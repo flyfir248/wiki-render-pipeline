@@ -83,7 +83,7 @@ class LLMConfig(BaseModel):
     model: str = "openai/gpt-oss-120b"  # see https://console.groq.com/docs/models
     api_key_env: str = "GROQ_API_KEY"
     temperature: float = 0.8
-    max_note_chars: int = 12000  # research notes sent to the model (free tiers limit tokens/minute)
+    max_note_chars: int = 6000  # research notes sent to the model (free tiers limit tokens/minute)
 
 
 class WikipediaConfig(BaseModel):

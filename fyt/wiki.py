@@ -154,7 +154,7 @@ def _plain(html: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html or "")).strip()
 
 
-def fetch_images(cfg: Config, title: str, limit: int = 12) -> list[WikiImage]:
+def fetch_images(cfg: Config, title: str, limit: int = 8) -> list[WikiImage]:
     """Photos used in the article, largest first, sized for the video."""
     body = _api(
         cfg,
@@ -183,7 +183,7 @@ def fetch_images(cfg: Config, title: str, limit: int = 12) -> list[WikiImage]:
                 title=name,
                 url=info.get("thumburl") or info["url"],
                 page=info.get("descriptionurl", ""),
-                description=_plain(meta.get("ImageDescription", {}).get("value", ""))[:200]
+                description=_plain(meta.get("ImageDescription", {}).get("value", ""))[:120]
                 or name.removeprefix("File:").rsplit(".", 1)[0].replace("_", " "),
                 artist=_plain(meta.get("Artist", {}).get("value", ""))[:80],
                 license=_plain(meta.get("LicenseShortName", {}).get("value", "")),
