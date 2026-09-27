@@ -54,7 +54,8 @@ if (still || frame !== undefined) {
     outputLocation: out,
     inputProps,
     browserExecutable,
-    concurrency: Number(process.env.REMOTION_CONCURRENCY || Math.max(1, Math.floor(os.cpus().length / 2))),
+    // Remotion rejects a concurrency above the machine's core count, so clamp it.
+    concurrency: Math.min(os.cpus().length, Number(process.env.REMOTION_CONCURRENCY) || os.cpus().length),
     onProgress: ({ progress }) => {
       const pct = Math.floor(progress * 100);
       if (pct % 10 === 0 && pct !== last) {

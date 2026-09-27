@@ -23,6 +23,10 @@ class ClaudeError(RuntimeError):
     pass
 
 
+class RequestTooLarge(ClaudeError):
+    """The provider rejected the request as too large (e.g. Groq's free tokens-per-minute cap)."""
+
+
 def _client() -> anthropic.Anthropic:
     return anthropic.Anthropic(max_retries=4)
 
@@ -72,6 +76,8 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
             print(f"rate limited by {c.base_url}; waiting {wait:.0f}s")
             time.sleep(wait)
             continue
+        if r.status_code == 413:
+            raise RequestTooLarge(f"{c.base_url} returned 413: {r.text[:500]}")
         if r.status_code >= 400:
             raise ClaudeError(f"{c.base_url} returned {r.status_code}: {r.text[:500]}")
         content = (r.json()["choices"][0]["message"]["content"] or "").strip()
@@ -243,14 +249,25 @@ def write_script(
         format_line=format_line,
         words=words,
     )
-    if cfg.llm.provider == "openai":
-        # Free tiers cap tokens per minute, so send a shorter slice of long notes.
-        notes = notes[: cfg.llm.max_note_chars]
     tail = f"\n\nAvailable images:\n{images}" if images else ""
     tail += f"\n\n{feedback}" if feedback else ""
-    user = f"Topic: {topic}\n\n<research_notes>\n{notes or '(no research notes; stick to well-established facts)'}\n</research_notes>{tail}"
+
+    def user_message(notes: str) -> str:
+        return f"Topic: {topic}\n\n<research_notes>\n{notes or '(no research notes; stick to well-established facts)'}\n</research_notes>{tail}"
+
     if cfg.llm.provider == "openai":
-        return _openai_structured(cfg, guide, user, Script, max_tokens=4000)
+        # Free tiers cap tokens per minute (Groq: 8000, counting max_tokens), so send a
+        # slice of long notes and halve it if the request is still too large.
+        limit = cfg.llm.max_note_chars
+        for attempt in range(3):
+            try:
+                return _openai_structured(cfg, guide, user_message(notes[:limit]), Script, max_tokens=3000)
+            except RequestTooLarge:
+                if attempt == 2:
+                    raise
+                limit //= 2
+                print(f"request too large; retrying with {limit} characters of notes")
+    user = user_message(notes)
     with _client().beta.messages.stream(
         model=cfg.model,
         max_tokens=48000,
