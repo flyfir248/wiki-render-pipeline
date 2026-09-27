@@ -29,6 +29,7 @@ def make_video(cfg: Config, topic: str, script: Script | None = None, voice: str
 
 
 def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None) -> None:
+    images: list[wiki.WikiImage] = []
     if script is None:
         notes, article = "", None
         if wiki.is_wiki_topic(topic):
@@ -36,16 +37,30 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             article = wiki.fetch_article(cfg, topic[len(wiki.PREFIX) :])
             notes = wiki.notes(article)
             job.file("research.md").write_text(notes)
+            try:
+                images = wiki.fetch_images(cfg, article.title)
+            except Exception as e:  # images are a nice-to-have
+                log(job, f"warning: no article images: {e}")
+            log(job, f"{len(images)} article images available")
         elif cfg.research:
             log(job, "researching")
             notes = llm.research(cfg, topic)
             job.file("research.md").write_text(notes)
         log(job, "writing script")
-        script = llm.write_script(cfg, article.title if article else topic, notes, from_wikipedia=article is not None)
+        subject = article.title if article else topic
+        menu = wiki.image_menu(images)
+        script = llm.write_script(cfg, subject, notes, from_wikipedia=article is not None, images=menu)
+        limit = llm.SHORT_WORDS * 1.25 if cfg.format == "short" else None
+        if limit and narration_words(script) > limit:
+            log(job, f"script is {narration_words(script)} words; asking for a shorter one")
+            feedback = (
+                f"Your previous draft had {narration_words(script)} words of narration. "
+                f"This is a Short: keep the total narration under {llm.SHORT_WORDS} words."
+            )
+            script = llm.write_script(cfg, subject, notes, from_wikipedia=article is not None, images=menu, feedback=feedback)
         if article:
             script = wiki_attribute(script, article)
     job.file("script.json").write_text(script.model_dump_json(indent=2))
-    job.file("youtube.txt").write_text(youtube.upload_sheet(cfg, script))
     job.update(status="scripted", title=script.title)
 
     problems = qa.check_script(cfg, script)
@@ -62,13 +77,13 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     voice_src = None if provider == "silent" else "voice.wav"
 
     log(job, "fetching visuals")
-    used: set[str] = set()
-    scene_media: dict[int, Media] = {}
-    for i, s in enumerate(script.scenes):
-        if s.type == "broll":
-            m = media.fetch_broll(cfg, s.broll_query or s.heading or topic, job.public, f"s{i + 1}", used)
-            if m:
-                scene_media[i] = m
+    scene_media, credits, used = scene_visuals(cfg, job, script, images, topic)
+    if credits:
+        script = script.model_copy(
+            update={"description": script.description.rstrip() + "\n\nImages from Wikimedia Commons:\n" + "\n".join(credits)}
+        )
+        job.file("script.json").write_text(script.model_dump_json(indent=2))
+    job.file("youtube.txt").write_text(youtube.upload_sheet(cfg, script))
     music = media.pick_music(cfg, job.public)
 
     props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music)
@@ -79,7 +94,10 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     video = render.render(job.file("props.json"), job.public, job.file("video.mp4"))
 
     log(job, "rendering thumbnail")
-    bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used) if cfg.stock_footage else None
+    # The subject's own photo makes a better thumbnail than a stock one.
+    bg = next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and "wiki" in m.src), None)
+    if bg is None and cfg.stock_footage:
+        bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used)
     thumb = ThumbnailProps(
         format=cfg.format,
         title=script.thumbnail_text,
@@ -94,6 +112,60 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     status = "qa_failed" if problems else ("ready" if cfg.require_review else "approved")
     job.update(status=status, problems=problems, duration=props.duration)
     log(job, f"done: {status}" + (f" -- {problems}" if problems else ""))
+
+
+def narration_words(script: Script) -> int:
+    return sum(len(s.narration.split()) for s in script.scenes)
+
+
+def scene_visuals(
+    cfg: Config, job: Job, script: Script, images: list["wiki.WikiImage"], topic: str
+) -> tuple[dict[int, Media], list[str], set[str]]:
+    """Pick a visual for each scene: the article image the script chose, else stock
+    footage for the scene's search query. Returns media per scene, image credits,
+    and the stock ids used."""
+    used: set[str] = set()
+    scene_media: dict[int, Media] = {}
+    credits: list[str] = []
+    taken: set[int] = set()
+    (job.public / "media").mkdir(parents=True, exist_ok=True)
+    for i, s in enumerate(script.scenes):
+        n = s.image
+        if n is not None and 1 <= n <= len(images) and n not in taken:
+            im = images[n - 1]
+            ext = im.url.rsplit(".", 1)[-1].split("?")[0].lower()
+            rel = f"media/wiki{n}.{ext if ext in ('jpg', 'jpeg', 'png', 'webp') else 'jpg'}"
+            try:
+                wiki.download_image(im, job.public / rel)
+            except Exception as e:
+                log(job, f"warning: could not download {im.title}: {e}")
+            else:
+                scene_media[i] = Media(src=rel, kind="image")
+                credits.append(im.credit)
+                taken.add(n)
+                continue
+        # Data scenes (charts, numbers, lists) read best on the plain background.
+        wants_stock = s.type == "broll" or (s.broll_query and s.type in ("title", "statement", "quote"))
+        if wants_stock:
+            m = media.fetch_broll(cfg, s.broll_query or s.heading or topic, job.public, f"s{i + 1}", used)
+            if m:
+                scene_media[i] = m
+    # Open on the subject: if the title scene has nothing, give it the first unused article image.
+    if 0 not in scene_media and script.scenes and images:
+        n = next((k for k in range(1, len(images) + 1) if k not in taken), None)
+        if n is not None:
+            im = images[n - 1]
+            rel = f"media/wiki{n}.jpg"
+            try:
+                wiki.download_image(im, job.public / rel)
+                scene_media[0] = Media(src=rel, kind="image")
+                credits.append(im.credit)
+            except Exception as e:
+                log(job, f"warning: could not download {im.title}: {e}")
+    log(job, f"visuals: {sum(1 for m in scene_media.values() if 'wiki' in m.src)} article images, "
+        f"{sum(1 for m in scene_media.values() if 'wiki' not in m.src)} stock, "
+        f"{len(script.scenes) - len(scene_media)} scenes on plain background")
+    return scene_media, credits, used
 
 
 def wiki_attribute(script: Script, article: "wiki.Article") -> Script:

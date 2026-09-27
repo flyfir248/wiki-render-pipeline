@@ -519,10 +519,44 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   broll: BrollScene,
 };
 
+// A photo or clip behind a template scene: slow Ken Burns move, darkened so text stays readable.
+const Backdrop: React.FC<{ media: NonNullable<Scene["media"]>; theme: Theme }> = ({ media, theme }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const zoom = interpolate(frame, [0, durationInFrames], [1.04, 1.14]);
+  const pan = interpolate(frame, [0, durationInFrames], [1.5, -1.5]);
+  const style = { width: "100%", height: "100%", objectFit: "cover" as const };
+  return (
+    <AbsoluteFill>
+      <AbsoluteFill style={{ transform: `scale(${zoom}) translateY(${pan}%)` }}>
+        {media.kind === "video" ? (
+          <OffthreadVideo src={staticFile(media.src)} muted style={style} />
+        ) : (
+          <Img src={staticFile(media.src)} style={style} />
+        )}
+      </AbsoluteFill>
+      <AbsoluteFill
+        style={{
+          background: `linear-gradient(${theme.background}cc, ${theme.background}a6 40%, ${theme.background}ee)`,
+        }}
+      />
+    </AbsoluteFill>
+  );
+};
+
 export const SceneView: React.FC<SceneProps> = (props) => {
   // Fall back to a kinetic statement for broll without media or unknown types.
   const type = props.scene.type === "broll" && !props.scene.media ? "statement" : props.scene.type;
   const Component = registry[type] ?? StatementScene;
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
+  const media = props.scene.media;
+  if (media && type !== "broll") {
+    return (
+      <AbsoluteFill>
+        <Backdrop media={media} theme={props.theme} />
+        <Component {...props} scene={scene} />
+      </AbsoluteFill>
+    );
+  }
   return <Component {...props} scene={scene} />;
 };

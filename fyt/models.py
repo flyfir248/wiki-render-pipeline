@@ -37,8 +37,14 @@ class ScriptScene(BaseModel):
     right_title: str | None = None
     right: list[str] | None = Field(default=None, description="comparison scenes: right column bullets.")
     author: str | None = Field(default=None, description="quote scenes: who said it (must be a real, verified quote).")
+    image: int | None = Field(
+        default=None,
+        description="Number of the article image (from the 'Available images' list) to show behind this scene, if one fits what is being said.",
+    )
     broll_query: str | None = Field(
-        default=None, description="broll scenes: 2-4 word stock-footage search query, concrete and visual."
+        default=None,
+        description="2-4 word stock-footage search query for what is being said, concrete and visual "
+        "(e.g. 'molasses tank', 'harbor 1919'). Used when no article image fits.",
     )
 
 
