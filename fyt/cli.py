@@ -89,8 +89,11 @@ def main(argv: list[str] | None = None) -> None:
                 print(f"  - {idea}")
     elif args.cmd == "run":
         done = pipeline.run_queue(cfg, args.count)
+        if not done:
+            raise SystemExit(f"no videos were made (asked for {args.count})")
         if len(done) < args.count:
-            raise SystemExit(f"only {len(done)} of {args.count} videos were made")
+            # Some videos are ready to download, so the run still counts as a success.
+            print(f"::warning::only {len(done)} of {args.count} videos were made; see the log for why")
     elif args.cmd == "jobs":
         for j in list_jobs(cfg):
             m = j.meta

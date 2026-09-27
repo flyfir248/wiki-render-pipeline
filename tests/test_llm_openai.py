@@ -53,6 +53,23 @@ def test_openai_script_retries_on_bad_json_and_rate_limit(cfg, monkeypatch):
     assert "never copy" in calls[0][0]["content"].lower()  # Wikipedia rules in the system prompt
     assert len(calls[0][1]["content"]) < 7000  # notes trimmed for free-tier limits
     assert "did not match the schema" in calls[-1][-1]["content"]
+    assert len(calls[-1]) == 2  # retries don't resend the rejected reply
+
+
+def test_openai_retries_when_groq_rejects_invalid_json(cfg, monkeypatch):
+    bodies = []
+    rejected = Resp(400, {"error": {"code": "json_validate_failed", "failed_generation": "max completion tokens reached"}})
+    answers = [rejected, reply(json.dumps(SCRIPT))]
+
+    def post(url, headers, json, timeout):
+        bodies.append(json)
+        return answers.pop(0)
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    script = llm.write_script(cfg, "Darth Vader in Ukrainian politics", "x" * 5000, from_wikipedia=True)
+    assert script.title == SCRIPT["title"]
+    assert bodies[0]["reasoning_effort"] == "low"  # leaves gpt-oss room to finish the JSON
+    assert len(bodies) == 2
 
 
 def test_openai_needs_key(cfg, monkeypatch):
