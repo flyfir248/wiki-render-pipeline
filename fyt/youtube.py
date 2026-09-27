@@ -53,7 +53,10 @@ def _service():
         TOKEN.write_text(os.environ["YOUTUBE_TOKEN_JSON"])
     if not TOKEN.exists():
         raise SystemExit("Not authorised. Run `python -m fyt auth` first.")
-    creds = Credentials.from_authorized_user_file(str(TOKEN), SCOPES)
+    # No scopes here: refreshing then keeps whatever the login granted. Asking for
+    # scopes the token wasn't granted (e.g. one made in the OAuth Playground)
+    # fails with invalid_scope.
+    creds = Credentials.from_authorized_user_file(str(TOKEN))
     if not creds.valid and creds.refresh_token:
         creds.refresh(Request())
         TOKEN.write_text(creds.to_json())
