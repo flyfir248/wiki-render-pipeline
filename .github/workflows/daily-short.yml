@@ -1,4 +1,6 @@
-# Makes one Short a day from a niche Wikipedia article and uploads it.
+# Makes one Short a day from a niche Wikipedia article. The video, thumbnail,
+# captions and a ready-to-paste youtube.txt are kept as the run's artifact.
+# It also uploads when channel.yaml has require_review: false.
 # Setup: see "Daily uploads with GitHub Actions" in the README.
 name: Daily Short
 
@@ -6,6 +8,10 @@ on:
   schedule:
     - cron: "0 14 * * *" # 14:00 UTC every day
   workflow_dispatch:
+    inputs:
+      count:
+        description: "How many videos to make"
+        default: "1"
 
 concurrency: daily-short
 
@@ -47,12 +53,12 @@ jobs:
           key: fyt-state-${{ github.run_id }}
           restore-keys: fyt-state-
 
-      - name: Make and upload today's Short
+      - name: Make today's Short
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
-        run: python -m fyt run --count 1
+        run: python -m fyt run --count ${{ inputs.count || 1 }}
 
       - name: Save topic queue
         if: always()
@@ -61,7 +67,7 @@ jobs:
           path: jobs/state.db
           key: fyt-state-${{ github.run_id }}
 
-      - name: Keep the video for a week
+      - name: Keep the videos for a week
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -69,6 +75,8 @@ jobs:
           path: |
             jobs/*/video.mp4
             jobs/*/thumbnail.png
+            jobs/*/captions.srt
+            jobs/*/youtube.txt
             jobs/*/script.json
             jobs/*/research.md
             jobs/*/job.json

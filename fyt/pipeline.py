@@ -45,6 +45,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         if article:
             script = wiki_attribute(script, article)
     job.file("script.json").write_text(script.model_dump_json(indent=2))
+    job.file("youtube.txt").write_text(youtube.upload_sheet(cfg, script))
     job.update(status="scripted", title=script.title)
 
     problems = qa.check_script(cfg, script)

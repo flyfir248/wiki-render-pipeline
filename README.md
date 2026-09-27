@@ -86,13 +86,18 @@ that once you trust the output: see the next section.
 
 ## Daily uploads with GitHub Actions
 
-`.github/workflows/daily-short.yml` makes one Short a day and uploads it, using
-`channel.yaml`: a niche Wikipedia article (from Wikipedia's
+`.github/workflows/daily-short.yml` makes one Short a day using `channel.yaml`: a niche Wikipedia article (from Wikipedia's
 [Unusual articles](https://en.wikipedia.org/wiki/Wikipedia:Unusual_articles) list by default)
 is rewritten by Claude into an original script, voiced with Kokoro, rendered and uploaded.
 Each video's description credits the article (Wikipedia text is CC BY-SA 4.0).
 
-One-time setup:
+**Manual upload (the default):** with `require_review: true` in `channel.yaml`, the job only
+makes the video. Add the `ANTHROPIC_API_KEY` secret, run **Actions → Daily Short → Run
+workflow** (choose how many videos), and download the run's **Artifact**. Each job folder has
+`video.mp4`, `thumbnail.png`, `captions.srt` and `youtube.txt` with the title, description
+(including the Wikipedia credit) and tags to paste into YouTube Studio.
+
+**Automatic upload:** set `require_review: false` and do this one-time setup:
 
 1. Do the YouTube steps above on your own computer (`python -m fyt auth`), so
    `secrets/token.json` exists. In Google Cloud, set the OAuth consent screen's

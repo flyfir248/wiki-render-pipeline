@@ -29,4 +29,6 @@ youtube:
   category_id: "27"
   contains_synthetic_media: true
 
-require_review: false   # the daily run uploads without waiting for approval
+# true: the daily run only makes the video (download it from the run's Artifacts
+# and upload by hand). false: it also uploads (needs the YOUTUBE_TOKEN_JSON secret).
+require_review: true

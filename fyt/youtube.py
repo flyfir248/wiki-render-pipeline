@@ -83,6 +83,18 @@ def build_body(cfg: Config, script: Script, now: datetime | None = None) -> dict
     }
 
 
+def upload_sheet(cfg: Config, script: Script) -> str:
+    """Title, description and tags to paste into YouTube Studio for a manual upload."""
+    body = build_body(cfg, script)["snippet"]
+    return (
+        f"TITLE\n{body['title']}\n\n"
+        f"DESCRIPTION\n{body['description']}\n\n"
+        f"TAGS\n{', '.join(body['tags'])}\n\n"
+        "Also: upload thumbnail.png as the thumbnail and captions.srt as subtitles, and under\n"
+        "\"Altered or synthetic content\" answer Yes (the voice is AI-generated).\n"
+    )
+
+
 def upload(cfg: Config, script: Script, video: Path, thumbnail: Path | None, srt: Path | None) -> str:
     from googleapiclient.errors import HttpError
     from googleapiclient.http import MediaFileUpload
