@@ -44,14 +44,20 @@ class ChannelInfo(BaseModel):
 
 
 class VoiceConfig(BaseModel):
+    # kokoro: free, natural Kokoro-82M voice run locally (model downloads once, ~350 MB).
     # elevenlabs: best quality (paid). edge: free Microsoft neural voices.
     # espeak: offline espeak-ng voice (robotic; no network or key needed).
     # silent: no audio, timings estimated -- for testing the render only.
-    provider: Literal["elevenlabs", "edge", "espeak", "silent"] = "edge"
+    provider: Literal["kokoro", "elevenlabs", "edge", "espeak", "silent"] = "kokoro"
     elevenlabs_voice_id: str = "JBFqnCBsd6RMkjVDRZzb"
     elevenlabs_model: str = "eleven_multilingual_v2"
     edge_voice: str = "en-US-AndrewMultilingualNeural"
     edge_rate: str = "+5%"
+    kokoro_voice: str = "am_michael"  # e.g. af_heart, am_michael, bm_george, bf_emma
+    kokoro_speed: float = 1.05
+    kokoro_lang: str = "en-us"
+    kokoro_sentence_pause: float = 0.18
+    kokoro_dir: str = "assets/kokoro"
     espeak_voice: str = "en-us"
     espeak_wpm: int = 165
     gap_seconds: float = 0.35  # pause between scenes
@@ -68,12 +74,26 @@ class YouTubeConfig(BaseModel):
     upload_captions: bool = True
 
 
+class WikipediaConfig(BaseModel):
+    lang: str = "en"
+    # Where to find article ideas. List pages contribute every article they link to.
+    list_pages: list[str] = Field(default_factory=lambda: ["Wikipedia:Unusual articles"])
+    categories: list[str] = Field(default_factory=list)  # e.g. "Unsolved problems in physics"
+    articles: list[str] = Field(default_factory=list)  # specific article titles
+    min_chars: int = 3000  # skip stubs
+    max_chars: int = 40000  # truncate very long articles in the notes
+
+
 class Config(BaseModel):
     channel: ChannelInfo = Field(default_factory=ChannelInfo)
     format: Literal["long", "short"] = "long"
     target_minutes: float = 6.0  # ignored for shorts (always < 60s)
     model: str = "claude-opus-5"
-    research: bool = True  # use Claude's web search before scripting
+    # wikipedia: videos are written from niche Wikipedia articles (see `wikipedia`).
+    # web: Claude researches each topic with web search first.
+    source: Literal["wikipedia", "web"] = "web"
+    wikipedia: WikipediaConfig = Field(default_factory=WikipediaConfig)
+    research: bool = True  # use Claude's web search before scripting (source: web)
     voice: VoiceConfig = Field(default_factory=VoiceConfig)
     music_dir: str = "assets/music"
     music_volume: float = 0.07

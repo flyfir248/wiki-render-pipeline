@@ -20,7 +20,7 @@ def main(argv: list[str] | None = None) -> None:
     d.add_argument("--voice", default="silent", choices=list(tts.PROVIDERS))
 
     m = sub.add_parser("make", help="build one video for a topic (no upload)")
-    m.add_argument("topic")
+    m.add_argument("topic", help='a topic, or "wiki:<Article title>" to build it from Wikipedia')
     m.add_argument("--script", type=Path, help="use an existing script.json instead of calling Claude")
     m.add_argument("--no-research", action="store_true", help="skip web research")
     m.add_argument("--voice", choices=list(tts.PROVIDERS))
@@ -32,6 +32,9 @@ def main(argv: list[str] | None = None) -> None:
     ta.add_argument("topic", nargs="+")
     ti = tsub.add_parser("ideate", help="ask Claude for new topics")
     ti.add_argument("-n", type=int, default=10)
+    tw = tsub.add_parser("wiki", help="queue niche Wikipedia articles (or name specific ones)")
+    tw.add_argument("title", nargs="*", help="article titles; omit to pick from the configured sources")
+    tw.add_argument("-n", type=int, default=5)
 
     r = sub.add_parser("run", help="build the next N queued topics (uploads if review is off)")
     r.add_argument("--count", type=int, default=1)
@@ -70,6 +73,13 @@ def main(argv: list[str] | None = None) -> None:
                 print(f"{row[0]:>4}  {row[2]:<12} {row[1]}" + (f"  -> {row[3]}" if row[3] else ""))
         elif args.action == "add":
             print(f"added {topics.add([' '.join(args.topic)])}")
+        elif args.action == "wiki":
+            from fyt import wiki
+
+            titles = args.title or wiki.pick_articles(cfg, args.n, set(topics.titles()))
+            print(f"added {topics.add([wiki.topic_for(t) for t in titles])}:")
+            for t in titles:
+                print(f"  - {t}")
         else:
             from fyt import llm
 
@@ -78,7 +88,9 @@ def main(argv: list[str] | None = None) -> None:
             for idea in ideas:
                 print(f"  - {idea}")
     elif args.cmd == "run":
-        pipeline.run_queue(cfg, args.count)
+        done = pipeline.run_queue(cfg, args.count)
+        if len(done) < args.count:
+            raise SystemExit(f"only {len(done)} of {args.count} videos were made")
     elif args.cmd == "jobs":
         for j in list_jobs(cfg):
             m = j.meta

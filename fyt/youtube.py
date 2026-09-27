@@ -10,6 +10,7 @@ locked to private. Apply for the audit early (see README).
 
 from __future__ import annotations
 
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -41,6 +42,10 @@ def _service():
     from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
 
+    # In CI the token comes from a secret; locally from `fyt auth`.
+    if not TOKEN.exists() and os.environ.get("YOUTUBE_TOKEN_JSON"):
+        SECRETS.mkdir(exist_ok=True)
+        TOKEN.write_text(os.environ["YOUTUBE_TOKEN_JSON"])
     if not TOKEN.exists():
         raise SystemExit("Not authorised. Run `python -m fyt auth` first.")
     creds = Credentials.from_authorized_user_file(str(TOKEN), SCOPES)

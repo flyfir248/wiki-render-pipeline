@@ -145,7 +145,17 @@ Rules:
 """
 
 
-def write_script(cfg: Config, topic: str, notes: str) -> Script:
+WIKI_GUIDE = """
+The research notes are a Wikipedia article. Turn it into an original video:
+- Pick the single most surprising or intriguing thread in the article and build the video around it;
+  don't summarise the article top to bottom.
+- Write every sentence in your own words. Never copy or lightly reword sentences from the article.
+- Don't say "according to Wikipedia" in the narration.
+- Only state facts the article supports.
+"""
+
+
+def write_script(cfg: Config, topic: str, notes: str, from_wikipedia: bool = False) -> Script:
     ch = cfg.channel
     if cfg.format == "short":
         format_line = "YouTube Short, vertical 9:16, under 55 seconds, 5-8 fast scenes"
@@ -153,7 +163,7 @@ def write_script(cfg: Config, topic: str, notes: str) -> Script:
     else:
         format_line = f"horizontal 16:9 video, about {cfg.target_minutes:g} minutes"
         words = int(cfg.target_minutes * 150)
-    guide = SCRIPT_GUIDE.format(
+    guide = (SCRIPT_GUIDE + (WIKI_GUIDE if from_wikipedia else "")).format(
         name=ch.name,
         niche=ch.niche,
         audience=ch.audience,

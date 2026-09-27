@@ -29,10 +29,10 @@ python -m venv .venv && source .venv/bin/activate    # Windows: .venv\Scripts\Ac
 pip install -r requirements.txt
 (cd renderer && npm install)
 
-# 1. Offline demo: no API keys, silent voice, renders jobs/<id>/video.mp4
+# 1. Demo: no API keys, silent voice by default, renders jobs/<id>/video.mp4
 python -m fyt demo                  # 16:9
 python -m fyt --format short demo   # 9:16 Short
-python -m fyt --format short demo --voice edge     # with a free neural voice (needs network)
+python -m fyt --format short demo --voice kokoro   # with the free local Kokoro voice (~350 MB model, downloaded once)
 python -m fyt --format short demo --voice espeak   # offline robotic voice (apt/brew install espeak-ng)
 
 # 2. Real video
@@ -83,6 +83,32 @@ Schedule `run` with cron (Linux/macOS) or Task Scheduler (Windows), for example 
 With `require_review: true` (the default), scheduled runs produce videos that wait in
 `jobs/` for approval. Setting it to `false` makes the pipeline fully hands-off. Only do
 that once you trust the output: see the next section.
+
+## Daily uploads with GitHub Actions
+
+`.github/workflows/daily-short.yml` makes one Short a day and uploads it, using
+`channel.yaml`: a niche Wikipedia article (from Wikipedia's
+[Unusual articles](https://en.wikipedia.org/wiki/Wikipedia:Unusual_articles) list by default)
+is rewritten by Claude into an original script, voiced with Kokoro, rendered and uploaded.
+Each video's description credits the article (Wikipedia text is CC BY-SA 4.0).
+
+One-time setup:
+
+1. Do the YouTube steps above on your own computer (`python -m fyt auth`), so
+   `secrets/token.json` exists. In Google Cloud, set the OAuth consent screen's
+   publishing status to **In production**; in *Testing* the token expires after 7 days
+   and the daily upload starts failing.
+2. In the GitHub repo, **Settings → Secrets and variables → Actions**, add:
+   - `ANTHROPIC_API_KEY`
+   - `YOUTUBE_TOKEN_JSON`: the full contents of `secrets/token.json`
+   - `PEXELS_API_KEY` (optional, for stock footage)
+3. **Actions → Daily Short → Run workflow** to test it once. The rendered video is kept
+   as a run artifact for a week.
+
+Change the time in the workflow's `cron` line, and the niche in `channel.yaml`
+(`wikipedia.list_pages`, `categories` or `articles`). Try one article locally with
+`python -m fyt make "wiki:Boston Molasses Disaster"`, or queue some with
+`python -m fyt topics wiki -n 5`.
 
 ## Monetization: read this before going hands-off
 

@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from fyt import llm, media, qa, render, tts, youtube
+from fyt import llm, media, qa, render, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, list_jobs
@@ -30,13 +30,20 @@ def make_video(cfg: Config, topic: str, script: Script | None = None, voice: str
 
 def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None) -> None:
     if script is None:
-        notes = ""
-        if cfg.research:
+        notes, article = "", None
+        if wiki.is_wiki_topic(topic):
+            log(job, "fetching Wikipedia article")
+            article = wiki.fetch_article(cfg, topic[len(wiki.PREFIX) :])
+            notes = wiki.notes(article)
+            job.file("research.md").write_text(notes)
+        elif cfg.research:
             log(job, "researching")
             notes = llm.research(cfg, topic)
             job.file("research.md").write_text(notes)
         log(job, "writing script")
-        script = llm.write_script(cfg, topic, notes)
+        script = llm.write_script(cfg, article.title if article else topic, notes, from_wikipedia=article is not None)
+        if article:
+            script = wiki_attribute(script, article)
     job.file("script.json").write_text(script.model_dump_json(indent=2))
     job.update(status="scripted", title=script.title)
 
@@ -88,6 +95,15 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     log(job, f"done: {status}" + (f" -- {problems}" if problems else ""))
 
 
+def wiki_attribute(script: Script, article: "wiki.Article") -> Script:
+    """CC BY-SA requires attribution: put it in the description and sources."""
+    description = script.description.rstrip()
+    if article.attribution not in description:
+        description += "\n\n" + article.attribution
+    sources = script.sources if article.url in script.sources else [article.url, *script.sources]
+    return script.model_copy(update={"description": description, "sources": sources})
+
+
 def upload_job(cfg: Config, job: Job, force: bool = False) -> str:
     status = job.meta.get("status")
     if status == "uploaded":
@@ -110,6 +126,10 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
             if cfg.seed_topics:
                 topics.add(cfg.seed_topics)
             nxt = topics.next_pending()
+            if nxt is None and cfg.source == "wikipedia":
+                titles = wiki.pick_articles(cfg, min(ideate_when_empty, 3), set(topics.titles()))
+                topics.add([wiki.topic_for(t) for t in titles])
+                nxt = topics.next_pending()
             if nxt is None:
                 topics.add(llm.ideate_topics(cfg, ideate_when_empty, topics.titles(), performance_summary(cfg)))
                 nxt = topics.next_pending()

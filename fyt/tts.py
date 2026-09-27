@@ -18,7 +18,7 @@ from pathlib import Path
 import imageio_ffmpeg
 import requests
 
-from fyt.config import Config, secret
+from fyt.config import ROOT, Config, secret
 from fyt.models import Word
 
 SAMPLE_RATE = 44100
@@ -154,7 +154,74 @@ def _espeak(cfg: Config, text: str, out: Path) -> Clip:
     return Clip(out, duration, words)
 
 
-PROVIDERS = {"elevenlabs": _elevenlabs, "edge": _edge, "espeak": _espeak, "silent": _silent}
+KOKORO_RELEASE = "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0"
+KOKORO_FILES = ("kokoro-v1.0.onnx", "voices-v1.0.bin")
+_kokoro_model = None
+
+
+def _kokoro_load(cfg: Config):
+    """Load Kokoro once per process, downloading the model files on first use."""
+    global _kokoro_model
+    if _kokoro_model is None:
+        from kokoro_onnx import Kokoro
+
+        d = ROOT / cfg.voice.kokoro_dir
+        d.mkdir(parents=True, exist_ok=True)
+        for name in KOKORO_FILES:
+            path = d / name
+            if not path.exists():
+                print(f"downloading Kokoro model file {name} ...", flush=True)
+                tmp = path.with_suffix(".part")
+                with requests.get(f"{KOKORO_RELEASE}/{name}", stream=True, timeout=60) as r:
+                    r.raise_for_status()
+                    with open(tmp, "wb") as f:
+                        for chunk in r.iter_content(1 << 20):
+                            f.write(chunk)
+                tmp.rename(path)
+        _kokoro_model = Kokoro(str(d / KOKORO_FILES[0]), str(d / KOKORO_FILES[1]))
+    return _kokoro_model
+
+
+SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+
+
+def _kokoro(cfg: Config, text: str, out: Path) -> Clip:
+    """Kokoro-82M, run locally via ONNX: natural voice, free, no API key.
+
+    Kokoro reports no word timings, so each sentence is voiced separately
+    (exact sentence boundaries) and words are spread across their sentence.
+    """
+    import numpy as np
+
+    model = _kokoro_load(cfg)
+    v = cfg.voice
+    pause = np.zeros(int(v.kokoro_sentence_pause * 24000), dtype=np.float32)
+    parts, words, t = [], [], 0.0
+    for sentence in [x for x in SENTENCE_END.split(text) if x.strip()]:
+        samples, sr = model.create(sentence, voice=v.kokoro_voice, speed=v.kokoro_speed, lang=v.kokoro_lang)
+        if parts:
+            parts.append(pause)
+            t += len(pause) / sr
+        dur = len(samples) / sr
+        est_words, est = estimate_words(sentence, offset=0.0)
+        k = dur / est if est else 1.0
+        words += [w.model_copy(update={"start": round(t + w.start * k, 3), "end": round(t + w.end * k, 3)}) for w in est_words]
+        parts.append(samples.astype(np.float32))
+        t += dur
+    audio = np.concatenate(parts) if parts else np.zeros(2400, dtype=np.float32)
+    pcm = (np.clip(audio, -1, 1) * 32767).astype("<i2").tobytes()
+    raw = out.with_suffix(".raw.wav")
+    with wave.open(str(raw), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(24000)
+        w.writeframes(pcm)
+    duration = to_wav(raw, out)
+    raw.unlink()
+    return Clip(out, duration, words)
+
+
+PROVIDERS = {"kokoro": _kokoro, "elevenlabs": _elevenlabs, "edge": _edge, "espeak": _espeak, "silent": _silent}
 
 
 def synthesize(cfg: Config, text: str, out: Path, provider: str | None = None) -> Clip:

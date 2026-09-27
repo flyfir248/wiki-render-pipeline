@@ -11,10 +11,18 @@ format: long            # long (16:9) or short (9:16, < 60s)
 target_minutes: 6       # long videos only; 8+ minutes allows mid-roll ads
 
 model: claude-opus-5
-research: true          # Claude web research before scripting (recommended)
+source: web             # web: Claude researches each topic | wikipedia: videos from niche Wikipedia articles
+research: true          # Claude web research before scripting (source: web)
+wikipedia:              # used when source: wikipedia (or for "wiki:<Title>" topics)
+  list_pages: ["Wikipedia:Unusual articles"]   # every article these pages link to is a candidate
+  categories: []        # e.g. ["Unsolved problems in physics"]
+  articles: []          # specific article titles
+  min_chars: 3000       # skip stubs
 
 voice:
-  provider: edge        # edge (free) | elevenlabs (best quality, paid) | espeak (offline) | silent (testing)
+  provider: kokoro      # kokoro (free, local, natural) | edge (free) | elevenlabs (paid) | espeak (offline) | silent (testing)
+  kokoro_voice: am_michael   # e.g. af_heart, am_michael, bm_george, bf_emma
+  kokoro_speed: 1.05
   edge_voice: en-US-AndrewMultilingualNeural     # list: edge-tts --list-voices
   edge_rate: "+5%"
   elevenlabs_voice_id: JBFqnCBsd6RMkjVDRZzb

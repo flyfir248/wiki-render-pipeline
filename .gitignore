@@ -8,3 +8,4 @@ assets/music/*
 !assets/music/.gitkeep
 __pycache__/
 .pytest_cache/
+assets/kokoro/
