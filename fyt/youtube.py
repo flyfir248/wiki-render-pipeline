@@ -37,13 +37,18 @@ def auth() -> None:
     print(f"Saved credentials to {TOKEN}")
 
 
+def authorised() -> bool:
+    """Whether uploads can run: a token from `fyt auth` or the YOUTUBE_TOKEN_JSON secret."""
+    return TOKEN.exists() or bool(os.environ.get("YOUTUBE_TOKEN_JSON", "").strip())
+
+
 def _service():
     from google.auth.transport.requests import Request
     from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
 
     # In CI the token comes from a secret; locally from `fyt auth`.
-    if not TOKEN.exists() and os.environ.get("YOUTUBE_TOKEN_JSON"):
+    if not TOKEN.exists() and os.environ.get("YOUTUBE_TOKEN_JSON", "").strip():
         SECRETS.mkdir(exist_ok=True)
         TOKEN.write_text(os.environ["YOUTUBE_TOKEN_JSON"])
     if not TOKEN.exists():
@@ -119,11 +124,14 @@ def upload(cfg: Config, script: Script, video: Path, thumbnail: Path | None, srt
         except HttpError as e:  # custom thumbnails need a phone-verified channel
             print(f"warning: thumbnail not set ({e.status_code}); verify the channel at youtube.com/verify")
     if srt and srt.exists() and cfg.youtube.upload_captions:
-        yt.captions().insert(
-            part="snippet",
-            body={"snippet": {"videoId": video_id, "language": cfg.channel.language, "name": "", "isDraft": False}},
-            media_body=MediaFileUpload(str(srt), mimetype="application/octet-stream"),
-        ).execute()
+        try:
+            yt.captions().insert(
+                part="snippet",
+                body={"snippet": {"videoId": video_id, "language": cfg.channel.language, "name": "", "isDraft": False}},
+                media_body=MediaFileUpload(str(srt), mimetype="application/octet-stream"),
+            ).execute()
+        except HttpError as e:  # the video is up; missing captions shouldn't fail the run
+            print(f"warning: captions not uploaded ({e.status_code})")
     return video_id
 
 

@@ -219,7 +219,15 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
             continue
         topics.set(topic_id, "done", job.id)
         if job.meta.get("status") == "approved":
-            upload_job(cfg, job)
+            if not youtube.authorised():
+                print("::warning::not uploaded: add the YOUTUBE_TOKEN_JSON secret to turn on uploads")
+                job.update(status="ready")
+            else:
+                try:
+                    upload_job(cfg, job)
+                except Exception as e:  # keep the video; it is still saved with the run
+                    print(f"::error::upload failed for {job.id}: {e}")
+                    job.update(status="upload_failed", upload_error=str(e)[:500])
         done.append(job)
     return done
 

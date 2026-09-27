@@ -38,5 +38,6 @@ youtube:
   contains_synthetic_media: true
 
 # true: the daily run only makes the video (download it from the run's Artifacts
-# and upload by hand). false: it also uploads (needs the YOUTUBE_TOKEN_JSON secret).
-require_review: true
+# and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is
+# set; without the secret it only makes the video.
+require_review: false
