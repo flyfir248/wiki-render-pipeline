@@ -20,14 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
           cache: pip
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -39,7 +39,7 @@ jobs:
           (cd renderer && npm ci)
 
       - name: Cache Kokoro voice model
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: assets/kokoro
           key: kokoro-v1.0
@@ -47,7 +47,7 @@ jobs:
       # The topic queue (which articles are already used) lives in jobs/state.db.
       # Each run restores the newest copy and saves a new one.
       - name: Restore topic queue
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: jobs/state.db
           key: fyt-state-${{ github.run_id }}
@@ -63,14 +63,14 @@ jobs:
 
       - name: Save topic queue
         if: always()
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: jobs/state.db
           key: fyt-state-${{ github.run_id }}
 
       - name: Keep the videos for a week
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: short-${{ github.run_id }}
           path: |
