@@ -170,6 +170,8 @@ Prefer primary and reputable sources. Flag anything uncertain.""",
     return _text(response)
 
 
+SHORT_WORDS = 130  # ~50s at Kokoro's pace
+
 SCRIPT_GUIDE = """Write the complete script for a faceless YouTube video. The narration is read by a
 text-to-speech voice and each scene is rendered as an animated motion-graphics template.
 
@@ -213,14 +215,22 @@ The research notes are a Wikipedia article. Turn it into an original video:
 - Write every sentence in your own words. Never copy or lightly reword sentences from the article.
 - Don't say "according to Wikipedia" in the narration.
 - Only state facts the article supports.
+
+Visuals: the message ends with a numbered list of "Available images" from the article. For each scene,
+set `image` to the number of the image that best shows what the narration is talking about at that
+moment (the real person, place or object), or leave it null if none fits. Use each image at most once.
+For scenes without an image, set `broll_query` to a concrete stock-footage search for what is being
+said. The title scene should show the subject itself whenever an image of it exists.
 """
 
 
-def write_script(cfg: Config, topic: str, notes: str, from_wikipedia: bool = False) -> Script:
+def write_script(
+    cfg: Config, topic: str, notes: str, from_wikipedia: bool = False, images: str = "", feedback: str = ""
+) -> Script:
     ch = cfg.channel
     if cfg.format == "short":
         format_line = "YouTube Short, vertical 9:16, under 55 seconds, 5-8 fast scenes"
-        words = 130
+        words = SHORT_WORDS
     else:
         format_line = f"horizontal 16:9 video, about {cfg.target_minutes:g} minutes"
         words = int(cfg.target_minutes * 150)
@@ -233,10 +243,13 @@ def write_script(cfg: Config, topic: str, notes: str, from_wikipedia: bool = Fal
         format_line=format_line,
         words=words,
     )
-    user = f"Topic: {topic}\n\n<research_notes>\n{notes or '(no research notes; stick to well-established facts)'}\n</research_notes>"
     if cfg.llm.provider == "openai":
         # Free tiers cap tokens per minute, so send a shorter slice of long notes.
-        user = f"Topic: {topic}\n\n<research_notes>\n{notes[: cfg.llm.max_note_chars] or '(no research notes; stick to well-established facts)'}\n</research_notes>"
+        notes = notes[: cfg.llm.max_note_chars]
+    tail = f"\n\nAvailable images:\n{images}" if images else ""
+    tail += f"\n\n{feedback}" if feedback else ""
+    user = f"Topic: {topic}\n\n<research_notes>\n{notes or '(no research notes; stick to well-established facts)'}\n</research_notes>{tail}"
+    if cfg.llm.provider == "openai":
         return _openai_structured(cfg, guide, user, Script, max_tokens=4000)
     with _client().beta.messages.stream(
         model=cfg.model,

@@ -18,7 +18,7 @@ export const Background: React.FC<{ theme: Theme; energy?: number }> = ({ theme,
       {blobs.map((b, i) => {
         const cx = (b.x + 0.08 * Math.sin(t * b.speed * 6 + i)) * width;
         const cy = (b.y + 0.08 * Math.cos(t * b.speed * 5 + i * 2)) * height;
-        const r = b.r * size * (1 + 0.12 * energy);
+        const r = b.r * size * 1.5 * (1 + 0.12 * energy); // gradient fades out, so draw it larger
         return (
           <div
             key={i}
@@ -28,10 +28,10 @@ export const Background: React.FC<{ theme: Theme; energy?: number }> = ({ theme,
               top: cy - r / 2,
               width: r,
               height: r,
-              borderRadius: "50%",
-              background: b.color,
+              // A radial gradient looks like a blurred circle but costs far less to
+              // render than a CSS blur filter, which dominated render time on CPU runners.
+              background: `radial-gradient(circle, ${b.color} 0%, ${b.color}00 70%)`,
               opacity: i === 0 ? 0.55 : 0.18 + 0.1 * energy,
-              filter: `blur(${size * 0.08}px)`,
             }}
           />
         );

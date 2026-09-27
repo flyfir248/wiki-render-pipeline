@@ -91,6 +91,12 @@ that once you trust the output: see the next section.
 is rewritten by Claude into an original script, voiced with Kokoro, rendered and uploaded.
 Each video's description credits the article (Wikipedia text is CC BY-SA 4.0).
 
+Visuals follow the story: the article's own photos (from Wikimedia Commons) are offered to the
+scriptwriter as a numbered list, and it picks the one that matches each scene's narration. Scenes
+with no fitting photo get Pexels stock footage for a search written for that moment (needs the
+`PEXELS_API_KEY` secret); charts and numbers stay on the plain background. Photo credits are
+added to the description automatically.
+
 **Manual upload (the default):** with `require_review: true` in `channel.yaml`, the job only
 makes the video. Add the `GROQ_API_KEY` secret (free key from
 [console.groq.com/keys](https://console.groq.com/keys); scripts are written by an open model on

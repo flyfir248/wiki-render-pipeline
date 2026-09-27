@@ -54,8 +54,8 @@ def check_render(cfg: Config, props: RenderProps, video: Path, voiced: bool = Tr
         problems.append("could not read rendered video duration")
     elif abs(dur - props.duration) > 1.0:
         problems.append(f"video is {dur:.1f}s but the timeline is {props.duration:.1f}s")
-    if cfg.format == "short" and props.duration > 60:
-        problems.append(f"short is {props.duration:.0f}s; Shorts must be 60s or less")
+    if cfg.format == "short" and props.duration > 180:
+        problems.append(f"short is {props.duration:.0f}s; Shorts must be 3 minutes or less")
     if cfg.format == "long" and props.duration < 0.5 * cfg.target_seconds:
         problems.append(f"video is {props.duration:.0f}s, far below the {cfg.target_seconds:.0f}s target")
     if voiced and props.voice is None:
