@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+import json
+import os
+import time
+
 import anthropic
-from pydantic import BaseModel
+import requests
+from pydantic import BaseModel, ValidationError
 
 from fyt.config import Config
 from fyt.models import Script
@@ -33,6 +38,56 @@ def _text(response) -> str:
     return "\n".join(b.text for b in response.content if b.type == "text").strip()
 
 
+def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 16000):
+    """Structured output from an OpenAI-compatible API (Groq, OpenRouter, Ollama...).
+
+    Asks for JSON matching the schema, validates it, and on a bad answer retries
+    with the validation error so the model can correct itself.
+    """
+    c = cfg.llm
+    key = os.environ.get(c.api_key_env)
+    if not key and "localhost" not in c.base_url:
+        raise ClaudeError(f"{c.api_key_env} is not set")
+    system += (
+        "\n\nReply with a single JSON object and nothing else. It must match this JSON schema:\n"
+        + json.dumps(schema.model_json_schema())
+    )
+    messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
+    last_error = ""
+    for attempt in range(5):
+        r = requests.post(
+            f"{c.base_url.rstrip('/')}/chat/completions",
+            headers={"Authorization": f"Bearer {key or 'none'}"},
+            json={
+                "model": c.model,
+                "messages": messages,
+                "temperature": c.temperature,
+                "max_tokens": max_tokens,
+                "response_format": {"type": "json_object"},
+            },
+            timeout=300,
+        )
+        if r.status_code == 429 and attempt < 4:  # free tiers limit tokens per minute
+            wait = min(float(r.headers.get("retry-after") or 20), 65)
+            print(f"rate limited by {c.base_url}; waiting {wait:.0f}s")
+            time.sleep(wait)
+            continue
+        if r.status_code >= 400:
+            raise ClaudeError(f"{c.base_url} returned {r.status_code}: {r.text[:500]}")
+        content = (r.json()["choices"][0]["message"]["content"] or "").strip()
+        if content.startswith("```"):  # tolerate a fenced reply
+            content = content.strip("`").removeprefix("json").strip()
+        try:
+            return schema.model_validate_json(content)
+        except ValidationError as e:
+            last_error = str(e)[:2000]
+            messages += [
+                {"role": "assistant", "content": content},
+                {"role": "user", "content": f"That JSON did not match the schema:\n{last_error}\nReply with the corrected JSON object only."},
+            ]
+    raise ClaudeError(f"{c.model} did not return valid JSON: {last_error}")
+
+
 class TopicIdeas(BaseModel):
     topics: list[str]
 
@@ -56,6 +111,9 @@ Already covered or queued -- do not repeat or closely paraphrase:
 {chr(10).join(f"- {t}" for t in avoid) or "- (none yet)"}
 {f"{chr(10)}What has performed well so far:{chr(10)}{performance_notes}" if performance_notes else ""}
 Return one topic per entry, phrased as a working title."""
+    if cfg.llm.provider == "openai":
+        ideas = _openai_structured(cfg, "You plan YouTube videos.", prompt, TopicIdeas, max_tokens=4000)
+        return [t.strip() for t in ideas.topics if t.strip()][:n]
     response = _client().beta.messages.parse(
         model=cfg.model,
         max_tokens=16000,
@@ -71,6 +129,9 @@ Return one topic per entry, phrased as a working title."""
 
 def research(cfg: Config, topic: str) -> str:
     """Gather facts, figures and sources for the topic using web search."""
+    if cfg.llm.provider == "openai":
+        print("note: web research needs Claude; writing from the model's own knowledge")
+        return ""
     messages: list = [
         {
             "role": "user",
@@ -172,6 +233,11 @@ def write_script(cfg: Config, topic: str, notes: str, from_wikipedia: bool = Fal
         format_line=format_line,
         words=words,
     )
+    user = f"Topic: {topic}\n\n<research_notes>\n{notes or '(no research notes; stick to well-established facts)'}\n</research_notes>"
+    if cfg.llm.provider == "openai":
+        # Free tiers cap tokens per minute, so send a shorter slice of long notes.
+        user = f"Topic: {topic}\n\n<research_notes>\n{notes[: cfg.llm.max_note_chars] or '(no research notes; stick to well-established facts)'}\n</research_notes>"
+        return _openai_structured(cfg, guide, user, Script, max_tokens=4000)
     with _client().beta.messages.stream(
         model=cfg.model,
         max_tokens=48000,
@@ -184,7 +250,7 @@ def write_script(cfg: Config, topic: str, notes: str, from_wikipedia: bool = Fal
         messages=[
             {
                 "role": "user",
-                "content": f"Topic: {topic}\n\n<research_notes>\n{notes or '(no research notes; stick to well-established facts)'}\n</research_notes>",
+                "content": user,
             }
         ],
     ) as stream:

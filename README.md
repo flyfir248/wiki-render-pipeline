@@ -92,7 +92,10 @@ is rewritten by Claude into an original script, voiced with Kokoro, rendered and
 Each video's description credits the article (Wikipedia text is CC BY-SA 4.0).
 
 **Manual upload (the default):** with `require_review: true` in `channel.yaml`, the job only
-makes the video. Add the `ANTHROPIC_API_KEY` secret, run **Actions → Daily Short → Run
+makes the video. Add the `GROQ_API_KEY` secret (free key from
+[console.groq.com/keys](https://console.groq.com/keys); scripts are written by an open model on
+Groq, see `llm` in `channel.yaml`; for Claude set `provider: anthropic` and add
+`ANTHROPIC_API_KEY` instead), run **Actions → Daily Short → Run
 workflow** (choose how many videos), and download the run's **Artifact**. Each job folder has
 `video.mp4`, `thumbnail.png`, `captions.srt` and `youtube.txt` with the title, description
 (including the Wikipedia credit) and tags to paste into YouTube Studio.
@@ -104,7 +107,7 @@ workflow** (choose how many videos), and download the run's **Artifact**. Each j
    publishing status to **In production**; in *Testing* the token expires after 7 days
    and the daily upload starts failing.
 2. In the GitHub repo, **Settings → Secrets and variables → Actions**, add:
-   - `ANTHROPIC_API_KEY`
+   - `GROQ_API_KEY` (or `ANTHROPIC_API_KEY` if `llm.provider` is `anthropic`)
    - `YOUTUBE_TOKEN_JSON`: the full contents of `secrets/token.json`
    - `PEXELS_API_KEY` (optional, for stock footage)
 3. **Actions → Daily Short → Run workflow** to test it once. The rendered video is kept

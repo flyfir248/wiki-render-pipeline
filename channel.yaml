@@ -10,6 +10,14 @@ channel:
 
 format: short
 
+# Scripts are written by a free open model on Groq (secret: GROQ_API_KEY).
+# To use Claude instead: provider: anthropic (secret: ANTHROPIC_API_KEY).
+llm:
+  provider: openai
+  base_url: https://api.groq.com/openai/v1
+  model: openai/gpt-oss-120b
+  api_key_env: GROQ_API_KEY
+
 source: wikipedia
 wikipedia:
   list_pages:
