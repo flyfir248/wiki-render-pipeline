@@ -74,6 +74,18 @@ class YouTubeConfig(BaseModel):
     upload_captions: bool = True
 
 
+class LLMConfig(BaseModel):
+    # anthropic: Claude (uses `model` and ANTHROPIC_API_KEY; web research works).
+    # openai: any OpenAI-compatible API, e.g. Groq's free tier serving open models,
+    # OpenRouter, or a local Ollama (base_url http://localhost:11434/v1). No web research.
+    provider: Literal["anthropic", "openai"] = "anthropic"
+    base_url: str = "https://api.groq.com/openai/v1"
+    model: str = "openai/gpt-oss-120b"  # see https://console.groq.com/docs/models
+    api_key_env: str = "GROQ_API_KEY"
+    temperature: float = 0.8
+    max_note_chars: int = 12000  # research notes sent to the model (free tiers limit tokens/minute)
+
+
 class WikipediaConfig(BaseModel):
     lang: str = "en"
     # Where to find article ideas. List pages contribute every article they link to.
@@ -89,6 +101,7 @@ class Config(BaseModel):
     format: Literal["long", "short"] = "long"
     target_minutes: float = 6.0  # ignored for shorts (always < 60s)
     model: str = "claude-opus-5"
+    llm: LLMConfig = Field(default_factory=LLMConfig)
     # wikipedia: videos are written from niche Wikipedia articles (see `wikipedia`).
     # web: Claude researches each topic with web search first.
     source: Literal["wikipedia", "web"] = "web"
