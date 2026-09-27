@@ -1,0 +1,84 @@
+# Makes one Short a day from a niche Wikipedia article. The video, thumbnail,
+# captions and a ready-to-paste youtube.txt are kept as the run's artifact.
+# It also uploads when channel.yaml has require_review: false.
+# Setup: see "Daily uploads with GitHub Actions" in the README.
+name: Daily Short
+
+on:
+  schedule:
+    - cron: "0 14 * * *" # 14:00 UTC every day
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "How many videos to make"
+        default: "1"
+
+concurrency: daily-short
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: renderer/package-lock.json
+
+      - name: Install
+        run: |
+          pip install -r requirements.txt
+          (cd renderer && npm ci)
+
+      - name: Cache Kokoro voice model
+        uses: actions/cache@v4
+        with:
+          path: assets/kokoro
+          key: kokoro-v1.0
+
+      # The topic queue (which articles are already used) lives in jobs/state.db.
+      # Each run restores the newest copy and saves a new one.
+      - name: Restore topic queue
+        uses: actions/cache/restore@v4
+        with:
+          path: jobs/state.db
+          key: fyt-state-${{ github.run_id }}
+          restore-keys: fyt-state-
+
+      - name: Make today's Short
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+        run: python -m fyt run --count ${{ inputs.count || 1 }}
+
+      - name: Save topic queue
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: jobs/state.db
+          key: fyt-state-${{ github.run_id }}
+
+      - name: Keep the videos for a week
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: short-${{ github.run_id }}
+          path: |
+            jobs/*/video.mp4
+            jobs/*/thumbnail.png
+            jobs/*/captions.srt
+            jobs/*/youtube.txt
+            jobs/*/script.json
+            jobs/*/research.md
+            jobs/*/job.json
+          retention-days: 7
+          if-no-files-found: ignore

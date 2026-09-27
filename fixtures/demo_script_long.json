@@ -1,0 +1,123 @@
+{
+  "description": "Why does money grow faster the longer you leave it alone? A short, chart-driven look at compound interest: the math, the history, and the one rule that matters most.\n\nKey points: growth on growth, the Rule of 72, and why time beats timing.",
+  "tags": [
+    "compound interest",
+    "investing basics",
+    "rule of 72",
+    "personal finance",
+    "money explained",
+    "exponential growth",
+    "saving money",
+    "finance education"
+  ],
+  "thumbnail_text": "Time Beats Timing",
+  "thumbnail_kicker": "Compound Interest",
+  "thumbnail_query": "growing plant coins",
+  "sources": [
+    "https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator",
+    "https://en.wikipedia.org/wiki/Compound_interest"
+  ],
+  "title": "Compound Interest: Why Time Beats Timing",
+  "scenes": [
+    {
+      "narration": "Put one hundred dollars away, never add another cent, and in fifty years it has grown more than elevenfold. No luck involved. Just math.",
+      "type": "title",
+      "heading": "Compound Interest",
+      "text": "The quiet force behind long-term wealth"
+    },
+    {
+      "narration": "At five percent a year, one hundred dollars becomes about one thousand one hundred and forty seven dollars after fifty years.",
+      "type": "stat",
+      "value": 1147,
+      "prefix": "$",
+      "heading": "$100 at 5% for 50 years",
+      "text": "without adding a single cent"
+    },
+    {
+      "narration": "The trick is that each year's interest earns interest of its own. Growth stacks on top of growth.",
+      "type": "statement",
+      "text": "Each year's interest earns interest of its own"
+    },
+    {
+      "narration": "Watch a thousand dollars at five percent. Ten years: sixteen hundred. Twenty: twenty six hundred. Thirty: forty three hundred. Forty: over seven thousand.",
+      "type": "bars",
+      "heading": "$1,000 at 5% per year",
+      "data": [
+        {
+          "label": "10y",
+          "value": 1629
+        },
+        {
+          "label": "20y",
+          "value": 2653
+        },
+        {
+          "label": "30y",
+          "value": 4322
+        },
+        {
+          "label": "40y",
+          "value": 7040
+        }
+      ]
+    },
+    {
+      "narration": "People have understood this for a very long time. Babylonian clay tablets already posed compound interest problems. Richard Witt published interest tables in 1613, and Jacob Bernoulli uncovered the number e in 1683 by studying continuous compounding.",
+      "type": "timeline",
+      "heading": "A very old idea",
+      "events": [
+        {
+          "label": "~1800 BC",
+          "text": "Babylonian tablets"
+        },
+        {
+          "label": "1613",
+          "text": "Witt's interest tables"
+        },
+        {
+          "label": "1683",
+          "text": "Bernoulli finds e"
+        }
+      ]
+    },
+    {
+      "narration": "A quick shortcut: divide seventy two by the interest rate to estimate how many years it takes to double. At eight percent, that is about nine years.",
+      "type": "stat",
+      "value": 9,
+      "suffix": " yrs",
+      "heading": "Rule of 72 at 8%",
+      "text": "72 ÷ 8 ≈ years to double"
+    },
+    {
+      "narration": "Starting early versus starting late is not a small difference. The early saver gets extra doubling periods that the late saver can never buy back.",
+      "type": "comparison",
+      "heading": "Early vs late",
+      "left_title": "Start at 25",
+      "left": [
+        "More doubling periods",
+        "Smaller monthly amount"
+      ],
+      "right_title": "Start at 45",
+      "right": [
+        "Fewer doublings",
+        "Must save far more"
+      ]
+    },
+    {
+      "narration": "So the rules are simple. Start early. Reinvest what you earn. And do not interrupt it.",
+      "type": "list",
+      "heading": "Three rules",
+      "items": [
+        "Start early",
+        "Reinvest returns",
+        "Don't interrupt it"
+      ]
+    },
+    {
+      "narration": "As Charlie Munger put it: the first rule of compounding is to never interrupt it unnecessarily. Subscribe for more ideas that quietly shape your money.",
+      "type": "quote",
+      "text": "The first rule of compounding is to never interrupt it unnecessarily.",
+      "author": "Charlie Munger"
+    }
+  ]
+}

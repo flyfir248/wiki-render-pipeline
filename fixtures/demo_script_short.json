@@ -1,0 +1,70 @@
+{
+  "description": "Why does money grow faster the longer you leave it alone? A short, chart-driven look at compound interest: the math, the history, and the one rule that matters most.\n\nKey points: growth on growth, the Rule of 72, and why time beats timing.",
+  "tags": [
+    "compound interest",
+    "investing basics",
+    "rule of 72",
+    "personal finance",
+    "money explained",
+    "exponential growth",
+    "saving money",
+    "finance education"
+  ],
+  "thumbnail_text": "Time Beats Timing",
+  "thumbnail_kicker": "Compound Interest",
+  "thumbnail_query": "growing plant coins",
+  "sources": [
+    "https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator",
+    "https://en.wikipedia.org/wiki/Compound_interest"
+  ],
+  "title": "$100 Becomes $1,147. Here's How.",
+  "scenes": [
+    {
+      "narration": "One hundred dollars. Fifty years. No extra deposits.",
+      "type": "title",
+      "heading": "$100 → ?",
+      "text": "Compound interest"
+    },
+    {
+      "narration": "At five percent a year, it grows to about eleven hundred and forty seven dollars.",
+      "type": "stat",
+      "value": 1147,
+      "prefix": "$",
+      "heading": "After 50 years at 5%"
+    },
+    {
+      "narration": "Because every year, your interest earns interest too.",
+      "type": "statement",
+      "text": "Your interest earns interest"
+    },
+    {
+      "narration": "A thousand dollars becomes sixteen hundred, then twenty six hundred, then over seven thousand.",
+      "type": "bars",
+      "heading": "$1,000 at 5%",
+      "data": [
+        {
+          "label": "10y",
+          "value": 1629
+        },
+        {
+          "label": "20y",
+          "value": 2653
+        },
+        {
+          "label": "40y",
+          "value": 7040
+        }
+      ]
+    },
+    {
+      "narration": "The rules: start early, reinvest, and never interrupt it. Follow for more money math.",
+      "type": "list",
+      "heading": "The rules",
+      "items": [
+        "Start early",
+        "Reinvest",
+        "Don't interrupt"
+      ]
+    }
+  ]
+}

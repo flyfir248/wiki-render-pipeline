@@ -1,0 +1,11 @@
+.venv/
+jobs/
+secrets/*
+!secrets/.gitkeep
+.env
+renderer/node_modules/
+assets/music/*
+!assets/music/.gitkeep
+__pycache__/
+.pytest_cache/
+assets/kokoro/

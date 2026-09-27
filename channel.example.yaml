@@ -1,0 +1,58 @@
+# Copy to channel.yaml and edit. Everything here has a sensible default.
+
+channel:
+  name: "My Channel"
+  niche: "surprising explainers about money, science and history"   # <- set your niche later
+  audience: "curious adults who want clear, fact-checked explanations"
+  tone: "confident, warm, fast-paced, no hype or clickbait lies"
+  language: en
+
+format: long            # long (16:9) or short (9:16, < 60s)
+target_minutes: 6       # long videos only; 8+ minutes allows mid-roll ads
+
+model: claude-opus-5
+source: web             # web: Claude researches each topic | wikipedia: videos from niche Wikipedia articles
+research: true          # Claude web research before scripting (source: web)
+wikipedia:              # used when source: wikipedia (or for "wiki:<Title>" topics)
+  list_pages: ["Wikipedia:Unusual articles"]   # every article these pages link to is a candidate
+  categories: []        # e.g. ["Unsolved problems in physics"]
+  articles: []          # specific article titles
+  min_chars: 3000       # skip stubs
+
+voice:
+  provider: kokoro      # kokoro (free, local, natural) | edge (free) | elevenlabs (paid) | espeak (offline) | silent (testing)
+  kokoro_voice: am_michael   # e.g. af_heart, am_michael, bm_george, bf_emma
+  kokoro_speed: 1.05
+  edge_voice: en-US-AndrewMultilingualNeural     # list: edge-tts --list-voices
+  edge_rate: "+5%"
+  elevenlabs_voice_id: JBFqnCBsd6RMkjVDRZzb
+  elevenlabs_model: eleven_multilingual_v2
+  gap_seconds: 0.35
+
+music_dir: assets/music # drop licensed royalty-free tracks here (mp3/wav)
+music_volume: 0.07
+stock_footage: true     # needs PEXELS_API_KEY; broll scenes fall back to text otherwise
+captions: true
+visualizer: true
+
+theme:                  # your channel's look; keep it consistent
+  background: "#0b1020"
+  background2: "#1b2350"
+  accent: "#ffcc33"
+  accent2: "#4dd6ff"
+  text: "#ffffff"
+  muted: "#a9b3d6"
+
+youtube:
+  privacy: private      # private | unlisted | public
+  category_id: "27"     # 27 Education, 28 Science & Tech, 22 People & Blogs
+  made_for_kids: false
+  contains_synthetic_media: true   # AI voice => disclose
+  publish_delay_hours: null        # e.g. 24 to schedule publishing a day after upload
+  upload_captions: true
+
+require_review: true    # videos wait for `fyt approve` before upload
+
+seed_topics:            # used first; after that Claude proposes topics
+  - "Why compound interest is called the eighth wonder of the world"
+  - "How the Rule of 72 predicts when your money doubles"
