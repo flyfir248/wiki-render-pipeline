@@ -94,6 +94,11 @@ def main(argv: list[str] | None = None) -> None:
         if len(done) < args.count:
             # Some videos are ready to download, so the run still counts as a success.
             print(f"::warning::only {len(done)} of {args.count} videos were made; see the log for why")
+        for job in done:
+            if job.meta.get("youtube_id"):
+                print(f"{job.id}: https://youtu.be/{job.meta['youtube_id']}")
+        if any(job.meta.get("status") == "upload_failed" for job in done):
+            raise SystemExit("the video was made but the YouTube upload failed; see the error above")
     elif args.cmd == "jobs":
         for j in list_jobs(cfg):
             m = j.meta
