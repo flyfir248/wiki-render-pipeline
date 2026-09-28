@@ -83,6 +83,10 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             update={"description": script.description.rstrip() + "\n\nImages from Wikimedia Commons:\n" + "\n".join(credits)}
         )
         job.file("script.json").write_text(script.model_dump_json(indent=2))
+    chapters = chapter_list(script, spans)
+    if chapters:
+        script = script.model_copy(update={"description": script.description.rstrip() + "\n\n" + chapters})
+        job.file("script.json").write_text(script.model_dump_json(indent=2))
     job.file("youtube.txt").write_text(youtube.upload_sheet(cfg, script))
     music = media.pick_music(cfg, job.public)
 
@@ -112,6 +116,20 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     status = "qa_failed" if problems else ("ready" if cfg.require_review else "approved")
     job.update(status=status, problems=problems, duration=props.duration)
     log(job, f"done: {status}" + (f" -- {problems}" if problems else ""))
+
+
+def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:
+    """YouTube chapter timestamps for the description, or "" when YouTube wouldn't accept them
+    (it needs at least 3 chapters, the first at 0:00, each at least 10 seconds long)."""
+    marks = [c for c in script.chapters or [] if 0 <= c.scene < len(spans)]
+    if len(marks) < 3 or marks[0].scene != 0:
+        return ""
+    starts = [0.0] + [spans[c.scene][0] for c in marks[1:]]
+    ends = starts[1:] + [spans[-1][1]]
+    if any(e - s < 10 for s, e in zip(starts, ends)):
+        return ""
+    stamp = lambda t: f"{int(t) // 60}:{int(t) % 60:02}"  # noqa: E731
+    return "Chapters:\n" + "\n".join(f"{stamp(t)} {c.title}" for t, c in zip(starts, marks))
 
 
 def narration_words(script: Script) -> int:
@@ -194,7 +212,7 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
     topics = Topics(cfg)
     done: list[Job] = []
     for _ in range(count):
-        nxt = topics.next_pending()
+        nxt = long_topic(cfg, topics) if cfg.format == "long" and cfg.source == "wikipedia" else topics.next_pending()
         if nxt is None and ideate_when_empty:
             if cfg.seed_topics:
                 topics.add(cfg.seed_topics)
@@ -230,6 +248,17 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
                     job.update(status="upload_failed", upload_error=str(e)[:500])
         done.append(job)
     return done
+
+
+def long_topic(cfg: Config, topics: Topics) -> tuple[int, str] | None:
+    """A fresh article with enough material for a long video. The queue is filled with
+    Short-sized articles, so long videos pick their own."""
+    long_cfg = cfg.model_copy(update={"wikipedia": cfg.wikipedia.model_copy(update={"min_chars": cfg.wikipedia.long_min_chars})})
+    titles = wiki.pick_articles(long_cfg, 1, set(topics.titles()))
+    if not titles:
+        return None
+    topics.add([wiki.topic_for(titles[0])])
+    return topics.find(wiki.topic_for(titles[0]))
 
 
 def performance_summary(cfg: Config, limit: int = 10) -> str:

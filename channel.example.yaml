@@ -23,6 +23,7 @@ wikipedia:              # used when source: wikipedia (or for "wiki:<Title>" top
   categories: []        # e.g. ["Unsolved problems in physics"]
   articles: []          # specific article titles
   min_chars: 3000       # skip stubs
+  long_min_chars: 15000 # long videos need an article with enough material
 
 voice:
   provider: kokoro      # kokoro (free, local, natural) | edge (free) | elevenlabs (paid) | espeak (offline) | silent (testing)
@@ -54,6 +55,7 @@ youtube:
   made_for_kids: false
   contains_synthetic_media: true   # AI voice => disclose
   publish_delay_hours: null        # e.g. 24 to schedule publishing a day after upload
+  publish_jitter_minutes: 0        # e.g. 90: go public at a random minute up to 90 min later
   upload_captions: true
 
 require_review: true    # videos wait for `fyt approve` before upload

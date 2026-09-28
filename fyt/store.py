@@ -45,6 +45,9 @@ class Topics:
     def next_pending(self) -> tuple[int, str] | None:
         return self.db.execute("select id, topic from topics where status='pending' order by id limit 1").fetchone()
 
+    def find(self, topic: str) -> tuple[int, str] | None:
+        return self.db.execute("select id, topic from topics where topic=?", (topic.strip(),)).fetchone()
+
     def set(self, topic_id: int, status: str, job: str | None = None) -> None:
         self.db.execute("update topics set status=?, job=coalesce(?, job) where id=?", (status, job, topic_id))
         self.db.commit()

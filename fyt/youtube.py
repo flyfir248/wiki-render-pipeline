@@ -11,6 +11,7 @@ locked to private. Apply for the audit early (see README).
 from __future__ import annotations
 
 import os
+import random
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -24,6 +25,7 @@ SCOPES = [
 SECRETS = ROOT / "secrets"
 CLIENT_SECRET = SECRETS / "client_secret.json"
 TOKEN = SECRETS / "token.json"
+MIN_PUBLISH_LEAD_MINUTES = 15
 
 
 def auth() -> None:
@@ -63,7 +65,20 @@ def _service():
     return build("youtube", "v3", credentials=creds, cache_discovery=False)
 
 
-def build_body(cfg: Config, script: Script, now: datetime | None = None) -> dict:
+def publish_time(cfg: Config, now: datetime | None = None, rng: random.Random | None = None) -> datetime | None:
+    """When a scheduled upload goes public, or None to publish right away."""
+    y = cfg.youtube
+    if y.publish_delay_hours is None and not y.publish_jitter_minutes:
+        return None
+    delay = timedelta(hours=y.publish_delay_hours or 0)
+    if y.publish_jitter_minutes:
+        delay += timedelta(minutes=(rng or random).uniform(0, y.publish_jitter_minutes))
+    # YouTube needs publishAt in the future, with some room for the upload itself.
+    delay = max(delay, timedelta(minutes=MIN_PUBLISH_LEAD_MINUTES))
+    return (now or datetime.now(timezone.utc)) + delay
+
+
+def build_body(cfg: Config, script: Script, now: datetime | None = None, rng: random.Random | None = None) -> dict:
     description = script.description.strip()
     if script.sources:
         description += "\n\nSources:\n" + "\n".join(f"- {s}" for s in script.sources)
@@ -74,8 +89,8 @@ def build_body(cfg: Config, script: Script, now: datetime | None = None) -> dict
         "selfDeclaredMadeForKids": cfg.youtube.made_for_kids,
         "containsSyntheticMedia": cfg.youtube.contains_synthetic_media,
     }
-    if cfg.youtube.publish_delay_hours is not None:
-        publish = (now or datetime.now(timezone.utc)) + timedelta(hours=cfg.youtube.publish_delay_hours)
+    publish = publish_time(cfg, now, rng)
+    if publish is not None:
         status["privacyStatus"] = "private"  # required for scheduled publishing
         status["publishAt"] = publish.strftime("%Y-%m-%dT%H:%M:%SZ")
     return {
