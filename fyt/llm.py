@@ -8,10 +8,10 @@ import time
 
 import anthropic
 import requests
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 
 from fyt.config import Config
-from fyt.models import Script
+from fyt.models import Chapter, Script, ScriptScene
 
 # Server-side refusal fallbacks: if the primary model declines, the API reroutes
 # the same request to a suitable fallback model inside the same call.
@@ -264,6 +264,8 @@ def write_script(
     def user_message(notes: str) -> str:
         return f"Topic: {topic}\n\n<research_notes>\n{notes or '(no research notes; stick to well-established facts)'}\n</research_notes>{tail}"
 
+    if cfg.llm.provider == "openai" and cfg.format == "long":
+        return write_long_script(cfg, topic, notes, guide, images, from_wikipedia)
     if cfg.llm.provider == "openai":
         # Free tiers cap tokens per minute (Groq: 8000, counting max_tokens), so send a
         # slice of long notes and halve it if the request is still too large.
@@ -299,3 +301,130 @@ def write_script(
     if script is None:
         raise ClaudeError("Claude did not return a parsable script.")
     return script
+
+
+# Long videos on a free tier: one request can't hold a whole 8-10 minute script
+# (Groq counts max_tokens against 8000 tokens a minute), so plan the video first,
+# then write it one chapter at a time, each from its own slice of the notes.
+
+WORDS_PER_CHAPTER = 220
+
+LONG_WIKI_GUIDE = """
+This is a long video, so it can tell the whole story. Build it as a narrative around the
+most intriguing thread in the article, not a section-by-section summary.
+"""
+
+
+class ChapterPlan(BaseModel):
+    heading: str = Field(description="Chapter title for the description's chapter list, max ~6 words.")
+    angle: str = Field(description="One sentence: what this chapter tells, and why the viewer keeps watching.")
+
+
+class Outline(BaseModel):
+    title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
+    description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
+    tags: list[str] = Field(description="8-15 search tags.")
+    thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail (not the title).")
+    thumbnail_kicker: str = Field(description="1-3 word label above the thumbnail text, e.g. the topic.")
+    thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
+    chapters: list[ChapterPlan]
+    sources: list[str] = Field(description="URLs or references backing the facts used.")
+
+
+class ChapterScenes(BaseModel):
+    scenes: list[ScriptScene]
+
+
+def chapter_count(cfg: Config) -> int:
+    return max(3, min(8, round(cfg.target_minutes * 150 / WORDS_PER_CHAPTER)))
+
+
+def split_notes(notes: str, parts: int, limit: int) -> list[str]:
+    """Consecutive slices of the notes, one per chapter, cut at line breaks, each at most `limit` chars."""
+    size = -(-len(notes) // parts) if notes else 0
+    chunks, start = [], 0
+    for i in range(parts):
+        end = len(notes) if i == parts - 1 else notes.find("\n", start + size)
+        end = len(notes) if end == -1 else end
+        chunks.append(notes[start:end].strip()[:limit] or notes[:limit])
+        start = end
+    return chunks
+
+
+def write_long_script(
+    cfg: Config, topic: str, notes: str, guide: str, images: str = "", from_wikipedia: bool = False
+) -> Script:
+    guide += LONG_WIKI_GUIDE if from_wikipedia else ""
+    limit = cfg.llm.max_note_chars
+    n = chapter_count(cfg)
+    chunks = split_notes(notes, n, limit)
+    overview = "\n...\n".join(c[: limit // n] for c in chunks)
+    image_tail = f"\n\nAvailable images:\n{images}" if images else ""
+
+    plan_note = (
+        f"\n\nFirst, plan the video as exactly {n} chapters. The notes below are excerpts in article order; "
+        "chapter k should draw mainly on part k. Return the metadata and the chapter plan only: the scenes "
+        "are written chapter by chapter afterwards."
+    )
+    user = f"Topic: {topic}\n\n<research_notes>\n{overview or '(no research notes)'}\n</research_notes>"
+    outline = _openai_structured(cfg, guide + plan_note, user, Outline, max_tokens=3000)
+    plans = outline.chapters[:8] or [ChapterPlan(heading=topic, angle="The story.")]
+    if len(plans) != n:
+        n = len(plans)
+        chunks = split_notes(notes, n, limit)
+
+    words = int(cfg.target_minutes * 150 / n)
+    plan_text = "\n".join(f"{i}. {c.heading}: {c.angle}" for i, c in enumerate(plans, 1))
+    scenes: list[ScriptScene] = []
+    chapters: list[Chapter] = []
+    used_images: set[int] = set()
+    for i, plan in enumerate(plans, 1):
+        if i == 1:
+            position = "This chapter opens the video: start with a title scene, and make the first two sentences the hook."
+        else:
+            last = scenes[-1].narration if scenes else ""
+            position = f"Continue straight on from the previous chapter, which ended: \"{last}\" Don't re-introduce the topic."
+        if i == n:
+            position += " This is the last chapter: end with a satisfying conclusion and one natural line inviting viewers to subscribe."
+        else:
+            position += " Don't wrap up or invite viewers to subscribe yet."
+        taken = f"\nImages already used (don't reuse): {', '.join(map(str, sorted(used_images)))}" if used_images else ""
+        system = guide + (
+            f"\n\nYou are writing one chapter of this video at a time. Return only this chapter's scenes: "
+            f"about {words} words of narration in total."
+        )
+        chunk = chunks[i - 1]
+        for attempt in range(3):
+            user = (
+                f"Video title: {outline.title}\nChapter plan:\n{plan_text}\n\n"
+                f"Write chapter {i}: {plan.heading}. {position}{taken}\n\n"
+                f"<research_notes>\n{chunk or '(no research notes)'}\n</research_notes>{image_tail}"
+            )
+            try:
+                part = _openai_structured(cfg, system, user, ChapterScenes, max_tokens=3000)
+                break
+            except RequestTooLarge:
+                if attempt == 2:
+                    raise
+                chunk = chunk[: len(chunk) // 2]
+                print(f"request too large; retrying chapter {i} with {len(chunk)} characters of notes")
+        if not part.scenes:
+            continue
+        chapters.append(Chapter(title=plan.heading, scene=len(scenes)))
+        for sc in part.scenes:
+            if sc.image is not None:
+                used_images.add(sc.image)
+        scenes.extend(part.scenes)
+        print(f"wrote chapter {i}/{n}: {plan.heading} ({sum(len(sc.narration.split()) for sc in part.scenes)} words)")
+
+    return Script(
+        title=outline.title,
+        description=outline.description,
+        tags=outline.tags,
+        thumbnail_text=outline.thumbnail_text,
+        thumbnail_kicker=outline.thumbnail_kicker,
+        thumbnail_query=outline.thumbnail_query,
+        scenes=scenes,
+        sources=outline.sources,
+        chapters=chapters,
+    )

@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Literal
 
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
 
 SceneType = Literal["title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll"]
 
@@ -48,6 +49,11 @@ class ScriptScene(BaseModel):
     )
 
 
+class Chapter(BaseModel):
+    title: str
+    scene: int  # index of the scene the chapter starts on
+
+
 class Script(BaseModel):
     title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
@@ -57,6 +63,8 @@ class Script(BaseModel):
     thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
     scenes: list[ScriptScene]
     sources: list[str] = Field(description="URLs or references backing the facts used.")
+    # Set by the pipeline for long videos written chapter by chapter; not asked of the model.
+    chapters: SkipJsonSchema[list[Chapter] | None] = None
 
 
 class Word(BaseModel):

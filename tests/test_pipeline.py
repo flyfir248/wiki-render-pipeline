@@ -100,3 +100,29 @@ def test_qa_catches_bad_scripts():
     problems = qa.check_script(Config(), s)
     assert any("title" in p for p in problems)
     assert any("bar chart" in p for p in problems)
+
+
+def test_random_publish_time_stays_inside_the_window():
+    import random
+
+    cfg = Config(format="short")
+    cfg.youtube.publish_jitter_minutes = 90
+    now = datetime(2026, 1, 1, 14, tzinfo=timezone.utc)
+    rng = random.Random(1)
+    times = [build_body(cfg, script(), now=now, rng=rng)["status"]["publishAt"] for _ in range(50)]
+    assert len(set(times)) > 10  # not the same minute every day
+    assert all("2026-01-01T14:15:00Z" <= t <= "2026-01-01T15:30:00Z" for t in times)
+    cfg.youtube.publish_jitter_minutes = 0
+    assert "publishAt" not in build_body(cfg, script(), now=now)["status"]  # off by default
+
+
+def test_chapter_list_uses_scene_start_times():
+    from fyt.models import Chapter
+    from fyt.pipeline import chapter_list
+
+    s = script(6).model_copy(update={"chapters": [Chapter(title="Start", scene=0), Chapter(title="Middle", scene=2), Chapter(title="End", scene=4)]})
+    spans = [(0, 20), (20.5, 40), (40.5, 75), (75.5, 100), (100.5, 130), (130.5, 150)]
+    assert chapter_list(s, spans) == "Chapters:\n0:00 Start\n0:40 Middle\n1:40 End"
+    assert chapter_list(script(6), spans) == ""  # Shorts have no chapters
+    short_gaps = [(0, 2), (2.5, 4), (4.5, 6), (6.5, 8), (8.5, 10), (10.5, 12)]
+    assert chapter_list(s, short_gaps) == ""  # YouTube needs chapters of 10s or more

@@ -8,7 +8,8 @@ channel:
   tone: "intriguing, warm, fast-paced storytelling; no hype or clickbait lies"
   language: en
 
-format: short
+format: short          # the Saturday run of the workflow switches to long
+target_minutes: 8      # length of the long videos
 
 # Scripts are written by a free open model on Groq (secret: GROQ_API_KEY).
 # To use Claude instead: provider: anthropic (secret: ANTHROPIC_API_KEY).
@@ -24,6 +25,7 @@ wikipedia:
     - "Wikipedia:Unusual articles"   # Wikipedia's own list of odd, niche articles
   categories: []
   min_chars: 3000
+  long_min_chars: 15000  # long videos pick articles with at least this much text
 
 voice:
   provider: kokoro
@@ -33,7 +35,10 @@ voice:
 stock_footage: true     # uses PEXELS_API_KEY if set, otherwise text-only scenes
 
 youtube:
-  privacy: public       # forced to private by YouTube until the API project is audited
+  privacy: public
+  # Each upload is scheduled to go public 15-90 minutes after it's ready, at a random
+  # minute, so the channel doesn't post at the exact same time every day.
+  publish_jitter_minutes: 90
   category_id: "27"
   contains_synthetic_media: true
 

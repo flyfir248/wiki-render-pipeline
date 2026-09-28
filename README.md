@@ -86,7 +86,8 @@ that once you trust the output: see the next section.
 
 ## Daily uploads with GitHub Actions
 
-`.github/workflows/daily-short.yml` makes one Short a day using `channel.yaml`: a niche Wikipedia article (from Wikipedia's
+`.github/workflows/daily-short.yml` (**Daily videos**) makes two Shorts a day (14:00 and 22:00 UTC) and one ~8 minute
+video every Saturday (06:00 UTC) using `channel.yaml`: a niche Wikipedia article (from Wikipedia's
 [Unusual articles](https://en.wikipedia.org/wiki/Wikipedia:Unusual_articles) list by default)
 is rewritten by Claude into an original script, voiced with Kokoro, rendered and uploaded.
 Each video's description credits the article (Wikipedia text is CC BY-SA 4.0).
@@ -101,7 +102,7 @@ added to the description automatically.
 makes the video. Add the `GROQ_API_KEY` secret (free key from
 [console.groq.com/keys](https://console.groq.com/keys); scripts are written by an open model on
 Groq, see `llm` in `channel.yaml`; for Claude set `provider: anthropic` and add
-`ANTHROPIC_API_KEY` instead), run **Actions → Daily Short → Run
+`ANTHROPIC_API_KEY` instead), run **Actions → Daily videos → Run
 workflow** (choose how many videos), and download the run's **Artifact**. Each job folder has
 `video.mp4`, `thumbnail.png`, `captions.srt` and `youtube.txt` with the title, description
 (including the Wikipedia credit) and tags to paste into YouTube Studio.
@@ -116,10 +117,18 @@ workflow** (choose how many videos), and download the run's **Artifact**. Each j
    - `GROQ_API_KEY` (or `ANTHROPIC_API_KEY` if `llm.provider` is `anthropic`)
    - `YOUTUBE_TOKEN_JSON`: the full contents of `secrets/token.json`
    - `PEXELS_API_KEY` (optional, for stock footage)
-3. **Actions → Daily Short → Run workflow** to test it once. The rendered video is kept
+3. **Actions → Daily videos → Run workflow** to test it once. The rendered video is kept
    as a run artifact for a week.
 
-Change the time in the workflow's `cron` line, and the niche in `channel.yaml`
+Each upload is scheduled to go public at a random minute up to `youtube.publish_jitter_minutes`
+after it's ready, so the channel doesn't post at the same minute every day.
+
+Long videos pick an article with at least `wikipedia.long_min_chars` of text. On Groq's free tier the
+script is planned first and then written one chapter at a time, each from its own part of the article,
+because a whole 8 minute script doesn't fit in one request. The chapters become timestamps in the
+description. A long video takes about an hour to render on the free runner.
+
+Change the times in the workflow's `cron` lines, and the niche in `channel.yaml`
 (`wikipedia.list_pages`, `categories` or `articles`). Try one article locally with
 `python -m fyt make "wiki:Boston Molasses Disaster"`, or queue some with
 `python -m fyt topics wiki -n 5`.

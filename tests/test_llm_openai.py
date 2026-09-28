@@ -91,3 +91,42 @@ def test_openai_script_shrinks_notes_when_request_too_large(cfg, monkeypatch):
     script = llm.write_script(cfg, "Mount Rushmore", "x" * 50000, from_wikipedia=True)
     assert script.title == SCRIPT["title"]
     assert sizes[1] < sizes[0] - 2000  # second try sent half the notes
+
+
+def test_split_notes_covers_the_article_in_order():
+    notes = "\n".join(f"paragraph {i} " + "x" * 90 for i in range(100))
+    chunks = llm.split_notes(notes, 4, 6000)
+    assert len(chunks) == 4
+    assert chunks[0].startswith("paragraph 0") and "paragraph 99" in chunks[-1]
+    assert all(len(c) <= 6000 for c in chunks)
+    assert all(c.startswith("paragraph") for c in chunks)  # cut at line breaks
+
+
+def test_long_script_is_written_chapter_by_chapter(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test")
+    cfg = Config(format="long", target_minutes=4, llm=LLMConfig(provider="openai"))
+    n = llm.chapter_count(cfg)
+    outline = {k: v for k, v in SCRIPT.items() if k != "scenes"}
+    outline["chapters"] = [{"heading": f"Part {i}", "angle": "why"} for i in range(1, n + 1)]
+    answers = [reply(json.dumps(outline))] + [
+        reply(json.dumps({"scenes": [{"narration": f"Chapter {i} line.", "type": "statement", "image": i}]}))
+        for i in range(1, n + 1)
+    ]
+    prompts = []
+
+    def post(url, headers, json, timeout):
+        prompts.append(json["messages"][1]["content"])
+        assert json["max_tokens"] <= 3000  # each request fits Groq's free per-minute limit
+        return answers.pop(0)
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    notes = "\n".join(f"fact {i} " + "y" * 200 for i in range(200))
+    script = llm.write_script(cfg, "Mary", notes, from_wikipedia=True, images="1. a\n2. b")
+    assert len(prompts) == n + 1
+    assert all(len(p) < 9000 for p in prompts)
+    assert [s.narration for s in script.scenes] == [f"Chapter {i} line." for i in range(1, n + 1)]
+    assert [(c.title, c.scene) for c in script.chapters] == [(f"Part {i}", i - 1) for i in range(1, n + 1)]
+    assert "Chapter 1 line." in prompts[2]  # the next chapter continues from the last one
+    assert "Images already used (don't reuse): 1" in prompts[2]
+    assert "fact 0 " in prompts[1] and "fact 0 " not in prompts[-1]  # each chapter gets its own part of the notes
+    assert "fact 140" in prompts[-1] and "fact 140" not in prompts[1]

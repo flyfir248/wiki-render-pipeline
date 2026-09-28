@@ -71,6 +71,9 @@ class YouTubeConfig(BaseModel):
     contains_synthetic_media: bool = True
     # Hours from upload to scheduled publish; forces privacy=private until then.
     publish_delay_hours: float | None = None
+    # Adds a random 0..N minute delay on top, so videos don't go live at the exact
+    # same minute every day. Also schedules the publish when publish_delay_hours is unset.
+    publish_jitter_minutes: int = 0
     upload_captions: bool = True
 
 
@@ -96,6 +99,7 @@ class WikipediaConfig(BaseModel):
     categories: list[str] = Field(default_factory=list)  # e.g. "Unsolved problems in physics"
     articles: list[str] = Field(default_factory=list)  # specific article titles
     min_chars: int = 3000  # skip stubs
+    long_min_chars: int = 15000  # long videos need an article with enough material
     max_chars: int = 40000  # truncate very long articles in the notes
 
 
