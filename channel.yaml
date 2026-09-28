@@ -44,6 +44,10 @@ youtube:
   publish_jitter_minutes: 90
   category_id: "27"
   contains_synthetic_media: true
+  # Captions are burned into the video. Uploading them as a caption track needs a
+  # permission the channel's token doesn't have (it failed with 403) and costs 400
+  # of the 10,000 daily API units.
+  upload_captions: false
 
 # Publish slots that `python -m fyt fill` (the workflow's runs) keeps filled ahead of time.
 schedule:

@@ -419,7 +419,8 @@ def write_long_script(
         taken = f"\nImages already used (don't reuse): {', '.join(map(str, sorted(used_images)))}" if used_images else ""
         system = guide + (
             f"\n\nYou are writing one chapter of this video at a time. Return only this chapter's scenes: "
-            f"about {words} words of narration in total."
+            f"{words} words of narration in total (about {max(3, words // 30)} scenes of 25-35 words each). "
+            "Don't write less: the video needs this length."
         )
         chunk = chunks[i - 1]
         for attempt in range(3):
