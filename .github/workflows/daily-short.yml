@@ -1,34 +1,47 @@
-# Makes today's videos from niche Wikipedia articles and uploads them:
-# two Shorts a day, plus one long (~8 min) video every Saturday.
-# The video, thumbnail, captions and a ready-to-paste youtube.txt are kept as the
-# run's artifact. Setup: see "Daily uploads with GitHub Actions" in the README.
+# Keeps the channel's upload schedule filled: two Shorts a day (14:00 and 22:00 UTC)
+# and one ~8 minute video every Saturday (16:00 UTC), made from niche Wikipedia articles.
+#
+# Every run tops up the next two days of publish slots (`python -m fyt fill`, see
+# `schedule` in channel.yaml). Videos are uploaded ahead of time as scheduled videos,
+# so a failed or skipped run doesn't cost a publish: the next run refills the gap.
+# If a slot in the next 24 hours is still empty after a run, the run fails and opens
+# an issue in this repo, which GitHub emails to you.
+# Setup: see "Daily uploads with GitHub Actions" in the README.
 name: Daily videos
 
 on:
   schedule:
-    # A Short at each of these times (UTC). Uploads go live at a random time within
-    # youtube.publish_jitter_minutes after the video is ready (see channel.yaml).
-    - cron: "0 14 * * *"
-    - cron: "0 22 * * *"
-    # The weekly long video: Saturdays 06:00 UTC. Keep this line in sync with FORMAT below.
-    - cron: "0 6 * * 6"
+    # Four chances a day to top up the schedule. A run with nothing to do takes about a minute.
+    - cron: "17 1,7,13,19 * * *"
   workflow_dispatch:
     inputs:
-      format:
-        description: "Short or long video"
+      task:
+        description: "fill: top up the schedule. short / long: make one video now"
         type: choice
-        options: [short, long]
-        default: short
+        options: [fill, short, long]
+        default: fill
+      upload:
+        description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
+        type: boolean
+        default: true
       count:
-        description: "How many videos to make"
+        description: "How many videos (for short / long)"
         default: "1"
 
-concurrency: daily-short
+concurrency:
+  group: daily-videos
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write # for the alert when the schedule runs low
 
 jobs:
   make:
     runs-on: ubuntu-latest
-    timeout-minutes: 150 # a long video takes about an hour to render on the free runner
+    timeout-minutes: 170 # fill stops starting new videos after 120 minutes
+    env:
+      TASK: ${{ inputs.task || 'fill' }}
     steps:
       - uses: actions/checkout@v6
 
@@ -37,53 +50,84 @@ jobs:
           python-version: "3.11"
           cache: pip
 
+      - run: pip install -r requirements.txt
+
+      # The topic queue and the upload schedule live in jobs/state.db; videos whose
+      # upload failed wait in jobs/pending. Each run restores the newest copy and saves a new one.
+      - name: Restore schedule
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            jobs/state.db
+            jobs/pending
+          key: fyt-state-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: fyt-state-
+
+      - name: Check what the schedule needs
+        id: need
+        run: |
+          if [ "$TASK" = fill ]; then
+            echo "needed=$(python -m fyt buffer --needed)" >> "$GITHUB_OUTPUT"
+          else
+            echo "needed=yes" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-node@v6
+        if: steps.need.outputs.needed == 'yes'
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: renderer/package-lock.json
 
-      - name: Install
-        run: |
-          pip install -r requirements.txt
-          (cd renderer && npm ci)
+      - name: Install the renderer
+        if: steps.need.outputs.needed == 'yes'
+        run: cd renderer && npm ci
 
       - name: Cache Kokoro voice model
+        if: steps.need.outputs.needed == 'yes'
         uses: actions/cache@v5
         with:
           path: assets/kokoro
           key: kokoro-v1.0
 
-      # The topic queue (which articles are already used) lives in jobs/state.db.
-      # Each run restores the newest copy and saves a new one.
-      - name: Restore topic queue
-        uses: actions/cache/restore@v5
-        with:
-          path: jobs/state.db
-          key: fyt-state-${{ github.run_id }}
-          restore-keys: fyt-state-
-
-      - name: Make today's video
+      - name: Make videos
+        if: steps.need.outputs.needed == 'yes'
         env:
-          FORMAT: ${{ github.event.schedule == '0 6 * * 6' && 'long' || inputs.format || 'short' }}
+          UPLOAD: ${{ inputs.upload }}
+          COUNT: ${{ inputs.count || '1' }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
-        run: python -m fyt --format "$FORMAT" run --count ${{ inputs.count || 1 }}
+        run: |
+          if [ "$TASK" = fill ]; then
+            python -m fyt fill
+          elif [ "$UPLOAD" = false ]; then
+            python -m fyt --format "$TASK" run --count "$COUNT" --no-upload
+          else
+            python -m fyt --format "$TASK" run --count "$COUNT"
+          fi
 
-      - name: Save topic queue
+      - name: Check the schedule
+        if: always() && env.TASK == 'fill'
+        run: |
+          echo "## Upload schedule" >> "$GITHUB_STEP_SUMMARY"
+          python -m fyt buffer --check | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Save schedule
         if: always()
         uses: actions/cache/save@v5
         with:
-          path: jobs/state.db
-          key: fyt-state-${{ github.run_id }}
+          path: |
+            jobs/state.db
+            jobs/pending
+          key: fyt-state-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Keep the videos for a week
-        if: always()
+        if: always() && steps.need.outputs.needed == 'yes'
         uses: actions/upload-artifact@v6
         with:
-          name: videos-${{ github.run_id }}
+          name: videos-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             jobs/*/video.mp4
             jobs/*/thumbnail.png
@@ -94,3 +138,28 @@ jobs:
             jobs/*/job.json
           retention-days: 7
           if-no-files-found: ignore
+
+      - name: Alert when the schedule needs attention
+        if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Upload schedule needs attention"
+          body="Run $RUN failed or left a publish slot in the next 24 hours without a video. The next run (every 6 hours) retries automatically; the run's summary shows the schedule and the log shows what failed."
+          n=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then
+            gh issue comment "$n" --repo "$GITHUB_REPOSITORY" --body "$body"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
+          fi
+
+      - name: Close the alert once the schedule is healthy
+        if: success() && env.TASK == 'fill'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          n=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search '"Upload schedule needs attention" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then
+            gh issue close "$n" --repo "$GITHUB_REPOSITORY" --comment "The schedule is full again."
+          fi

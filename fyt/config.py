@@ -90,6 +90,9 @@ class LLMConfig(BaseModel):
     # so "low" leaves room for the script itself. Empty to omit.
     reasoning_effort: str = "low"
     max_note_chars: int = 6000  # research notes sent to the model (free tiers limit tokens/minute)
+    # Tried in order when `model` keeps failing (outage, daily token cap). On Groq each
+    # model has its own free limits.
+    fallback_models: list[str] = Field(default_factory=list)
 
 
 class WikipediaConfig(BaseModel):
@@ -101,6 +104,22 @@ class WikipediaConfig(BaseModel):
     min_chars: int = 3000  # skip stubs
     long_min_chars: int = 15000  # long videos need an article with enough material
     max_chars: int = 40000  # truncate very long articles in the notes
+
+
+class ScheduleConfig(BaseModel):
+    """`fyt fill`: keep the next few days of publish slots filled with videos uploaded
+    ahead of time, so a failed or skipped run never costs a publish."""
+
+    # Shorts go live at these UTC times, each at a random minute up to
+    # youtube.publish_jitter_minutes later.
+    short_slots: list[str] = Field(default_factory=lambda: ["14:00", "22:00"])
+    long_weekday: int | None = 5  # the long video's day (Monday = 0); None for no long videos
+    long_slot: str = "16:00"  # UTC
+    buffer_days: float = 2.0  # how far ahead Shorts are kept scheduled
+    long_lead_days: float = 3.0  # the long video is made up to this many days before it goes live
+    # The YouTube Data API allows 10,000 units a day and an upload with thumbnail and captions uses ~2,050.
+    max_uploads_per_day: int = 4
+    max_run_minutes: int = 120  # stop starting new videos after this, so the job never times out
 
 
 class Config(BaseModel):
@@ -122,6 +141,7 @@ class Config(BaseModel):
     visualizer: bool = True
     theme: Theme = Field(default_factory=Theme)
     youtube: YouTubeConfig = Field(default_factory=YouTubeConfig)
+    schedule: ScheduleConfig = Field(default_factory=ScheduleConfig)
     # Upload only after `fyt approve <job>`; strongly recommended (see README).
     require_review: bool = True
     jobs_dir: str = "jobs"

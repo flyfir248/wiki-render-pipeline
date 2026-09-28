@@ -8,7 +8,7 @@ channel:
   tone: "intriguing, warm, fast-paced storytelling; no hype or clickbait lies"
   language: en
 
-format: short          # the Saturday run of the workflow switches to long
+format: short          # `fill` picks short or long per publish slot
 target_minutes: 8      # length of the long videos
 
 # Scripts are written by a free open model on Groq (secret: GROQ_API_KEY).
@@ -18,6 +18,9 @@ llm:
   base_url: https://api.groq.com/openai/v1
   model: openai/gpt-oss-120b
   api_key_env: GROQ_API_KEY
+  # Used in turn if the main model is down or out of free tokens for the day
+  # (each model on Groq has its own free limits).
+  fallback_models: [openai/gpt-oss-20b, llama-3.3-70b-versatile]
 
 source: wikipedia
 wikipedia:
@@ -36,11 +39,20 @@ stock_footage: true     # uses PEXELS_API_KEY if set, otherwise text-only scenes
 
 youtube:
   privacy: public
-  # Each upload is scheduled to go public 15-90 minutes after it's ready, at a random
-  # minute, so the channel doesn't post at the exact same time every day.
+  # Each video goes public at a random minute up to 90 minutes after its slot, so the
+  # channel doesn't post at the exact same time every day.
   publish_jitter_minutes: 90
   category_id: "27"
   contains_synthetic_media: true
+
+# Publish slots that `python -m fyt fill` (the workflow's runs) keeps filled ahead of time.
+schedule:
+  short_slots: ["14:00", "22:00"]   # UTC
+  long_weekday: 5                   # Saturday (Monday = 0)
+  long_slot: "16:00"                # UTC
+  buffer_days: 2                    # Shorts are uploaded up to 2 days before they go live
+  long_lead_days: 3
+  max_uploads_per_day: 4            # YouTube API quota
 
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is

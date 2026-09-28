@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import random
 import shutil
+import time
 from pathlib import Path
 
 import requests
@@ -18,9 +19,18 @@ def _get(path: str, params: dict) -> dict | None:
     key = secret("PEXELS_API_KEY")
     if not key:
         return None
-    r = requests.get(f"{PEXELS}{path}", params=params, headers={"Authorization": key}, timeout=30)
-    r.raise_for_status()
-    return r.json()
+    for attempt in range(3):  # ride out rate limits, server errors and dropped connections
+        try:
+            r = requests.get(f"{PEXELS}{path}", params=params, headers={"Authorization": key}, timeout=30)
+        except requests.RequestException:
+            if attempt == 2:
+                raise
+        else:
+            if r.status_code != 429 and r.status_code < 500 or attempt == 2:
+                r.raise_for_status()
+                return r.json()
+        time.sleep(5 * 2**attempt)
+    return None
 
 
 def _download(url: str, dst: Path) -> None:

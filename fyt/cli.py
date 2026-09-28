@@ -38,6 +38,12 @@ def main(argv: list[str] | None = None) -> None:
 
     r = sub.add_parser("run", help="build the next N queued topics (uploads if review is off)")
     r.add_argument("--count", type=int, default=1)
+    r.add_argument("--no-upload", action="store_true", help="only make the videos, even if review is off")
+
+    sub.add_parser("fill", help="make and schedule videos for the empty publish slots (see `schedule`)")
+    b = sub.add_parser("buffer", help="show the coming publish slots and which are filled")
+    b.add_argument("--check", action="store_true", help="exit with an error if a slot in the next 24 hours is empty")
+    b.add_argument("--needed", action="store_true", help="print yes/no: whether `fill` has work to do")
 
     sub.add_parser("jobs", help="list jobs and their status")
     a = sub.add_parser("approve", help="mark a reviewed job as approved")
@@ -87,7 +93,24 @@ def main(argv: list[str] | None = None) -> None:
             print(f"added {topics.add(ideas)}:")
             for idea in ideas:
                 print(f"  - {idea}")
+    elif args.cmd == "fill":
+        from fyt import schedule
+
+        print(f"filled {schedule.fill(cfg)} slots")
+    elif args.cmd == "buffer":
+        from fyt import schedule
+
+        if args.needed:
+            print("yes" if schedule.needed(cfg) else "no")
+            return
+        table, soon = schedule.report(cfg)
+        print(table)
+        if args.check and soon:
+            print(f"\n{len(soon)} slot(s) in the next 24 hours have no video yet.")
+            raise SystemExit(1)
     elif args.cmd == "run":
+        if args.no_upload:
+            cfg.require_review = True
         done = pipeline.run_queue(cfg, args.count)
         if not done:
             raise SystemExit(f"no videos were made (asked for {args.count})")

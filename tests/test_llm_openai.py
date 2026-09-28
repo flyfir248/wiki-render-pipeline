@@ -130,3 +130,19 @@ def test_long_script_is_written_chapter_by_chapter(monkeypatch):
     assert "Images already used (don't reuse): 1" in prompts[2]
     assert "fact 0 " in prompts[1] and "fact 0 " not in prompts[-1]  # each chapter gets its own part of the notes
     assert "fact 140" in prompts[-1] and "fact 140" not in prompts[1]
+
+
+def test_falls_back_to_the_next_model_when_one_keeps_failing(cfg, monkeypatch):
+    cfg.llm.fallback_models = ["llama-3.3-70b-versatile"]
+    models = []
+
+    def post(url, headers, json, timeout):
+        models.append(json["model"])
+        if json["model"] == cfg.llm.model:
+            return Resp(503, {"error": "over capacity"})
+        return reply(__import__("json").dumps(SCRIPT))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    script = llm.write_script(cfg, "Mary", "notes")
+    assert script.title == SCRIPT["title"]
+    assert models[-1] == "llama-3.3-70b-versatile" and models.count(cfg.llm.model) == 8

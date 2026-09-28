@@ -4,12 +4,13 @@ so a failed run can be inspected and individual steps re-run."""
 from __future__ import annotations
 
 import json
+from datetime import datetime
 from pathlib import Path
 
 from fyt import llm, media, qa, render, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
-from fyt.store import Job, Topics, list_jobs
+from fyt.store import Job, Topics, Uploads, list_jobs
 from fyt.timeline import build_props, to_srt
 
 
@@ -101,7 +102,10 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     # The subject's own photo makes a better thumbnail than a stock one.
     bg = next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and "wiki" in m.src), None)
     if bg is None and cfg.stock_footage:
-        bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used)
+        try:
+            bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used)
+        except Exception as e:
+            log(job, f"warning: no stock thumbnail background: {e}")
     thumb = ThumbnailProps(
         format=cfg.format,
         title=script.thumbnail_text,
@@ -165,7 +169,11 @@ def scene_visuals(
         # Data scenes (charts, numbers, lists) read best on the plain background.
         wants_stock = s.type == "broll" or (s.broll_query and s.type in ("title", "statement", "quote"))
         if wants_stock:
-            m = media.fetch_broll(cfg, s.broll_query or s.heading or topic, job.public, f"s{i + 1}", used)
+            try:
+                m = media.fetch_broll(cfg, s.broll_query or s.heading or topic, job.public, f"s{i + 1}", used)
+            except Exception as e:  # stock footage is optional; fall back to the plain background
+                log(job, f"warning: no stock footage for scene {i + 1}: {e}")
+                m = None
             if m:
                 scene_media[i] = m
     # Open on the subject: if the title scene has nothing, give it the first unused article image.
@@ -195,16 +203,60 @@ def wiki_attribute(script: Script, article: "wiki.Article") -> Script:
     return script.model_copy(update={"description": description, "sources": sources})
 
 
-def upload_job(cfg: Config, job: Job, force: bool = False) -> str:
+def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime | None = None) -> str:
     status = job.meta.get("status")
     if status == "uploaded":
         raise SystemExit(f"{job.id} is already uploaded: https://youtu.be/{job.meta.get('youtube_id')}")
-    if status != "approved" and not force:
+    if status not in ("approved", "upload_failed") and not force:
         raise SystemExit(f"{job.id} is '{status}'. Review it, then `python -m fyt approve {job.id}` (or --force).")
     script = Script.model_validate_json(job.file("script.json").read_text())
-    video_id = youtube.upload(cfg, script, job.file("video.mp4"), job.file("thumbnail.png"), job.file("captions.srt"))
-    job.update(status="uploaded", youtube_id=video_id)
+    cfg = cfg.model_copy(update={"format": job.meta.get("format", cfg.format)})  # e.g. #Shorts in the description
+    video_id = youtube.upload(
+        cfg, script, job.file("video.mp4"), job.file("thumbnail.png"), job.file("captions.srt"), publish_at=publish_at
+    )
+    job.update(status="uploaded", youtube_id=video_id, publish_at=publish_at.isoformat() if publish_at else None)
     return video_id
+
+
+def next_topic(cfg: Config, topics: Topics, ideate_when_empty: int = 10) -> tuple[int, str] | None:
+    """The next topic to make, refilling the queue when it runs dry."""
+    nxt = long_topic(cfg, topics) if cfg.format == "long" and cfg.source == "wikipedia" else topics.next_pending()
+    if nxt is None and ideate_when_empty:
+        if cfg.seed_topics:
+            topics.add(cfg.seed_topics)
+        nxt = topics.next_pending()
+        if nxt is None and cfg.source == "wikipedia":
+            titles = wiki.pick_articles(cfg, min(ideate_when_empty, 3), set(topics.titles()))
+            topics.add([wiki.topic_for(t) for t in titles])
+            nxt = topics.next_pending()
+        if nxt is None:
+            topics.add(llm.ideate_topics(cfg, ideate_when_empty, topics.titles(), performance_summary(cfg)))
+            nxt = topics.next_pending()
+    return nxt
+
+
+def make_next(cfg: Config, topics: Topics, attempts: int = 3) -> Job | None:
+    """Make a video from the next topic that works, trying up to `attempts` topics."""
+    for _ in range(attempts):
+        try:
+            nxt = next_topic(cfg, topics)
+        except Exception as e:  # Wikipedia or the LLM is down
+            print(f"::warning::could not pick a topic: {e}")
+            return None
+        if nxt is None:
+            print("no topics available")
+            return None
+        topic_id, topic = nxt
+        topics.set(topic_id, "in_progress")
+        try:
+            job = make_video(cfg, topic)
+        except Exception as e:
+            topics.set(topic_id, "failed")
+            print(f"::warning::failed: {topic}: {e}")
+            continue
+        topics.set(topic_id, "done", job.id)
+        return job
+    return None
 
 
 def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[Job]:
@@ -212,18 +264,7 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
     topics = Topics(cfg)
     done: list[Job] = []
     for _ in range(count):
-        nxt = long_topic(cfg, topics) if cfg.format == "long" and cfg.source == "wikipedia" else topics.next_pending()
-        if nxt is None and ideate_when_empty:
-            if cfg.seed_topics:
-                topics.add(cfg.seed_topics)
-            nxt = topics.next_pending()
-            if nxt is None and cfg.source == "wikipedia":
-                titles = wiki.pick_articles(cfg, min(ideate_when_empty, 3), set(topics.titles()))
-                topics.add([wiki.topic_for(t) for t in titles])
-                nxt = topics.next_pending()
-            if nxt is None:
-                topics.add(llm.ideate_topics(cfg, ideate_when_empty, topics.titles(), performance_summary(cfg)))
-                nxt = topics.next_pending()
+        nxt = next_topic(cfg, topics, ideate_when_empty)
         if nxt is None:
             print("no topics available")
             break
@@ -243,6 +284,7 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
             else:
                 try:
                     upload_job(cfg, job)
+                    Uploads(cfg).record(cfg.format, job.id, job.meta["youtube_id"], None)
                 except Exception as e:  # keep the video; it is still saved with the run
                     print(f"::error::upload failed for {job.id}: {e}")
                     job.update(status="upload_failed", upload_error=str(e)[:500])

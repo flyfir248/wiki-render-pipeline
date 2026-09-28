@@ -4,14 +4,15 @@ Setup (once): create an OAuth client of type "Desktop app" in Google Cloud with
 the YouTube Data API v3 enabled, save it as secrets/client_secret.json, then run
 `python -m fyt auth`.
 
-Note: until Google audits your API project, videos uploaded through it are
-locked to private. Apply for the audit early (see README).
+Note: Google may lock uploads from an unaudited API project to private
+(see README).
 """
 
 from __future__ import annotations
 
 import os
 import random
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -26,6 +27,7 @@ SECRETS = ROOT / "secrets"
 CLIENT_SECRET = SECRETS / "client_secret.json"
 TOKEN = SECRETS / "token.json"
 MIN_PUBLISH_LEAD_MINUTES = 15
+RETRIABLE_STATUS = {500, 502, 503, 504}
 
 
 def auth() -> None:
@@ -78,7 +80,13 @@ def publish_time(cfg: Config, now: datetime | None = None, rng: random.Random | 
     return (now or datetime.now(timezone.utc)) + delay
 
 
-def build_body(cfg: Config, script: Script, now: datetime | None = None, rng: random.Random | None = None) -> dict:
+def build_body(
+    cfg: Config,
+    script: Script,
+    now: datetime | None = None,
+    rng: random.Random | None = None,
+    publish_at: datetime | None = None,
+) -> dict:
     description = script.description.strip()
     if script.sources:
         description += "\n\nSources:\n" + "\n".join(f"- {s}" for s in script.sources)
@@ -89,7 +97,7 @@ def build_body(cfg: Config, script: Script, now: datetime | None = None, rng: ra
         "selfDeclaredMadeForKids": cfg.youtube.made_for_kids,
         "containsSyntheticMedia": cfg.youtube.contains_synthetic_media,
     }
-    publish = publish_time(cfg, now, rng)
+    publish = publish_at or publish_time(cfg, now, rng)
     if publish is not None:
         status["privacyStatus"] = "private"  # required for scheduled publishing
         status["publishAt"] = publish.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -118,19 +126,37 @@ def upload_sheet(cfg: Config, script: Script) -> str:
     )
 
 
-def upload(cfg: Config, script: Script, video: Path, thumbnail: Path | None, srt: Path | None) -> str:
+def upload(
+    cfg: Config,
+    script: Script,
+    video: Path,
+    thumbnail: Path | None,
+    srt: Path | None,
+    publish_at: datetime | None = None,
+) -> str:
     from googleapiclient.errors import HttpError
     from googleapiclient.http import MediaFileUpload
 
     yt = _service()
     request = yt.videos().insert(
         part="snippet,status",
-        body=build_body(cfg, script),
+        body=build_body(cfg, script, publish_at=publish_at),
         media_body=MediaFileUpload(str(video), mimetype="video/mp4", chunksize=8 * 1024 * 1024, resumable=True),
     )
-    response = None
+    response, failures = None, 0
     while response is None:
-        status, response = request.next_chunk()
+        try:
+            status, response = request.next_chunk()
+        except (HttpError, OSError) as e:
+            # A resumable upload picks up where it stopped; retry server errors and dropped connections.
+            retriable = not isinstance(e, HttpError) or e.status_code in RETRIABLE_STATUS
+            failures += 1
+            if not retriable or failures > 5:
+                raise
+            wait = min(2**failures, 60)
+            print(f"upload interrupted ({e}); retrying in {wait}s")
+            time.sleep(wait)
+            continue
         if status:
             print(f"upload {int(status.progress() * 100)}%")
     video_id = response["id"]

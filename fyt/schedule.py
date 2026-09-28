@@ -1,0 +1,196 @@
+"""Keep the channel's publish slots filled ahead of time.
+
+`fyt fill` looks at the next few days of publish slots (config `schedule`), makes a
+video for each empty one and uploads it with YouTube's scheduled publishing
+(`publishAt`). Videos sit on YouTube as "scheduled" until their slot, so a run that
+fails, or a scheduled run GitHub skips, only shrinks the buffer; the next run refills
+it and no publish is missed. A video whose upload fails is kept in jobs/pending/ and
+uploaded by a later run.
+"""
+
+from __future__ import annotations
+
+import random
+import shutil
+import time
+from dataclasses import dataclass
+from datetime import date, datetime, timedelta, timezone
+from datetime import time as dtime
+from zoneinfo import ZoneInfo
+
+from fyt import pipeline, youtube
+from fyt.config import Config
+from fyt.store import Job, Topics, Uploads
+
+# The YouTube Data API quota resets at midnight Pacific time.
+PACIFIC = ZoneInfo("America/Los_Angeles")
+LEAD_MINUTES = 30  # a slot this close is left alone: the upload might not finish in time
+# Rough time to make one video on the free 2-core runner, to avoid starting one the job can't finish.
+MAKE_MINUTES = {"short": 10, "long": 80}
+KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json")
+
+
+@dataclass(frozen=True)
+class Slot:
+    at: datetime
+    kind: str  # short | long
+
+    @property
+    def key(self) -> str:
+        return self.at.isoformat()
+
+
+def _at(day: date, hhmm: str) -> datetime:
+    h, m = (int(x) for x in hhmm.split(":"))
+    return datetime.combine(day, dtime(h, m), tzinfo=timezone.utc)
+
+
+def upcoming_slots(cfg: Config, now: datetime) -> list[Slot]:
+    """Publish slots from now (plus a lead time) to the end of the buffer, earliest first."""
+    sc = cfg.schedule
+    start = now + timedelta(minutes=LEAD_MINUTES)
+    short_end = now + timedelta(days=sc.buffer_days)
+    long_end = now + timedelta(days=sc.long_lead_days)
+    slots = []
+    day = now.date()
+    while day <= max(short_end, long_end).date():
+        for hhmm in sc.short_slots:
+            at = _at(day, hhmm)
+            if start <= at <= short_end:
+                slots.append(Slot(at, "short"))
+        if sc.long_weekday is not None and day.weekday() == sc.long_weekday:
+            at = _at(day, sc.long_slot)
+            if start <= at <= long_end:
+                slots.append(Slot(at, "long"))
+        day += timedelta(days=1)
+    return sorted(slots, key=lambda s: s.at)
+
+
+def empty_slots(cfg: Config, now: datetime) -> list[Slot]:
+    filled = Uploads(cfg).filled()
+    return [s for s in upcoming_slots(cfg, now) if s.key not in filled]
+
+
+def uploads_left_today(cfg: Config, now: datetime) -> int:
+    day_start = now.astimezone(PACIFIC).replace(hour=0, minute=0, second=0, microsecond=0)
+    used = Uploads(cfg).count_since(day_start.astimezone(timezone.utc).isoformat(timespec="seconds"))
+    return max(0, cfg.schedule.max_uploads_per_day - used)
+
+
+def pending_jobs(cfg: Config) -> list[Job]:
+    folder = cfg.jobs_path / "pending"
+    if not folder.exists():
+        return []
+    return [Job(p) for p in sorted(folder.iterdir()) if (p / "job.json").exists()]
+
+
+def _keep_pending(cfg: Config, job: Job) -> None:
+    """Save a made-but-not-uploaded video so a later run can upload it (jobs/pending is cached)."""
+    dst = cfg.jobs_path / "pending" / job.id
+    if dst == job.path:
+        return
+    dst.mkdir(parents=True, exist_ok=True)
+    for name in KEEP:
+        if job.file(name).exists():
+            shutil.copy(job.file(name), dst / name)
+    print(f"kept {job.id} to upload in a later run")
+
+
+def _is_quota_error(e: Exception) -> bool:
+    return "quota" in str(e).lower()
+
+
+def publish_time(cfg: Config, slot: Slot, rng: random.Random | None = None) -> datetime:
+    jitter = cfg.youtube.publish_jitter_minutes
+    return slot.at + timedelta(minutes=(rng or random).uniform(0, jitter) if jitter else 0)
+
+
+def _upload(cfg: Config, job: Job, slot: Slot, rng: random.Random | None, now: datetime) -> bool | None:
+    """Upload a job into a slot. True on success, None when the daily quota ran out, False otherwise."""
+    publish_at = publish_time(cfg, slot, rng)
+    try:
+        video_id = pipeline.upload_job(cfg, job, publish_at=publish_at)
+    except Exception as e:
+        print(f"::warning::upload of {job.id} failed: {e}")
+        job.update(status="upload_failed", upload_error=str(e)[:500])
+        return None if _is_quota_error(e) else False
+    Uploads(cfg).record(slot.kind, job.id, video_id, publish_at.isoformat(), slot.key, at=now.isoformat(timespec="seconds"))
+    print(f"scheduled https://youtu.be/{video_id} ({slot.kind}) for {publish_at:%a %d %b %H:%M} UTC")
+    return True
+
+
+def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = None, clock=time.monotonic) -> int:
+    """Make and upload videos for the empty slots. Returns how many slots were filled."""
+    if cfg.require_review:
+        raise SystemExit("fill uploads automatically: set require_review: false in channel.yaml")
+    if not youtube.authorised():
+        raise SystemExit("fill needs YouTube access: add the YOUTUBE_TOKEN_JSON secret")
+    now = now or datetime.now(timezone.utc)
+    started = clock()
+    budget = uploads_left_today(cfg, now)
+    free = empty_slots(cfg, now)
+    print(f"{len(free)} empty slots in the next {cfg.schedule.buffer_days:g} days; {budget} uploads left today")
+    filled = 0
+
+    # Videos made earlier whose upload failed go first: they cost no rendering.
+    for job in pending_jobs(cfg):
+        kind = job.meta.get("format", "short")
+        slot = next((s for s in free if s.kind == kind), None)
+        if slot is None or budget <= 0:
+            continue
+        result = _upload(cfg, job, slot, rng, now)
+        if result:
+            shutil.rmtree(job.path)
+            free.remove(slot)
+            budget -= 1
+            filled += 1
+        elif result is None:
+            budget = 0
+
+    topics = Topics(cfg)
+    failures = 0
+    for slot in list(free):
+        if budget <= 0:
+            print("daily upload quota used up; the next run continues")
+            break
+        elapsed = (clock() - started) / 60
+        if elapsed + MAKE_MINUTES[slot.kind] > cfg.schedule.max_run_minutes:
+            print(f"not enough time left in this run for a {slot.kind} video; the next run continues")
+            continue  # a Short may still fit after a skipped long video
+        job = pipeline.make_next(cfg.model_copy(update={"format": slot.kind}), topics)
+        if job is None or job.meta.get("status") != "approved":
+            failures += 1
+            if failures >= 3:
+                print("::warning::3 videos in a row failed; stopping this run")
+                break
+            continue
+        result = _upload(cfg, job, slot, rng, now)
+        if result:
+            budget -= 1
+            filled += 1
+        else:
+            _keep_pending(cfg, job)
+            if result is None:
+                budget = 0
+    return filled
+
+
+def report(cfg: Config, now: datetime | None = None) -> tuple[str, list[Slot]]:
+    """A markdown table of the coming slots, and the ones in the next 24 hours that are still empty."""
+    now = now or datetime.now(timezone.utc)
+    filled = Uploads(cfg).filled()
+    rows = ["| Goes live (UTC) | Kind | Video |", "|---|---|---|"]
+    for s in upcoming_slots(cfg, now):
+        video = f"https://youtu.be/{filled[s.key][0]}" if s.key in filled else "**empty**"
+        rows.append(f"| {s.at:%a %d %b %H:%M} | {s.kind} | {video} |")
+    pending = pending_jobs(cfg)
+    if pending:
+        rows.append(f"\n{len(pending)} made video(s) waiting to be uploaded.")
+    soon = [s for s in upcoming_slots(cfg, now) if s.key not in filled and s.at <= now + timedelta(days=1)]
+    return "\n".join(rows), soon
+
+
+def needed(cfg: Config, now: datetime | None = None) -> bool:
+    """Whether a fill run has anything to do (so a run can skip installing the renderer)."""
+    now = now or datetime.now(timezone.utc)
+    return bool(empty_slots(cfg, now)) and uploads_left_today(cfg, now) > 0
