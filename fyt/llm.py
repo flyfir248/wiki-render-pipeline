@@ -46,8 +46,25 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
     """Structured output from an OpenAI-compatible API (Groq, OpenRouter, Ollama...).
 
     Asks for JSON matching the schema, validates it, and on a bad answer retries
-    with the validation error so the model can correct itself.
+    with the validation error so the model can correct itself. If the model keeps
+    failing, tries each of `llm.fallback_models` in turn.
     """
+    models = [cfg.llm.model, *cfg.llm.fallback_models]
+    for i, model in enumerate(models):
+        try:
+            return _openai_structured_once(cfg, model, system, user, schema, max_tokens)
+        except RequestTooLarge:
+            raise  # the caller shrinks the request
+        except ClaudeError as e:
+            if i == len(models) - 1:
+                raise
+            print(f"{model} failed ({str(e)[:200]}); trying {models[i + 1]}")
+    raise AssertionError("unreachable")
+
+
+def _openai_structured_once(
+    cfg: Config, model: str, system: str, user: str, schema: type[BaseModel], max_tokens: int
+):
     c = cfg.llm
     key = os.environ.get(c.api_key_env)
     if not key and "localhost" not in c.base_url:
@@ -57,12 +74,12 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
         + json.dumps(schema.model_json_schema(), separators=(",", ":"))
     )
     body = {
-        "model": c.model,
+        "model": model,
         "temperature": c.temperature,
         "max_tokens": max_tokens,
         "response_format": {"type": "json_object"},
     }
-    if c.reasoning_effort and "gpt-oss" in c.model:
+    if c.reasoning_effort and "gpt-oss" in model:
         body["reasoning_effort"] = c.reasoning_effort
     retry_note = ""
     last_error = ""
@@ -70,12 +87,23 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
         # A retry resends the same prompt plus a short note, never the rejected reply,
         # so the request doesn't grow past the provider's tokens-per-minute limit.
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user + retry_note}]
-        r = requests.post(
-            f"{c.base_url.rstrip('/')}/chat/completions",
-            headers={"Authorization": f"Bearer {key or 'none'}"},
-            json={**body, "messages": messages},
-            timeout=300,
-        )
+        try:
+            r = requests.post(
+                f"{c.base_url.rstrip('/')}/chat/completions",
+                headers={"Authorization": f"Bearer {key or 'none'}"},
+                json={**body, "messages": messages},
+                timeout=300,
+            )
+        except requests.RequestException as e:  # dropped connection or timeout
+            last_error = str(e)[:500]
+            print(f"request to {c.base_url} failed ({e}); retrying")
+            time.sleep(min(10 * (attempt + 1), 60))
+            continue
+        if r.status_code >= 500 and attempt < 7:  # provider hiccup
+            last_error = f"{r.status_code}: {r.text[:300]}"
+            print(f"{c.base_url} returned {r.status_code}; retrying")
+            time.sleep(min(10 * (attempt + 1), 60))
+            continue
         if r.status_code == 429 and attempt < 7:  # free tiers limit tokens per minute
             wait = min(max(float(r.headers.get("retry-after") or 30), 10), 65)
             print(f"rate limited by {c.base_url}; waiting {wait:.0f}s")
@@ -86,7 +114,7 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
         if r.status_code == 400 and "json_validate_failed" in r.text:
             # Groq rejects replies that aren't valid JSON, e.g. when the model ran out of tokens.
             last_error = r.text[:500]
-            print(f"{c.model} did not produce valid JSON; retrying")
+            print(f"{model} did not produce valid JSON; retrying")
             retry_note = "\n\nYour previous reply was not valid JSON. Keep it concise and reply with the JSON object only."
             continue
         if r.status_code >= 400:
@@ -98,9 +126,9 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
             return schema.model_validate_json(content)
         except ValidationError as e:
             last_error = str(e)[:800]
-            print(f"{c.model} reply did not match the schema; retrying")
+            print(f"{model} reply did not match the schema; retrying")
             retry_note = f"\n\nYour previous reply did not match the schema:\n{last_error}\nReply with the corrected JSON object only."
-    raise ClaudeError(f"{c.model} did not return valid JSON: {last_error}")
+    raise ClaudeError(f"{model} did not return a valid answer: {last_error}")
 
 
 class TopicIdeas(BaseModel):
@@ -391,7 +419,8 @@ def write_long_script(
         taken = f"\nImages already used (don't reuse): {', '.join(map(str, sorted(used_images)))}" if used_images else ""
         system = guide + (
             f"\n\nYou are writing one chapter of this video at a time. Return only this chapter's scenes: "
-            f"about {words} words of narration in total."
+            f"{words} words of narration in total (about {max(3, words // 30)} scenes of 25-35 words each). "
+            "Don't write less: the video needs this length."
         )
         chunk = chunks[i - 1]
         for attempt in range(3):

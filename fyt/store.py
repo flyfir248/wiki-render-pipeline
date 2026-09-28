@@ -53,6 +53,43 @@ class Topics:
         self.db.commit()
 
 
+class Uploads:
+    """Every upload, and which publish slot it fills. Lives next to the topic queue in state.db."""
+
+    def __init__(self, cfg: Config):
+        cfg.jobs_path.mkdir(parents=True, exist_ok=True)
+        self.db = sqlite3.connect(cfg.jobs_path / "state.db")
+        self.db.execute(
+            """create table if not exists uploads (
+                id integer primary key,
+                slot text unique,          -- publish slot (UTC ISO time) this video fills; null for one-off uploads
+                kind text not null,        -- short | long
+                job text,
+                youtube_id text,
+                publish_at text,
+                uploaded text not null
+            )"""
+        )
+        self.db.commit()
+
+    def record(
+        self, kind: str, job: str, youtube_id: str, publish_at: str | None, slot: str | None = None, at: str | None = None
+    ) -> None:
+        self.db.execute(
+            "insert into uploads(slot, kind, job, youtube_id, publish_at, uploaded) values (?, ?, ?, ?, ?, ?)",
+            (slot, kind, job, youtube_id, publish_at, at or now()),
+        )
+        self.db.commit()
+
+    def filled(self) -> dict[str, tuple[str, str]]:
+        """slot -> (youtube_id, publish_at)"""
+        rows = self.db.execute("select slot, youtube_id, publish_at from uploads where slot is not null")
+        return {r[0]: (r[1], r[2]) for r in rows}
+
+    def count_since(self, since: str) -> int:
+        return self.db.execute("select count(*) from uploads where uploaded >= ?", (since,)).fetchone()[0]
+
+
 class Job:
     """A folder under jobs/ holding every artifact for one video."""
 
