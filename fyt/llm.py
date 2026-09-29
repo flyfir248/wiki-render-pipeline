@@ -131,6 +131,26 @@ def _openai_structured_once(
     raise ClaudeError(f"{model} did not return a valid answer: {last_error}")
 
 
+def structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 3000):
+    """A small structured answer from whichever provider the channel uses."""
+    if cfg.llm.provider == "openai":
+        return _openai_structured(cfg, system, user, schema, max_tokens=max_tokens)
+    response = _client().beta.messages.parse(
+        model=cfg.model,
+        max_tokens=max(max_tokens, 8000),
+        betas=[FALLBACK_BETA],
+        fallbacks="default",
+        output_config={"effort": "medium"},
+        output_format=schema,
+        system=system,
+        messages=[{"role": "user", "content": user}],
+    )
+    _check(response)
+    if response.parsed_output is None:
+        raise ClaudeError("Claude did not return a parsable answer.")
+    return response.parsed_output
+
+
 class TopicIdeas(BaseModel):
     topics: list[str]
 

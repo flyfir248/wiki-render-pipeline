@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from fyt import llm, media, qa, render, tts, wiki, youtube
+from fyt import growth, llm, media, qa, render, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -18,18 +18,21 @@ def log(job: Job, msg: str) -> None:
     print(f"[{job.id}] {msg}", flush=True)
 
 
-def make_video(cfg: Config, topic: str, script: Script | None = None, voice: str | None = None) -> Job:
-    """Topic -> rendered video + thumbnail + captions, ready for review/upload."""
+def make_video(
+    cfg: Config, topic: str, script: Script | None = None, voice: str | None = None, polish: bool | None = None
+) -> Job:
+    """Topic -> rendered video + thumbnail + captions, ready for review/upload.
+    `polish` (default: when the script is written here) sharpens title, hook and thumbnail text."""
     job = Job.create(cfg, topic)
     try:
-        _make(cfg, job, topic, script, voice)
+        _make(cfg, job, topic, script, voice, script is None if polish is None else polish)
     except Exception as e:
         job.update(status="failed", error=f"{type(e).__name__}: {e}")
         raise
     return job
 
 
-def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None) -> None:
+def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False) -> None:
     images: list[wiki.WikiImage] = []
     if script is None:
         notes, article = "", None
@@ -61,6 +64,12 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             script = llm.write_script(cfg, subject, notes, from_wikipedia=article is not None, images=menu, feedback=feedback)
         if article:
             script = wiki_attribute(script, article)
+    if polish and cfg.growth.polish:
+        log(job, "sharpening title, hook and thumbnail text")
+        try:
+            script = growth.polish(cfg, script)
+        except Exception as e:  # the unpolished script is still fine
+            log(job, f"warning: polish failed: {e}")
     job.file("script.json").write_text(script.model_dump_json(indent=2))
     job.update(status="scripted", title=script.title)
 
@@ -215,18 +224,50 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
         cfg, script, job.file("video.mp4"), job.file("thumbnail.png"), job.file("captions.srt"), publish_at=publish_at
     )
     job.update(status="uploaded", youtube_id=video_id, publish_at=publish_at.isoformat() if publish_at else None)
+    if script.series and youtube.can_manage():
+        try:
+            youtube.add_to_playlist(video_id, script.series)
+        except Exception as e:  # the video is up; the playlist is a nice-to-have
+            print(f"warning: not added to the {script.series!r} playlist: {e}")
+    if cfg.format == "long":
+        queue_cuts(cfg, script, video_id)
     return video_id
+
+
+CUT = "cut:"
+
+
+def queue_cuts(cfg: Config, script: Script, video_id: str) -> None:
+    """Queue Shorts cut from a long video; they fill the next regular Short slots."""
+    try:
+        cuts = growth.cut_scripts(cfg, script, video_id, cfg.growth.cuts_per_long)
+    except Exception as e:
+        print(f"warning: no Shorts cut from {video_id}: {e}")
+        return
+    folder = cfg.jobs_path / "cuts"
+    folder.mkdir(parents=True, exist_ok=True)
+    names = []
+    for i, cut in enumerate(cuts, 1):
+        name = f"{video_id}-{i}"
+        (folder / f"{name}.json").write_text(cut.model_dump_json(indent=2))
+        names.append(CUT + name)
+    if names:
+        Topics(cfg).add(names)
+        print(f"queued {len(names)} Shorts cut from https://youtu.be/{video_id}")
 
 
 def next_topic(cfg: Config, topics: Topics, ideate_when_empty: int = 10) -> tuple[int, str] | None:
     """The next topic to make, refilling the queue when it runs dry."""
-    nxt = long_topic(cfg, topics) if cfg.format == "long" and cfg.source == "wikipedia" else topics.next_pending()
+    if cfg.format == "long" and cfg.source == "wikipedia":
+        nxt = long_topic(cfg, topics)
+    else:
+        nxt = topics.next_pending(prefix=CUT) or topics.next_pending(exclude_prefix=CUT)
     if nxt is None and ideate_when_empty:
         if cfg.seed_topics:
             topics.add(cfg.seed_topics)
         nxt = topics.next_pending()
         if nxt is None and cfg.source == "wikipedia":
-            titles = wiki.pick_articles(cfg, min(ideate_when_empty, 3), set(topics.titles()))
+            titles = growth.pick_topics(cfg, min(ideate_when_empty, 3), set(topics.titles()), performance=performance_summary(cfg))
             topics.add([wiki.topic_for(t) for t in titles])
             nxt = topics.next_pending()
         if nxt is None:
@@ -249,7 +290,7 @@ def make_next(cfg: Config, topics: Topics, attempts: int = 3) -> Job | None:
         topic_id, topic = nxt
         topics.set(topic_id, "in_progress")
         try:
-            job = make_video(cfg, topic)
+            job = make_topic(cfg, topic)
         except Exception as e:
             topics.set(topic_id, "failed")
             print(f"::warning::failed: {topic}: {e}")
@@ -257,6 +298,16 @@ def make_next(cfg: Config, topics: Topics, attempts: int = 3) -> Job | None:
         topics.set(topic_id, "done", job.id)
         return job
     return None
+
+
+def make_topic(cfg: Config, topic: str) -> Job:
+    """A queued topic -> video. Cuts from long videos come with their script ready."""
+    if not topic.startswith(CUT):
+        return make_video(cfg, topic)
+    path = cfg.jobs_path / "cuts" / f"{topic[len(CUT):]}.json"
+    job = make_video(cfg, topic, script=load_script(path), polish=True)
+    path.unlink(missing_ok=True)
+    return job
 
 
 def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[Job]:
@@ -271,7 +322,7 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
         topic_id, topic = nxt
         topics.set(topic_id, "in_progress")
         try:
-            job = make_video(cfg, topic)
+            job = make_topic(cfg, topic)
         except Exception as e:
             topics.set(topic_id, "failed")
             print(f"failed: {topic}: {e}")
@@ -295,8 +346,9 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
 def long_topic(cfg: Config, topics: Topics) -> tuple[int, str] | None:
     """A fresh article with enough material for a long video. The queue is filled with
     Short-sized articles, so long videos pick their own."""
-    long_cfg = cfg.model_copy(update={"wikipedia": cfg.wikipedia.model_copy(update={"min_chars": cfg.wikipedia.long_min_chars})})
-    titles = wiki.pick_articles(long_cfg, 1, set(topics.titles()))
+    titles = growth.pick_topics(
+        cfg, 1, set(topics.titles()), min_chars=cfg.wikipedia.long_min_chars, performance=performance_summary(cfg)
+    )
     if not titles:
         return None
     topics.add([wiki.topic_for(titles[0])])
@@ -305,8 +357,9 @@ def long_topic(cfg: Config, topics: Topics) -> tuple[int, str] | None:
 
 def performance_summary(cfg: Config, limit: int = 10) -> str:
     """Top uploaded videos by views, fed back into topic ideation."""
-    uploaded = {j.meta["youtube_id"]: j for j in list_jobs(cfg) if j.meta.get("youtube_id")}
-    if not uploaded:
+    uploaded = {j.meta["youtube_id"] for j in list_jobs(cfg) if j.meta.get("youtube_id")}
+    uploaded |= set(Uploads(cfg).video_ids())
+    if not uploaded or not youtube.can_manage():  # reading stats needs more than the upload scope
         return ""
     try:
         rows = youtube.stats(list(uploaded))

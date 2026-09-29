@@ -65,6 +65,7 @@ class Script(BaseModel):
     sources: list[str] = Field(description="URLs or references backing the facts used.")
     # Set by the pipeline for long videos written chapter by chapter; not asked of the model.
     chapters: SkipJsonSchema[list[Chapter] | None] = None
+    series: SkipJsonSchema[str | None] = None  # playlist the video is filed under
 
 
 class Word(BaseModel):

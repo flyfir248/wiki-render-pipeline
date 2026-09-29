@@ -122,6 +122,19 @@ class ScheduleConfig(BaseModel):
     max_run_minutes: int = 120  # stop starting new videos after this, so the job never times out
 
 
+class GrowthConfig(BaseModel):
+    polish: bool = True  # second pass on title, hook and thumbnail text (plus a loop line for Shorts)
+    rank_topics: bool = True  # pick articles by fit with the niche and Wikipedia pageviews
+    min_topic_fit: int = 6  # 0-10; articles the model rates lower are skipped
+    cuts_per_long: int = 2  # Shorts cut from each long video (they fill regular Short slots)
+    series: list[str] = Field(default_factory=list)  # playlists; each video is filed under one
+    # Extra videos on topics trending on Wikipedia that fit the niche, on top of the schedule.
+    bonus_shorts_per_day: int = 1
+    bonus_longs_per_week: int = 1
+    bonus_min_fit: int = 7  # 0-10
+    bonus_long_min_fit: int = 9
+
+
 class Config(BaseModel):
     channel: ChannelInfo = Field(default_factory=ChannelInfo)
     format: Literal["long", "short"] = "long"
@@ -142,6 +155,7 @@ class Config(BaseModel):
     theme: Theme = Field(default_factory=Theme)
     youtube: YouTubeConfig = Field(default_factory=YouTubeConfig)
     schedule: ScheduleConfig = Field(default_factory=ScheduleConfig)
+    growth: GrowthConfig = Field(default_factory=GrowthConfig)
     # Upload only after `fyt approve <job>`; strongly recommended (see README).
     require_review: bool = True
     jobs_dir: str = "jobs"

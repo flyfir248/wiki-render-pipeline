@@ -10,6 +10,7 @@ Note: Google may lock uploads from an unaudited API project to private
 
 from __future__ import annotations
 
+import json
 import os
 import random
 import time
@@ -44,6 +45,42 @@ def auth() -> None:
 def authorised() -> bool:
     """Whether uploads can run: a token from `fyt auth` or the YOUTUBE_TOKEN_JSON secret."""
     return TOKEN.exists() or bool(os.environ.get("YOUTUBE_TOKEN_JSON", "").strip())
+
+
+FULL_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl"
+
+
+def can_manage() -> bool:
+    """Whether the token may do more than upload (caption tracks, playlists, stats).
+    Tokens made with only the upload scope get 403 for those."""
+    try:
+        raw = TOKEN.read_text() if TOKEN.exists() else os.environ.get("YOUTUBE_TOKEN_JSON", "")
+        scopes = json.loads(raw).get("scopes")
+    except (OSError, ValueError):
+        return False
+    if isinstance(scopes, str):
+        scopes = scopes.split()
+    if not scopes:
+        return False  # unknown: don't spend quota on calls that may be refused
+    return FULL_SCOPE in scopes or "https://www.googleapis.com/auth/youtube" in scopes
+
+
+def add_to_playlist(video_id: str, name: str, privacy: str = "public") -> None:
+    """File the video under a playlist with this name, creating it the first time."""
+    yt = _service()
+    playlist_id = None
+    request = yt.playlists().list(part="snippet", mine=True, maxResults=50)
+    while request is not None and playlist_id is None:
+        resp = request.execute()
+        playlist_id = next((p["id"] for p in resp.get("items", []) if p["snippet"]["title"] == name), None)
+        request = yt.playlists().list_next(request, resp)
+    if playlist_id is None:
+        playlist_id = yt.playlists().insert(
+            part="snippet,status", body={"snippet": {"title": name}, "status": {"privacyStatus": privacy}}
+        ).execute()["id"]
+    yt.playlistItems().insert(
+        part="snippet", body={"snippet": {"playlistId": playlist_id, "resourceId": {"kind": "youtube#video", "videoId": video_id}}}
+    ).execute()
 
 
 def _service():
@@ -90,6 +127,8 @@ def build_body(
     description = script.description.strip()
     if script.sources:
         description += "\n\nSources:\n" + "\n".join(f"- {s}" for s in script.sources)
+    if script.series:
+        description += f"\n\nSeries: {script.series}"
     if cfg.format == "short":
         description += "\n\n#Shorts"
     status = {
@@ -167,7 +206,7 @@ def upload(
             yt.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(str(thumbnail))).execute()
         except HttpError as e:  # custom thumbnails need a phone-verified channel
             print(f"warning: thumbnail not set ({e.status_code}); verify the channel at youtube.com/verify")
-    if srt and srt.exists() and cfg.youtube.upload_captions:
+    if srt and srt.exists() and cfg.youtube.upload_captions and can_manage():
         try:
             yt.captions().insert(
                 part="snippet",
