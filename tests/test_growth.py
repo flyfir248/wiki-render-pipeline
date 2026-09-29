@@ -165,6 +165,7 @@ def test_can_manage_reads_the_token_scopes(monkeypatch, tmp_path):
 @pytest.fixture
 def cfg(tmp_path, monkeypatch):
     monkeypatch.setattr(youtube, "authorised", lambda: True)
+    monkeypatch.setattr(youtube, "recent_uploads", lambda: [])
     monkeypatch.setattr(schedule, "utcnow", lambda: NOW)
     c = Config(jobs_dir=str(tmp_path), require_review=False)
     c.schedule.short_slots = []  # only bonus videos in these tests

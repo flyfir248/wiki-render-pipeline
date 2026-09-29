@@ -52,6 +52,12 @@ class Topics:
     def find(self, topic: str) -> tuple[int, str] | None:
         return self.db.execute("select id, topic from topics where topic=?", (topic.strip(),)).fetchone()
 
+    def mark_done(self, topic: str) -> None:
+        """Record a topic as already made (it stays done if it was)."""
+        self.add([topic])
+        self.db.execute("update topics set status='done' where topic=? and status='pending'", (topic.strip(),))
+        self.db.commit()
+
     def set(self, topic_id: int, status: str, job: str | None = None) -> None:
         self.db.execute("update topics set status=?, job=coalesce(?, job) where id=?", (status, job, topic_id))
         self.db.commit()

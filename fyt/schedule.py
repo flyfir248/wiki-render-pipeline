@@ -11,6 +11,7 @@ uploaded by a later run.
 from __future__ import annotations
 
 import random
+import re
 import shutil
 import time
 from dataclasses import dataclass
@@ -128,6 +129,45 @@ def _upload(
     return True
 
 
+ARTICLE = re.compile(r'Based on the Wikipedia article "(.+?)" \(')
+SLOT_SLACK_MINUTES = 60  # a publish time can land past the jitter window when a render ran long
+
+
+def sync(cfg: Config, now: datetime) -> int:
+    """Recover the schedule from the channel itself, so a lost or reset state cache can't double-book
+    slots or repeat topics. Returns how many uploads were new to the local state."""
+    from fyt import wiki
+
+    try:
+        videos = youtube.recent_uploads()
+    except (Exception, SystemExit) as e:  # e.g. an upload-only token; the local state is all we have then
+        print(f"::warning::could not read the channel's uploads to check the schedule: {e}")
+        return 0
+    uploads, topics = Uploads(cfg), Topics(cfg)
+    known = set(uploads.video_ids())
+    filled = uploads.filled()
+    slots = upcoming_slots(cfg, now)
+    window = timedelta(minutes=cfg.youtube.publish_jitter_minutes + SLOT_SLACK_MINUTES)
+    added = 0
+    for v in videos:
+        m = ARTICLE.search(v["description"])
+        if m:
+            topics.mark_done(wiki.topic_for(m.group(1)))
+        if v["id"] in known:
+            continue
+        slot = None
+        if v["publish_at"]:
+            at = datetime.fromisoformat(v["publish_at"])
+            slot = next((s for s in slots if s.key not in filled and s.at <= at <= s.at + window), None)
+        uploaded = v["uploaded"] and datetime.fromisoformat(v["uploaded"]).isoformat(timespec="seconds")
+        uploads.record(slot.kind if slot else "channel", None, v["id"], v["publish_at"], slot.key if slot else None, at=uploaded)
+        if slot:
+            filled[slot.key] = (v["id"], v["publish_at"])
+            print(f"slot {slot.at:%a %d %b %H:%M} already has https://youtu.be/{v['id']}")
+        added += 1
+    return added
+
+
 def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = None, clock=time.monotonic) -> int:
     """Make and upload videos for the empty slots. Returns how many slots were filled."""
     if cfg.require_review:
@@ -136,6 +176,7 @@ def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = N
         raise SystemExit("fill needs YouTube access: add the YOUTUBE_TOKEN_JSON secret")
     now = now or utcnow()
     started = clock()
+    sync(cfg, now)
     budget = uploads_left_today(cfg, now)
     free = empty_slots(cfg, now)
     print(f"{len(free)} empty slots in the next {cfg.schedule.buffer_days:g} days; {budget} uploads left today")
