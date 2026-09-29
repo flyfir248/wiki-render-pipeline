@@ -133,6 +133,26 @@ two-day buffer; the next run refills it. Other safeguards:
   "Upload schedule needs attention", which GitHub emails to you. It closes itself once the schedule is full.
 Each run's summary shows the coming slots and their videos. `python -m fyt buffer` shows the same locally.
 
+**Growth features** (`growth` in `channel.yaml`):
+- *Packaging:* after the script is written, a second pass rewrites the title, the thumbnail text and
+  the opening line for curiosity, and gives each Short a last line that loops back into its hook.
+- *Topics:* articles are ranked by how well they fit the niche (rated by the model) and by how many
+  people read them on Wikipedia in the last 30 days, plus the channel's own view counts when the token
+  allows reading them. Off-niche articles are skipped.
+- *Series:* each video is filed under one of `growth.series`, named in its description and added to a
+  playlist of that name (created the first time).
+- *Cuts:* each long video's strongest chapters become Shorts that link to the full video. They take
+  the next regular Short slots.
+- *Bonus videos:* once the schedule is full, a run with quota left checks Wikipedia's most-read
+  articles and today's anniversaries. If one fits the channel well, it makes a bonus Short (at most
+  one a day) or, for a very strong fit, a bonus long video (at most one a week), and publishes it
+  within the hour. If nothing fits, it looks again six hours later.
+
+**Caption tracks, playlists and stats** need a YouTube token with the full permission, not only
+uploads. Run `python -m fyt auth` on your computer (it asks for both), then replace the
+`YOUTUBE_TOKEN_JSON` secret with the new `secrets/token.json`. Until then those steps are skipped and
+the videos still go out; captions are burned into the video anyway.
+
 Long videos pick an article with at least `wikipedia.long_min_chars` of text. On Groq's free tier the
 script is planned first and then written one chapter at a time, each from its own part of the article,
 because a whole 8 minute script doesn't fit in one request. The chapters become timestamps in the

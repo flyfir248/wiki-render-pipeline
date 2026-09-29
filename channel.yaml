@@ -44,10 +44,10 @@ youtube:
   publish_jitter_minutes: 90
   category_id: "27"
   contains_synthetic_media: true
-  # Captions are burned into the video. Uploading them as a caption track needs a
-  # permission the channel's token doesn't have (it failed with 403) and costs 400
-  # of the 10,000 daily API units.
-  upload_captions: false
+  # Caption tracks, playlists and view stats need a token with the full YouTube
+  # permission (see "Caption tracks, playlists and stats" in the README). With an
+  # upload-only token they're skipped. Captions are burned into the video either way.
+  upload_captions: true
 
 # Publish slots that `python -m fyt fill` (the workflow's runs) keeps filled ahead of time.
 schedule:
@@ -57,6 +57,23 @@ schedule:
   buffer_days: 2                    # Shorts are uploaded up to 2 days before they go live
   long_lead_days: 3
   max_uploads_per_day: 4            # YouTube API quota
+
+# Growth: sharper packaging, better topics, series, Shorts cut from long videos,
+# and bonus videos on trending topics. See GrowthConfig in fyt/config.py.
+growth:
+  polish: true              # second pass on title, hook and thumbnail text; loop line for Shorts
+  rank_topics: true         # pick articles by fit with the niche and Wikipedia readers
+  min_topic_fit: 6          # 0-10
+  cuts_per_long: 2          # Shorts cut from each long video, linking to it
+  series:                   # a playlist each; every video is filed under one
+    - Weird History
+    - Strange Science
+    - Bizarre Places
+    - Unbelievable People
+  bonus_shorts_per_day: 1   # extra Short on a trending topic that fits (if one does)
+  bonus_longs_per_week: 1   # extra long video, only for a very strong trending fit
+  bonus_min_fit: 7
+  bonus_long_min_fit: 9
 
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is

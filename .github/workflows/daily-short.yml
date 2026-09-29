@@ -4,6 +4,8 @@
 # Every run tops up the next two days of publish slots (`python -m fyt fill`, see
 # `schedule` in channel.yaml). Videos are uploaded ahead of time as scheduled videos,
 # so a failed or skipped run doesn't cost a publish: the next run refills the gap.
+# With what's left of the day's quota, it adds a bonus Short (daily) or long video (weekly)
+# on a topic trending on Wikipedia, when one fits the channel.
 # If a slot in the next 24 hours is still empty after a run, the run fails and opens
 # an issue in this repo, which GitHub emails to you.
 # Setup: see "Daily uploads with GitHub Actions" in the README.
@@ -53,13 +55,14 @@ jobs:
       - run: pip install -r requirements.txt
 
       # The topic queue and the upload schedule live in jobs/state.db; videos whose
-      # upload failed wait in jobs/pending. Each run restores the newest copy and saves a new one.
+      # upload failed wait in jobs/pending, and scripts for Shorts cut from long videos in jobs/cuts. Each run restores the newest copy and saves a new one.
       - name: Restore schedule
         uses: actions/cache/restore@v5
         with:
           path: |
             jobs/state.db
             jobs/pending
+            jobs/cuts
           key: fyt-state-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: fyt-state-
 
@@ -121,6 +124,7 @@ jobs:
           path: |
             jobs/state.db
             jobs/pending
+            jobs/cuts
           key: fyt-state-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Keep the videos for a week

@@ -13,8 +13,11 @@ MONDAY = datetime(2026, 9, 28, 19, 0, tzinfo=timezone.utc)
 @pytest.fixture
 def cfg(tmp_path, monkeypatch):
     monkeypatch.setattr(youtube, "authorised", lambda: True)
+    monkeypatch.setattr(schedule, "utcnow", lambda: MONDAY)
     c = Config(jobs_dir=str(tmp_path), require_review=False)
     c.youtube.publish_jitter_minutes = 90
+    c.growth.bonus_shorts_per_day = 0  # tested separately
+    c.growth.bonus_longs_per_week = 0
     return c
 
 

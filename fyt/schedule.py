@@ -30,6 +30,10 @@ MAKE_MINUTES = {"short": 10, "long": 80}
 KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json")
 
 
+def utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 @dataclass(frozen=True)
 class Slot:
     at: datetime
@@ -105,17 +109,22 @@ def publish_time(cfg: Config, slot: Slot, rng: random.Random | None = None) -> d
     return slot.at + timedelta(minutes=(rng or random).uniform(0, jitter) if jitter else 0)
 
 
-def _upload(cfg: Config, job: Job, slot: Slot, rng: random.Random | None, now: datetime) -> bool | None:
+def _upload(
+    cfg: Config, job: Job, slot: Slot, rng: random.Random | None, now: datetime, kind: str | None = None
+) -> bool | None:
     """Upload a job into a slot. True on success, None when the daily quota ran out, False otherwise."""
-    publish_at = publish_time(cfg, slot, rng)
+    # A long render can outlast a near slot; YouTube needs publishAt in the future.
+    earliest = utcnow() + timedelta(minutes=youtube.MIN_PUBLISH_LEAD_MINUTES)
+    publish_at = max(publish_time(cfg, slot, rng), earliest)
     try:
         video_id = pipeline.upload_job(cfg, job, publish_at=publish_at)
     except Exception as e:
         print(f"::warning::upload of {job.id} failed: {e}")
         job.update(status="upload_failed", upload_error=str(e)[:500])
         return None if _is_quota_error(e) else False
-    Uploads(cfg).record(slot.kind, job.id, video_id, publish_at.isoformat(), slot.key, at=now.isoformat(timespec="seconds"))
-    print(f"scheduled https://youtu.be/{video_id} ({slot.kind}) for {publish_at:%a %d %b %H:%M} UTC")
+    key = None if kind else slot.key  # bonus videos fill no slot
+    Uploads(cfg).record(kind or slot.kind, job.id, video_id, publish_at.isoformat(), key, at=now.isoformat(timespec="seconds"))
+    print(f"scheduled https://youtu.be/{video_id} ({kind or slot.kind}) for {publish_at:%a %d %b %H:%M} UTC")
     return True
 
 
@@ -125,7 +134,7 @@ def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = N
         raise SystemExit("fill uploads automatically: set require_review: false in channel.yaml")
     if not youtube.authorised():
         raise SystemExit("fill needs YouTube access: add the YOUTUBE_TOKEN_JSON secret")
-    now = now or datetime.now(timezone.utc)
+    now = now or utcnow()
     started = clock()
     budget = uploads_left_today(cfg, now)
     free = empty_slots(cfg, now)
@@ -172,12 +181,78 @@ def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = N
             _keep_pending(cfg, job)
             if result is None:
                 budget = 0
+
+    # The schedule comes first; bonus videos only use what's left of the quota and the run.
+    if budget > 0 and failures < 3:
+        filled += bonus(cfg, now, rng, clock, started, budget, topics)
     return filled
+
+
+BONUS_MIN_FIT = {"short": "bonus_min_fit", "long": "bonus_long_min_fit"}
+
+
+def bonus_due(cfg: Config, fmt: str, now: datetime) -> bool:
+    """Whether a trending bonus video of this format is allowed now."""
+    g = cfg.growth
+    per_day = g.bonus_shorts_per_day if fmt == "short" else g.bonus_longs_per_week / 7
+    if per_day <= 0:
+        return False
+    uploads = Uploads(cfg)
+    skip = uploads.note(f"bonus-{fmt}-skip-until")  # nothing fitting was trending when we last looked
+    if skip and skip > now.isoformat():
+        return False
+    last = uploads.last(f"bonus-{fmt}")
+    return last is None or last <= (now - timedelta(days=1 / per_day)).isoformat(timespec="seconds")
+
+
+def bonus(cfg: Config, now: datetime, rng, clock, started: float, budget: int, topics: Topics) -> int:
+    """Extra videos on topics trending on Wikipedia that fit the channel. Returns how many were uploaded."""
+    from fyt import growth, wiki
+
+    made = 0
+    for fmt in ("short", "long"):
+        if budget <= 0 or not bonus_due(cfg, fmt, now):
+            continue
+        if (clock() - started) / 60 + MAKE_MINUTES[fmt] > cfg.schedule.max_run_minutes:
+            print(f"not enough time left for a bonus {fmt} video")
+            continue
+        min_chars = cfg.wikipedia.long_min_chars if fmt == "long" else cfg.wikipedia.min_chars
+        try:
+            title = growth.pick_trending(cfg, set(topics.titles()), getattr(cfg.growth, BONUS_MIN_FIT[fmt]), min_chars)
+        except Exception as e:
+            print(f"::warning::could not check trending topics: {e}")
+            continue
+        if title is None:
+            print(f"nothing trending fits the channel for a bonus {fmt} right now")
+            Uploads(cfg).set_note(f"bonus-{fmt}-skip-until", (now + timedelta(hours=6)).isoformat())
+            continue
+        topic = wiki.topic_for(title)
+        topics.add([topic])
+        topic_id, _ = topics.find(topic)
+        topics.set(topic_id, "in_progress")
+        vcfg = cfg.model_copy(update={"format": fmt})
+        try:
+            job = pipeline.make_video(vcfg, topic)
+        except Exception as e:
+            topics.set(topic_id, "failed")
+            print(f"::warning::bonus {fmt} failed: {topic}: {e}")
+            continue
+        topics.set(topic_id, "done", job.id)
+        if job.meta.get("status") != "approved":
+            continue
+        # Trending topics go out soon: at a random minute within the jitter window from now.
+        result = _upload(cfg, job, Slot(utcnow(), fmt), rng, now, kind=f"bonus-{fmt}")
+        if result:
+            budget -= 1
+            made += 1
+        elif result is None:
+            budget = 0
+    return made
 
 
 def report(cfg: Config, now: datetime | None = None) -> tuple[str, list[Slot]]:
     """A markdown table of the coming slots, and the ones in the next 24 hours that are still empty."""
-    now = now or datetime.now(timezone.utc)
+    now = now or utcnow()
     filled = Uploads(cfg).filled()
     rows = ["| Goes live (UTC) | Kind | Video |", "|---|---|---|"]
     for s in upcoming_slots(cfg, now):
@@ -192,5 +267,6 @@ def report(cfg: Config, now: datetime | None = None) -> tuple[str, list[Slot]]:
 
 def needed(cfg: Config, now: datetime | None = None) -> bool:
     """Whether a fill run has anything to do (so a run can skip installing the renderer)."""
-    now = now or datetime.now(timezone.utc)
-    return bool(empty_slots(cfg, now)) and uploads_left_today(cfg, now) > 0
+    now = now or utcnow()
+    work = bool(empty_slots(cfg, now)) or bonus_due(cfg, "short", now) or bonus_due(cfg, "long", now)
+    return work and uploads_left_today(cfg, now) > 0

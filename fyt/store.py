@@ -42,8 +42,12 @@ class Topics:
     def titles(self) -> list[str]:
         return [r[0] for r in self.db.execute("select topic from topics")]
 
-    def next_pending(self) -> tuple[int, str] | None:
-        return self.db.execute("select id, topic from topics where status='pending' order by id limit 1").fetchone()
+    def next_pending(self, prefix: str = "", exclude_prefix: str | None = None) -> tuple[int, str] | None:
+        sql, args = "select id, topic from topics where status='pending' and topic like ?", [prefix + "%"]
+        if exclude_prefix:
+            sql += " and topic not like ?"
+            args.append(exclude_prefix + "%")
+        return self.db.execute(sql + " order by id limit 1", args).fetchone()
 
     def find(self, topic: str) -> tuple[int, str] | None:
         return self.db.execute("select id, topic from topics where topic=?", (topic.strip(),)).fetchone()
@@ -70,6 +74,15 @@ class Uploads:
                 uploaded text not null
             )"""
         )
+        self.db.execute("create table if not exists notes (key text primary key, value text)")
+        self.db.commit()
+
+    def note(self, key: str) -> str | None:
+        row = self.db.execute("select value from notes where key=?", (key,)).fetchone()
+        return row[0] if row else None
+
+    def set_note(self, key: str, value: str) -> None:
+        self.db.execute("insert or replace into notes(key, value) values (?, ?)", (key, value))
         self.db.commit()
 
     def record(
@@ -85,6 +98,13 @@ class Uploads:
         """slot -> (youtube_id, publish_at)"""
         rows = self.db.execute("select slot, youtube_id, publish_at from uploads where slot is not null")
         return {r[0]: (r[1], r[2]) for r in rows}
+
+    def video_ids(self) -> list[str]:
+        return [r[0] for r in self.db.execute("select youtube_id from uploads where youtube_id is not null")]
+
+    def last(self, kind: str) -> str | None:
+        """When the last upload of this kind happened (ISO time), or None."""
+        return self.db.execute("select max(uploaded) from uploads where kind=?", (kind,)).fetchone()[0]
 
     def count_since(self, since: str) -> int:
         return self.db.execute("select count(*) from uploads where uploaded >= ?", (since,)).fetchone()[0]
