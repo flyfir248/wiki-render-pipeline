@@ -235,3 +235,30 @@ def stats(video_ids: list[str]) -> list[dict]:
                 }
             )
     return out
+
+
+def recent_uploads(limit: int = 100) -> list[dict]:
+    """The channel's newest uploads, scheduled ones included: id, publish_at (or None), description.
+    Costs a few quota units; needs more than the upload-only scope."""
+    yt = _service()
+    channel = yt.channels().list(part="contentDetails", mine=True).execute()["items"][0]
+    uploads = channel["contentDetails"]["relatedPlaylists"]["uploads"]
+    ids: list[str] = []
+    request = yt.playlistItems().list(part="contentDetails", playlistId=uploads, maxResults=50)
+    while request is not None and len(ids) < limit:
+        resp = request.execute()
+        ids += [i["contentDetails"]["videoId"] for i in resp.get("items", [])]
+        request = yt.playlistItems().list_next(request, resp)
+    out = []
+    for i in range(0, len(ids[:limit]), 50):
+        resp = yt.videos().list(part="snippet,status", id=",".join(ids[i : i + 50])).execute()
+        for item in resp.get("items", []):
+            out.append(
+                {
+                    "id": item["id"],
+                    "publish_at": item["status"].get("publishAt"),
+                    "uploaded": item["snippet"].get("publishedAt"),
+                    "description": item["snippet"].get("description", ""),
+                }
+            )
+    return out

@@ -14,6 +14,7 @@ MONDAY = datetime(2026, 9, 28, 19, 0, tzinfo=timezone.utc)
 def cfg(tmp_path, monkeypatch):
     monkeypatch.setattr(youtube, "authorised", lambda: True)
     monkeypatch.setattr(schedule, "utcnow", lambda: MONDAY)
+    monkeypatch.setattr(youtube, "recent_uploads", lambda: [])
     c = Config(jobs_dir=str(tmp_path), require_review=False)
     c.youtube.publish_jitter_minutes = 90
     c.growth.bonus_shorts_per_day = 0  # tested separately
@@ -127,3 +128,24 @@ def test_check_flags_an_empty_slot_in_the_next_day(cfg):
 def test_one_off_uploads_count_toward_the_quota(cfg):
     Uploads(cfg).record("short", "job", "vid", None)
     assert schedule.uploads_left_today(cfg, datetime.now(timezone.utc)) == 3
+
+
+def test_a_lost_state_is_recovered_from_the_channel(cfg, monkeypatch):
+    """A fresh state.db (e.g. the cache was reset) must not double-book slots already scheduled on YouTube."""
+    desc = 'Intro.\n\nBased on the Wikipedia article "Vril" (https://en.wikipedia.org/wiki/Vril), licensed CC BY-SA 4.0.'
+    monkeypatch.setattr(
+        youtube,
+        "recent_uploads",
+        lambda: [
+            {"id": "old1", "publish_at": "2026-09-28T22:40:00Z", "uploaded": "2026-09-28T19:30:00Z", "description": desc},
+            {"id": "old2", "publish_at": "2026-09-29T14:16:00Z", "uploaded": "2026-09-28T19:40:00Z", "description": ""},
+            {"id": "live", "publish_at": None, "uploaded": "2026-09-27T14:00:00Z", "description": ""},
+        ],
+    )
+    ch = FakeChannel(monkeypatch)
+    assert schedule.fill(cfg, now=MONDAY) == 2  # Mon 22:00 and Tue 14:00 were already on the channel
+    assert [at.strftime("%a %H") for _, at in ch.uploaded] == ["Tue 22", "Wed 14"]
+    from fyt.store import Topics
+
+    assert ("wiki:Vril", "done") in [(t, s) for _, t, s, _ in Topics(cfg).all()]
+    assert schedule.uploads_left_today(cfg, MONDAY) == 0  # the two made Monday count toward the quota, plus two now
