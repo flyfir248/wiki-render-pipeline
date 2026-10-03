@@ -98,6 +98,12 @@ with no fitting photo get Pexels stock footage for a search written for that mom
 `PEXELS_API_KEY` secret); charts and numbers stay on the plain background. Photo credits are
 added to the description automatically.
 
+Before Kokoro speaks, `fyt/speech.py` rewrites the narration into plain spoken words: years
+("1992" as "nineteen ninety-two"), decades, dates, ordinals, money, percentages, units, Roman
+numerals, abbreviations ("Dr.", "St.", "c. 1450") and acronyms ("HAL" as a name, "FBI" letter by
+letter). Captions still show the text as written, timed to the spoken words. To change how an
+acronym is said, add it to `WORD_ACRONYMS` there.
+
 **Manual upload (the default):** with `require_review: true` in `channel.yaml`, the job only
 makes the video. Add the `GROQ_API_KEY` secret (free key from
 [console.groq.com/keys](https://console.groq.com/keys); scripts are written by an open model on

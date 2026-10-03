@@ -256,16 +256,35 @@ Scene templates (field names in brackets):
 - comparison: two columns [heading, left_title, left, right_title, right]
 - broll: stock footage with a caption [broll_query (concrete, filmable), heading]
 
+Structure (always the same shape, so every video feels like the same show):
+1. Hook: the single strangest fact or question, in the first 2 sentences. No "welcome back",
+   no "in this video we will", no "did you know".
+2. Setup: who, where and when, in plain terms.
+3. The story: what happened, in order, each scene adding one new fact.
+4. The twist or payoff: the detail that makes it worth telling.
+5. Close: one line on why it still matters, then one natural line inviting viewers to subscribe.
+
+Narrator voice (keep it identical from the first scene to the last):
+- One storyteller talking to one listener: warm, curious, confident. Past tense for the story,
+  present tense only for what is still true today.
+- Never shift register: no sudden hype, jokes, rhetorical "folks" or "guys", and no exclamation marks.
+
+Write for the ear -- the narration is spoken by a text-to-speech voice:
+- Sentences of 8-20 words, one idea each. Never start a sentence with a number or symbol.
+- Say a long date or number the way a person would, and keep figures simple: "about 2,500 people",
+  not "2,487 people". Round decimals unless the exact value is the point.
+- Write a name in full the first time (the HAL 9000 computer, the International Union for
+  Conservation of Nature) and avoid unfamiliar acronyms after that.
+- No parentheses, slashes, semicolons, footnote marks, emoji or ALL-CAPS emphasis.
+- No lists or headings inside the narration; the on-screen templates carry those.
+
 Rules:
-- The first scene's narration is the hook: create curiosity or tension within the first 2 sentences.
-  No "welcome back", no "in this video we will".
 - Each scene's narration is 1-4 sentences and matches what is on screen at that moment.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
   (stat, bars, timeline, comparison) wherever the research supports them -- they are what makes this
   channel different from generic stock-footage channels.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.
-- End with a satisfying conclusion and one natural line inviting viewers to subscribe for similar topics.
 - Title max 70 characters; no false clickbait. Description must be accurate.
 - List the sources you relied on.
 """
