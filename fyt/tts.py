@@ -20,6 +20,7 @@ import requests
 
 from fyt.config import ROOT, Config, secret
 from fyt.models import Word
+from fyt.speech import join_spoken, speakable, spoken_sentences
 
 SAMPLE_RATE = 44100
 
@@ -58,6 +59,19 @@ def estimate_words(text: str, words_per_second: float = 2.6, offset: float = 0.1
         words.append(Word(word=tok, start=round(t, 3), end=round(t + d, 3)))
         t += d + 0.04
     return words, t + 0.2
+
+
+def estimate_spoken(pairs: list[tuple[str, str]], duration: float, offset: float = 0.0) -> list[Word]:
+    """Timings for written tokens, spread over `duration` by how long each one takes to say:
+    "1992" gets the time of "nineteen ninety-two", but the caption still shows "1992"."""
+    cost = [sum(0.12 + 0.045 * len(w) for w in said.split()) + 0.04 for _, said in pairs]
+    k = duration / sum(cost) if sum(cost) else 1.0
+    words, t = [], offset
+    for (written, _), c in zip(pairs, cost):
+        d = c * k
+        words.append(Word(word=written, start=round(t, 3), end=round(t + d - 0.04 * k, 3)))
+        t += d
+    return words
 
 
 def words_from_chars(chars: list[str], starts: list[float], ends: list[float]) -> list[Word]:
@@ -144,14 +158,13 @@ def _espeak(cfg: Config, text: str, out: Path) -> Clip:
     if not exe:
         raise RuntimeError("espeak-ng is not installed (apt install espeak-ng / brew install espeak-ng)")
     raw = out.with_suffix(".raw.wav")
-    subprocess.run([exe, "-v", cfg.voice.espeak_voice, "-s", str(cfg.voice.espeak_wpm), "-w", str(raw), text], check=True)
+    spoken = speakable(text)
+    subprocess.run([exe, "-v", cfg.voice.espeak_voice, "-s", str(cfg.voice.espeak_wpm), "-w", str(raw), spoken], check=True)
     duration = to_wav(raw, out)
     raw.unlink()
     # espeak reports no word timings; spread the estimate over the real duration.
-    words, est = estimate_words(text, offset=0.0)
-    k = duration / est if est else 1.0
-    words = [w.model_copy(update={"start": round(w.start * k, 3), "end": round(w.end * k, 3)}) for w in words]
-    return Clip(out, duration, words)
+    pairs = [p for sentence in spoken_sentences(text) for p in sentence]
+    return Clip(out, duration, estimate_spoken(pairs, duration))
 
 
 KOKORO_RELEASE = "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0"
@@ -182,14 +195,13 @@ def _kokoro_load(cfg: Config):
     return _kokoro_model
 
 
-SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
-
-
 def _kokoro(cfg: Config, text: str, out: Path) -> Clip:
     """Kokoro-82M, run locally via ONNX: natural voice, free, no API key.
 
     Kokoro reports no word timings, so each sentence is voiced separately
     (exact sentence boundaries) and words are spread across their sentence.
+    Numbers, dates, acronyms and abbreviations are rewritten into words first
+    (see fyt.speech); captions keep the written form.
     """
     import numpy as np
 
@@ -197,15 +209,16 @@ def _kokoro(cfg: Config, text: str, out: Path) -> Clip:
     v = cfg.voice
     pause = np.zeros(int(v.kokoro_sentence_pause * 24000), dtype=np.float32)
     parts, words, t = [], [], 0.0
-    for sentence in [x for x in SENTENCE_END.split(text) if x.strip()]:
-        samples, sr = model.create(sentence, voice=v.kokoro_voice, speed=v.kokoro_speed, lang=v.kokoro_lang)
+    for pairs in spoken_sentences(text):
+        spoken = join_spoken(pairs)
+        if not re.search(r"\w", spoken):
+            continue
+        samples, sr = model.create(spoken, voice=v.kokoro_voice, speed=v.kokoro_speed, lang=v.kokoro_lang)
         if parts:
             parts.append(pause)
             t += len(pause) / sr
         dur = len(samples) / sr
-        est_words, est = estimate_words(sentence, offset=0.0)
-        k = dur / est if est else 1.0
-        words += [w.model_copy(update={"start": round(t + w.start * k, 3), "end": round(t + w.end * k, 3)}) for w in est_words]
+        words += estimate_spoken(pairs, dur, offset=t)
         parts.append(samples.astype(np.float32))
         t += dur
     audio = np.concatenate(parts) if parts else np.zeros(2400, dtype=np.float32)
