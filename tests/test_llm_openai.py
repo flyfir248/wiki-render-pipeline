@@ -1,4 +1,5 @@
 import json
+import json as _json
 
 import pytest
 
@@ -146,3 +147,24 @@ def test_falls_back_to_the_next_model_when_one_keeps_failing(cfg, monkeypatch):
     script = llm.write_script(cfg, "Mary", "notes")
     assert script.title == SCRIPT["title"]
     assert models[-1] == "llama-3.3-70b-versatile" and models.count(cfg.llm.model) == 8
+
+
+def test_short_scripts_are_built_around_one_message(cfg, monkeypatch):
+    seen = []
+
+    def post(url, headers, json, timeout):
+        seen.append(json["messages"][0]["content"])
+        return reply(_json.dumps({**SCRIPT, "core_message": "A baby became queen and lost it all."}))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    script = llm.write_script(cfg, "Mary, Queen of Scots", "notes")
+    assert script.core_message.startswith("A baby")
+    system = seen[0]
+    assert "core_message" in system and "Hook (scene 1, max 12 words)" in system
+    assert "inviting viewers to subscribe" not in system  # a Short ends on its payoff and loops
+    # The schema asks for the message before anything else, so the model commits to it first.
+    assert list(llm.Script.model_json_schema()["properties"])[0] == "core_message"
+
+
+def test_long_scripts_keep_the_subscribe_close():
+    assert "inviting viewers to subscribe" in llm.LONG_STRUCTURE and "Short" not in llm.LONG_STRUCTURE

@@ -233,7 +233,25 @@ Prefer primary and reputable sources. Flag anything uncertain.""",
     return _text(response)
 
 
-SHORT_WORDS = 130  # ~50s at Kokoro's pace
+SHORT_WORDS = 105  # about 35 seconds at the Shorts reading speed
+
+SHORT_STRUCTURE = """Structure of a Short (30-40 seconds, 5-7 scenes; viewers decide in the first second whether to swipe):
+1. Hook (scene 1, max 12 words): the strangest concrete fact, stated flatly. The viewer must know
+   at once what this is about. No "welcome back", no "in this video", no "did you know", no question.
+2. Context (1 scene): just enough who, where and when to follow along.
+3. Build (2-3 scenes): each one escalates with a new, stranger or higher-stakes detail.
+4. Payoff (1 scene): the twist or answer, saying the core message in plain words.
+5. End on the payoff. No subscribe line, no "thanks for watching", no question to the audience:
+   Shorts replay automatically, and a clean ending makes the replay seamless."""
+
+LONG_STRUCTURE = """Structure (always the same shape, so every video feels like the same show):
+1. Hook: the single strangest fact or question, in the first 2 sentences, and a promise of what the
+   viewer will understand by the end. No "welcome back", no "in this video we will", no "did you know".
+2. Setup: who, where and when, in plain terms.
+3. The story: what happened, in order, each scene adding one new fact. End each chapter on an open
+   question the next chapter answers, so there is always a reason to keep watching.
+4. The payoff: the detail that makes it worth telling, stated as the core message.
+5. Close: one line on why it still matters, then one natural line inviting viewers to subscribe."""
 
 SCRIPT_GUIDE = """Write the complete script for a faceless YouTube video. The narration is read by a
 text-to-speech voice and each scene is rendered as an animated motion-graphics template.
@@ -256,21 +274,21 @@ Scene templates (field names in brackets):
 - comparison: two columns [heading, left_title, left, right_title, right]
 - broll: stock footage with a caption [broll_query (concrete, filmable), heading]
 
-Structure (always the same shape, so every video feels like the same show):
-1. Hook: the single strangest fact or question, in the first 2 sentences. No "welcome back",
-   no "in this video we will", no "did you know".
-2. Setup: who, where and when, in plain terms.
-3. The story: what happened, in order, each scene adding one new fact.
-4. The twist or payoff: the detail that makes it worth telling.
-5. Close: one line on why it still matters, then one natural line inviting viewers to subscribe.
+One message: before any scene, decide the single thing the viewer should walk away knowing and
+write it as `core_message` (one plain sentence). Every scene must move toward it. Cut any fact,
+however interesting, that doesn't; a video that says one thing clearly beats one that says five.
+
+{structure}
 
 Narrator voice (keep it identical from the first scene to the last):
-- One storyteller talking to one listener: warm, curious, confident. Past tense for the story,
-  present tense only for what is still true today.
+- One storyteller talking to one listener: warm, curious, confident and brisk. Past tense for the
+  story, present tense only for what is still true today.
+- Momentum beats completeness: link scenes with "but", "so" and "then", never "and also" or "another fact".
 - Never shift register: no sudden hype, jokes, rhetorical "folks" or "guys", and no exclamation marks.
 
 Write for the ear -- the narration is spoken by a text-to-speech voice:
-- Sentences of 8-20 words, one idea each. Never start a sentence with a number or symbol.
+- Sentences of 6-16 words, one idea each, with a few very short ones for punch. Never start a
+  sentence with a number or symbol.
 - Say a long date or number the way a person would, and keep figures simple: "about 2,500 people",
   not "2,487 people". Round decimals unless the exact value is the point.
 - Write a name in full the first time (the HAL 9000 computer, the International Union for
@@ -279,7 +297,7 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
 - No lists or headings inside the narration; the on-screen templates carry those.
 
 Rules:
-- Each scene's narration is 1-4 sentences and matches what is on screen at that moment.
+- Each scene's narration is 1-4 sentences (1-2 in a Short) and matches what is on screen at that moment.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
   (stat, bars, timeline, comparison) wherever the research supports them -- they are what makes this
   channel different from generic stock-footage channels.
@@ -311,7 +329,7 @@ def write_script(
 ) -> Script:
     ch = cfg.channel
     if cfg.format == "short":
-        format_line = "YouTube Short, vertical 9:16, under 55 seconds, 5-8 fast scenes"
+        format_line = "YouTube Short, vertical 9:16, 30-40 seconds, 5-7 fast scenes"
         words = SHORT_WORDS
     else:
         format_line = f"horizontal 16:9 video, about {cfg.target_minutes:g} minutes"
@@ -324,6 +342,7 @@ def write_script(
         language=ch.language,
         format_line=format_line,
         words=words,
+        structure=SHORT_STRUCTURE if cfg.format == "short" else LONG_STRUCTURE,
     )
     tail = f"\n\nAvailable images:\n{images}" if images else ""
     tail += f"\n\n{feedback}" if feedback else ""
@@ -388,6 +407,7 @@ class ChapterPlan(BaseModel):
 
 
 class Outline(BaseModel):
+    core_message: str = Field(default="", description="Write this first: the one sentence the viewer should remember, max 20 words.")
     title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")
@@ -464,7 +484,7 @@ def write_long_script(
         chunk = chunks[i - 1]
         for attempt in range(3):
             user = (
-                f"Video title: {outline.title}\nChapter plan:\n{plan_text}\n\n"
+                f"Video title: {outline.title}\nCore message: {outline.core_message}\nChapter plan:\n{plan_text}\n\n"
                 f"Write chapter {i}: {plan.heading}. {position}{taken}\n\n"
                 f"<research_notes>\n{chunk or '(no research notes)'}\n</research_notes>{image_tail}"
             )
@@ -486,6 +506,7 @@ def write_long_script(
         print(f"wrote chapter {i}/{n}: {plan.heading} ({sum(len(sc.narration.split()) for sc in part.scenes)} words)")
 
     return Script(
+        core_message=outline.core_message,
         title=outline.title,
         description=outline.description,
         tags=outline.tags,

@@ -213,7 +213,7 @@ def _kokoro(cfg: Config, text: str, out: Path) -> Clip:
         spoken = join_spoken(pairs)
         if not re.search(r"\w", spoken):
             continue
-        samples, sr = model.create(spoken, voice=v.kokoro_voice, speed=v.kokoro_speed, lang=v.kokoro_lang)
+        samples, sr = model.create(spoken, voice=v.kokoro_voice, speed=v.speed(cfg.format), lang=v.kokoro_lang)
         if parts:
             parts.append(pause)
             t += len(pause) / sr

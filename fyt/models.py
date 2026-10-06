@@ -55,6 +55,10 @@ class Chapter(BaseModel):
 
 
 class Script(BaseModel):
+    core_message: str = Field(
+        default="",
+        description="Write this first: the one sentence the viewer should remember, max 20 words. Every scene serves it.",
+    )
     title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")

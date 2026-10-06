@@ -71,7 +71,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         except Exception as e:  # the unpolished script is still fine
             log(job, f"warning: polish failed: {e}")
     job.file("script.json").write_text(script.model_dump_json(indent=2))
-    job.update(status="scripted", title=script.title)
+    job.update(status="scripted", title=script.title, core_message=script.core_message)
 
     problems = qa.check_script(cfg, script)
     if problems:
@@ -83,7 +83,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     clips_dir = job.file("clips")
     clips_dir.mkdir(exist_ok=True)
     clips = [tts.synthesize(cfg, s.narration, clips_dir / f"{i:03}.wav", provider) for i, s in enumerate(script.scenes)]
-    spans = tts.join_clips(clips, cfg.voice.gap_seconds, job.public / "voice.wav")
+    spans = tts.join_clips(clips, cfg.voice.gap(cfg.format), job.public / "voice.wav")
     voice_src = None if provider == "silent" else "voice.wav"
 
     log(job, "fetching visuals")
@@ -214,14 +214,25 @@ def wiki_attribute(script: Script, article: "wiki.Article") -> Script:
 
 def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime | None = None) -> str:
     status = job.meta.get("status")
+    if job.meta.get("youtube_id") and status != "uploaded":
+        # A previous attempt got the video onto YouTube, then failed on a later step.
+        job.update(status="uploaded")
+        return job.meta["youtube_id"]
     if status == "uploaded":
         raise SystemExit(f"{job.id} is already uploaded: https://youtu.be/{job.meta.get('youtube_id')}")
     if status not in ("approved", "upload_failed") and not force:
         raise SystemExit(f"{job.id} is '{status}'. Review it, then `python -m fyt approve {job.id}` (or --force).")
     script = Script.model_validate_json(job.file("script.json").read_text())
     cfg = cfg.model_copy(update={"format": job.meta.get("format", cfg.format)})  # e.g. #Shorts in the description
+    posted_at = publish_at.isoformat() if publish_at else None
     video_id = youtube.upload(
-        cfg, script, job.file("video.mp4"), job.file("thumbnail.png"), job.file("captions.srt"), publish_at=publish_at
+        cfg,
+        script,
+        job.file("video.mp4"),
+        job.file("thumbnail.png"),
+        job.file("captions.srt"),
+        publish_at=publish_at,
+        on_uploaded=lambda vid: job.update(youtube_id=vid, publish_at=posted_at),
     )
     job.update(status="uploaded", youtube_id=video_id, publish_at=publish_at.isoformat() if publish_at else None)
     if script.series and youtube.can_manage():

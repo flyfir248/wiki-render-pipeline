@@ -33,7 +33,9 @@ wikipedia:
 voice:
   provider: kokoro
   kokoro_voice: am_michael
-  kokoro_speed: 1.05
+  kokoro_speed: 1.05        # long videos
+  kokoro_short_speed: 1.15  # Shorts: brisker read, near-zero pauses between scenes
+  short_gap_seconds: 0.08
 
 stock_footage: true     # uses PEXELS_API_KEY if set, otherwise text-only scenes
 

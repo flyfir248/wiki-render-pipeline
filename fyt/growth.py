@@ -44,8 +44,10 @@ Titles:
 - no clickbait lies, no ALL CAPS words except one short one at most, no emoji, no "you won't believe"
 Thumbnail text: 2-5 words that add to the title rather than repeat it.
 Hook: rewrite the opening so the first sentence alone makes someone stop scrolling: open on the strangest
-concrete fact or the moment of tension. No "welcome back", no "in this video", no questions like "did you know".
-Use only facts that appear in the script.
+concrete fact or the moment of tension. {hook_rule} No "welcome back", no "in this video", no questions like
+"did you know". Use only facts that appear in the script.
+Everything you write must point at the video's core message; a title or hook that promises something
+else loses the viewer when the video doesn't deliver it.
 {loop_rule}{series_rule}"""
 
 
@@ -57,7 +59,8 @@ def polish(cfg: Config, script: Script) -> Script:
     guide = POLISH_GUIDE.format(
         niche=cfg.channel.niche,
         audience=cfg.channel.audience,
-        format="YouTube Short (vertical, under a minute)" if short else "long video",
+        format="YouTube Short (vertical, 30-40 seconds)" if short else "long video",
+        hook_rule="For this Short: one sentence, max 12 words." if short else "Max 2 sentences.",
         loop_rule=(
             "Loop line: Shorts replay automatically. Write a last sentence that leads straight back into the hook, "
             "so the replay feels seamless.\n"
@@ -67,14 +70,15 @@ def polish(cfg: Config, script: Script) -> Script:
         series_rule=f"Series: pick the one that fits best: {', '.join(series)}.\n" if series else "Leave series empty.\n",
     )
     user = (
-        f"Current title: {script.title}\nCurrent thumbnail text: {script.thumbnail_text}\n"
+        (f"Core message: {script.core_message}\n" if script.core_message else "")
+        + f"Current title: {script.title}\nCurrent thumbnail text: {script.thumbnail_text}\n"
         f"Opening narration: {script.scenes[0].narration if script.scenes else ''}\n\n"
         f"Full narration:\n{narration[:3000]}"
     )
     p = llm.structured(cfg, guide, user, Polish, max_tokens=2000)
     scenes = list(script.scenes)
     hook = p.hook.strip()
-    if scenes and hook and len(hook.split()) <= 45:
+    if scenes and hook and len(hook.split()) <= (20 if short else 45):
         scenes[0] = scenes[0].model_copy(update={"narration": hook})
     loop = p.loop_line.strip()
     if short and scenes and loop and len(loop.split()) <= 16:
@@ -305,6 +309,7 @@ def cut_scripts(cfg: Config, script: Script, video_id: str, n: int) -> list[Scri
                     "description": _cut_description(script.description, link),
                     "scenes": kept,
                     "chapters": None,
+                    "core_message": "",  # the long video's message isn't this chapter's
                     "thumbnail_text": title,
                 }
             )
