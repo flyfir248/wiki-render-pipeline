@@ -28,12 +28,14 @@ wikipedia:              # used when source: wikipedia (or for "wiki:<Title>" top
 voice:
   provider: kokoro      # kokoro (free, local, natural) | edge (free) | elevenlabs (paid) | espeak (offline) | silent (testing)
   kokoro_voice: am_michael   # e.g. af_heart, am_michael, bm_george, bf_emma
-  kokoro_speed: 1.05
+  kokoro_speed: 1.05         # long videos
+  kokoro_short_speed: 1.15   # Shorts
   edge_voice: en-US-AndrewMultilingualNeural     # list: edge-tts --list-voices
   edge_rate: "+5%"
   elevenlabs_voice_id: JBFqnCBsd6RMkjVDRZzb
   elevenlabs_model: eleven_multilingual_v2
-  gap_seconds: 0.35
+  gap_seconds: 0.3          # pause between scenes in long videos
+  short_gap_seconds: 0.08   # and in Shorts
 
 music_dir: assets/music # drop licensed royalty-free tracks here (mp3/wav)
 music_volume: 0.07

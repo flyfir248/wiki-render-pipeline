@@ -143,9 +143,60 @@ def test_a_lost_state_is_recovered_from_the_channel(cfg, monkeypatch):
         ],
     )
     ch = FakeChannel(monkeypatch)
-    assert schedule.fill(cfg, now=MONDAY) == 2  # Mon 22:00 and Tue 14:00 were already on the channel
-    assert [at.strftime("%a %H") for _, at in ch.uploaded] == ["Tue 22", "Wed 14"]
+    assert schedule.fill(cfg, now=MONDAY, rng=random.Random(1)) == 2  # Mon 22:00 and Tue 14:00 were already on the channel
+    days = [at.strftime("%a") for _, at in ch.uploaded]
+    assert days == ["Tue", "Wed"] and ch.uploaded[0][1].hour >= 22 and ch.uploaded[1][1].hour < 16
     from fyt.store import Topics
 
     assert ("wiki:Vril", "done") in [(t, s) for _, t, s, _ in Topics(cfg).all()]
     assert schedule.uploads_left_today(cfg, MONDAY) == 0  # the two made Monday count toward the quota, plus two now
+
+
+def test_a_video_whose_thumbnail_step_failed_is_never_uploaded_again(cfg, monkeypatch):
+    """The video reached YouTube, then the thumbnail upload timed out: it fills its slot and is not re-posted."""
+    ch = FakeChannel(monkeypatch)
+    real_upload = ch.upload_job
+
+    def flaky_upload(cfg, job, force=False, publish_at=None):
+        if not ch.uploaded:
+            real_upload(cfg, job, force, publish_at)
+            job.update(status="approved")  # what the real pipeline leaves behind when a later step raises
+            raise TimeoutError("The read operation timed out")
+        return real_upload(cfg, job, force, publish_at)
+
+    monkeypatch.setattr(pipeline, "upload_job", flaky_upload)
+    assert schedule.fill(cfg, now=MONDAY) == 4
+    assert len(ch.uploaded) == 4 and schedule.pending_jobs(cfg) == []
+    assert schedule.fill(cfg, now=MONDAY) == 0
+    assert len(ch.uploaded) == 4
+
+
+def test_a_kept_video_already_on_the_channel_is_dropped(cfg, monkeypatch):
+    """Videos kept by older versions (no video id saved) are matched to the channel by title."""
+    job = Job.create(cfg, "wiki:Dreamachine")
+    job.update(status="upload_failed", title="The Lamp That Makes You Dream", format="short")
+    schedule._keep_pending(cfg, job)
+    monkeypatch.setattr(
+        youtube,
+        "recent_uploads",
+        lambda: [{"id": "dup", "publish_at": "2026-09-29T14:20:00Z", "uploaded": "2026-09-28T16:05:00Z",
+                  "title": "The lamp that makes you dream!", "description": ""}],
+    )
+    ch = FakeChannel(monkeypatch)
+    schedule.fill(cfg, now=MONDAY)
+    assert schedule.pending_jobs(cfg) == []
+    assert ch.made == ["short"] * 3  # Tue 14:00 already holds the earlier upload
+
+
+def test_a_kept_video_with_a_video_id_fills_its_slot_without_the_channel(cfg, monkeypatch):
+    def unreadable():
+        raise RuntimeError("403")
+
+    monkeypatch.setattr(youtube, "recent_uploads", unreadable)
+    job = Job.create(cfg, "x")
+    job.update(status="upload_failed", youtube_id="up1", publish_at="2026-09-29T14:20:00+00:00", format="short")
+    schedule._keep_pending(cfg, job)
+    ch = FakeChannel(monkeypatch)
+    schedule.fill(cfg, now=MONDAY)
+    assert ch.made == ["short"] * 3 and schedule.pending_jobs(cfg) == []
+    assert Uploads(cfg).filled()["2026-09-29T14:00:00+00:00"][0] == "up1"

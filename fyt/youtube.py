@@ -172,7 +172,11 @@ def upload(
     thumbnail: Path | None,
     srt: Path | None,
     publish_at: datetime | None = None,
+    on_uploaded=None,
 ) -> str:
+    """Upload the video, then its thumbnail and caption track. Returns the video id.
+    `on_uploaded(video_id)` runs as soon as the video exists on YouTube, so a caller can record it
+    even if a later step fails: retrying the whole upload would post the same video twice."""
     from googleapiclient.errors import HttpError
     from googleapiclient.http import MediaFileUpload
 
@@ -200,12 +204,17 @@ def upload(
             print(f"upload {int(status.progress() * 100)}%")
     video_id = response["id"]
     print(f"uploaded https://youtu.be/{video_id}")
+    if on_uploaded:
+        on_uploaded(video_id)
 
+    # From here on the video is up: nothing may fail the upload, or a retry would post it again.
     if thumbnail and thumbnail.exists():
         try:
             yt.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(str(thumbnail))).execute()
         except HttpError as e:  # custom thumbnails need a phone-verified channel
             print(f"warning: thumbnail not set ({e.status_code}); verify the channel at youtube.com/verify")
+        except Exception as e:  # e.g. "The read operation timed out"
+            print(f"warning: thumbnail not set ({e})")
     if srt and srt.exists() and cfg.youtube.upload_captions and can_manage():
         try:
             yt.captions().insert(
@@ -215,6 +224,8 @@ def upload(
             ).execute()
         except HttpError as e:  # the video is up; missing captions shouldn't fail the run
             print(f"warning: captions not uploaded ({e.status_code})")
+        except Exception as e:
+            print(f"warning: captions not uploaded ({e})")
     return video_id
 
 
@@ -238,7 +249,7 @@ def stats(video_ids: list[str]) -> list[dict]:
 
 
 def recent_uploads(limit: int = 100) -> list[dict]:
-    """The channel's newest uploads, scheduled ones included: id, publish_at (or None), description.
+    """The channel's newest uploads, scheduled ones included: id, publish_at (or None), title, description.
     Costs a few quota units; needs more than the upload-only scope."""
     yt = _service()
     channel = yt.channels().list(part="contentDetails", mine=True).execute()["items"][0]
@@ -258,6 +269,7 @@ def recent_uploads(limit: int = 100) -> list[dict]:
                     "id": item["id"],
                     "publish_at": item["status"].get("publishAt"),
                     "uploaded": item["snippet"].get("publishedAt"),
+                    "title": item["snippet"].get("title", ""),
                     "description": item["snippet"].get("description", ""),
                 }
             )

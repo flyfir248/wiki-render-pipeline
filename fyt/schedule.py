@@ -120,9 +120,13 @@ def _upload(
     try:
         video_id = pipeline.upload_job(cfg, job, publish_at=publish_at)
     except Exception as e:
-        print(f"::warning::upload of {job.id} failed: {e}")
-        job.update(status="upload_failed", upload_error=str(e)[:500])
-        return None if _is_quota_error(e) else False
+        video_id = job.meta.get("youtube_id")
+        if not video_id:
+            print(f"::warning::upload of {job.id} failed: {e}")
+            job.update(status="upload_failed", upload_error=str(e)[:500])
+            return None if _is_quota_error(e) else False
+        # The video is on YouTube; only a later step failed. Count it, never upload it again.
+        print(f"::warning::{job.id} is up as https://youtu.be/{video_id}, but a later step failed: {e}")
     key = None if kind else slot.key  # bonus videos fill no slot
     Uploads(cfg).record(kind or slot.kind, job.id, video_id, publish_at.isoformat(), key, at=now.isoformat(timespec="seconds"))
     print(f"scheduled https://youtu.be/{video_id} ({kind or slot.kind}) for {publish_at:%a %d %b %H:%M} UTC")
@@ -131,6 +135,47 @@ def _upload(
 
 ARTICLE = re.compile(r'Based on the Wikipedia article "(.+?)" \(')
 SLOT_SLACK_MINUTES = 60  # a publish time can land past the jitter window when a render ran long
+
+
+def _slot_for(cfg: Config, publish_at: str | None, slots: list[Slot], filled: dict) -> Slot | None:
+    """The empty slot a video scheduled for `publish_at` fills, if any."""
+    if not publish_at:
+        return None
+    at = datetime.fromisoformat(publish_at.replace("Z", "+00:00"))
+    window = timedelta(minutes=cfg.youtube.publish_jitter_minutes + SLOT_SLACK_MINUTES)
+    return next((s for s in slots if s.key not in filled and s.at <= at <= s.at + window), None)
+
+
+def _same_title(a: str, b: str) -> bool:
+    norm = lambda t: re.sub(r"\W+", " ", t).strip().lower()  # noqa: E731
+    return bool(a) and norm(a) == norm(b)
+
+
+def settle_posted(cfg: Config, now: datetime, channel_titles: list[str] = ()) -> int:
+    """Drop kept videos that are already on YouTube, so no video is ever uploaded twice.
+    A kept video counts as posted when an earlier upload got its video id (a later step such as the
+    thumbnail failed), or when the channel already has a video with its title."""
+    uploads = Uploads(cfg)
+    known = set(uploads.video_ids())
+    dropped = 0
+    for job in pending_jobs(cfg):
+        video_id = job.meta.get("youtube_id")
+        if video_id:
+            if video_id not in known:
+                slots, filled = upcoming_slots(cfg, now), uploads.filled()
+                slot = _slot_for(cfg, job.meta.get("publish_at"), slots, filled)
+                kind = slot.kind if slot else job.meta.get("format", "short")
+                uploads.record(kind, job.id, video_id, job.meta.get("publish_at"), slot.key if slot else None,
+                               at=now.isoformat(timespec="seconds"))
+                known.add(video_id)
+            print(f"{job.id} is already on YouTube as https://youtu.be/{video_id}; not uploading it again")
+        elif any(_same_title(job.meta.get("title", ""), t) for t in channel_titles):
+            print(f"{job.id} ({job.meta.get('title')}) is already on the channel; not uploading it again")
+        else:
+            continue
+        shutil.rmtree(job.path)
+        dropped += 1
+    return dropped
 
 
 def sync(cfg: Config, now: datetime) -> int:
@@ -142,12 +187,12 @@ def sync(cfg: Config, now: datetime) -> int:
         videos = youtube.recent_uploads()
     except (Exception, SystemExit) as e:  # e.g. an upload-only token; the local state is all we have then
         print(f"::warning::could not read the channel's uploads to check the schedule: {e}")
+        settle_posted(cfg, now)
         return 0
     uploads, topics = Uploads(cfg), Topics(cfg)
     known = set(uploads.video_ids())
     filled = uploads.filled()
     slots = upcoming_slots(cfg, now)
-    window = timedelta(minutes=cfg.youtube.publish_jitter_minutes + SLOT_SLACK_MINUTES)
     added = 0
     for v in videos:
         m = ARTICLE.search(v["description"])
@@ -155,16 +200,14 @@ def sync(cfg: Config, now: datetime) -> int:
             topics.mark_done(wiki.topic_for(m.group(1)))
         if v["id"] in known:
             continue
-        slot = None
-        if v["publish_at"]:
-            at = datetime.fromisoformat(v["publish_at"])
-            slot = next((s for s in slots if s.key not in filled and s.at <= at <= s.at + window), None)
+        slot = _slot_for(cfg, v["publish_at"], slots, filled)
         uploaded = v["uploaded"] and datetime.fromisoformat(v["uploaded"]).isoformat(timespec="seconds")
         uploads.record(slot.kind if slot else "channel", None, v["id"], v["publish_at"], slot.key if slot else None, at=uploaded)
         if slot:
             filled[slot.key] = (v["id"], v["publish_at"])
             print(f"slot {slot.at:%a %d %b %H:%M} already has https://youtu.be/{v['id']}")
         added += 1
+    settle_posted(cfg, now, [v.get("title", "") for v in videos])
     return added
 
 

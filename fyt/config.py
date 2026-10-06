@@ -55,12 +55,20 @@ class VoiceConfig(BaseModel):
     edge_rate: str = "+5%"
     kokoro_voice: str = "am_michael"  # e.g. af_heart, am_michael, bm_george, bf_emma
     kokoro_speed: float = 1.05
+    kokoro_short_speed: float = 1.15  # Shorts are read faster: viewers swipe away from a slow start
     kokoro_lang: str = "en-us"
-    kokoro_sentence_pause: float = 0.18
+    kokoro_sentence_pause: float = 0.12
     kokoro_dir: str = "assets/kokoro"
     espeak_voice: str = "en-us"
     espeak_wpm: int = 165
-    gap_seconds: float = 0.35  # pause between scenes
+    gap_seconds: float = 0.3  # pause between scenes
+    short_gap_seconds: float = 0.08  # in Shorts, scenes run straight into each other
+
+    def speed(self, fmt: str) -> float:
+        return self.kokoro_short_speed if fmt == "short" else self.kokoro_speed
+
+    def gap(self, fmt: str) -> float:
+        return self.short_gap_seconds if fmt == "short" else self.gap_seconds
 
 
 class YouTubeConfig(BaseModel):
