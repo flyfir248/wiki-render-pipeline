@@ -22,8 +22,10 @@ from fyt.models import Script
 
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
-    "https://www.googleapis.com/auth/youtube.force-ssl",  # captions + stats
+    "https://www.googleapis.com/auth/youtube.force-ssl",  # captions, playlists, comments, stats
+    "https://www.googleapis.com/auth/yt-analytics.readonly",  # how long viewers watch each video
 ]
+ANALYTICS_SCOPE = SCOPES[2]
 SECRETS = ROOT / "secrets"
 CLIENT_SECRET = SECRETS / "client_secret.json"
 TOKEN = SECRETS / "token.json"
@@ -50,19 +52,25 @@ def authorised() -> bool:
 FULL_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl"
 
 
-def can_manage() -> bool:
-    """Whether the token may do more than upload (caption tracks, playlists, stats).
-    Tokens made with only the upload scope get 403 for those."""
+def _scopes() -> list[str]:
     try:
         raw = TOKEN.read_text() if TOKEN.exists() else os.environ.get("YOUTUBE_TOKEN_JSON", "")
         scopes = json.loads(raw).get("scopes")
     except (OSError, ValueError):
-        return False
-    if isinstance(scopes, str):
-        scopes = scopes.split()
-    if not scopes:
-        return False  # unknown: don't spend quota on calls that may be refused
+        return []
+    return scopes.split() if isinstance(scopes, str) else list(scopes or [])  # unknown: assume none
+
+
+def can_manage() -> bool:
+    """Whether the token may do more than upload (caption tracks, playlists, comments, stats).
+    Tokens made with only the upload scope get 403 for those."""
+    scopes = _scopes()
     return FULL_SCOPE in scopes or "https://www.googleapis.com/auth/youtube" in scopes
+
+
+def can_analyze() -> bool:
+    """Whether the token may read YouTube Analytics (watch time per video)."""
+    return ANALYTICS_SCOPE in _scopes()
 
 
 def add_to_playlist(video_id: str, name: str, privacy: str = "public") -> None:
@@ -160,8 +168,7 @@ def upload_sheet(cfg: Config, script: Script) -> str:
         f"TITLE\n{body['title']}\n\n"
         f"DESCRIPTION\n{body['description']}\n\n"
         f"TAGS\n{', '.join(body['tags'])}\n\n"
-        "Also: upload thumbnail.png as the thumbnail and captions.srt as subtitles, and under\n"
-        "\"Altered or synthetic content\" answer Yes (the voice is AI-generated).\n"
+        "Also: upload thumbnail.png as the thumbnail and captions.srt as subtitles.\n"
     )
 
 
@@ -227,6 +234,60 @@ def upload(
         except Exception as e:
             print(f"warning: captions not uploaded ({e})")
     return video_id
+
+
+def set_synthetic_label(video_ids: list[str], value: bool) -> int:
+    """Set YouTube's "altered or synthetic content" label on videos already uploaded.
+    Returns how many changed. videos.update replaces the whole status, so the current one is sent back."""
+    yt = _service()
+    changed = 0
+    for i in range(0, len(video_ids), 50):
+        resp = yt.videos().list(part="status", id=",".join(video_ids[i : i + 50])).execute()
+        for item in resp.get("items", []):
+            status = item["status"]
+            if status.get("containsSyntheticMedia", False) == value:
+                continue
+            keep = ("privacyStatus", "publishAt", "license", "embeddable", "publicStatsViewable", "selfDeclaredMadeForKids")
+            body = {k: status[k] for k in keep if k in status}
+            body["containsSyntheticMedia"] = value
+            yt.videos().update(part="status", body={"id": item["id"], "status": body}).execute()
+            changed += 1
+    return changed
+
+
+def post_comment(video_id: str, text: str) -> str:
+    """Post a top-level comment from the channel on its own video. Returns the comment id.
+    (The API can't pin it; pin it in YouTube Studio if you like.)"""
+    resp = _service().commentThreads().insert(
+        part="snippet",
+        body={"snippet": {"videoId": video_id, "topLevelComment": {"snippet": {"textOriginal": text}}}},
+    ).execute()
+    return resp["id"]
+
+
+def retention(video_ids: list[str], since: str = "2020-01-01") -> dict[str, dict]:
+    """Per video: views, average seconds watched and average percentage watched, from YouTube Analytics."""
+    from googleapiclient.discovery import build
+
+    _service()  # refreshes the token file
+    from google.oauth2.credentials import Credentials
+
+    yta = build("youtubeAnalytics", "v2", credentials=Credentials.from_authorized_user_file(str(TOKEN)), cache_discovery=False)
+    out: dict[str, dict] = {}
+    today = datetime.now(timezone.utc).date().isoformat()
+    for i in range(0, len(video_ids), 50):
+        resp = yta.reports().query(
+            ids="channel==MINE",
+            startDate=since,
+            endDate=today,
+            metrics="views,averageViewDuration,averageViewPercentage",
+            dimensions="video",
+            filters="video==" + ",".join(video_ids[i : i + 50]),
+            maxResults=50,
+        ).execute()
+        for vid, views, seconds, percent in resp.get("rows", []):
+            out[vid] = {"views": int(views), "seconds": float(seconds), "percent": float(percent)}
+    return out
 
 
 def stats(video_ids: list[str]) -> list[dict]:

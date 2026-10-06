@@ -2,112 +2,20 @@ import React from "react";
 import {
   AbsoluteFill,
   Easing,
-  Img,
-  OffthreadVideo,
   interpolate,
   spring,
-  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
 import type { Format, Scene, Theme } from "../types";
 import { unit } from "../theme";
 
-type SceneProps = { scene: Scene; theme: Theme; format: Format };
+import { CameraMedia, cameraOf } from "./camera";
+import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
+import { MapScene, validPlaces } from "./map";
+import { Heading, Stage, Sub, useEnter, type SceneProps } from "./shared";
 
-// ---------- shared helpers ----------
-
-const useEnter = (delayFrames = 0) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  return spring({ frame: frame - delayFrames, fps, config: { damping: 16, mass: 0.7 } });
-};
-
-// Fade + slight zoom on the way in and out of every scene.
-export const SceneFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
-  const fadeIn = interpolate(frame, [0, 10], [0, 1], { extrapolateRight: "clamp" });
-  const fadeOut = interpolate(frame, [durationInFrames - 8, durationInFrames], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const zoom = interpolate(frame, [0, durationInFrames], [1, 1.04]);
-  return (
-    <AbsoluteFill style={{ opacity: Math.min(fadeIn, fadeOut), transform: `scale(${zoom})` }}>{children}</AbsoluteFill>
-  );
-};
-
-const Stage: React.FC<{ format: Format; children: React.ReactNode; justify?: string }> = ({
-  format,
-  children,
-  justify = "center",
-}) => (
-  <AbsoluteFill
-    style={{
-      padding: format === "short" ? "220px 80px 560px" : "90px 160px 170px",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: justify,
-      alignItems: "center",
-      textAlign: "center",
-      gap: 36,
-    }}
-  >
-    {children}
-  </AbsoluteFill>
-);
-
-const Heading: React.FC<{ text?: string | null; theme: Theme; format: Format; size?: number; delay?: number }> = ({
-  text,
-  theme,
-  format,
-  size = 64,
-  delay = 0,
-}) => {
-  const p = useEnter(delay);
-  if (!text) return null;
-  return (
-    <div
-      style={{
-        fontFamily: theme.font,
-        fontWeight: 800,
-        fontSize: size * unit(format),
-        color: theme.text,
-        lineHeight: 1.1,
-        opacity: p,
-        transform: `translateY(${(1 - p) * 40}px)`,
-      }}
-    >
-      {text}
-    </div>
-  );
-};
-
-const Sub: React.FC<{ text?: string | null; theme: Theme; format: Format; delay?: number }> = ({
-  text,
-  theme,
-  format,
-  delay = 8,
-}) => {
-  const p = useEnter(delay);
-  if (!text) return null;
-  return (
-    <div
-      style={{
-        fontFamily: theme.font,
-        fontWeight: 500,
-        fontSize: 38 * unit(format),
-        color: theme.muted,
-        maxWidth: 1400,
-        opacity: p,
-        transform: `translateY(${(1 - p) * 30}px)`,
-      }}
-    >
-      {text}
-    </div>
-  );
-};
+export { SceneFrame, transitionOf } from "./camera";
 
 const formatNumber = (n: number) =>
   Math.abs(n) >= 1000 ? Math.round(n).toLocaleString("en-US") : n % 1 === 0 ? String(n) : n.toFixed(1);
@@ -461,26 +369,14 @@ const ComparisonColumn: React.FC<{
   );
 };
 
-// Stock footage / image with a slow Ken Burns move and a lower-third label.
+// A photo or clip moved by the scene's camera, with a lower-third label.
 const BrollScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
-  const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
-  const zoom = interpolate(frame, [0, durationInFrames], [1.05, 1.18]);
-  const pan = interpolate(frame, [0, durationInFrames], [-2, 2]);
   const media = scene.media;
   const p = useEnter(6);
   const label = scene.heading ?? scene.text;
   return (
     <AbsoluteFill>
-      {media ? (
-        <AbsoluteFill style={{ transform: `scale(${zoom}) translateX(${pan}%)` }}>
-          {media.kind === "video" ? (
-            <OffthreadVideo src={staticFile(media.src)} muted style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          ) : (
-            <Img src={staticFile(media.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          )}
-        </AbsoluteFill>
-      ) : null}
+      {media ? <CameraMedia media={media} camera={cameraOf(scene)} /> : null}
       <AbsoluteFill style={{ background: `linear-gradient(transparent 45%, ${theme.background}dd)` }} />
       {label ? (
         <div
@@ -517,43 +413,38 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   timeline: TimelineScene,
   comparison: ComparisonScene,
   broll: BrollScene,
+  map: MapScene,
+  process: ProcessScene,
+  document: DocumentScene,
+  dialogue: DialogueScene,
 };
 
-// A photo or clip behind a template scene: slow Ken Burns move, darkened so text stays readable.
-const Backdrop: React.FC<{ media: NonNullable<Scene["media"]>; theme: Theme }> = ({ media, theme }) => {
-  const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
-  const zoom = interpolate(frame, [0, durationInFrames], [1.04, 1.14]);
-  const pan = interpolate(frame, [0, durationInFrames], [1.5, -1.5]);
-  const style = { width: "100%", height: "100%", objectFit: "cover" as const };
-  return (
-    <AbsoluteFill>
-      <AbsoluteFill style={{ transform: `scale(${zoom}) translateY(${pan}%)` }}>
-        {media.kind === "video" ? (
-          <OffthreadVideo src={staticFile(media.src)} muted style={style} />
-        ) : (
-          <Img src={staticFile(media.src)} style={style} />
-        )}
-      </AbsoluteFill>
-      <AbsoluteFill
-        style={{
-          background: `linear-gradient(${theme.background}cc, ${theme.background}a6 40%, ${theme.background}ee)`,
-        }}
-      />
-    </AbsoluteFill>
-  );
-};
+// A photo or clip behind a template scene, moved by the scene's camera and darkened so text stays readable.
+const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; theme: Theme }> = ({ scene, media, theme }) => (
+  <AbsoluteFill>
+    <CameraMedia media={media} camera={cameraOf(scene)} flat />
+    <AbsoluteFill
+      style={{
+        background: `linear-gradient(${theme.background}cc, ${theme.background}a6 40%, ${theme.background}ee)`,
+      }}
+    />
+  </AbsoluteFill>
+);
 
 export const SceneView: React.FC<SceneProps> = (props) => {
-  // Fall back to a kinetic statement for broll without media or unknown types.
-  const type = props.scene.type === "broll" && !props.scene.media ? "statement" : props.scene.type;
+  // Fall back to a kinetic statement for broll without media, a map without places, or unknown types.
+  const { scene: raw } = props;
+  const type =
+    (raw.type === "broll" && !raw.media) || (raw.type === "map" && !validPlaces(raw.places).length)
+      ? "statement"
+      : raw.type;
   const Component = registry[type] ?? StatementScene;
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
   const media = props.scene.media;
-  if (media && type !== "broll") {
+  if (media && type !== "broll" && type !== "map") {
     return (
       <AbsoluteFill>
-        <Backdrop media={media} theme={props.theme} />
+        <Backdrop scene={props.scene} media={media} theme={props.theme} />
         <Component {...props} scene={scene} />
       </AbsoluteFill>
     );

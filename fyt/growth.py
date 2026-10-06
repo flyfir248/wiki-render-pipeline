@@ -51,9 +51,10 @@ else loses the viewer when the video doesn't deliver it.
 {loop_rule}{series_rule}"""
 
 
-def polish(cfg: Config, script: Script) -> Script:
+def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True) -> Script:
     """Rewrite the title, thumbnail text and opening line for clicks and retention."""
     short = cfg.format == "short"
+    looped = short and loop
     narration = " ".join(s.narration for s in script.scenes)
     series = cfg.growth.series
     guide = POLISH_GUIDE.format(
@@ -64,7 +65,7 @@ def polish(cfg: Config, script: Script) -> Script:
         loop_rule=(
             "Loop line: Shorts replay automatically. Write a last sentence that leads straight back into the hook, "
             "so the replay feels seamless.\n"
-            if short
+            if looped
             else "Leave loop_line empty.\n"
         ),
         series_rule=f"Series: pick the one that fits best: {', '.join(series)}.\n" if series else "Leave series empty.\n",
@@ -74,15 +75,16 @@ def polish(cfg: Config, script: Script) -> Script:
         + f"Current title: {script.title}\nCurrent thumbnail text: {script.thumbnail_text}\n"
         f"Opening narration: {script.scenes[0].narration if script.scenes else ''}\n\n"
         f"Full narration:\n{narration[:3000]}"
+        + (f"\n\nHow earlier videos on this channel did (learn from the titles and hooks that held viewers):\n{performance[:1500]}" if performance else "")
     )
     p = llm.structured(cfg, guide, user, Polish, max_tokens=2000)
     scenes = list(script.scenes)
     hook = p.hook.strip()
     if scenes and hook and len(hook.split()) <= (20 if short else 45):
         scenes[0] = scenes[0].model_copy(update={"narration": hook})
-    loop = p.loop_line.strip()
-    if short and scenes and loop and len(loop.split()) <= 16:
-        scenes[-1] = scenes[-1].model_copy(update={"narration": scenes[-1].narration.rstrip() + " " + loop})
+    loop_line = p.loop_line.strip()
+    if looped and scenes and loop_line and len(loop_line.split()) <= 16:
+        scenes[-1] = scenes[-1].model_copy(update={"narration": scenes[-1].narration.rstrip() + " " + loop_line})
     title = p.best_title.strip()
     update = {"scenes": scenes}
     if 10 <= len(title) <= 100:

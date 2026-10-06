@@ -4,6 +4,7 @@ so a failed run can be inspected and individual steps re-run."""
 from __future__ import annotations
 
 import json
+import random
 from datetime import datetime
 from pathlib import Path
 
@@ -34,8 +35,9 @@ def make_video(
 
 def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False) -> None:
     images: list[wiki.WikiImage] = []
+    article = None
     if script is None:
-        notes, article = "", None
+        notes = ""
         if wiki.is_wiki_topic(topic):
             log(job, "fetching Wikipedia article")
             article = wiki.fetch_article(cfg, topic[len(wiki.PREFIX) :])
@@ -50,26 +52,42 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             log(job, "researching")
             notes = llm.research(cfg, topic)
             job.file("research.md").write_text(notes)
-        log(job, "writing script")
         subject = article.title if article else topic
         menu = wiki.image_menu(images)
-        script = llm.write_script(cfg, subject, notes, from_wikipedia=article is not None, images=menu)
-        limit = llm.SHORT_WORDS * 1.25 if cfg.format == "short" else None
-        if limit and narration_words(script) > limit:
-            log(job, f"script is {narration_words(script)} words; asking for a shorter one")
-            feedback = (
-                f"Your previous draft had {narration_words(script)} words of narration. "
-                f"This is a Short: keep the total narration under {llm.SHORT_WORDS} words."
-            )
-            script = llm.write_script(cfg, subject, notes, from_wikipedia=article is not None, images=menu, feedback=feedback)
+        g = cfg.growth
+        two_part = (
+            cfg.format == "short" and article is not None and len(notes) >= g.two_part_min_chars
+            and random.random() < g.two_part_share
+        )
+        log(job, "writing part 1 of a two-part script" if two_part else "writing script")
+        script = _short_enough(cfg, job, subject, notes, article is not None, menu, llm.PART1_NOTE if two_part else "")
+        if two_part:
+            try:
+                previous = " ".join(s.narration for s in script.scenes)
+                note = llm.PART2_NOTE.format(previous=previous, message=script.core_message)
+                log(job, "writing part 2")
+                part2 = _short_enough(cfg, job, subject, notes, True, menu, note)
+                job.file("part2.json").write_text(wiki_attribute(part2, article).model_dump_json(indent=2))
+                last = script.scenes[-1]
+                if "part two" not in last.narration.lower():
+                    script.scenes[-1] = last.model_copy(update={"narration": last.narration.rstrip() + " Part two is up next."})
+            except Exception as e:  # a single Short is still fine
+                log(job, f"warning: no part 2 ({e}); making a single Short")
+                two_part = False
         if article:
             script = wiki_attribute(script, article)
+    else:
+        two_part = False
     if polish and cfg.growth.polish:
         log(job, "sharpening title, hook and thumbnail text")
         try:
-            script = growth.polish(cfg, script)
+            # Part 1 ends on its cliffhanger, not a line looping back into the hook.
+            script = growth.polish(cfg, script, performance_summary(cfg), loop=not two_part)
         except Exception as e:  # the unpolished script is still fine
             log(job, f"warning: polish failed: {e}")
+    if two_part:
+        script = script.model_copy(update={"title": f"{script.title[:88]} (Part 1)"})
+        job.update(two_part=True)
     job.file("script.json").write_text(script.model_dump_json(indent=2))
     job.update(status="scripted", title=script.title, core_message=script.core_message)
 
@@ -87,7 +105,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     voice_src = None if provider == "silent" else "voice.wav"
 
     log(job, "fetching visuals")
-    scene_media, credits, used = scene_visuals(cfg, job, script, images, topic)
+    subject = article.title if article else (script.thumbnail_kicker or "")
+    scene_media, credits, used = scene_visuals(cfg, job, script, images, topic, subject)
     if credits:
         script = script.model_copy(
             update={"description": script.description.rstrip() + "\n\nImages from Wikimedia Commons:\n" + "\n".join(credits)}
@@ -98,7 +117,9 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = script.model_copy(update={"description": script.description.rstrip() + "\n\n" + chapters})
         job.file("script.json").write_text(script.model_dump_json(indent=2))
     job.file("youtube.txt").write_text(youtube.upload_sheet(cfg, script))
-    music = media.pick_music(cfg, job.public)
+    music = media.pick_music(
+        cfg, job.public, seconds=spans[-1][1] + 2 if spans else 60, seed=sum(map(ord, job.id)), mood=script.mood
+    )
 
     props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music)
     job.file("props.json").write_text(props.model_dump_json(indent=2))
@@ -109,7 +130,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
 
     log(job, "rendering thumbnail")
     # The subject's own photo makes a better thumbnail than a stock one.
-    bg = next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and "wiki" in m.src), None)
+    bg = next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)), None)
     if bg is None and cfg.stock_footage:
         try:
             bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used)
@@ -131,6 +152,22 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     log(job, f"done: {status}" + (f" -- {problems}" if problems else ""))
 
 
+def _short_enough(cfg: Config, job: Job, subject: str, notes: str, from_wiki: bool, menu: str, note: str = "") -> Script:
+    """Write the script, asking once more for a shorter one when a Short runs long."""
+    script = llm.write_script(cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note)
+    limit = llm.SHORT_WORDS * 1.25 if cfg.format == "short" else None
+    if limit and narration_words(script) > limit:
+        log(job, f"script is {narration_words(script)} words; asking for a shorter one")
+        feedback = (
+            f"Your previous draft had {narration_words(script)} words of narration. "
+            f"This is a Short: keep the total narration under {llm.SHORT_WORDS} words."
+        )
+        script = llm.write_script(
+            cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=f"{note}\n\n{feedback}".strip()
+        )
+    return script
+
+
 def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:
     """YouTube chapter timestamps for the description, or "" when YouTube wouldn't accept them
     (it needs at least 3 chapters, the first at 0:00, each at least 10 seconds long)."""
@@ -150,32 +187,41 @@ def narration_words(script: Script) -> int:
 
 
 def scene_visuals(
-    cfg: Config, job: Job, script: Script, images: list["wiki.WikiImage"], topic: str
+    cfg: Config, job: Job, script: Script, images: list["wiki.WikiImage"], topic: str, subject: str = ""
 ) -> tuple[dict[int, Media], list[str], set[str]]:
-    """Pick a visual for each scene: the article image the script chose, else stock
-    footage for the scene's search query. Returns media per scene, image credits,
-    and the stock ids used."""
+    """Pick a visual for each scene: the article image the script chose, else stock footage for
+    the scene's search query. With `visuals_every_scene`, scenes still without one (charts, numbers,
+    quotes) get a real photo behind them: a spare article image, a Wikimedia Commons photo, or a
+    stock photo. Returns media per scene, image credits, and the stock ids used."""
     used: set[str] = set()
     scene_media: dict[int, Media] = {}
     credits: list[str] = []
     taken: set[int] = set()
     (job.public / "media").mkdir(parents=True, exist_ok=True)
+
+    def use_image(i: int, im: "wiki.WikiImage", rel: str) -> bool:
+        try:
+            wiki.download_image(im, job.public / rel)
+        except Exception as e:
+            log(job, f"warning: could not download {im.title}: {e}")
+            return False
+        scene_media[i] = Media(src=rel, kind="image")
+        credits.append(im.credit)
+        return True
+
+    def article_image(i: int, n: int) -> bool:
+        im = images[n - 1]
+        ext = im.url.rsplit(".", 1)[-1].split("?")[0].lower()
+        if not use_image(i, im, f"media/wiki{n}.{ext if ext in ('jpg', 'jpeg', 'png', 'webp') else 'jpg'}"):
+            return False
+        taken.add(n)
+        return True
+
     for i, s in enumerate(script.scenes):
         n = s.image
-        if n is not None and 1 <= n <= len(images) and n not in taken:
-            im = images[n - 1]
-            ext = im.url.rsplit(".", 1)[-1].split("?")[0].lower()
-            rel = f"media/wiki{n}.{ext if ext in ('jpg', 'jpeg', 'png', 'webp') else 'jpg'}"
-            try:
-                wiki.download_image(im, job.public / rel)
-            except Exception as e:
-                log(job, f"warning: could not download {im.title}: {e}")
-            else:
-                scene_media[i] = Media(src=rel, kind="image")
-                credits.append(im.credit)
-                taken.add(n)
-                continue
-        # Data scenes (charts, numbers, lists) read best on the plain background.
+        if n is not None and 1 <= n <= len(images) and n not in taken and article_image(i, n):
+            continue
+        # Data scenes (charts, numbers, lists) get their photo in the second pass, behind the chart.
         wants_stock = s.type == "broll" or (s.broll_query and s.type in ("title", "statement", "quote"))
         if wants_stock:
             try:
@@ -189,16 +235,40 @@ def scene_visuals(
     if 0 not in scene_media and script.scenes and images:
         n = next((k for k in range(1, len(images) + 1) if k not in taken), None)
         if n is not None:
-            im = images[n - 1]
-            rel = f"media/wiki{n}.jpg"
+            article_image(0, n)
+
+    if cfg.growth.visuals_every_scene:
+        commons_seen: set[str] = set()
+
+        def commons(query: str) -> list["wiki.WikiImage"]:
             try:
-                wiki.download_image(im, job.public / rel)
-                scene_media[0] = Media(src=rel, kind="image")
-                credits.append(im.credit)
+                found = wiki.search_commons(query)
+            except Exception as e:  # Commons is a nice-to-have
+                log(job, f"warning: Commons search failed for {query!r}: {e}")
+                return []
+            return [im for im in found if im.title not in commons_seen]
+
+        for i, s in enumerate(script.scenes):
+            if i in scene_media or s.type == "map":  # a map is its own picture
+                continue
+            n = next((k for k in range(1, len(images) + 1) if k not in taken), None)
+            if n is not None and article_image(i, n):
+                continue
+            query = s.broll_query or s.heading or ""
+            found = (commons(f"{subject} {query}".strip()) if subject and query else []) or (commons(subject) if subject else [])
+            if found and use_image(i, found[0], f"media/commons{i + 1}.jpg"):
+                commons_seen.add(found[0].title)
+                continue
+            try:
+                m = media.fetch_photo(cfg, query or subject or topic, job.public, f"p{i + 1}", used) if cfg.stock_footage else None
             except Exception as e:
-                log(job, f"warning: could not download {im.title}: {e}")
-    log(job, f"visuals: {sum(1 for m in scene_media.values() if 'wiki' in m.src)} article images, "
-        f"{sum(1 for m in scene_media.values() if 'wiki' not in m.src)} stock, "
+                log(job, f"warning: no stock photo for scene {i + 1}: {e}")
+                m = None
+            if m:
+                scene_media[i] = m
+
+    kinds = [("wiki" in m.src or "commons" in m.src) for m in scene_media.values()]
+    log(job, f"visuals: {sum(kinds)} Wikipedia/Commons images, {len(kinds) - sum(kinds)} stock, "
         f"{len(script.scenes) - len(scene_media)} scenes on plain background")
     return scene_media, credits, used
 
@@ -235,6 +305,9 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
         on_uploaded=lambda vid: job.update(youtube_id=vid, publish_at=posted_at),
     )
     job.update(status="uploaded", youtube_id=video_id, publish_at=publish_at.isoformat() if publish_at else None)
+    if script.comment_question.strip() and cfg.growth.first_comment:
+        # Comments only work once the video is public, so `fill` posts it after the publish time.
+        Uploads(cfg).queue_comment(video_id, script.comment_question.strip(), publish_at.isoformat() if publish_at else None)
     if script.series and youtube.can_manage():
         try:
             youtube.add_to_playlist(video_id, script.series)
@@ -242,7 +315,26 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
             print(f"warning: not added to the {script.series!r} playlist: {e}")
     if cfg.format == "long":
         queue_cuts(cfg, script, video_id)
+    if job.file("part2.json").exists():
+        queue_part2(cfg, job, video_id)
     return video_id
+
+
+def queue_part2(cfg: Config, job: Job, video_id: str) -> None:
+    """Queue part 2 of a two-part Short; it fills the next Short slot and links back to part 1."""
+    part2 = load_script(job.file("part2.json"))
+    part2 = part2.model_copy(
+        update={
+            "title": f"{part2.title[:88]} (Part 2)",
+            "description": f"Part 1: https://youtu.be/{video_id}\n\n{part2.description}",
+        }
+    )
+    folder = cfg.jobs_path / "cuts"
+    folder.mkdir(parents=True, exist_ok=True)
+    name = f"{video_id}-part2"
+    (folder / f"{name}.json").write_text(part2.model_dump_json(indent=2))
+    Topics(cfg).add([CUT + name])
+    print(f"queued part 2 of https://youtu.be/{video_id}")
 
 
 CUT = "cut:"
@@ -316,7 +408,8 @@ def make_topic(cfg: Config, topic: str) -> Job:
     if not topic.startswith(CUT):
         return make_video(cfg, topic)
     path = cfg.jobs_path / "cuts" / f"{topic[len(CUT):]}.json"
-    job = make_video(cfg, topic, script=load_script(path), polish=True)
+    # Part 2 opens with its recap, which a new hook would replace.
+    job = make_video(cfg, topic, script=load_script(path), polish=not topic.endswith("-part2"))
     path.unlink(missing_ok=True)
     return job
 
@@ -366,8 +459,21 @@ def long_topic(cfg: Config, topics: Topics) -> tuple[int, str] | None:
     return topics.find(wiki.topic_for(titles[0]))
 
 
+_performance: dict[tuple, str] = {}  # one lookup per run: every video made in it gets the same answer
+MIN_VIEWS_FOR_RETENTION = 30  # below this, how long people watched is mostly noise
+
+
 def performance_summary(cfg: Config, limit: int = 10) -> str:
-    """Top uploaded videos by views, fed back into topic ideation."""
+    """What has worked on the channel, fed back into topic choice and packaging. With YouTube
+    Analytics access: the videos people watched furthest and the ones they left soonest. Otherwise
+    the top videos by views."""
+    key = (str(cfg.jobs_path), limit)
+    if key not in _performance:
+        _performance[key] = _performance_summary(cfg, limit)
+    return _performance[key]
+
+
+def _performance_summary(cfg: Config, limit: int) -> str:
     uploaded = {j.meta["youtube_id"] for j in list_jobs(cfg) if j.meta.get("youtube_id")}
     uploaded |= set(Uploads(cfg).video_ids())
     if not uploaded or not youtube.can_manage():  # reading stats needs more than the upload scope
@@ -377,6 +483,22 @@ def performance_summary(cfg: Config, limit: int = 10) -> str:
     except Exception as e:  # stats are a nice-to-have
         print(f"warning: could not fetch stats: {e}")
         return ""
+    watched: dict[str, dict] = {}
+    if youtube.can_analyze():
+        try:
+            watched = youtube.retention(list(uploaded))
+        except Exception as e:
+            print(f"warning: could not fetch watch time: {e}")
+    rated = [r for r in rows if watched.get(r["id"], {}).get("views", 0) >= MIN_VIEWS_FOR_RETENTION]
+    if len(rated) >= 4:
+        rated.sort(key=lambda r: watched[r["id"]]["percent"], reverse=True)
+        line = lambda r: (  # noqa: E731
+            f"- {r['title']}: {r['views']} views, watched {watched[r['id']]['percent']:.0f}% on average"
+        )
+        keep = max(2, limit * 2 // 3)
+        best = "\n".join(line(r) for r in rated[:keep])
+        worst = "\n".join(line(r) for r in rated[keep:][-max(1, limit - keep):])
+        return f"Held viewers best:\n{best}" + (f"\nLost viewers soonest (avoid what these did):\n{worst}" if worst else "")
     rows.sort(key=lambda r: r["views"], reverse=True)
     return "\n".join(f"- {r['title']}: {r['views']} views, {r['likes']} likes" for r in rows[:limit])
 

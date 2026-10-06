@@ -42,6 +42,14 @@ def check_script(cfg: Config, script: Script) -> list[str]:
             problems.append(f"scene {i} is a list without items")
         if s.type == "quote" and not (s.text and s.author):
             problems.append(f"scene {i} is a quote without text/author")
+        if s.type == "map" and not any(abs(p.lat) <= 80 and abs(p.lon) <= 180 for p in s.places or []):
+            problems.append(f"scene {i} is a map without valid places")
+        if s.type == "process" and len(s.items or []) < 2:
+            problems.append(f"scene {i} is a process diagram with fewer than 2 steps")
+        if s.type == "document" and not s.text:
+            problems.append(f"scene {i} is a document without text")
+        if s.type == "dialogue" and not s.lines:
+            problems.append(f"scene {i} is a transcript without lines")
     return problems
 
 

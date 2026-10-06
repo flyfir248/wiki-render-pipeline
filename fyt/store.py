@@ -81,6 +81,15 @@ class Uploads:
             )"""
         )
         self.db.execute("create table if not exists notes (key text primary key, value text)")
+        self.db.execute(
+            """create table if not exists comments (
+                youtube_id text primary key,
+                text text not null,
+                due text,                  -- when the video goes public (UTC ISO); null: already public
+                tries integer not null default 0,
+                posted text
+            )"""
+        )
         self.db.commit()
 
     def note(self, key: str) -> str | None:
@@ -98,6 +107,25 @@ class Uploads:
             "insert into uploads(slot, kind, job, youtube_id, publish_at, uploaded) values (?, ?, ?, ?, ?, ?)",
             (slot, kind, job, youtube_id, publish_at, at or now()),
         )
+        self.db.commit()
+
+    def queue_comment(self, youtube_id: str, text: str, due: str | None) -> None:
+        self.db.execute("insert or ignore into comments(youtube_id, text, due) values (?, ?, ?)", (youtube_id, text, due))
+        self.db.commit()
+
+    def due_comments(self, now: str, max_tries: int = 3) -> list[tuple[str, str]]:
+        """(youtube_id, text) of comments whose video is public by now and that aren't posted yet."""
+        rows = self.db.execute(
+            "select youtube_id, text from comments where posted is null and tries < ? and (due is null or due <= ?)",
+            (max_tries, now),
+        )
+        return rows.fetchall()
+
+    def comment_done(self, youtube_id: str, ok: bool) -> None:
+        if ok:
+            self.db.execute("update comments set posted=? where youtube_id=?", (now(), youtube_id))
+        else:
+            self.db.execute("update comments set tries=tries+1 where youtube_id=?", (youtube_id,))
         self.db.commit()
 
     def filled(self) -> dict[str, tuple[str, str]]:

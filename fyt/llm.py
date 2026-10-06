@@ -11,7 +11,7 @@ import requests
 from pydantic import BaseModel, Field, ValidationError
 
 from fyt.config import Config
-from fyt.models import Chapter, Script, ScriptScene
+from fyt.models import MOOD_HELP, Chapter, Mood, Script, ScriptScene
 
 # Server-side refusal fallbacks: if the primary model declines, the API reroutes
 # the same request to a suitable fallback model inside the same call.
@@ -273,12 +273,29 @@ Scene templates (field names in brackets):
 - timeline: dated events [heading, events (3-5, label = year/date)]
 - comparison: two columns [heading, left_title, left, right_title, right]
 - broll: stock footage with a caption [broll_query (concrete, filmable), heading]
+- map: an animated map that flies to real places and draws a route between them [heading, places
+  (1-4, each name + lat + lon in degrees, in the order of travel), route (true to draw the journey)].
+  Use it whenever the story moves between places or where something is matters.
+- process: how one thing led to another, as connected steps [heading, items (2-5, max ~5 words each)]
+- document: a line from a real report, letter, ruling or newspaper, highlighted [heading = what the
+  document is, text = the line (max ~20 words), author = source and year]
+- dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
+  words)]. Only for words that were actually recorded or documented; never invent dialogue.
+
+Every scene may also set `camera` (push_in, pull_out, pan_left, pan_right, parallax) for the move over
+its photo and `transition` (fade, slide, zoom, wipe, flash) for how it enters. Leave them unset unless
+a choice clearly fits the moment, e.g. flash for a sudden turn, pull_out to reveal scale.
 
 One message: before any scene, decide the single thing the viewer should walk away knowing and
 write it as `core_message` (one plain sentence). Every scene must move toward it. Cut any fact,
 however interesting, that doesn't; a video that says one thing clearly beats one that says five.
 
 {structure}
+
+Music: set `mood` so the background music fits the story. Somber for death, disaster, war, illness
+or any tragedy (respectful, never upbeat); tense for danger, mystery or a race against time; curious
+for strange facts and discoveries; uplifting for triumph, rescue or kindness; playful only for light,
+harmless fun.
 
 Narrator voice (keep it identical from the first scene to the last):
 - One storyteller talking to one listener: warm, curious, confident and brisk. Past tense for the
@@ -299,12 +316,14 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
 Rules:
 - Each scene's narration is 1-4 sentences (1-2 in a Short) and matches what is on screen at that moment.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
-  (stat, bars, timeline, comparison) wherever the research supports them -- they are what makes this
+  (stat, bars, timeline, comparison, map, process) wherever the research supports them -- they are what makes this
   channel different from generic stock-footage channels.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.
 - Title max 70 characters; no false clickbait. Description must be accurate.
 - List the sources you relied on.
+- Write `comment_question`: one specific, easy question about this story for the channel's first
+  comment, the kind people answer in a few words. No "let me know in the comments".
 """
 
 
@@ -322,6 +341,18 @@ moment (the real person, place or object), or leave it null if none fits. Use ea
 For scenes without an image, set `broll_query` to a concrete stock-footage search for what is being
 said. The title scene should show the subject itself whenever an image of it exists.
 """
+
+
+PART1_NOTE = """This Short is part 1 of a two-part story, and this overrides how the structure ends:
+tell the first half, build to the most gripping open question, and stop there without giving the
+payoff away. The last sentence is "Part two is up next." Keep the payoff for part 2."""
+
+PART2_NOTE = """This Short is part 2 of a two-part story. Part 1 told this, and ended on its open question:
+<part_1>
+{previous}
+</part_1>
+Open with "Part two." and one sentence that reminds the viewer where part 1 stopped, then the build
+and the payoff. Don't repeat part 1's facts beyond that one sentence. Core message of the story: {message}"""
 
 
 def write_script(
@@ -408,6 +439,7 @@ class ChapterPlan(BaseModel):
 
 class Outline(BaseModel):
     core_message: str = Field(default="", description="Write this first: the one sentence the viewer should remember, max 20 words.")
+    mood: Mood = Field(default="curious", description=MOOD_HELP)
     title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")
@@ -416,6 +448,11 @@ class Outline(BaseModel):
     thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
     chapters: list[ChapterPlan]
     sources: list[str] = Field(description="URLs or references backing the facts used.")
+    comment_question: str = Field(
+        default="",
+        description="A question the channel posts as the first comment: specific to this story, easy to answer "
+        "in a few words, max 15 words.",
+    )
 
 
 class ChapterScenes(BaseModel):
@@ -507,6 +544,8 @@ def write_long_script(
 
     return Script(
         core_message=outline.core_message,
+        mood=outline.mood,
+        comment_question=outline.comment_question,
         title=outline.title,
         description=outline.description,
         tags=outline.tags,

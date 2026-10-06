@@ -45,7 +45,8 @@ youtube:
   # channel doesn't post at the exact same time every day.
   publish_jitter_minutes: 90
   category_id: "27"
-  contains_synthetic_media: true
+  # Not needed for a narrator voice over real images; see YouTubeConfig in fyt/config.py.
+  contains_synthetic_media: false
   # Caption tracks, playlists and view stats need a token with the full YouTube
   # permission (see "Caption tracks, playlists and stats" in the README). With an
   # upload-only token they're skipped. Captions are burned into the video either way.

@@ -10,6 +10,13 @@ export type Media = {
 
 export type DataPoint = { label: string; value: number };
 export type TimelineEvent = { label: string; text: string };
+export type Place = { name: string; lat: number; lon: number };
+export type DialogueLine = { speaker: string; text: string };
+
+// How the "camera" moves over a scene's photo or clip.
+export type Camera = "push_in" | "pull_out" | "pan_left" | "pan_right" | "parallax";
+// How a scene enters.
+export type Transition = "fade" | "slide" | "zoom" | "wipe" | "flash";
 
 export type SceneType =
   | "title"
@@ -20,7 +27,11 @@ export type SceneType =
   | "quote"
   | "timeline"
   | "comparison"
-  | "broll";
+  | "broll"
+  | "map"
+  | "process"
+  | "document"
+  | "dialogue";
 
 export type Scene = {
   id: string;
@@ -41,6 +52,11 @@ export type Scene = {
   rightTitle?: string | null;
   author?: string | null;
   media?: Media | null;
+  places?: Place[] | null; // map scenes
+  route?: boolean | null; // map scenes: draw a route through the places in order
+  lines?: DialogueLine[] | null; // dialogue scenes
+  camera?: Camera | null; // picked per scene when not set
+  transition?: Transition | null; // picked per scene when not set
 };
 
 export type Word = { word: string; start: number; end: number };
