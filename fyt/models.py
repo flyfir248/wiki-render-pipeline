@@ -9,7 +9,7 @@ from pydantic.json_schema import SkipJsonSchema
 
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
-    "map", "process", "document", "dialogue",
+    "map", "process", "document", "dialogue", "story",
 ]
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
@@ -44,6 +44,32 @@ class DialogueLine(BaseModel):
     text: str = Field(description="Their exact recorded words, short.")
 
 
+Setting = Literal["sky", "night", "space", "sea", "city", "countryside", "desert", "snow", "room", "road"]
+Effect = Literal["explosion", "fire", "smoke", "lightning", "sparkles", "rain", "snow"]
+
+
+class Actor(BaseModel):
+    """One illustrated thing on a story scene's stage."""
+
+    thing: str = Field(description="A plain, concrete noun drawn as a flat illustration: 'airplane', 'police car', "
+                       "'woman', 'rocket', 'house', 'ship', 'money bag', 'skull', 'dog', 'scientist'.")
+    x: float = Field(default=50, description="Horizontal position, 0 (left) to 100 (right).")
+    y: float = Field(default=50, description="Vertical position, 0 (top) to 100 (ground).")
+    size: Literal["s", "m", "l"] = "m"
+    to_x: float | None = Field(default=None, description="Where it moves to during the scene (0-100), if it moves.")
+    to_y: float | None = None
+    enter: Literal["pop", "slide_left", "slide_right", "drop", "rise", "fade"] = "pop"
+    action: Literal["none", "shake", "pulse", "spin", "bob", "blink", "fall"] = "none"
+    at: float = Field(default=0, description="When it appears, 0 (scene start) to 0.8.")
+    label: str | None = Field(default=None, description="Optional 1-3 word tag under it, e.g. a name.")
+    look: str | None = Field(
+        default=None,
+        description="How it should be drawn, in 4-12 words: 'a 1970s white space capsule with a scorched side', "
+        "'a pilot in a navy uniform'. Describe people by role and clothing, never as a named real person.",
+    )
+    src: SkipJsonSchema[str | None] = None  # illustration file, set by the pipeline
+
+
 class ScriptScene(BaseModel):
     """One beat of the video: what is said, and what is shown while it is said."""
 
@@ -70,6 +96,19 @@ class ScriptScene(BaseModel):
     lines: list[DialogueLine] | None = Field(
         default=None, description="dialogue scenes: 2-4 lines of a real recorded exchange, in order."
     )
+    setting: Setting | None = Field(default=None, description="story scenes: the kind of place.")
+    backdrop: str | None = Field(
+        default=None,
+        description="story scenes: the place to draw behind the action, in 6-15 words: 'mission control room "
+        "with rows of consoles, 1970', 'calm Pacific ocean at dawn'. No people in it.",
+    )
+    backdrop_src: SkipJsonSchema[str | None] = None  # set by the pipeline
+    actors: list[Actor] | None = Field(default=None, description="story scenes: 1-5 things on the stage.")
+    effect: Effect | None = Field(default=None, description="story scenes: an optional effect.")
+    effect_x: float | None = Field(default=None, description="story scenes: where the effect happens (0-100).")
+    effect_y: float | None = None
+    effect_at: float | None = Field(default=None, description="story scenes: when the effect happens (0-1).")
+    effect_src: SkipJsonSchema[str | None] = None  # set by the pipeline
     camera: Camera | None = Field(default=None, description="Optional camera move over this scene's photo.")
     transition: Transition | None = Field(default=None, description="Optional way this scene enters.")
     image: int | None = Field(
@@ -145,6 +184,14 @@ class RenderScene(BaseModel):
     places: list[Place] | None = None
     route: bool | None = None
     lines: list[DialogueLine] | None = None
+    setting: Setting | None = None
+    backdropSrc: str | None = None
+    actors: list[Actor] | None = None
+    effect: Effect | None = None
+    effectX: float | None = None
+    effectY: float | None = None
+    effectAt: float | None = None
+    effectSrc: str | None = None
     camera: Camera | None = None
     transition: Transition | None = None
 

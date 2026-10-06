@@ -31,12 +31,27 @@ class Article:
         return f'Based on the Wikipedia article "{self.title}" ({self.url}), licensed CC BY-SA 4.0.'
 
 
+NEWS_PREFIX = "news:"  # a recent news incident, explained from its Wikipedia article
+
+
 def is_wiki_topic(topic: str) -> bool:
-    return topic.startswith(PREFIX)
+    return topic.startswith((PREFIX, NEWS_PREFIX))
+
+
+def is_news_topic(topic: str) -> bool:
+    return topic.startswith(NEWS_PREFIX)
+
+
+def title_of(topic: str) -> str:
+    return topic.split(":", 1)[1]
 
 
 def topic_for(title: str) -> str:
     return PREFIX + title
+
+
+def news_topic_for(title: str) -> str:
+    return NEWS_PREFIX + title
 
 
 def _api(cfg: Config, **params) -> dict:

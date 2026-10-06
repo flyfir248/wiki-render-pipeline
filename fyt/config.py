@@ -153,6 +153,11 @@ class GrowthConfig(BaseModel):
     bonus_longs_per_week: int = 1
     bonus_min_fit: int = 7  # 0-10
     bonus_long_min_fit: int = 9
+    # A weekly long explainer on a recent news incident (from Wikipedia's "In the news" and most-read
+    # articles, at least a day old), on top of the schedule, when one is strong enough.
+    news_longs_per_week: int = 1
+    news_min_fit: int = 8
+    news_min_chars: int = 6000
 
 
 class Config(BaseModel):
@@ -171,6 +176,9 @@ class Config(BaseModel):
     music_volume: float = 0.07
     generate_music: bool = True  # compose an original background track when music_dir has none
     stock_footage: bool = True  # needs PEXELS_API_KEY
+    # AI illustrations for story scenes in the flat house style (fyt/artgen.py); needs
+    # CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN or TOGETHER_API_KEY, else emoji-style props.
+    story_art: bool = True
     captions: bool = True
     visualizer: bool = True
     theme: Theme = Field(default_factory=Theme)
@@ -200,5 +208,5 @@ def load_config(path: str | Path | None = None) -> Config:
 
 
 def secret(name: str) -> str | None:
-    value = os.environ.get(name)
+    value = (os.environ.get(name) or "").strip()  # a pasted secret often ends in a newline
     return value or None

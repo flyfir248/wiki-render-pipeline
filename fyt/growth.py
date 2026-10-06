@@ -260,6 +260,66 @@ def pick_trending(cfg: Config, used: set[str], min_fit: int, min_chars: int, day
     return None
 
 
+# --- News incidents -----------------------------------------------------------------
+
+NEWS_RANK_GUIDE = """You choose news incidents for a weekly explainer video on a YouTube channel.
+
+Channel: {niche}
+Audience: {audience}
+
+Rate every candidate Wikipedia article 0-10 as the subject of a calm, factual explainer about a recent
+incident. 8-10: a specific incident (an accident, disaster, rescue, crime with charges, discovery or
+failure) whose basic facts are established and that the audience would want explained. 5-7: notable but
+thin on facts or less gripping. 0-4: not an incident (people, films, sports results, companies, lists),
+still developing so fast the facts may change within days, about elections or partisan politics,
+centred on a private person, or a violent crime, trial or execution centred on one individual (these
+are hard to monetise and easy to get wrong).
+"""
+
+
+def news_candidates(cfg: Config, day: date | None = None) -> list[tuple[str, int]]:
+    """(title, readers) for the incidents in Wikipedia's "In the news" and the most read articles, as of
+    yesterday's feed, so each story has had at least a day for its facts to settle."""
+    day = (day or datetime.now(timezone.utc).date()) - timedelta(days=1)
+    r = requests.get(FEED.format(lang=cfg.wikipedia.lang, day=day), headers={"User-Agent": wiki.USER_AGENT}, timeout=30)
+    r.raise_for_status()
+    body = r.json()
+    out: dict[str, int] = {}
+    for a in (body.get("mostread") or {}).get("articles", [])[:30]:
+        out[_title(a)] = a.get("views", 0)
+    for item in body.get("news") or []:
+        for page in (item.get("links") or [])[:3]:
+            out.setdefault(_title(page), 0)
+    out.pop("Main Page", None)
+    return list(out.items())
+
+
+def pick_news(cfg: Config, used: set[str], min_fit: int, min_chars: int, day: date | None = None) -> str | None:
+    """The recent incident that makes the best explainer, if one is strong enough."""
+
+    def seen(t: str) -> bool:
+        return wiki.topic_for(t) in used or wiki.news_topic_for(t) in used
+
+    cands = [(t, v) for t, v in news_candidates(cfg, day) if not seen(t)]
+    if not cands:
+        return None
+    guide = NEWS_RANK_GUIDE.format(niche=cfg.channel.niche, audience=cfg.channel.audience)
+    user = "Candidates (title | readers yesterday):\n" + "\n".join(f"- {t} | {v}" for t, v in cands)
+    scores = llm.structured(cfg, guide, user, TopicScores, max_tokens=2500)
+    fits = {x.title: max(0, min(10, x.fit)) for x in scores.scores}
+    views = dict(cands)
+    for title in rank(fits, views, min_fit):
+        try:
+            article = wiki.fetch_article(cfg, title)
+        except Exception as e:
+            print(f"skipping {title}: {e}")
+            continue
+        if len(article.text) >= min_chars and not seen(article.title):
+            print(f"news pick: {article.title} (fit {fits[title]}/10, {views[title]} readers)")
+            return article.title
+    return None
+
+
 # --- Shorts cut from a long video -------------------------------------------------
 
 CUT_WORDS = 140

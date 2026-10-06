@@ -128,6 +128,10 @@ workflow** (task `short` or `long`, choose how many videos), and download the ru
    - `GROQ_API_KEY` (or `ANTHROPIC_API_KEY` if `llm.provider` is `anthropic`)
    - `YOUTUBE_TOKEN_JSON`: the full contents of `secrets/token.json`
    - `PEXELS_API_KEY` (optional, for stock footage)
+   - `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` (optional, for illustrated story scenes):
+     sign up free at dash.cloudflare.com; the account ID is on the Workers AI page, and the token
+     comes from **My Profile → API Tokens → Create Token → Workers AI** template. Or `TOGETHER_API_KEY`.
+     Without them, story scenes use emoji-style props.
 3. **Actions → Daily videos → Run workflow** to test it once. The rendered video is kept
    as a run artifact for a week.
 
@@ -158,12 +162,19 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
   articles and today's anniversaries. If one fits the channel well, it makes a bonus Short (at most
   one a day) or, for a very strong fit, a bonus long video (at most one a week), and publishes it
   within the hour. If nothing fits, it looks again six hours later.
+- *Weekly news explainer* (`news_longs_per_week`): once a week, a bonus long video on a recent news
+  incident from Wikipedia's "In the news" and most-read lists, using the previous day's feed so the
+  facts have had a day to settle. Only a specific incident with established facts and a strong fit
+  (`news_min_fit`, 0-10) qualifies; elections, partisan politics and private people are skipped. The
+  script attributes claims ("police said"), never speculates about causes or guilt, avoids graphic
+  detail, covers what is still unknown, and uses somber or tense music. Its title isn't run through
+  the curiosity polish. YouTube often limits ads on tragedy coverage.
 - *Visuals in every scene* (`visuals_every_scene`): scenes the script gave no picture (charts, numbers,
   quotes) get a real photo behind them, darkened, with a slow zoom: a spare article image, then a
   Wikimedia Commons photo of the subject, then a stock photo. Commons images are credited in the description.
 - *Music:* with no tracks in `music_dir`, each video gets an original background track composed note by
-  note (`fyt/music.py`): soft chords, bass and an arpeggio in a random minor key, with a light pulse in
-  Shorts. No licences, no Content ID claims, nothing to disclose. Drop your own tracks in `music_dir` to
+  note (`fyt/music.py`) in the mood the script picks: somber (slow, dark, quiet, no beat) for deaths,
+  disasters and war, tense, curious, uplifting or playful, with a light pulse in Shorts where it fits. No licences, no Content ID claims, nothing to disclose. Drop your own tracks in `music_dir` to
   use those instead.
 - *First comment* (`first_comment`): each script includes a question about the story, and once the video
   is public the channel posts it as the first comment. The API can't pin comments; pin it in Studio if
@@ -223,7 +234,8 @@ fyt/                 Python pipeline
   store.py           topic queue (SQLite) + job folders
 renderer/            Remotion (React) video templates
   src/scenes/        scene templates: title, statement, stat, bars, list, quote, timeline, comparison, broll,
-                     map (animated routes), process, document, dialogue; camera moves and transitions
+                     map (animated routes), process, document, dialogue, story (2D illustrated scenes
+                     acting out the narration, drawn with Fluent Emoji, MIT); camera moves and transitions
   src/components/    background, captions, audio visualizer
   render.mjs         CLI renderer (video, thumbnail, --frame preview)
 fixtures/            demo scripts used by `fyt demo`

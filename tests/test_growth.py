@@ -173,9 +173,10 @@ def cfg(tmp_path, monkeypatch):
     return c
 
 
-def fake_channel(monkeypatch, trending=("Great Emu War",)):
+def fake_channel(monkeypatch, trending=("Great Emu War",), news=()):
     made, uploaded = [], []
     picks = list(trending)
+    news_picks = list(news)
 
     def make_video(cfg, topic, script=None, voice=None, polish=None):
         job = Job.create(cfg, topic)
@@ -190,7 +191,70 @@ def fake_channel(monkeypatch, trending=("Great Emu War",)):
     monkeypatch.setattr(pipeline, "make_video", make_video)
     monkeypatch.setattr(pipeline, "upload_job", upload_job)
     monkeypatch.setattr(growth, "pick_trending", lambda cfg, used, fit, chars, day=None: picks.pop(0) if picks else None)
+    monkeypatch.setattr(growth, "pick_news", lambda cfg, used, fit, chars, day=None: news_picks.pop(0) if news_picks else None)
     return made, uploaded
+
+
+def test_one_news_explainer_a_week_as_a_long_video(cfg, monkeypatch):
+    cfg.growth.bonus_shorts_per_day = 0
+    cfg.growth.bonus_longs_per_week = 0
+    made, uploaded = fake_channel(monkeypatch, news=("2026 Example ferry fire", "Another incident"))
+    assert schedule.fill(cfg, now=NOW) == 1
+    assert made == [("long", "news:2026 Example ferry fire")]
+    assert Uploads(cfg).last("bonus-news") is not None
+    assert not schedule.bonus_due(cfg, "news", NOW + timedelta(days=6))
+    assert schedule.bonus_due(cfg, "news", NOW + timedelta(days=7, minutes=1))
+    cfg.growth.news_longs_per_week = 0
+    assert not schedule.bonus_due(cfg, "news", NOW + timedelta(days=30))
+
+
+def test_news_candidates_use_yesterdays_feed_and_in_the_news_links(monkeypatch):
+    body = {
+        "mostread": {"articles": [{"title": "Some_Film", "views": 80000}]},
+        "news": [{"story": "x", "links": [{"title": "2026_Example_ferry_fire"}, {"title": "Example_Strait"}]}],
+    }
+
+    class R:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return body
+
+    seen = []
+    monkeypatch.setattr(growth.requests, "get", lambda url, headers, timeout: seen.append(url) or R())
+    got = growth.news_candidates(Config(), datetime(2026, 10, 6).date())
+    assert "2026/10/05" in seen[0]  # a day old, so the facts have had time to settle
+    assert got == [("Some Film", 80000), ("2026 Example ferry fire", 0), ("Example Strait", 0)]
+
+
+def test_pick_news_rates_with_its_own_guide_and_skips_used(monkeypatch):
+    cfg = Config()
+    monkeypatch.setattr(
+        growth, "news_candidates", lambda cfg, day=None: [("Some Film", 80000), ("Ferry fire", 0), ("Old story", 5)]
+    )
+    monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: wiki.Article(t, "u", "x" * 7000))
+    calls = answer(monkeypatch, {"scores": [{"title": "Some Film", "fit": 2}, {"title": "Ferry fire", "fit": 9}]})
+    assert growth.pick_news(cfg, {wiki.news_topic_for("Old story")}, 8, 6000) == "Ferry fire"
+    assert "explainer about a recent" in calls[0][0] and "Old story" not in calls[0][1]
+
+
+def test_a_news_topic_gets_the_news_rules_and_no_polish_or_two_parts(monkeypatch, tmp_path):
+    cfg = Config(jobs_dir=str(tmp_path), format="short")
+    cfg.growth.two_part_share = 1.0
+    article = wiki.Article("Ferry fire", "u", "x" * 9000)
+    monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: article)
+    monkeypatch.setattr(wiki, "fetch_images", lambda cfg, t: [])
+    seen = []
+    monkeypatch.setattr(
+        llm, "write_script", lambda cfg, t, n, from_wikipedia=False, images="", feedback="", news=False: seen.append((t, news, feedback)) or script(3)
+    )
+    monkeypatch.setattr(growth, "polish", lambda *a, **k: pytest.fail("news titles are not polished"))
+    monkeypatch.setattr(pipeline.qa, "check_script", lambda cfg, s: ["stop"])
+    job = Job.create(cfg, "news:Ferry fire")
+    with pytest.raises(RuntimeError):
+        pipeline._make(cfg, job, "news:Ferry fire", None, None, polish=True)
+    assert seen == [("Ferry fire", True, "")]
 
 
 def test_one_bonus_short_a_day_published_soon(cfg, monkeypatch):
@@ -260,7 +324,7 @@ def test_a_two_part_short_ends_on_a_cliffhanger_and_queues_part_2(monkeypatch, t
     monkeypatch.setattr(wiki, "fetch_images", lambda cfg, t: [])
     notes = []
 
-    def write_script(cfg, topic, n, from_wikipedia=False, images="", feedback=""):
+    def write_script(cfg, topic, n, from_wikipedia=False, images="", feedback="", news=False):
         notes.append(feedback)
         return script(3).model_copy(update={"title": "The Lamp", "core_message": "Flicker makes the brain see."})
 
@@ -290,7 +354,7 @@ def test_short_articles_and_most_shorts_stay_single(monkeypatch, tmp_path):
     monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: wiki.Article("Stub", "u", "x" * 3000))
     monkeypatch.setattr(wiki, "fetch_images", lambda cfg, t: [])
     notes = []
-    monkeypatch.setattr(llm, "write_script", lambda cfg, t, n, from_wikipedia=False, images="", feedback="": notes.append(feedback) or script(3))
+    monkeypatch.setattr(llm, "write_script", lambda cfg, t, n, from_wikipedia=False, images="", feedback="", news=False: notes.append(feedback) or script(3))
     monkeypatch.setattr(pipeline.qa, "check_script", lambda cfg, s: ["stop"])
     job = Job.create(cfg, "wiki:Stub")
     with pytest.raises(RuntimeError):

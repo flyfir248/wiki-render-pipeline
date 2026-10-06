@@ -24,7 +24,7 @@ export const ProcessScene: React.FC<SceneProps> = ({ scene, theme, format }) => 
           return (
             <React.Fragment key={i}>
               {i > 0 ? <Arrow progress={arrow} vertical={short} theme={theme} /> : null}
-              <StepBox i={i} at={at} text={step} last={i === steps.length - 1} theme={theme} format={format} />
+              <StepBox i={i} at={at} text={step} last={i === steps.length - 1} count={steps.length} theme={theme} format={format} />
             </React.Fragment>
           );
         })}
@@ -47,20 +47,23 @@ const Arrow: React.FC<{ progress: number; vertical: boolean; theme: Theme }> = (
   );
 };
 
-const StepBox: React.FC<{ i: number; at: number; text: string; last: boolean; theme: Theme; format: Format }> = ({
+const StepBox: React.FC<{ i: number; at: number; text: string; last: boolean; count: number; theme: Theme; format: Format }> = ({
   i,
   at,
   text,
   last,
+  count,
   theme,
   format,
 }) => {
   const p = useEnter(at);
   const short = format === "short";
+  // In 16:9 the boxes share one row with the arrows between them.
+  const wide = Math.min(360, (1560 - (count - 1) * 90) / Math.max(count, 1));
   return (
     <div
       style={{
-        width: short ? 820 : 300,
+        width: short ? 820 : wide,
         padding: short ? "24px 30px" : "30px 24px",
         borderRadius: 24,
         background: last ? theme.accent : "rgba(255,255,255,0.08)",
@@ -68,7 +71,7 @@ const StepBox: React.FC<{ i: number; at: number; text: string; last: boolean; th
         color: last ? theme.background : theme.text,
         fontFamily: theme.font,
         fontWeight: 800,
-        fontSize: (short ? 42 : 36) * unit(format) * (short ? 0.85 : 1),
+        fontSize: short ? 42 * unit(format) * 0.85 : count > 4 ? 36 : 44,
         lineHeight: 1.15,
         opacity: p,
         transform: `scale(${0.7 + 0.3 * p})`,

@@ -48,6 +48,8 @@ def check_script(cfg: Config, script: Script) -> list[str]:
             problems.append(f"scene {i} is a process diagram with fewer than 2 steps")
         if s.type == "document" and not s.text:
             problems.append(f"scene {i} is a document without text")
+        if s.type == "story" and not s.actors:
+            problems.append(f"scene {i} is a story scene with nothing on stage")
         if s.type == "dialogue" and not s.lines:
             problems.append(f"scene {i} is a transcript without lines")
     return problems

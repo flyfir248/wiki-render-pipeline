@@ -18,9 +18,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. relabel: clear the AI-content label on videos already up"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up"
         type: choice
-        options: [fill, short, long, relabel]
+        options: [fill, short, long, news, relabel]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -29,6 +29,9 @@ on:
       count:
         description: "How many videos (for short / long)"
         default: "1"
+      title:
+        description: "For news: the incident's Wikipedia article title (blank picks the strongest recent one). For short / long: render that article as a test, without uploading"
+        default: ""
 
 concurrency:
   group: daily-videos
@@ -115,13 +118,21 @@ jobs:
         env:
           UPLOAD: ${{ inputs.upload }}
           COUNT: ${{ inputs.count || '1' }}
+          TITLE: ${{ inputs.title }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
         run: |
           if [ "$TASK" = fill ]; then
             python -m fyt fill
+          elif [ "$TASK" = news ]; then
+            python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
+          elif [ -n "$TITLE" ]; then
+            python -m fyt --format "$TASK" make "wiki:$TITLE" # a test render, never uploaded
           elif [ "$UPLOAD" = false ]; then
             python -m fyt --format "$TASK" run --count "$COUNT" --no-upload
           else
