@@ -132,6 +132,8 @@ def add_props(script: Script, public: Path, icon_set: dict | None = None) -> int
         if scene.type != "story":
             continue
         for actor in scene.actors or []:
+            if actor.src:  # already drawn (fyt.artgen)
+                continue
             actor.src = place(resolve(actor.thing, data["icons"]))
             missing += actor.src is None
         if scene.effect:

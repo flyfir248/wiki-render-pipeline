@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import growth, illustrate, llm, media, qa, render, tts, wiki, youtube
+from fyt import artgen, growth, illustrate, llm, media, qa, render, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -127,6 +127,12 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     )
 
     if any(s.type == "story" for s in script.scenes):
+        if cfg.story_art and artgen.provider():
+            try:
+                log(job, f"drawing story scenes ({artgen.provider()})")
+                log(job, f"{artgen.illustrate(cfg, script, job.public, log=lambda m: log(job, m))} illustrations drawn")
+            except Exception as e:  # emoji-style props below are the fallback
+                log(job, f"warning: story art failed: {e}")
         try:
             missing = illustrate.add_props(script, job.public)
             if missing:

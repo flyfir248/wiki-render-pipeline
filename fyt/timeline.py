@@ -50,6 +50,7 @@ def build_props(
                 route=scene.route,
                 lines=scene.lines,
                 setting=scene.setting,
+                backdropSrc=scene.backdrop_src,
                 actors=[a for a in scene.actors or [] if a.src] or None,
                 effect=scene.effect,
                 effectX=scene.effect_x,

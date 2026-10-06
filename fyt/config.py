@@ -176,6 +176,9 @@ class Config(BaseModel):
     music_volume: float = 0.07
     generate_music: bool = True  # compose an original background track when music_dir has none
     stock_footage: bool = True  # needs PEXELS_API_KEY
+    # AI illustrations for story scenes in the flat house style (fyt/artgen.py); needs
+    # CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN or TOGETHER_API_KEY, else emoji-style props.
+    story_art: bool = True
     captions: bool = True
     visualizer: bool = True
     theme: Theme = Field(default_factory=Theme)

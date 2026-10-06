@@ -130,6 +130,18 @@ const Backdrop: React.FC<{ setting: Setting; stage: Stage }> = ({ setting, stage
   );
 };
 
+// An illustrated plate for this scene: a slow push in, so the props in front read as a separate layer.
+const Plate: React.FC<{ src: string }> = ({ src }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const t = interpolate(frame, [0, durationInFrames], [0, 1]);
+  return (
+    <AbsoluteFill style={{ overflow: "hidden" }}>
+      <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${1.04 + 0.06 * t}) translateX(${(0.5 - t) * 1.5}%)` }} />
+    </AbsoluteFill>
+  );
+};
+
 // ---------- actors ----------
 
 const ActorView: React.FC<{ actor: Actor; stage: Stage; theme: Theme; format: Format }> = ({ actor, stage, theme, format }) => {
@@ -354,6 +366,7 @@ export const StoryScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   return (
     <AbsoluteFill style={{ transform: `translate(${jolt}px, ${jolt * 0.6}px)` }}>
       <Backdrop setting={setting} stage={stage} />
+      {scene.backdropSrc ? <Plate src={scene.backdropSrc} /> : null}
       {actors.map((a, i) => (
         <ActorView key={i} actor={a} stage={stage} theme={theme} format={format} />
       ))}

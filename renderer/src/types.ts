@@ -73,6 +73,7 @@ export type Scene = {
   route?: boolean | null; // map scenes: draw a route through the places in order
   lines?: DialogueLine[] | null; // dialogue scenes
   setting?: Setting | null; // story scenes
+  backdropSrc?: string | null; // story scenes: an illustrated plate, drawn over the setting
   actors?: Actor[] | null;
   effect?: Effect | null;
   effectX?: number | null;

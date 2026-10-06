@@ -128,6 +128,10 @@ workflow** (task `short` or `long`, choose how many videos), and download the ru
    - `GROQ_API_KEY` (or `ANTHROPIC_API_KEY` if `llm.provider` is `anthropic`)
    - `YOUTUBE_TOKEN_JSON`: the full contents of `secrets/token.json`
    - `PEXELS_API_KEY` (optional, for stock footage)
+   - `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` (optional, for illustrated story scenes):
+     sign up free at dash.cloudflare.com; the account ID is on the Workers AI page, and the token
+     comes from **My Profile → API Tokens → Create Token → Workers AI** template. Or `TOGETHER_API_KEY`.
+     Without them, story scenes use emoji-style props.
 3. **Actions → Daily videos → Run workflow** to test it once. The rendered video is kept
    as a run artifact for a week.
 

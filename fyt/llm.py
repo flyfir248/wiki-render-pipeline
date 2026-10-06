@@ -285,10 +285,11 @@ Scene templates (field names in brackets):
   road), actors (1-5 things on stage: thing = plain concrete noun, x/y position 0-100 with y=100 the
   ground, size s/m/l, optional to_x/to_y to move it, enter, action, at = when it appears 0-0.8, label),
   effect (explosion, fire, smoke, lightning, sparkles, rain, snow) with effect_x/effect_y/effect_at].
-  Things are drawn as flat emoji-style illustrations, so name everyday objects, animals, vehicles,
-  buildings, weather and people: airplane, rocket, ship, police car, ambulance, house, castle, factory,
-  money bag, envelope, laptop, mobile phone, satellite, bomb, skull, dog, horse, whale, tree, mountain,
-  volcano, man, woman, old man, child, scientist, pilot, police officer, judge, astronaut, crown.
+  Each scene is illustrated for this story in a flat 2D style: set `backdrop` to the specific place
+  (era, landmarks, time of day) and give each actor a `look` that fits the story (era, colours,
+  condition). Keep `thing` a plain noun too (airplane, rocket, ship, police car, house, money bag,
+  envelope, skull, dog, man, woman, scientist, pilot, judge), used if a drawing can't be made.
+  Describe people only by role and clothing; never ask for a real person's likeness.
   Show the action: the ship sails from left to right, the plane climbs then shakes, the money moves
   from one person to another, the explosion goes off at the moment the narration says so.
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
