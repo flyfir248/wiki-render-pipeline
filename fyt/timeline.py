@@ -49,6 +49,13 @@ def build_props(
                 places=scene.places,
                 route=scene.route,
                 lines=scene.lines,
+                setting=scene.setting,
+                actors=[a for a in scene.actors or [] if a.src] or None,
+                effect=scene.effect,
+                effectX=scene.effect_x,
+                effectY=scene.effect_y,
+                effectAt=scene.effect_at,
+                effectSrc=scene.effect_src,
                 camera=scene.camera,
                 transition=scene.transition,
             )

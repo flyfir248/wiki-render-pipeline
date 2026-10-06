@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import growth, llm, media, qa, render, tts, wiki, youtube
+from fyt import growth, illustrate, llm, media, qa, render, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -126,6 +126,13 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         cfg, job.public, seconds=spans[-1][1] + 2 if spans else 60, seed=sum(map(ord, job.id)), mood=script.mood
     )
 
+    if any(s.type == "story" for s in script.scenes):
+        try:
+            missing = illustrate.add_props(script, job.public)
+            if missing:
+                log(job, f"{missing} story props had no matching illustration and are left out")
+        except Exception as e:  # without illustrations, story scenes fall back to text
+            log(job, f"warning: no story illustrations: {e}")
     props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music)
     job.file("props.json").write_text(props.model_dump_json(indent=2))
     job.file("captions.srt").write_text(to_srt(props.captions))
@@ -256,7 +263,7 @@ def scene_visuals(
             return [im for im in found if im.title not in commons_seen]
 
         for i, s in enumerate(script.scenes):
-            if i in scene_media or s.type == "map":  # a map is its own picture
+            if i in scene_media or s.type in ("map", "story"):  # these draw their own picture
                 continue
             n = next((k for k in range(1, len(images) + 1) if k not in taken), None)
             if n is not None and article_image(i, n):

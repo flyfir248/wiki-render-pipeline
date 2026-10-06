@@ -230,7 +230,8 @@ fyt/                 Python pipeline
   store.py           topic queue (SQLite) + job folders
 renderer/            Remotion (React) video templates
   src/scenes/        scene templates: title, statement, stat, bars, list, quote, timeline, comparison, broll,
-                     map (animated routes), process, document, dialogue; camera moves and transitions
+                     map (animated routes), process, document, dialogue, story (2D illustrated scenes
+                     acting out the narration, drawn with Fluent Emoji, MIT); camera moves and transitions
   src/components/    background, captions, audio visualizer
   render.mjs         CLI renderer (video, thumbnail, --frame preview)
 fixtures/            demo scripts used by `fyt demo`

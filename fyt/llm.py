@@ -280,6 +280,17 @@ Scene templates (field names in brackets):
 - process: how one thing led to another, as connected steps [heading, items (2-5, max ~5 words each)]
 - document: a line from a real report, letter, ruling or newspaper, highlighted [heading = what the
   document is, text = the line (max ~20 words), author = source and year]
+- story: an animated 2D illustration that acts out what the narration describes, like a cartoon
+  explainer [heading (optional), setting (sky, night, space, sea, city, countryside, desert, snow, room,
+  road), actors (1-5 things on stage: thing = plain concrete noun, x/y position 0-100 with y=100 the
+  ground, size s/m/l, optional to_x/to_y to move it, enter, action, at = when it appears 0-0.8, label),
+  effect (explosion, fire, smoke, lightning, sparkles, rain, snow) with effect_x/effect_y/effect_at].
+  Things are drawn as flat emoji-style illustrations, so name everyday objects, animals, vehicles,
+  buildings, weather and people: airplane, rocket, ship, police car, ambulance, house, castle, factory,
+  money bag, envelope, laptop, mobile phone, satellite, bomb, skull, dog, horse, whale, tree, mountain,
+  volcano, man, woman, old man, child, scientist, pilot, police officer, judge, astronaut, crown.
+  Show the action: the ship sails from left to right, the plane climbs then shakes, the money moves
+  from one person to another, the explosion goes off at the moment the narration says so.
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 
@@ -316,6 +327,9 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
 
 Rules:
 - Each scene's narration is 1-4 sentences (1-2 in a Short) and matches what is on screen at that moment.
+- Act the story out: use a story scene for every key moment where something happens (a journey, an
+  accident, a discovery, a handover, a chase) -- about a third of all scenes. Viewers stay for seeing
+  the story, not reading it.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
   (stat, bars, timeline, comparison, map, process) wherever the research supports them -- they are what makes this
   channel different from generic stock-footage channels.

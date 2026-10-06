@@ -13,6 +13,7 @@ import { unit } from "../theme";
 import { CameraMedia, cameraOf } from "./camera";
 import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
 import { MapScene, validPlaces } from "./map";
+import { StoryScene } from "./story";
 import { Heading, Stage, Sub, useEnter, type SceneProps } from "./shared";
 
 export { SceneFrame, transitionOf } from "./camera";
@@ -417,6 +418,7 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   process: ProcessScene,
   document: DocumentScene,
   dialogue: DialogueScene,
+  story: StoryScene,
 };
 
 // A photo or clip behind a template scene, moved by the scene's camera and darkened so text stays readable.
@@ -435,13 +437,15 @@ export const SceneView: React.FC<SceneProps> = (props) => {
   // Fall back to a kinetic statement for broll without media, a map without places, or unknown types.
   const { scene: raw } = props;
   const type =
-    (raw.type === "broll" && !raw.media) || (raw.type === "map" && !validPlaces(raw.places).length)
+    (raw.type === "broll" && !raw.media) ||
+    (raw.type === "map" && !validPlaces(raw.places).length) ||
+    (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src))
       ? "statement"
       : raw.type;
   const Component = registry[type] ?? StatementScene;
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
   const media = props.scene.media;
-  if (media && type !== "broll" && type !== "map") {
+  if (media && type !== "broll" && type !== "map" && type !== "story") {
     return (
       <AbsoluteFill>
         <Backdrop scene={props.scene} media={media} theme={props.theme} />

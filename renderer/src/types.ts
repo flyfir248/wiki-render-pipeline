@@ -12,6 +12,22 @@ export type DataPoint = { label: string; value: number };
 export type TimelineEvent = { label: string; text: string };
 export type Place = { name: string; lat: number; lon: number };
 export type DialogueLine = { speaker: string; text: string };
+export type Setting = "sky" | "night" | "space" | "sea" | "city" | "countryside" | "desert" | "snow" | "room" | "road";
+export type Effect = "explosion" | "fire" | "smoke" | "lightning" | "sparkles" | "rain" | "snow";
+// One illustrated thing on a story scene's stage. Positions are 0-100 (y = 100 is the ground).
+export type Actor = {
+  thing: string;
+  src: string; // illustration file in the job's public dir
+  x: number;
+  y: number;
+  size: "s" | "m" | "l";
+  to_x?: number | null;
+  to_y?: number | null;
+  enter: "pop" | "slide_left" | "slide_right" | "drop" | "rise" | "fade";
+  action: "none" | "shake" | "pulse" | "spin" | "bob" | "blink" | "fall";
+  at: number; // 0..1 of the scene
+  label?: string | null;
+};
 
 // How the "camera" moves over a scene's photo or clip.
 export type Camera = "push_in" | "pull_out" | "pan_left" | "pan_right" | "parallax";
@@ -31,7 +47,8 @@ export type SceneType =
   | "map"
   | "process"
   | "document"
-  | "dialogue";
+  | "dialogue"
+  | "story";
 
 export type Scene = {
   id: string;
@@ -55,6 +72,13 @@ export type Scene = {
   places?: Place[] | null; // map scenes
   route?: boolean | null; // map scenes: draw a route through the places in order
   lines?: DialogueLine[] | null; // dialogue scenes
+  setting?: Setting | null; // story scenes
+  actors?: Actor[] | null;
+  effect?: Effect | null;
+  effectX?: number | null;
+  effectY?: number | null;
+  effectAt?: number | null;
+  effectSrc?: string | null;
   camera?: Camera | null; // picked per scene when not set
   transition?: Transition | null; // picked per scene when not set
 };
