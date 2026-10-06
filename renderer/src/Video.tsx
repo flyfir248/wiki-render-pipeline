@@ -3,7 +3,7 @@ import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useVideoConfig 
 import { Background } from "./components/Background";
 import { Captions } from "./components/Captions";
 import { Visualizer, energyOf, useVoiceSpectrum } from "./components/Visualizer";
-import { SceneFrame, SceneView } from "./scenes";
+import { SceneFrame, SceneView, transitionOf } from "./scenes";
 import type { RenderProps, Word } from "./types";
 
 const ReactiveLayer: React.FC<{ props: RenderProps; voice: string }> = ({ props, voice }) => {
@@ -38,7 +38,7 @@ export const Video: React.FC<RenderProps> = (props) => {
         const len = Math.max(1, Math.round(scene.end * fps) - from);
         return (
           <Sequence key={scene.id} from={from} durationInFrames={len} name={`${scene.type}:${scene.id}`}>
-            <SceneFrame>
+            <SceneFrame transition={transitionOf(scene)}>
               <SceneView scene={scene} theme={props.theme} format={props.format} />
             </SceneFrame>
           </Sequence>

@@ -273,6 +273,18 @@ Scene templates (field names in brackets):
 - timeline: dated events [heading, events (3-5, label = year/date)]
 - comparison: two columns [heading, left_title, left, right_title, right]
 - broll: stock footage with a caption [broll_query (concrete, filmable), heading]
+- map: an animated map that flies to real places and draws a route between them [heading, places
+  (1-4, each name + lat + lon in degrees, in the order of travel), route (true to draw the journey)].
+  Use it whenever the story moves between places or where something is matters.
+- process: how one thing led to another, as connected steps [heading, items (2-5, max ~5 words each)]
+- document: a line from a real report, letter, ruling or newspaper, highlighted [heading = what the
+  document is, text = the line (max ~20 words), author = source and year]
+- dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
+  words)]. Only for words that were actually recorded or documented; never invent dialogue.
+
+Every scene may also set `camera` (push_in, pull_out, pan_left, pan_right, parallax) for the move over
+its photo and `transition` (fade, slide, zoom, wipe, flash) for how it enters. Leave them unset unless
+a choice clearly fits the moment, e.g. flash for a sudden turn, pull_out to reveal scale.
 
 One message: before any scene, decide the single thing the viewer should walk away knowing and
 write it as `core_message` (one plain sentence). Every scene must move toward it. Cut any fact,
@@ -299,7 +311,7 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
 Rules:
 - Each scene's narration is 1-4 sentences (1-2 in a Short) and matches what is on screen at that moment.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
-  (stat, bars, timeline, comparison) wherever the research supports them -- they are what makes this
+  (stat, bars, timeline, comparison, map, process) wherever the research supports them -- they are what makes this
   channel different from generic stock-footage channels.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.

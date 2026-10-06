@@ -15,7 +15,9 @@ topics queue ─► Claude research (web search) ─► Claude script (structure
 
 The visuals are **motion-graphics templates driven by the script**, not only stock footage:
 animated titles, kinetic typography, count-up stats, bar charts, timelines, numbered lists,
-comparisons, quotes, and stock b-roll with Ken Burns moves. Word-highlighted captions and
+comparisons, quotes, animated maps that fly to real places and draw the route, cause-and-effect
+diagrams, highlighted documents, typed-out transcripts, and photos moved by a virtual camera
+(push in, pan, parallax) with varied transitions. Word-highlighted captions and
 an audio-reactive background and visualizer sit on top. Every video looks different while
 the channel keeps one consistent style, which matters for monetization (see below).
 
@@ -220,7 +222,8 @@ fyt/                 Python pipeline
   youtube.py         OAuth, upload (video, thumbnail, captions), stats
   store.py           topic queue (SQLite) + job folders
 renderer/            Remotion (React) video templates
-  src/scenes/        scene templates: title, statement, stat, bars, list, quote, timeline, comparison, broll
+  src/scenes/        scene templates: title, statement, stat, bars, list, quote, timeline, comparison, broll,
+                     map (animated routes), process, document, dialogue; camera moves and transitions
   src/components/    background, captions, audio visualizer
   render.mjs         CLI renderer (video, thumbnail, --frame preview)
 fixtures/            demo scripts used by `fyt demo`

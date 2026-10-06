@@ -126,3 +126,39 @@ def test_chapter_list_uses_scene_start_times():
     assert chapter_list(script(6), spans) == ""  # Shorts have no chapters
     short_gaps = [(0, 2), (2.5, 4), (4.5, 6), (6.5, 8), (8.5, 10), (10.5, 12)]
     assert chapter_list(s, short_gaps) == ""  # YouTube needs chapters of 10s or more
+
+
+def test_engine_scenes_reach_the_renderer():
+    from fyt.models import DialogueLine, Place
+
+    s = script(2)
+    s.scenes[0].type = "map"
+    s.scenes[0].places = [Place(name="Lahore", lat=31.5, lon=74.3), Place(name="Delhi", lat=28.6, lon=77.2)]
+    s.scenes[0].route = True
+    s.scenes[0].camera = "parallax"
+    s.scenes[1].type = "dialogue"
+    s.scenes[1].lines = [DialogueLine(speaker="Captain", text="Say again.")]
+    s.scenes[1].transition = "flash"
+    props = build_props(Config(), s, [(0.0, 2.0), (2.0, 4.0)], [[], []], {}, None, None)
+    data = props.model_dump(exclude_none=True)["scenes"]
+    assert data[0]["places"][1] == {"name": "Delhi", "lat": 28.6, "lon": 77.2}
+    assert data[0]["route"] is True and data[0]["camera"] == "parallax"
+    assert data[1]["lines"] == [{"speaker": "Captain", "text": "Say again."}]
+    assert data[1]["transition"] == "flash"
+    assert qa.check_script(Config(), s) == []
+
+
+def test_qa_catches_empty_engine_scenes():
+    from fyt.models import Place
+
+    s = script(4)
+    s.scenes[0].type = "map"
+    s.scenes[0].places = [Place(name="Nowhere", lat=95, lon=0)]
+    s.scenes[1].type = "process"
+    s.scenes[1].items = ["only one step"]
+    s.scenes[2].type = "document"
+    s.scenes[2].text = None
+    s.scenes[3].type = "dialogue"
+    problems = " | ".join(qa.check_script(Config(), s))
+    for word in ("map", "process", "document", "transcript"):
+        assert word in problems

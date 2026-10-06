@@ -7,7 +7,13 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from pydantic.json_schema import SkipJsonSchema
 
-SceneType = Literal["title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll"]
+SceneType = Literal[
+    "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
+    "map", "process", "document", "dialogue",
+]
+# How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
+Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
+Transition = Literal["fade", "slide", "zoom", "wipe", "flash"]
 
 
 class DataPoint(BaseModel):
@@ -18,6 +24,17 @@ class DataPoint(BaseModel):
 class TimelineEvent(BaseModel):
     label: str
     text: str
+
+
+class Place(BaseModel):
+    name: str = Field(description="Short label shown on the map, e.g. 'Lahore'.")
+    lat: float = Field(description="Latitude in degrees (north positive).")
+    lon: float = Field(description="Longitude in degrees (east positive).")
+
+
+class DialogueLine(BaseModel):
+    speaker: str = Field(description="Who said it, e.g. 'Captain' or 'Control tower'.")
+    text: str = Field(description="Their exact recorded words, short.")
 
 
 class ScriptScene(BaseModel):
@@ -37,7 +54,17 @@ class ScriptScene(BaseModel):
     left: list[str] | None = Field(default=None, description="comparison scenes: left column bullets.")
     right_title: str | None = None
     right: list[str] | None = Field(default=None, description="comparison scenes: right column bullets.")
-    author: str | None = Field(default=None, description="quote scenes: who said it (must be a real, verified quote).")
+    author: str | None = Field(
+        default=None,
+        description="quote scenes: who said it (must be a real, verified quote). document scenes: source and date.",
+    )
+    places: list[Place] | None = Field(default=None, description="map scenes: 1-4 real places, in the order of travel.")
+    route: bool | None = Field(default=None, description="map scenes: draw a route through the places in order.")
+    lines: list[DialogueLine] | None = Field(
+        default=None, description="dialogue scenes: 2-4 lines of a real recorded exchange, in order."
+    )
+    camera: Camera | None = Field(default=None, description="Optional camera move over this scene's photo.")
+    transition: Transition | None = Field(default=None, description="Optional way this scene enters.")
     image: int | None = Field(
         default=None,
         description="Number of the article image (from the 'Available images' list) to show behind this scene, if one fits what is being said.",
@@ -107,6 +134,11 @@ class RenderScene(BaseModel):
     rightTitle: str | None = None
     author: str | None = None
     media: Media | None = None
+    places: list[Place] | None = None
+    route: bool | None = None
+    lines: list[DialogueLine] | None = None
+    camera: Camera | None = None
+    transition: Transition | None = None
 
 
 class Music(BaseModel):

@@ -46,6 +46,11 @@ def build_props(
                 rightTitle=scene.right_title,
                 author=scene.author,
                 media=media.get(i),
+                places=scene.places,
+                route=scene.route,
+                lines=scene.lines,
+                camera=scene.camera,
+                transition=scene.transition,
             )
         )
         captions.extend(

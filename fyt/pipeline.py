@@ -247,7 +247,7 @@ def scene_visuals(
             return [im for im in found if im.title not in commons_seen]
 
         for i, s in enumerate(script.scenes):
-            if i in scene_media:
+            if i in scene_media or s.type == "map":  # a map is its own picture
                 continue
             n = next((k for k in range(1, len(images) + 1) if k not in taken), None)
             if n is not None and article_image(i, n):
