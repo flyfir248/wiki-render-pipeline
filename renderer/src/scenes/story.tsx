@@ -130,14 +130,42 @@ const Backdrop: React.FC<{ setting: Setting; stage: Stage }> = ({ setting, stage
   );
 };
 
-// An illustrated plate for this scene: a slow push in, so the props in front read as a separate layer.
-const Plate: React.FC<{ src: string }> = ({ src }) => {
+// An illustrated plate for this scene, with a slow push in so the props in front read as a separate
+// layer. The art is square: in a Short it is shown sharp at about its own size across the stage, and
+// a blurred, dimmed copy fills above and below instead of blowing the picture up; in 16:9 it fills
+// the frame.
+const Plate: React.FC<{ src: string; stage: Stage }> = ({ src, stage }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const t = interpolate(frame, [0, durationInFrames], [0, 1]);
+  const side = Math.min(stage.w, stage.h) * 1.02;
+  const cy = (stage.top + stage.ground) / 2;
+  const push = `scale(${1.02 + 0.05 * t}) translateX(${(0.5 - t) * 1.2}%)`;
+  if (stage.w > stage.h) {
+    return (
+      <AbsoluteFill style={{ overflow: "hidden" }}>
+        <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: push }} />
+      </AbsoluteFill>
+    );
+  }
+  const fade = "to bottom";
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
-      <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${1.04 + 0.06 * t}) translateX(${(0.5 - t) * 1.5}%)` }} />
+      <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover", filter: "blur(28px) brightness(0.6) saturate(1.1)", transform: "scale(1.15)" }} />
+      <div
+        style={{
+          position: "absolute",
+          left: (stage.w - side) / 2,
+          top: cy - side / 2,
+          width: side,
+          height: side,
+          overflow: "hidden",
+          WebkitMaskImage: `linear-gradient(${fade}, transparent 0%, black 9%, black 91%, transparent 100%)`,
+          maskImage: `linear-gradient(${fade}, transparent 0%, black 9%, black 91%, transparent 100%)`,
+        }}
+      >
+        <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: push }} />
+      </div>
     </AbsoluteFill>
   );
 };
@@ -366,7 +394,7 @@ export const StoryScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   return (
     <AbsoluteFill style={{ transform: `translate(${jolt}px, ${jolt * 0.6}px)` }}>
       <Backdrop setting={setting} stage={stage} />
-      {scene.backdropSrc ? <Plate src={scene.backdropSrc} /> : null}
+      {scene.backdropSrc ? <Plate src={scene.backdropSrc} stage={stage} /> : null}
       {actors.map((a, i) => (
         <ActorView key={i} actor={a} stage={stage} theme={theme} format={format} />
       ))}

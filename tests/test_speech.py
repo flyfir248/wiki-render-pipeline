@@ -22,6 +22,8 @@ from fyt.tts import estimate_spoken
         ("A 9-year-old (born 2012) ran.", "A nine-year-old, born twenty twelve, ran."),
         ("It was found — once.", "It was found, once."),
         ("He moved to the U.S. Then he left.", "He moved to the U S. Then he left."),
+        ("A 35-mph wave, 25 ft. high, near Ft. Knox.", "A thirty-five miles per hour wave, twenty-five feet high, near Fort Knox."),
+        ("Speeds in MPH and 50 psi.", "Speeds in miles per hour and fifty pounds per square inch."),
     ],
 )
 def test_speakable(written, spoken):

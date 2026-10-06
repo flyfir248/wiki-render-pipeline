@@ -16,6 +16,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import io
+import re
 import time
 from pathlib import Path
 
@@ -26,13 +27,24 @@ from PIL import Image, ImageDraw, ImageFilter
 from fyt.config import Config, secret
 from fyt.models import Script
 
+# FLUX follows plain descriptive sentences better than lists of tags.
 STYLE = (
-    "flat 2D vector illustration, editorial explainer style, bold clean shapes, subtle paper grain, "
-    "limited palette of deep navy, teal, warm mustard yellow, coral and cream, soft long shadows, "
-    "people drawn as simple faceless figures without facial features, no text, no letters, no logos, no watermark"
+    "Drawn as a polished flat vector illustration for an animated science and history explainer: clean "
+    "geometric shapes with crisp edges, smooth soft gradients, gentle rim light and a fine grain texture, "
+    "rich but harmonious colours built on deep navy, teal, warm mustard yellow, coral and cream, with "
+    "accurate period details. Any people are simple stylised figures with no facial features. "
+    "There is no text, lettering, logo or watermark anywhere in the image."
 )
-PROP = "a single {thing}, isolated, centered, full view, on a plain pure white background, no ground, no shadow"
-PLATE = "{scene}, wide establishing shot, empty of people and vehicles, room for characters in the lower half"
+PROP = (
+    "A single {thing}, shown whole and centred in a three-quarter view with a clear, readable silhouette, "
+    "isolated on a plain pure white background with no ground, shadow or other objects."
+)
+PLATE = (
+    "A wide, detailed establishing view of {scene}, seen from eye level, with a distinct foreground, middle "
+    "ground and distant background for depth. The lower half is open ground where characters could stand, "
+    "and there are no people or vehicles in the scene."
+)
+STEPS = 8  # the most Cloudflare allows for FLUX.1 schnell: noticeably sharper than 4, still well inside the free allowance
 MAX_IMAGES = 40  # per video: keeps a long video inside the free daily allowance
 
 
@@ -70,7 +82,7 @@ def generate(prompt: str, vertical: bool = False, seed: int = 7) -> Image.Image:
                 r = requests.post(
                     url,
                     headers={"Authorization": f"Bearer {secret('CLOUDFLARE_API_TOKEN')}"},
-                    json={"prompt": prompt, "steps": 4},  # the model takes only these two
+                    json={"prompt": prompt, "steps": STEPS},  # the model takes only these two
                     timeout=120,
                 )
                 _check(r)
@@ -140,7 +152,7 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
         name = f"art/plate-{_key(place, str(vertical))}.jpg"
         try:
             if not (public / name).exists():
-                generate(f"{PLATE.format(scene=place)}, {STYLE}", vertical, seed=11 + i).save(public / name, quality=90)
+                generate(f"{PLATE.format(scene=place)} {STYLE}", vertical, seed=11 + i).save(public / name, quality=90)
                 made += 1
             scene.backdrop_src = name
         except Exception as e:
@@ -152,7 +164,7 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
             name = f"art/prop-{_key(thing)}.png"
             try:
                 if not (public / name).exists():
-                    cut_out(generate(f"{PROP.format(thing=thing)}, {STYLE}", seed=23)).save(public / name)
+                    cut_out(generate(f"{PROP.format(thing=re.sub(r'^(a|an|the|one) ', '', thing.strip(), flags=re.I))} {STYLE}", seed=23)).save(public / name)
                     made += 1
                 actor.src = name
             except Exception as e:

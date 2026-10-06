@@ -126,7 +126,12 @@ UNITS = {
     "mi": "miles", "mph": "miles per hour", "km/h": "kilometers per hour", "kph": "kilometers per hour",
     "°c": "degrees Celsius", "°f": "degrees Fahrenheit", "°": "degrees", "hz": "hertz", "kw": "kilowatts",
     "mw": "megawatts", "gb": "gigabytes", "mb": "megabytes", "tb": "terabytes", "l": "liters", "ml": "milliliters",
-}  # fmt: skip
+    "psi": "pounds per square inch", "kpa": "kilopascals", "mpg": "miles per gallon", "kn": "knots", "kt": "knots",
+    "kts": "knots", "yd": "yards", "yds": "yards", "gal": "gallons", "ha": "hectares", "kwh": "kilowatt hours",
+    "m/s": "meters per second", "ft/s": "feet per second", "sq": "square",
+}
+# Units read in full even without a figure in front ("top speed in MPH").
+NAMED_UNITS = {"mph": "miles per hour", "kph": "kilometers per hour", "km/h": "kilometers per hour", "psi": "pounds per square inch", "mpg": "miles per gallon", "kwh": "kilowatt hours"}  # fmt: skip
 MAGNITUDES = {"k": "thousand", "m": "million", "bn": "billion", "b": "billion", "t": "trillion"}
 CURRENCY = {"$": "dollars", "£": "pounds", "€": "euros", "¥": "yen"}
 BIG_WORDS = {"thousand", "million", "billion", "trillion"}
@@ -227,9 +232,13 @@ def _core(core: str, prev: str, nxt: str, prev_raw: str) -> str | None:
         if unit in ERAS and len(m[1]) <= 4:
             return f"{year(int(m[1]))} {ERAS[unit]}"
     if m := COMPOUND_RE.match(core):
+        if m[2].lower() in UNITS:  # a 35-mph wave
+            return f"{cardinal(int(m[1]))} {UNITS[m[2].lower()]}"
         return f"{cardinal(int(m[1]))}-{m[2]}"
     if low in UNITS and prev_raw and NUM_RE.match(prev_raw.strip(TRAIL)):
         return UNITS[low]
+    if low in NAMED_UNITS:
+        return NAMED_UNITS[low]
     if low in ERAS and core.isupper() and NUM_RE.match(prev_raw.strip(TRAIL) or "x"):
         return ERAS[low]
     if core in WORD_ACRONYMS:
@@ -277,6 +286,8 @@ def spoken_tokens(text: str) -> list[tuple[str, str]]:
             said = ABBREVIATIONS[low]
             if low == "st.":
                 said = "Saint" if nxt[:1].isupper() else "Street"
+            if low == "ft." and NUM_RE.match(prev_raw.strip(LEAD + TRAIL)):
+                said = "feet"  # 25 ft. -> feet; Ft. Knox -> Fort
             rest = body[len(low) :].replace(")", ",").replace("]", ",")
             if (low not in BEFORE_NAMES or said == "Street") and not rest and (not nxt or nxt[:1].isupper()):
                 rest = "."  # "... in the U.S. Then" ends a sentence; "Dr. Smith" doesn't

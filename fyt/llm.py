@@ -323,6 +323,9 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
   not "2,487 people". Round decimals unless the exact value is the point.
 - Write a name in full the first time (the HAL 9000 computer, the International Union for
   Conservation of Nature) and avoid unfamiliar acronyms after that.
+- Write units in full, in the narration and on screen: "35 miles per hour", "15 feet", "200 pounds
+  per square inch", never mph, ft, psi or km/h. On-screen labels, headings and stat units follow the
+  same rule; if a full word is too long for a label, rephrase rather than abbreviate.
 - No parentheses, slashes, semicolons, footnote marks, emoji or ALL-CAPS emphasis.
 - No lists or headings inside the narration; the on-screen templates carry those.
 
