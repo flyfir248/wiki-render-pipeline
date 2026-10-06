@@ -208,5 +208,5 @@ def load_config(path: str | Path | None = None) -> Config:
 
 
 def secret(name: str) -> str | None:
-    value = os.environ.get(name)
+    value = (os.environ.get(name) or "").strip()  # a pasted secret often ends in a newline
     return value or None

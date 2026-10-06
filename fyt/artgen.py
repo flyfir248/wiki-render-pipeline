@@ -44,6 +44,19 @@ def provider() -> str | None:
     return None
 
 
+class Rejected(requests.RequestException):
+    """The provider refused the request itself (bad key, bad input): retrying won't help."""
+
+
+def _check(r: requests.Response) -> None:
+    if r.ok:
+        return
+    detail = r.text[:300].replace("\n", " ")
+    if 400 <= r.status_code < 500 and r.status_code != 429:
+        raise Rejected(f"{r.status_code}: {detail}")
+    raise requests.HTTPError(f"{r.status_code}: {detail}")
+
+
 def generate(prompt: str, vertical: bool = False, seed: int = 7) -> Image.Image:
     """One image from the configured provider."""
     which = provider()
@@ -57,10 +70,10 @@ def generate(prompt: str, vertical: bool = False, seed: int = 7) -> Image.Image:
                 r = requests.post(
                     url,
                     headers={"Authorization": f"Bearer {secret('CLOUDFLARE_API_TOKEN')}"},
-                    json={"prompt": prompt, "steps": 4, "seed": seed},
+                    json={"prompt": prompt, "steps": 4},  # the model takes only these two
                     timeout=120,
                 )
-                r.raise_for_status()
+                _check(r)
                 data = base64.b64decode(r.json()["result"]["image"])
             elif which == "together":
                 w, h = (768, 1344) if vertical else (1344, 768)
@@ -71,13 +84,13 @@ def generate(prompt: str, vertical: bool = False, seed: int = 7) -> Image.Image:
                           "steps": 4, "seed": seed, "response_format": "b64_json"},
                     timeout=120,
                 )
-                r.raise_for_status()
+                _check(r)
                 data = base64.b64decode(r.json()["data"][0]["b64_json"])
             else:
                 raise RuntimeError("no image provider configured")
             return Image.open(io.BytesIO(data)).convert("RGB")
         except (requests.RequestException, KeyError) as e:
-            if attempt == 2:
+            if attempt == 2 or isinstance(e, Rejected):
                 raise RuntimeError(f"image generation failed: {e}") from e
             time.sleep(4 * (attempt + 1))
     raise AssertionError("unreachable")
