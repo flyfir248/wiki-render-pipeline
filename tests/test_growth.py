@@ -249,3 +249,50 @@ def test_trending_candidates_read_most_read_and_anniversaries(monkeypatch):
     got = growth.trending_candidates(Config(), datetime(2026, 9, 29).date())
     assert got == [("Great Emu War", 90000), ("Boston Molasses Disaster", 0)]
     assert seen == ["https://en.wikipedia.org/api/rest_v1/feed/featured/2026/09/29"]
+
+
+def test_a_two_part_short_ends_on_a_cliffhanger_and_queues_part_2(monkeypatch, tmp_path):
+    cfg = Config(jobs_dir=str(tmp_path), format="short")
+    cfg.growth.two_part_share = 1.0
+    cfg.growth.polish = False
+    article = wiki.Article("Dreamachine", "https://en.wikipedia.org/wiki/Dreamachine", "x" * 9000)
+    monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: article)
+    monkeypatch.setattr(wiki, "fetch_images", lambda cfg, t: [])
+    notes = []
+
+    def write_script(cfg, topic, n, from_wikipedia=False, images="", feedback=""):
+        notes.append(feedback)
+        return script(3).model_copy(update={"title": "The Lamp", "core_message": "Flicker makes the brain see."})
+
+    monkeypatch.setattr(llm, "write_script", write_script)
+    monkeypatch.setattr(pipeline.qa, "check_script", lambda cfg, s: ["stop after the script"])
+    job = Job.create(cfg, "wiki:Dreamachine")
+    with pytest.raises(RuntimeError):
+        pipeline._make(cfg, job, "wiki:Dreamachine", None, None)
+    assert "part 1 of a two-part story" in notes[0] and "part 2 of a two-part story" in notes[1]
+    assert "Flicker makes the brain see." in notes[1]
+    part1 = Script.model_validate_json(job.file("script.json").read_text())
+    assert part1.title == "The Lamp (Part 1)" and part1.scenes[-1].narration.endswith("Part two is up next.")
+
+    monkeypatch.setattr(youtube, "upload", lambda *a, **k: "p1")
+    monkeypatch.setattr(youtube, "can_manage", lambda: False)
+    job.update(status="approved")
+    pipeline.upload_job(cfg, job)
+    assert ("cut:p1-part2" in Topics(cfg).titles())
+    part2 = pipeline.load_script(tmp_path / "cuts" / "p1-part2.json")
+    assert part2.title == "The Lamp (Part 2)" and part2.description.startswith("Part 1: https://youtu.be/p1")
+
+
+def test_short_articles_and_most_shorts_stay_single(monkeypatch, tmp_path):
+    cfg = Config(jobs_dir=str(tmp_path), format="short")
+    cfg.growth.two_part_share = 1.0
+    cfg.growth.polish = False
+    monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: wiki.Article("Stub", "u", "x" * 3000))
+    monkeypatch.setattr(wiki, "fetch_images", lambda cfg, t: [])
+    notes = []
+    monkeypatch.setattr(llm, "write_script", lambda cfg, t, n, from_wikipedia=False, images="", feedback="": notes.append(feedback) or script(3))
+    monkeypatch.setattr(pipeline.qa, "check_script", lambda cfg, s: ["stop"])
+    job = Job.create(cfg, "wiki:Stub")
+    with pytest.raises(RuntimeError):
+        pipeline._make(cfg, job, "wiki:Stub", None, None)
+    assert notes == [""] and not job.file("part2.json").exists()

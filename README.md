@@ -62,8 +62,11 @@ Things to know:
 - **Custom thumbnails need a verified channel** (youtube.com/verify). Until then the upload
   still works and the thumbnail step is skipped with a warning.
 - **Quota:** the default 10,000 units a day allows about 6 uploads a day. That's plenty.
-- `contains_synthetic_media: true` sets YouTube's AI-content disclosure. Keep it on while
-  you use AI voices.
+- `contains_synthetic_media` sets YouTube's "altered or synthetic content" label. YouTube asks
+  for it on realistic footage of people or events that didn't happen, cloned real voices and
+  AI-generated music, not for a narrator voice over real photos and graphics, so it's off. Turn it
+  on for any video that does show realistic synthetic people or events.
+  `python -m fyt relabel` (or the workflow's `relabel` task) clears the label on videos already up.
 
 ## Running it automatically
 
@@ -153,10 +156,26 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
   articles and today's anniversaries. If one fits the channel well, it makes a bonus Short (at most
   one a day) or, for a very strong fit, a bonus long video (at most one a week), and publishes it
   within the hour. If nothing fits, it looks again six hours later.
+- *Visuals in every scene* (`visuals_every_scene`): scenes the script gave no picture (charts, numbers,
+  quotes) get a real photo behind them, darkened, with a slow zoom: a spare article image, then a
+  Wikimedia Commons photo of the subject, then a stock photo. Commons images are credited in the description.
+- *Music:* with no tracks in `music_dir`, each video gets an original background track composed note by
+  note (`fyt/music.py`): soft chords, bass and an arpeggio in a random minor key, with a light pulse in
+  Shorts. No licences, no Content ID claims, nothing to disclose. Drop your own tracks in `music_dir` to
+  use those instead.
+- *First comment* (`first_comment`): each script includes a question about the story, and once the video
+  is public the channel posts it as the first comment. The API can't pin comments; pin it in Studio if
+  you like.
+- *Two-part stories* (`two_part_share`): about a quarter of Shorts from long enough articles are told in
+  two parts. Part 1 ends on the open question with "Part two is up next."; part 2 opens with a one-line
+  recap, fills the next Short slot and links back to part 1.
+- *Watch-time feedback:* with YouTube Analytics access (below), topic choice and the packaging pass see
+  which videos people watched furthest and which they left soonest, not only view counts.
 
-**Caption tracks, playlists and stats** need a YouTube token with the full permission, not only
-uploads. Run `python -m fyt auth` on your computer (it asks for both), then replace the
-`YOUTUBE_TOKEN_JSON` secret with the new `secrets/token.json`. Until then those steps are skipped and
+**Caption tracks, playlists, comments and stats** need a YouTube token with the full permission, not only
+uploads, and watch-time feedback needs the `https://www.googleapis.com/auth/yt-analytics.readonly`
+scope too. Run `python -m fyt auth` on your computer (it asks for all three), or make the token in the
+OAuth Playground with all three scopes, then replace the `YOUTUBE_TOKEN_JSON` secret with the new token. Until then those steps are skipped and
 the videos still go out; captions are burned into the video anyway.
 
 Long videos pick an article with at least `wikipedia.long_min_chars` of text. On Groq's free tier the

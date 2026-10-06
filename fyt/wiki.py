@@ -167,6 +167,41 @@ def fetch_images(cfg: Config, title: str, limit: int = 8) -> list[WikiImage]:
         iiprop="url|size|mime|extmetadata",
         iiurlwidth=1280,
     )
+    images = _images(body)
+    images.sort(key=lambda im: len(im.description), reverse=True)  # described images first
+    return images[:limit]
+
+
+COMMONS = "https://commons.wikimedia.org/w/api.php"
+
+
+def search_commons(query: str, limit: int = 6) -> list[WikiImage]:
+    """Freely licensed photos on Wikimedia Commons matching a search, best match first.
+    Fills scenes the article's own images don't cover."""
+    r = requests.get(
+        COMMONS,
+        params={
+            "format": "json",
+            "formatversion": 2,
+            "action": "query",
+            "generator": "search",
+            "gsrsearch": f"{query} filetype:bitmap",
+            "gsrnamespace": 6,
+            "gsrlimit": 20,
+            "prop": "imageinfo",
+            "iiprop": "url|size|mime|extmetadata",
+            "iiurlwidth": 1280,
+        },
+        headers={"User-Agent": USER_AGENT},
+        timeout=30,
+    )
+    r.raise_for_status()
+    body = r.json()
+    pages = sorted(body.get("query", {}).get("pages", []), key=lambda p: p.get("index", 0))
+    return _images({"query": {"pages": pages}})[:limit]
+
+
+def _images(body: dict) -> list[WikiImage]:
     images = []
     for page in body.get("query", {}).get("pages", []):
         info = (page.get("imageinfo") or [{}])[0]
@@ -189,8 +224,7 @@ def fetch_images(cfg: Config, title: str, limit: int = 8) -> list[WikiImage]:
                 license=_plain(meta.get("LicenseShortName", {}).get("value", "")),
             )
         )
-    images.sort(key=lambda im: len(im.description), reverse=True)  # described images first
-    return images[:limit]
+    return images
 
 
 def image_menu(images: list[WikiImage]) -> str:

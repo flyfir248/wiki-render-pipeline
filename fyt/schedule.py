@@ -28,7 +28,7 @@ PACIFIC = ZoneInfo("America/Los_Angeles")
 LEAD_MINUTES = 30  # a slot this close is left alone: the upload might not finish in time
 # Rough time to make one video on the free 2-core runner, to avoid starting one the job can't finish.
 MAKE_MINUTES = {"short": 10, "long": 80}
-KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json")
+KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json", "part2.json")
 
 
 def utcnow() -> datetime:
@@ -209,6 +209,24 @@ def sync(cfg: Config, now: datetime) -> int:
         added += 1
     settle_posted(cfg, now, [v.get("title", "") for v in videos])
     return added
+
+
+def post_comments(cfg: Config, now: datetime) -> int:
+    """Post the first comment on videos that have gone public since the last run."""
+    if not youtube.can_manage():
+        return 0
+    uploads, posted = Uploads(cfg), 0
+    for video_id, text in uploads.due_comments(now.isoformat()):
+        try:
+            youtube.post_comment(video_id, text)
+        except Exception as e:  # e.g. comments turned off on the video; try again next run, up to 3 times
+            print(f"warning: no comment on https://youtu.be/{video_id}: {e}")
+            uploads.comment_done(video_id, ok=False)
+            continue
+        uploads.comment_done(video_id, ok=True)
+        print(f"commented on https://youtu.be/{video_id}: {text}")
+        posted += 1
+    return posted
 
 
 def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = None, clock=time.monotonic) -> int:

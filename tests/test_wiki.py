@@ -159,8 +159,48 @@ def test_scene_visuals_uses_chosen_images_then_stock(monkeypatch, tmp_path):
     )
     job = Job(tmp_path / "job")
     job.public.mkdir(parents=True)
-    scene_media, credits, _ = pipeline.scene_visuals(Config(), job, s, images, "topic")
+    cfg = Config()
+    cfg.growth.visuals_every_scene = False
+    scene_media, credits, _ = pipeline.scene_visuals(cfg, job, s, images, "topic")
     assert scene_media[0].src == "media/wiki2.jpg"
     assert 1 not in scene_media and stock == ["flood street"]  # image 2 already used -> stock
     assert 2 not in scene_media  # out-of-range image, data scene: plain background
     assert credits == ["B.jpg (Public domain): https://c/B"]
+
+
+def test_every_scene_gets_a_photo_when_visuals_every_scene(monkeypatch, tmp_path):
+    from fyt import media
+    from fyt.store import Job
+
+    images = [wiki.WikiImage("File:A.jpg", "https://x/A.jpg", "https://c/A", "lamp", "", "CC0")]
+    monkeypatch.setattr(wiki, "download_image", lambda im, dst: dst.write_bytes(b"jpg"))
+    monkeypatch.setattr(media, "fetch_broll", lambda *a: None)
+    searches = []
+
+    def commons(query):
+        searches.append(query)
+        if query == "Dreamachine":
+            return [wiki.WikiImage(f"File:C{len(searches)}.jpg", "https://x/C.jpg", "https://c/C", "c", "", "CC BY 4.0")]
+        return []
+
+    monkeypatch.setattr(wiki, "search_commons", commons)
+    monkeypatch.setattr(media, "fetch_photo", lambda cfg, q, public, name, used: media.Media(src=f"media/{name}.jpg", kind="image"))
+    s = Script.model_validate(
+        {
+            "title": "t", "description": "d", "tags": [], "thumbnail_text": "x", "thumbnail_kicker": "y",
+            "thumbnail_query": "z", "sources": [],
+            "scenes": [
+                {"narration": "a", "type": "title", "heading": "a", "image": 1},
+                {"narration": "b", "type": "stat", "value": 78, "heading": "Record speed"},
+                {"narration": "c", "type": "bars", "data": [{"label": "x", "value": 1}]},
+            ],
+        }
+    )
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+    scene_media, credits, _ = pipeline.scene_visuals(Config(), job, s, images, "wiki:Dreamachine", "Dreamachine")
+    assert scene_media[0].src == "media/wiki1.jpg"
+    assert scene_media[1].src == "media/commons2.jpg"  # nothing for "Dreamachine Record speed", so the subject itself
+    assert searches[:2] == ["Dreamachine Record speed", "Dreamachine"]
+    assert scene_media[2].src.startswith("media/commons3")  # a different Commons photo, not the same one again
+    assert len(credits) == 3

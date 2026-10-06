@@ -305,6 +305,8 @@ Rules:
 - On-screen text must be short and scannable; the narration carries the detail.
 - Title max 70 characters; no false clickbait. Description must be accurate.
 - List the sources you relied on.
+- Write `comment_question`: one specific, easy question about this story for the channel's first
+  comment, the kind people answer in a few words. No "let me know in the comments".
 """
 
 
@@ -322,6 +324,18 @@ moment (the real person, place or object), or leave it null if none fits. Use ea
 For scenes without an image, set `broll_query` to a concrete stock-footage search for what is being
 said. The title scene should show the subject itself whenever an image of it exists.
 """
+
+
+PART1_NOTE = """This Short is part 1 of a two-part story, and this overrides how the structure ends:
+tell the first half, build to the most gripping open question, and stop there without giving the
+payoff away. The last sentence is "Part two is up next." Keep the payoff for part 2."""
+
+PART2_NOTE = """This Short is part 2 of a two-part story. Part 1 told this, and ended on its open question:
+<part_1>
+{previous}
+</part_1>
+Open with "Part two." and one sentence that reminds the viewer where part 1 stopped, then the build
+and the payoff. Don't repeat part 1's facts beyond that one sentence. Core message of the story: {message}"""
 
 
 def write_script(

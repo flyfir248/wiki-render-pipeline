@@ -85,3 +85,37 @@ def test_upload_job_does_not_post_a_video_twice(tmp_path, monkeypatch):
     monkeypatch.setattr(youtube, "upload", lambda *a, **k: (_ for _ in ()).throw(AssertionError("uploaded again")))
     assert pipeline.upload_job(cfg, job) == "vid1"
     assert job.meta["status"] == "uploaded"
+
+
+def test_performance_ranks_by_how_much_people_watched(tmp_path, monkeypatch):
+    from fyt.store import Uploads
+
+    cfg = Config(jobs_dir=str(tmp_path))
+    for v in "abcde":
+        Uploads(cfg).record("short", None, v, None)
+    monkeypatch.setattr(youtube, "can_manage", lambda: True)
+    monkeypatch.setattr(youtube, "can_analyze", lambda: True)
+    monkeypatch.setattr(youtube, "stats", lambda ids: [{"id": v, "title": v.upper(), "views": 100, "likes": 1} for v in sorted(ids)])
+    pct = {"a": 40, "b": 90, "c": 70, "d": 20, "e": 60}
+    monkeypatch.setattr(youtube, "retention", lambda ids: {v: {"views": 100, "seconds": 20, "percent": p} for v, p in pct.items()})
+    pipeline._performance.clear()
+    summary = pipeline.performance_summary(cfg, limit=4)
+    best, worst = summary.split("Lost viewers soonest")
+    assert best.index("- B:") < best.index("- C:") and "- D:" in worst
+    assert "watched 90%" in best
+
+
+def test_upload_queues_the_first_comment(tmp_path, monkeypatch):
+    from fyt.models import Script
+    from fyt.store import Uploads
+
+    cfg = Config(jobs_dir=str(tmp_path))
+    job = Job.create(cfg, "x")
+    job.update(status="approved")
+    s = Script(title="T", description="D", tags=[], thumbnail_text="", thumbnail_kicker="", thumbnail_query="",
+               scenes=[], sources=[], comment_question="Would you sit in front of it?")
+    job.file("script.json").write_text(s.model_dump_json())
+    monkeypatch.setattr(youtube, "upload", lambda *a, **k: "vid9")
+    monkeypatch.setattr(youtube, "can_manage", lambda: False)
+    pipeline.upload_job(cfg, job)
+    assert Uploads(cfg).due_comments("2030-01-01") == [("vid9", "Would you sit in front of it?")]

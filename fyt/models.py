@@ -67,6 +67,11 @@ class Script(BaseModel):
     thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
     scenes: list[ScriptScene]
     sources: list[str] = Field(description="URLs or references backing the facts used.")
+    comment_question: str = Field(
+        default="",
+        description="A question the channel posts as the first comment to start a conversation: specific to this "
+        "story, easy to answer in a few words, max 15 words. E.g. 'Would you have sat in front of it?'",
+    )
     # Set by the pipeline for long videos written chapter by chapter; not asked of the model.
     chapters: SkipJsonSchema[list[Chapter] | None] = None
     series: SkipJsonSchema[str | None] = None  # playlist the video is filed under

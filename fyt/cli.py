@@ -54,6 +54,8 @@ def main(argv: list[str] | None = None) -> None:
     u.add_argument("--force", action="store_true", help="upload even if not approved")
     sub.add_parser("auth", help="authorise YouTube uploads (opens a browser)")
     sub.add_parser("stats", help="show views for uploaded videos")
+    sub.add_parser("comments", help="post the first comment on videos that have gone public")
+    sub.add_parser("relabel", help="clear YouTube's AI-content label on the channel's recent videos")
 
     args = p.parse_args(argv)
     cfg = load_config(args.config)
@@ -141,6 +143,18 @@ def main(argv: list[str] | None = None) -> None:
         from fyt import youtube
 
         youtube.auth()
+    elif args.cmd == "comments":
+        from datetime import datetime, timezone
+
+        from fyt import schedule, youtube
+
+        if youtube.authorised():
+            print(f"posted {schedule.post_comments(cfg, datetime.now(timezone.utc))} comments")
+    elif args.cmd == "relabel":
+        from fyt import youtube
+
+        ids = [v["id"] for v in youtube.recent_uploads(limit=200)]
+        print(f"cleared the label on {youtube.set_synthetic_label(ids, cfg.youtube.contains_synthetic_media)} of {len(ids)} videos")
     elif args.cmd == "stats":
         print(pipeline.performance_summary(cfg, limit=100) or "no uploaded videos yet")
 

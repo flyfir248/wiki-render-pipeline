@@ -88,7 +88,7 @@ def test_scheduled_upload_forces_private_and_shorts_tag():
     body = build_body(cfg, script(), now=datetime(2026, 1, 1, 10, tzinfo=timezone.utc))
     assert body["status"]["privacyStatus"] == "private"
     assert body["status"]["publishAt"] == "2026-01-01T12:00:00Z"
-    assert body["status"]["containsSyntheticMedia"] is True
+    assert body["status"]["containsSyntheticMedia"] is False  # a narrator over real images needs no label
     assert "#Shorts" in body["snippet"]["description"]
     assert "https://example.com" in body["snippet"]["description"]
 

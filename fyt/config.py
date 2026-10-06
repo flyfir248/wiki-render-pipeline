@@ -75,8 +75,10 @@ class YouTubeConfig(BaseModel):
     privacy: Literal["private", "unlisted", "public"] = "private"
     category_id: str = "27"  # Education
     made_for_kids: bool = False
-    # Must be true when the video has realistic AI-generated voices/footage.
-    contains_synthetic_media: bool = True
+    # YouTube's "altered or synthetic content" label. Required for realistic footage of people or
+    # events that didn't happen, a cloned real voice, or AI-generated music; not for a narrator voice
+    # over real photos and motion graphics, which is what this pipeline makes.
+    contains_synthetic_media: bool = False
     # Hours from upload to scheduled publish; forces privacy=private until then.
     publish_delay_hours: float | None = None
     # Adds a random 0..N minute delay on top, so videos don't go live at the exact
@@ -134,6 +136,16 @@ class GrowthConfig(BaseModel):
     polish: bool = True  # second pass on title, hook and thumbnail text (plus a loop line for Shorts)
     rank_topics: bool = True  # pick articles by fit with the niche and Wikipedia pageviews
     min_topic_fit: int = 6  # 0-10; articles the model rates lower are skipped
+    # Every scene gets a real photo: a spare article image, a Wikimedia Commons photo, or a stock photo.
+    # Charts and numbers sit on top of it, darkened. Off: data scenes keep the plain background.
+    visuals_every_scene: bool = True
+    # The channel asks each video's question as the first comment once the video is public (needs the
+    # full YouTube permission; 50 quota units each).
+    first_comment: bool = True
+    # Share of Shorts told as a two-part story: part 1 ends on a cliffhanger and part 2 fills the next
+    # Short slot, so viewers who want the ending follow the channel. Only for articles with enough material.
+    two_part_share: float = 0.25
+    two_part_min_chars: int = 8000
     cuts_per_long: int = 2  # Shorts cut from each long video (they fill regular Short slots)
     series: list[str] = Field(default_factory=list)  # playlists; each video is filed under one
     # Extra videos on topics trending on Wikipedia that fit the niche, on top of the schedule.
@@ -157,6 +169,7 @@ class Config(BaseModel):
     voice: VoiceConfig = Field(default_factory=VoiceConfig)
     music_dir: str = "assets/music"
     music_volume: float = 0.07
+    generate_music: bool = True  # compose an original background track when music_dir has none
     stock_footage: bool = True  # needs PEXELS_API_KEY
     captions: bool = True
     visualizer: bool = True

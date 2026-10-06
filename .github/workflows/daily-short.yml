@@ -18,9 +18,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now"
+        description: "fill: top up the schedule. short / long: make one video now. relabel: clear the AI-content label on videos already up"
         type: choice
-        options: [fill, short, long]
+        options: [fill, short, long, relabel]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -67,11 +67,21 @@ jobs:
           key: fyt-state-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: fyt-state-
 
+      # Each video's question goes up as the channel's first comment once the video is public.
+      - name: Post first comments
+        if: env.TASK == 'fill'
+        continue-on-error: true
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+        run: python -m fyt comments
+
       - name: Check what the schedule needs
         id: need
         run: |
           if [ "$TASK" = fill ]; then
             echo "needed=$(python -m fyt buffer --needed)" >> "$GITHUB_OUTPUT"
+          elif [ "$TASK" = relabel ]; then
+            echo "needed=no" >> "$GITHUB_OUTPUT"
           else
             echo "needed=yes" >> "$GITHUB_OUTPUT"
           fi
@@ -93,6 +103,12 @@ jobs:
         with:
           path: assets/kokoro
           key: kokoro-v1.0
+
+      - name: Clear the AI-content label on videos already up
+        if: env.TASK == 'relabel'
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+        run: python -m fyt relabel
 
       - name: Make videos
         if: steps.need.outputs.needed == 'yes'

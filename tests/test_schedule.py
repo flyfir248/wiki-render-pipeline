@@ -200,3 +200,28 @@ def test_a_kept_video_with_a_video_id_fills_its_slot_without_the_channel(cfg, mo
     schedule.fill(cfg, now=MONDAY)
     assert ch.made == ["short"] * 3 and schedule.pending_jobs(cfg) == []
     assert Uploads(cfg).filled()["2026-09-29T14:00:00+00:00"][0] == "up1"
+
+
+def test_first_comment_is_posted_once_the_video_is_public(cfg, monkeypatch):
+    posted = []
+    monkeypatch.setattr(youtube, "can_manage", lambda: True)
+    monkeypatch.setattr(youtube, "post_comment", lambda vid, text: posted.append((vid, text)) or "c1")
+    u = Uploads(cfg)
+    u.queue_comment("v1", "Would you have tried it?", "2026-09-29T14:20:00+00:00")
+    u.queue_comment("v2", "Older one?", None)
+    assert schedule.post_comments(cfg, MONDAY) == 1  # v1 is still scheduled
+    assert posted == [("v2", "Older one?")]
+    later = datetime(2026, 9, 29, 15, 0, tzinfo=timezone.utc)
+    assert schedule.post_comments(cfg, later) == 1
+    assert schedule.post_comments(cfg, later) == 0  # never twice
+    assert posted[-1] == ("v1", "Would you have tried it?")
+
+
+def test_a_failing_comment_is_retried_at_most_three_times(cfg, monkeypatch):
+    calls = []
+    monkeypatch.setattr(youtube, "can_manage", lambda: True)
+    monkeypatch.setattr(youtube, "post_comment", lambda vid, text: calls.append(vid) or (_ for _ in ()).throw(RuntimeError("403")))
+    Uploads(cfg).queue_comment("v1", "Q?", None)
+    for _ in range(5):
+        schedule.post_comments(cfg, MONDAY)
+    assert len(calls) == 3
