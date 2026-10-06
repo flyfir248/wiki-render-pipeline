@@ -271,8 +271,9 @@ Rate every candidate Wikipedia article 0-10 as the subject of a calm, factual ex
 incident. 8-10: a specific incident (an accident, disaster, rescue, crime with charges, discovery or
 failure) whose basic facts are established and that the audience would want explained. 5-7: notable but
 thin on facts or less gripping. 0-4: not an incident (people, films, sports results, companies, lists),
-still developing so fast the facts may change within days, about elections or partisan politics, or
-centred on a private person.
+still developing so fast the facts may change within days, about elections or partisan politics,
+centred on a private person, or a violent crime, trial or execution centred on one individual (these
+are hard to monetise and easy to get wrong).
 """
 
 
