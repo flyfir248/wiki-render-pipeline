@@ -30,7 +30,7 @@ on:
         description: "How many videos (for short / long)"
         default: "1"
       title:
-        description: "For news: the incident's Wikipedia article title (blank picks the strongest recent one)"
+        description: "For news: the incident's Wikipedia article title (blank picks the strongest recent one). For short / long: render that article as a test, without uploading"
         default: ""
 
 concurrency:
@@ -131,6 +131,8 @@ jobs:
             python -m fyt fill
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
+          elif [ -n "$TITLE" ]; then
+            python -m fyt --format "$TASK" make "wiki:$TITLE" # a test render, never uploaded
           elif [ "$UPLOAD" = false ]; then
             python -m fyt --format "$TASK" run --count "$COUNT" --no-upload
           else
