@@ -11,7 +11,7 @@ import requests
 from pydantic import BaseModel, Field, ValidationError
 
 from fyt.config import Config
-from fyt.models import Chapter, Script, ScriptScene
+from fyt.models import MOOD_HELP, Chapter, Mood, Script, ScriptScene
 
 # Server-side refusal fallbacks: if the primary model declines, the API reroutes
 # the same request to a suitable fallback model inside the same call.
@@ -292,6 +292,11 @@ however interesting, that doesn't; a video that says one thing clearly beats one
 
 {structure}
 
+Music: set `mood` so the background music fits the story. Somber for death, disaster, war, illness
+or any tragedy (respectful, never upbeat); tense for danger, mystery or a race against time; curious
+for strange facts and discoveries; uplifting for triumph, rescue or kindness; playful only for light,
+harmless fun.
+
 Narrator voice (keep it identical from the first scene to the last):
 - One storyteller talking to one listener: warm, curious, confident and brisk. Past tense for the
   story, present tense only for what is still true today.
@@ -434,6 +439,7 @@ class ChapterPlan(BaseModel):
 
 class Outline(BaseModel):
     core_message: str = Field(default="", description="Write this first: the one sentence the viewer should remember, max 20 words.")
+    mood: Mood = Field(default="curious", description=MOOD_HELP)
     title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")
@@ -442,6 +448,11 @@ class Outline(BaseModel):
     thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
     chapters: list[ChapterPlan]
     sources: list[str] = Field(description="URLs or references backing the facts used.")
+    comment_question: str = Field(
+        default="",
+        description="A question the channel posts as the first comment: specific to this story, easy to answer "
+        "in a few words, max 15 words.",
+    )
 
 
 class ChapterScenes(BaseModel):
@@ -533,6 +544,8 @@ def write_long_script(
 
     return Script(
         core_message=outline.core_message,
+        mood=outline.mood,
+        comment_question=outline.comment_question,
         title=outline.title,
         description=outline.description,
         tags=outline.tags,

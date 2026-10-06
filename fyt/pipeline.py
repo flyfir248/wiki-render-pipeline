@@ -117,7 +117,9 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = script.model_copy(update={"description": script.description.rstrip() + "\n\n" + chapters})
         job.file("script.json").write_text(script.model_dump_json(indent=2))
     job.file("youtube.txt").write_text(youtube.upload_sheet(cfg, script))
-    music = media.pick_music(cfg, job.public, seconds=spans[-1][1] + 2 if spans else 60, seed=sum(map(ord, job.id)))
+    music = media.pick_music(
+        cfg, job.public, seconds=spans[-1][1] + 2 if spans else 60, seed=sum(map(ord, job.id)), mood=script.mood
+    )
 
     props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music)
     job.file("props.json").write_text(props.model_dump_json(indent=2))

@@ -14,6 +14,13 @@ SceneType = Literal[
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
 Transition = Literal["fade", "slide", "zoom", "wipe", "flash"]
+# Feel of the background music, chosen from the story (see fyt.music).
+Mood = Literal["somber", "tense", "curious", "uplifting", "playful"]
+MOOD_HELP = (
+    "Music mood that respects the story: somber for death, disaster, war, illness or other tragedy; "
+    "tense for danger, mystery or a race against time; curious for strange facts and discoveries; "
+    "uplifting for triumph, rescue or kindness; playful only for light, harmless fun."
+)
 
 
 class DataPoint(BaseModel):
@@ -86,6 +93,7 @@ class Script(BaseModel):
         default="",
         description="Write this first: the one sentence the viewer should remember, max 20 words. Every scene serves it.",
     )
+    mood: Mood = Field(default="curious", description=MOOD_HELP)
     title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")

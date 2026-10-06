@@ -99,7 +99,7 @@ export const SceneFrame: React.FC<{ transition?: Transition; children: React.Rea
   } else if (transition === "flash") {
     style = { opacity: fadeOut, transform: `scale(${drift})` };
   }
-  const flash = transition === "flash" ? interpolate(frame, [0, 3, 10], [0.9, 0.7, 0], { extrapolateRight: "clamp" }) : 0;
+  const flash = transition === "flash" ? interpolate(frame, [0, 2, 8], [0.6, 0.45, 0], { extrapolateRight: "clamp" }) : 0;
   return (
     <AbsoluteFill style={style}>
       {children}

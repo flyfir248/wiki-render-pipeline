@@ -85,7 +85,9 @@ def fetch_photo(cfg: Config, query: str, public: Path, name: str, used: set[str]
     return None
 
 
-def pick_music(cfg: Config, public: Path, seconds: float = 60.0, seed: int | None = None) -> str | None:
+def pick_music(
+    cfg: Config, public: Path, seconds: float = 60.0, seed: int | None = None, mood: str = "curious"
+) -> str | None:
     """Copy a random track from music_dir into the job (use only music you are licensed to use),
     or, with no tracks there, compose an original one (see fyt.music)."""
     folder = (ROOT / cfg.music_dir).resolve()
@@ -95,7 +97,7 @@ def pick_music(cfg: Config, public: Path, seconds: float = 60.0, seed: int | Non
             return None
         from fyt import music
 
-        music.write(public / "music.wav", seconds, energetic=cfg.format == "short", seed=seed)
+        music.write(public / "music.wav", seconds, energetic=cfg.format == "short", seed=seed, mood=mood)
         return "music.wav"
     track = random.choice(tracks)
     dst = public / f"music{track.suffix.lower()}"
