@@ -153,6 +153,11 @@ class GrowthConfig(BaseModel):
     bonus_longs_per_week: int = 1
     bonus_min_fit: int = 7  # 0-10
     bonus_long_min_fit: int = 9
+    # A weekly long explainer on a recent news incident (from Wikipedia's "In the news" and most-read
+    # articles, at least a day old), on top of the schedule, when one is strong enough.
+    news_longs_per_week: int = 1
+    news_min_fit: int = 8
+    news_min_chars: int = 6000
 
 
 class Config(BaseModel):

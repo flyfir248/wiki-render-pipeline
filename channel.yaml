@@ -77,6 +77,10 @@ growth:
   bonus_longs_per_week: 1   # extra long video, only for a very strong trending fit
   bonus_min_fit: 7
   bonus_long_min_fit: 9
+  # A weekly long explainer on a recent news incident (Wikipedia "In the news" and most read, at
+  # least a day old). Factual and attributed, no speculation; see NEWS_GUIDE in fyt/llm.py.
+  news_longs_per_week: 1
+  news_min_fit: 8
 
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is

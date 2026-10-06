@@ -40,7 +40,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         notes = ""
         if wiki.is_wiki_topic(topic):
             log(job, "fetching Wikipedia article")
-            article = wiki.fetch_article(cfg, topic[len(wiki.PREFIX) :])
+            article = wiki.fetch_article(cfg, wiki.title_of(topic))
             notes = wiki.notes(article)
             job.file("research.md").write_text(notes)
             try:
@@ -59,8 +59,12 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             cfg.format == "short" and article is not None and len(notes) >= g.two_part_min_chars
             and random.random() < g.two_part_share
         )
-        log(job, "writing part 1 of a two-part script" if two_part else "writing script")
-        script = _short_enough(cfg, job, subject, notes, article is not None, menu, llm.PART1_NOTE if two_part else "")
+        news = wiki.is_news_topic(topic)
+        two_part = two_part and not news
+        log(job, "writing a news explainer" if news else "writing part 1 of a two-part script" if two_part else "writing script")
+        script = _short_enough(
+            cfg, job, subject, notes, article is not None, menu, llm.PART1_NOTE if two_part else "", news=news
+        )
         if two_part:
             try:
                 previous = " ".join(s.narration for s in script.scenes)
@@ -78,7 +82,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             script = wiki_attribute(script, article)
     else:
         two_part = False
-    if polish and cfg.growth.polish:
+    # News titles stay as factual as the script wrote them; the polish pass is for curiosity hooks.
+    if polish and cfg.growth.polish and not wiki.is_news_topic(topic):
         log(job, "sharpening title, hook and thumbnail text")
         try:
             # Part 1 ends on its cliffhanger, not a line looping back into the hook.
@@ -152,9 +157,11 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     log(job, f"done: {status}" + (f" -- {problems}" if problems else ""))
 
 
-def _short_enough(cfg: Config, job: Job, subject: str, notes: str, from_wiki: bool, menu: str, note: str = "") -> Script:
+def _short_enough(
+    cfg: Config, job: Job, subject: str, notes: str, from_wiki: bool, menu: str, note: str = "", news: bool = False
+) -> Script:
     """Write the script, asking once more for a shorter one when a Short runs long."""
-    script = llm.write_script(cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note)
+    script = llm.write_script(cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note, news=news)
     limit = llm.SHORT_WORDS * 1.25 if cfg.format == "short" else None
     if limit and narration_words(script) > limit:
         log(job, f"script is {narration_words(script)} words; asking for a shorter one")
@@ -163,7 +170,7 @@ def _short_enough(cfg: Config, job: Job, subject: str, notes: str, from_wiki: bo
             f"This is a Short: keep the total narration under {llm.SHORT_WORDS} words."
         )
         script = llm.write_script(
-            cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=f"{note}\n\n{feedback}".strip()
+            cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=f"{note}\n\n{feedback}".strip(), news=news
         )
     return script
 

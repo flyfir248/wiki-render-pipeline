@@ -40,6 +40,10 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--count", type=int, default=1)
     r.add_argument("--no-upload", action="store_true", help="only make the videos, even if review is off")
 
+    n = sub.add_parser("news", help="make a long explainer on a recent news incident now")
+    n.add_argument("--title", help="its Wikipedia article title (default: the strongest incident in yesterday's news)")
+    n.add_argument("--no-upload", action="store_true", help="only make the video, even if review is off")
+
     sub.add_parser("fill", help="make and schedule videos for the empty publish slots (see `schedule`)")
     b = sub.add_parser("buffer", help="show the coming publish slots and which are filled")
     b.add_argument("--check", action="store_true", help="exit with an error if a slot in the next 24 hours is empty")
@@ -124,6 +128,25 @@ def main(argv: list[str] | None = None) -> None:
                 print(f"{job.id}: https://youtu.be/{job.meta['youtube_id']}")
         if any(job.meta.get("status") == "upload_failed" for job in done):
             raise SystemExit("the video was made but the YouTube upload failed; see the error above")
+    elif args.cmd == "news":
+        from fyt import growth, wiki
+
+        cfg.format = "long"
+        if args.no_upload:
+            cfg.require_review = True
+        topics = Topics(cfg)
+        title = args.title or growth.pick_news(cfg, set(topics.titles()), cfg.growth.news_min_fit, cfg.growth.news_min_chars)
+        if not title:
+            raise SystemExit("no recent incident is strong enough for an explainer right now")
+        topic = wiki.news_topic_for(title)
+        topics.add([topic])
+        topic_id, _ = topics.find(topic)
+        job = pipeline.make_video(cfg, topic)
+        topics.set(topic_id, "done", job.id)
+        if job.meta.get("status") == "approved":
+            print(f"{job.id}: https://youtu.be/{pipeline.upload_job(cfg, job)}")
+        else:
+            print(f"{job.id}: {job.meta.get('status')}")
     elif args.cmd == "jobs":
         for j in list_jobs(cfg):
             m = j.meta

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import time
+from datetime import datetime, timezone
 
 import anthropic
 import requests
@@ -343,6 +344,22 @@ said. The title scene should show the subject itself whenever an image of it exi
 """
 
 
+NEWS_GUIDE = """
+This is a news explainer about a recent real incident, written on {today}. It overrides anything above
+that conflicts:
+- Report only what the article states as established. Attribute claims that are disputed or come
+  from one side: "police said", "the airline said", "according to investigators".
+- Never speculate about causes, motives or guilt. Anyone accused but not convicted is "accused" or
+  "charged". Don't name private people who aren't central to the story.
+- No graphic detail about injuries or deaths. Speak of victims with respect.
+- Set `mood` to somber for deaths or injuries, otherwise tense.
+- Structure: what happened, where and when (use a map scene), how it unfolded (a timeline scene),
+  why it matters or what it changed, then what is still unknown or under investigation.
+- Say "as of" the article's latest facts where they may still change. The title is factual, never
+  sensational, and doesn't promise answers the facts don't give.
+"""
+
+
 PART1_NOTE = """This Short is part 1 of a two-part story, and this overrides how the structure ends:
 tell the first half, build to the most gripping open question, and stop there without giving the
 payoff away. The last sentence is "Part two is up next." Keep the payoff for part 2."""
@@ -356,7 +373,13 @@ and the payoff. Don't repeat part 1's facts beyond that one sentence. Core messa
 
 
 def write_script(
-    cfg: Config, topic: str, notes: str, from_wikipedia: bool = False, images: str = "", feedback: str = ""
+    cfg: Config,
+    topic: str,
+    notes: str,
+    from_wikipedia: bool = False,
+    images: str = "",
+    feedback: str = "",
+    news: bool = False,
 ) -> Script:
     ch = cfg.channel
     if cfg.format == "short":
@@ -375,6 +398,8 @@ def write_script(
         words=words,
         structure=SHORT_STRUCTURE if cfg.format == "short" else LONG_STRUCTURE,
     )
+    if news:
+        guide += NEWS_GUIDE.format(today=datetime.now(timezone.utc).strftime("%d %B %Y"))
     tail = f"\n\nAvailable images:\n{images}" if images else ""
     tail += f"\n\n{feedback}" if feedback else ""
 
