@@ -26,6 +26,8 @@ import { Heading, type SceneProps } from "./shared";
 const atlas = countries as any;
 const WORLD = feature(atlas, atlas.objects.countries) as unknown as FeatureCollection;
 const coarseAtlas = coarse as any;
+// The detailed outlines only matter close up; a wide view uses the lighter set.
+const WORLD_COARSE = feature(coarseAtlas, coarseAtlas.objects.countries) as unknown as FeatureCollection;
 const GLOBE_LAND = feature(coarseAtlas, coarseAtlas.objects.land) as unknown as Feature;
 
 // Fixed atlas colours: a map has to read the same on every channel theme.
@@ -33,7 +35,6 @@ const OCEAN = "#123651";
 const OCEAN_DEEP = "#0a2035";
 const LAND = "#e4dcc6";
 const BORDER = "#9c9178";
-const COAST = "#5e7a8c";
 const LABEL = "#5c5442";
 const GRID = "#cfe3f2";
 
@@ -193,8 +194,10 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
     .rotate([-lon0, 0])
     .scale(scale)
     .center(center)
-    .translate([(rect[0][0] + rect[1][0]) / 2, (rect[0][1] + rect[1][1]) / 2]);
-  const path = geoPath(proj);
+    .translate([(rect[0][0] + rect[1][0]) / 2, (rect[0][1] + rect[1][1]) / 2])
+    // Cut everything off-screen before it becomes SVG: the detailed outlines are what makes maps slow.
+    .clipExtent([[-20, -20], [width + 20, height + 20]]);
+  const path = geoPath(proj).digits(1);
   const k = unit(format);
 
   // Grid: lines every `step` degrees for the current zoom, labelled along the edges.
@@ -306,9 +309,6 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
             <stop offset="65%" stopColor="#000" stopOpacity={0} />
             <stop offset="100%" stopColor="#000" stopOpacity={0.55} />
           </radialGradient>
-          <filter id="land-shadow" x="-5%" y="-5%" width="110%" height="110%">
-            <feDropShadow dx="0" dy={4} stdDeviation="6" floodColor="#000" floodOpacity="0.35" />
-          </filter>
           <filter id="glow">
             <feGaussianBlur stdDeviation="6" result="b" />
             <feMerge>
@@ -319,8 +319,8 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
         </defs>
         <rect width={width} height={height} fill="url(#ocean)" />
         <path d={path(lines) ?? ""} fill="none" stroke={GRID} strokeOpacity={0.22 * grow} strokeWidth={1.4} />
-        <path d={path(WORLD) ?? ""} fill={LAND} stroke={COAST} strokeWidth={2} filter="url(#land-shadow)" />
-        <path d={path(WORLD) ?? ""} fill="none" stroke={BORDER} strokeWidth={1.2} />
+        {/* one path for land and borders: the map is the slowest thing to draw, so it is drawn once */}
+        <path d={path(span > 90 ? WORLD_COARSE : WORLD) ?? ""} fill={LAND} stroke={BORDER} strokeWidth={1.2} strokeLinejoin="round" />
         {involved.map((f, i) => {
           // A country much bigger than the view (the whole USA around Boston) isn't worth highlighting.
           const [[x0, y0], [x1, y1]] = path.bounds(f);
