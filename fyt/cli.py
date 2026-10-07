@@ -7,7 +7,7 @@ from pathlib import Path
 
 from fyt import pipeline, tts
 from fyt.config import ROOT, load_config
-from fyt.store import Topics, find_job, list_jobs
+from fyt.store import Topics, Uploads, find_job, list_jobs
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -144,7 +144,10 @@ def main(argv: list[str] | None = None) -> None:
         job = pipeline.make_video(cfg, topic)
         topics.set(topic_id, "done", job.id)
         if job.meta.get("status") == "approved":
-            print(f"{job.id}: https://youtu.be/{pipeline.upload_job(cfg, job)}")
+            video_id = pipeline.upload_job(cfg, job)
+            # Counted like the weekly explainer `fill` makes, so the week doesn't get a second one.
+            Uploads(cfg).record("bonus-news", job.id, video_id, job.meta.get("publish_at"))
+            print(f"{job.id}: https://youtu.be/{video_id}")
         else:
             print(f"{job.id}: {job.meta.get('status')}")
     elif args.cmd == "jobs":

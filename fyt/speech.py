@@ -132,6 +132,37 @@ UNITS = {
 }
 # Units read in full even without a figure in front ("top speed in MPH").
 NAMED_UNITS = {"mph": "miles per hour", "kph": "kilometers per hour", "km/h": "kilometers per hour", "psi": "pounds per square inch", "mpg": "miles per gallon", "kwh": "kilowatt hours"}  # fmt: skip
+# Words that follow a measurement without it describing them: "15 feet high", "3 miles north".
+AFTER_MEASURE = {
+    "tall", "high", "long", "deep", "wide", "thick", "away", "above", "below", "under", "beneath", "over", "of", "per",
+    "in", "into", "from", "and", "or", "to", "across", "down", "up", "off", "on", "at", "an", "a", "the", "by", "behind",
+    "ahead", "apart", "around", "inland", "offshore", "out", "short", "underground", "underwater", "upstream",
+    "downstream", "north", "south", "east", "west", "northeast", "northwest", "southeast", "southwest", "high,", "is",
+    "was", "were", "are", "for", "with", "before", "after", "farther", "further", "closer", "more", "less", "than",
+    "each", "every", "an", "that", "which", "as", "beyond", "past", "toward", "towards", "through", "along", "high.",
+}  # fmt: skip
+SINGULAR = {"feet": "foot", "inches": "inch"}
+NO_ADJECTIVE = ("degrees", "hertz", "square")  # "a 40-degree-Celsius day" reads worse than the plain form
+
+
+def measure_adjective(n: str, unit: str) -> str:
+    """'fifteen', 'feet' -> 'fifteen-foot' for a measurement in front of a noun (a fifteen-foot wave)."""
+    words = unit.split()
+    first = SINGULAR.get(words[0], words[0][:-1] if words[0].endswith("s") else words[0])
+    return f"{n}-" + "-".join([first, *words[1:]])
+
+
+DETERMINERS = {"a", "an", "the", "this", "that", "its", "their", "his", "her", "one", "another", "each"}
+
+
+def _before_noun(tokens: list[str], i: int, nxt: str, trail: str) -> bool:
+    """A measurement describes the next word when it sits between "a"/"the" and a plain word: a 15 ft wave."""
+    if trail or not (nxt.isalpha() and nxt.islower()) or nxt in AFTER_MEASURE:
+        return False
+    before = [tokens[j].strip(LEAD + TRAIL).lower() for j in (i - 1, i - 2) if j >= 0]
+    return any(w in DETERMINERS for w in before)
+
+
 MAGNITUDES = {"k": "thousand", "m": "million", "bn": "billion", "b": "billion", "t": "trillion"}
 CURRENCY = {"$": "dollars", "£": "pounds", "€": "euros", "¥": "yen"}
 BIG_WORDS = {"thousand", "million", "billion", "trillion"}
@@ -194,8 +225,32 @@ def _number(raw: str, prev: str, nxt: str) -> str:
     return cardinal(n)
 
 
-def _core(core: str, prev: str, nxt: str, prev_raw: str) -> str | None:
-    """What to say for one token stripped of surrounding punctuation, or None to keep it."""
+def _measure(n: str, unit: str, noun_next: bool) -> str:
+    if noun_next and not unit.startswith(NO_ADJECTIVE):
+        return measure_adjective(n, unit)
+    return f"{n} {unit}"
+
+
+# Letters and a number: a flight (MH370), an aircraft (B-52, A380), a vehicle (U2).
+CODE_RE = re.compile(r"^([A-Z]{1,3})-?(\d{1,4})$")
+NAMED_NUMBER_RE = re.compile(r"^([A-Za-z]{4,})-(\d{1,2})$")  # COVID-19
+DATE_CODE = {"9/11": "nine eleven", "24/7": "twenty-four seven", "7/7": "seven seven"}
+
+
+def _code(letters: str, digits: str) -> str:
+    n = int(digits)
+    if len(digits) == 3 and n >= 100:
+        said = _model_number(n)
+    elif len(digits) == 4 and n % 1000 and n >= 1000:
+        said = " ".join(cardinal(int(digits[i : i + 2])) if digits[i] != "0" else f"oh {ONES[int(digits[i + 1])]}" for i in (0, 2))
+    else:
+        said = cardinal(n)
+    return " ".join(letters) + " " + said
+
+
+def _core(core: str, prev: str, nxt: str, prev_raw: str, noun_next: bool = False) -> str | None:
+    """What to say for one token stripped of surrounding punctuation, or None to keep it.
+    `noun_next`: a plain lowercase word follows, so a measurement describes it (a 15 ft wave)."""
     low = core.lower()
     if m := NUM_RE.match(core):
         return _number(m[1], prev, nxt)
@@ -226,17 +281,26 @@ def _core(core: str, prev: str, nxt: str, prev_raw: str) -> str | None:
     if m := UNIT_RE.match(core):
         unit = m[2].lower()
         if unit in UNITS:
-            return f"{decimal(m[1])} {UNITS[unit]}"
+            return _measure(decimal(m[1]), UNITS[unit], noun_next)
         if unit in MAGNITUDES:
             return f"{decimal(m[1])} {MAGNITUDES[unit]}"
         if unit in ERAS and len(m[1]) <= 4:
             return f"{year(int(m[1]))} {ERAS[unit]}"
     if m := COMPOUND_RE.match(core):
         if m[2].lower() in UNITS:  # a 35-mph wave
-            return f"{cardinal(int(m[1]))} {UNITS[m[2].lower()]}"
+            return _measure(cardinal(int(m[1])), UNITS[m[2].lower()], noun_next)
         return f"{cardinal(int(m[1]))}-{m[2]}"
     if low in UNITS and prev_raw and NUM_RE.match(prev_raw.strip(TRAIL)):
-        return UNITS[low]
+        unit = UNITS[low]
+        if noun_next and not unit.startswith(NO_ADJECTIVE):
+            return measure_adjective("", unit)[1:]  # "fifteen" is already said: "foot"
+        return unit
+    if core in DATE_CODE:
+        return DATE_CODE[core]
+    if m := CODE_RE.match(core):
+        return _code(m[1], m[2])
+    if m := NAMED_NUMBER_RE.match(core):
+        return f"{m[1].capitalize() if m[1].isupper() else m[1]} {cardinal(int(m[2]))}"
     if low in NAMED_UNITS:
         return NAMED_UNITS[low]
     if low in ERAS and core.isupper() and NUM_RE.match(prev_raw.strip(TRAIL) or "x"):
@@ -289,13 +353,13 @@ def spoken_tokens(text: str) -> list[tuple[str, str]]:
             if low == "ft." and NUM_RE.match(prev_raw.strip(LEAD + TRAIL)):
                 said = "feet"  # 25 ft. -> feet; Ft. Knox -> Fort
             rest = body[len(low) :].replace(")", ",").replace("]", ",")
-            if (low not in BEFORE_NAMES or said == "Street") and not rest and (not nxt or nxt[:1].isupper()):
+            if (low not in BEFORE_NAMES or said in ("Street", "feet")) and not rest and (not nxt or nxt[:1].isupper()):
                 rest = "."  # "... in the U.S. Then" ends a sentence; "Dr. Smith" doesn't
             out.append((tok, pre + said + rest))
             continue
         core = body.rstrip(TRAIL)
         trail = body[len(core) :]
-        said = _core(core, prev, nxt, prev_raw) if core else None
+        said = _core(core, prev, nxt, prev_raw, _before_noun(tokens, i, nxt, trail)) if core else None
         if said is None:
             said = core.replace("—", ", ").replace("&", " and ")
             said = re.sub(r"(?<=\w)–(?=\w)", " to " if re.search(r"\d–\d", core) else ", ", said)

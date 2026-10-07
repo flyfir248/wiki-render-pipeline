@@ -111,9 +111,10 @@ class Uploads:
             "insert into uploads(slot, kind, job, youtube_id, publish_at, uploaded) values (?, ?, ?, ?, ?, ?)",
             (slot, kind, job, youtube_id, publish_at, at or now()),
         )
-        props = self.jobs / job / "props.json" if job else None
-        if youtube_id and props and props.exists():
-            self.save_outline(youtube_id, json.loads(props.read_text()))
+        # A video kept for a later run waits in jobs/pending.
+        found = [p for p in (self.jobs / job / "props.json", self.jobs / "pending" / job / "props.json") if p.exists()] if job else []
+        if youtube_id and found:
+            self.save_outline(youtube_id, json.loads(found[0].read_text()))
         self.db.commit()
 
     def save_outline(self, youtube_id: str, props: dict) -> None:

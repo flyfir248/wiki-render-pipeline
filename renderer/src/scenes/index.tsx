@@ -433,15 +433,17 @@ const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; the
   </AbsoluteFill>
 );
 
+// What a scene is drawn as: a kinetic statement stands in for broll without media, a map without
+// places, or a story without any art.
+export const shownType = (raw: Scene): Scene["type"] =>
+  (raw.type === "broll" && !raw.media) ||
+  (raw.type === "map" && !validPlaces(raw.places).length) ||
+  (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src))
+    ? "statement"
+    : raw.type;
+
 export const SceneView: React.FC<SceneProps> = (props) => {
-  // Fall back to a kinetic statement for broll without media, a map without places, or unknown types.
-  const { scene: raw } = props;
-  const type =
-    (raw.type === "broll" && !raw.media) ||
-    (raw.type === "map" && !validPlaces(raw.places).length) ||
-    (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src))
-      ? "statement"
-      : raw.type;
+  const type = shownType(props.scene);
   const Component = registry[type] ?? StatementScene;
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
   const media = props.scene.media;

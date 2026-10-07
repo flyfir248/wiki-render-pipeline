@@ -5,7 +5,7 @@ import React from "react";
 import { Audio, Sequence, staticFile } from "remotion";
 import { effectStart, actorStart } from "../scenes/story";
 import { pinFrames } from "../scenes/map";
-import { transitionOf } from "../scenes";
+import { shownType, transitionOf } from "../scenes";
 import type { Scene } from "../types";
 
 type Cue = { at: number; name: string; gain: number };
@@ -26,8 +26,9 @@ export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
     const transition = transitionOf(scene);
     // A gentle fade needs no sound; the moving transitions get a whoosh as they start.
     if (scene.id !== "s1" && transition !== "fade") cues.push({ at: from - 4, name: transition === "flash" ? "thud" : "whoosh", gain: 0.6 });
-    if (scene.type === "map") pinFrames(scene, len).forEach((f) => cues.push({ at: from + Math.round(f), name: "pop", gain: 0.8 }));
-    if (scene.type === "story") {
+    const type = shownType(scene); // no pops or booms for art or pins that never appear
+    if (type === "map") pinFrames(scene, len).forEach((f) => cues.push({ at: from + Math.round(f), name: "pop", gain: 0.8 }));
+    if (type === "story") {
       (scene.actors ?? [])
         .filter((a) => a.src)
         .slice(0, 3)

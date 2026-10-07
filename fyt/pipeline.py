@@ -80,6 +80,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
                 two_part = False
         if article:
             script = wiki_attribute(script, article)
+        if news and cfg.growth.news_series:
+            script = script.model_copy(update={"series": cfg.growth.news_series})
     else:
         two_part = False
     # News titles stay as factual as the script wrote them; the polish pass is for curiosity hooks.
@@ -87,7 +89,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         log(job, "sharpening title, hook and thumbnail text")
         try:
             # Part 1 ends on its cliffhanger, not a line looping back into the hook.
-            script = growth.polish(cfg, script, performance_summary(cfg), loop=not two_part)
+            script = growth.polish(cfg, script, performance_summary(cfg), loop=not two_part and not topic.startswith(CUT))
         except Exception as e:  # the unpolished script is still fine
             log(job, f"warning: polish failed: {e}")
     if two_part:
@@ -332,6 +334,8 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
         raise SystemExit(f"{job.id} is '{status}'. Review it, then `python -m fyt approve {job.id}` (or --force).")
     script = Script.model_validate_json(job.file("script.json").read_text())
     cfg = cfg.model_copy(update={"format": job.meta.get("format", cfg.format)})  # e.g. #Shorts in the description
+    # Decide the publish time here (it may be a random minute ahead) so the first comment waits for it.
+    publish_at = publish_at or youtube.publish_time(cfg)
     posted_at = publish_at.isoformat() if publish_at else None
     video_id = youtube.upload(
         cfg,
@@ -352,7 +356,7 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
         except Exception as e:  # the video is up; the playlist is a nice-to-have
             print(f"warning: not added to the {script.series!r} playlist: {e}")
     if cfg.format == "long":
-        queue_cuts(cfg, script, video_id)
+        queue_cuts(cfg, script, video_id, news=wiki.is_news_topic(job.meta.get("topic", "")))
     if job.file("part2.json").exists():
         queue_part2(cfg, job, video_id)
     return video_id
@@ -361,8 +365,10 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
 def queue_part2(cfg: Config, job: Job, video_id: str) -> None:
     """Queue part 2 of a two-part Short; it fills the next Short slot and links back to part 1."""
     part2 = load_script(job.file("part2.json"))
+    part1 = load_script(job.file("script.json"))
     part2 = part2.model_copy(
         update={
+            "series": part1.series,  # the same playlist as part 1
             "title": f"{part2.title[:88]} (Part 2)",
             "description": f"Part 1: https://youtu.be/{video_id}\n\n{part2.description}",
         }
@@ -378,8 +384,9 @@ def queue_part2(cfg: Config, job: Job, video_id: str) -> None:
 CUT = "cut:"
 
 
-def queue_cuts(cfg: Config, script: Script, video_id: str) -> None:
-    """Queue Shorts cut from a long video; they fill the next regular Short slots."""
+def queue_cuts(cfg: Config, script: Script, video_id: str, news: bool = False) -> None:
+    """Queue Shorts cut from a long video; they fill the next regular Short slots.
+    Cuts from a news explainer keep its factual title and hook (no polish pass)."""
     try:
         cuts = growth.cut_scripts(cfg, script, video_id, cfg.growth.cuts_per_long)
     except Exception as e:
@@ -389,7 +396,7 @@ def queue_cuts(cfg: Config, script: Script, video_id: str) -> None:
     folder.mkdir(parents=True, exist_ok=True)
     names = []
     for i, cut in enumerate(cuts, 1):
-        name = f"{video_id}-{i}"
+        name = f"{video_id}-{'news-' if news else ''}{i}"
         (folder / f"{name}.json").write_text(cut.model_dump_json(indent=2))
         names.append(CUT + name)
     if names:
@@ -447,7 +454,7 @@ def make_topic(cfg: Config, topic: str) -> Job:
         return make_video(cfg, topic)
     path = cfg.jobs_path / "cuts" / f"{topic[len(CUT):]}.json"
     # Part 2 opens with its recap, which a new hook would replace.
-    job = make_video(cfg, topic, script=load_script(path), polish=not topic.endswith("-part2"))
+    job = make_video(cfg, topic, script=load_script(path), polish=not topic.endswith("-part2") and "-news-" not in topic)
     path.unlink(missing_ok=True)
     return job
 
@@ -477,7 +484,7 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
             else:
                 try:
                     upload_job(cfg, job)
-                    Uploads(cfg).record(cfg.format, job.id, job.meta["youtube_id"], None)
+                    Uploads(cfg).record(cfg.format, job.id, job.meta["youtube_id"], job.meta.get("publish_at"))
                 except Exception as e:  # keep the video; it is still saved with the run
                     print(f"::error::upload failed for {job.id}: {e}")
                     job.update(status="upload_failed", upload_error=str(e)[:500])
