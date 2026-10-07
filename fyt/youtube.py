@@ -322,28 +322,6 @@ def retention(video_ids: list[str], since: str = "2020-01-01") -> dict[str, dict
     return out
 
 
-def thumbnail_clicks(video_ids: list[str], since: str = "2020-01-01") -> dict[str, dict]:
-    """Per video: how often its thumbnail was shown on YouTube and the share of those that were clicked.
-    YouTube only answers this as a top-videos report, so the channel's most-shown videos are read and
-    matched to `video_ids`."""
-    today = datetime.now(timezone.utc).date().isoformat()
-    resp = _analytics().reports().query(
-        ids="channel==MINE",
-        startDate=since,
-        endDate=today,
-        metrics="videoThumbnailImpressions,videoThumbnailImpressionsClickRate",
-        dimensions="video",
-        sort="-videoThumbnailImpressions",
-        maxResults=200,
-    ).execute()
-    wanted = set(video_ids)
-    return {
-        vid: {"impressions": int(shown), "click_rate": float(rate)}
-        for vid, shown, rate in resp.get("rows", [])
-        if vid in wanted
-    }
-
-
 def _analytics():
     from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
