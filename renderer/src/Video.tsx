@@ -2,6 +2,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useVideoConfig } from "remotion";
 import { Background } from "./components/Background";
 import { Captions } from "./components/Captions";
+import { SoundEffects } from "./components/SoundEffects";
 import { Visualizer, energyOf, useVoiceSpectrum } from "./components/Visualizer";
 import { SceneFrame, SceneView, transitionOf } from "./scenes";
 import type { RenderProps, Word } from "./types";
@@ -50,6 +51,7 @@ export const Video: React.FC<RenderProps> = (props) => {
       ) : null}
 
       {props.voice ? <Audio src={staticFile(props.voice)} /> : null}
+      {props.sfx ? <SoundEffects scenes={props.scenes} fps={fps} dir={props.sfx.dir} volume={props.sfx.volume} /> : null}
       {props.music ? (
         <Audio
           src={staticFile(props.music.src)}

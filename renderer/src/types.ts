@@ -104,6 +104,7 @@ export type RenderProps = {
   theme: Theme;
   voice: string | null;
   music: { src: string; volume: number } | null;
+  sfx?: { dir: string; volume: number } | null;
   scenes: Scene[];
   captions: Word[];
   showCaptions: boolean;

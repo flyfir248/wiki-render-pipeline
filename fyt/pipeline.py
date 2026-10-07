@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artgen, growth, illustrate, llm, media, qa, render, tts, wiki, youtube
+from fyt import artgen, growth, illustrate, insights, llm, media, qa, render, sfx, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -139,7 +139,13 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
                 log(job, f"{missing} story props had no matching illustration and are left out")
         except Exception as e:  # without illustrations, story scenes fall back to text
             log(job, f"warning: no story illustrations: {e}")
-    props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music)
+    effects = None
+    if cfg.sound_effects:
+        try:
+            effects = sfx.write_all(job.public)
+        except Exception as e:  # a video without sound effects is still a video
+            log(job, f"warning: no sound effects: {e}")
+    props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music, effects)
     job.file("props.json").write_text(props.model_dump_json(indent=2))
     job.file("captions.srt").write_text(to_srt(props.captions))
 
@@ -174,7 +180,12 @@ def _short_enough(
     cfg: Config, job: Job, subject: str, notes: str, from_wiki: bool, menu: str, note: str = "", news: bool = False
 ) -> Script:
     """Write the script, asking once more for a shorter one when a Short runs long."""
-    script = llm.write_script(cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note, news=news)
+    lessons = insights.scene_lessons(cfg)
+    if lessons:
+        log(job, "using watch-time lessons: " + lessons.replace("\n", " "))
+    script = llm.write_script(
+        cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note, news=news, lessons=lessons
+    )
     limit = llm.SHORT_WORDS * 1.25 if cfg.format == "short" else None
     if limit and narration_words(script) > limit:
         log(job, f"script is {narration_words(script)} words; asking for a shorter one")
@@ -183,7 +194,14 @@ def _short_enough(
             f"This is a Short: keep the total narration under {llm.SHORT_WORDS} words."
         )
         script = llm.write_script(
-            cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=f"{note}\n\n{feedback}".strip(), news=news
+            cfg,
+            subject,
+            notes,
+            from_wikipedia=from_wiki,
+            images=menu,
+            feedback=f"{note}\n\n{feedback}".strip(),
+            news=news,
+            lessons=lessons,
         )
     return script
 

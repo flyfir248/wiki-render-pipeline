@@ -170,12 +170,18 @@ const Plate: React.FC<{ src: string; stage: Stage }> = ({ src, stage }) => {
   );
 };
 
+// When a prop appears and when the effect goes off, in frames from the scene's start (the sound
+// effects use these too).
+export const actorStart = (actor: Actor, frames: number) => Math.round(Math.max(0, Math.min(0.8, actor.at ?? 0)) * frames);
+export const effectStart = (scene: { effectAt?: number | null }, frames: number) =>
+  Math.round(Math.max(0, Math.min(0.9, scene.effectAt ?? 0.35)) * frames);
+
 // ---------- actors ----------
 
 const ActorView: React.FC<{ actor: Actor; stage: Stage; theme: Theme; format: Format }> = ({ actor, stage, theme, format }) => {
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
-  const start = Math.round(Math.max(0, Math.min(0.8, actor.at ?? 0)) * durationInFrames);
+  const start = actorStart(actor, durationInFrames);
   if (frame < start) return null;
   const f = frame - start;
   const p = spring({ frame: f, fps, config: { damping: 13, mass: 0.7 } });
@@ -386,7 +392,7 @@ export const StoryScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const stage = stageOf(format, width, height);
   const actors = (scene.actors ?? []).filter((a) => a.src).slice(0, 5);
   const setting = scene.setting ?? "sky";
-  const effectAt = Math.round(Math.max(0, Math.min(0.9, scene.effectAt ?? 0.35)) * durationInFrames);
+  const effectAt = effectStart(scene, durationInFrames);
   const anchor = actors[0];
   const where = px(stage, scene.effectX ?? anchor?.to_x ?? anchor?.x ?? 50, scene.effectY ?? (anchor ? (anchor.to_y ?? anchor.y) - 15 : 50));
   // The whole stage jolts when something explodes.

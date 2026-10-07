@@ -80,6 +80,10 @@ class Uploads:
                 uploaded text not null
             )"""
         )
+        self.jobs = cfg.jobs_path
+        # The scenes of each uploaded video (type, start, end), kept so watch-time curves can be
+        # read scene by scene long after the job folder is gone.
+        self.db.execute("create table if not exists outlines (youtube_id text primary key, outline text not null)")
         self.db.execute("create table if not exists notes (key text primary key, value text)")
         self.db.execute(
             """create table if not exists comments (
@@ -107,7 +111,22 @@ class Uploads:
             "insert into uploads(slot, kind, job, youtube_id, publish_at, uploaded) values (?, ?, ?, ?, ?, ?)",
             (slot, kind, job, youtube_id, publish_at, at or now()),
         )
+        props = self.jobs / job / "props.json" if job else None
+        if youtube_id and props and props.exists():
+            self.save_outline(youtube_id, json.loads(props.read_text()))
         self.db.commit()
+
+    def save_outline(self, youtube_id: str, props: dict) -> None:
+        outline = {
+            "duration": props["duration"],
+            "format": props.get("format"),
+            "scenes": [[s["type"], s["start"], s["end"]] for s in props.get("scenes", [])],
+        }
+        self.db.execute("insert or replace into outlines(youtube_id, outline) values (?, ?)", (youtube_id, json.dumps(outline)))
+        self.db.commit()
+
+    def outlines(self) -> dict[str, dict]:
+        return {vid: json.loads(o) for vid, o in self.db.execute("select youtube_id, outline from outlines")}
 
     def queue_comment(self, youtube_id: str, text: str, due: str | None) -> None:
         self.db.execute("insert or ignore into comments(youtube_id, text, due) values (?, ?, ?)", (youtube_id, text, due))

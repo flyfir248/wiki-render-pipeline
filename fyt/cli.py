@@ -180,6 +180,12 @@ def main(argv: list[str] | None = None) -> None:
         print(f"cleared the label on {youtube.set_synthetic_label(ids, cfg.youtube.contains_synthetic_media)} of {len(ids)} videos")
     elif args.cmd == "stats":
         print(pipeline.performance_summary(cfg, limit=100) or "no uploaded videos yet")
+        from fyt import insights
+
+        for fmt in ("short", "long"):
+            cfg.format = fmt
+            lessons = insights.scene_lessons(cfg)
+            print(f"\n{fmt} videos, scene by scene:\n{lessons or '(not enough watch-time data yet)'}")
 
 
 if __name__ == "__main__":

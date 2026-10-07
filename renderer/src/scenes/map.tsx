@@ -156,6 +156,14 @@ const arrivals = (pts: LonLat[]): number[] => {
   return [0, ...legs.map((d) => (acc += d) / total)];
 };
 
+// When each pin drops, in frames from the scene's start: as the route reaches it, or one after another.
+export const pinFrames = (scene: SceneProps["scene"], frames: number): number[] => {
+  const pts = validPlaces(scene.places).map((p) => [p.lon, p.lat] as LonLat);
+  const routed = pts.length > 1 && scene.route !== false;
+  const reached = arrivals(pts);
+  return pts.map((_, i) => (routed ? frames * (0.3 + 0.55 * reached[i]) : frames * (0.3 + 0.1 * i)));
+};
+
 export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
   const { width, height, durationInFrames, fps } = useVideoConfig();
@@ -261,7 +269,6 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
         easing: Easing.inOut(Easing.quad),
       })
     : 1;
-  const reached = arrivals(pts);
   const route = routed ? along(pts, travel) : null;
   const head = route ? proj(route.head) : null;
   const miles = routed ? pts.slice(1).reduce((a, p, i) => a + geoDistance(pts[i], p), 0) * 3958.8 : 0;
@@ -410,7 +417,7 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
       {places.map((p, i) => {
         const xy = proj([p.lon, p.lat]);
         if (!xy) return null;
-        const at = routed ? durationInFrames * (0.3 + 0.55 * reached[i]) : durationInFrames * (0.3 + 0.1 * i);
+        const at = pinFrames(scene, durationInFrames)[i];
         const anchor = xy[0] < width * 0.3 ? 15 : xy[0] > width * 0.7 ? 85 : 50; // keep labels inside the frame
         return <Pin key={i} x={xy[0]} y={xy[1]} anchor={anchor} name={p.name} at={at} fps={fps} theme={theme} k={k} />;
       })}

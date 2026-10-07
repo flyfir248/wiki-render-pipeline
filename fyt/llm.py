@@ -398,6 +398,7 @@ def write_script(
     images: str = "",
     feedback: str = "",
     news: bool = False,
+    lessons: str = "",
 ) -> Script:
     ch = cfg.channel
     if cfg.format == "short":
@@ -418,6 +419,8 @@ def write_script(
     )
     if news:
         guide += NEWS_GUIDE.format(today=datetime.now(timezone.utc).strftime("%d %B %Y"))
+    if lessons:
+        guide += f"\n\nWhat this channel's viewers have responded to, from watch-time data on earlier videos:\n{lessons}\n"
     tail = f"\n\nAvailable images:\n{images}" if images else ""
     tail += f"\n\n{feedback}" if feedback else ""
 
