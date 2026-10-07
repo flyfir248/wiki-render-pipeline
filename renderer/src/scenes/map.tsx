@@ -2,9 +2,15 @@
 // land with country borders and names, the countries involved highlighted, and a small globe showing
 // where in the world the view is. The camera flies in from a wide view to the places, pins drop, and
 // a route draws itself along the great circle between them, ending with its length.
+//
+// Motion on top of that: the video's first map opens on a spinning globe that dives in; a plane, ship,
+// car, train, walker or army arrow travels the route with the camera following it over a tilted map;
+// regions (an empire, an alliance, a spread) appear, spread out, shrink or fade; and a year counter
+// runs while time passes.
 import React, { useMemo } from "react";
 import {
   geoArea,
+  geoBounds,
   geoCentroid,
   geoContains,
   geoDistance,
@@ -19,7 +25,7 @@ import { feature } from "topojson-client";
 import countries from "world-atlas/countries-50m.json";
 import coarse from "world-atlas/countries-110m.json";
 import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import type { Place } from "../types";
+import type { Place, Scene, Vehicle } from "../types";
 import { unit } from "../theme";
 import { Heading, type SceneProps } from "./shared";
 
@@ -37,6 +43,7 @@ const LAND = "#e4dcc6";
 const BORDER = "#9c9178";
 const LABEL = "#5c5442";
 const GRID = "#cfe3f2";
+const REGION = "#9f1239"; // territory: an empire, an alliance, a spread
 
 // Country names placed where the country's biggest piece is, with its size for ranking.
 type CountryLabel = { name: string; at: [number, number]; area: number };
@@ -86,6 +93,50 @@ const gridStep = (span: number) => STEPS.find((s) => span / s <= 8) ?? 30;
 const degrees = (v: number, pos: string, neg: string) => (v === 0 ? "0°" : `${Math.abs(Math.round(v))}°${v > 0 ? pos : neg}`);
 
 type LonLat = [number, number];
+
+// Region names as a script writes them, matched to the atlas's own (often abbreviated) names.
+const norm = (s: string) =>
+  s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z ]/g, " ").replace(/\s+/g, " ").trim();
+const ALIASES: Record<string, string> = {
+  "united states": "United States of America", usa: "United States of America", us: "United States of America",
+  america: "United States of America", "u s": "United States of America", "u s a": "United States of America",
+  uk: "United Kingdom", "u k": "United Kingdom", britain: "United Kingdom", "great britain": "United Kingdom",
+  england: "United Kingdom", scotland: "United Kingdom", wales: "United Kingdom", "northern ireland": "United Kingdom",
+  "czech republic": "Czechia", "democratic republic of the congo": "Dem. Rep. Congo", drc: "Dem. Rep. Congo",
+  "dr congo": "Dem. Rep. Congo", zaire: "Dem. Rep. Congo", "republic of the congo": "Congo", "ivory coast": "Côte d'Ivoire",
+  "south sudan": "S. Sudan", "bosnia and herzegovina": "Bosnia and Herz.", bosnia: "Bosnia and Herz.",
+  "central african republic": "Central African Rep.", "dominican republic": "Dominican Rep.", swaziland: "eSwatini",
+  eswatini: "eSwatini", burma: "Myanmar", "east timor": "Timor-Leste", "north macedonia": "Macedonia", persia: "Iran",
+  holland: "Netherlands", "the netherlands": "Netherlands", "soviet union": "Russia", ussr: "Russia",
+  "russian federation": "Russia", "western sahara": "W. Sahara", "equatorial guinea": "Eq. Guinea", siam: "Thailand",
+  ceylon: "Sri Lanka", "south korea": "South Korea", korea: "South Korea", "north korea": "North Korea",
+  "united arab emirates": "United Arab Emirates", uae: "United Arab Emirates", "vatican city": "Italy", vatican: "Italy",
+};
+const BY_NAME = new Map(WORLD.features.map((f) => [norm(String(f.properties?.name ?? "")), f]));
+const findCountry = (name: string): Feature | undefined => {
+  const n = norm(name).replace(/^the /, "");
+  return BY_NAME.get(norm(ALIASES[n] ?? n));
+};
+export const mapRegions = (scene: Scene): Feature[] =>
+  (scene.regions ?? []).map(findCountry).filter((f, i, all): f is Feature => !!f && all.indexOf(f) === i);
+
+// The middle and the corners of a region's biggest piece, for framing the view around it.
+const regionPoints = (f: Feature): LonLat[] => {
+  const g = f.geometry as Polygon | MultiPolygon;
+  const parts: Polygon[] = g.type === "MultiPolygon" ? g.coordinates.map((c) => ({ type: "Polygon", coordinates: c })) : [g];
+  const main = parts.reduce((a, b) => (geoArea(b) > geoArea(a) ? b : a));
+  const c = geoCentroid(main) as LonLat;
+  const [[w, s], [e, n]] = geoBounds(main);
+  if (e < w || e - w > 120) return [c, [c[0] - 30, Math.max(s, c[1] - 20)], [c[0] + 30, Math.min(n, c[1] + 20)]];
+  return [c, [w, s], [e, n]];
+};
+
+// When things happen, as fractions of the scene: the fly-in, and the journey along the route.
+// A globe opening pushes both a little later.
+export const mapTiming = (scene: Scene) =>
+  scene.globe
+    ? { flyFrom: 0.2, flyTo: 0.5, travelFrom: 0.42, travelTo: 0.88 }
+    : { flyFrom: 0, flyTo: 0.4, travelFrom: 0.3, travelTo: 0.85 };
 
 export const validPlaces = (places?: Place[] | null): Place[] =>
   (places ?? []).filter(
@@ -162,8 +213,48 @@ export const pinFrames = (scene: SceneProps["scene"], frames: number): number[] 
   const pts = validPlaces(scene.places).map((p) => [p.lon, p.lat] as LonLat);
   const routed = pts.length > 1 && scene.route !== false;
   const reached = arrivals(pts);
-  return pts.map((_, i) => (routed ? frames * (0.3 + 0.55 * reached[i]) : frames * (0.3 + 0.1 * i)));
+  const t = mapTiming(scene);
+  return pts.map((_, i) =>
+    routed ? frames * (t.travelFrom + (t.travelTo - t.travelFrom) * reached[i]) : frames * (t.travelFrom + 0.1 * i),
+  );
 };
+
+// Top-down icons drawn pointing east (right), about 60 units long, centred on the route head.
+const VEHICLE_ICONS: Record<Exclude<Vehicle, "army">, React.ReactNode> = {
+  plane: (
+    <path d="M32 0 L12 -5 L-1 -28 L-9 -28 L-3 -5 L-19 -4 L-25 -13 L-31 -13 L-27 0 L-31 13 L-25 13 L-19 4 L-3 5 L-9 28 L-1 28 L12 5 Z" />
+  ),
+  ship: (
+    <>
+      <path d="M-30 -11 L16 -11 Q36 0 16 11 L-30 11 Z" />
+      <rect x={-18} y={-6} width={18} height={12} rx={2} fill="#c2410c" stroke="none" />
+    </>
+  ),
+  car: (
+    <>
+      <rect x={-22} y={-12} width={44} height={24} rx={7} />
+      <rect x={4} y={-9} width={9} height={18} rx={2} fill="#1e293b" stroke="none" />
+    </>
+  ),
+  train: (
+    <>
+      <rect x={-34} y={-10} width={68} height={20} rx={6} />
+      <path d="M-11 -10 V10 M12 -10 V10" stroke="#1e293b" strokeWidth={3} />
+    </>
+  ),
+  walk: (
+    <>
+      <circle r={13} />
+      <circle r={5} fill="#c2410c" stroke="none" />
+    </>
+  ),
+};
+
+// Faint stars behind the opening globe, the same in every frame.
+const STARS = Array.from({ length: 90 }, (_, i) => {
+  const r = (n: number) => (Math.sin(i * 12.9898 + n * 78.233) * 43758.5453) % 1;
+  return { x: Math.abs(r(1)), y: Math.abs(r(2)), s: 0.6 + Math.abs(r(3)) * 1.8, o: 0.25 + Math.abs(r(4)) * 0.6 };
+});
 
 export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
@@ -171,32 +262,66 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const places = validPlaces(scene.places);
   const pts = places.map((p) => [p.lon, p.lat] as LonLat);
   const short = format === "short";
+  const D = durationInFrames;
+  const T = mapTiming(scene);
+  const regionKey = (scene.regions ?? []).join("|");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const regions = useMemo(() => mapRegions(scene), [regionKey]);
+  // The view frames the places, or the regions when the map is about territory.
+  const framePts = pts.length ? pts : regions.flatMap(regionPoints);
   // Keep the map clear of the heading above and the captions below.
   const rect: [[number, number], [number, number]] = short ? [[90, 420], [width - 90, 1220]] : [[200, 210], [width - 200, 900]];
-  const lon0 = midLon(pts);
-  const close = fit(box(pts, lon0, 0.35, pts.length > 1 ? 1.5 : 3), rect);
-  const wide = fit(box(pts, lon0, 2.5, 25), rect);
+  const lon0 = midLon(framePts);
+  const close = fit(box(framePts, lon0, pts.length ? 0.35 : 0.12, pts.length > 1 ? 1.5 : 3), rect);
+  const wide = fit(box(framePts, lon0, 2.5, 25), rect);
   const key = pts.map((p) => p.join(",")).join(";");
-  // The countries the places are in, highlighted on the map.
+  // The countries the places are in, highlighted on the map (unless the scene names its own regions).
   const involved = useMemo(
-    () => WORLD.features.filter((f) => pts.some((p) => geoContains(f, p))),
+    () => (regions.length ? [] : WORLD.features.filter((f) => pts.some((p) => geoContains(f, p)))),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [key],
+    [key, regionKey],
   );
 
-  const fly = interpolate(frame, [0, durationInFrames * 0.4], [0, 1], {
+  const fly = interpolate(frame, [D * T.flyFrom, D * T.flyTo], [0, 1], {
+    extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.inOut(Easing.cubic),
   });
-  const scale = wide.scale * Math.pow(close.scale / wide.scale, fly);
-  const center = geoInterpolate(wide.center, close.center)(fly) as LonLat;
+  const routed = pts.length > 1 && scene.route !== false;
+  const travelAt = (f: number) =>
+    routed
+      ? interpolate(f, [D * T.travelFrom, D * T.travelTo], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+          easing: Easing.inOut(Easing.quad),
+        })
+      : 1;
+  const travel = travelAt(frame);
+  const route = routed ? along(pts, travel) : null;
+  // With a vehicle, the camera leaves the overview to ride along with it, tilted like a flyover, and
+  // pulls back once it arrives so the whole journey is in view.
+  const follow = routed && !!scene.vehicle;
+  const ride = follow
+    ? interpolate(frame, [D * (T.travelFrom - 0.08), D * (T.travelFrom + 0.04), D * (T.travelTo - 0.02), D * Math.min(0.99, T.travelTo + 0.1)], [0, 1, 1, 0], {
+        extrapolateLeft: "clamp",
+        extrapolateRight: "clamp",
+        easing: Easing.inOut(Easing.cubic),
+      })
+    : 0;
+  const headRot: LonLat | null = route ? [((route.head[0] - lon0 + 540) % 360) - 180, route.head[1]] : null;
+  const baseScale = wide.scale * Math.pow(close.scale / wide.scale, fly);
+  const baseCenter = geoInterpolate(wide.center, close.center)(fly) as LonLat;
+  const scale = baseScale * Math.pow(2.2, ride);
+  const center = headRot && ride > 0 ? (geoInterpolate(baseCenter, headRot)(ride) as LonLat) : baseCenter;
+  const tilt = 38 * ride;
   const proj = geoMercator()
     .rotate([-lon0, 0])
     .scale(scale)
     .center(center)
     .translate([(rect[0][0] + rect[1][0]) / 2, (rect[0][1] + rect[1][1]) / 2])
     // Cut everything off-screen before it becomes SVG: the detailed outlines are what makes maps slow.
-    .clipExtent([[-20, -20], [width + 20, height + 20]]);
+    // (wider while tilted: the far edge of a tilted map shows more than the frame).
+    .clipExtent(ride > 0.01 ? [[-width * 0.7, -height * 0.45], [width * 1.7, height + 20]] : [[-20, -20], [width + 20, height + 20]]);
   const path = geoPath(proj).digits(1);
   const k = unit(format);
 
@@ -264,18 +389,53 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
     waters.push({ x, y, name: wl.name, size });
   }
 
-  const routed = pts.length > 1 && scene.route !== false;
-  const travel = routed
-    ? interpolate(frame, [durationInFrames * 0.3, durationInFrames * 0.85], [0, 1], {
-        extrapolateLeft: "clamp",
-        extrapolateRight: "clamp",
-        easing: Easing.inOut(Easing.quad),
-      })
-    : 1;
-  const route = routed ? along(pts, travel) : null;
   const head = route ? proj(route.head) : null;
+  // Which way the vehicle points: along the route on screen, from a moment ago to now.
+  const behind = route ? proj(along(pts, Math.max(0, travel - 0.01)).head) : null;
+  const bearing = head && behind && Math.hypot(head[0] - behind[0], head[1] - behind[1]) > 0.5
+    ? (Math.atan2(head[1] - behind[1], head[0] - behind[0]) * 180) / Math.PI
+    : head && route ? (() => {
+        const ahead = proj(along(pts, Math.min(1, travel + 0.01)).head);
+        return ahead ? (Math.atan2(ahead[1] - head[1], ahead[0] - head[0]) * 180) / Math.PI : 0;
+      })() : 0;
   const miles = routed ? pts.slice(1).reduce((a, p, i) => a + geoDistance(pts[i], p), 0) * 3958.8 : 0;
-  const total = useEnterAt(frame, durationInFrames * 0.86);
+  const total = useEnterAt(frame, D * Math.min(0.9, T.travelTo + 0.01));
+
+  // Regions: their change plays out after the fly-in.
+  const change = scene.regionChange ?? "appear";
+  const rp = interpolate(frame, [D * Math.max(T.flyTo - 0.1, 0.25), D * Math.min(T.flyTo + 0.3, 0.85)], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.inOut(Easing.cubic),
+  });
+  const regionShapes = regions.map((f) => {
+    const [[x0, y0], [x1, y1]] = path.bounds(f);
+    const c = proj(regionPoints(f)[0]) ?? [(x0 + x1) / 2, (y0 + y1) / 2];
+    const reach = Math.max(...[[x0, y0], [x1, y0], [x0, y1], [x1, y1]].map(([x, y]) => Math.hypot(x - c[0], y - c[1])));
+    const r = change === "spread" ? rp * reach : change === "shrink" ? (1 - rp) * reach : reach;
+    const opacity = change === "appear" ? rp : change === "fade" ? 1 - rp : 1;
+    return { d: path(f) ?? "", c, r, opacity };
+  });
+
+  // The year counter, running while the journey or the change plays out.
+  const years = scene.yearFrom != null && scene.yearTo != null ? [scene.yearFrom, scene.yearTo] : null;
+  const year = years
+    ? Math.round(interpolate(frame, [D * 0.3, D * 0.85], years, { extrapolateLeft: "clamp", extrapolateRight: "clamp" }))
+    : 0;
+  const yearText = year < 0 ? `${-year} BC` : years && years[0] < 0 ? `AD ${year}` : String(year);
+
+  // The opening globe: it turns to face the places while it rushes closer, then hands over to the map.
+  const globeIn = scene.globe ? 1 - interpolate(frame, [D * 0.2, D * 0.3], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 0;
+  const target = geoCentroid({ type: "MultiPoint", coordinates: framePts }) as LonLat;
+  const spin = Easing.inOut(Easing.cubic)(interpolate(frame, [0, D * 0.3], [0, 1], { extrapolateRight: "clamp" }));
+  const earthR = Math.min(width, height) * 0.36 * (1 + 3 * Math.pow(spin, 3));
+  const earth = geoOrthographic()
+    .rotate([-(target[0] - 110 * (1 - spin)), -(target[1] * spin + 18 * (1 - spin))])
+    .scale(earthR)
+    .translate([width / 2, short ? height * 0.47 : height / 2])
+    .clipAngle(90);
+  const earthPath = geoPath(earth).digits(1);
+  const targetXY = earth(target);
 
   // The locator globe, turned to face the places, with the current view outlined.
   const globe = geoOrthographic()
@@ -297,96 +457,160 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
     ),
   };
 
+  const vehicle = scene.vehicle;
+  const iconScale = 1.9 * k;
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={{ background: OCEAN_DEEP }}>
+      {/* the map itself, tilted into a flyover while the camera rides along */}
+      <AbsoluteFill
+        style={{
+          transform: tilt > 0.01 ? `perspective(1400px) rotateX(${tilt}deg) scale(${1 + 0.35 * ride})` : undefined,
+          transformOrigin: "50% 58%",
+        }}
+      >
+        <svg width={width} height={height} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
+          <defs>
+            <radialGradient id="ocean" cx="50%" cy="45%" r="75%">
+              <stop offset="0%" stopColor={OCEAN} />
+              <stop offset="100%" stopColor={OCEAN_DEEP} />
+            </radialGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="6" result="b" />
+              <feMerge>
+                <feMergeNode in="b" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            {regionShapes.map((r, i) => (
+              <clipPath key={i} id={`region-${scene.id}-${i}`}>
+                <circle cx={r.c[0]} cy={r.c[1]} r={Math.max(0, r.r)} />
+              </clipPath>
+            ))}
+          </defs>
+          <rect x={-width * 0.5} y={-height * 0.5} width={width * 2} height={height * 2} fill="url(#ocean)" />
+          <path d={path(lines) ?? ""} fill="none" stroke={GRID} strokeOpacity={0.22 * grow} strokeWidth={1.4} />
+          {/* one path for land and borders: the map is the slowest thing to draw, so it is drawn once */}
+          <path d={path(span > 90 ? WORLD_COARSE : WORLD) ?? ""} fill={LAND} stroke={BORDER} strokeWidth={1.2} strokeLinejoin="round" />
+          {involved.map((f, i) => {
+            // A country much bigger than the view (the whole USA around Boston) isn't worth highlighting.
+            const [[x0, y0], [x1, y1]] = path.bounds(f);
+            if ((x1 - x0) * (y1 - y0) > width * height * 1.5) return null;
+            return <path key={i} d={path(f) ?? ""} fill={theme.accent} fillOpacity={0.3 * grow} stroke={theme.accent} strokeWidth={3} strokeOpacity={grow} />;
+          })}
+          {regionShapes.map((r, i) =>
+            r.opacity > 0.01 && r.r > 0.5 ? (
+              <path
+                key={`r${i}`}
+                d={r.d}
+                clipPath={`url(#region-${scene.id}-${i})`}
+                fill={REGION}
+                fillOpacity={0.55 * r.opacity}
+                stroke={REGION}
+                strokeWidth={3}
+                strokeOpacity={0.9 * r.opacity}
+                strokeLinejoin="round"
+              />
+            ) : null,
+          )}
+          {/* the grid continues faintly over land, so the lines read as one grid */}
+          <path d={path(lines) ?? ""} fill="none" stroke="#000" strokeOpacity={0.06 * grow} strokeWidth={1} />
+          {placed.map((l) => (
+            <text
+              key={l.name}
+              x={l.x + l.w / 2}
+              y={l.y + l.h / 2}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill={LABEL}
+              fillOpacity={0.85 * grow}
+              fontFamily={theme.font}
+              fontWeight={700}
+              fontSize={l.size}
+              letterSpacing={l.size * 0.12}
+              style={{ textTransform: "uppercase" }}
+            >
+              {l.name}
+            </text>
+          ))}
+          {waters.map((wl) => (
+            <text
+              key={wl.name}
+              x={wl.x}
+              y={wl.y}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill={GRID}
+              fillOpacity={0.6 * grow}
+              fontFamily="Georgia, 'DejaVu Serif', serif"
+              fontStyle="italic"
+              fontSize={wl.size}
+              letterSpacing={wl.size * 0.08}
+            >
+              {wl.name}
+            </text>
+          ))}
+          {route && vehicle === "army" ? (
+            // A campaign arrow: a broad band behind the army, ending in an arrowhead.
+            <path
+              d={path({ type: "LineString", coordinates: route.line }) ?? ""}
+              fill="none"
+              stroke={REGION}
+              strokeOpacity={0.85}
+              strokeWidth={22 * k}
+              strokeLinejoin="round"
+            />
+          ) : route ? (
+            <path
+              d={path({ type: "LineString", coordinates: route.line }) ?? ""}
+              fill="none"
+              stroke="#c2410c"
+              strokeWidth={7 * k}
+              strokeLinecap="round"
+              strokeDasharray={`${18 * k} ${12 * k}`}
+            />
+          ) : null}
+          {head && travel > 0 && vehicle === "army" ? (
+            <path d="M-6 -34 L44 0 L-6 34 Z" fill={REGION} transform={`translate(${head[0]} ${head[1]}) rotate(${bearing}) scale(${k})`} />
+          ) : head && travel > 0 && vehicle ? (
+            <g transform={`translate(${head[0]} ${head[1]}) rotate(${bearing}) scale(${iconScale})`} filter="url(#glow)" fill="#fff" stroke="#1e293b" strokeWidth={2.5} strokeLinejoin="round">
+              {VEHICLE_ICONS[vehicle as Exclude<Vehicle, "army">]}
+            </g>
+          ) : head && travel > 0 && travel < 1 ? (
+            <g filter="url(#glow)">
+              <circle cx={head[0]} cy={head[1]} r={16 * k} fill="#fff" />
+              <circle cx={head[0]} cy={head[1]} r={30 * k} fill="none" stroke="#c2410c" strokeWidth={4} />
+            </g>
+          ) : null}
+        </svg>
+        {places.map((p, i) => {
+          const xy = proj([p.lon, p.lat]);
+          if (!xy) return null;
+          const at = pinFrames(scene, durationInFrames)[i];
+          const anchor = xy[0] < width * 0.3 ? 15 : xy[0] > width * 0.7 ? 85 : 50; // keep labels inside the frame
+          return <Pin key={i} x={xy[0]} y={xy[1]} anchor={anchor} name={p.name} at={at} fps={fps} theme={theme} k={k} />;
+        })}
+      </AbsoluteFill>
       <svg width={width} height={height} style={{ position: "absolute", inset: 0 }}>
         <defs>
-          <radialGradient id="ocean" cx="50%" cy="45%" r="75%">
-            <stop offset="0%" stopColor={OCEAN} />
-            <stop offset="100%" stopColor={OCEAN_DEEP} />
-          </radialGradient>
           <radialGradient id="vignette" cx="50%" cy="45%" r="72%">
             <stop offset="65%" stopColor="#000" stopOpacity={0} />
             <stop offset="100%" stopColor="#000" stopOpacity={0.55} />
           </radialGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="6" result="b" />
-            <feMerge>
-              <feMergeNode in="b" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
+          <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={OCEAN_DEEP} stopOpacity={1} />
+            <stop offset="12%" stopColor={OCEAN_DEEP} stopOpacity={0.9} />
+            <stop offset="38%" stopColor={OCEAN_DEEP} stopOpacity={0} />
+          </linearGradient>
         </defs>
-        <rect width={width} height={height} fill="url(#ocean)" />
-        <path d={path(lines) ?? ""} fill="none" stroke={GRID} strokeOpacity={0.22 * grow} strokeWidth={1.4} />
-        {/* one path for land and borders: the map is the slowest thing to draw, so it is drawn once */}
-        <path d={path(span > 90 ? WORLD_COARSE : WORLD) ?? ""} fill={LAND} stroke={BORDER} strokeWidth={1.2} strokeLinejoin="round" />
-        {involved.map((f, i) => {
-          // A country much bigger than the view (the whole USA around Boston) isn't worth highlighting.
-          const [[x0, y0], [x1, y1]] = path.bounds(f);
-          if ((x1 - x0) * (y1 - y0) > width * height * 1.5) return null;
-          return <path key={i} d={path(f) ?? ""} fill={theme.accent} fillOpacity={0.3 * grow} stroke={theme.accent} strokeWidth={3} strokeOpacity={grow} />;
-        })}
-        {/* the grid continues faintly over land, so the lines read as one grid */}
-        <path d={path(lines) ?? ""} fill="none" stroke="#000" strokeOpacity={0.06 * grow} strokeWidth={1} />
-        {placed.map((l) => (
-          <text
-            key={l.name}
-            x={l.x + l.w / 2}
-            y={l.y + l.h / 2}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fill={LABEL}
-            fillOpacity={0.85 * grow}
-            fontFamily={theme.font}
-            fontWeight={700}
-            fontSize={l.size}
-            letterSpacing={l.size * 0.12}
-            style={{ textTransform: "uppercase" }}
-          >
-            {l.name}
-          </text>
-        ))}
-        {waters.map((wl) => (
-          <text
-            key={wl.name}
-            x={wl.x}
-            y={wl.y}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fill={GRID}
-            fillOpacity={0.6 * grow}
-            fontFamily="Georgia, 'DejaVu Serif', serif"
-            fontStyle="italic"
-            fontSize={wl.size}
-            letterSpacing={wl.size * 0.08}
-          >
-            {wl.name}
-          </text>
-        ))}
-        {route ? (
-          <path
-            d={path({ type: "LineString", coordinates: route.line }) ?? ""}
-            fill="none"
-            stroke="#c2410c"
-            strokeWidth={7 * k}
-            strokeLinecap="round"
-            strokeDasharray={`${18 * k} ${12 * k}`}
-          />
-        ) : null}
-        {head && travel > 0 && travel < 1 ? (
-          <g filter="url(#glow)">
-            <circle cx={head[0]} cy={head[1]} r={16 * k} fill="#fff" />
-            <circle cx={head[0]} cy={head[1]} r={30 * k} fill="none" stroke="#c2410c" strokeWidth={4} />
-          </g>
-        ) : null}
         <rect width={width} height={height} fill="url(#vignette)" />
-        {/* grid labels along the edges */}
+        {/* distance haze at the top of the tilted map, like a horizon */}
+        {ride > 0.01 ? <rect width={width} height={height} fill="url(#haze)" opacity={ride} /> : null}
+        {/* grid labels along the edges (hidden while the map is tilted) */}
         {latTicks.map((v) => {
           const xy = proj([topLeft[0], v]);
           if (!xy || xy[1] < rect[0][1] - 30 || xy[1] > rect[1][1] + 30) return null;
           return (
-            <text key={`lat${v}`} x={short ? 24 : 40} y={xy[1]} dominantBaseline="central" fill={GRID} fillOpacity={0.9 * grow} stroke={OCEAN_DEEP} strokeWidth={3} strokeOpacity={grow} paintOrder="stroke" fontFamily={theme.font} fontWeight={700} fontSize={22 * k}>
+            <text key={`lat${v}`} x={short ? 24 : 40} y={xy[1]} dominantBaseline="central" fill={GRID} fillOpacity={0.9 * grow * (1 - ride)} stroke={OCEAN_DEEP} strokeWidth={3} strokeOpacity={grow * (1 - ride)} paintOrder="stroke" fontFamily={theme.font} fontWeight={700} fontSize={22 * k}>
               {degrees(v, "N", "S")}
             </text>
           );
@@ -396,7 +620,7 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
           if (!xy || xy[0] < 120 || xy[0] > width - 120 || underGlobe(xy[0], edgeY, 50)) return null;
           const lon = ((v + 540) % 360) - 180;
           return (
-            <text key={`lon${v}`} x={xy[0]} y={edgeY} textAnchor="middle" fill={GRID} fillOpacity={0.9 * grow} stroke={OCEAN_DEEP} strokeWidth={3} strokeOpacity={grow} paintOrder="stroke" fontFamily={theme.font} fontWeight={700} fontSize={22 * k}>
+            <text key={`lon${v}`} x={xy[0]} y={edgeY} textAnchor="middle" fill={GRID} fillOpacity={0.9 * grow * (1 - ride)} stroke={OCEAN_DEEP} strokeWidth={3} strokeOpacity={grow * (1 - ride)} paintOrder="stroke" fontFamily={theme.font} fontWeight={700} fontSize={22 * k}>
               {degrees(lon, "E", "W")}
             </text>
           );
@@ -407,24 +631,74 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
             <path d={globePath({ type: "Sphere" }) ?? ""} fill={OCEAN} stroke={GRID} strokeOpacity={0.7} strokeWidth={2} />
             <path d={globePath(GLOBE_LAND) ?? ""} fill={LAND} />
             <path d={globePath(viewOutline) ?? ""} fill="none" stroke={theme.accent} strokeWidth={3} />
-            {pts.map((p, i) => {
+            {framePts.slice(0, 6).map((p, i) => {
               const xy = globe(p);
               return xy ? <circle key={i} cx={xy[0]} cy={xy[1]} r={4} fill="#c2410c" /> : null;
             })}
           </g>
         ) : null}
       </svg>
-      {places.map((p, i) => {
-        const xy = proj([p.lon, p.lat]);
-        if (!xy) return null;
-        const at = pinFrames(scene, durationInFrames)[i];
-        const anchor = xy[0] < width * 0.3 ? 15 : xy[0] > width * 0.7 ? 85 : 50; // keep labels inside the frame
-        return <Pin key={i} x={xy[0]} y={xy[1]} anchor={anchor} name={p.name} at={at} fps={fps} theme={theme} k={k} />;
-      })}
+      {globeIn > 0 ? (
+        // The opening: Earth in space, turning to the story's part of the world as we rush towards it.
+        <svg width={width} height={height} style={{ position: "absolute", inset: 0, opacity: globeIn }}>
+          <defs>
+            <radialGradient id="space" cx="50%" cy="45%" r="80%">
+              <stop offset="0%" stopColor="#0b1a33" />
+              <stop offset="100%" stopColor="#02050c" />
+            </radialGradient>
+            <radialGradient id="atmosphere" cx="50%" cy="50%" r="50%">
+              <stop offset="88%" stopColor="#5eb3ff" stopOpacity={0.45} />
+              <stop offset="100%" stopColor="#5eb3ff" stopOpacity={0} />
+            </radialGradient>
+            <radialGradient id="shade" cx="38%" cy="32%" r="75%">
+              <stop offset="55%" stopColor="#000" stopOpacity={0} />
+              <stop offset="100%" stopColor="#000" stopOpacity={0.55} />
+            </radialGradient>
+          </defs>
+          <rect width={width} height={height} fill="url(#space)" />
+          {STARS.map((s, i) => (
+            <circle key={i} cx={s.x * width} cy={s.y * height} r={s.s} fill="#fff" opacity={s.o} />
+          ))}
+          <circle cx={earth.translate()[0]} cy={earth.translate()[1]} r={earthR * 1.09} fill="url(#atmosphere)" />
+          <path d={earthPath({ type: "Sphere" }) ?? ""} fill={OCEAN} />
+          <path d={earthPath(geoGraticule().step([15, 15])()) ?? ""} fill="none" stroke={GRID} strokeOpacity={0.2} strokeWidth={1.2} />
+          <path d={earthPath(WORLD_COARSE) ?? ""} fill={LAND} stroke={BORDER} strokeWidth={0.8} />
+          {regions.map((f, i) => (
+            <path key={i} d={earthPath(f) ?? ""} fill={REGION} fillOpacity={0.5} />
+          ))}
+          <path d={earthPath({ type: "Sphere" }) ?? ""} fill="url(#shade)" />
+          {targetXY ? (
+            <g>
+              <circle cx={targetXY[0]} cy={targetXY[1]} r={10 * k} fill="#c2410c" />
+              <circle cx={targetXY[0]} cy={targetXY[1]} r={(14 + ((frame % 30) / 30) * 30) * k} fill="none" stroke="#c2410c" strokeWidth={4} opacity={1 - (frame % 30) / 30} />
+            </g>
+          ) : null}
+        </svg>
+      ) : null}
       <AbsoluteFill style={{ padding: short ? "220px 80px 0" : "60px 160px 0", alignItems: "center" }}>
         <div style={{ padding: "14px 34px", borderRadius: 18, background: `${theme.background}e6` }}>
           <Heading text={scene.heading} theme={theme} format={format} size={52} />
         </div>
+        {years ? (
+          <div
+            style={{
+              marginTop: 18,
+              padding: "8px 30px",
+              borderRadius: 14,
+              background: `${theme.background}e6`,
+              border: `3px solid ${theme.accent}`,
+              color: theme.text,
+              fontFamily: theme.font,
+              fontWeight: 900,
+              fontSize: short ? 58 : 50,
+              fontVariantNumeric: "tabular-nums",
+              letterSpacing: 2,
+              opacity: grow,
+            }}
+          >
+            {yearText}
+          </div>
+        ) : null}
         {routed && miles >= 1 ? (
           <div
             style={{

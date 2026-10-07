@@ -68,6 +68,35 @@ def _api(cfg: Config, **params) -> dict:
     return body
 
 
+# Articles named for what happened to one person; a news explainer centred on one individual is off-limits.
+ONE_PERSON = re.compile(
+    r"^(murder|killing|death|trial|execution|disappearance|kidnapping|abduction|shooting|stabbing|rape|arrest|"
+    r"conviction|case) of ",
+    re.I,
+)
+
+
+def is_about_a_person(cfg: Config, title: str) -> bool:
+    """Whether an article is a biography (Wikidata: instance of human) or about what happened to one person."""
+    if ONE_PERSON.match(title):
+        return True
+    body = _api(cfg, action="query", prop="pageprops", ppprop="wikibase_item", titles=title, redirects=1)
+    pages = body.get("query", {}).get("pages", [])
+    item = (pages[0].get("pageprops") or {}).get("wikibase_item") if pages else None
+    if not item:
+        return False
+    r = requests.get(
+        "https://www.wikidata.org/w/api.php",
+        params={"action": "wbgetclaims", "entity": item, "property": "P31", "format": "json"},
+        headers={"User-Agent": USER_AGENT},
+        timeout=30,
+    )
+    r.raise_for_status()
+    claims = r.json().get("claims", {}).get("P31", [])
+    kinds = {((c.get("mainsnak") or {}).get("datavalue") or {}).get("value", {}).get("id") for c in claims}
+    return "Q5" in kinds  # Q5: human
+
+
 def fetch_article(cfg: Config, title: str) -> Article:
     page = _api(
         cfg,

@@ -158,6 +158,7 @@ class GrowthConfig(BaseModel):
     news_longs_per_week: int = 1
     news_min_fit: int = 8
     news_min_chars: int = 6000
+    news_series: str = "News Explained"  # the playlist news explainers go in ("" for none)
 
 
 class Config(BaseModel):

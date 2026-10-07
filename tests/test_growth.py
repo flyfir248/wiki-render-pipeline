@@ -234,9 +234,44 @@ def test_pick_news_rates_with_its_own_guide_and_skips_used(monkeypatch):
         growth, "news_candidates", lambda cfg, day=None: [("Some Film", 80000), ("Ferry fire", 0), ("Old story", 5)]
     )
     monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: wiki.Article(t, "u", "x" * 7000))
+    monkeypatch.setattr(wiki, "is_about_a_person", lambda cfg, t: False)
     calls = answer(monkeypatch, {"scores": [{"title": "Some Film", "fit": 2}, {"title": "Ferry fire", "fit": 9}]})
     assert growth.pick_news(cfg, {wiki.news_topic_for("Old story")}, 8, 6000) == "Ferry fire"
     assert "explainer about a recent" in calls[0][0] and "Old story" not in calls[0][1]
+
+
+def test_pick_news_never_picks_an_article_about_one_person(monkeypatch):
+    cfg = Config()
+    monkeypatch.setattr(growth, "news_candidates", lambda cfg, day=None: [("Jane Doe", 90000), ("Ferry fire", 0)])
+    monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: wiki.Article(t, "u", "x" * 7000))
+    monkeypatch.setattr(wiki, "is_about_a_person", lambda cfg, t: t == "Jane Doe")
+    answer(monkeypatch, {"scores": [{"title": "Jane Doe", "fit": 10}, {"title": "Ferry fire", "fit": 8}]})
+    assert growth.pick_news(cfg, set(), 8, 6000) == "Ferry fire"
+
+
+def test_is_about_a_person_reads_wikidata(monkeypatch):
+    class R:
+        def __init__(self, body):
+            self.body = body
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return self.body
+
+    def get(url, params, headers, timeout):
+        if "wikidata" in url:
+            human = params["entity"] == "Q1"
+            return R({"claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q5" if human else "Q1190554"}}}}]}})
+        item = "Q1" if params["titles"] == "Jane Doe" else "Q2"
+        return R({"query": {"pages": [{"pageprops": {"wikibase_item": item}}]}})
+
+    monkeypatch.setattr(wiki.requests, "get", get)
+    cfg = Config()
+    assert wiki.is_about_a_person(cfg, "Jane Doe")
+    assert not wiki.is_about_a_person(cfg, "2026 Example ferry fire")
+    assert wiki.is_about_a_person(cfg, "Murder of John Roe")  # what happened to one person
 
 
 def test_a_news_topic_gets_the_news_rules_and_no_polish_or_two_parts(monkeypatch, tmp_path):

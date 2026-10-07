@@ -15,6 +15,10 @@ SceneType = Literal[
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
 Transition = Literal["fade", "slide", "zoom", "wipe", "flash"]
 # Feel of the background music, chosen from the story (see fyt.music).
+# What travels along a map route: a plane, ship, car or train icon, a walker, or an army's campaign arrow.
+Vehicle = Literal["plane", "ship", "car", "train", "walk", "army"]
+# How the highlighted regions of a map change: they appear, spread out from their middle, shrink away or fade.
+RegionChange = Literal["appear", "spread", "shrink", "fade"]
 Mood = Literal["somber", "tense", "curious", "uplifting", "playful"]
 MOOD_HELP = (
     "Music mood that respects the story: somber for death, disaster, war, illness or other tragedy; "
@@ -93,6 +97,15 @@ class ScriptScene(BaseModel):
     )
     places: list[Place] | None = Field(default=None, description="map scenes: 1-4 real places, in the order of travel.")
     route: bool | None = Field(default=None, description="map scenes: draw a route through the places in order.")
+    vehicle: Vehicle | None = Field(
+        default=None, description="map scenes with a route: what travels it; the camera follows it over a tilted map."
+    )
+    regions: list[str] | None = Field(
+        default=None, description="map scenes: 1-6 present-day country names to highlight (an empire, an alliance, a spread)."
+    )
+    region_change: RegionChange | None = Field(default=None, description="map scenes: how the regions change.")
+    year_from: int | None = Field(default=None, description="map scenes: a year counter starts here (negative for BC).")
+    year_to: int | None = Field(default=None, description="map scenes: and counts to this year.")
     lines: list[DialogueLine] | None = Field(
         default=None, description="dialogue scenes: 2-4 lines of a real recorded exchange, in order."
     )
@@ -183,6 +196,12 @@ class RenderScene(BaseModel):
     media: Media | None = None
     places: list[Place] | None = None
     route: bool | None = None
+    vehicle: Vehicle | None = None
+    regions: list[str] | None = None
+    regionChange: RegionChange | None = None
+    yearFrom: int | None = None
+    yearTo: int | None = None
+    globe: bool | None = None  # open on a spinning globe that dives in (the video's first map)
     lines: list[DialogueLine] | None = None
     setting: Setting | None = None
     backdropSrc: str | None = None

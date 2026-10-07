@@ -22,7 +22,11 @@ from fyt.tts import estimate_spoken
         ("A 9-year-old (born 2012) ran.", "A nine-year-old, born twenty twelve, ran."),
         ("It was found — once.", "It was found, once."),
         ("He moved to the U.S. Then he left.", "He moved to the U S. Then he left."),
-        ("A 35-mph wave, 25 ft. high, near Ft. Knox.", "A thirty-five miles per hour wave, twenty-five feet high, near Fort Knox."),
+        ("A 35-mph wave, 25 ft. high, near Ft. Knox.", "A thirty-five-mile-per-hour wave, twenty-five feet high, near Fort Knox."),
+        ("It flew at 30,000 ft. Then it fell.", "It flew at thirty thousand feet. Then it fell."),
+        ("A 15 ft wave hit. Winds of 35 mph hit.", "A fifteen foot wave hit. Winds of thirty-five miles per hour hit."),
+        ("Flight MH370, the B-52 and the A380.", "Flight M H three seventy, the B fifty-two and the A three eighty."),
+        ("COVID-19 and 9/11.", "Covid nineteen and nine eleven."),
         ("Speeds in MPH and 50 psi.", "Speeds in miles per hour and fifty pounds per square inch."),
     ],
 )

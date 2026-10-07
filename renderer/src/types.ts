@@ -11,6 +11,8 @@ export type Media = {
 export type DataPoint = { label: string; value: number };
 export type TimelineEvent = { label: string; text: string };
 export type Place = { name: string; lat: number; lon: number };
+export type Vehicle = "plane" | "ship" | "car" | "train" | "walk" | "army";
+export type RegionChange = "appear" | "spread" | "shrink" | "fade";
 export type DialogueLine = { speaker: string; text: string };
 export type Setting = "sky" | "night" | "space" | "sea" | "city" | "countryside" | "desert" | "snow" | "room" | "road";
 export type Effect = "explosion" | "fire" | "smoke" | "lightning" | "sparkles" | "rain" | "snow";
@@ -71,6 +73,12 @@ export type Scene = {
   media?: Media | null;
   places?: Place[] | null; // map scenes
   route?: boolean | null; // map scenes: draw a route through the places in order
+  vehicle?: Vehicle | null; // map scenes: what travels the route; the camera follows it over a tilted map
+  regions?: string[] | null; // map scenes: present-day countries to highlight
+  regionChange?: RegionChange | null;
+  yearFrom?: number | null; // map scenes: a year counter (negative for BC)
+  yearTo?: number | null;
+  globe?: boolean | null; // map scenes: open on a spinning globe that dives in
   lines?: DialogueLine[] | null; // dialogue scenes
   setting?: Setting | null; // story scenes
   backdropSrc?: string | null; // story scenes: an illustrated plate, drawn over the setting

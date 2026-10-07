@@ -314,6 +314,14 @@ def pick_news(cfg: Config, used: set[str], min_fit: int, min_chars: int, day: da
         except Exception as e:
             print(f"skipping {title}: {e}")
             continue
+        try:
+            person = wiki.is_about_a_person(cfg, article.title)
+        except Exception as e:  # can't tell, so don't risk it
+            print(f"skipping {title}: could not check whether it is about one person: {e}")
+            continue
+        if person:
+            print(f"skipping {title}: it is about one person")
+            continue
         if len(article.text) >= min_chars and not seen(article.title):
             print(f"news pick: {article.title} (fit {fits[title]}/10, {views[title]} readers)")
             return article.title

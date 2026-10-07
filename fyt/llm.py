@@ -276,7 +276,12 @@ Scene templates (field names in brackets):
 - broll: stock footage with a caption [broll_query (concrete, filmable), heading]
 - map: an animated map that flies to real places and draws a route between them [heading, places
   (1-4, each name + lat + lon in degrees, in the order of travel), route (true to draw the journey)].
-  Use it whenever the story moves between places or where something is matters.
+  Use it whenever the story moves between places or where something is matters. For a journey, set
+  `vehicle` (plane, ship, car, train, walk, or army for a military campaign) and the camera follows it
+  across a tilted map, stopping at each place. For territory (an empire, an alliance, where something
+  spread), set `regions` (1-6 present-day country names) and `region_change` (appear, spread, shrink,
+  fade); places are optional then. When time passes on the map, set `year_from` and `year_to` (negative
+  for BC) and a year counter runs.
 - process: how one thing led to another, as connected steps [heading, items (2-5, max ~5 words each)]
 - document: a line from a real report, letter, ruling or newspaper, highlighted [heading = what the
   document is, text = the line (max ~20 words), author = source and year]

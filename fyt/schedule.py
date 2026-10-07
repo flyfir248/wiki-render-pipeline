@@ -28,7 +28,7 @@ PACIFIC = ZoneInfo("America/Los_Angeles")
 LEAD_MINUTES = 30  # a slot this close is left alone: the upload might not finish in time
 # Rough time to make one video on the free 2-core runner, to avoid starting one the job can't finish.
 MAKE_MINUTES = {"short": 10, "long": 80}
-KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json", "part2.json")
+KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json", "part2.json", "props.json")
 
 
 def utcnow() -> datetime:
