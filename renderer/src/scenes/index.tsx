@@ -12,7 +12,7 @@ import { unit } from "../theme";
 
 import { CameraMedia, cameraOf } from "./camera";
 import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
-import { MapScene, validPlaces } from "./map";
+import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
 import { Heading, Stage, Sub, useEnter, type SceneProps } from "./shared";
 
@@ -437,7 +437,7 @@ const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; the
 // places, or a story without any art.
 export const shownType = (raw: Scene): Scene["type"] =>
   (raw.type === "broll" && !raw.media) ||
-  (raw.type === "map" && !validPlaces(raw.places).length) ||
+  (raw.type === "map" && !validPlaces(raw.places).length && !mapRegions(raw).length) ||
   (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src))
     ? "statement"
     : raw.type;

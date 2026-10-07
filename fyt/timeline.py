@@ -23,6 +23,8 @@ def build_props(
     duration = (spans[-1][1] if spans else 0) + TAIL_SECONDS
     scenes: list[RenderScene] = []
     captions: list[Word] = []
+    # The video's first map opens on a globe that dives in; later maps start from the flat map.
+    first_map = next((i for i, s in enumerate(script.scenes) if s.type == "map"), None)
     for i, (scene, (start, _end)) in enumerate(zip(script.scenes, spans)):
         # A scene stays on screen until the next one starts, so pauses are covered.
         vis_start = 0.0 if i == 0 else start
@@ -49,6 +51,12 @@ def build_props(
                 media=media.get(i),
                 places=scene.places,
                 route=scene.route,
+                vehicle=scene.vehicle,
+                regions=scene.regions,
+                regionChange=scene.region_change,
+                yearFrom=scene.year_from,
+                yearTo=scene.year_to,
+                globe=True if scene.type == "map" and i == first_map else None,
                 lines=scene.lines,
                 setting=scene.setting,
                 backdropSrc=scene.backdrop_src,

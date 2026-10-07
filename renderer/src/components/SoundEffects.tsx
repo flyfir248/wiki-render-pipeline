@@ -27,6 +27,7 @@ export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
     // A gentle fade needs no sound; the moving transitions get a whoosh as they start.
     if (scene.id !== "s1" && transition !== "fade") cues.push({ at: from - 4, name: transition === "flash" ? "thud" : "whoosh", gain: 0.6 });
     const type = shownType(scene); // no pops or booms for art or pins that never appear
+    if (type === "map" && scene.globe) cues.push({ at: from + Math.round(len * 0.18), name: "whoosh", gain: 0.9 }); // the dive
     if (type === "map") pinFrames(scene, len).forEach((f) => cues.push({ at: from + Math.round(f), name: "pop", gain: 0.8 }));
     if (type === "story") {
       (scene.actors ?? [])

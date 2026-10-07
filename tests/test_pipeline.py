@@ -162,3 +162,22 @@ def test_qa_catches_empty_engine_scenes():
     problems = " | ".join(qa.check_script(Config(), s))
     for word in ("map", "process", "document", "transcript"):
         assert word in problems
+
+
+def test_map_motion_fields_reach_the_renderer_and_only_the_first_map_opens_on_a_globe():
+    from fyt.models import Place
+
+    s = script(3)
+    for sc in s.scenes[:2]:
+        sc.type = "map"
+    s.scenes[0].places = [Place(name="Paris", lat=48.9, lon=2.4), Place(name="Moscow", lat=55.8, lon=37.6)]
+    s.scenes[0].vehicle = "army"
+    s.scenes[0].year_from, s.scenes[0].year_to = 1812, 1812
+    s.scenes[1].regions = ["Italy", "Greece"]
+    s.scenes[1].region_change = "spread"
+    props = build_props(Config(), s, [(0.0, 2.0), (2.0, 4.0), (4.0, 6.0)], [[], [], []], {}, None, None)
+    data = props.model_dump(exclude_none=True)["scenes"]
+    assert data[0]["vehicle"] == "army" and data[0]["yearFrom"] == 1812 and data[0]["globe"] is True
+    assert data[1]["regions"] == ["Italy", "Greece"] and data[1]["regionChange"] == "spread"
+    assert "globe" not in data[1]
+    assert qa.check_script(Config(), s) == []  # a territory map needs no places
