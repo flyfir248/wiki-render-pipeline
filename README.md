@@ -180,7 +180,7 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
 - *Playlists*: every video is filed under a series, long videos in "<series>" and Shorts in
   "<series> Shorts", newest first, each with a description. New uploads are filed as they go up; each
   scheduled run also files up to 8 older videos (run the `playlists` task to do more at once).
-- *Community posts*: once a week the scheduled run drafts three posts (a poll on what to cover next, a
+- *Community posts* (on demand: run the `posts` task): drafts three posts (a poll on what to cover next, a
   teaser for the week's long video, a fact with a question) and opens them as a GitHub issue, which
   GitHub emails you. YouTube's API can't publish posts, so paste them in Studio (Create > Create post).
 - *Sound effects* (`sound_effects`, `sfx_volume`): a whoosh on the livelier scene changes, a pop as a map
