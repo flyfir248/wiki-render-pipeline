@@ -18,9 +18,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say"
         type: choice
-        options: [fill, short, long, news, relabel]
+        options: [fill, short, long, news, relabel, stats]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -83,7 +83,7 @@ jobs:
         run: |
           if [ "$TASK" = fill ]; then
             echo "needed=$(python -m fyt buffer --needed)" >> "$GITHUB_OUTPUT"
-          elif [ "$TASK" = relabel ]; then
+          elif [ "$TASK" = relabel ] || [ "$TASK" = stats ]; then
             echo "needed=no" >> "$GITHUB_OUTPUT"
           else
             echo "needed=yes" >> "$GITHUB_OUTPUT"
@@ -112,6 +112,12 @@ jobs:
         env:
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
         run: python -m fyt relabel
+
+      - name: Channel stats and watch-time lessons
+        if: env.TASK == 'stats'
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+        run: python -m fyt stats | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Make videos
         if: steps.need.outputs.needed == 'yes'

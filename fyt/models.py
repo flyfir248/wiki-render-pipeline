@@ -201,6 +201,11 @@ class Music(BaseModel):
     volume: float
 
 
+class Sfx(BaseModel):
+    dir: str  # folder of <name>.wav files in the job (see fyt.sfx.NAMES)
+    volume: float
+
+
 class RenderProps(BaseModel):
     format: Literal["long", "short"]
     fps: int = 30
@@ -209,6 +214,7 @@ class RenderProps(BaseModel):
     theme: dict
     voice: str | None
     music: Music | None
+    sfx: Sfx | None = None
     scenes: list[RenderScene]
     captions: list[Word]
     showCaptions: bool

@@ -176,6 +176,10 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
   note (`fyt/music.py`) in the mood the script picks: somber (slow, dark, quiet, no beat) for deaths,
   disasters and war, tense, curious, uplifting or playful, with a light pulse in Shorts where it fits. No licences, no Content ID claims, nothing to disclose. Drop your own tracks in `music_dir` to
   use those instead.
+- *Sound effects* (`sound_effects`, `sfx_volume`): a whoosh on the livelier scene changes, a pop as a map
+  pin drops or a prop appears, a boom, thunder or crackle with a story scene's effect, a chime when a
+  figure lands and a thud for a document's stamp. They're synthesised too (`fyt/sfx.py`) and sit under
+  the narrator.
 - *First comment* (`first_comment`): each script includes a question about the story, and once the video
   is public the channel posts it as the first comment. The API can't pin comments; pin it in Studio if
   you like.

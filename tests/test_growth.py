@@ -247,7 +247,7 @@ def test_a_news_topic_gets_the_news_rules_and_no_polish_or_two_parts(monkeypatch
     monkeypatch.setattr(wiki, "fetch_images", lambda cfg, t: [])
     seen = []
     monkeypatch.setattr(
-        llm, "write_script", lambda cfg, t, n, from_wikipedia=False, images="", feedback="", news=False: seen.append((t, news, feedback)) or script(3)
+        llm, "write_script", lambda cfg, t, n, from_wikipedia=False, images="", feedback="", news=False, lessons="": seen.append((t, news, feedback)) or script(3)
     )
     monkeypatch.setattr(growth, "polish", lambda *a, **k: pytest.fail("news titles are not polished"))
     monkeypatch.setattr(pipeline.qa, "check_script", lambda cfg, s: ["stop"])
@@ -324,7 +324,7 @@ def test_a_two_part_short_ends_on_a_cliffhanger_and_queues_part_2(monkeypatch, t
     monkeypatch.setattr(wiki, "fetch_images", lambda cfg, t: [])
     notes = []
 
-    def write_script(cfg, topic, n, from_wikipedia=False, images="", feedback="", news=False):
+    def write_script(cfg, topic, n, from_wikipedia=False, images="", feedback="", news=False, lessons=""):
         notes.append(feedback)
         return script(3).model_copy(update={"title": "The Lamp", "core_message": "Flicker makes the brain see."})
 
@@ -354,7 +354,7 @@ def test_short_articles_and_most_shorts_stay_single(monkeypatch, tmp_path):
     monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: wiki.Article("Stub", "u", "x" * 3000))
     monkeypatch.setattr(wiki, "fetch_images", lambda cfg, t: [])
     notes = []
-    monkeypatch.setattr(llm, "write_script", lambda cfg, t, n, from_wikipedia=False, images="", feedback="", news=False: notes.append(feedback) or script(3))
+    monkeypatch.setattr(llm, "write_script", lambda cfg, t, n, from_wikipedia=False, images="", feedback="", news=False, lessons="": notes.append(feedback) or script(3))
     monkeypatch.setattr(pipeline.qa, "check_script", lambda cfg, s: ["stop"])
     job = Job.create(cfg, "wiki:Stub")
     with pytest.raises(RuntimeError):

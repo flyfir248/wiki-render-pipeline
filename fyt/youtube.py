@@ -267,12 +267,7 @@ def post_comment(video_id: str, text: str) -> str:
 
 def retention(video_ids: list[str], since: str = "2020-01-01") -> dict[str, dict]:
     """Per video: views, average seconds watched and average percentage watched, from YouTube Analytics."""
-    from googleapiclient.discovery import build
-
-    _service()  # refreshes the token file
-    from google.oauth2.credentials import Credentials
-
-    yta = build("youtubeAnalytics", "v2", credentials=Credentials.from_authorized_user_file(str(TOKEN)), cache_discovery=False)
+    yta = _analytics()
     out: dict[str, dict] = {}
     today = datetime.now(timezone.utc).date().isoformat()
     for i in range(0, len(video_ids), 50):
@@ -288,6 +283,34 @@ def retention(video_ids: list[str], since: str = "2020-01-01") -> dict[str, dict
         for vid, views, seconds, percent in resp.get("rows", []):
             out[vid] = {"views": int(views), "seconds": float(seconds), "percent": float(percent)}
     return out
+
+
+def _analytics():
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+
+    _service()  # refreshes the token file
+    return build("youtubeAnalytics", "v2", credentials=Credentials.from_authorized_user_file(str(TOKEN)), cache_discovery=False)
+
+
+def retention_curve(video_id: str, since: str = "2020-01-01") -> list[tuple[float, float]]:
+    """How many of the viewers are still watching at each point of a video: (fraction of the video
+    elapsed, share of views still watching), about 100 points. Rewatched moments can go above 1."""
+    today = datetime.now(timezone.utc).date().isoformat()
+    resp = (
+        _analytics()
+        .reports()
+        .query(
+            ids="channel==MINE",
+            startDate=since,
+            endDate=today,
+            metrics="audienceWatchRatio",
+            dimensions="elapsedVideoTimeRatio",
+            filters=f"video=={video_id}",
+        )
+        .execute()
+    )
+    return sorted((float(at), float(ratio)) for at, ratio in resp.get("rows", []))
 
 
 def stats(video_ids: list[str]) -> list[dict]:

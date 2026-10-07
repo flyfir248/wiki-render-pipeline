@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from fyt.config import Config
-from fyt.models import Media, Music, RenderProps, RenderScene, Script, Word
+from fyt.models import Media, Music, RenderProps, RenderScene, Script, Sfx, Word
 
 TAIL_SECONDS = 1.5  # hold the last scene after the voice ends
 
@@ -16,6 +16,7 @@ def build_props(
     media: dict[int, Media],
     voice: str | None,
     music: str | None,
+    sfx: str | None = None,
 ) -> RenderProps:
     if len(spans) != len(script.scenes):
         raise ValueError("one audio span per scene is required")
@@ -71,6 +72,7 @@ def build_props(
         theme=cfg.theme.model_dump(),
         voice=voice,
         music=Music(src=music, volume=cfg.music_volume) if music else None,
+        sfx=Sfx(dir=sfx, volume=cfg.sfx_volume) if sfx else None,
         scenes=scenes,
         captions=captions,
         showCaptions=cfg.captions,
