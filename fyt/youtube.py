@@ -73,22 +73,59 @@ def can_analyze() -> bool:
     return ANALYTICS_SCOPE in _scopes()
 
 
-def add_to_playlist(video_id: str, name: str, privacy: str = "public") -> None:
-    """File the video under a playlist with this name, creating it the first time."""
+def playlists() -> dict[str, dict]:
+    """The channel's playlists by title: id and description."""
     yt = _service()
-    playlist_id = None
+    out: dict[str, dict] = {}
     request = yt.playlists().list(part="snippet", mine=True, maxResults=50)
-    while request is not None and playlist_id is None:
+    while request is not None:
         resp = request.execute()
-        playlist_id = next((p["id"] for p in resp.get("items", []) if p["snippet"]["title"] == name), None)
+        for p in resp.get("items", []):
+            out[p["snippet"]["title"]] = {"id": p["id"], "description": p["snippet"].get("description", "")}
         request = yt.playlists().list_next(request, resp)
-    if playlist_id is None:
-        playlist_id = yt.playlists().insert(
-            part="snippet,status", body={"snippet": {"title": name}, "status": {"privacyStatus": privacy}}
-        ).execute()["id"]
-    yt.playlistItems().insert(
-        part="snippet", body={"snippet": {"playlistId": playlist_id, "resourceId": {"kind": "youtube#video", "videoId": video_id}}}
-    ).execute()
+    return out
+
+
+def create_playlist(name: str, description: str = "", privacy: str = "public") -> str:
+    body = {"snippet": {"title": name, "description": description}, "status": {"privacyStatus": privacy}}
+    return _service().playlists().insert(part="snippet,status", body=body).execute()["id"]
+
+
+def describe_playlist(playlist_id: str, name: str, description: str) -> None:
+    body = {"id": playlist_id, "snippet": {"title": name, "description": description}}
+    _service().playlists().update(part="snippet", body=body).execute()
+
+
+def playlist_items(playlist_id: str) -> dict[str, str]:
+    """video id -> playlist item id, for every video in the playlist."""
+    yt = _service()
+    out: dict[str, str] = {}
+    request = yt.playlistItems().list(part="contentDetails", playlistId=playlist_id, maxResults=50)
+    while request is not None:
+        resp = request.execute()
+        for item in resp.get("items", []):
+            out[item["contentDetails"]["videoId"]] = item["id"]
+        request = yt.playlistItems().list_next(request, resp)
+    return out
+
+
+def add_playlist_item(playlist_id: str, video_id: str, top: bool = True) -> None:
+    """Add a video at the top of the playlist (a new upload, so the newest is first) or at the end."""
+    body = {"snippet": {"playlistId": playlist_id, "resourceId": {"kind": "youtube#video", "videoId": video_id}}}
+    if top:
+        body["snippet"]["position"] = 0
+    _service().playlistItems().insert(part="snippet", body=body).execute()
+
+
+def remove_playlist_item(item_id: str) -> None:
+    _service().playlistItems().delete(id=item_id).execute()
+
+
+def add_to_playlist(video_id: str, name: str, description: str = "", privacy: str = "public") -> None:
+    """File the video under a playlist with this name, creating it the first time."""
+    found = playlists().get(name)
+    playlist_id = found["id"] if found else create_playlist(name, description, privacy)
+    add_playlist_item(playlist_id, video_id)
 
 
 def _service():
@@ -332,6 +369,17 @@ def stats(video_ids: list[str]) -> list[dict]:
     return out
 
 
+def iso_seconds(duration: str) -> int:
+    """'PT1M5S' -> 65."""
+    import re
+
+    m = re.fullmatch(r"P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", duration or "")
+    if not m:
+        return 0
+    d, h, mins, s = (int(x or 0) for x in m.groups())
+    return ((d * 24 + h) * 60 + mins) * 60 + s
+
+
 def recent_uploads(limit: int = 100) -> list[dict]:
     """The channel's newest uploads, scheduled ones included: id, publish_at (or None), title, description.
     Costs a few quota units; needs more than the upload-only scope."""
@@ -346,7 +394,7 @@ def recent_uploads(limit: int = 100) -> list[dict]:
         request = yt.playlistItems().list_next(request, resp)
     out = []
     for i in range(0, len(ids[:limit]), 50):
-        resp = yt.videos().list(part="snippet,status", id=",".join(ids[i : i + 50])).execute()
+        resp = yt.videos().list(part="snippet,status,contentDetails", id=",".join(ids[i : i + 50])).execute()
         for item in resp.get("items", []):
             out.append(
                 {
@@ -355,6 +403,7 @@ def recent_uploads(limit: int = 100) -> list[dict]:
                     "uploaded": item["snippet"].get("publishedAt"),
                     "title": item["snippet"].get("title", ""),
                     "description": item["snippet"].get("description", ""),
+                    "seconds": iso_seconds(item.get("contentDetails", {}).get("duration", "")),
                 }
             )
     return out

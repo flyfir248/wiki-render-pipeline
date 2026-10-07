@@ -18,9 +18,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now"
         type: choice
-        options: [fill, short, long, news, relabel, stats]
+        options: [fill, short, long, news, relabel, stats, playlists, posts]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -78,12 +78,40 @@ jobs:
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
         run: python -m fyt comments
 
+      # Older videos are filed into the series playlists a few at a time, to spare the upload quota.
+      - name: Organise playlists
+        if: env.TASK == 'fill' || env.TASK == 'playlists'
+        continue-on-error: true
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          COUNT: ${{ inputs.count || '1' }}
+        # By hand: up to `count` changes (40 when count is 1); each costs 50 of the 10,000 daily quota units.
+        run: python -m fyt playlists --max $([ "$TASK" = playlists ] && { [ "$COUNT" -gt 1 ] && echo "$COUNT" || echo 40; } || echo 8)
+
+      # Once a week: drafts for the Community tab (YouTube has no API to post them), sent as an issue,
+      # which GitHub emails to you.
+      - name: Draft Community posts
+        if: env.TASK == 'fill' || env.TASK == 'posts'
+        continue-on-error: true
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m fyt posts --out posts.md $([ "$TASK" = posts ] && echo --now)
+          if [ -f posts.md ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "Community posts for the week of $(date -u +'%d %B')" --body-file posts.md
+          fi
+
       - name: Check what the schedule needs
         id: need
         run: |
           if [ "$TASK" = fill ]; then
             echo "needed=$(python -m fyt buffer --needed)" >> "$GITHUB_OUTPUT"
-          elif [ "$TASK" = relabel ] || [ "$TASK" = stats ]; then
+          elif [ "$TASK" = relabel ] || [ "$TASK" = stats ] || [ "$TASK" = playlists ] || [ "$TASK" = posts ]; then
             echo "needed=no" >> "$GITHUB_OUTPUT"
           else
             echo "needed=yes" >> "$GITHUB_OUTPUT"

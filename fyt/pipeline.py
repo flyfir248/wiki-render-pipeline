@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artgen, growth, illustrate, insights, llm, media, qa, render, sfx, tts, wiki, youtube
+from fyt import artgen, growth, illustrate, insights, llm, media, playlists, qa, render, sfx, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -352,7 +352,7 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
         Uploads(cfg).queue_comment(video_id, script.comment_question.strip(), publish_at.isoformat() if publish_at else None)
     if script.series and youtube.can_manage():
         try:
-            youtube.add_to_playlist(video_id, script.series)
+            playlists.file_upload(cfg, video_id, script.series)
         except Exception as e:  # the video is up; the playlist is a nice-to-have
             print(f"warning: not added to the {script.series!r} playlist: {e}")
     if cfg.format == "long":
