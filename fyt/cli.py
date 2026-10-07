@@ -179,6 +179,14 @@ def main(argv: list[str] | None = None) -> None:
         ids = [v["id"] for v in youtube.recent_uploads(limit=200)]
         print(f"cleared the label on {youtube.set_synthetic_label(ids, cfg.youtube.contains_synthetic_media)} of {len(ids)} videos")
     elif args.cmd == "stats":
+        from fyt import youtube
+
+        if youtube.authorised():
+            print(f"YouTube Analytics access: {'yes' if youtube.can_analyze() else 'no (add the yt-analytics.readonly scope)'}")
+            if youtube.can_analyze():
+                ids = [v["id"] for v in youtube.recent_uploads(limit=50)]
+                watched = youtube.retention(ids) if ids else {}
+                print(f"watch time read for {len(watched)} of {len(ids)} recent videos\n")
         print(pipeline.performance_summary(cfg, limit=100) or "no uploaded videos yet")
         from fyt import insights
 
