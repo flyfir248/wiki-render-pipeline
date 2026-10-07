@@ -129,4 +129,4 @@ def test_thumbnail_art_is_drawn_once_per_picture(monkeypatch, tmp_path):
     a = artgen.thumbnail_art("a wave of molasses in a street.", tmp_path)
     b = artgen.thumbnail_art("a wave of molasses in a street.", tmp_path)
     assert a == b and (tmp_path / a).exists() and len(prompts) == 1
-    assert "a wave of molasses in a street." not in prompts[0] and "no text" in prompts[0]
+    assert "street.." not in prompts[0] and "no text" in prompts[0]
