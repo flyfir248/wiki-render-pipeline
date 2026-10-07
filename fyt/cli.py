@@ -239,6 +239,14 @@ def main(argv: list[str] | None = None) -> None:
                     print(f"watch time read for {len(watched)} of {len(ids)} recent videos\n")
                 except Exception as e:  # most often: the YouTube Analytics API isn't enabled in the Cloud project
                     print(f"could not read watch time: {e}\n")
+                try:
+                    clicks = youtube.thumbnail_clicks(ids) if ids else {}
+                    print(f"thumbnail click rate read for {len(clicks)} of {len(ids)} recent videos")
+                    for vid, c in sorted(clicks.items(), key=lambda kv: -kv[1]["impressions"])[:15]:
+                        print(f"  https://youtu.be/{vid}: shown {c['impressions']}, click rate {c['click_rate']:.4g}")
+                    print()
+                except Exception as e:
+                    print(f"could not read thumbnail click rate: {e}\n")
         print(pipeline.performance_summary(cfg, limit=100) or "no uploaded videos yet")
         from fyt import insights
 

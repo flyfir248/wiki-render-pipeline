@@ -128,6 +128,14 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         cfg, job.public, seconds=spans[-1][1] + 2 if spans else 60, seed=sum(map(ord, job.id)), mood=script.mood
     )
 
+    # The thumbnail's illustration is drawn before the story scenes: it matters more for each image the
+    # free daily allowance buys.
+    thumb_art = None
+    if cfg.thumbnail_art and script.thumbnail_scene.strip() and artgen.provider():
+        try:
+            thumb_art = Media(kind="image", src=artgen.thumbnail_art(script.thumbnail_scene, job.public))
+        except Exception as e:
+            log(job, f"warning: no thumbnail illustration: {e}")
     if any(s.type == "story" for s in script.scenes):
         if cfg.story_art and artgen.provider():
             try:
@@ -157,12 +165,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     log(job, "rendering thumbnail")
     # An illustration of the story's most intriguing moment first; then the subject's own photo, which
     # makes a better thumbnail than a stock one.
-    bg, art = None, False
-    if cfg.thumbnail_art and script.thumbnail_scene.strip() and artgen.provider():
-        try:
-            bg, art = Media(kind="image", src=artgen.thumbnail_art(script.thumbnail_scene, job.public)), True
-        except Exception as e:
-            log(job, f"warning: no thumbnail illustration: {e}")
+    bg, art = thumb_art, thumb_art is not None
     bg = bg or next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)), None)
     if bg is None and cfg.stock_footage:
         try:

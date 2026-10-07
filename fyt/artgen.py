@@ -64,10 +64,21 @@ class Rejected(requests.RequestException):
     """The provider refused the request itself (bad key, bad input): retrying won't help."""
 
 
+class OutOfAllowance(Rejected):
+    """The free daily allowance is used up: nothing more can be drawn until it resets (midnight UTC)."""
+
+
+_spent = False  # once the allowance is gone, the rest of the run skips straight to the fallbacks
+
+
 def _check(r: requests.Response) -> None:
     if r.ok:
         return
     detail = r.text[:300].replace("\n", " ")
+    if r.status_code == 429 and "daily free allocation" in r.text:
+        global _spent
+        _spent = True
+        raise OutOfAllowance(f"the free daily image allowance is used up (it resets at midnight UTC): {detail[:120]}")
     if 400 <= r.status_code < 500 and r.status_code != 429:
         raise Rejected(f"{r.status_code}: {detail}")
     raise requests.HTTPError(f"{r.status_code}: {detail}")
@@ -76,6 +87,8 @@ def _check(r: requests.Response) -> None:
 def generate(prompt: str, vertical: bool = False, seed: int = 7) -> Image.Image:
     """One image from the configured provider."""
     which = provider()
+    if _spent:
+        raise RuntimeError("image generation failed: the free daily image allowance is used up")
     for attempt in range(3):
         try:
             if which == "cloudflare":

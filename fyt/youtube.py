@@ -322,6 +322,26 @@ def retention(video_ids: list[str], since: str = "2020-01-01") -> dict[str, dict
     return out
 
 
+def thumbnail_clicks(video_ids: list[str], since: str = "2020-01-01") -> dict[str, dict]:
+    """Per video: how often its thumbnail was shown on YouTube and the share of those that were clicked."""
+    yta = _analytics()
+    out: dict[str, dict] = {}
+    today = datetime.now(timezone.utc).date().isoformat()
+    for i in range(0, len(video_ids), 50):
+        resp = yta.reports().query(
+            ids="channel==MINE",
+            startDate=since,
+            endDate=today,
+            metrics="videoThumbnailImpressions,videoThumbnailImpressionsClickRate",
+            dimensions="video",
+            filters="video==" + ",".join(video_ids[i : i + 50]),
+            maxResults=50,
+        ).execute()
+        for vid, shown, rate in resp.get("rows", []):
+            out[vid] = {"impressions": int(shown), "click_rate": float(rate)}
+    return out
+
+
 def _analytics():
     from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build

@@ -117,16 +117,3 @@ def test_community_post_drafts_are_weekly(monkeypatch, tmp_path):
     assert "Tunguska event" in seen[0] and "The Long One" in seen[0]
     assert not posts.write_drafts(cfg, now, str(out))  # done for this week
     assert posts.write_drafts(cfg, now, str(out), force=True)
-
-
-def test_thumbnail_art_is_drawn_once_per_picture(monkeypatch, tmp_path):
-    from PIL import Image
-
-    from fyt import artgen
-
-    prompts = []
-    monkeypatch.setattr(artgen, "generate", lambda prompt, vertical=False, seed=7: prompts.append(prompt) or Image.new("RGB", (8, 8)))
-    a = artgen.thumbnail_art("a wave of molasses in a street.", tmp_path)
-    b = artgen.thumbnail_art("a wave of molasses in a street.", tmp_path)
-    assert a == b and (tmp_path / a).exists() and len(prompts) == 1
-    assert "street.." not in prompts[0] and "no text" in prompts[0]

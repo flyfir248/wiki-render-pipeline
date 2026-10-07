@@ -65,3 +65,39 @@ def test_no_keys_draws_nothing(monkeypatch, tmp_path):
     for k in ("CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN", "TOGETHER_API_KEY"):
         monkeypatch.delenv(k, raising=False)
     assert artgen.illustrate(Config(), story_script(), tmp_path) == 0
+
+
+def test_thumbnail_art_is_drawn_once_per_picture(monkeypatch, tmp_path):
+    from PIL import Image
+
+    from fyt import artgen
+
+    prompts = []
+    monkeypatch.setattr(artgen, "generate", lambda prompt, vertical=False, seed=7: prompts.append(prompt) or Image.new("RGB", (8, 8)))
+    a = artgen.thumbnail_art("a wave of molasses in a street.", tmp_path)
+    b = artgen.thumbnail_art("a wave of molasses in a street.", tmp_path)
+    assert a == b and (tmp_path / a).exists() and len(prompts) == 1
+    assert "street.." not in prompts[0] and "no text" in prompts[0]
+
+
+def test_image_generation_stops_once_the_daily_allowance_is_spent(monkeypatch):
+    import pytest
+    import requests
+
+    from fyt import artgen
+
+    calls = []
+
+    class Spent:
+        ok, status_code = False, 429
+        text = '{"errors":[{"message":"you have used up your daily free allocation of 10,000 neurons"}]}'
+
+    monkeypatch.setattr(artgen, "provider", lambda: "cloudflare")
+    monkeypatch.setattr(artgen, "secret", lambda name: "x")
+    monkeypatch.setattr(artgen, "_spent", False)
+    monkeypatch.setattr(requests, "post", lambda *a, **k: calls.append(1) or Spent())
+    with pytest.raises(RuntimeError, match="allowance"):
+        artgen.generate("a ship")
+    with pytest.raises(RuntimeError, match="allowance"):
+        artgen.generate("a ship")
+    assert len(calls) == 1  # no retries, and nothing more asked of it this run
