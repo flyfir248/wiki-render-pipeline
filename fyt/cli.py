@@ -60,6 +60,11 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("stats", help="show views for uploaded videos")
     sub.add_parser("comments", help="post the first comment on videos that have gone public")
     sub.add_parser("relabel", help="clear YouTube's AI-content label on the channel's recent videos")
+    pl = sub.add_parser("playlists", help="file the channel's videos into series playlists (long and Shorts)")
+    pl.add_argument("--max", type=int, default=40, help="most changes to make (50 quota units each)")
+    po = sub.add_parser("posts", help="draft this week's Community tab posts, when due")
+    po.add_argument("--out", default="posts.md")
+    po.add_argument("--now", action="store_true", help="draft them even if this week's are done")
 
     args = p.parse_args(argv)
     cfg = load_config(args.config)
@@ -176,6 +181,19 @@ def main(argv: list[str] | None = None) -> None:
 
         if youtube.authorised():
             print(f"posted {schedule.post_comments(cfg, datetime.now(timezone.utc))} comments")
+    elif args.cmd == "playlists":
+        from fyt import playlists
+
+        print(f"made {playlists.organise(cfg, args.max)} playlist changes")
+    elif args.cmd == "posts":
+        from datetime import datetime, timezone
+
+        from fyt import posts
+
+        if posts.write_drafts(cfg, datetime.now(timezone.utc), args.out, force=args.now):
+            print(f"wrote this week's Community post drafts to {args.out}")
+        else:
+            print("no Community post drafts due")
     elif args.cmd == "relabel":
         from fyt import youtube
 
