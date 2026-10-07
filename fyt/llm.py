@@ -497,6 +497,12 @@ class Outline(BaseModel):
     thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail (not the title).")
     thumbnail_kicker: str = Field(description="1-3 word label above the thumbnail text, e.g. the topic.")
     thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
+    thumbnail_scene: str = Field(
+        default="",
+        description="The thumbnail picture: the single most intriguing moment of the story as one image, in 10-25 "
+        "words, with one clear subject big in frame and a sense of drama or mystery, e.g. 'a giant wave of brown "
+        "molasses crashing through a 1919 Boston street'. No text, no real person's likeness.",
+    )
     chapters: list[ChapterPlan]
     sources: list[str] = Field(description="URLs or references backing the facts used.")
     comment_question: str = Field(
@@ -603,6 +609,7 @@ def write_long_script(
         thumbnail_text=outline.thumbnail_text,
         thumbnail_kicker=outline.thumbnail_kicker,
         thumbnail_query=outline.thumbnail_query,
+        thumbnail_scene=outline.thumbnail_scene,
         scenes=scenes,
         sources=outline.sources,
         chapters=chapters,

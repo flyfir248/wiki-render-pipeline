@@ -20,7 +20,7 @@ on:
       task:
         description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now"
         type: choice
-        options: [fill, short, long, news, relabel, stats, playlists, posts]
+        options: [fill, short, long, news, relabel, stats, playlists, posts, thumbnail]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -163,6 +163,9 @@ jobs:
         run: |
           if [ "$TASK" = fill ]; then
             python -m fyt fill
+          elif [ "$TASK" = thumbnail ]; then
+            # title: "picture | thumbnail words | kicker"; upload off renders a Short-sized one
+            python -m fyt --format "$([ "$UPLOAD" = false ] && echo short || echo long)" thumbnail "$TITLE"
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
           elif [ -n "$TITLE" ]; then
@@ -202,6 +205,7 @@ jobs:
             jobs/*/script.json
             jobs/*/research.md
             jobs/*/job.json
+            jobs/sample-thumbnail.png
           retention-days: 7
           if-no-files-found: ignore
 

@@ -179,6 +179,8 @@ class Config(BaseModel):
     sound_effects: bool = True  # whooshes, pops and booms timed to the animation (fyt/sfx.py)
     sfx_volume: float = 0.3  # relative to the narrator at 1.0
     stock_footage: bool = True  # needs PEXELS_API_KEY
+    # An AI illustration as the thumbnail (needs the same image provider as story_art).
+    thumbnail_art: bool = True
     # AI illustrations for story scenes in the flat house style (fyt/artgen.py); needs
     # CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN or TOGETHER_API_KEY, else emoji-style props.
     story_art: bool = True

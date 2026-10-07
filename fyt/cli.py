@@ -60,6 +60,9 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("stats", help="show views for uploaded videos")
     sub.add_parser("comments", help="post the first comment on videos that have gone public")
     sub.add_parser("relabel", help="clear YouTube's AI-content label on the channel's recent videos")
+    th = sub.add_parser("thumbnail", help="draw and render a sample illustrated thumbnail")
+    th.add_argument("spec", help="'picture | thumbnail words | kicker'")
+    th.add_argument("--out", default="jobs/sample-thumbnail.png")
     pl = sub.add_parser("playlists", help="file the channel's videos into series playlists (long and Shorts)")
     pl.add_argument("--max", type=int, default=40, help="most changes to make (50 quota units each)")
     po = sub.add_parser("posts", help="draft this week's Community tab posts, when due")
@@ -181,6 +184,31 @@ def main(argv: list[str] | None = None) -> None:
 
         if youtube.authorised():
             print(f"posted {schedule.post_comments(cfg, datetime.now(timezone.utc))} comments")
+    elif args.cmd == "thumbnail":
+        import base64
+        import io
+
+        from PIL import Image
+
+        from fyt import artgen, render
+        from fyt.models import Media, ThumbnailProps
+
+        scene, text, kicker = ([p.strip() for p in args.spec.split("|")] + ["", ""])[:3]
+        out = Path(args.out)
+        public = out.parent / "sample-public"
+        public.mkdir(parents=True, exist_ok=True)
+        src = artgen.thumbnail_art(scene, public)
+        props = ThumbnailProps(format=cfg.format, title=text, kicker=kicker.upper(), theme=cfg.theme.model_dump(),
+                               background=Media(kind="image", src=src), art=True)
+        (out.parent / "sample-thumbnail.json").write_text(props.model_dump_json())
+        render.render(out.parent / "sample-thumbnail.json", public, out, still=True)
+        # A small preview in the log, for checking without downloading the artifact.
+        buf = io.BytesIO()
+        img = Image.open(out).convert("RGB")
+        img.thumbnail((960, 960))
+        img.save(buf, "JPEG", quality=80)
+        print("PREVIEW-BASE64:" + base64.b64encode(buf.getvalue()).decode())
+        print(f"wrote {out}")
     elif args.cmd == "playlists":
         from fyt import playlists
 

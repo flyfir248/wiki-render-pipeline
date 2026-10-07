@@ -44,6 +44,10 @@ PLATE = (
     "ground and distant background for depth. The lower half is open ground where characters could stand, "
     "and there are no people or vehicles in the scene."
 )
+THUMB = (
+    "A bold, dramatic poster-like scene of {scene}. One clear subject, large and close in the frame, with strong "
+    "contrast between a bright subject and a darker background, and a sense of tension or mystery."
+)
 STEPS = 8  # the most Cloudflare allows for FLUX.1 schnell: noticeably sharper than 4, still well inside the free allowance
 MAX_IMAGES = 40  # per video: keeps a long video inside the free daily allowance
 
@@ -170,3 +174,12 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
             except Exception as e:
                 log(f"warning: no art for {thing!r}: {e}")
     return made
+
+
+def thumbnail_art(scene: str, public: Path) -> str:
+    """Draw the thumbnail picture in the house style. Returns its path inside `public`."""
+    name = f"art/thumb-{_key(scene)}.jpg"
+    (public / "art").mkdir(parents=True, exist_ok=True)
+    if not (public / name).exists():
+        generate(f"{THUMB.format(scene=scene.strip().rstrip('.'))} {STYLE}", seed=5).save(public / name, quality=92)
+    return name

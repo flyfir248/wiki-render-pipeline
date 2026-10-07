@@ -125,4 +125,5 @@ export type ThumbnailProps = {
   kicker: string;
   theme: Theme;
   background: Media | null;
+  art?: boolean; // the background is a square illustration drawn for the thumbnail
 };

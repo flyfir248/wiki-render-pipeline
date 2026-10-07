@@ -152,6 +152,12 @@ class Script(BaseModel):
     thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail (not the title).")
     thumbnail_kicker: str = Field(description="1-3 word label above the thumbnail text, e.g. the topic.")
     thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
+    thumbnail_scene: str = Field(
+        default="",
+        description="The thumbnail picture: the single most intriguing moment of the story as one image, in 10-25 "
+        "words, with one clear subject big in frame and a sense of drama or mystery, e.g. 'a giant wave of brown "
+        "molasses crashing through a 1919 Boston street'. No text, no real person's likeness.",
+    )
     scenes: list[ScriptScene]
     sources: list[str] = Field(description="URLs or references backing the facts used.")
     comment_question: str = Field(
@@ -246,3 +252,4 @@ class ThumbnailProps(BaseModel):
     kicker: str
     theme: dict
     background: Media | None
+    art: bool = False  # the background is an illustration drawn for the thumbnail (square)

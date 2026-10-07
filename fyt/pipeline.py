@@ -155,8 +155,15 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     video = render.render(job.file("props.json"), job.public, job.file("video.mp4"))
 
     log(job, "rendering thumbnail")
-    # The subject's own photo makes a better thumbnail than a stock one.
-    bg = next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)), None)
+    # An illustration of the story's most intriguing moment first; then the subject's own photo, which
+    # makes a better thumbnail than a stock one.
+    bg, art = None, False
+    if cfg.thumbnail_art and script.thumbnail_scene.strip() and artgen.provider():
+        try:
+            bg, art = Media(kind="image", src=artgen.thumbnail_art(script.thumbnail_scene, job.public)), True
+        except Exception as e:
+            log(job, f"warning: no thumbnail illustration: {e}")
+    bg = bg or next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)), None)
     if bg is None and cfg.stock_footage:
         try:
             bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used)
@@ -168,6 +175,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         kicker=script.thumbnail_kicker.upper(),
         theme=cfg.theme.model_dump(),
         background=bg,
+        art=art,
     )
     job.file("thumbnail.json").write_text(thumb.model_dump_json(indent=2))
     render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
