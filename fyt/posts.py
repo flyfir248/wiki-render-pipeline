@@ -23,12 +23,14 @@ Audience: {audience}
 Tone: {tone}
 
 Write three posts for this week:
-1. A poll asking which story the channel should cover next. Use the candidate stories given, each
-   rewritten as an intriguing option of at most 60 characters (no spoilers, no clickbait lies).
+1. A poll asking which story the channel should cover next, with exactly 4 options. Use the candidate
+   stories given (add stories that fit the channel if there are fewer than 4), each rewritten as an
+   intriguing option of at most 60 characters (no spoilers, no clickbait lies).
 2. A teaser for the week's long video: two or three short sentences that make people want to watch,
-   ending with when it goes live. If no long video is given, tease the channel's best recent video instead.
-3. One surprising fact taken from the recent videos, followed by a short question people answer in a
-   few words.
+   ending with the day it goes live (just the day, e.g. "Live Saturday."). If no long video is given,
+   tease the channel's best recent video instead, without a day.
+3. One surprising fact taken from the recent videos, then a question that asks for an opinion or a
+   guess about it, never one the fact already answers. E.g. "Would you have stayed in the city?"
 Only use facts from the material given. No hashtags, no "smash that like button"."""
 
 
@@ -61,7 +63,7 @@ def draft(cfg: Config, now: datetime) -> str:
     material = "Candidate stories for the poll:\n" + "\n".join(f"- {t}" for t in pending or ["(none queued: suggest four fitting the niche)"])
     if long_video:
         when = datetime.fromisoformat(long_video["publish_at"].replace("Z", "+00:00"))
-        material += f"\n\nThis week's long video: {long_video['title']}, live {when:%A at %H:%M} UTC.\n{long_video['description'][:600]}"
+        material += f"\n\nThis week's long video: {long_video['title']}, live {when:%A}.\n{long_video['description'][:600]}"
     material += "\n\nRecent videos:\n" + "\n".join(f"- {v['title']}: {v['description'][:300]}" for v in recent)
     guide = GUIDE.format(niche=cfg.channel.niche, audience=cfg.channel.audience, tone=cfg.channel.tone)
     d = llm.structured(cfg, guide, material, Drafts, max_tokens=2000)
