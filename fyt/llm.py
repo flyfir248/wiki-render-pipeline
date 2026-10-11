@@ -411,7 +411,7 @@ def write_script(
         words = SHORT_WORDS
     else:
         format_line = f"horizontal 16:9 video, about {cfg.target_minutes:g} minutes"
-        words = int(cfg.target_minutes * 150)
+        words = long_words(cfg)
     guide = (SCRIPT_GUIDE + (WIKI_GUIDE if from_wikipedia else "")).format(
         name=ch.name,
         niche=ch.niche,
@@ -476,6 +476,17 @@ def write_script(
 # then write it one chapter at a time, each from its own slice of the notes.
 
 WORDS_PER_CHAPTER = 220
+# The narrator's real pace in a long video, pauses and title cards included: 822 words ran 6:01
+# (Devil's Island) and 876 ran 6:07 (a news explainer), about 137-143 words a minute.
+LONG_WPM = 135
+MIDROLL_MARGIN_MINUTES = 0.5  # aim a little past the minimum so a brisk read still clears it
+
+
+def long_words(cfg: Config) -> int:
+    """Narration words a long video needs to run its target length, and at least the minimum
+    length for mid-roll ads (`long_min_minutes`), with a margin."""
+    minutes = max(cfg.target_minutes, cfg.long_min_minutes + MIDROLL_MARGIN_MINUTES if cfg.long_min_minutes else 0)
+    return int(minutes * LONG_WPM)
 
 LONG_WIKI_GUIDE = """
 This is a long video, so it can tell the whole story. Build it as a narrative around the
@@ -511,7 +522,7 @@ class ChapterScenes(BaseModel):
 
 
 def chapter_count(cfg: Config) -> int:
-    return max(3, min(8, round(cfg.target_minutes * 150 / WORDS_PER_CHAPTER)))
+    return max(3, min(8, round(long_words(cfg) / WORDS_PER_CHAPTER)))
 
 
 def split_notes(notes: str, parts: int, limit: int) -> list[str]:
@@ -524,6 +535,26 @@ def split_notes(notes: str, parts: int, limit: int) -> list[str]:
         chunks.append(notes[start:end].strip()[:limit] or notes[:limit])
         start = end
     return chunks
+
+
+def _extend_chapter(
+    cfg: Config, system: str, user: str, scenes: list[ScriptScene], missing: int, next_plan: ChapterPlan | None
+) -> list[ScriptScene]:
+    """More scenes for a chapter that came out short, continuing from its last line. [] if the call fails."""
+    lead = f' It still has to lead into the next chapter, "{next_plan.heading}".' if next_plan else ""
+    so_far = "\n".join(sc.narration for sc in scenes)
+    ask = (
+        f"{user}\n\nYou already wrote this chapter's opening:\n{so_far}\n\nIt is {missing} words too short. "
+        f"Return only the NEW scenes that continue it: about {missing} more words of narration, with new facts "
+        f"and detail from the notes, not repetition.{lead}"
+    )
+    try:
+        extra = _openai_structured(cfg, system, ask, ChapterScenes, max_tokens=3000).scenes
+    except Exception as e:  # the chapter as written still works, just shorter
+        print(f"could not lengthen a short chapter: {e}")
+        return []
+    print(f"added {sum(len(sc.narration.split()) for sc in extra)} words to a short chapter")
+    return extra
 
 
 def write_long_script(
@@ -548,7 +579,7 @@ def write_long_script(
         n = len(plans)
         chunks = split_notes(notes, n, limit)
 
-    words = int(cfg.target_minutes * 150 / n)
+    words = int(long_words(cfg) / n)
     plan_text = "\n".join(f"{i}. {c.heading}: {c.angle}" for i, c in enumerate(plans, 1))
     scenes: list[ScriptScene] = []
     chapters: list[Chapter] = []
@@ -586,6 +617,11 @@ def write_long_script(
                 print(f"request too large; retrying chapter {i} with {len(chunk)} characters of notes")
         if not part.scenes:
             continue
+        written = sum(len(sc.narration.split()) for sc in part.scenes)
+        if written < words * 0.85:
+            # Models write short; a chapter that falls well short would pull the video under its minimum.
+            more = _extend_chapter(cfg, system, user, part.scenes, words - written, plans[i] if i < n else None)
+            part = ChapterScenes(scenes=part.scenes + more)
         chapters.append(Chapter(title=plan.heading, scene=len(scenes)))
         for sc in part.scenes:
             if sc.image is not None:

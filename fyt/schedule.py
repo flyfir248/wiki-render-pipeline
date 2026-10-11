@@ -27,7 +27,7 @@ from fyt.store import Job, Topics, Uploads
 PACIFIC = ZoneInfo("America/Los_Angeles")
 LEAD_MINUTES = 30  # a slot this close is left alone: the upload might not finish in time
 # Rough time to make one video on the free 2-core runner, to avoid starting one the job can't finish.
-MAKE_MINUTES = {"short": 10, "long": 80}
+MAKE_MINUTES = {"short": 10, "long": 100}  # an 8.5-minute long video takes about 100
 KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json", "part2.json", "props.json", "localizations.json")
 
 
