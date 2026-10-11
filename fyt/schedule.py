@@ -28,7 +28,7 @@ PACIFIC = ZoneInfo("America/Los_Angeles")
 LEAD_MINUTES = 30  # a slot this close is left alone: the upload might not finish in time
 # Rough time to make one video on the free 2-core runner, to avoid starting one the job can't finish.
 MAKE_MINUTES = {"short": 10, "long": 80}
-KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json", "part2.json", "props.json")
+KEEP = ("video.mp4", "thumbnail.png", "captions.srt", "script.json", "job.json", "part2.json", "props.json", "localizations.json")
 
 
 def utcnow() -> datetime:
@@ -207,7 +207,9 @@ def sync(cfg: Config, now: datetime) -> int:
             filled[slot.key] = (v["id"], v["publish_at"])
             print(f"slot {slot.at:%a %d %b %H:%M} already has https://youtu.be/{v['id']}")
         added += 1
-    settle_posted(cfg, now, [v.get("title", "") for v in videos])
+    # A copy YouTube never processed doesn't count: the video is uploaded again under the same title.
+    broken = uploads.broken_ids()
+    settle_posted(cfg, now, [v.get("title", "") for v in videos if v["id"] not in broken])
     return added
 
 

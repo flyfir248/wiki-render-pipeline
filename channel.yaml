@@ -51,6 +51,8 @@ youtube:
   # permission (see "Caption tracks, playlists and stats" in the README). With an
   # upload-only token they're skipped. Captions are burned into the video either way.
   upload_captions: true
+  # Title and description translated into these languages too (one extra LLM call each per video).
+  localize: [es, pt, hi, fr, de]
 
 # Publish slots that `python -m fyt fill` (the workflow's runs) keeps filled ahead of time.
 schedule:

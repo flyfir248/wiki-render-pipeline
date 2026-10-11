@@ -58,6 +58,8 @@ def main(argv: list[str] | None = None) -> None:
     u.add_argument("--force", action="store_true", help="upload even if not approved")
     sub.add_parser("auth", help="authorise YouTube uploads (opens a browser)")
     sub.add_parser("stats", help="show views for uploaded videos")
+    w = sub.add_parser("watchdog", help="find uploads YouTube never processed and queue them to upload again")
+    w.add_argument("--out", default="watchdog.md", help="where to write the report when something is found")
     sub.add_parser("comments", help="post the first comment on videos that have gone public")
     sub.add_parser("relabel", help="clear YouTube's AI-content label on the channel's recent videos")
     pl = sub.add_parser("playlists", help="file the channel's videos into series playlists (long and Shorts)")
@@ -181,6 +183,10 @@ def main(argv: list[str] | None = None) -> None:
 
         if youtube.authorised():
             print(f"posted {schedule.post_comments(cfg, datetime.now(timezone.utc))} comments")
+    elif args.cmd == "watchdog":
+        from fyt import watchdog
+
+        print(f"{watchdog.run(cfg, args.out)} broken uploads found")
     elif args.cmd == "playlists":
         from fyt import playlists
 

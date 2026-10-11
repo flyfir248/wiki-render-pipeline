@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -80,6 +81,12 @@ class Uploads:
                 uploaded text not null
             )"""
         )
+        # Added later; older state.db files get the columns here.
+        have = {r[1] for r in self.db.execute("pragma table_info(uploads)")}
+        if "run" not in have:  # the Actions run (id-attempt) whose artifact holds the video file
+            self.db.execute("alter table uploads add column run text")
+        if "problem" not in have:  # set when YouTube failed to process the video (see fyt/watchdog.py)
+            self.db.execute("alter table uploads add column problem text")
         self.jobs = cfg.jobs_path
         # The scenes of each uploaded video (type, start, end), kept so watch-time curves can be
         # read scene by scene long after the job folder is gone.
@@ -107,9 +114,11 @@ class Uploads:
     def record(
         self, kind: str, job: str, youtube_id: str, publish_at: str | None, slot: str | None = None, at: str | None = None
     ) -> None:
+        run = os.environ.get("GITHUB_RUN_ID")
+        run = f"{run}-{os.environ.get('GITHUB_RUN_ATTEMPT', '1')}" if run else None
         self.db.execute(
-            "insert into uploads(slot, kind, job, youtube_id, publish_at, uploaded) values (?, ?, ?, ?, ?, ?)",
-            (slot, kind, job, youtube_id, publish_at, at or now()),
+            "insert into uploads(slot, kind, job, youtube_id, publish_at, uploaded, run) values (?, ?, ?, ?, ?, ?, ?)",
+            (slot, kind, job, youtube_id, publish_at, at or now(), run),
         )
         # A video kept for a later run waits in jobs/pending.
         found = [p for p in (self.jobs / job / "props.json", self.jobs / "pending" / job / "props.json") if p.exists()] if job else []
@@ -152,6 +161,24 @@ class Uploads:
         """slot -> (youtube_id, publish_at)"""
         rows = self.db.execute("select slot, youtube_id, publish_at from uploads where slot is not null")
         return {r[0]: (r[1], r[2]) for r in rows}
+
+    def recent(self, since: str) -> list[dict]:
+        """Uploads since this time (ISO) that have a video id and no problem recorded yet."""
+        rows = self.db.execute(
+            "select id, slot, kind, job, youtube_id, publish_at, uploaded, run from uploads"
+            " where youtube_id is not null and problem is null and uploaded >= ?",
+            (since,),
+        )
+        keys = ("id", "slot", "kind", "job", "youtube_id", "publish_at", "uploaded", "run")
+        return [dict(zip(keys, r)) for r in rows]
+
+    def mark_problem(self, youtube_id: str, problem: str) -> None:
+        """Record that YouTube failed this video, and free its publish slot so it can be filled again."""
+        self.db.execute("update uploads set problem=?, slot=null where youtube_id=?", (problem, youtube_id))
+        self.db.commit()
+
+    def broken_ids(self) -> set[str]:
+        return {r[0] for r in self.db.execute("select youtube_id from uploads where problem is not null")}
 
     def video_ids(self) -> list[str]:
         return [r[0] for r in self.db.execute("select youtube_id from uploads where youtube_id is not null")]

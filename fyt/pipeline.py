@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artgen, growth, illustrate, insights, llm, media, playlists, qa, render, sfx, tts, wiki, youtube
+from fyt import artgen, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -124,6 +124,11 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = script.model_copy(update={"description": script.description.rstrip() + "\n\n" + chapters})
         job.file("script.json").write_text(script.model_dump_json(indent=2))
     job.file("youtube.txt").write_text(youtube.upload_sheet(cfg, script))
+    if cfg.youtube.localize:
+        log(job, f"translating the title and description ({', '.join(cfg.youtube.localize)})")
+        translated = localize.translate(cfg, script, log=lambda m: log(job, m))
+        if translated:
+            job.file("localizations.json").write_text(json.dumps(translated, ensure_ascii=False, indent=2))
     music = media.pick_music(
         cfg, job.public, seconds=spans[-1][1] + 2 if spans else 60, seed=sum(map(ord, job.id)), mood=script.mood
     )
@@ -345,6 +350,7 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
         job.file("captions.srt"),
         publish_at=publish_at,
         on_uploaded=lambda vid: job.update(youtube_id=vid, publish_at=posted_at),
+        localizations=json.loads(job.file("localizations.json").read_text()) if job.file("localizations.json").exists() else None,
     )
     job.update(status="uploaded", youtube_id=video_id, publish_at=publish_at.isoformat() if publish_at else None)
     if script.comment_question.strip() and cfg.growth.first_comment:
@@ -355,7 +361,7 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
             playlists.file_upload(cfg, video_id, script.series)
         except Exception as e:  # the video is up; the playlist is a nice-to-have
             print(f"warning: not added to the {script.series!r} playlist: {e}")
-    if cfg.format == "long":
+    if cfg.format == "long" and not job.meta.get("reupload_of"):  # the first upload already queued its Shorts
         queue_cuts(cfg, script, video_id, news=wiki.is_news_topic(job.meta.get("topic", "")))
     if job.file("part2.json").exists():
         queue_part2(cfg, job, video_id)

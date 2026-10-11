@@ -85,6 +85,9 @@ class YouTubeConfig(BaseModel):
     # same minute every day. Also schedules the publish when publish_delay_hours is unset.
     publish_jitter_minutes: int = 0
     upload_captions: bool = True
+    # Titles and descriptions also in these languages (codes like es, pt, hi), so viewers and
+    # searches in those languages see them in their own language. The narration stays as is.
+    localize: list[str] = Field(default_factory=list)
 
 
 class LLMConfig(BaseModel):
