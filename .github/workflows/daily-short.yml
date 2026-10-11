@@ -39,6 +39,7 @@ concurrency:
 
 permissions:
   contents: read
+  actions: read # to fetch a video again from the run that made it
   issues: write # for the alert when the schedule runs low
 
 jobs:
@@ -77,6 +78,20 @@ jobs:
         env:
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
         run: python -m fyt comments
+
+      # Uploads YouTube never finished processing: their slots are freed and their files, fetched from
+      # the run that made them, go back in jobs/pending so this run uploads them again. Sent as an issue.
+      - name: Check recent uploads went through
+        if: env.TASK == 'fill'
+        continue-on-error: true
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m fyt watchdog --out watchdog.md
+          if [ -f watchdog.md ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "YouTube didn't process $(grep -c '^| \[' watchdog.md) upload(s)" --body-file watchdog.md
+          fi
 
       # Older videos are filed into the series playlists a few at a time, to spare the upload quota.
       - name: Organise playlists
@@ -202,6 +217,8 @@ jobs:
             jobs/*/script.json
             jobs/*/research.md
             jobs/*/job.json
+            jobs/*/localizations.json
+            jobs/*/props.json
           retention-days: 7
           if-no-files-found: ignore
 

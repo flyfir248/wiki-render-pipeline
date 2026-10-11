@@ -162,6 +162,28 @@ def publish_time(cfg: Config, now: datetime | None = None, rng: random.Random | 
     return (now or datetime.now(timezone.utc)) + delay
 
 
+def description_footer(cfg: Config, script: Script) -> str:
+    """Sources, series and #Shorts, added under the description (and under each translation of it)."""
+    footer = ""
+    if script.sources:
+        footer += "\n\nSources:\n" + "\n".join(f"- {s}" for s in script.sources)
+    if script.series:
+        footer += f"\n\nSeries: {script.series}"
+    if cfg.format == "short":
+        footer += "\n\n#Shorts"
+    return footer
+
+
+def localized(cfg: Config, script: Script, translations: dict[str, dict]) -> dict[str, dict]:
+    """The `localizations` part of a video: each translated title and description, with the same footer."""
+    footer = description_footer(cfg, script)
+    return {
+        lang: {"title": t["title"][:100], "description": (t["description"].strip() + footer)[:5000]}
+        for lang, t in translations.items()
+        if lang != cfg.channel.language
+    }
+
+
 def build_body(
     cfg: Config,
     script: Script,
@@ -169,13 +191,7 @@ def build_body(
     rng: random.Random | None = None,
     publish_at: datetime | None = None,
 ) -> dict:
-    description = script.description.strip()
-    if script.sources:
-        description += "\n\nSources:\n" + "\n".join(f"- {s}" for s in script.sources)
-    if script.series:
-        description += f"\n\nSeries: {script.series}"
-    if cfg.format == "short":
-        description += "\n\n#Shorts"
+    description = script.description.strip() + description_footer(cfg, script)
     status = {
         "privacyStatus": cfg.youtube.privacy,
         "selfDeclaredMadeForKids": cfg.youtube.made_for_kids,
@@ -217,8 +233,9 @@ def upload(
     srt: Path | None,
     publish_at: datetime | None = None,
     on_uploaded=None,
+    localizations: dict[str, dict] | None = None,
 ) -> str:
-    """Upload the video, then its thumbnail and caption track. Returns the video id.
+    """Upload the video, then its thumbnail, caption track and translated titles. Returns the video id.
     `on_uploaded(video_id)` runs as soon as the video exists on YouTube, so a caller can record it
     even if a later step fails: retrying the whole upload would post the same video twice."""
     from googleapiclient.errors import HttpError
@@ -270,6 +287,16 @@ def upload(
             print(f"warning: captions not uploaded ({e.status_code})")
         except Exception as e:
             print(f"warning: captions not uploaded ({e})")
+    if localizations and can_manage():
+        # Sent after the upload (50 quota units) so a translation YouTube rejects can't fail the upload.
+        # The insert set snippet.defaultLanguage, which YouTube needs before it takes localizations.
+        try:
+            yt.videos().update(
+                part="localizations", body={"id": video_id, "localizations": localized(cfg, script, localizations)}
+            ).execute()
+            print(f"titles and descriptions added in {', '.join(sorted(localizations))}")
+        except Exception as e:
+            print(f"warning: translated titles not added ({e})")
     return video_id
 
 
