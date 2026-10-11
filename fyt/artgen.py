@@ -36,7 +36,7 @@ LOOK = (
 )
 SAFE = (
     "Any people are stylised figures with simplified features, never a real person's likeness. "
-    "There is no text, lettering, sign, logo or watermark anywhere in the image."
+    "There is no text, lettering, sign, logo or watermark anywhere in the image. Nothing gory: no blood or wounds."
 )
 STYLE = f"Drawn as a {LOOK} for an animated documentary. {SAFE}"
 SCENE_STYLE = (

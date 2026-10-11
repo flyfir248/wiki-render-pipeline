@@ -7,8 +7,9 @@ drawn in the house style (fyt.artgen) from its description plus the cast entries
 character looks much the same from scene to scene. A free vision model then checks each picture
 against what it was meant to show, and a picture that fails is drawn once more or left out.
 
-The scene's own graphic (the number, the statement) plays over the first sentence; each later
-sentence cuts to its illustration on the word it starts with.
+A long sentence is told in two pictures, split where a clause ends. The scene's own graphic (the
+number, the quote) plays over its first sentence; each later one cuts to its illustration on the word
+it starts with. Scenes that are only words on screen are illustrated from their first sentence.
 """
 
 from __future__ import annotations
@@ -30,8 +31,10 @@ from fyt.models import RenderBeat, Script, Word
 BEAT_TYPES = ("title", "statement", "stat", "quote", "broll", "story")
 # Scenes that are only words on screen: their first sentence is illustrated too (the captions carry
 # the words). The others keep their own graphic, or the video's opening photo, for the first sentence.
-FROM_FIRST = ("statement",)
-BUDGET = {"short": 6, "long": 20}  # illustrations per video, inside the free daily image allowance
+FROM_FIRST = ("statement", "title")
+BUDGET = {"short": 10, "long": 24}  # illustrations per video, well inside the free daily image allowance
+LONG_SENTENCE = 14  # words: a sentence this long is told in two pictures, split where a clause ends
+MIN_PART = 5  # words in each half of a split sentence
 
 
 class CastMember(BaseModel):
@@ -57,7 +60,7 @@ class Board(BaseModel):
     beats: list[Beat] = Field(default_factory=list)
 
 
-GUIDE = """You are the storyboard artist of an illustrated documentary channel. Every sentence listed below
+GUIDE = """You are the storyboard artist of an illustrated documentary channel. Every line listed below
 gets its own illustration, shown full screen while the narrator says it. Plan them.
 
 - Show what the sentence says is happening, as one concrete moment: a place, the people or things in
@@ -68,23 +71,47 @@ gets its own illustration, shown full screen while the narrator says it. Plan th
   and era only; never name or depict a real person's face or likeness.
 - Pictures must be drawable: no text, signs, numbers, maps, charts or diagrams in them.
 - Nothing gory: show tragedy through its aftermath, scale and atmosphere, never injuries or bodies.
-- Return exactly one beat per listed sentence, with its scene and sentence numbers."""
+- Return exactly one beat per listed line, with its scene and sentence numbers."""
 
 SENTENCE = re.compile(r"(?<=[.!?])[\"')\]]*\s+(?=[A-Z0-9\"'(])")
+
+
+CLAUSE = re.compile(r"(?<=[,;:])\s+|\s+(?=--|\u2014)")
 
 
 def sentences(text: str) -> list[str]:
     return [s.strip() for s in SENTENCE.split(text.strip()) if s.strip()]
 
 
+def _halves(sentence: str) -> list[str]:
+    """A long sentence split once, at the clause break nearest its middle, if both halves are long enough."""
+    words = len(sentence.split())
+    if words < LONG_SENTENCE:
+        return [sentence]
+    best = None
+    for m in CLAUSE.finditer(sentence):
+        left = len(sentence[: m.start()].split())
+        if left >= MIN_PART and words - left >= MIN_PART and (best is None or abs(left - words / 2) < abs(best[0] - words / 2)):
+            best = (left, m)
+    if not best:
+        return [sentence]
+    m = best[1]
+    return [sentence[: m.start()].strip(), sentence[m.end() :].strip()]
+
+
+def parts(text: str) -> list[str]:
+    """The narration in picture-sized pieces: sentences, with long ones halved at a clause break."""
+    return [half for sentence in sentences(text) for half in _halves(sentence)]
+
+
 def wanted(script: Script) -> list[tuple[int, int, str]]:
-    """(scene index, sentence index, sentence) for every sentence that gets an illustration, 0-based."""
+    """(scene index, part index, text) for every part of the narration that gets an illustration, 0-based."""
     out = []
     for i, scene in enumerate(script.scenes):
         if scene.type not in BEAT_TYPES:
             continue
         first = 0 if scene.type in FROM_FIRST and i > 0 else 1
-        out += [(i, k, s) for k, s in enumerate(sentences(scene.narration)) if k >= first]
+        out += [(i, k, s) for k, s in enumerate(parts(scene.narration)) if k >= first]
     return out
 
 
@@ -97,9 +124,8 @@ def plan(cfg: Config, script: Script, todo: list[tuple[int, int, str]]) -> Board
 
 
 def sentence_starts(narration: str, words: list[Word], duration: float) -> list[float]:
-    """When each sentence starts, in seconds from the start of the scene's audio."""
-    parts = sentences(narration)
-    counts = [len(p.split()) for p in parts]
+    """When each part (fyt.storyboard.parts) starts, in seconds from the start of the scene's audio."""
+    counts = [len(p.split()) for p in parts(narration)]
     total = sum(counts) or 1
     starts, seen = [], 0
     for n in counts:
@@ -125,10 +151,14 @@ class Verdict(BaseModel):
 
 
 REVIEW = """You check illustrations for a documentary video before it is published. Look at the picture and
-compare it with what it was meant to show. Fail it if the main subject or action is missing or wrong,
-or if it has any readable text or garbled lettering, distorted or extra limbs, melted faces, gore, or
-a real person's recognisable face. Small stylistic differences are fine.
-Reply with a single JSON object: {"matches": true or false, "problems": "a few words, or empty"}."""
+compare it with what it was meant to show. Fail it only for one of these: the main subject is missing
+or clearly wrong; readable text or garbled lettering; badly distorted bodies, extra limbs or melted
+faces; blood, wounds or dead bodies; a real person's recognisable face. It is an illustration, so
+stylised, exaggerated or dramatic drawing is fine, and so are extra details that fit the scene.
+Reply with a single JSON object: {"matches": true or false, "problems": "at most 12 words, or empty"}."""
+
+GORE = re.compile(r"blood|gore|wound|injur|dead|corpse|bod(y|ies)|lying on the ground", re.I)
+CALM = "Shown through its aftermath and scale only: no blood, no injured or fallen people."
 
 
 VISION_HINTS = ("scout", "maverick", "vision", "llava")  # Groq model ids that can read images
@@ -278,7 +308,8 @@ def make(
                 break
             log(f"scene {i + 1}, sentence {k + 1} redrawn: {verdict.problems or 'did not match'}")
             redrawn += attempt == 0
-            ask = f"{ask} Avoid: {verdict.problems}." if verdict.problems else ask
+            # Naming the fault in the prompt tends to draw it, so the second try only adds a safer framing.
+            ask = f"{ask} {CALM}" if GORE.search(verdict.problems or "") and CALM not in ask else ask
         if not ok:
             dropped += 1
             continue

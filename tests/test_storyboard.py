@@ -27,6 +27,16 @@ def test_sentences_split_on_full_stops_but_not_decimals():
     assert storyboard.sentences("It held 8.7 million litres. Then it burst! Why?") == ["It held 8.7 million litres.", "Then it burst!", "Why?"]
 
 
+def test_long_sentences_are_told_in_two_pictures():
+    long = "On January 15, 1919, a giant tank of molasses burst in Boston's North End, sending a wave down the street."
+    assert storyboard.parts(long + " It killed 21.") == [
+        "On January 15, 1919, a giant tank of molasses burst in Boston's North End,",
+        "sending a wave down the street.",
+        "It killed 21.",
+    ]
+    assert storyboard.parts("A short one, with a comma.") == ["A short one, with a comma."]
+
+
 def test_later_sentences_of_picture_scenes_are_illustrated():
     todo = storyboard.wanted(_script())
     # The opening and the number keep their own graphic for the first sentence; a statement is only
@@ -54,7 +64,7 @@ def test_make_draws_checks_and_times_each_beat(monkeypatch, tmp_path):
         ],
     )
     monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo: board)
-    verdicts = iter([storyboard.Verdict(matches=False, problems="garbled sign"), storyboard.Verdict(matches=True), None, None])
+    verdicts = iter([storyboard.Verdict(matches=False, problems="blood on the street"), storyboard.Verdict(matches=True), None, None])
     monkeypatch.setattr(storyboard, "review", lambda cfg, path, meant: next(verdicts))
     words = [[Word(word=w, start=0.3 * n, end=0.3 * n + 0.2) for n, w in enumerate(sc.narration.split())] for sc in s.scenes]
     spans = [(0.0, 4.0), (4.1, 6.0), (6.1, 9.0), (9.1, 12.0)]
@@ -62,7 +72,7 @@ def test_make_draws_checks_and_times_each_beat(monkeypatch, tmp_path):
     assert [b.src for b in beats[0]] == ["art/beat-1-2.jpg"] and beats[0][0].at == 1.8  # "It" is word 7
     assert [b.at for b in beats[3]] == [0.0, 0.9]  # the first opens the scene; the next from the scene's start
     assert "a riveted steel tank" in prompts[0] and artgen.SCENE_STYLE in prompts[0]
-    assert "Avoid: garbled sign." in prompts[1]  # the failed picture is drawn again
+    assert storyboard.CALM in prompts[1] and "blood on the street" not in prompts[1]  # drawn again, more gently
     assert len(prompts) == 4
     props = build_props(Config(format="short"), s, spans, words, {}, None, None, None, None, beats)
     assert props.scenes[0].beats[0].src == "art/beat-1-2.jpg" and props.scenes[1].beats is None
