@@ -22,10 +22,13 @@ import requests
 from pydantic import BaseModel, Field
 
 from fyt import artgen, llm
-from fyt.config import Config
+from fyt.config import Config, secret
 from fyt.models import RenderBeat, Script, Word
 
 BEAT_TYPES = ("title", "statement", "stat", "quote", "broll")  # scenes whose picture can change with the story
+# Scenes that are only words on screen: their first sentence is illustrated too (the captions carry
+# the words). The others keep their own graphic, or the video's opening photo, for the first sentence.
+FROM_FIRST = ("statement",)
 BUDGET = {"short": 6, "long": 20}  # illustrations per video, inside the free daily image allowance
 
 
@@ -39,7 +42,7 @@ class CastMember(BaseModel):
 
 class Beat(BaseModel):
     scene: int = Field(description="Scene number, as listed.")
-    sentence: int = Field(description="Sentence number within that scene, as listed (2 or more).")
+    sentence: int = Field(description="Sentence number within that scene, as listed.")
     picture: str = Field(
         description="The illustration shown while this sentence is spoken: one concrete moment, where it is, "
         "who or what is in it and what they are doing, max 40 words. No text or signs in the picture."
@@ -78,9 +81,8 @@ def wanted(script: Script) -> list[tuple[int, int, str]]:
     for i, scene in enumerate(script.scenes):
         if scene.type not in BEAT_TYPES:
             continue
-        for k, s in enumerate(sentences(scene.narration)):
-            if k > 0:
-                out.append((i, k, s))
+        first = 0 if scene.type in FROM_FIRST and i > 0 else 1
+        out += [(i, k, s) for k, s in enumerate(sentences(scene.narration)) if k >= first]
     return out
 
 
@@ -127,18 +129,50 @@ a real person's recognisable face. Small stylistic differences are fine.
 Reply with a single JSON object: {"matches": true or false, "problems": "a few words, or empty"}."""
 
 
-def review(cfg: Config, path: Path, meant: str) -> Verdict | None:
-    """A free vision model's verdict on one picture, or None when no check could be made."""
-    model = cfg.review_model
-    key = os.environ.get(cfg.llm.api_key_env)
-    if not model or not key or cfg.llm.provider != "openai":
-        return None
-    data = base64.b64encode(path.read_bytes()).decode()
+VISION_HINTS = ("scout", "maverick", "vision", "llava")  # Groq model ids that can read images
+CLOUDFLARE_VISION = "@cf/meta/llama-3.2-11b-vision-instruct"
+_found: dict[str, str | None] = {}
+
+
+def _groq_vision_model(cfg: Config, key: str) -> str | None:
+    """The configured review model, or with "auto" the first image-reading model Groq lists."""
+    if cfg.review_model != "auto":
+        return cfg.review_model
+    if "model" not in _found:
+        try:
+            r = requests.get(f"{cfg.llm.base_url.rstrip('/')}/models", headers={"Authorization": f"Bearer {key}"}, timeout=30)
+            r.raise_for_status()
+            ids = sorted(m["id"] for m in r.json().get("data", []))
+            _found["model"] = next((m for hint in VISION_HINTS for m in ids if hint in m.lower()), None)
+        except Exception as e:
+            print(f"warning: could not list the provider's models: {str(e)[:200]}")
+            _found["model"] = None
+    return _found["model"]
+
+
+def _verdict(text: str) -> Verdict:
+    m = re.search(r"\{.*\}", text or "", re.S)
+    return Verdict.model_validate_json(m.group(0) if m else text)
+
+
+def _small_jpeg(path: Path) -> bytes:
+    from io import BytesIO
+
+    from PIL import Image
+
+    img = Image.open(path).convert("RGB")
+    img.thumbnail((640, 640))
+    out = BytesIO()
+    img.save(out, "JPEG", quality=85)
+    return out.getvalue()
+
+
+def _ask_groq(cfg: Config, key: str, model: str, image: bytes, meant: str) -> Verdict:
+    data = base64.b64encode(image).decode()
     body = {
         "model": model,
         "temperature": 0.1,
         "max_tokens": 200,
-        "response_format": {"type": "json_object"},
         "messages": [
             {"role": "system", "content": REVIEW},
             {
@@ -150,19 +184,46 @@ def review(cfg: Config, path: Path, meant: str) -> Verdict | None:
             },
         ],
     }
+    r = requests.post(
+        f"{cfg.llm.base_url.rstrip('/')}/chat/completions", headers={"Authorization": f"Bearer {key}"}, json=body, timeout=90
+    )
+    r.raise_for_status()
+    return _verdict(r.json()["choices"][0]["message"]["content"])
+
+
+def _ask_cloudflare(image: bytes, meant: str) -> Verdict:
+    account, token = secret("CLOUDFLARE_ACCOUNT_ID"), secret("CLOUDFLARE_API_TOKEN")
+    url = f"https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/{CLOUDFLARE_VISION}"
+    headers = {"Authorization": f"Bearer {token}"}
+    body = {
+        "messages": [{"role": "system", "content": REVIEW}, {"role": "user", "content": f"Meant to show: {meant}"}],
+        "image": list(image),
+        "max_tokens": 200,
+    }
+    r = requests.post(url, headers=headers, json=body, timeout=90)
+    if not r.ok and "agree" in r.text.lower():  # Meta's licence is accepted once per account by sending "agree"
+        requests.post(url, headers=headers, json={"prompt": "agree"}, timeout=60)
+        r = requests.post(url, headers=headers, json=body, timeout=90)
+    r.raise_for_status()
+    return _verdict(r.json()["result"]["response"])
+
+
+def review(cfg: Config, path: Path, meant: str) -> Verdict | None:
+    """A free vision model's verdict on one picture, or None when no check could be made: a Groq model
+    that reads images when the channel writes with Groq, else Cloudflare's, with the image key."""
+    if not cfg.review_model:
+        return None
     try:
-        r = requests.post(
-            f"{cfg.llm.base_url.rstrip('/')}/chat/completions",
-            headers={"Authorization": f"Bearer {key}"},
-            json=body,
-            timeout=90,
-        )
-        r.raise_for_status()
-        content = (r.json()["choices"][0]["message"]["content"] or "").strip().strip("`").removeprefix("json").strip()
-        return Verdict.model_validate_json(content)
+        image = _small_jpeg(path)
+        key = os.environ.get(cfg.llm.api_key_env)
+        model = _groq_vision_model(cfg, key) if key and cfg.llm.provider == "openai" else None
+        if model:
+            return _ask_groq(cfg, key, model, image, meant)
+        if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN"):
+            return _ask_cloudflare(image, meant)
     except Exception as e:  # the check is a safeguard; without it the picture is used as drawn
         print(f"warning: could not check {path.name}: {str(e)[:200]}")
-        return None
+    return None
 
 
 # --- the whole pass --------------------------------------------------------------------
@@ -211,7 +272,8 @@ def make(
             continue
         start = 0.0 if i == 0 else spans[i][0]
         at = spans[i][0] + sentence_starts(script.scenes[i].narration, clip_words[i], spans[i][1] - spans[i][0])[k]
-        beats.setdefault(i, []).append(RenderBeat(at=round(max(0.3, at - start), 3), src=name))
+        # The first sentence's picture opens the scene; a later one cuts in on its first word.
+        beats.setdefault(i, []).append(RenderBeat(at=0.0 if k == 0 else round(max(0.3, at - start), 3), src=name))
     log(
         f"storyboard: {sum(len(v) for v in beats.values())} illustrated sentences, {len(cast)} in the cast"
         + (f"; {checked} checked, {redrawn} redrawn, {dropped} left out" if checked or dropped else "")

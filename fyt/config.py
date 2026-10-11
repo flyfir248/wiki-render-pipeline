@@ -194,9 +194,10 @@ class Config(BaseModel):
     # An illustration for every later sentence of titles, statements, numbers and quotes, planned by
     # a storyboard pass with a cast sheet (fyt/storyboard.py). Uses the same image keys as story_art.
     storyboard: bool = True
-    # Free vision model that checks each storyboard picture before it is used (OpenAI-compatible
-    # provider only, e.g. Groq). Empty to skip the check.
-    review_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
+    # Free vision model that checks each storyboard picture before it is used. "auto": the first
+    # image-reading model the OpenAI-compatible provider (Groq) lists, else Cloudflare's with the image
+    # keys. A model id to pin one; empty to skip the check.
+    review_model: str = "auto"
     captions: bool = True
     visualizer: bool = True
     theme: Theme = Field(default_factory=Theme)

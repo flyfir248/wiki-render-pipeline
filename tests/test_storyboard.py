@@ -29,8 +29,9 @@ def test_sentences_split_on_full_stops_but_not_decimals():
 
 def test_later_sentences_of_picture_scenes_are_illustrated():
     todo = storyboard.wanted(_script())
-    # The first sentence keeps the scene's own graphic; maps draw their own picture.
-    assert [(i, k) for i, k, _ in todo] == [(0, 1), (3, 1)]
+    # The opening and the number keep their own graphic for the first sentence; a statement is only
+    # words, so its first sentence gets a picture too; maps draw their own picture.
+    assert [(i, k) for i, k, _ in todo] == [(0, 1), (3, 0), (3, 1)]
 
 
 def test_sentence_starts_follow_the_voice():
@@ -48,20 +49,21 @@ def test_make_draws_checks_and_times_each_beat(monkeypatch, tmp_path):
         cast=[storyboard.CastMember(name="the tank", look="a riveted steel tank, rust streaks")],
         beats=[
             storyboard.Beat(scene=1, sentence=2, picture="Brown wave sweeping a cobbled street", cast=["the tank"]),
+            storyboard.Beat(scene=4, sentence=1, picture="Crowds staring at a burst tank"),
             storyboard.Beat(scene=4, sentence=2, picture="A woman sniffing the air on a hot street"),
         ],
     )
     monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo: board)
-    verdicts = iter([storyboard.Verdict(matches=False, problems="garbled sign"), storyboard.Verdict(matches=True), None])
+    verdicts = iter([storyboard.Verdict(matches=False, problems="garbled sign"), storyboard.Verdict(matches=True), None, None])
     monkeypatch.setattr(storyboard, "review", lambda cfg, path, meant: next(verdicts))
     words = [[Word(word=w, start=0.3 * n, end=0.3 * n + 0.2) for n, w in enumerate(sc.narration.split())] for sc in s.scenes]
     spans = [(0.0, 4.0), (4.1, 6.0), (6.1, 9.0), (9.1, 12.0)]
     beats = storyboard.make(Config(format="short"), s, spans, words, tmp_path, log=lambda m: None)
     assert [b.src for b in beats[0]] == ["art/beat-1-2.jpg"] and beats[0][0].at == 1.8  # "It" is word 7
-    assert beats[3][0].at == 0.9  # from the scene's own start
+    assert [b.at for b in beats[3]] == [0.0, 0.9]  # the first opens the scene; the next from the scene's start
     assert "a riveted steel tank" in prompts[0] and artgen.SCENE_STYLE in prompts[0]
     assert "Avoid: garbled sign." in prompts[1]  # the failed picture is drawn again
-    assert len(prompts) == 3
+    assert len(prompts) == 4
     props = build_props(Config(format="short"), s, spans, words, {}, None, None, None, None, beats)
     assert props.scenes[0].beats[0].src == "art/beat-1-2.jpg" and props.scenes[1].beats is None
 

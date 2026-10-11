@@ -141,11 +141,11 @@ export const ShotReel: React.FC<{ media: Media; shots?: Media[] | null; camera: 
 // One storyboard illustration, full screen for its sentence. The art is square: in a Short it is shown
 // sharp across the middle over a blurred, darkened copy of itself rather than blown up; in 16:9 it
 // fills the frame. It drifts slowly, alternating direction from beat to beat, and dissolves in.
-const ArtShot: React.FC<{ src: string; k: number; format: Format }> = ({ src, k, format }) => {
+const ArtShot: React.FC<{ src: string; k: number; format: Format; instant?: boolean }> = ({ src, k, format, instant }) => {
   const frame = useCurrentFrame();
   const { width, height, durationInFrames } = useVideoConfig();
   const t = interpolate(frame, [0, durationInFrames], [0, 1], { extrapolateRight: "clamp" });
-  const enter = interpolate(frame, [0, 7], [0, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
+  const enter = instant ? 1 : interpolate(frame, [0, 7], [0, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
   const dir = k % 2 ? -1 : 1;
   const move = `scale(${1.04 + 0.07 * t}) translateX(${dir * (t - 0.5) * 2.4}%)`;
   const img = { width: "100%", height: "100%", objectFit: "cover" as const };
@@ -172,23 +172,24 @@ const ArtShot: React.FC<{ src: string; k: number; format: Format }> = ({ src, k,
   );
 };
 
-// A scene with storyboard beats: its own graphic plays over the first sentence, then each later
-// sentence cuts to its illustration on the word it starts with.
+// A scene with storyboard beats: its own graphic plays until the first beat, then each sentence cuts
+// to its illustration on the word it starts with. A beat at 0 opens the scene with the scene's own
+// transition, so the scene's graphic is not shown at all.
 export const BeatCuts: React.FC<{ beats: Beat[]; format: Format; children: React.ReactNode }> = ({ beats, format, children }) => {
   const { fps, durationInFrames } = useVideoConfig();
   const marks = beats
     .map((b) => ({ ...b, from: Math.round(b.at * fps) }))
-    .filter((b) => b.from > 0 && b.from < durationInFrames - 8)
+    .filter((b) => b.from >= 0 && b.from < durationInFrames - 8)
     .sort((a, b) => a.from - b.from);
   if (!marks.length) return <>{children}</>;
   return (
     <AbsoluteFill>
-      <Sequence durationInFrames={marks[0].from}>{children}</Sequence>
+      {marks[0].from > 0 && <Sequence durationInFrames={marks[0].from}>{children}</Sequence>}
       {marks.map((b, k) => {
         const to = k + 1 < marks.length ? marks[k + 1].from : durationInFrames;
         return (
           <Sequence key={k} from={b.from} durationInFrames={Math.max(1, to - b.from)}>
-            <ArtShot src={b.src} k={k} format={format} />
+            <ArtShot src={b.src} k={k} format={format} instant={b.from === 0} />
           </Sequence>
         );
       })}
