@@ -260,7 +260,7 @@ Prefer primary and reputable sources. Flag anything uncertain.""",
 
 
 SHORT_WORDS = 105  # about 35 seconds at the Shorts reading speed
-SHORT_MAX_WORDS = 120  # about 40 seconds: a longer Short gets tightened before it is voiced
+SHORT_MAX_WORDS = 110  # about 40 seconds with the closing hold (a 44s test Short had ~120): longer gets tightened
 
 SHORT_STRUCTURE = """Structure of a Short (30-40 seconds, 5-7 scenes; viewers decide in the first second whether to swipe):
 1. Hook (scene 1, max 12 words): the strangest concrete fact, stated flatly. The viewer must know
