@@ -168,6 +168,25 @@ CURRENCY = {"$": "dollars", "£": "pounds", "€": "euros", "¥": "yen"}
 BIG_WORDS = {"thousand", "million", "billion", "trillion"}
 ROMAN = re.compile(r"^(?=[MDCLXVI])M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$")
 ROMAN_VALUES = {"M": 1000, "D": 500, "C": 100, "L": 50, "X": 10, "V": 5, "I": 1}
+# A numeral glued to a possessive or a dash: Napoleon III's, Napoleon III—who, a Napoleon III-era coin.
+ROMAN_TOKEN_RE = re.compile(r"^([MDCLXVI]+)(['’]s|[—–-]\S*)?$")
+# After these words a numeral is a plain number: World War II, Chapter IV, Super Bowl LVIII.
+ROMAN_CARDINAL_CUES = {
+    "war", "chapter", "part", "act", "scene", "volume", "book", "phase", "stage", "apollo", "gemini", "type",
+    "super", "bowl", "episode", "mark", "mk", "vatican", "article", "section", "class", "level", "grade", "series",
+    "model", "version", "round", "title", "appendix", "figure", "plate", "unit", "game",
+}  # fmt: skip
+# Rulers often numbered "I", "V" or "X", where a lone capital letter could otherwise be the pronoun or a letter.
+REGNAL_NAMES = {
+    "napoleon", "louis", "henry", "charles", "elizabeth", "george", "edward", "william", "james", "richard",
+    "john", "mary", "anne", "victoria", "peter", "catherine", "frederick", "alexander", "nicholas", "philip",
+    "ferdinand", "leopold", "francis", "franz", "joseph", "wilhelm", "otto", "rudolf", "maximilian", "paul",
+    "pius", "leo", "gregory", "innocent", "benedict", "clement", "urban", "boniface", "ivan", "constantine",
+    "justinian", "ptolemy", "ramesses", "rameses", "thutmose", "amenhotep", "darius", "xerxes", "cyrus",
+    "selim", "suleiman", "mehmed", "murad", "harald", "olaf", "gustav", "christian", "frederik", "haakon",
+    "carol", "michael", "manuel", "pedro", "juan", "alfonso", "felipe", "carlos", "isabella", "umberto",
+    "emmanuel", "nero", "malcolm", "david", "robert", "stephen", "matilda", "victor", "sancho", "baldwin",
+}  # fmt: skip
 
 SYMBOLS = {"&": "and", "+": "plus", "~": "about", "=": "equals", "×": "times", "—": ",", "–": ",", "-": ",", "--": ","}
 LEAD = "\"'“‘([{¿¡"
@@ -248,6 +267,29 @@ def _code(letters: str, digits: str) -> str:
     return " ".join(letters) + " " + said
 
 
+def _roman_after_name(core: str, prev: str, prev_raw: str) -> str | None:
+    """Henry VIII -> "Henry the eighth", Napoleon III's -> "Napoleon the third's", World War II -> "World War two".
+    Only right after a capitalised word in the same sentence, so "DC", "MIX" or "CD" aren't read as numbers."""
+    m = ROMAN_TOKEN_RE.match(core)
+    name = prev.rsplit("-", 1)[-1]  # Louis-Napoleon III
+    if not m or not ROMAN.match(m[1]) or not name[:1].isupper() or not prev.replace("-", "").isalpha():
+        return None
+    if prev_raw.rstrip(LEAD)[-1:] in TRAIL:
+        return None  # "... met Napoleon. I think": the numeral would start a new clause
+    numeral, rest = m[1], m[2] or ""
+    n = _roman(numeral)
+    if name.lower() in ROMAN_CARDINAL_CUES:
+        said = cardinal(n)
+    elif re.fullmatch(r"X{0,3}(IX|IV|V?I{0,3})", numeral) and (len(numeral) > 1 or name.lower() in REGNAL_NAMES):
+        # Rulers stop well short of L (50), so DC, MD or XL after a name stay letters.
+        said = f"the {ordinal(n)}"
+    else:
+        return None
+    if rest[:1] in ("—", "–"):
+        rest = ", " + rest[1:]
+    return said + rest
+
+
 def _core(core: str, prev: str, nxt: str, prev_raw: str, noun_next: bool = False) -> str | None:
     """What to say for one token stripped of surrounding punctuation, or None to keep it.
     `noun_next`: a plain lowercase word follows, so a measurement describes it (a 15 ft wave)."""
@@ -307,12 +349,8 @@ def _core(core: str, prev: str, nxt: str, prev_raw: str, noun_next: bool = False
         return ERAS[low]
     if core in WORD_ACRONYMS:
         return WORD_ACRONYMS[core]
-    if ROMAN.match(core) and len(core) > 1 and prev[:1].isupper() and prev.isalpha():
-        # Henry VIII -> "Henry the eighth"; World War II -> "World War two".
-        n = _roman(core)
-        if prev.lower() in {"war", "chapter", "part", "act", "volume", "phase", "apollo", "type", "super"}:
-            return cardinal(n)
-        return f"the {ordinal(n)}"
+    if (said := _roman_after_name(core, prev, prev_raw)) is not None:
+        return said
     if m := TIME_RE.match(core):
         h, mins = int(m[1]), int(m[2])
         return cardinal(h) + ("" if mins == 0 else f" oh {ONES[mins]}" if mins < 10 else f" {cardinal(mins)}")
