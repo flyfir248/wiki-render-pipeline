@@ -141,11 +141,13 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         cfg, job.public, seconds=spans[-1][1] + 2 if spans else 60, seed=sum(map(ord, job.id)), mood=script.mood
     )
 
+    drawn = 0
     if any(s.type == "story" for s in script.scenes):
         if cfg.story_art and artgen.provider():
             try:
                 log(job, f"drawing story scenes ({artgen.provider()})")
-                log(job, f"{artgen.illustrate(cfg, script, job.public, log=lambda m: log(job, m))} illustrations drawn")
+                drawn = artgen.illustrate(cfg, script, job.public, log=lambda m: log(job, m))
+                log(job, f"{drawn} illustrations drawn")
             except Exception as e:  # emoji-style props below are the fallback
                 log(job, f"warning: story art failed: {e}")
         try:
@@ -158,7 +160,9 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     if cfg.storyboard and artgen.provider():
         try:
             log(job, "storyboarding: an illustration for each sentence")
-            beats = storyboard.make(cfg, script, spans, [c.words for c in clips], job.public, log=lambda m: log(job, m))
+            beats = storyboard.make(
+                cfg, script, spans, [c.words for c in clips], job.public, log=lambda m: log(job, m), drawn=drawn
+            )
         except Exception as e:  # the scenes still have their own graphics and photos
             log(job, f"warning: storyboard failed: {e}")
     effects = None

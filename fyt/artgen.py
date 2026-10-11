@@ -52,8 +52,16 @@ PLATE = (
     "ground and distant background for depth. The lower half is open ground where characters could stand, "
     "and there are no people or vehicles in the scene."
 )
-STEPS = 8  # the most Cloudflare allows for FLUX.1 schnell: noticeably sharper than 4, still well inside the free allowance
+STEPS = 8  # the most Cloudflare allows for FLUX.1 schnell: noticeably sharper than 4
 MAX_IMAGES = 40  # per video: keeps a long video inside the free daily allowance
+# Cloudflare's free allowance is 10,000 neurons a day, about 30 pictures at 8 steps. Two Shorts a
+# day plus a few test renders fit when a Short draws at most this many (story scenes and storyboard).
+ART_PER_SHORT = 12
+_spent = False  # the free daily allowance ran out during this run
+
+
+def out_of_allowance() -> bool:
+    return _spent
 
 
 def provider() -> str | None:
@@ -69,9 +77,13 @@ class Rejected(requests.RequestException):
 
 
 def _check(r: requests.Response) -> None:
+    global _spent
     if r.ok:
         return
     detail = r.text[:300].replace("\n", " ")
+    if "daily free allocation" in detail:  # resets at midnight UTC; asking again today only wastes time
+        _spent = True
+        raise Rejected(f"{r.status_code}: the free daily image allowance is used up")
     if 400 <= r.status_code < 500 and r.status_code != 429:
         raise Rejected(f"{r.status_code}: {detail}")
     raise requests.HTTPError(f"{r.status_code}: {detail}")
@@ -80,6 +92,8 @@ def _check(r: requests.Response) -> None:
 def generate(prompt: str, vertical: bool = False, seed: int = 7) -> Image.Image:
     """One image from the configured provider."""
     which = provider()
+    if which == "cloudflare" and _spent:
+        raise RuntimeError("image generation failed: the free daily image allowance is used up")
     for attempt in range(3):
         try:
             if which == "cloudflare":
@@ -153,8 +167,9 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
     vertical = cfg.format == "short"
     (public / "art").mkdir(parents=True, exist_ok=True)
     made = 0
+    limit = ART_PER_SHORT - 4 if vertical else MAX_IMAGES  # a Short keeps a few pictures for its storyboard
     for i, scene in enumerate(script.scenes):
-        if scene.type != "story" or made >= MAX_IMAGES:
+        if scene.type != "story" or made >= limit:
             continue
         place = scene.backdrop or (scene.setting or "open sky")
         name = f"art/plate-{_key(place, str(vertical))}.jpg"
@@ -166,7 +181,7 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
         except Exception as e:
             log(f"warning: no background art for scene {i + 1}: {e}")
         for actor in scene.actors or []:
-            if made >= MAX_IMAGES:
+            if made >= limit:
                 break
             thing = actor.look or actor.thing
             name = f"art/prop-{_key(thing)}.png"

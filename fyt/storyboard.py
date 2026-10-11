@@ -32,7 +32,7 @@ BEAT_TYPES = ("title", "statement", "stat", "quote", "broll", "story")
 # Scenes that are only words on screen: their first sentence is illustrated too (the captions carry
 # the words). The others keep their own graphic, or the video's opening photo, for the first sentence.
 FROM_FIRST = ("statement", "title")
-BUDGET = {"short": 10, "long": 24}  # illustrations per video, well inside the free daily image allowance
+BUDGET = {"short": artgen.ART_PER_SHORT, "long": 24}  # pictures per video, redraws and story scenes included
 LONG_SENTENCE = 14  # words: a sentence this long is told in two pictures, split where a clause ends
 MIN_PART = 5  # words in each half of a split sentence
 
@@ -278,26 +278,31 @@ def make(
     clip_words: list[list[Word]],
     public: Path,
     log=print,
+    drawn: int = 0,
 ) -> dict[int, list[RenderBeat]]:
-    """Plan, draw and check the illustrations; returns the beats per scene for the renderer."""
-    todo = wanted(script)[: BUDGET[cfg.format]]
-    if not todo or not artgen.provider():
+    """Plan, draw and check the illustrations; returns the beats per scene for the renderer.
+    `drawn` is how many pictures the video's story scenes already used from its budget."""
+    budget = BUDGET[cfg.format] - drawn
+    todo = wanted(script)[: max(0, budget)]
+    if not todo or not artgen.provider() or artgen.out_of_allowance():
         return {}
     board = plan(cfg, script, todo)
     cast = {c.name: c.look for c in board.cast}
     by_key = {(b.scene - 1, b.sentence - 1): b for b in board.beats}
     (public / "art").mkdir(parents=True, exist_ok=True)
     beats: dict[int, list[RenderBeat]] = {}
-    drawn = checked = redrawn = dropped = 0
+    drawn_here = checked = redrawn = dropped = 0
     for i, k, text in todo:
+        if drawn_here >= budget or artgen.out_of_allowance():
+            break
         beat = by_key.get((i, k)) or Beat(scene=i + 1, sentence=k + 1, picture=text)
         name = f"art/beat-{i + 1}-{k + 1}.jpg"
         ask = prompt(beat, cast)
         ok = False
-        for attempt in range(2):
+        for attempt in range(2 if drawn_here + 1 < budget else 1):
             try:
                 artgen.generate(ask, cfg.format == "short", seed=31 + 7 * i + k + attempt).save(public / name, quality=90)
-                drawn += 1
+                drawn_here += 1
             except Exception as e:
                 log(f"warning: no illustration for scene {i + 1}, sentence {k + 1}: {e}")
                 break

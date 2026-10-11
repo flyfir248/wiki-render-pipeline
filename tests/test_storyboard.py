@@ -92,3 +92,17 @@ def test_story_scenes_move_on_after_their_first_sentence():
 def test_verdict_reads_text_or_parsed_json():
     assert storyboard._verdict('Sure: {"matches": false, "problems": "extra arm"}').problems == "extra arm"
     assert storyboard._verdict({"matches": True, "problems": ""}).matches is True
+
+
+def test_story_scene_pictures_count_against_the_budget_and_an_empty_allowance_stops_drawing(monkeypatch, tmp_path):
+    s = _script()
+    monkeypatch.setattr(artgen, "provider", lambda: "cloudflare")
+    monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo: storyboard.Board())
+    monkeypatch.setattr(storyboard, "review", lambda cfg, path, meant: None)
+    calls = []
+    monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=7: calls.append(p) or Image.new("RGB", (8, 8)))
+    spans = [(0.0, 4.0), (4.1, 6.0), (6.1, 9.0), (9.1, 12.0)]
+    beats = storyboard.make(Config(format="short"), s, spans, [[]] * 4, tmp_path, log=lambda m: None, drawn=artgen.ART_PER_SHORT - 1)
+    assert len(calls) == 1 and sum(len(v) for v in beats.values()) == 1
+    monkeypatch.setattr(artgen, "_spent", True)
+    assert storyboard.make(Config(format="short"), s, spans, [[]] * 4, tmp_path, log=lambda m: None) == {}
