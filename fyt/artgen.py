@@ -1,4 +1,4 @@
-"""AI illustrations for the 2D story scenes, all in one flat house style.
+"""AI illustrations in the channel's house style: story scene plates and props, and storyboard pictures.
 
 Each story scene gets a background plate (the place, empty) and a cut-out for each prop (drawn
 alone on white, then the white is removed), so the renderer can still move, tilt and layer them.
@@ -27,13 +27,21 @@ from PIL import Image, ImageDraw, ImageFilter
 from fyt.config import Config, secret
 from fyt.models import Script
 
-# FLUX follows plain descriptive sentences better than lists of tags.
-STYLE = (
-    "Drawn as a polished flat vector illustration for an animated science and history explainer: clean "
-    "geometric shapes with crisp edges, smooth soft gradients, gentle rim light and a fine grain texture, "
-    "rich but harmonious colours built on deep navy, teal, warm mustard yellow, coral and cream, with "
-    "accurate period details. Any people are simple stylised figures with no facial features. "
-    "There is no text, lettering, logo or watermark anywhere in the image."
+# The channel's house style: an illustrated documentary look, shared by the storyboard pictures
+# (fyt.storyboard) and the story scenes' plates and props. FLUX follows plain descriptive sentences
+# better than lists of tags.
+LOOK = (
+    "painterly editorial illustration with confident ink linework and gouache texture on warm paper grain, "
+    "a limited palette of deep navy, warm amber, cream and muted brick red, accurate period details"
+)
+SAFE = (
+    "Any people are stylised figures with simplified features, never a real person's likeness. "
+    "There is no text, lettering, sign, logo or watermark anywhere in the image."
+)
+STYLE = f"Drawn as a {LOOK} for an animated documentary. {SAFE}"
+SCENE_STYLE = (
+    f"A full-frame {LOOK}, cinematic lighting with strong shadows, composed like a film still with the main "
+    f"subject large in the centre. {SAFE}"
 )
 PROP = (
     "A single {thing}, shown whole and centred in a three-quarter view with a clear, readable silhouette, "

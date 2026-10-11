@@ -10,7 +10,7 @@ import {
 import type { Format, Scene, Theme } from "../types";
 import { unit } from "../theme";
 
-import { ShotReel, cameraOf } from "./camera";
+import { BeatCuts, ShotReel, cameraOf } from "./camera";
 import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
 import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
@@ -514,7 +514,10 @@ export const shownType = (raw: Scene): Scene["type"] =>
     ? "statement"
     : raw.type;
 
-export const SceneView: React.FC<SceneProps> = (props) => {
+// Scenes whose picture can change with the story (fyt/storyboard.py BEAT_TYPES).
+const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll"];
+
+const SceneBody: React.FC<SceneProps> = (props) => {
   const type = shownType(props.scene);
   const Component = registry[type] ?? StatementScene;
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
@@ -531,4 +534,16 @@ export const SceneView: React.FC<SceneProps> = (props) => {
     );
   }
   return <Component {...props} scene={scene} />;
+};
+
+export const SceneView: React.FC<SceneProps> = (props) => {
+  const beats = props.scene.beats;
+  if (beats?.length && BEAT_TYPES.includes(props.scene.type)) {
+    return (
+      <BeatCuts beats={beats} format={props.format}>
+        <SceneBody {...props} />
+      </BeatCuts>
+    );
+  }
+  return <SceneBody {...props} />;
 };

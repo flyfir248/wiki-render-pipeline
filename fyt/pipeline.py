@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artgen, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, tts, wiki, youtube
+from fyt import artgen, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -154,13 +154,20 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
                 log(job, f"{missing} story props had no matching illustration and are left out")
         except Exception as e:  # without illustrations, story scenes fall back to text
             log(job, f"warning: no story illustrations: {e}")
+    beats = {}
+    if cfg.storyboard and artgen.provider():
+        try:
+            log(job, "storyboarding: an illustration for each sentence")
+            beats = storyboard.make(cfg, script, spans, [c.words for c in clips], job.public, log=lambda m: log(job, m))
+        except Exception as e:  # the scenes still have their own graphics and photos
+            log(job, f"warning: storyboard failed: {e}")
     effects = None
     if cfg.sound_effects:
         try:
             effects = sfx.write_all(job.public)
         except Exception as e:  # a video without sound effects is still a video
             log(job, f"warning: no sound effects: {e}")
-    props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music, effects, shots)
+    props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music, effects, shots, beats)
     job.file("props.json").write_text(props.model_dump_json(indent=2))
     job.file("captions.srt").write_text(to_srt(props.captions))
 

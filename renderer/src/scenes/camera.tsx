@@ -1,7 +1,7 @@
 // Camera moves over photos and clips, and the transitions scenes enter with.
 import React from "react";
 import { AbsoluteFill, Easing, Img, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import type { Camera, Format, Media, Scene, Transition } from "../types";
+import type { Beat, Camera, Format, Media, Scene, Transition } from "../types";
 import { pick } from "./shared";
 
 const CAMERAS: Camera[] = ["push_in", "parallax", "pan_left", "pull_out", "pan_right"];
@@ -131,6 +131,64 @@ export const ShotReel: React.FC<{ media: Media; shots?: Media[] | null; camera: 
               origin={repeat ? CROPS[(k + repeat) % CROPS.length] : "50% 50%"}
               punch={k > 0}
             />
+          </Sequence>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};
+
+// One storyboard illustration, full screen for its sentence. The art is square: in a Short it is shown
+// sharp across the middle over a blurred, darkened copy of itself rather than blown up; in 16:9 it
+// fills the frame. It drifts slowly, alternating direction from beat to beat, and dissolves in.
+const ArtShot: React.FC<{ src: string; k: number; format: Format }> = ({ src, k, format }) => {
+  const frame = useCurrentFrame();
+  const { width, height, durationInFrames } = useVideoConfig();
+  const t = interpolate(frame, [0, durationInFrames], [0, 1], { extrapolateRight: "clamp" });
+  const enter = interpolate(frame, [0, 7], [0, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
+  const dir = k % 2 ? -1 : 1;
+  const move = `scale(${1.04 + 0.07 * t}) translateX(${dir * (t - 0.5) * 2.4}%)`;
+  const img = { width: "100%", height: "100%", objectFit: "cover" as const };
+  const vignette = "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%)";
+  if (width >= height || format === "long") {
+    return (
+      <AbsoluteFill style={{ overflow: "hidden", opacity: enter }}>
+        <Img src={staticFile(src)} style={{ ...img, transform: move }} />
+        <AbsoluteFill style={{ background: vignette }} />
+      </AbsoluteFill>
+    );
+  }
+  const side = width;
+  const top = (height - side) / 2 - height * 0.04;
+  const fade = "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)";
+  return (
+    <AbsoluteFill style={{ overflow: "hidden", opacity: enter }}>
+      <Img src={staticFile(src)} style={{ ...img, filter: "blur(30px) brightness(0.5) saturate(1.1)", transform: "scale(1.2)" }} />
+      <div style={{ position: "absolute", left: 0, top, width: side, height: side, overflow: "hidden", WebkitMaskImage: fade, maskImage: fade }}>
+        <Img src={staticFile(src)} style={{ ...img, transform: move }} />
+      </div>
+      <AbsoluteFill style={{ background: vignette }} />
+    </AbsoluteFill>
+  );
+};
+
+// A scene with storyboard beats: its own graphic plays over the first sentence, then each later
+// sentence cuts to its illustration on the word it starts with.
+export const BeatCuts: React.FC<{ beats: Beat[]; format: Format; children: React.ReactNode }> = ({ beats, format, children }) => {
+  const { fps, durationInFrames } = useVideoConfig();
+  const marks = beats
+    .map((b) => ({ ...b, from: Math.round(b.at * fps) }))
+    .filter((b) => b.from > 0 && b.from < durationInFrames - 8)
+    .sort((a, b) => a.from - b.from);
+  if (!marks.length) return <>{children}</>;
+  return (
+    <AbsoluteFill>
+      <Sequence durationInFrames={marks[0].from}>{children}</Sequence>
+      {marks.map((b, k) => {
+        const to = k + 1 < marks.length ? marks[k + 1].from : durationInFrames;
+        return (
+          <Sequence key={k} from={b.from} durationInFrames={Math.max(1, to - b.from)}>
+            <ArtShot src={b.src} k={k} format={format} />
           </Sequence>
         );
       })}

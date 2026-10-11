@@ -72,6 +72,7 @@ export type Scene = {
   author?: string | null;
   media?: Media | null;
   shots?: Media[] | null; // more photos to cut to after `media`
+  beats?: Beat[] | null; // an illustration per later sentence
   places?: Place[] | null; // map scenes
   route?: boolean | null; // map scenes: draw a route through the places in order
   vehicle?: Vehicle | null; // map scenes: what travels the route; the camera follows it over a tilted map
@@ -92,6 +93,9 @@ export type Scene = {
   camera?: Camera | null; // picked per scene when not set
   transition?: Transition | null; // picked per scene when not set
 };
+
+// An illustration that takes over the scene when the sentence it shows begins (fyt/storyboard.py).
+export type Beat = { at: number; src: string }; // seconds from the scene's start
 
 export type Word = { word: string; start: number; end: number };
 
