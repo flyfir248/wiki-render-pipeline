@@ -168,6 +168,9 @@ class Config(BaseModel):
     channel: ChannelInfo = Field(default_factory=ChannelInfo)
     format: Literal["long", "short"] = "long"
     target_minutes: float = 6.0  # ignored for shorts (always < 60s)
+    # Long videos are written to run at least this long. YouTube shows mid-roll ads only in
+    # videos of 8 minutes or more. 0 for no minimum.
+    long_min_minutes: float = 8.0
     model: str = "claude-opus-5"
     llm: LLMConfig = Field(default_factory=LLMConfig)
     # wikipedia: videos are written from niche Wikipedia articles (see `wikipedia`).

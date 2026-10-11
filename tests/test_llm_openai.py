@@ -105,7 +105,7 @@ def test_split_notes_covers_the_article_in_order():
 
 def test_long_script_is_written_chapter_by_chapter(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test")
-    cfg = Config(format="long", target_minutes=4, llm=LLMConfig(provider="openai"))
+    cfg = Config(format="long", target_minutes=4, long_min_minutes=0, llm=LLMConfig(provider="openai"))
     n = llm.chapter_count(cfg)
     outline = {k: v for k, v in SCRIPT.items() if k != "scenes"}
     outline["chapters"] = [{"heading": f"Part {i}", "angle": "why"} for i in range(1, n + 1)]
@@ -116,8 +116,10 @@ def test_long_script_is_written_chapter_by_chapter(monkeypatch):
     prompts = []
 
     def post(url, headers, json, timeout):
-        prompts.append(json["messages"][1]["content"])
         assert json["max_tokens"] <= 3000  # each request fits Groq's free per-minute limit
+        if "words too short" in json["messages"][1]["content"]:
+            return reply('{"scenes": []}')  # the one-line chapters get a request to lengthen them
+        prompts.append(json["messages"][1]["content"])
         return answers.pop(0)
 
     monkeypatch.setattr(llm.requests, "post", post)
@@ -168,3 +170,34 @@ def test_short_scripts_are_built_around_one_message(cfg, monkeypatch):
 
 def test_long_scripts_keep_the_subscribe_close():
     assert "inviting viewers to subscribe" in llm.LONG_STRUCTURE and "Short" not in llm.LONG_STRUCTURE
+
+
+def test_long_videos_aim_past_the_mid_roll_minimum():
+    assert llm.long_words(Config(format="long", target_minutes=6)) == int(8.5 * llm.LONG_WPM)
+    assert llm.long_words(Config(format="long", target_minutes=10)) == 10 * llm.LONG_WPM
+    assert llm.long_words(Config(format="long", target_minutes=6, long_min_minutes=0)) == 6 * llm.LONG_WPM
+
+
+def test_a_short_chapter_is_lengthened(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test")
+    cfg = Config(format="long", target_minutes=3, long_min_minutes=0, llm=LLMConfig(provider="openai"))
+    n = llm.chapter_count(cfg)
+    words = int(llm.long_words(cfg) / n)
+    outline = {k: v for k, v in SCRIPT.items() if k != "scenes"}
+    outline["chapters"] = [{"heading": f"Part {i}", "angle": "why"} for i in range(1, n + 1)]
+    full = " ".join(["word"] * words)
+    answers = [reply(json.dumps(outline)), reply(json.dumps({"scenes": [{"narration": "Too short.", "type": "statement"}]}))]
+    answers += [reply(json.dumps({"scenes": [{"narration": "More words here.", "type": "statement"}]}))]
+    answers += [reply(json.dumps({"scenes": [{"narration": full, "type": "statement"}]})) for _ in range(n - 1)]
+    asks = []
+
+    def post(url, headers, json, timeout):
+        asks.append(json["messages"][1]["content"])
+        return answers.pop(0)
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    script = llm.write_script(cfg, "Mary", "notes", from_wikipedia=True)
+    assert [s.narration for s in script.scenes[:2]] == ["Too short.", "More words here."]
+    assert "Too short." in asks[2] and 'lead into the next chapter, "Part 2"' in asks[2]
+    assert script.chapters[1].scene == 2  # the next chapter starts after the added scene
+    assert len(asks) == n + 2

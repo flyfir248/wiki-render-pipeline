@@ -109,6 +109,10 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     clips_dir.mkdir(exist_ok=True)
     clips = [tts.synthesize(cfg, s.narration, clips_dir / f"{i:03}.wav", provider) for i, s in enumerate(script.scenes)]
     spans = tts.join_clips(clips, cfg.voice.gap(cfg.format), job.public / "voice.wav")
+    if cfg.format == "long" and cfg.long_min_minutes and spans and spans[-1][1] < cfg.long_min_minutes * 60:
+        minutes = spans[-1][1] / 60
+        print(f"::warning::{job.id} narration runs {minutes:.1f} min, under the {cfg.long_min_minutes:g} min for mid-roll ads")
+    job.update(narration_seconds=round(spans[-1][1], 1) if spans else 0)
     voice_src = None if provider == "silent" else "voice.wav"
 
     log(job, "fetching visuals")
