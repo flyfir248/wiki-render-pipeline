@@ -34,6 +34,28 @@ def test_speakable(written, spoken):
     assert speakable(written) == spoken
 
 
+@pytest.mark.parametrize(
+    "written, spoken",
+    [
+        ("Napoleon III ruled France.", "Napoleon the third ruled France."),
+        ("Napoleon III's coup, then Napoleon I.", "Napoleon the third's coup, then Napoleon the first."),
+        ("Louis-Napoleon III—the nephew.", "Louis-Napoleon the third, the nephew."),
+        ("Henry VIII, Louis XVIII and Pope Pius XII.", "Henry the eighth, Louis the eighteenth and Pope Pius the twelfth."),
+        ("World War II, Apollo XI and Super Bowl LVIII.", "World War two, Apollo eleven and Super Bowl fifty-eight."),
+        # Not numerals: the pronoun, a new sentence, and capitals that only look Roman.
+        ("They beat Napoleon. I think so, I said.", "They beat Napoleon. I think so, I said."),
+        ("The MIX in Washington DC, on CD.", "The M I X in Washington D C, on C D."),
+    ],
+)
+def test_roman_numerals(written, spoken):
+    assert speakable(written) == spoken
+
+
+def test_captions_keep_the_numeral():
+    [pairs] = spoken_sentences("Napoleon III's empire fell.")
+    assert pairs[1] == ("III's", "the third's")
+
+
 def test_years_and_ordinals():
     assert [year(y) for y in (1905, 1900, 2000, 2008, 2024)] == [
         "nineteen oh five",
