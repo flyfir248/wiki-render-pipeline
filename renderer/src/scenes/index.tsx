@@ -515,7 +515,7 @@ export const shownType = (raw: Scene): Scene["type"] =>
     : raw.type;
 
 // Scenes whose picture can change with the story (fyt/storyboard.py BEAT_TYPES).
-const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll"];
+const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll", "story"];
 
 const SceneBody: React.FC<SceneProps> = (props) => {
   const type = shownType(props.scene);

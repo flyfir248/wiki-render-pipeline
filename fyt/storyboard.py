@@ -25,7 +25,9 @@ from fyt import artgen, llm
 from fyt.config import Config, secret
 from fyt.models import RenderBeat, Script, Word
 
-BEAT_TYPES = ("title", "statement", "stat", "quote", "broll")  # scenes whose picture can change with the story
+# Scenes whose picture can change with the story. A story scene's first sentence keeps its own
+# animated illustration; its later sentences move on to new moments.
+BEAT_TYPES = ("title", "statement", "stat", "quote", "broll", "story")
 # Scenes that are only words on screen: their first sentence is illustrated too (the captions carry
 # the words). The others keep their own graphic, or the video's opening photo, for the first sentence.
 FROM_FIRST = ("statement",)
@@ -150,7 +152,9 @@ def _groq_vision_model(cfg: Config, key: str) -> str | None:
     return _found["model"]
 
 
-def _verdict(text: str) -> Verdict:
+def _verdict(text: str | dict) -> Verdict:
+    if isinstance(text, dict):  # Cloudflare hands back a reply that is JSON already parsed
+        return Verdict.model_validate(text)
     m = re.search(r"\{.*\}", text or "", re.S)
     return Verdict.model_validate_json(m.group(0) if m else text)
 
@@ -208,6 +212,12 @@ def _ask_cloudflare(image: bytes, meant: str) -> Verdict:
     return _verdict(r.json()["result"]["response"])
 
 
+def _say_once(message: str) -> None:
+    if _found.get("said") != message:
+        _found["said"] = message
+        print(message)
+
+
 def review(cfg: Config, path: Path, meant: str) -> Verdict | None:
     """A free vision model's verdict on one picture, or None when no check could be made: a Groq model
     that reads images when the channel writes with Groq, else Cloudflare's, with the image key."""
@@ -218,8 +228,10 @@ def review(cfg: Config, path: Path, meant: str) -> Verdict | None:
         key = os.environ.get(cfg.llm.api_key_env)
         model = _groq_vision_model(cfg, key) if key and cfg.llm.provider == "openai" else None
         if model:
+            _say_once(f"pictures checked by {model}")
             return _ask_groq(cfg, key, model, image, meant)
         if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN"):
+            _say_once(f"pictures checked by {CLOUDFLARE_VISION}")
             return _ask_cloudflare(image, meant)
     except Exception as e:  # the check is a safeguard; without it the picture is used as drawn
         print(f"warning: could not check {path.name}: {str(e)[:200]}")
@@ -275,7 +287,8 @@ def make(
         # The first sentence's picture opens the scene; a later one cuts in on its first word.
         beats.setdefault(i, []).append(RenderBeat(at=0.0 if k == 0 else round(max(0.3, at - start), 3), src=name))
     log(
-        f"storyboard: {sum(len(v) for v in beats.values())} illustrated sentences, {len(cast)} in the cast"
+        f"storyboard: {sum(len(v) for v in beats.values())} illustrated sentences of {len(todo)} planned, "
+        f"{len(cast)} in the cast"
         + (f"; {checked} checked, {redrawn} redrawn, {dropped} left out" if checked or dropped else "")
     )
     return beats

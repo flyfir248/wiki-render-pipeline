@@ -71,3 +71,14 @@ def test_make_draws_checks_and_times_each_beat(monkeypatch, tmp_path):
 def test_no_image_provider_means_no_storyboard(monkeypatch, tmp_path):
     monkeypatch.setattr(artgen, "provider", lambda: None)
     assert storyboard.make(Config(format="short"), _script(), [(0, 1)] * 4, [[]] * 4, tmp_path) == {}
+
+
+def test_story_scenes_move_on_after_their_first_sentence():
+    s = _script()
+    s.scenes[2].type = "story"
+    assert (2, 1) in [(i, k) for i, k, _ in storyboard.wanted(s)] and (2, 0) not in [(i, k) for i, k, _ in storyboard.wanted(s)]
+
+
+def test_verdict_reads_text_or_parsed_json():
+    assert storyboard._verdict('Sure: {"matches": false, "problems": "extra arm"}').problems == "extra arm"
+    assert storyboard._verdict({"matches": True, "problems": ""}).matches is True
