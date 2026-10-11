@@ -113,9 +113,9 @@ const HookScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
                 key={i}
                 style={{
                   display: "inline-block",
-                  marginRight: "0.22em",
+                  margin: "0 0.14em",
                   color: i % 3 === 1 ? theme.accent : theme.text,
-                  transform: `scale(${interpolate(pop, [0, 1], [1.3, 1])})`,
+                  transform: `scale(${interpolate(pop, [0, 1], [1.12, 1])})`,
                 }}
               >
                 {w}
