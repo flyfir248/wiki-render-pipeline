@@ -36,6 +36,7 @@ def make_video(
 def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False) -> None:
     images: list[wiki.WikiImage] = []
     article = None
+    written = script is None
     if script is None:
         notes = ""
         if wiki.is_wiki_topic(topic):
@@ -92,6 +93,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             script = growth.polish(cfg, script, performance_summary(cfg), loop=not two_part and not topic.startswith(CUT))
         except Exception as e:  # the unpolished script is still fine
             log(job, f"warning: polish failed: {e}")
+    if written:
+        script = keep_short(cfg, job, script)
     if two_part:
         script = script.model_copy(update={"title": f"{script.title[:88]} (Part 1)"})
         job.update(two_part=True)
@@ -118,6 +121,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     log(job, "fetching visuals")
     subject = article.title if article else (script.thumbnail_kicker or "")
     scene_media, credits, used = scene_visuals(cfg, job, script, images, topic, subject)
+    shots = extra_shots(cfg, job, script, images, spans, scene_media, credits, used, subject)
     if credits:
         script = script.model_copy(
             update={"description": script.description.rstrip() + "\n\nImages from Wikimedia Commons:\n" + "\n".join(credits)}
@@ -156,7 +160,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             effects = sfx.write_all(job.public)
         except Exception as e:  # a video without sound effects is still a video
             log(job, f"warning: no sound effects: {e}")
-    props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music, effects)
+    props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music, effects, shots)
     job.file("props.json").write_text(props.model_dump_json(indent=2))
     job.file("captions.srt").write_text(to_srt(props.captions))
 
@@ -197,14 +201,14 @@ def _short_enough(
     script = llm.write_script(
         cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note, news=news, lessons=lessons
     )
-    limit = llm.SHORT_WORDS * 1.25 if cfg.format == "short" else None
+    limit = llm.SHORT_MAX_WORDS if cfg.format == "short" else None
     if limit and narration_words(script) > limit:
         log(job, f"script is {narration_words(script)} words; asking for a shorter one")
         feedback = (
             f"Your previous draft had {narration_words(script)} words of narration. "
             f"This is a Short: keep the total narration under {llm.SHORT_WORDS} words."
         )
-        script = llm.write_script(
+        retry = llm.write_script(
             cfg,
             subject,
             notes,
@@ -214,7 +218,23 @@ def _short_enough(
             news=news,
             lessons=lessons,
         )
+        if narration_words(retry) < narration_words(script):
+            script = retry
     return script
+
+
+def keep_short(cfg: Config, job: Job, script: Script) -> Script:
+    """A Short over about 40 seconds loses viewers before its payoff: tighten its narration once."""
+    words = narration_words(script)
+    if cfg.format != "short" or words <= llm.SHORT_MAX_WORDS:
+        return script
+    log(job, f"script is {words} words; tightening it to about {llm.SHORT_WORDS}")
+    try:
+        tight = llm.tighten(cfg, script)
+    except Exception as e:  # a long Short is still a Short
+        log(job, f"warning: could not tighten the script: {e}")
+        return script
+    return tight if narration_words(tight) < words else script
 
 
 def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:
@@ -320,6 +340,84 @@ def scene_visuals(
     log(job, f"visuals: {sum(kinds)} Wikipedia/Commons images, {len(kinds) - sum(kinds)} stock, "
         f"{len(script.scenes) - len(scene_media)} scenes on plain background")
     return scene_media, credits, used
+
+
+MAX_EXTRA_SHOTS = 2  # per scene; the renderer re-frames the photos it has for any further cuts
+
+
+def extra_shots(
+    cfg: Config,
+    job: Job,
+    script: Script,
+    images: list["wiki.WikiImage"],
+    spans: list[tuple[float, float]],
+    scene_media: dict[int, Media],
+    credits: list[str],
+    used: set[str],
+    subject: str = "",
+) -> dict[int, list[Media]]:
+    """More photos for a Short's longer scenes, so the picture changes every `shot_seconds`: spare
+    article images first, then Wikimedia Commons, then stock photos. Adds their credits."""
+    every = cfg.growth.shot_seconds
+    if cfg.format != "short" or not every or not spans:
+        return {}
+    (job.public / "media").mkdir(parents=True, exist_ok=True)
+    taken = {m.src for m in scene_media.values()}
+    spare = [(k, im) for k, im in enumerate(images, 1) if not any(src.startswith(f"media/wiki{k}.") for src in taken)]
+    seen = {c.split(" (")[0] for c in credits}
+    shots: dict[int, list[Media]] = {}
+    commons_cache: dict[str, list["wiki.WikiImage"]] = {}
+
+    def commons(query: str) -> list["wiki.WikiImage"]:
+        if query not in commons_cache:
+            try:
+                commons_cache[query] = wiki.search_commons(query)
+            except Exception as e:  # Commons is a nice-to-have
+                log(job, f"warning: Commons search failed for {query!r}: {e}")
+                commons_cache[query] = []
+        return [im for im in commons_cache[query] if im.title.removeprefix("File:") not in seen]
+
+    def download(im: "wiki.WikiImage", rel: str) -> Media | None:
+        seen.add(im.title.removeprefix("File:"))  # tried once, whatever happens
+        try:
+            wiki.download_image(im, job.public / rel)
+        except Exception as e:
+            log(job, f"warning: could not download {im.title}: {e}")
+            return None
+        credits.append(im.credit)
+        return Media(src=rel, kind="image")
+
+    for i, s in enumerate(script.scenes):
+        m = scene_media.get(i)
+        if m is None or m.kind != "image" or s.type in ("map", "story"):
+            continue
+        start = 0.0 if i == 0 else spans[i][0]
+        end = spans[i + 1][0] if i + 1 < len(spans) else spans[i][1]
+        want = min(MAX_EXTRA_SHOTS, int((end - start) // every) - 1)
+        got: list[Media] = []
+        while len(got) < want:
+            name = f"media/shot{i + 1}-{len(got) + 1}"
+            if spare:
+                _, im = spare.pop(0)
+                found = download(im, f"{name}.jpg")
+            else:
+                query = s.broll_query or s.heading or ""
+                hits = (commons(f"{subject} {query}".strip()) if subject and query else []) or (commons(subject) if subject else [])
+                found = download(hits[0], f"{name}.jpg") if hits else None
+                if not found and cfg.stock_footage:
+                    try:
+                        found = media.fetch_photo(cfg, query or subject, job.public, name.removeprefix("media/"), used)
+                    except Exception as e:
+                        log(job, f"warning: no stock photo for scene {i + 1}: {e}")
+                if not found:
+                    break
+            if found:
+                got.append(found)
+        if got:
+            shots[i] = got
+    if shots:
+        log(job, f"cutaways: {sum(len(v) for v in shots.values())} extra photos across {len(shots)} scenes")
+    return shots
 
 
 def wiki_attribute(script: Script, article: "wiki.Article") -> Script:

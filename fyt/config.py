@@ -142,6 +142,9 @@ class GrowthConfig(BaseModel):
     # Every scene gets a real photo: a spare article image, a Wikimedia Commons photo, or a stock photo.
     # Charts and numbers sit on top of it, darkened. Off: data scenes keep the plain background.
     visuals_every_scene: bool = True
+    # Shorts cut to a new shot about this often (seconds): a scene's photo is followed by more
+    # photos of the subject, or re-framed when there are none. 0 keeps one shot per scene.
+    shot_seconds: float = 2.5
     # The channel asks each video's question as the first comment once the video is public (needs the
     # full YouTube permission; 50 quota units each).
     first_comment: bool = True

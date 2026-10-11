@@ -194,6 +194,7 @@ class RenderScene(BaseModel):
     rightTitle: str | None = None
     author: str | None = None
     media: Media | None = None
+    shots: list[Media] | None = None  # more photos to cut to after `media`
     places: list[Place] | None = None
     route: bool | None = None
     vehicle: Vehicle | None = None

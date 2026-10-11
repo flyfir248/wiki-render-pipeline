@@ -152,6 +152,31 @@ def structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max
     return response.parsed_output
 
 
+class Tightened(BaseModel):
+    narrations: list[str] = Field(description="The new narration for each scene, in the same order, one per scene.")
+
+
+TIGHTEN_GUIDE = """You are the editor of a YouTube Short. The script runs too long: viewers swipe away before
+the payoff. Cut it to about {words} words of narration in total, keeping every scene and its order.
+- Keep the hook (scene 1) and the payoff (the last scene) as strong as they are; cut hardest in the middle.
+- Cut whole clauses and side facts rather than squeezing words; every sentence must still read naturally aloud.
+- Change no facts and add none. Keep any line that leads back into the opening, or that says part two is next.
+Return exactly {n} narrations, one per scene."""
+
+
+def tighten(cfg: Config, script: Script, words: int | None = None) -> Script:
+    """Shorten a Short's narration scene by scene, keeping its scenes and visuals."""
+    words = words or SHORT_WORDS
+    n = len(script.scenes)
+    user = "\n".join(f"Scene {i} ({s.type}): {s.narration}" for i, s in enumerate(script.scenes, 1))
+    t = structured(cfg, TIGHTEN_GUIDE.format(words=words, n=n), user, Tightened, max_tokens=2000)
+    lines = [x.strip() for x in t.narrations]
+    if len(lines) != n or not all(lines):
+        raise ValueError(f"expected {n} narrations, got {len(lines)}")
+    scenes = [sc.model_copy(update={"narration": line}) for sc, line in zip(script.scenes, lines)]
+    return script.model_copy(update={"scenes": scenes})
+
+
 class TopicIdeas(BaseModel):
     topics: list[str]
 
@@ -235,10 +260,13 @@ Prefer primary and reputable sources. Flag anything uncertain.""",
 
 
 SHORT_WORDS = 105  # about 35 seconds at the Shorts reading speed
+SHORT_MAX_WORDS = 120  # about 40 seconds: a longer Short gets tightened before it is voiced
 
 SHORT_STRUCTURE = """Structure of a Short (30-40 seconds, 5-7 scenes; viewers decide in the first second whether to swipe):
 1. Hook (scene 1, max 12 words): the strangest concrete fact, stated flatly. The viewer must know
    at once what this is about. No "welcome back", no "in this video", no "did you know", no question.
+   Scene 1 is a `title` scene shown over a photo of the subject: its heading is the hook in 2-5 big
+   words (e.g. "Watch it with your eyes shut"), never just the topic's name. Leave its text empty.
 2. Context (1 scene): just enough who, where and when to follow along.
 3. Build (2-3 scenes): each one escalates with a new, stranger or higher-stakes detail.
 4. Payoff (1 scene): the twist or answer, saying the core message in plain words.

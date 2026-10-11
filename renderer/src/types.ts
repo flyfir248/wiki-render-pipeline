@@ -71,6 +71,7 @@ export type Scene = {
   rightTitle?: string | null;
   author?: string | null;
   media?: Media | null;
+  shots?: Media[] | null; // more photos to cut to after `media`
   places?: Place[] | null; // map scenes
   route?: boolean | null; // map scenes: draw a route through the places in order
   vehicle?: Vehicle | null; // map scenes: what travels the route; the camera follows it over a tilted map

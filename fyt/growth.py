@@ -28,6 +28,7 @@ class Polish(BaseModel):
     thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail, different from the title.")
     hook: str = Field(description="New opening narration: 1-2 sentences, max 35 words, facts from the script only.")
     loop_line: str = Field(default="", description="Shorts only: last sentence, max 12 words, that flows back into the hook.")
+    hook_heading: str = Field(default="", description="Shorts only: 2-5 words shown huge on the first frame, over the photo.")
     series: str = Field(default="", description="The series this video belongs to, exactly as listed, or empty.")
 
 
@@ -48,7 +49,7 @@ concrete fact or the moment of tension. {hook_rule} No "welcome back", no "in th
 "did you know". Use only facts that appear in the script.
 Everything you write must point at the video's core message; a title or hook that promises something
 else loses the viewer when the video doesn't deliver it.
-{loop_rule}{series_rule}"""
+{loop_rule}{heading_rule}{series_rule}"""
 
 
 def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True) -> Script:
@@ -68,6 +69,12 @@ def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True
             if looped
             else "Leave loop_line empty.\n"
         ),
+        heading_rule=(
+            "Hook heading: 2-5 words shown huge over the photo on the very first frame, before a word is spoken. "
+            "It is the hook's most striking idea (e.g. \"Watch it with your eyes shut\"), never just the topic's name.\n"
+            if short
+            else "Leave hook_heading empty.\n"
+        ),
         series_rule=f"Series: pick the one that fits best: {', '.join(series)}.\n" if series else "Leave series empty.\n",
     )
     user = (
@@ -82,6 +89,9 @@ def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True
     hook = p.hook.strip()
     if scenes and hook and len(hook.split()) <= (20 if short else 45):
         scenes[0] = scenes[0].model_copy(update={"narration": hook})
+    heading = p.hook_heading.strip().rstrip(".")
+    if short and scenes and scenes[0].type == "title" and heading and len(heading.split()) <= 6:
+        scenes[0] = scenes[0].model_copy(update={"heading": heading, "text": None})
     loop_line = p.loop_line.strip()
     if looped and scenes and loop_line and len(loop_line.split()) <= 16:
         scenes[-1] = scenes[-1].model_copy(update={"narration": scenes[-1].narration.rstrip() + " " + loop_line})
