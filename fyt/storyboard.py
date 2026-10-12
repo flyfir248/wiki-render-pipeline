@@ -48,9 +48,13 @@ class CastMember(BaseModel):
 class Beat(BaseModel):
     scene: int = Field(description="Scene number, as listed.")
     sentence: int = Field(description="Sentence number within that scene, as listed.")
+    subject: str = Field(
+        default="",
+        description="The one thing the picture must clearly show, 2-6 words, e.g. 'a cracked steel tank'.",
+    )
     picture: str = Field(
-        description="The illustration shown while this sentence is spoken: one concrete moment, where it is, "
-        "who or what is in it and what they are doing, max 40 words. No text or signs in the picture."
+        description="The illustration shown while this sentence is spoken: the subject large in the frame, "
+        "where it is, the light and mood, max 35 words. No text or signs in the picture."
     )
     cast: list[str] = Field(default_factory=list, description="Names from the cast sheet that appear in it.")
 
@@ -63,8 +67,13 @@ class Board(BaseModel):
 GUIDE = """You are the storyboard artist of an illustrated documentary channel. Every line listed below
 gets its own illustration, shown full screen while the narrator says it. Plan them.
 
-- Show what the sentence says is happening, as one concrete moment: a place, the people or things in
-  it, what they are doing, the time of day. Make the viewer feel they are watching the story happen.
+- Show what the sentence is about as one simple, striking image the artist can draw well: ONE clear
+  subject, large in the frame, in a place, with light and mood. Name it in `subject`.
+- The artist cannot draw interactions between several moving things (a wave hitting a car, a crowd
+  fleeing a fire, a horse pulling a cart through a flood). Show one of them instead, or the moment
+  just before or after: the cracked tank, an empty street under a brown flood, a lone abandoned cart.
+- Vary the framing from picture to picture: a wide establishing view, a close-up of an object, a
+  single figure seen from behind, the aftermath. Close-ups of objects and wide views of places draw best.
 - Follow the story: consecutive pictures should feel like the same world (same era, places, people).
 - First write the cast sheet: each person, object or place that appears in more than one picture,
   described once so every picture draws it the same way. People are described by role, age, clothing
@@ -151,8 +160,8 @@ class Verdict(BaseModel):
 
 
 REVIEW = """You check illustrations for a documentary video before it is published. Look at the picture and
-compare it with what it was meant to show. Fail it only for one of these: the main subject is missing
-or clearly wrong; readable text or garbled lettering; badly distorted bodies, extra limbs or melted
+check that it clearly shows the subject it was meant to show. Fail it only for one of these: that
+subject is missing or clearly wrong; readable text or garbled lettering; badly distorted bodies, extra limbs or melted
 faces; blood, wounds or dead bodies; a real person's recognisable face. It is an illustration, so
 stylised, exaggerated or dramatic drawing is fine, and so are extra details that fit the scene.
 Reply with a single JSON object: {"matches": true or false, "problems": "at most 12 words, or empty"}."""
@@ -212,7 +221,7 @@ def _ask_groq(cfg: Config, key: str, model: str, image: bytes, meant: str) -> Ve
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": f"Meant to show: {meant}"},
+                    {"type": "text", "text": f"The subject it must show: {meant}"},
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{data}"}},
                 ],
             },
@@ -230,7 +239,7 @@ def _ask_cloudflare(image: bytes, meant: str) -> Verdict:
     url = f"https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/{CLOUDFLARE_VISION}"
     headers = {"Authorization": f"Bearer {token}"}
     body = {
-        "messages": [{"role": "system", "content": REVIEW}, {"role": "user", "content": f"Meant to show: {meant}"}],
+        "messages": [{"role": "system", "content": REVIEW}, {"role": "user", "content": f"The subject it must show: {meant}"}],
         "image": list(image),
         "max_tokens": 200,
     }
@@ -306,7 +315,7 @@ def make(
             except Exception as e:
                 log(f"warning: no illustration for scene {i + 1}, sentence {k + 1}: {e}")
                 break
-            verdict = review(cfg, public / name, beat.picture)
+            verdict = review(cfg, public / name, beat.subject or beat.picture)
             checked += verdict is not None
             if verdict is None or verdict.matches:
                 ok = True

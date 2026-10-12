@@ -58,14 +58,15 @@ def test_make_draws_checks_and_times_each_beat(monkeypatch, tmp_path):
     board = storyboard.Board(
         cast=[storyboard.CastMember(name="the tank", look="a riveted steel tank, rust streaks")],
         beats=[
-            storyboard.Beat(scene=1, sentence=2, picture="Brown wave sweeping a cobbled street", cast=["the tank"]),
+            storyboard.Beat(scene=1, sentence=2, subject="a brown wave", picture="Brown wave sweeping a cobbled street", cast=["the tank"]),
             storyboard.Beat(scene=4, sentence=1, picture="Crowds staring at a burst tank"),
             storyboard.Beat(scene=4, sentence=2, picture="A woman sniffing the air on a hot street"),
         ],
     )
     monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo: board)
     verdicts = iter([storyboard.Verdict(matches=False, problems="blood on the street"), storyboard.Verdict(matches=True), None, None])
-    monkeypatch.setattr(storyboard, "review", lambda cfg, path, meant: next(verdicts))
+    meant = []
+    monkeypatch.setattr(storyboard, "review", lambda cfg, path, m: meant.append(m) or next(verdicts))
     words = [[Word(word=w, start=0.3 * n, end=0.3 * n + 0.2) for n, w in enumerate(sc.narration.split())] for sc in s.scenes]
     spans = [(0.0, 4.0), (4.1, 6.0), (6.1, 9.0), (9.1, 12.0)]
     beats = storyboard.make(Config(format="short"), s, spans, words, tmp_path, log=lambda m: None)
@@ -74,6 +75,7 @@ def test_make_draws_checks_and_times_each_beat(monkeypatch, tmp_path):
     assert "a riveted steel tank" in prompts[0] and artgen.SCENE_STYLE in prompts[0]
     assert storyboard.CALM in prompts[1] and "blood on the street" not in prompts[1]  # drawn again, more gently
     assert len(prompts) == 4
+    assert meant[0] == "a brown wave"  # the check judges the subject, not every detail of the picture
     props = build_props(Config(format="short"), s, spans, words, {}, None, None, None, None, beats)
     assert props.scenes[0].beats[0].src == "art/beat-1-2.jpg" and props.scenes[1].beats is None
 
