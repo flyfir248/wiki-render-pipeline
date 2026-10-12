@@ -53,10 +53,12 @@ PLATE = (
     "and there are no people or vehicles in the scene."
 )
 STEPS = 8  # the most Cloudflare allows for FLUX.1 schnell: noticeably sharper than 4
-MAX_IMAGES = 40  # per video: keeps a long video inside the free daily allowance
 # Cloudflare's free allowance is 10,000 neurons a day, about 30 pictures at 8 steps. Two Shorts a
 # day plus a few test renders fit when a Short draws at most this many (story scenes and storyboard).
 ART_PER_SHORT = 12
+# A long video is made on a day that also makes two Shorts, so it gets a modest share too; once the
+# allowance runs out, everything still renders, with photos and graphics instead of pictures.
+ART_PER_LONG = 16
 _spent = False  # the free daily allowance ran out during this run
 
 
@@ -167,7 +169,8 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
     vertical = cfg.format == "short"
     (public / "art").mkdir(parents=True, exist_ok=True)
     made = 0
-    limit = ART_PER_SHORT - 4 if vertical else MAX_IMAGES  # a Short keeps a few pictures for its storyboard
+    # Story scenes leave a few pictures of the video's budget for its storyboard.
+    limit = ART_PER_SHORT - 4 if vertical else ART_PER_LONG - 4
     for i, scene in enumerate(script.scenes):
         if scene.type != "story" or made >= limit:
             continue

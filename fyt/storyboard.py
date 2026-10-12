@@ -32,7 +32,7 @@ BEAT_TYPES = ("title", "statement", "stat", "quote", "broll", "story")
 # Scenes that are only words on screen: their first sentence is illustrated too (the captions carry
 # the words). The others keep their own graphic, or the video's opening photo, for the first sentence.
 FROM_FIRST = ("statement", "title")
-BUDGET = {"short": artgen.ART_PER_SHORT, "long": 24}  # pictures per video, redraws and story scenes included
+BUDGET = {"short": artgen.ART_PER_SHORT, "long": artgen.ART_PER_LONG}  # pictures per video, redraws and story scenes included
 LONG_SENTENCE = 14  # words: a sentence this long is told in two pictures, split where a clause ends
 MIN_PART = 5  # words in each half of a split sentence
 
