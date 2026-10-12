@@ -10,16 +10,20 @@ import {
 import type { Format, Scene, Theme } from "../types";
 import { unit } from "../theme";
 
-import { CameraMedia, cameraOf } from "./camera";
+import { BeatCuts, ShotReel, cameraOf } from "./camera";
 import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
 import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
-import { Heading, Stage, Sub, useEnter, type SceneProps } from "./shared";
+import { Heading, PanelContext, Stage, Sub, useEnter, type SceneProps } from "./shared";
 
 export { SceneFrame, transitionOf } from "./camera";
 
 const formatNumber = (n: number) =>
   Math.abs(n) >= 1000 ? Math.round(n).toLocaleString("en-US") : n % 1 === 0 ? String(n) : n.toFixed(1);
+
+// A bare year (1968, not 1,968), shown as itself rather than counted up from zero.
+const isYear = (scene: Scene) =>
+  !scene.prefix && !(scene.suffix ?? "").trim() && Number.isInteger(scene.value) && (scene.value ?? 0) >= 1000 && (scene.value ?? 0) <= 2100;
 
 // ---------- scene types ----------
 
@@ -60,6 +64,68 @@ const TitleWord: React.FC<{ word: string; i: number; theme: Theme }> = ({ word, 
     >
       {word}
     </span>
+  );
+};
+
+// The opening: the subject's photo at full brightness with the hook in huge words across it. Every
+// word is on screen from the first frame (that frame decides whether people stay), each with a punch.
+const HookScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const short = format === "short";
+  const words = (scene.heading ?? "").split(" ").filter(Boolean);
+  const size = (short ? 150 : 128) * (words.length > 5 ? 0.75 : 1);
+  return (
+    <AbsoluteFill>
+      {scene.media ? (
+        <>
+          <ShotReel media={scene.media} shots={scene.shots} camera="push_in" flat format={format} />
+          <AbsoluteFill
+            style={{ background: `linear-gradient(${theme.background}66 0%, transparent 28%, ${theme.background}40 55%, ${theme.background}d9 100%)` }}
+          />
+        </>
+      ) : null}
+      <AbsoluteFill
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          gap: 30,
+          padding: short ? "0 70px 420px" : "0 160px 80px",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: theme.font,
+            fontWeight: 900,
+            fontSize: size,
+            lineHeight: 1.0,
+            textTransform: short ? "uppercase" : "none",
+            textShadow: "0 8px 40px rgba(0,0,0,0.9), 0 0 6px rgba(0,0,0,0.8)",
+          }}
+        >
+          {words.map((w, i) => {
+            const pop = spring({ frame: frame - i * 2, fps, config: { damping: 12, mass: 0.5 } });
+            return (
+              <span
+                key={i}
+                style={{
+                  display: "inline-block",
+                  margin: "0 0.16em",
+                  color: i % 3 === 1 ? theme.accent : theme.text,
+                  transform: `translateY(${interpolate(pop, [0, 1], [-0.18, 0])}em)`,
+                }}
+              >
+                {w}
+              </span>
+            );
+          })}
+        </div>
+        <Sub text={scene.text} theme={theme} format={format} delay={6} />
+      </AbsoluteFill>
+    </AbsoluteFill>
   );
 };
 
@@ -124,7 +190,7 @@ const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
         }}
       >
         {scene.prefix ?? ""}
-        {formatNumber(target * progress)}
+        {isYear(scene) ? String(target) : formatNumber(target * progress)}
         {scene.suffix ?? ""}
       </div>
       <Sub text={scene.text} theme={theme} format={format} delay={20} />
@@ -377,7 +443,7 @@ const BrollScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const label = scene.heading ?? scene.text;
   return (
     <AbsoluteFill>
-      {media ? <CameraMedia media={media} camera={cameraOf(scene)} /> : null}
+      {media ? <ShotReel media={media} shots={scene.shots} camera={cameraOf(scene)} format={format} /> : null}
       <AbsoluteFill style={{ background: `linear-gradient(transparent 45%, ${theme.background}dd)` }} />
       {label ? (
         <div
@@ -421,13 +487,19 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   story: StoryScene,
 };
 
-// A photo or clip behind a template scene, moved by the scene's camera and darkened so text stays readable.
-const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; theme: Theme }> = ({ scene, media, theme }) => (
+// A photo or clip behind a template scene, moved by the scene's camera. It stays bright: the scene's
+// content sits on its own dark panel, and only the edges darken, under the heading and the captions.
+const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; theme: Theme; format: Format }> = ({
+  scene,
+  media,
+  theme,
+  format,
+}) => (
   <AbsoluteFill>
-    <CameraMedia media={media} camera={cameraOf(scene)} flat />
+    <ShotReel media={media} shots={scene.shots} camera={cameraOf(scene)} flat format={format} />
     <AbsoluteFill
       style={{
-        background: `linear-gradient(${theme.background}cc, ${theme.background}a6 40%, ${theme.background}ee)`,
+        background: `linear-gradient(${theme.background}80 0%, ${theme.background}1a 30%, ${theme.background}33 60%, ${theme.background}e6 100%)`,
       }}
     />
   </AbsoluteFill>
@@ -442,18 +514,36 @@ export const shownType = (raw: Scene): Scene["type"] =>
     ? "statement"
     : raw.type;
 
-export const SceneView: React.FC<SceneProps> = (props) => {
+// Scenes whose picture can change with the story (fyt/storyboard.py BEAT_TYPES).
+const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll", "story"];
+
+const SceneBody: React.FC<SceneProps> = (props) => {
   const type = shownType(props.scene);
   const Component = registry[type] ?? StatementScene;
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
   const media = props.scene.media;
+  if (type === "title" && props.scene.id === "s1") return <HookScene {...props} scene={scene} />;
   if (media && type !== "broll" && type !== "map" && type !== "story") {
     return (
       <AbsoluteFill>
-        <Backdrop scene={props.scene} media={media} theme={props.theme} />
-        <Component {...props} scene={scene} />
+        <Backdrop scene={props.scene} media={media} theme={props.theme} format={props.format} />
+        <PanelContext.Provider value={props.theme.background}>
+          <Component {...props} scene={scene} />
+        </PanelContext.Provider>
       </AbsoluteFill>
     );
   }
   return <Component {...props} scene={scene} />;
+};
+
+export const SceneView: React.FC<SceneProps> = (props) => {
+  const beats = props.scene.beats;
+  if (beats?.length && BEAT_TYPES.includes(props.scene.type)) {
+    return (
+      <BeatCuts beats={beats} format={props.format}>
+        <SceneBody {...props} />
+      </BeatCuts>
+    );
+  }
+  return <SceneBody {...props} />;
 };

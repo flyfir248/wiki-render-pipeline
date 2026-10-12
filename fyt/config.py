@@ -142,6 +142,9 @@ class GrowthConfig(BaseModel):
     # Every scene gets a real photo: a spare article image, a Wikimedia Commons photo, or a stock photo.
     # Charts and numbers sit on top of it, darkened. Off: data scenes keep the plain background.
     visuals_every_scene: bool = True
+    # Shorts cut to a new shot about this often (seconds): a scene's photo is followed by more
+    # photos of the subject, or re-framed when there are none. 0 keeps one shot per scene.
+    shot_seconds: float = 2.5
     # The channel asks each video's question as the first comment once the video is public (needs the
     # full YouTube permission; 50 quota units each).
     first_comment: bool = True
@@ -188,6 +191,13 @@ class Config(BaseModel):
     # AI illustrations for story scenes in the flat house style (fyt/artgen.py); needs
     # CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN or TOGETHER_API_KEY, else emoji-style props.
     story_art: bool = True
+    # An illustration for every later sentence of titles, statements, numbers and quotes, planned by
+    # a storyboard pass with a cast sheet (fyt/storyboard.py). Uses the same image keys as story_art.
+    storyboard: bool = True
+    # Free vision model that checks each storyboard picture before it is used. "auto": the first
+    # image-reading model the OpenAI-compatible provider (Groq) lists, else Cloudflare's with the image
+    # keys. A model id to pin one; empty to skip the check.
+    review_model: str = "auto"
     captions: bool = True
     visualizer: bool = True
     theme: Theme = Field(default_factory=Theme)

@@ -1,4 +1,4 @@
-"""AI illustrations for the 2D story scenes, all in one flat house style.
+"""AI illustrations in the channel's house style: story scene plates and props, and storyboard pictures.
 
 Each story scene gets a background plate (the place, empty) and a cut-out for each prop (drawn
 alone on white, then the white is removed), so the renderer can still move, tilt and layer them.
@@ -27,13 +27,21 @@ from PIL import Image, ImageDraw, ImageFilter
 from fyt.config import Config, secret
 from fyt.models import Script
 
-# FLUX follows plain descriptive sentences better than lists of tags.
-STYLE = (
-    "Drawn as a polished flat vector illustration for an animated science and history explainer: clean "
-    "geometric shapes with crisp edges, smooth soft gradients, gentle rim light and a fine grain texture, "
-    "rich but harmonious colours built on deep navy, teal, warm mustard yellow, coral and cream, with "
-    "accurate period details. Any people are simple stylised figures with no facial features. "
-    "There is no text, lettering, logo or watermark anywhere in the image."
+# The channel's house style: an illustrated documentary look, shared by the storyboard pictures
+# (fyt.storyboard) and the story scenes' plates and props. FLUX follows plain descriptive sentences
+# better than lists of tags.
+LOOK = (
+    "painterly editorial illustration with confident ink linework and gouache texture on warm paper grain, "
+    "a limited palette of deep navy, warm amber, cream and muted brick red, accurate period details"
+)
+SAFE = (
+    "Any people are stylised figures with simplified features, never a real person's likeness. "
+    "There is no text, lettering, sign, logo or watermark anywhere in the image. Nothing gory: no blood or wounds."
+)
+STYLE = f"Drawn as a {LOOK} for an animated documentary. {SAFE}"
+SCENE_STYLE = (
+    f"A full-frame {LOOK}, cinematic lighting with strong shadows, composed like a film still with the main "
+    f"subject large in the centre. {SAFE}"
 )
 PROP = (
     "A single {thing}, shown whole and centred in a three-quarter view with a clear, readable silhouette, "
@@ -44,8 +52,16 @@ PLATE = (
     "ground and distant background for depth. The lower half is open ground where characters could stand, "
     "and there are no people or vehicles in the scene."
 )
-STEPS = 8  # the most Cloudflare allows for FLUX.1 schnell: noticeably sharper than 4, still well inside the free allowance
+STEPS = 8  # the most Cloudflare allows for FLUX.1 schnell: noticeably sharper than 4
 MAX_IMAGES = 40  # per video: keeps a long video inside the free daily allowance
+# Cloudflare's free allowance is 10,000 neurons a day, about 30 pictures at 8 steps. Two Shorts a
+# day plus a few test renders fit when a Short draws at most this many (story scenes and storyboard).
+ART_PER_SHORT = 12
+_spent = False  # the free daily allowance ran out during this run
+
+
+def out_of_allowance() -> bool:
+    return _spent
 
 
 def provider() -> str | None:
@@ -61,9 +77,13 @@ class Rejected(requests.RequestException):
 
 
 def _check(r: requests.Response) -> None:
+    global _spent
     if r.ok:
         return
     detail = r.text[:300].replace("\n", " ")
+    if "daily free allocation" in detail:  # resets at midnight UTC; asking again today only wastes time
+        _spent = True
+        raise Rejected(f"{r.status_code}: the free daily image allowance is used up")
     if 400 <= r.status_code < 500 and r.status_code != 429:
         raise Rejected(f"{r.status_code}: {detail}")
     raise requests.HTTPError(f"{r.status_code}: {detail}")
@@ -72,6 +92,8 @@ def _check(r: requests.Response) -> None:
 def generate(prompt: str, vertical: bool = False, seed: int = 7) -> Image.Image:
     """One image from the configured provider."""
     which = provider()
+    if which == "cloudflare" and _spent:
+        raise RuntimeError("image generation failed: the free daily image allowance is used up")
     for attempt in range(3):
         try:
             if which == "cloudflare":
@@ -145,8 +167,9 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
     vertical = cfg.format == "short"
     (public / "art").mkdir(parents=True, exist_ok=True)
     made = 0
+    limit = ART_PER_SHORT - 4 if vertical else MAX_IMAGES  # a Short keeps a few pictures for its storyboard
     for i, scene in enumerate(script.scenes):
-        if scene.type != "story" or made >= MAX_IMAGES:
+        if scene.type != "story" or made >= limit:
             continue
         place = scene.backdrop or (scene.setting or "open sky")
         name = f"art/plate-{_key(place, str(vertical))}.jpg"
@@ -158,7 +181,7 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
         except Exception as e:
             log(f"warning: no background art for scene {i + 1}: {e}")
         for actor in scene.actors or []:
-            if made >= MAX_IMAGES:
+            if made >= limit:
                 break
             thing = actor.look or actor.thing
             name = f"art/prop-{_key(thing)}.png"

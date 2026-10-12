@@ -45,7 +45,7 @@ def test_story_scenes_get_a_plate_and_cut_out_props(monkeypatch, tmp_path):
     assert scene.backdrop_src.startswith("art/plate-") and (tmp_path / scene.backdrop_src).exists()
     prop = Image.open(tmp_path / scene.actors[0].src)
     assert prop.mode == "RGBA" and prop.getpixel((0, 0))[3] == 0  # the white around it is gone
-    assert "A single grey 1970 navy recovery ship" in prompts[1] and "no facial features" in prompts[1]
+    assert "A single grey 1970 navy recovery ship" in prompts[1] and "never a real person's likeness" in prompts[1]
     assert "Pacific ocean" in prompts[0] and "no people or vehicles" in prompts[0]
 
 

@@ -13,25 +13,40 @@ export const useEnter = (delayFrames = 0) => {
   return spring({ frame: frame - delayFrames, fps, config: { damping: 16, mass: 0.7 } });
 };
 
+// Set when a scene sits over a photo: its content then goes on a dark panel, so the photo can stay
+// bright around it instead of being darkened as a whole. The value is the panel's colour.
+export const PanelContext = React.createContext<string | null>(null);
+
+const column = { display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 36 } as const;
+
 export const Stage: React.FC<{ format: Format; children: React.ReactNode; justify?: string }> = ({
   format,
   children,
   justify = "center",
-}) => (
-  <AbsoluteFill
-    style={{
-      padding: format === "short" ? "220px 80px 560px" : "90px 160px 170px",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: justify,
-      alignItems: "center",
-      textAlign: "center",
-      gap: 36,
-    }}
-  >
-    {children}
-  </AbsoluteFill>
-);
+}) => {
+  const panel = React.useContext(PanelContext);
+  const short = format === "short";
+  return (
+    <AbsoluteFill style={{ ...column, padding: short ? "220px 80px 560px" : "90px 160px 170px", justifyContent: justify }}>
+      {panel ? (
+        <div
+          style={{
+            ...column,
+            maxWidth: "100%",
+            padding: short ? "52px 44px" : "48px 64px",
+            borderRadius: 40,
+            background: `${panel}d9`,
+            boxShadow: "0 30px 80px rgba(0,0,0,0.45)",
+          }}
+        >
+          {children}
+        </div>
+      ) : (
+        children
+      )}
+    </AbsoluteFill>
+  );
+};
 
 export const Heading: React.FC<{ text?: string | null; theme: Theme; format: Format; size?: number; delay?: number }> = ({
   text,

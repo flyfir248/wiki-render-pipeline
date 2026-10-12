@@ -34,12 +34,12 @@ export const Video: React.FC<RenderProps> = (props) => {
     <AbsoluteFill style={{ backgroundColor: props.theme.background }}>
       {props.voice ? <ReactiveLayer props={props} voice={props.voice} /> : <Background theme={props.theme} />}
 
-      {props.scenes.map((scene) => {
+      {props.scenes.map((scene, i) => {
         const from = Math.round(scene.start * fps);
         const len = Math.max(1, Math.round(scene.end * fps) - from);
         return (
           <Sequence key={scene.id} from={from} durationInFrames={len} name={`${scene.type}:${scene.id}`}>
-            <SceneFrame transition={transitionOf(scene)}>
+            <SceneFrame transition={transitionOf(scene)} instant={i === 0}>
               <SceneView scene={scene} theme={props.theme} format={props.format} />
             </SceneFrame>
           </Sequence>

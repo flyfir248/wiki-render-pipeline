@@ -175,6 +175,11 @@ class Media(BaseModel):
     kind: Literal["video", "image"]
 
 
+class RenderBeat(BaseModel):
+    at: float  # seconds from the scene's start: when the sentence it illustrates begins
+    src: str  # illustration in the job's public dir
+
+
 class RenderScene(BaseModel):
     id: str
     type: SceneType
@@ -194,6 +199,8 @@ class RenderScene(BaseModel):
     rightTitle: str | None = None
     author: str | None = None
     media: Media | None = None
+    shots: list[Media] | None = None  # more photos to cut to after `media`
+    beats: list[RenderBeat] | None = None  # an illustration per later sentence (fyt.storyboard)
     places: list[Place] | None = None
     route: bool | None = None
     vehicle: Vehicle | None = None
