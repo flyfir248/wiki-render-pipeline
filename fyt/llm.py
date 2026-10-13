@@ -366,7 +366,9 @@ Scene templates (field names in brackets):
   for BC) and a year counter runs.
 - process: how one thing led to another, as connected steps [heading, items (2-5, max ~5 words each)]
 - document: a line from a real report, letter, ruling or newspaper, highlighted [heading = what the
-  document is, text = the line (max ~20 words), author = source and year]
+  document is, text = the line (max ~20 words), author = source and year]. For a reveal, wrap the 1-3
+  words that matter most in [square brackets]: they start blacked out, like a declassified file, and
+  are uncovered one by one.
 - story: an animated 2D illustration that acts out what the narration describes, like a cartoon
   explainer [heading (optional), setting (sky, night, space, sea, city, countryside, desert, snow, room,
   road), actors (1-5 things on stage: thing = plain concrete noun, x/y position 0-100 with y=100 the
@@ -379,6 +381,10 @@ Scene templates (field names in brackets):
   Describe people only by role and clothing; never ask for a real person's likeness.
   Show the action: the ship sails from left to right, the plane climbs then shakes, the money moves
   from one person to another, the explosion goes off at the moment the narration says so.
+- evidence: an investigator's board for a mystery, crime or unexplained event: clue cards are pinned one
+  by one and joined with red string, then an optional stamp lands [heading = the case name, items (2-5
+  clues, max ~5 words each, each a real documented fact), text = a 1-2 word stamp such as Unsolved or
+  Classified, only if true]. Use it where the story lays out the clues that don't add up.
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 
@@ -418,12 +424,13 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
 
 Rules:
 - Each scene's narration is 1-4 sentences (1-2 in a Short) and matches what is on screen at that moment.
-- Act the story out: use a story scene for every key moment where something happens (a journey, an
-  accident, a discovery, a handover, a chase) -- about a third of all scenes. Viewers stay for seeing
-  the story, not reading it.
+- Show, don't just tell: real photos of the subject (they get the channel's cut-out collage look), maps,
+  and the animated templates carry most of the video. Save story scenes, which act a moment out in
+  drawings, for the one or two moments a photo can't show (a journey, an accident, a chase) -- at most
+  one scene in five. Viewers stay for seeing the story, not reading it.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
-  (stat, bars, timeline, comparison, map, process) wherever the research supports them -- they are what makes this
-  channel different from generic stock-footage channels.
+  (stat, bars, timeline, comparison, map, process, evidence) wherever the research supports them -- they
+  are what makes this channel different from generic stock-footage channels.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.
 - Title max 70 characters; no false clickbait. Description must be accurate.

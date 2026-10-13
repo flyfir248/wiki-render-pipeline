@@ -35,6 +35,15 @@ class Theme(BaseModel):
     font: str = "Inter, 'Helvetica Neue', Arial, sans-serif"
 
 
+class CollageConfig(BaseModel):
+    """Vox-style collage for real photos (fyt/cutout.py): each photo also becomes a duotone halftone
+    print, and its main subject a black-and-white cut-out that lifts off it. Free, runs locally."""
+
+    enabled: bool = True
+    paper: str = "#efe6d4"  # the print's light colour; the dark one is theme.background
+    model_dir: str = "assets/cutout"
+
+
 class ChannelInfo(BaseModel):
     name: str = "My Channel"
     niche: str = "surprising explainers about money, science and history"
@@ -208,6 +217,7 @@ class Config(BaseModel):
     # image-reading model the OpenAI-compatible provider (Groq) lists, else Cloudflare's with the image
     # keys. A model id to pin one; empty to skip the check.
     review_model: str = "auto"
+    collage: CollageConfig = Field(default_factory=CollageConfig)
     captions: bool = True
     visualizer: bool = True
     theme: Theme = Field(default_factory=Theme)

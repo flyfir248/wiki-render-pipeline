@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import re
+
 from fyt.config import Config
-from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, Sfx, Word
+from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, ScriptScene, Sfx, Word
 
 TAIL_SECONDS = 1.5  # hold the last scene after the voice ends
 
@@ -72,6 +74,7 @@ def build_props(
                 effectY=scene.effect_y,
                 effectAt=scene.effect_at,
                 effectSrc=scene.effect_src,
+                revealTimes=reveal_times(revealed(scene), clip_words[i], start - vis_start),
                 camera=scene.camera,
                 transition=scene.transition,
             )
@@ -95,6 +98,50 @@ def build_props(
         subscribe=cfg.growth.subscribe_line.strip() or None,
         endCard=round(end_card, 3),
     )
+
+
+STOPWORDS = {"from", "with", "into", "they", "them", "their", "that", "this", "were", "what", "when", "where", "there", "been", "have"}
+
+
+def _stems(text: str) -> set[str]:
+    words = ("".join(c if c.isalnum() else " " for c in text.lower())).split()
+    return {w[:5] for w in words if len(w) >= 4 and w not in STOPWORDS}
+
+
+def revealed(scene: ScriptScene) -> list[str] | None:
+    """What a scene shows one piece at a time as it is said: an evidence board's clues, or the
+    [bracketed] words a document scene starts with blacked out."""
+    if scene.type == "evidence":
+        return scene.items
+    if scene.type == "document":
+        return re.findall(r"\[([^\]]+)\]", scene.text or "") or None
+    return None
+
+
+def reveal_times(clues: list[str] | None, words: list[Word], offset: float) -> list[float] | None:
+    """When the narration first mentions each clue (or hidden phrase), so it appears as it is said.
+    Clues stay in order; one the narration never names is shown halfway to the next. None when
+    nothing matches, and the renderer spreads them evenly."""
+    if not clues or not words:
+        return None
+    times: list[float | None] = []
+    after = 0
+    for clue in clues:
+        stems = _stems(clue)
+        hit = next((j for j in range(after, len(words)) if _stems(words[j].word) & stems), None)
+        times.append(None if hit is None else round(words[hit].start + offset, 3))
+        if hit is not None:
+            after = hit + 1
+    if all(t is None for t in times):
+        return None
+    end = words[-1].end + offset
+    filled = list(times)
+    for k, t in enumerate(filled):
+        if t is None:
+            prev = filled[k - 1] if k else offset
+            nxt = next((x for x in times[k + 1:] if x is not None), end)
+            filled[k] = round((prev + nxt) / 2, 3)
+    return filled
 
 
 def to_srt(words: list[Word], max_words: int = 7) -> str:

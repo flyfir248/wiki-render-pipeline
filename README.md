@@ -15,10 +15,12 @@ topics queue ─► Claude research (web search) ─► Claude script (structure
 
 The visuals are **motion-graphics templates driven by the script**, not only stock footage:
 animated titles, kinetic typography, count-up stats, bar charts, timelines, numbered lists,
-comparisons, quotes, animated maps (a globe that dives in, a plane, ship or army the camera follows over
+comparisons, quotes, evidence boards (clue cards pinned and joined with red string as the narrator names them), animated maps (a globe that dives in, a plane, ship or army the camera follows over
 a tilted map, empires that spread or shrink, a running year counter), cause-and-effect
 diagrams, highlighted documents, typed-out transcripts, and photos moved by a virtual camera
-(push in, pan, parallax) with varied transitions. Word-highlighted captions and
+(push in, pan, parallax) with varied transitions. Real photos get a Vox-style collage look: each one
+becomes a duotone halftone print pinned over a dim copy of itself, and its main subject is cut out in
+black and white and lifts off the print (`fyt/cutout.py`, free and local; turn off with `collage: {enabled: false}`). Word-highlighted captions and
 an audio-reactive background and visualizer sit on top. Every video looks different while
 the channel keeps one consistent style, which matters for monetization (see below).
 

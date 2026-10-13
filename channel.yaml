@@ -38,6 +38,9 @@ voice:
   short_gap_seconds: 0.08
 
 stock_footage: true     # uses PEXELS_API_KEY if set, otherwise text-only scenes
+# Cloudflare's free image allowance is spent sparingly: drawings only for story scenes, not an
+# illustration for every sentence. Photos get the free collage look (fyt/cutout.py) instead.
+storyboard: false
 
 youtube:
   privacy: public

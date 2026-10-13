@@ -9,7 +9,7 @@ from pydantic.json_schema import SkipJsonSchema
 
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
-    "map", "process", "document", "dialogue", "story",
+    "map", "process", "document", "dialogue", "story", "evidence",
 ]
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
@@ -173,6 +173,9 @@ class Word(BaseModel):
 class Media(BaseModel):
     src: str
     kind: Literal["video", "image"]
+    styled: str | None = None  # images: the photo as a halftone print (fyt/cutout.py)
+    cutout: str | None = None  # images: its main subject cut out, same size, transparent elsewhere
+    aspect: float | None = None  # images with a print: width / height
 
 
 class RenderBeat(BaseModel):
@@ -218,6 +221,7 @@ class RenderScene(BaseModel):
     effectY: float | None = None
     effectAt: float | None = None
     effectSrc: str | None = None
+    revealTimes: list[float] | None = None  # evidence clues / document [hidden] words: when said, from scene start
     camera: Camera | None = None
     transition: Transition | None = None
 

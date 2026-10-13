@@ -12,6 +12,7 @@ import { unit } from "../theme";
 
 import { BeatCuts, ShotReel, cameraOf } from "./camera";
 import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
+import { EvidenceScene } from "./evidence";
 import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
 import { Heading, PanelContext, Stage, Sub, useEnter, type SceneProps } from "./shared";
@@ -485,6 +486,7 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   document: DocumentScene,
   dialogue: DialogueScene,
   story: StoryScene,
+  evidence: EvidenceScene,
 };
 
 // A photo or clip behind a template scene, moved by the scene's camera. It stays bright: the scene's
@@ -506,11 +508,12 @@ const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; the
 );
 
 // What a scene is drawn as: a kinetic statement stands in for broll without media, a map without
-// places, or a story without any art.
+// places, a story without any art, or an evidence board without clues.
 export const shownType = (raw: Scene): Scene["type"] =>
   (raw.type === "broll" && !raw.media) ||
   (raw.type === "map" && !validPlaces(raw.places).length && !mapRegions(raw).length) ||
-  (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src))
+  (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src)) ||
+  (raw.type === "evidence" && !(raw.items ?? []).some(Boolean))
     ? "statement"
     : raw.type;
 
@@ -523,7 +526,7 @@ const SceneBody: React.FC<SceneProps> = (props) => {
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
   const media = props.scene.media;
   if (type === "title" && props.scene.id === "s1") return <HookScene {...props} scene={scene} />;
-  if (media && type !== "broll" && type !== "map" && type !== "story") {
+  if (media && type !== "broll" && type !== "map" && type !== "story" && type !== "evidence") {
     return (
       <AbsoluteFill>
         <Backdrop scene={props.scene} media={media} theme={props.theme} format={props.format} />

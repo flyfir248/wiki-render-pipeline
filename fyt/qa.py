@@ -52,6 +52,8 @@ def check_script(cfg: Config, script: Script) -> list[str]:
             problems.append(f"scene {i} is a story scene with nothing on stage")
         if s.type == "dialogue" and not s.lines:
             problems.append(f"scene {i} is a transcript without lines")
+        if s.type == "evidence" and len(s.items or []) < 2:
+            problems.append(f"scene {i} is an evidence board with fewer than 2 clues")
     return problems
 
 
