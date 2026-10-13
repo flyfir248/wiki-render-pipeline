@@ -47,6 +47,9 @@ Thumbnail text: 2-5 words that add to the title rather than repeat it.
 Hook: rewrite the opening so the first sentence alone makes someone stop scrolling: open on the strangest
 concrete fact or the moment of tension. {hook_rule} No "welcome back", no "in this video", no questions like
 "did you know". Use only facts that appear in the script.
+The hook replaces the first scene's narration, and the second scene follows it unchanged: it must be
+about the same thing the first scene was, so the story still flows into scene 2. Don't pull a fact
+forward from later in the script that only makes sense once that later part has explained it.
 Everything you write must point at the video's core message; a title or hook that promises something
 else loses the viewer when the video doesn't deliver it.
 {loop_rule}{heading_rule}{series_rule}"""
@@ -61,11 +64,12 @@ def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True
     guide = POLISH_GUIDE.format(
         niche=cfg.channel.niche,
         audience=cfg.channel.audience,
-        format="YouTube Short (vertical, 30-40 seconds)" if short else "long video",
+        format="YouTube Short (vertical, 45-55 seconds)" if short else "long video",
         hook_rule="For this Short: one sentence, max 12 words." if short else "Max 2 sentences.",
         loop_rule=(
-            "Loop line: Shorts replay automatically. Write a last sentence that leads straight back into the hook, "
-            "so the replay feels seamless.\n"
+            "Loop line: Shorts replay automatically. If it comes naturally, write a last sentence that follows from "
+            "the payoff and leads back into the hook, so the replay feels seamless. It adds no new fact. "
+            "Leave it empty rather than tack on a line that doesn't follow.\n"
             if looped
             else "Leave loop_line empty.\n"
         ),

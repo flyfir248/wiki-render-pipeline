@@ -95,6 +95,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             log(job, f"warning: polish failed: {e}")
     if written:
         script = keep_short(cfg, job, script)
+        script = make_sense(cfg, job, script)
     if two_part:
         script = script.model_copy(update={"title": f"{script.title[:88]} (Part 1)"})
         job.update(two_part=True)
@@ -231,6 +232,25 @@ def _short_enough(
         )
         if narration_words(retry) < narration_words(script):
             script = retry
+    elif limit and narration_words(script) < llm.SHORT_MIN_WORDS:
+        # Too thin a Short skips the context, and then the story makes no sense to a newcomer.
+        log(job, f"script is only {narration_words(script)} words; asking for a fuller one")
+        feedback = (
+            f"Your previous draft had only {narration_words(script)} words of narration, too few to follow. "
+            f"Write about {llm.SHORT_WORDS} words: say who or what this is and why the hook is true before the build."
+        )
+        retry = llm.write_script(
+            cfg,
+            subject,
+            notes,
+            from_wikipedia=from_wiki,
+            images=menu,
+            feedback=f"{note}\n\n{feedback}".strip(),
+            news=news,
+            lessons=lessons,
+        )
+        if narration_words(script) < narration_words(retry) <= limit:
+            script = retry
     return script
 
 
@@ -246,6 +266,20 @@ def keep_short(cfg: Config, job: Job, script: Script) -> Script:
         log(job, f"warning: could not tighten the script: {e}")
         return script
     return tight if narration_words(tight) < words else script
+
+
+def make_sense(cfg: Config, job: Job, script: Script) -> Script:
+    """A Short is heard once at speed: check it tells one followable story, and fix the lines that don't."""
+    if cfg.format != "short":
+        return script
+    try:
+        fixed, problems = llm.mend(cfg, script)
+    except Exception as e:  # the script as written is still a Short
+        log(job, f"warning: could not check the story: {e}")
+        return script
+    if problems:
+        log(job, "story fixed where it lost the thread: " + "; ".join(problems))
+    return fixed
 
 
 def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:

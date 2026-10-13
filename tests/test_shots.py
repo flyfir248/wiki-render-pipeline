@@ -49,7 +49,7 @@ def test_shots_reach_the_renderer():
 
 
 def test_a_long_short_is_tightened(monkeypatch, tmp_path):
-    long = _script(*[{"narration": " ".join(["word"] * 30), "type": "statement", "text": "x"} for _ in range(5)])
+    long = _script(*[{"narration": " ".join(["word"] * 35), "type": "statement", "text": "x"} for _ in range(5)])
     calls = []
 
     def tighten(cfg, script, words=None):
@@ -64,3 +64,56 @@ def test_a_long_short_is_tightened(monkeypatch, tmp_path):
     assert pipeline.keep_short(Config(format="long"), job, long) is long  # long videos are left alone
     ok = _script({"narration": "just right", "type": "statement", "text": "x"})
     assert pipeline.keep_short(Config(format="short"), job, ok) is ok
+
+
+def test_tighten_never_aims_longer_than_the_script(monkeypatch):
+    seen = {}
+
+    def structured(cfg, guide, user, model, max_tokens=0):
+        seen["guide"] = guide
+        return llm.Tightened(narrations=["one two three"])
+
+    monkeypatch.setattr(llm, "structured", structured)
+    s = _script({"narration": " ".join(["word"] * 101), "type": "statement", "text": "x"})
+    llm.tighten(Config(format="short"), s)
+    assert "about 90 words" in seen["guide"]
+
+
+def test_a_short_that_loses_the_thread_is_fixed(monkeypatch, tmp_path):
+    s = _script(
+        {"narration": "A baron found dwarf dinosaurs.", "type": "statement", "text": "x"},
+        {"narration": "Then he flew.", "type": "statement", "text": "x"},
+    )
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+
+    def lost(cfg, guide, user, model, max_tokens=0):
+        assert "Scene 2 (statement): Then he flew." in user
+        return llm.Mended(problems=["the flight comes from nowhere"], narrations=["A baron found dwarf dinosaurs.", "They lived on an island."])
+
+    monkeypatch.setattr(llm, "structured", lost)
+    out = pipeline.make_sense(Config(format="short"), job, s)
+    assert out.scenes[1].narration == "They lived on an island."
+    assert pipeline.make_sense(Config(format="long"), job, s) is s
+
+    monkeypatch.setattr(llm, "structured", lambda *a, **k: llm.Mended(problems=[], narrations=["x"]))
+    assert pipeline.make_sense(Config(format="short"), job, s) is s  # nothing wrong: left as written
+
+    monkeypatch.setattr(llm, "structured", lambda *a, **k: llm.Mended(problems=["p"], narrations=["only one"]))
+    assert pipeline.make_sense(Config(format="short"), job, s) is s  # a broken fix is ignored
+
+
+def test_a_thin_short_is_written_again_with_context(monkeypatch, tmp_path):
+    drafts = [" ".join(["word"] * 60), " ".join(["word"] * 120)]
+    notes = []
+
+    def write_script(cfg, topic, n, from_wikipedia=False, images="", feedback="", news=False, lessons=""):
+        notes.append(feedback)
+        return _script({"narration": drafts[len(notes) - 1], "type": "statement", "text": "x"})
+
+    monkeypatch.setattr(llm, "write_script", write_script)
+    monkeypatch.setattr(pipeline.insights, "scene_lessons", lambda cfg: "")
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+    out = pipeline._short_enough(Config(format="short"), job, "t", "n", True, "")
+    assert pipeline.narration_words(out) == 120 and "only 60 words" in notes[1]

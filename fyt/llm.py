@@ -158,16 +158,19 @@ class Tightened(BaseModel):
 
 TIGHTEN_GUIDE = """You are the editor of a YouTube Short. The script runs too long: viewers swipe away before
 the payoff. Cut it to about {words} words of narration in total, keeping every scene and its order.
-- Keep the hook (scene 1) and the payoff (the last scene) as strong as they are; cut hardest in the middle.
-- Cut whole clauses and side facts rather than squeezing words; every sentence must still read naturally aloud.
+- Keep the hook (scene 1) and the payoff (the last scene) as strong as they are.
+- Keep the story followable: keep the lines that say who or what this is and why the hook is true, and
+  every link that explains how one scene leads to the next. Cut side facts and repetition instead.
+- Cut whole clauses rather than squeezing words; every sentence must still read naturally aloud.
 - Change no facts and add none. Keep any line that leads back into the opening, or that says part two is next.
 Return exactly {n} narrations, one per scene."""
 
 
 def tighten(cfg: Config, script: Script, words: int | None = None) -> Script:
     """Shorten a Short's narration scene by scene, keeping its scenes and visuals."""
-    words = words or SHORT_WORDS
     n = len(script.scenes)
+    current = sum(len(s.narration.split()) for s in script.scenes)
+    words = min(words or SHORT_WORDS, current * 9 // 10)  # always shorter than it is now
     user = "\n".join(f"Scene {i} ({s.type}): {s.narration}" for i, s in enumerate(script.scenes, 1))
     t = structured(cfg, TIGHTEN_GUIDE.format(words=words, n=n), user, Tightened, max_tokens=2000)
     lines = [x.strip() for x in t.narrations]
@@ -175,6 +178,50 @@ def tighten(cfg: Config, script: Script, words: int | None = None) -> Script:
         raise ValueError(f"expected {n} narrations, got {len(lines)}")
     scenes = [sc.model_copy(update={"narration": line}) for sc, line in zip(script.scenes, lines)]
     return script.model_copy(update={"scenes": scenes})
+
+
+class Mended(BaseModel):
+    problems: list[str] = Field(description="Each place a first-time viewer would get lost, or empty if none.")
+    narrations: list[str] = Field(description="The narration for each scene, in the same order, fixed where needed.")
+
+
+MEND_GUIDE = """You are the story editor of a YouTube Short. Read the script as a viewer who has never heard
+of the subject, hearing it once at speed with no way to rewind. List every place they would get lost:
+- a person, place or thing used before it was introduced, or never explained
+- a jump to a different topic with no link to what came before
+- a hook whose claim the rest of the script never explains
+- a payoff that doesn't answer what the script set up (unless the script ends by saying part two is
+  next: then the open question is meant to stay open)
+- a sentence that contradicts or repeats another
+If there are none, return no problems and the narrations exactly as they are.
+Otherwise rewrite only the lines that need it to fix those problems: add a short link or a few words of
+context, reorder within a scene, or drop the stray fact. Keep every scene and its order, keep each scene
+about what it shows now, keep the total length about the same ({words} words, never over {limit}), use
+only facts already in the script, and keep the narrator's voice. Keep any line that leads back into the
+opening, or that says part two is next. Sentences of 6-16 words, written for the ear.
+Return exactly {n} narrations, one per scene."""
+
+
+def mend(cfg: Config, script: Script) -> tuple[Script, list[str]]:
+    """Check a Short tells one followable story; fix the lines where a first-time viewer would get lost."""
+    n = len(script.scenes)
+    words = sum(len(s.narration.split()) for s in script.scenes)
+    user = (f"Core message: {script.core_message}\n\n" if script.core_message else "") + "\n".join(
+        f"Scene {i} ({s.type}{': ' + s.heading if s.heading else ''}): {s.narration}"
+        for i, s in enumerate(script.scenes, 1)
+    )
+    guide = MEND_GUIDE.format(words=words, limit=max(words, SHORT_MAX_WORDS), n=n)
+    m = structured(cfg, guide, user, Mended, max_tokens=2500)
+    problems = [p.strip() for p in m.problems if p.strip()]
+    if not problems:
+        return script, []
+    lines = [x.strip() for x in m.narrations]
+    if len(lines) != n or not all(lines):
+        raise ValueError(f"expected {n} narrations, got {len(lines)}")
+    if sum(len(x.split()) for x in lines) > max(words, SHORT_MAX_WORDS):
+        raise ValueError("the fixed script ran too long")
+    scenes = [sc.model_copy(update={"narration": line}) for sc, line in zip(script.scenes, lines)]
+    return script.model_copy(update={"scenes": scenes}), problems
 
 
 class TopicIdeas(BaseModel):
@@ -259,19 +306,26 @@ Prefer primary and reputable sources. Flag anything uncertain.""",
     return _text(response)
 
 
-SHORT_WORDS = 105  # about 35 seconds at the Shorts reading speed
-SHORT_MAX_WORDS = 100  # about 35-40 seconds with the closing hold (110-word Shorts still ran 44s): longer gets tightened
+SHORT_WORDS = 130  # about 50 seconds at the Shorts reading speed (110 words ran 44s): room to explain the story
+SHORT_MAX_WORDS = 150  # about a minute: longer gets tightened
+SHORT_MIN_WORDS = 105  # under about 40 seconds there is no room for context: shorter gets rewritten
 
-SHORT_STRUCTURE = """Structure of a Short (30-40 seconds, 5-7 scenes; viewers decide in the first second whether to swipe):
+SHORT_STRUCTURE = """Structure of a Short (45-55 seconds, 6-8 scenes; viewers decide in the first second whether to swipe):
 1. Hook (scene 1, max 12 words): the strangest concrete fact, stated flatly. The viewer must know
    at once what this is about. No "welcome back", no "in this video", no "did you know", no question.
    Scene 1 is a `title` scene shown over a photo of the subject: its heading is the hook in 2-5 big
    words (e.g. "Watch it with your eyes shut"), never just the topic's name. Leave its text empty.
-2. Context (1 scene): just enough who, where and when to follow along.
-3. Build (2-3 scenes): each one escalates with a new, stranger or higher-stakes detail.
+2. Context (1-2 scenes): who or what this is, where and when, in plain words, so a viewer who has
+   never heard of it can follow. Explain the hook here: why is that strange fact true?
+3. Build (2-3 scenes): each one follows from the one before ("so", "but", "then") and escalates
+   with a new, stranger or higher-stakes detail of the same thread.
 4. Payoff (1 scene): the twist or answer, saying the core message in plain words.
 5. End on the payoff. No subscribe line, no "thanks for watching", no question to the audience:
-   Shorts replay automatically, and a clean ending makes the replay seamless."""
+   Shorts replay automatically, and a clean ending makes the replay seamless.
+One thread only: tell one story from start to finish, not a list of facts about the subject.
+Introduce every person, place and object before relying on it, and never jump to a new topic
+(an unexplained "flight", a different discovery, a later career) without saying how it connects.
+Read it back as a stranger would: if any sentence would make them ask "wait, what?", fix it."""
 
 LONG_STRUCTURE = """Structure (always the same shape, so every video feels like the same show):
 1. Hook: the single strangest fact or question, in the first 2 sentences, and a promise of what the
@@ -435,7 +489,7 @@ def write_script(
 ) -> Script:
     ch = cfg.channel
     if cfg.format == "short":
-        format_line = "YouTube Short, vertical 9:16, 30-40 seconds, 5-7 fast scenes"
+        format_line = "YouTube Short, vertical 9:16, 45-55 seconds, 6-8 fast scenes"
         words = SHORT_WORDS
     else:
         format_line = f"horizontal 16:9 video, about {cfg.target_minutes:g} minutes"
