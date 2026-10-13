@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artgen, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, wiki, youtube
+from fyt import artgen, cutout, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -123,6 +123,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     subject = article.title if article else (script.thumbnail_kicker or "")
     scene_media, credits, used = scene_visuals(cfg, job, script, images, topic, subject)
     shots = extra_shots(cfg, job, script, images, spans, scene_media, credits, used, subject)
+    if cfg.collage.enabled:
+        scene_media, shots = collage(cfg, job, scene_media, shots)
     if credits:
         script = script.model_copy(
             update={"description": script.description.rstrip() + "\n\nImages from Wikimedia Commons:\n" + "\n".join(credits)}
@@ -463,6 +465,42 @@ def extra_shots(
     if shots:
         log(job, f"cutaways: {sum(len(v) for v in shots.values())} extra photos across {len(shots)} scenes")
     return shots
+
+
+def collage(
+    cfg: Config, job: Job, scene_media: dict[int, Media], shots: dict[int, list[Media]]
+) -> tuple[dict[int, Media], dict[int, list[Media]]]:
+    """Give every photo its collage print and, where it has a clear subject, a cut-out (fyt/cutout.py).
+    A photo that can't be styled stays as it is; if the model can't be loaded, all of them do."""
+    done: dict[str, Media] = {}
+    cuts = 0
+
+    def styled(m: Media) -> Media:
+        nonlocal cuts
+        if m.kind != "image":
+            return m
+        if m.src not in done:
+            try:
+                bg, cut, aspect = cutout.stylize(cfg, job.public, m.src, seed=len(done))
+                done[m.src] = m.model_copy(update={"styled": bg, "cutout": cut, "aspect": aspect})
+                cuts += cut is not None
+            except Exception as e:
+                log(job, f"warning: no collage for {m.src}: {e}")
+                done[m.src] = m
+        return done[m.src]
+
+    photos = [m for m in [*scene_media.values(), *(m for ms in shots.values() for m in ms)] if m.kind == "image"]
+    if not photos:
+        return scene_media, shots
+    try:
+        cutout._load(cfg)
+    except Exception as e:
+        log(job, f"warning: collage look skipped, cut-out model unavailable: {e}")
+        return scene_media, shots
+    scene_media = {i: styled(m) for i, m in scene_media.items()}
+    shots = {i: [styled(m) for m in ms] for i, ms in shots.items()}
+    log(job, f"collage: {len(done)} photos styled, {cuts} with a cut-out subject")
+    return scene_media, shots
 
 
 def wiki_attribute(script: Script, article: "wiki.Article") -> Script:

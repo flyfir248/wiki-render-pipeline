@@ -173,6 +173,9 @@ class Word(BaseModel):
 class Media(BaseModel):
     src: str
     kind: Literal["video", "image"]
+    styled: str | None = None  # images: the photo as a halftone print (fyt/cutout.py)
+    cutout: str | None = None  # images: its main subject cut out, same size, transparent elsewhere
+    aspect: float | None = None  # images with a print: width / height
 
 
 class RenderBeat(BaseModel):

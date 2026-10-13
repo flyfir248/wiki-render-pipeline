@@ -6,6 +6,9 @@ export type Format = "long" | "short";
 export type Media = {
   src: string; // path relative to the job's public dir
   kind: "video" | "image";
+  styled?: string | null; // images: the photo as a halftone print (fyt/cutout.py)
+  cutout?: string | null; // images: its main subject cut out, same size as the print
+  aspect?: number | null; // images with a print: width / height
 };
 
 export type DataPoint = { label: string; value: number };

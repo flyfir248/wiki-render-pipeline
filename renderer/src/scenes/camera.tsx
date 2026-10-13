@@ -1,6 +1,6 @@
 // Camera moves over photos and clips, and the transitions scenes enter with.
 import React from "react";
-import { AbsoluteFill, Easing, Img, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Easing, Img, OffthreadVideo, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Beat, Camera, Format, Media, Scene, Transition } from "../types";
 import { pick } from "./shared";
 
@@ -16,9 +16,53 @@ const fill = { width: "100%", height: "100%", objectFit: "cover" as const };
 const MediaEl: React.FC<{ media: Media; style: React.CSSProperties }> = ({ media, style }) =>
   media.kind === "video" ? (
     <OffthreadVideo src={staticFile(media.src)} muted style={style} />
+  ) : media.styled ? (
+    <Collage media={media} style={style} />
   ) : (
     <Img src={staticFile(media.src)} style={style} />
   );
+
+// The collage look (fyt/cutout.py): the photo as a halftone print pinned over a dim, blown-up copy of
+// itself, with its subject cut out in black and white and lifted off the print, breaking out of its
+// frame. The cut-out moves in small steps, like stop-motion paper.
+const Collage: React.FC<{ media: Media; style: React.CSSProperties }> = ({ media }) => {
+  const frame = useCurrentFrame();
+  const { fps, width, height } = useVideoConfig();
+  const step = Math.floor(frame / 3); // 10 poses a second
+  const lift = spring({ frame: frame - 4, fps, config: { damping: 12, mass: 0.6 } });
+  const wobble = ((step * 7919) % 5) - 2; // -2..2, a stable "random" pose per step
+  // The print as large as fits, leaving a margin of the backdrop around it.
+  const aspect = media.aspect ?? 1.5;
+  const maxW = width * (width > height ? 0.8 : 0.9);
+  const maxH = height * (width > height ? 0.8 : 0.55);
+  const w = Math.min(maxW, maxH * aspect);
+  const h = w / aspect;
+  const box: React.CSSProperties = { position: "absolute", left: (width - w) / 2, top: (height - h) / 2 - height * 0.03, width: w, height: h };
+  const img = { width: "100%", height: "100%", objectFit: "cover" as const, display: "block" };
+  const tilt = (((media.src.length * 31) % 5) - 2) * 0.6; // each photo sits at its own slight angle
+  return (
+    <AbsoluteFill style={{ overflow: "hidden" }}>
+      <Img src={staticFile(media.styled!)} style={{ ...img, position: "absolute", transform: "scale(1.25)", filter: "brightness(0.42) blur(2px)" }} />
+      <div style={{ ...box, transform: `rotate(${tilt}deg)` }}>
+        <div style={{ position: "absolute", inset: 0, outline: "10px solid #f4eee0", boxShadow: "0 30px 70px rgba(0,0,0,0.6)" }}>
+          <Img src={staticFile(media.styled!)} style={img} />
+        </div>
+        {media.cutout ? (
+          <Img
+            src={staticFile(media.cutout)}
+            style={{
+              ...img,
+              position: "absolute",
+              inset: 0,
+              transformOrigin: "50% 100%",
+              transform: `translateY(${-2.5 * lift}%) scale(${1 + 0.12 * lift}) rotate(${wobble * 0.2 - tilt * 0.5}deg)`,
+            }}
+          />
+        ) : null}
+      </div>
+    </AbsoluteFill>
+  );
+};
 
 // Scene progress 0..1 with an ease, so moves start and settle gently.
 const useProgress = () => {
