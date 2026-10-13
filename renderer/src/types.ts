@@ -50,7 +50,8 @@ export type SceneType =
   | "process"
   | "document"
   | "dialogue"
-  | "story";
+  | "story"
+  | "evidence";
 
 export type Scene = {
   id: string;
@@ -90,6 +91,7 @@ export type Scene = {
   effectY?: number | null;
   effectAt?: number | null;
   effectSrc?: string | null;
+  clueTimes?: number[] | null; // evidence scenes: when each clue is said, seconds from the scene's start
   camera?: Camera | null; // picked per scene when not set
   transition?: Transition | null; // picked per scene when not set
 };

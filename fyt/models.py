@@ -9,7 +9,7 @@ from pydantic.json_schema import SkipJsonSchema
 
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
-    "map", "process", "document", "dialogue", "story",
+    "map", "process", "document", "dialogue", "story", "evidence",
 ]
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
@@ -218,6 +218,7 @@ class RenderScene(BaseModel):
     effectY: float | None = None
     effectAt: float | None = None
     effectSrc: str | None = None
+    clueTimes: list[float] | None = None  # evidence scenes: seconds from the scene's start
     camera: Camera | None = None
     transition: Transition | None = None
 

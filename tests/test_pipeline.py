@@ -181,3 +181,17 @@ def test_map_motion_fields_reach_the_renderer_and_only_the_first_map_opens_on_a_
     assert data[1]["regions"] == ["Italy", "Greece"] and data[1]["regionChange"] == "spread"
     assert "globe" not in data[1]
     assert qa.check_script(Config(), s) == []  # a territory map needs no places
+
+
+def test_evidence_clues_are_pinned_when_the_narration_names_them():
+    s = script(1)
+    s.scenes[0].type = "evidence"
+    s.scenes[0].items = ["Tent cut from inside", "Radiation on clothing", "No boots"]
+    words = [Word(word=w, start=t, end=t + 0.3) for w, t in [("Their", 0.0), ("tent", 0.4), ("was", 0.8), ("cut.", 1.2), ("Some", 2.0), ("had", 2.4), ("no", 2.8), ("boots.", 3.2)]]
+    props = build_props(Config(), s, [(0.5, 4.0)], [words], {}, None, None)
+    # The first scene starts at 0, so word times shift by the clip's 0.5 s offset. Radiation is never
+    # said, so it is pinned between its neighbours.
+    assert props.scenes[0].clueTimes == [0.9, 2.3, 3.7]
+    assert qa.check_script(Config(), s) == []
+    s.scenes[0].items = ["One clue"]
+    assert "evidence board" in " | ".join(qa.check_script(Config(), s))

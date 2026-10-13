@@ -379,6 +379,10 @@ Scene templates (field names in brackets):
   Describe people only by role and clothing; never ask for a real person's likeness.
   Show the action: the ship sails from left to right, the plane climbs then shakes, the money moves
   from one person to another, the explosion goes off at the moment the narration says so.
+- evidence: an investigator's board for a mystery, crime or unexplained event: clue cards are pinned one
+  by one and joined with red string, then an optional stamp lands [heading = the case name, items (2-5
+  clues, max ~5 words each, each a real documented fact), text = a 1-2 word stamp such as Unsolved or
+  Classified, only if true]. Use it where the story lays out the clues that don't add up.
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 

@@ -72,6 +72,7 @@ def build_props(
                 effectY=scene.effect_y,
                 effectAt=scene.effect_at,
                 effectSrc=scene.effect_src,
+                clueTimes=clue_times(scene.items, clip_words[i], start - vis_start) if scene.type == "evidence" else None,
                 camera=scene.camera,
                 transition=scene.transition,
             )
@@ -95,6 +96,40 @@ def build_props(
         subscribe=cfg.growth.subscribe_line.strip() or None,
         endCard=round(end_card, 3),
     )
+
+
+STOPWORDS = {"from", "with", "into", "they", "them", "their", "that", "this", "were", "what", "when", "where", "there", "been", "have"}
+
+
+def _stems(text: str) -> set[str]:
+    words = ("".join(c if c.isalnum() else " " for c in text.lower())).split()
+    return {w[:5] for w in words if len(w) >= 4 and w not in STOPWORDS}
+
+
+def clue_times(clues: list[str] | None, words: list[Word], offset: float) -> list[float] | None:
+    """When the narration first mentions each evidence clue, so its card is pinned as it is said.
+    Clues stay in order; one the narration never names is pinned halfway to the next. None when
+    nothing matches, and the renderer spreads the cards evenly."""
+    if not clues or not words:
+        return None
+    times: list[float | None] = []
+    after = 0
+    for clue in clues:
+        stems = _stems(clue)
+        hit = next((j for j in range(after, len(words)) if _stems(words[j].word) & stems), None)
+        times.append(None if hit is None else round(words[hit].start + offset, 3))
+        if hit is not None:
+            after = hit + 1
+    if all(t is None for t in times):
+        return None
+    end = words[-1].end + offset
+    filled = list(times)
+    for k, t in enumerate(filled):
+        if t is None:
+            prev = filled[k - 1] if k else offset
+            nxt = next((x for x in times[k + 1:] if x is not None), end)
+            filled[k] = round((prev + nxt) / 2, 3)
+    return filled
 
 
 def to_srt(words: list[Word], max_words: int = 7) -> str:
