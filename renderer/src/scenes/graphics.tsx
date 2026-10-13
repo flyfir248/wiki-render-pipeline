@@ -88,10 +88,11 @@ const StepBox: React.FC<{ i: number; at: number; text: string; last: boolean; co
 };
 
 // A page from a report, letter or newspaper: it slides in, the camera leans in, and the key line is highlighted.
-// heading = what the document is, text = the line from it, author = source and date.
+// heading = what the document is, text = the line from it, author = source and date. Words in [brackets]
+// start blacked out and are uncovered one by one, like a declassified file.
 export const DocumentScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
+  const { durationInFrames, fps } = useVideoConfig();
   const p = useEnter(0);
   const short = format === "short";
   const k = unit(format);
@@ -135,7 +136,13 @@ export const DocumentScene: React.FC<SceneProps> = ({ scene, theme, format }) =>
               padding: "0 6px",
             }}
           >
-            {scene.text}
+            {redactions(scene.text ?? "").map((part, i, parts) =>
+              part.hidden ? (
+                <Redacted key={i} text={part.text} at={revealAt(parts, i, durationInFrames, scene.revealTimes, fps)} />
+              ) : (
+                <React.Fragment key={i}>{part.text}</React.Fragment>
+              ),
+            )}
           </span>
         </div>
         {[0.95, 0.6].map((w, i) => (
@@ -164,6 +171,46 @@ export const DocumentScene: React.FC<SceneProps> = ({ scene, theme, format }) =>
         ) : null}
       </div>
     </AbsoluteFill>
+  );
+};
+
+const redactions = (text: string) =>
+  text
+    .split(/(\[[^\]]+\])/)
+    .filter(Boolean)
+    .map((t) => (t.startsWith("[") && t.endsWith("]") ? { text: t.slice(1, -1), hidden: true } : { text: t, hidden: false }));
+
+// Hidden words are uncovered as the narration says them, or in order between 35% and 75% of the scene.
+const revealAt = (parts: { hidden: boolean }[], i: number, duration: number, said: number[] | null | undefined, fps: number) => {
+  const hidden = parts.filter((p) => p.hidden).length;
+  const n = parts.slice(0, i).filter((p) => p.hidden).length;
+  if (said?.length === hidden) return Math.max(0, Math.round(said[n] * fps) - 4);
+  return Math.round(duration * (0.35 + (0.4 * n) / Math.max(hidden - 1, 1)));
+};
+
+// A black marker bar over a word; it is peeled away to the right to show the word underneath. Drawn as
+// a background so a long phrase can wrap across lines like the rest of the sentence.
+const Redacted: React.FC<{ text: string; at: number }> = ({ text, at }) => {
+  const frame = useCurrentFrame();
+  const peel = interpolate(frame, [at, at + 12], [0, 1], { easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const glow = interpolate(frame, [at + 6, at + 14, at + 40], [0, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  return (
+    <span
+      style={{
+        fontWeight: 800,
+        // the same black as the bar until it starts to peel, so nothing shows through
+        color: peel > 0 ? "#b3261e" : "#111",
+        textShadow: `0 0 ${18 * glow}px rgba(179,38,30,${0.6 * glow})`,
+        backgroundImage: "linear-gradient(#111, #111)",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "100% 50%",
+        backgroundSize: `${(1 - peel) * 100}% 92%`,
+        boxDecorationBreak: "clone",
+        WebkitBoxDecorationBreak: "clone",
+      }}
+    >
+      {text}
+    </span>
   );
 };
 

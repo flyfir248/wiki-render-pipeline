@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import re
+
 from fyt.config import Config
-from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, Sfx, Word
+from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, ScriptScene, Sfx, Word
 
 TAIL_SECONDS = 1.5  # hold the last scene after the voice ends
 
@@ -72,7 +74,7 @@ def build_props(
                 effectY=scene.effect_y,
                 effectAt=scene.effect_at,
                 effectSrc=scene.effect_src,
-                clueTimes=clue_times(scene.items, clip_words[i], start - vis_start) if scene.type == "evidence" else None,
+                revealTimes=reveal_times(revealed(scene), clip_words[i], start - vis_start),
                 camera=scene.camera,
                 transition=scene.transition,
             )
@@ -106,10 +108,20 @@ def _stems(text: str) -> set[str]:
     return {w[:5] for w in words if len(w) >= 4 and w not in STOPWORDS}
 
 
-def clue_times(clues: list[str] | None, words: list[Word], offset: float) -> list[float] | None:
-    """When the narration first mentions each evidence clue, so its card is pinned as it is said.
-    Clues stay in order; one the narration never names is pinned halfway to the next. None when
-    nothing matches, and the renderer spreads the cards evenly."""
+def revealed(scene: ScriptScene) -> list[str] | None:
+    """What a scene shows one piece at a time as it is said: an evidence board's clues, or the
+    [bracketed] words a document scene starts with blacked out."""
+    if scene.type == "evidence":
+        return scene.items
+    if scene.type == "document":
+        return re.findall(r"\[([^\]]+)\]", scene.text or "") or None
+    return None
+
+
+def reveal_times(clues: list[str] | None, words: list[Word], offset: float) -> list[float] | None:
+    """When the narration first mentions each clue (or hidden phrase), so it appears as it is said.
+    Clues stay in order; one the narration never names is shown halfway to the next. None when
+    nothing matches, and the renderer spreads them evenly."""
     if not clues or not words:
         return None
     times: list[float | None] = []

@@ -191,7 +191,16 @@ def test_evidence_clues_are_pinned_when_the_narration_names_them():
     props = build_props(Config(), s, [(0.5, 4.0)], [words], {}, None, None)
     # The first scene starts at 0, so word times shift by the clip's 0.5 s offset. Radiation is never
     # said, so it is pinned between its neighbours.
-    assert props.scenes[0].clueTimes == [0.9, 2.3, 3.7]
+    assert props.scenes[0].revealTimes == [0.9, 2.3, 3.7]
     assert qa.check_script(Config(), s) == []
     s.scenes[0].items = ["One clue"]
     assert "evidence board" in " | ".join(qa.check_script(Config(), s))
+
+
+def test_redacted_document_words_are_uncovered_when_said():
+    s = script(1)
+    s.scenes[0].type = "document"
+    s.scenes[0].text = "The deaths were caused by a [compelling natural force]."
+    words = [Word(word=w, start=t, end=t + 0.3) for w, t in [("Their", 0.0), ("verdict", 0.4), ("blamed", 0.8), ("a", 1.2), ("compelling", 1.4), ("force.", 2.0)]]
+    props = build_props(Config(), s, [(0.0, 3.0)], [words], {}, None, None)
+    assert props.scenes[0].revealTimes == [1.4]

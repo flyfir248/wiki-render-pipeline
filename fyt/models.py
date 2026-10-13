@@ -218,7 +218,7 @@ class RenderScene(BaseModel):
     effectY: float | None = None
     effectAt: float | None = None
     effectSrc: str | None = None
-    clueTimes: list[float] | None = None  # evidence scenes: seconds from the scene's start
+    revealTimes: list[float] | None = None  # evidence clues / document [hidden] words: when said, from scene start
     camera: Camera | None = None
     transition: Transition | None = None
 

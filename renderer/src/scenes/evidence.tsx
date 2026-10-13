@@ -1,8 +1,8 @@
-// An investigator's evidence board: clue cards are pinned one by one, red string runs between them,
-// and the camera moves from clue to clue before pulling back to show the whole board. A stamp
-// (UNSOLVED, CLASSIFIED) can slam onto it at the end.
+// An investigator's evidence board in a dark room: a flashlight finds each clue card as it is pinned
+// and typed out, red string runs between them, the last clue is circled in marker, and the camera
+// pulls back to show the whole board. A stamp (UNSOLVED, CLASSIFIED) can slam onto it at the end.
 import React from "react";
-import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Easing, Img, interpolate, random, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Format } from "../types";
 import { pick, type SceneProps } from "./shared";
 
@@ -27,30 +27,42 @@ export const EvidenceScene: React.FC<SceneProps> = ({ scene, format }) => {
   const photo = scene.media?.kind === "image" ? scene.media.src : null;
   const slots = SLOTS[format];
   // Each card is pinned as the narration names its clue, or spread evenly when timings are missing.
-  const said = scene.clueTimes?.length === clues.length ? scene.clueTimes : null;
+  const said = scene.revealTimes?.length === clues.length ? scene.revealTimes : null;
   const at = (i: number) =>
     said ? Math.max(0, Math.round(said[i] * fps) - 6) : Math.round(D * 0.08 + (i * D * 0.62) / Math.max(clues.length, 1));
   const pullBack = Math.max(at(clues.length - 1) + 36, Math.round(D * 0.78));
   const stampAt = Math.min(D - 15, Math.max(Math.round(D * 0.84), pullBack + 10));
 
-  // Camera: settle on each clue as it is pinned, then pull back to the whole board.
-  const keys = [0, ...clues.map((_, i) => at(i) + 6), pullBack, Math.max(pullBack + 24, D)].reduce<number[]>(
-    (out, k) => [...out, out.length ? Math.max(k, out[out.length - 1] + 1) : k], // interpolate needs rising keys
-    [],
-  );
-  const xs = [photo ? slots.photo[0] : 50, ...clues.map((_, i) => slots.clues[i][0]), 50, 50];
-  const ys = [photo ? slots.photo[1] : 50, ...clues.map((_, i) => slots.clues[i][1]), 50, 50];
-  const zs = [1.25, ...clues.map(() => 1.5), 1.02, 1.0];
+  // Camera: arrive on each clue as it is pinned and hold there, moving on just before the next one,
+  // then pull back to the whole board.
+  const start: [number, number, number, number] = [0, photo ? slots.photo[0] : 50, photo ? slots.photo[1] : 50, 1.25];
+  const stops = clues.flatMap((_, i): [number, number, number, number][] => {
+    const [cx, cy] = slots.clues[i];
+    const leave = (i + 1 < clues.length ? at(i + 1) : pullBack) - 14;
+    return [
+      [at(i) + 6, cx, cy, 1.5],
+      [Math.max(at(i) + 7, leave), cx, cy, 1.5],
+    ];
+  });
+  const frames = [start, ...stops, [pullBack, 50, 50, 1.02], [Math.max(pullBack + 24, D), 50, 50, 1.0]];
+  // interpolate needs rising keys
+  const keys = frames.reduce<number[]>((out, [k]) => [...out, out.length ? Math.max(k, out[out.length - 1] + 1) : k], []);
+  const [xs, ys, zs] = [1, 2, 3].map((c) => frames.map((f) => f[c]));
   const moveTo = (values: number[]) =>
     interpolate(frame, keys, values, { easing: ease, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const z = moveTo(zs);
   // Keep the board's edges out of frame.
   const room = ((1 - 1 / z) / 2) * 100;
   const clamp = (v: number) => Math.max(-room, Math.min(room, v));
-  const dx = clamp(50 - moveTo(xs)) + Math.sin(frame / 37) * 0.35;
-  const dy = clamp(50 - moveTo(ys)) + Math.cos(frame / 43) * 0.3;
+  const [fx, fy] = [moveTo(xs), moveTo(ys)];
+  const dx = clamp(50 - fx) + Math.sin(frame / 37) * 0.35;
+  const dy = clamp(50 - fy) + Math.cos(frame / 43) * 0.3;
   // A thump on the board each time a pin goes in.
   const thump = clues.reduce((s, _, i) => s + Math.max(0, 1 - Math.abs(frame - at(i) - 4) / 5) * 0.012, 0);
+  // The stamp hits hard: the board jolts for a few frames.
+  const hit = frame >= stampAt && frame < stampAt + 8 && scene.text ? (1 - (frame - stampAt) / 8) * 14 : 0;
+  const shakeX = hit * (random(`sx${frame}`) - 0.5);
+  const shakeY = hit * (random(`sy${frame}`) - 0.5);
 
   const hub = photo ? slots.photo : null;
   const anchor = (i: number): [number, number] => slots.clues[i];
@@ -68,7 +80,9 @@ export const EvidenceScene: React.FC<SceneProps> = ({ scene, format }) => {
 
   return (
     <AbsoluteFill style={{ background: "#120d09", overflow: "hidden" }}>
-      <AbsoluteFill style={{ transform: `scale(${z + thump}) translate(${dx}%, ${dy}%)`, transformOrigin: "50% 50%" }}>
+      <AbsoluteFill
+        style={{ transform: `translate(${shakeX}px, ${shakeY}px) scale(${z + thump}) translate(${dx}%, ${dy}%)`, transformOrigin: "50% 50%" }}
+      >
         <Board />
         {scene.heading ? <CaseLabel text={scene.heading} short={short} /> : null}
         {photo ? <PinnedPhoto src={photo} x={slots.photo[0]} y={slots.photo[1]} short={short} /> : null}
@@ -91,11 +105,23 @@ export const EvidenceScene: React.FC<SceneProps> = ({ scene, format }) => {
           )}
         </svg>
         {clues.map((text, i) => (
-          <ClueCard key={i} id={`${scene.id}-${i}`} text={text} n={i + 1} at={at(i)} x={anchor(i)[0]} y={anchor(i)[1]} short={short} />
+          <ClueCard
+            key={i}
+            id={`${scene.id}-${i}`}
+            text={text}
+            n={i + 1}
+            at={at(i)}
+            x={anchor(i)[0]}
+            y={anchor(i)[1]}
+            short={short}
+            circled={i === clues.length - 1 && clues.length > 1}
+          />
         ))}
       </AbsoluteFill>
-      {/* Lamp light: bright where the camera looks, dark at the edges. */}
-      <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(0,0,0,0.75) 100%)", pointerEvents: "none" }} />
+      {/* the beam sits on what the camera is looking at, wherever the board's edge put it on screen */}
+      <Flashlight z={z} pullBack={pullBack} x={50 + z * (fx - 50 + dx)} y={50 + z * (fy - 50 + dy)} />
+      <Dust />
+      <Grain />
       {scene.text ? <Stamp text={scene.text} at={stampAt} fps={fps} short={short} /> : null}
     </AbsoluteFill>
   );
@@ -131,7 +157,7 @@ const Pin: React.FC<{ size?: number }> = ({ size = 34 }) => (
   />
 );
 
-const ClueCard: React.FC<{ id: string; text: string; n: number; at: number; x: number; y: number; short: boolean }> = ({
+const ClueCard: React.FC<{ id: string; text: string; n: number; at: number; x: number; y: number; short: boolean; circled: boolean }> = ({
   id,
   text,
   n,
@@ -139,12 +165,15 @@ const ClueCard: React.FC<{ id: string; text: string; n: number; at: number; x: n
   x,
   y,
   short,
+  circled,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const p = spring({ frame: frame - at, fps, config: { damping: 13, mass: 0.6 } });
   const tilt = pick(id, [-5, -3, -1.5, 2, 3.5, 5]);
   const cardW = short ? 400 : 390;
+  // Typed out after the pin goes in; the card keeps its full size so nothing reflows.
+  const typed = Math.floor(interpolate(frame, [at + 6, at + 6 + Math.min(24, text.length * 1.2)], [0, text.length], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));
   return (
     <div
       style={{
@@ -168,8 +197,87 @@ const ClueCard: React.FC<{ id: string; text: string; n: number; at: number; x: n
     >
       <Pin />
       <div style={{ fontSize: "0.55em", letterSpacing: 3, color: STRING, marginBottom: 10 }}>CLUE {String(n).padStart(2, "0")}</div>
-      {text}
+      <span>{text.slice(0, typed)}</span>
+      <span style={{ visibility: "hidden" }}>{text.slice(typed)}</span>
+      {circled ? <MarkerCircle at={at + 34} /> : null}
     </div>
+  );
+};
+
+// A red marker loop scrawled around the card, then a question mark beside it.
+const MarkerCircle: React.FC<{ at: number }> = ({ at }) => {
+  const frame = useCurrentFrame();
+  const loop = interpolate(frame, [at, at + 16], [0, 1], { easing: Easing.out(Easing.quad), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const mark = interpolate(frame, [at + 14, at + 24], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  if (frame < at) return null;
+  const pen = { fill: "none", stroke: "#e0262c", strokeWidth: 7, strokeLinecap: "round", strokeLinejoin: "round", pathLength: 1, strokeDasharray: "1" } as const;
+  return (
+    <svg viewBox="0 0 200 120" preserveAspectRatio="none" style={{ position: "absolute", left: "-14%", top: "-24%", width: "128%", height: "148%", overflow: "visible", pointerEvents: "none" }}>
+      {/* slightly more than one turn, so the ends overlap like a real pen loop */}
+      <path {...pen} d="M30 22 C 80 2, 170 4, 192 40 C 210 80, 150 116, 90 114 C 30 112, 2 86, 8 56 C 14 26, 60 10, 120 12" strokeDashoffset={1 - loop} />
+      <path {...pen} strokeWidth={9} d="M206 6 C 214 -8, 238 -6, 236 10 C 234 24, 218 24, 220 38" strokeDashoffset={1 - mark} />
+      <circle cx={220} cy={52} r={5} fill="#e0262c" opacity={mark >= 1 ? 1 : 0} />
+    </svg>
+  );
+};
+
+// A flashlight beam in a dark room: it looks where the camera looks, flickers a little, and widens
+// as the camera pulls back so the whole board is lit at the end.
+const Flashlight: React.FC<{ z: number; pullBack: number; x: number; y: number }> = ({ z, pullBack, x, y }) => {
+  const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const flicker = 1 - 0.06 * random(`f${Math.floor(frame / 2)}`) - (random(`d${Math.floor(frame / 9)}`) < 0.04 ? 0.25 : 0);
+  const lit = interpolate(frame, [pullBack - 10, pullBack + 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const r = Math.max(width, height) * interpolate(lit, [0, 1], [0.32 + (1.5 - z) * 0.2, 0.75]);
+  const cx = interpolate(lit, [0, 1], [x, 50]) + Math.sin(frame / 23) * 2.5;
+  const cy = interpolate(lit, [0, 1], [y, 47]) + Math.cos(frame / 29) * 2;
+  const dark = interpolate(lit, [0, 1], [0.9, 0.6]) * flicker + (1 - flicker) * 0.9;
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <AbsoluteFill
+        style={{
+          background: `radial-gradient(circle ${r}px at ${cx}% ${cy}%, rgba(0,0,0,${1 - flicker}) 0%, rgba(0,0,0,${0.15 + (1 - flicker)}) 55%, rgba(0,0,0,${dark}) 100%)`,
+        }}
+      />
+      {/* warm bulb colour inside the beam */}
+      <AbsoluteFill style={{ background: `radial-gradient(circle ${r * 0.8}px at ${cx}% ${cy}%, rgba(255,200,120,0.16), transparent 70%)`, mixBlendMode: "screen" }} />
+    </AbsoluteFill>
+  );
+};
+
+// Dust drifting through the beam.
+const Dust: React.FC = () => {
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      {Array.from({ length: 26 }, (_, i) => {
+        const x = (random(`dx${i}`) * 100 + frame * (0.02 + random(`vx${i}`) * 0.05)) % 100;
+        const y = (random(`dy${i}`) * 100 - frame * (0.03 + random(`vy${i}`) * 0.06) + 1000) % 100;
+        const size = 2 + random(`ds${i}`) * 4;
+        const glow = 0.25 + 0.35 * Math.sin(frame / (12 + i) + i);
+        // Only motes near the middle, where the beam is, catch the light.
+        const inBeam = Math.max(0, 1 - Math.hypot(x - 50, y - 47) / 35);
+        return (
+          <div
+            key={i}
+            style={{ position: "absolute", left: `${x}%`, top: `${y}%`, width: size, height: size, borderRadius: "50%", background: "#ffe6bf", opacity: glow * inBeam, filter: "blur(1px)" }}
+          />
+        );
+      })}
+    </AbsoluteFill>
+  );
+};
+
+// Film grain, a new pattern every two frames.
+const Grain: React.FC = () => {
+  const seed = Math.floor(useCurrentFrame() / 2) % 12;
+  return (
+    <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, opacity: 0.09, mixBlendMode: "overlay", pointerEvents: "none" }}>
+      <filter id={`grain${seed}`}>
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={2} seed={seed} />
+      </filter>
+      <rect width="100%" height="100%" filter={`url(#grain${seed})`} />
+    </svg>
   );
 };
 
@@ -224,10 +332,14 @@ const Stamp: React.FC<{ text: string; at: number; fps: number; short: boolean }>
   const frame = useCurrentFrame();
   if (frame < at) return null;
   const p = spring({ frame: frame - at, fps, config: { damping: 11, mass: 0.5, stiffness: 220 } });
+  const flash = interpolate(frame - at, [0, 2, 6], [0, 0.35, 0], { extrapolateRight: "clamp" });
+  const landed = frame - at >= 4;
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", paddingBottom: short ? 380 : 0 }}>
+      <AbsoluteFill style={{ background: "#fff", opacity: flash }} />
       <div
         style={{
+          position: "relative",
           transform: `rotate(-12deg) scale(${interpolate(p, [0, 1], [2.6, 1])})`,
           opacity: interpolate(p, [0, 0.25], [0, 0.92], { extrapolateRight: "clamp" }),
           padding: "14px 46px",
@@ -244,6 +356,23 @@ const Stamp: React.FC<{ text: string; at: number; fps: number; short: boolean }>
         }}
       >
         {text}
+        {/* ink spattered by the impact */}
+        {landed
+          ? Array.from({ length: 9 }, (_, i) => (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  left: `${random(`sp${i}`) * 110 - 5}%`,
+                  top: `${random(`sq${i}`) > 0.5 ? 108 + random(`sr${i}`) * 25 : -12 - random(`sr${i}`) * 25}%`,
+                  width: 6 + random(`ss${i}`) * 16,
+                  height: 6 + random(`ss${i}`) * 16,
+                  borderRadius: "50%",
+                  background: STRING,
+                }}
+              />
+            ))
+          : null}
       </div>
     </AbsoluteFill>
   );

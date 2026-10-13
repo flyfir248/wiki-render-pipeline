@@ -366,7 +366,9 @@ Scene templates (field names in brackets):
   for BC) and a year counter runs.
 - process: how one thing led to another, as connected steps [heading, items (2-5, max ~5 words each)]
 - document: a line from a real report, letter, ruling or newspaper, highlighted [heading = what the
-  document is, text = the line (max ~20 words), author = source and year]
+  document is, text = the line (max ~20 words), author = source and year]. For a reveal, wrap the 1-3
+  words that matter most in [square brackets]: they start blacked out, like a declassified file, and
+  are uncovered one by one.
 - story: an animated 2D illustration that acts out what the narration describes, like a cartoon
   explainer [heading (optional), setting (sky, night, space, sea, city, countryside, desert, snow, room,
   road), actors (1-5 things on stage: thing = plain concrete noun, x/y position 0-100 with y=100 the
