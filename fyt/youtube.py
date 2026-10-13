@@ -396,8 +396,8 @@ def channel_growth(days: int = 28) -> list[dict]:
     )
     try:
         rows = yta.reports().query(dimensions="creatorContentType", **query).execute().get("rows", [])
-        kinds = {"SHORTS": "Shorts", "VIDEO_ON_DEMAND": "Long videos", "LIVE_STREAM": "Live"}
-        return [{"kind": kinds.get(k, k.title()), "views": int(v), "gained": int(g), "lost": int(lo)} for k, v, g, lo in rows]
+        kinds = {"shorts": "Shorts", "videoondemand": "Long videos", "video_on_demand": "Long videos", "livestream": "Live"}
+        return [{"kind": kinds.get(k.lower(), k), "views": int(v), "gained": int(g), "lost": int(lo)} for k, v, g, lo in rows]
     except Exception:  # the content-type split isn't offered on every channel
         rows = yta.reports().query(**query).execute().get("rows", [])
         return [{"kind": "All videos", "views": int(v), "gained": int(g), "lost": int(lo)} for v, g, lo in rows]

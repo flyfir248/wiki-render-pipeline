@@ -692,7 +692,7 @@ def _performance_summary(cfg: Config, limit: int) -> str:
             gained = youtube.subscribers_gained(list(uploaded))
         except (Exception, SystemExit) as e:  # a nice-to-have on top of watch time
             print(f"warning: could not fetch subscribers gained: {e}")
-    subs = lambda r: f", {gained[r['id']]} new subscribers" if r["id"] in gained else ""  # noqa: E731
+    subs = lambda r: f", {_subscribers(gained[r['id']])}" if r["id"] in gained else ""  # noqa: E731
     converted = subscriber_winners(rows, gained)
     rated = [r for r in rows if watched.get(r["id"], {}).get("views", 0) >= MIN_VIEWS_FOR_RETENTION]
     if len(rated) >= 4:
@@ -715,6 +715,10 @@ def _performance_summary(cfg: Config, limit: int) -> str:
 MIN_VIEWS_FOR_CONVERSION = 100  # below this, one subscriber swings the rate too much
 
 
+def _subscribers(n: int) -> str:
+    return f"{n} new subscriber{'' if n == 1 else 's'}"
+
+
 def subscriber_winners(rows: list[dict], gained: dict[str, int], limit: int = 5) -> str:
     """The videos that turned the largest share of their viewers into subscribers: what makes
     someone want more of the channel, not just finish one video."""
@@ -723,7 +727,7 @@ def subscriber_winners(rows: list[dict], gained: dict[str, int], limit: int = 5)
         return ""
     rated.sort(key=lambda r: gained[r["id"]] / r["views"], reverse=True)
     lines = "\n".join(
-        f"- {r['title']}: {gained[r['id']]} new subscribers from {r['views']} views" for r in rated[:limit]
+        f"- {r['title']}: {_subscribers(gained[r['id']])} from {r['views']} views" for r in rated[:limit]
     )
     return f"\nWon the most subscribers per view (topics and titles viewers want a whole channel of):\n{lines}"
 
