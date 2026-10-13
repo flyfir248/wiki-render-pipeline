@@ -245,6 +245,9 @@ class RenderProps(BaseModel):
     captions: list[Word]
     showCaptions: bool
     showVisualizer: bool
+    badge: str | None = None  # the series name, shown small at the top the whole video
+    subscribe: str | None = None  # shown at the end: over a Short's last seconds, on a long video's end card
+    endCard: float = 0  # seconds at the end of a long video held for YouTube's end screen
 
 
 class ThumbnailProps(BaseModel):

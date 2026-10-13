@@ -165,6 +165,9 @@ def publish_time(cfg: Config, now: datetime | None = None, rng: random.Random | 
 def description_footer(cfg: Config, script: Script) -> str:
     """Sources, series and #Shorts, added under the description (and under each translation of it)."""
     footer = ""
+    link = _subscribe_link(cfg)
+    if link:
+        footer += f"\n\n{cfg.growth.subscribe_line.strip()}: {link}"
     if script.sources:
         footer += "\n\nSources:\n" + "\n".join(f"- {s}" for s in script.sources)
     if script.series:
@@ -172,6 +175,17 @@ def description_footer(cfg: Config, script: Script) -> str:
     if cfg.format == "short":
         footer += "\n\n#Shorts"
     return footer
+
+
+def _subscribe_link(cfg: Config) -> str | None:
+    """The one-click subscribe link for descriptions, when the line is set and the channel can be read."""
+    if not cfg.growth.subscribe_line.strip() or not authorised() or not can_manage():
+        return None
+    try:
+        return subscribe_url(channel_id())
+    except Exception as e:  # the video still goes up without it
+        print(f"warning: no subscribe link in the description: {e}")
+        return None
 
 
 def localized(cfg: Config, script: Script, translations: dict[str, dict]) -> dict[str, dict]:
@@ -347,6 +361,62 @@ def retention(video_ids: list[str], since: str = "2020-01-01") -> dict[str, dict
         for vid, views, seconds, percent in resp.get("rows", []):
             out[vid] = {"views": int(views), "seconds": float(seconds), "percent": float(percent)}
     return out
+
+
+def subscribers_gained(video_ids: list[str], since: str = "2020-01-01") -> dict[str, int]:
+    """Per video: subscribers gained on its watch page (or Shorts player), from YouTube Analytics."""
+    yta = _analytics()
+    out: dict[str, int] = {}
+    today = datetime.now(timezone.utc).date().isoformat()
+    for i in range(0, len(video_ids), 50):
+        resp = yta.reports().query(
+            ids="channel==MINE",
+            startDate=since,
+            endDate=today,
+            metrics="views,subscribersGained",
+            dimensions="video",
+            filters="video==" + ",".join(video_ids[i : i + 50]),
+            maxResults=50,
+        ).execute()
+        for vid, _views, gained in resp.get("rows", []):
+            out[vid] = int(gained)
+    return out
+
+
+def channel_growth(days: int = 28) -> list[dict]:
+    """Views and subscribers gained and lost over the last `days`, split into Shorts and long videos
+    when YouTube reports the split (one row per content type), else one row for the whole channel."""
+    yta = _analytics()
+    end = datetime.now(timezone.utc).date()
+    query = dict(
+        ids="channel==MINE",
+        startDate=(end - timedelta(days=days)).isoformat(),
+        endDate=end.isoformat(),
+        metrics="views,subscribersGained,subscribersLost",
+    )
+    try:
+        rows = yta.reports().query(dimensions="creatorContentType", **query).execute().get("rows", [])
+        kinds = {"shorts": "Shorts", "videoondemand": "Long videos", "video_on_demand": "Long videos", "livestream": "Live"}
+        return [{"kind": kinds.get(k.lower(), k), "views": int(v), "gained": int(g), "lost": int(lo)} for k, v, g, lo in rows]
+    except Exception:  # the content-type split isn't offered on every channel
+        rows = yta.reports().query(**query).execute().get("rows", [])
+        return [{"kind": "All videos", "views": int(v), "gained": int(g), "lost": int(lo)} for v, g, lo in rows]
+
+
+_channel_id: str | None = None
+
+
+def channel_id() -> str:
+    """The channel's id (UC...), read once per run; needs more than the upload-only scope."""
+    global _channel_id
+    if _channel_id is None:
+        _channel_id = _service().channels().list(part="id", mine=True).execute()["items"][0]["id"]
+    return _channel_id
+
+
+def subscribe_url(channel: str) -> str:
+    """A link that opens the channel with the subscribe confirmation already showing."""
+    return f"https://www.youtube.com/channel/{channel}?sub_confirmation=1"
 
 
 def _analytics():

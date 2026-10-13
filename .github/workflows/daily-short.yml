@@ -106,9 +106,9 @@ jobs:
         run: python -m fyt playlists --max $([ "$TASK" = playlists ] && { [ "$COUNT" -gt 1 ] && echo "$COUNT" || echo 40; } || echo 8)
 
       # Drafts for the Community tab (YouTube has no API to post them), sent as an issue, which GitHub
-      # emails to you. On demand for now; add `env.TASK == 'fill' ||` to the condition to get them weekly.
+      # emails to you once a week. Posts reach subscribers and viewers between uploads.
       - name: Draft Community posts
-        if: env.TASK == 'posts'
+        if: env.TASK == 'fill' || env.TASK == 'posts'
         continue-on-error: true
         env:
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}

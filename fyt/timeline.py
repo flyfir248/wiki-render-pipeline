@@ -22,7 +22,9 @@ def build_props(
 ) -> RenderProps:
     if len(spans) != len(script.scenes):
         raise ValueError("one audio span per scene is required")
-    duration = (spans[-1][1] if spans else 0) + TAIL_SECONDS
+    # Long videos hold an end card after the voice, where YouTube's end screen (subscribe, next video) sits.
+    end_card = cfg.growth.end_card_seconds if cfg.format == "long" else 0.0
+    duration = (spans[-1][1] if spans else 0) + TAIL_SECONDS + end_card
     scenes: list[RenderScene] = []
     captions: list[Word] = []
     # The video's first map opens on a globe that dives in; later maps start from the flat map.
@@ -89,6 +91,9 @@ def build_props(
         captions=captions,
         showCaptions=cfg.captions,
         showVisualizer=cfg.visualizer,
+        badge=(script.series or None) if cfg.growth.series_badge else None,
+        subscribe=cfg.growth.subscribe_line.strip() or None,
+        endCard=round(end_card, 3),
     )
 
 

@@ -86,7 +86,7 @@ def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True
         + f"Current title: {script.title}\nCurrent thumbnail text: {script.thumbnail_text}\n"
         f"Opening narration: {script.scenes[0].narration if script.scenes else ''}\n\n"
         f"Full narration:\n{narration[:3000]}"
-        + (f"\n\nHow earlier videos on this channel did (learn from the titles and hooks that held viewers):\n{performance[:1500]}" if performance else "")
+        + (f"\n\nHow earlier videos on this channel did (learn from the titles and hooks that held viewers and won subscribers):\n{performance[:1500]}" if performance else "")
     )
     p = llm.structured(cfg, guide, user, Polish, max_tokens=2000)
     scenes = list(script.scenes)
