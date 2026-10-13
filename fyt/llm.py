@@ -308,6 +308,7 @@ Prefer primary and reputable sources. Flag anything uncertain.""",
 
 SHORT_WORDS = 130  # about 50 seconds at the Shorts reading speed (110 words ran 44s): room to explain the story
 SHORT_MAX_WORDS = 150  # about a minute: longer gets tightened
+SHORT_MIN_WORDS = 105  # under about 40 seconds there is no room for context: shorter gets rewritten
 
 SHORT_STRUCTURE = """Structure of a Short (45-55 seconds, 6-8 scenes; viewers decide in the first second whether to swipe):
 1. Hook (scene 1, max 12 words): the strangest concrete fact, stated flatly. The viewer must know

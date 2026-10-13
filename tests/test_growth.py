@@ -12,6 +12,13 @@ from fyt.store import Job, Topics, Uploads
 NOW = datetime(2026, 9, 29, 13, 0, tzinfo=timezone.utc)
 
 
+@pytest.fixture(autouse=True)
+def plain_shorts(monkeypatch):
+    """These tests are about topics and packaging, not script length or the story check."""
+    monkeypatch.setattr(llm, "SHORT_MIN_WORDS", 0)
+    monkeypatch.setattr(llm, "mend", lambda cfg, s: (s, []))
+
+
 def script(n=6, chapters=None) -> Script:
     return Script(
         title="Old title",

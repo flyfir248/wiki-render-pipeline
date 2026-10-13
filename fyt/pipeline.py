@@ -232,6 +232,25 @@ def _short_enough(
         )
         if narration_words(retry) < narration_words(script):
             script = retry
+    elif limit and narration_words(script) < llm.SHORT_MIN_WORDS:
+        # Too thin a Short skips the context, and then the story makes no sense to a newcomer.
+        log(job, f"script is only {narration_words(script)} words; asking for a fuller one")
+        feedback = (
+            f"Your previous draft had only {narration_words(script)} words of narration, too few to follow. "
+            f"Write about {llm.SHORT_WORDS} words: say who or what this is and why the hook is true before the build."
+        )
+        retry = llm.write_script(
+            cfg,
+            subject,
+            notes,
+            from_wikipedia=from_wiki,
+            images=menu,
+            feedback=f"{note}\n\n{feedback}".strip(),
+            news=news,
+            lessons=lessons,
+        )
+        if narration_words(script) < narration_words(retry) <= limit:
+            script = retry
     return script
 
 

@@ -101,3 +101,19 @@ def test_a_short_that_loses_the_thread_is_fixed(monkeypatch, tmp_path):
 
     monkeypatch.setattr(llm, "structured", lambda *a, **k: llm.Mended(problems=["p"], narrations=["only one"]))
     assert pipeline.make_sense(Config(format="short"), job, s) is s  # a broken fix is ignored
+
+
+def test_a_thin_short_is_written_again_with_context(monkeypatch, tmp_path):
+    drafts = [" ".join(["word"] * 60), " ".join(["word"] * 120)]
+    notes = []
+
+    def write_script(cfg, topic, n, from_wikipedia=False, images="", feedback="", news=False, lessons=""):
+        notes.append(feedback)
+        return _script({"narration": drafts[len(notes) - 1], "type": "statement", "text": "x"})
+
+    monkeypatch.setattr(llm, "write_script", write_script)
+    monkeypatch.setattr(pipeline.insights, "scene_lessons", lambda cfg: "")
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+    out = pipeline._short_enough(Config(format="short"), job, "t", "n", True, "")
+    assert pipeline.narration_words(out) == 120 and "only 60 words" in notes[1]
