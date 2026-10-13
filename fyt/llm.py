@@ -424,12 +424,13 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
 
 Rules:
 - Each scene's narration is 1-4 sentences (1-2 in a Short) and matches what is on screen at that moment.
-- Act the story out: use a story scene for every key moment where something happens (a journey, an
-  accident, a discovery, a handover, a chase) -- about a third of all scenes. Viewers stay for seeing
-  the story, not reading it.
+- Show, don't just tell: real photos of the subject (they get the channel's cut-out collage look), maps,
+  and the animated templates carry most of the video. Save story scenes, which act a moment out in
+  drawings, for the one or two moments a photo can't show (a journey, an accident, a chase) -- at most
+  one scene in five. Viewers stay for seeing the story, not reading it.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
-  (stat, bars, timeline, comparison, map, process) wherever the research supports them -- they are what makes this
-  channel different from generic stock-footage channels.
+  (stat, bars, timeline, comparison, map, process, evidence) wherever the research supports them -- they
+  are what makes this channel different from generic stock-footage channels.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.
 - Title max 70 characters; no false clickbait. Description must be accurate.
