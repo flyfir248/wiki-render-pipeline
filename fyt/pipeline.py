@@ -95,6 +95,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             log(job, f"warning: polish failed: {e}")
     if written:
         script = keep_short(cfg, job, script)
+        script = make_sense(cfg, job, script)
     if two_part:
         script = script.model_copy(update={"title": f"{script.title[:88]} (Part 1)"})
         job.update(two_part=True)
@@ -246,6 +247,20 @@ def keep_short(cfg: Config, job: Job, script: Script) -> Script:
         log(job, f"warning: could not tighten the script: {e}")
         return script
     return tight if narration_words(tight) < words else script
+
+
+def make_sense(cfg: Config, job: Job, script: Script) -> Script:
+    """A Short is heard once at speed: check it tells one followable story, and fix the lines that don't."""
+    if cfg.format != "short":
+        return script
+    try:
+        fixed, problems = llm.mend(cfg, script)
+    except Exception as e:  # the script as written is still a Short
+        log(job, f"warning: could not check the story: {e}")
+        return script
+    if problems:
+        log(job, "story fixed where it lost the thread: " + "; ".join(problems))
+    return fixed
 
 
 def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:
