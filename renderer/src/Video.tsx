@@ -1,6 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useVideoConfig } from "remotion";
 import { Background } from "./components/Background";
+import { Brand } from "./components/Brand";
 import { Captions } from "./components/Captions";
 import { SoundEffects } from "./components/SoundEffects";
 import { Visualizer, energyOf, useVoiceSpectrum } from "./components/Visualizer";
@@ -49,6 +50,8 @@ export const Video: React.FC<RenderProps> = (props) => {
       {props.showCaptions && props.captions.length ? (
         <Captions words={props.captions} theme={props.theme} format={props.format} />
       ) : null}
+
+      <Brand badge={props.badge} subscribe={props.subscribe} endCard={props.endCard ?? 0} theme={props.theme} format={props.format} />
 
       {props.voice ? <Audio src={staticFile(props.voice)} /> : null}
       {props.sfx ? <SoundEffects scenes={props.scenes} fps={fps} dir={props.sfx.dir} volume={props.sfx.volume} /> : null}

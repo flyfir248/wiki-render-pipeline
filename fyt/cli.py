@@ -217,6 +217,10 @@ def main(argv: list[str] | None = None) -> None:
                     print(f"watch time read for {len(watched)} of {len(ids)} recent videos\n")
                 except Exception as e:  # most often: the YouTube Analytics API isn't enabled in the Cloud project
                     print(f"could not read watch time: {e}\n")
+                try:
+                    print(growth_report(youtube.channel_growth()))
+                except Exception as e:
+                    print(f"could not read subscriber numbers: {e}\n")
         print(pipeline.performance_summary(cfg, limit=100) or "no uploaded videos yet")
         from fyt import insights
 
@@ -224,6 +228,15 @@ def main(argv: list[str] | None = None) -> None:
             cfg.format = fmt
             lessons = insights.scene_lessons(cfg)
             print(f"\n{fmt} videos, scene by scene:\n{lessons or '(not enough watch-time data yet)'}")
+
+
+def growth_report(rows: list[dict], days: int = 28) -> str:
+    """Views and subscribers over the last `days`, with how many viewers per 1,000 subscribed."""
+    lines = [f"Subscribers, last {days} days:"]
+    for r in rows:
+        rate = r["gained"] / r["views"] * 1000 if r["views"] else 0.0
+        lines.append(f"- {r['kind']}: {r['views']} views, +{r['gained']} / -{r['lost']} subscribers ({rate:.1f} per 1,000 views)")
+    return "\n".join(lines) + "\n"
 
 
 if __name__ == "__main__":

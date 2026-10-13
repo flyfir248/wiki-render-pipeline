@@ -682,23 +682,50 @@ def _performance_summary(cfg: Config, limit: int) -> str:
         print(f"warning: could not fetch stats: {e}")
         return ""
     watched: dict[str, dict] = {}
+    gained: dict[str, int] = {}
     if youtube.can_analyze():
         try:
             watched = youtube.retention(list(uploaded))
         except Exception as e:
             print(f"warning: could not fetch watch time: {e}")
+        try:
+            gained = youtube.subscribers_gained(list(uploaded))
+        except (Exception, SystemExit) as e:  # a nice-to-have on top of watch time
+            print(f"warning: could not fetch subscribers gained: {e}")
+    subs = lambda r: f", {gained[r['id']]} new subscribers" if r["id"] in gained else ""  # noqa: E731
+    converted = subscriber_winners(rows, gained)
     rated = [r for r in rows if watched.get(r["id"], {}).get("views", 0) >= MIN_VIEWS_FOR_RETENTION]
     if len(rated) >= 4:
         rated.sort(key=lambda r: watched[r["id"]]["percent"], reverse=True)
         line = lambda r: (  # noqa: E731
-            f"- {r['title']}: {r['views']} views, watched {watched[r['id']]['percent']:.0f}% on average"
+            f"- {r['title']}: {r['views']} views, watched {watched[r['id']]['percent']:.0f}% on average{subs(r)}"
         )
         keep = max(2, limit * 2 // 3)
         best = "\n".join(line(r) for r in rated[:keep])
         worst = "\n".join(line(r) for r in rated[keep:][-max(1, limit - keep):])
-        return f"Held viewers best:\n{best}" + (f"\nLost viewers soonest (avoid what these did):\n{worst}" if worst else "")
+        return (
+            f"Held viewers best:\n{best}"
+            + (f"\nLost viewers soonest (avoid what these did):\n{worst}" if worst else "")
+            + converted
+        )
     rows.sort(key=lambda r: r["views"], reverse=True)
-    return "\n".join(f"- {r['title']}: {r['views']} views, {r['likes']} likes" for r in rows[:limit])
+    return "\n".join(f"- {r['title']}: {r['views']} views, {r['likes']} likes{subs(r)}" for r in rows[:limit]) + converted
+
+
+MIN_VIEWS_FOR_CONVERSION = 100  # below this, one subscriber swings the rate too much
+
+
+def subscriber_winners(rows: list[dict], gained: dict[str, int], limit: int = 5) -> str:
+    """The videos that turned the largest share of their viewers into subscribers: what makes
+    someone want more of the channel, not just finish one video."""
+    rated = [r for r in rows if gained.get(r["id"], 0) > 0 and r["views"] >= MIN_VIEWS_FOR_CONVERSION]
+    if not rated:
+        return ""
+    rated.sort(key=lambda r: gained[r["id"]] / r["views"], reverse=True)
+    lines = "\n".join(
+        f"- {r['title']}: {gained[r['id']]} new subscribers from {r['views']} views" for r in rated[:limit]
+    )
+    return f"\nWon the most subscribers per view (topics and titles viewers want a whole channel of):\n{lines}"
 
 
 def load_script(path: Path) -> Script:

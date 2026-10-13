@@ -83,6 +83,11 @@ growth:
   # least a day old). Factual and attributed, no speculation; see NEWS_GUIDE in fyt/llm.py.
   news_longs_per_week: 1
   news_min_fit: 8
+  # Turning viewers into subscribers: the series name on screen, the reason to subscribe over a Short's
+  # last seconds and on a long video's end card, and a one-click subscribe link in every description.
+  series_badge: true
+  subscribe_line: "Subscribe for a strange true story every day"
+  end_card_seconds: 15      # add the end screen (subscribe + best video) in YouTube Studio
 
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is

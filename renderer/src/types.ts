@@ -122,6 +122,9 @@ export type RenderProps = {
   captions: Word[];
   showCaptions: boolean;
   showVisualizer: boolean;
+  badge?: string | null; // the series name, shown small at the top
+  subscribe?: string | null; // over a Short's last seconds, and on a long video's end card
+  endCard?: number; // seconds held at the end of a long video for YouTube's end screen
 };
 
 export type ThumbnailProps = {

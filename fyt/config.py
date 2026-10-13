@@ -165,6 +165,16 @@ class GrowthConfig(BaseModel):
     news_min_fit: int = 8
     news_min_chars: int = 6000
     news_series: str = "News Explained"  # the playlist news explainers go in ("" for none)
+    # Turning viewers into subscribers. The series name shown small at the top of every video, so a
+    # viewer sees each one is part of a collection.
+    series_badge: bool = True
+    # Why to subscribe, in a few words: shown over a Short's last seconds (on screen only, so the loop
+    # stays seamless), on the long video's end card, and as a one-click subscribe link at the top of
+    # each description. Empty for none.
+    subscribe_line: str = ""
+    # Seconds a long video holds an end card after the narration, the space YouTube's end screen
+    # (subscribe button, next video) covers. Add the end screen in YouTube Studio. 0 for none.
+    end_card_seconds: float = 0.0
 
 
 class Config(BaseModel):
