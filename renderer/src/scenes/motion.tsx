@@ -415,7 +415,8 @@ export const ScaleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
             </div>
           );
         }
-        const x = sx(xs[i]);
+        // Keep the label on screen even when its circle sits near the edge.
+        const x = Math.max(short ? 190 : 220, Math.min(width - (short ? 190 : 220), sx(xs[i])));
         const y = groundY - 2 * Math.max(r, 22) - 24;
         return (
           <div
