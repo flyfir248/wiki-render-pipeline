@@ -155,7 +155,8 @@ const StatementScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
         {words.map((w, i) => {
           const at = said ? Math.round(said[i] * fps) - 2 : (i / words.length) * revealEnd;
           const slam = spring({ frame: frame - at, fps, config: { damping: 13, mass: 0.5, stiffness: 180 } });
-          const o = interpolate(frame, [at, at + 3], [said ? 0 : 0.15, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+          // Words not said yet wait faintly in place, so the line is never an empty frame.
+          const o = interpolate(frame, [at, at + 3], [0.14, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
           const emphasise = /^[A-Z0-9$%]/.test(w) && i > 0;
           return (
             <span
@@ -165,8 +166,8 @@ const StatementScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
                 opacity: o,
                 color: emphasise ? theme.accent : theme.text,
                 marginRight: "0.25em",
-                transform: `scale(${1 + (1 - slam) * (emphasise ? 1.2 : 0.7)}) rotate(${(1 - slam) * (i % 2 ? 4 : -4)}deg)`,
-                filter: slam < 0.9 ? `blur(${(1 - slam) * 6}px)` : undefined,
+                      transform: frame < at ? undefined : `scale(${1 + (1 - slam) * (emphasise ? 1.2 : 0.7)}) rotate(${(1 - slam) * (i % 2 ? 4 : -4)}deg)`,
+                filter: frame >= at && slam < 0.9 ? `blur(${(1 - slam) * 6}px)` : undefined,
               }}
             >
               {w}
@@ -183,6 +184,7 @@ const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const { durationInFrames } = useVideoConfig();
   const target = scene.value ?? 0;
   const lands = statLands(durationInFrames);
+  const statText = `${scene.prefix ?? ""}${isYear(scene) ? String(target) : formatNumber(target)}${scene.suffix ?? ""}`;
   const progress = interpolate(frame, [5, lands], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -199,7 +201,8 @@ const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
         style={{
           fontFamily: theme.font,
           fontWeight: 900,
-          fontSize: 210 * unit(format),
+          // Long figures shrink to fit across a Short's narrow frame.
+          fontSize: Math.min(210 * unit(format), (format === "short" ? 900 : 1600) / (0.62 * Math.max(1, statText.length))),
           color: theme.accent,
           lineHeight: 1,
           transform: `scale(${1 + 0.05 * pulse})`,
