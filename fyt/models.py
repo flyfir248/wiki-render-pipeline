@@ -9,11 +9,14 @@ from pydantic.json_schema import SkipJsonSchema
 
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
-    "map", "process", "document", "dialogue", "story", "evidence",
+    "map", "process", "document", "dialogue", "story", "evidence", "trend", "proportion", "scale", "cycle",
 ]
+# Scenes that draw their whole picture themselves, so no photo is fetched for them. Code-drawn charts
+# (trend, proportion, scale, cycle) do take one: it sits dim and soft far behind the chart.
+DRAWN = ("map", "story")
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
-Transition = Literal["fade", "slide", "zoom", "wipe", "flash"]
+Transition = Literal["fade", "slide", "zoom", "wipe", "flash", "thread", "whip"]
 # Feel of the background music, chosen from the story (see fyt.music).
 # What travels along a map route: a plane, ship, car or train icon, a walker, or an army's campaign arrow.
 Vehicle = Literal["plane", "ship", "car", "train", "walk", "army"]
@@ -81,11 +84,17 @@ class ScriptScene(BaseModel):
     type: SceneType = Field(description="Visual template used while the narration plays.")
     heading: str | None = Field(default=None, description="Short on-screen heading (max ~8 words).")
     text: str | None = Field(default=None, description="Supporting on-screen line, or the quote text for quote scenes.")
-    items: list[str] | None = Field(default=None, description="list scenes: 2-5 short bullet items.")
-    value: float | None = Field(default=None, description="stat scenes: the number to count up to.")
+    items: list[str] | None = Field(default=None, description="list scenes: 2-5 short bullet items. cycle scenes: 3-5 steps of the loop.")
+    value: float | None = Field(
+        default=None, description="stat scenes: the number to count up to. proportion scenes: the share as a percentage (0-100)."
+    )
     prefix: str | None = Field(default=None, description="stat scenes: e.g. '$'.")
     suffix: str | None = Field(default=None, description="stat scenes: e.g. '%', 'x', 'M'.")
-    data: list[DataPoint] | None = Field(default=None, description="bars scenes: 2-7 real data points.")
+    data: list[DataPoint] | None = Field(
+        default=None,
+        description="bars scenes: 2-7 real data points. trend scenes: 3-10 points in time order (label = year). "
+        "scale scenes: 2-5 things to compare by size (label = the thing).",
+    )
     events: list[TimelineEvent] | None = Field(default=None, description="timeline scenes: 3-5 dated events.")
     left_title: str | None = None
     left: list[str] | None = Field(default=None, description="comparison scenes: left column bullets.")
@@ -221,7 +230,7 @@ class RenderScene(BaseModel):
     effectY: float | None = None
     effectAt: float | None = None
     effectSrc: str | None = None
-    revealTimes: list[float] | None = None  # evidence clues / document [hidden] words: when said, from scene start
+    revealTimes: list[float] | None = None  # evidence clues, document [hidden] words, scale items, cycle steps: when said
     camera: Camera | None = None
     transition: Transition | None = None
 

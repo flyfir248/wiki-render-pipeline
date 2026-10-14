@@ -15,12 +15,10 @@ import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
 import { EvidenceScene } from "./evidence";
 import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
-import { Heading, PanelContext, Stage, Sub, useEnter, type SceneProps } from "./shared";
+import { CycleScene, Flash, ProportionScene, ScaleScene, TrendScene, impact, statLands } from "./motion";
+import { Heading, PanelContext, Stage, Sub, formatNumber, useEnter, type SceneProps } from "./shared";
 
-export { SceneFrame, transitionOf } from "./camera";
-
-const formatNumber = (n: number) =>
-  Math.abs(n) >= 1000 ? Math.round(n).toLocaleString("en-US") : n % 1 === 0 ? String(n) : n.toFixed(1);
+export { OVERLAP, SceneFrame, sceneSpans, transitionOf } from "./camera";
 
 // A bare year (1968, not 1,968), shown as itself rather than counted up from zero.
 const isYear = (scene: Scene) =>
@@ -80,7 +78,9 @@ const HookScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
     <AbsoluteFill>
       {scene.media ? (
         <>
-          <ShotReel media={scene.media} shots={scene.shots} camera="push_in" flat format={format} />
+          <AbsoluteFill style={{ transform: `scale(${interpolate(frame, [0, 8], [1.18, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) })})` }}>
+            <ShotReel media={scene.media} shots={scene.shots} camera="push_in" flat format={format} />
+          </AbsoluteFill>
           <AbsoluteFill
             style={{ background: `linear-gradient(${theme.background}66 0%, transparent 28%, ${theme.background}40 55%, ${theme.background}d9 100%)` }}
           />
@@ -130,12 +130,15 @@ const HookScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   );
 };
 
-// Kinetic typography: words reveal one at a time across the scene.
+// Kinetic typography: each word slams into place as the narrator says it (or, without timings, one
+// after another across the scene), and the line leans slowly toward the viewer.
 const StatementScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
+  const { durationInFrames, fps } = useVideoConfig();
   const words = (scene.text ?? "").split(" ");
   const revealEnd = Math.max(10, durationInFrames * 0.6);
+  const said = scene.revealTimes?.length === words.length ? scene.revealTimes : null;
+  const lean = interpolate(frame, [0, durationInFrames], [1, 1.06]);
   return (
     <Stage format={format}>
       <Heading text={scene.heading} theme={theme} format={format} size={40} />
@@ -146,16 +149,26 @@ const StatementScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
           fontSize: (words.length > 14 ? 60 : 78) * unit(format),
           lineHeight: 1.2,
           maxWidth: 1500,
+          transform: `scale(${lean})`,
         }}
       >
         {words.map((w, i) => {
-          const at = (i / words.length) * revealEnd;
-          const o = interpolate(frame, [at, at + 6], [0.15, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+          const at = said ? Math.round(said[i] * fps) - 2 : (i / words.length) * revealEnd;
+          const slam = spring({ frame: frame - at, fps, config: { damping: 13, mass: 0.5, stiffness: 180 } });
+          // Words not said yet wait faintly in place, so the line is never an empty frame.
+          const o = interpolate(frame, [at, at + 3], [0.14, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
           const emphasise = /^[A-Z0-9$%]/.test(w) && i > 0;
           return (
             <span
               key={i}
-              style={{ display: "inline-block", opacity: o, color: emphasise ? theme.accent : theme.text, marginRight: "0.25em" }}
+              style={{
+                display: "inline-block",
+                opacity: o,
+                color: emphasise ? theme.accent : theme.text,
+                marginRight: "0.25em",
+                      transform: frame < at ? undefined : `scale(${1 + (1 - slam) * (emphasise ? 1.2 : 0.7)}) rotate(${(1 - slam) * (i % 2 ? 4 : -4)}deg)`,
+                filter: frame >= at && slam < 0.9 ? `blur(${(1 - slam) * 6}px)` : undefined,
+              }}
             >
               {w}
             </span>
@@ -170,20 +183,26 @@ const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const target = scene.value ?? 0;
-  const progress = interpolate(frame, [5, Math.min(durationInFrames * 0.55, 60)], [0, 1], {
+  const lands = statLands(durationInFrames);
+  const statText = `${scene.prefix ?? ""}${isYear(scene) ? String(target) : formatNumber(target)}${scene.suffix ?? ""}`;
+  const progress = interpolate(frame, [5, lands], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
-  const pulse = spring({ frame: frame - 60, fps: 30, config: { damping: 8 } });
+  const pulse = spring({ frame: frame - lands, fps: 30, config: { damping: 8 } });
+  // The number lands like an impact cut: a punch in, a flash, and (in SoundEffects) a hit.
+  const hit = impact(frame, lands);
   return (
+    <AbsoluteFill style={{ transform: `scale(${hit.punch})` }}>
     <Stage format={format}>
       <Heading text={scene.heading} theme={theme} format={format} size={52} />
       <div
         style={{
           fontFamily: theme.font,
           fontWeight: 900,
-          fontSize: 210 * unit(format),
+          // Long figures shrink to fit across a Short's narrow frame.
+          fontSize: Math.min(210 * unit(format), (format === "short" ? 900 : 1600) / (0.62 * Math.max(1, statText.length))),
           color: theme.accent,
           lineHeight: 1,
           transform: `scale(${1 + 0.05 * pulse})`,
@@ -196,6 +215,8 @@ const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
       </div>
       <Sub text={scene.text} theme={theme} format={format} delay={20} />
     </Stage>
+    <Flash amount={hit.flash} />
+    </AbsoluteFill>
   );
 };
 
@@ -487,6 +508,10 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   dialogue: DialogueScene,
   story: StoryScene,
   evidence: EvidenceScene,
+  trend: TrendScene,
+  proportion: ProportionScene,
+  scale: ScaleScene,
+  cycle: CycleScene,
 };
 
 // A photo or clip behind a template scene, moved by the scene's camera. It stays bright: the scene's
@@ -508,17 +533,50 @@ const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; the
 );
 
 // What a scene is drawn as: a kinetic statement stands in for broll without media, a map without
-// places, a story without any art, or an evidence board without clues.
+// places, a story without any art, an evidence board without clues, or a chart without enough data.
 export const shownType = (raw: Scene): Scene["type"] =>
   (raw.type === "broll" && !raw.media) ||
   (raw.type === "map" && !validPlaces(raw.places).length && !mapRegions(raw).length) ||
   (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src)) ||
-  (raw.type === "evidence" && !(raw.items ?? []).some(Boolean))
+  (raw.type === "evidence" && !(raw.items ?? []).some(Boolean)) ||
+  (raw.type === "trend" && (raw.data ?? []).length < 2) ||
+  (raw.type === "scale" && (raw.data ?? []).filter((d) => d.value > 0).length < 2) ||
+  (raw.type === "cycle" && (raw.items ?? []).filter(Boolean).length < 3)
     ? "statement"
     : raw.type;
 
 // Scenes whose picture can change with the story (fyt/storyboard.py BEAT_TYPES).
 const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll", "story"];
+
+// Scenes that draw their own full frame, so a photo is never put behind them.
+const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence"];
+// Code-drawn charts: a photo goes far behind them, dim and soft, so the chart reads first.
+const CHARTS: Scene["type"][] = ["trend", "proportion", "scale", "cycle"];
+// Graphics that float in 3D space: they tip up into place and sway gently, so they never sit dead flat.
+const FLOATING: Scene["type"][] = [...CHARTS, "stat", "bars", "list", "timeline", "comparison", "process", "quote"];
+
+const Depth: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const land = spring({ frame, fps, config: { damping: 15, mass: 0.9 } });
+  const dir = id.length % 2 ? 1 : -1; // neighbouring scenes tip in from opposite sides
+  const tiltX = (1 - land) * 16 + Math.cos(frame / 70) * 1.6;
+  const tiltY = (1 - land) * 10 * dir + Math.sin(frame / 90) * 2.4;
+  return (
+    <AbsoluteFill style={{ perspective: 1800 }}>
+      <AbsoluteFill style={{ transform: `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`, transformStyle: "preserve-3d" }}>{children}</AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+const DimBackdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; theme: Theme; format: Format }> = ({ scene, media, theme, format }) => (
+  <AbsoluteFill>
+    <AbsoluteFill style={{ filter: "blur(4px) brightness(0.55) saturate(0.8)", transform: "scale(1.06)" }}>
+      <ShotReel media={media} shots={null} camera={cameraOf(scene)} flat format={format} />
+    </AbsoluteFill>
+    <AbsoluteFill style={{ background: `radial-gradient(ellipse at center, ${theme.background}aa 0%, ${theme.background}66 70%, ${theme.background}cc 100%)` }} />
+  </AbsoluteFill>
+);
 
 const SceneBody: React.FC<SceneProps> = (props) => {
   const type = shownType(props.scene);
@@ -526,17 +584,30 @@ const SceneBody: React.FC<SceneProps> = (props) => {
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
   const media = props.scene.media;
   if (type === "title" && props.scene.id === "s1") return <HookScene {...props} scene={scene} />;
-  if (media && type !== "broll" && type !== "map" && type !== "story" && type !== "evidence") {
+  const body = FLOATING.includes(type) ? (
+    <Depth id={props.scene.id}>
+      <Component {...props} scene={scene} />
+    </Depth>
+  ) : (
+    <Component {...props} scene={scene} />
+  );
+  if (media && CHARTS.includes(type)) {
     return (
       <AbsoluteFill>
-        <Backdrop scene={props.scene} media={media} theme={props.theme} format={props.format} />
-        <PanelContext.Provider value={props.theme.background}>
-          <Component {...props} scene={scene} />
-        </PanelContext.Provider>
+        <DimBackdrop scene={props.scene} media={media} theme={props.theme} format={props.format} />
+        {body}
       </AbsoluteFill>
     );
   }
-  return <Component {...props} scene={scene} />;
+  if (media && !DRAWN_OVER.includes(type)) {
+    return (
+      <AbsoluteFill>
+        <Backdrop scene={props.scene} media={media} theme={props.theme} format={props.format} />
+        <PanelContext.Provider value={props.theme.background}>{body}</PanelContext.Provider>
+      </AbsoluteFill>
+    );
+  }
+  return body;
 };
 
 export const SceneView: React.FC<SceneProps> = (props) => {

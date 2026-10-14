@@ -318,7 +318,9 @@ SHORT_STRUCTURE = """Structure of a Short (45-55 seconds, 6-8 scenes; viewers de
 2. Context (1-2 scenes): who or what this is, where and when, in plain words, so a viewer who has
    never heard of it can follow. Explain the hook here: why is that strange fact true?
 3. Build (2-3 scenes): each one follows from the one before ("so", "but", "then") and escalates
-   with a new, stranger or higher-stakes detail of the same thread.
+   with a new, stranger or higher-stakes detail of the same thread. When the story has a size, share,
+   change over time or place, show it in one of these with a moving graphic (scale, proportion, trend
+   or map) rather than a still: motion on screen is what keeps a thumb from swiping.
 4. Payoff (1 scene): the twist or answer, saying the core message in plain words.
 5. End on the payoff. No subscribe line, no "thanks for watching", no question to the audience:
    Shorts replay automatically, and a clean ending makes the replay seamless.
@@ -385,12 +387,24 @@ Scene templates (field names in brackets):
   by one and joined with red string, then an optional stamp lands [heading = the case name, items (2-5
   clues, max ~5 words each, each a real documented fact), text = a 1-2 word stamp such as Unsolved or
   Classified, only if true]. Use it where the story lays out the clues that don't add up.
+- trend: a line chart drawn point by point, its value counting up beside the pen, the peak circled at
+  the end [heading, data (3-10 real points in time order, label = year or date), prefix, suffix, optional
+  text]. Use it when a number rose or fell over time.
+- proportion: a grid of 100 dots that light up to show a share [heading, value (the percentage, 0-100),
+  text = what the share is of, e.g. "of the island collapsed into the sea"]. Use it for "1 in 3", "two thirds".
+- scale: circles sized by value; the camera starts on the smallest and pulls out to reveal each bigger
+  one [heading, data (2-5 things, label = the thing, value = a real number in the same unit), suffix =
+  the unit, optional text]. Use it to make a huge difference in size, energy, money or distance felt.
+- cycle: a loop of steps joined by arrows, with a pulse running round it [heading, items (3-5 steps,
+  max ~4 words each), optional text = a 1-3 word name for the loop shown in the middle]. Only for
+  something that really feeds back into itself.
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 
 Every scene may also set `camera` (push_in, pull_out, pan_left, pan_right, parallax) for the move over
-its photo and `transition` (fade, slide, zoom, wipe, flash) for how it enters. Leave them unset unless
-a choice clearly fits the moment, e.g. flash for a sudden turn, pull_out to reveal scale.
+its photo and `transition` (fade, slide, zoom, wipe, flash, thread, whip) for how it enters. Leave them
+unset unless a choice clearly fits the moment, e.g. flash for a sudden turn, whip for a jump in place or
+time, thread when the next scene is a connected clue, pull_out to reveal scale.
 
 One message: before any scene, decide the single thing the viewer should walk away knowing and
 write it as `core_message` (one plain sentence). Every scene must move toward it. Cut any fact,
@@ -429,7 +443,8 @@ Rules:
   drawings, for the one or two moments a photo can't show (a journey, an accident, a chase) -- at most
   one scene in five. Viewers stay for seeing the story, not reading it.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
-  (stat, bars, timeline, comparison, map, process, evidence) wherever the research supports them -- they
+  (stat, bars, trend, proportion, scale, timeline, comparison, map, process, cycle, evidence) wherever the
+  research supports them -- they
   are what makes this channel different from generic stock-footage channels.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.

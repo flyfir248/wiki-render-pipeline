@@ -7,6 +7,9 @@ export type SceneProps = { scene: Scene; theme: Theme; format: Format };
 
 // ---------- shared helpers ----------
 
+export const formatNumber = (n: number) =>
+  Math.abs(n) >= 1000 ? Math.round(n).toLocaleString("en-US") : n % 1 === 0 ? String(n) : n.toFixed(1);
+
 export const useEnter = (delayFrames = 0) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();

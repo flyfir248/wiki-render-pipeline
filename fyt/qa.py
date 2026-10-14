@@ -7,6 +7,7 @@ import subprocess
 from pathlib import Path
 
 import imageio_ffmpeg
+import numpy as np
 
 from fyt.config import Config
 from fyt.models import RenderProps, Script
@@ -54,6 +55,14 @@ def check_script(cfg: Config, script: Script) -> list[str]:
             problems.append(f"scene {i} is a transcript without lines")
         if s.type == "evidence" and len(s.items or []) < 2:
             problems.append(f"scene {i} is an evidence board with fewer than 2 clues")
+        if s.type == "trend" and len(s.data or []) < 2:
+            problems.append(f"scene {i} is a trend line with fewer than 2 points")
+        if s.type == "scale" and len([d for d in s.data or [] if d.value > 0]) < 2:
+            problems.append(f"scene {i} is a size comparison with fewer than 2 positive values")
+        if s.type == "proportion" and not (s.value is not None and 0 < s.value <= 100):
+            problems.append(f"scene {i} is a proportion without a share between 0 and 100")
+        if s.type == "cycle" and len(s.items or []) < 3:
+            problems.append(f"scene {i} is a cycle with fewer than 3 steps")
     return problems
 
 
@@ -73,3 +82,28 @@ def check_render(cfg: Config, props: RenderProps, video: Path, voiced: bool = Tr
     if voiced and props.voice is None:
         problems.append("no voice track")
     return problems
+
+
+def static_spans(video: Path, min_seconds: float = 4.0, until: float | None = None, rate: float = 4.0) -> list[tuple[float, float]]:
+    """Stretches where the picture barely changes for `min_seconds` or more: the places a viewer's
+    eye has nothing new to follow. Samples small grey frames `rate` times a second up to `until`."""
+    w, h = 64, 36
+    cmd = [imageio_ffmpeg.get_ffmpeg_exe(), "-loglevel", "error", "-i", str(video)]
+    if until:
+        cmd += ["-t", f"{until:.2f}"]
+    cmd += ["-vf", f"fps={rate},scale={w}:{h},format=gray", "-f", "rawvideo", "-"]
+    raw = subprocess.run(cmd, capture_output=True, check=False).stdout
+    frames = np.frombuffer(raw, dtype=np.uint8)[: len(raw) // (w * h) * w * h].reshape(-1, h, w).astype(np.float32)
+    if len(frames) < 2:
+        return []
+    change = np.abs(np.diff(frames, axis=0)).mean(axis=(1, 2))  # mean grey-level change per step
+    still = change < 0.6
+    spans, start = [], None
+    for i, s in enumerate(list(still) + [False]):
+        if s and start is None:
+            start = i
+        elif not s and start is not None:
+            if (i - start) / rate >= min_seconds:
+                spans.append((round(start / rate, 1), round(i / rate, 1)))
+            start = None
+    return spans

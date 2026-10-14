@@ -15,13 +15,31 @@ topics queue ─► Claude research (web search) ─► Claude script (structure
 
 The visuals are **motion-graphics templates driven by the script**, not only stock footage:
 animated titles, kinetic typography, count-up stats, bar charts, timelines, numbered lists,
-comparisons, quotes, evidence boards (clue cards pinned and joined with red string as the narrator names them), animated maps (a globe that dives in, a plane, ship or army the camera follows over
+comparisons, quotes, code-drawn explainer graphics (a line chart drawn by a glowing pen, a grid of 100
+dots that lights up to show a share, circles where the camera pulls out from a speck to a giant to show
+scale, and a loop of steps with a pulse running round it; any photo for the scene sits dim and soft
+behind them), evidence boards (clue cards pinned and joined with red string as the narrator names them), animated maps (a globe that dives in, a plane, ship or army the camera follows over
 a tilted map, empires that spread or shrink, a running year counter), cause-and-effect
 diagrams, highlighted documents, typed-out transcripts, and photos moved by a virtual camera
 (push in, pan, parallax) with varied transitions. Real photos get a Vox-style collage look: each one
 becomes a duotone halftone print pinned over a dim copy of itself, and its main subject is cut out in
 black and white and lifts off the print (`fyt/cutout.py`, free and local; turn off with `collage: {enabled: false}`). Word-highlighted captions and
-an audio-reactive background and visualizer sit on top. Every video looks different while
+an audio-reactive background and visualizer sit on top.
+
+One motion system ties it together, in long videos and Shorts alike: the channel's signature cut is a
+red thread (the evidence-board string) pulled across the frame to reveal the next scene, alternating
+with whip pans that smear sideways; charts and lists tip up into place in 3D and sway gently; reveals
+land with a small camera jolt; the spoken word in the captions lifts and gets a red-thread underline;
+and a paper grain that changes every other frame gives the whole picture a printed, hand-made feel.
+Statement words slam into place on the word the narrator says them; big reveals (a stat landing, the
+largest circle of a scale, a share filling up) hit like an impact cut, with a punch-in, a flash and a
+bass hit; collage photos drift in three layers (backdrop, print, cut-out) for 2.5D depth; and dust and an
+occasional light beam drift over everything, so even a held frame is alive. Sound follows the picture:
+a zip as the red thread is pulled, whooshes on whips, ticks as chart points land, a riser into each big
+reveal and a hit as it lands (all synthesised in `fyt/sfx.py`).
+
+After each render the pipeline logs any stretch of 4 seconds or more where the picture barely changes
+(`fyt/qa.py`), and `python -m fyt sheet video.mp4` prints them too. Every video looks different while
 the channel keeps one consistent style, which matters for monetization (see below).
 
 ## Quick start
@@ -48,6 +66,19 @@ python -m fyt make "How the Rule of 72 predicts when your money doubles"
 
 Rendering uses Chromium through Remotion. It downloads its own copy on first run; set
 `REMOTION_BROWSER_EXECUTABLE` to use an existing Chromium or headless shell instead.
+
+## Checking a render frame by frame
+
+Every frame is a pure function of time (React/SVG drawn in headless Chromium, stitched by ffmpeg), so
+any frame can be drawn on its own and looked at. `python -m fyt sheet` lays frames out on one image:
+
+```bash
+python -m fyt sheet jobs/<id>/video.mp4                # a frame a second from a finished video
+python -m fyt sheet jobs/<id>/props.json --every 0.5   # frames drawn straight from the props, no full render
+```
+
+Use it when adding or changing a scene template (`renderer/src/scenes/`): render, look at the sheet,
+fix what is wrong, repeat. It costs nothing at run time; the scheduled pipeline doesn't call it.
 
 ## Uploading to YouTube
 

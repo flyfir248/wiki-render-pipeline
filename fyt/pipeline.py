@@ -10,7 +10,7 @@ from pathlib import Path
 
 from fyt import artgen, cutout, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, wiki, youtube
 from fyt.config import Config
-from fyt.models import Media, RenderProps, Script, ThumbnailProps
+from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
 from fyt.timeline import build_props, to_srt
 
@@ -200,6 +200,11 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
 
     problems = qa.check_render(cfg, props, video, voiced=provider != "silent")
+    try:  # a held picture loses viewers: say where, so the template or script can be fixed
+        for a, b in qa.static_spans(video, until=props.duration - props.endCard):
+            log(job, f"warning: the picture barely changes from {a:.0f}s to {b:.0f}s")
+    except Exception as e:
+        log(job, f"warning: could not check for still stretches: {e}")
     status = "qa_failed" if problems else ("ready" if cfg.require_review else "approved")
     job.update(status=status, problems=problems, duration=props.duration)
     log(job, f"done: {status}" + (f" -- {problems}" if problems else ""))
@@ -365,7 +370,7 @@ def scene_visuals(
             return [im for im in found if im.title not in commons_seen]
 
         for i, s in enumerate(script.scenes):
-            if i in scene_media or s.type in ("map", "story"):  # these draw their own picture
+            if i in scene_media or s.type in DRAWN:
                 continue
             n = next((k for k in range(1, len(images) + 1) if k not in taken), None)
             if n is not None and article_image(i, n):
@@ -436,7 +441,7 @@ def extra_shots(
 
     for i, s in enumerate(script.scenes):
         m = scene_media.get(i)
-        if m is None or m.kind != "image" or s.type in ("map", "story"):
+        if m is None or m.kind != "image" or s.type in DRAWN:
             continue
         start = 0.0 if i == 0 else spans[i][0]
         end = spans[i + 1][0] if i + 1 < len(spans) else spans[i][1]

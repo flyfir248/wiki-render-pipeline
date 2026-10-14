@@ -37,7 +37,7 @@ export type Actor = {
 // How the "camera" moves over a scene's photo or clip.
 export type Camera = "push_in" | "pull_out" | "pan_left" | "pan_right" | "parallax";
 // How a scene enters.
-export type Transition = "fade" | "slide" | "zoom" | "wipe" | "flash";
+export type Transition = "fade" | "slide" | "zoom" | "wipe" | "flash" | "thread" | "whip";
 
 export type SceneType =
   | "title"
@@ -54,7 +54,11 @@ export type SceneType =
   | "document"
   | "dialogue"
   | "story"
-  | "evidence";
+  | "evidence"
+  | "trend"
+  | "proportion"
+  | "scale"
+  | "cycle";
 
 export type Scene = {
   id: string;
@@ -94,7 +98,7 @@ export type Scene = {
   effectY?: number | null;
   effectAt?: number | null;
   effectSrc?: string | null;
-  revealTimes?: number[] | null; // when each evidence clue or document [hidden] word is said, seconds from the scene's start
+  revealTimes?: number[] | null; // when each evidence clue, document [hidden] word, scale item or cycle step is said, seconds from the scene's start
   camera?: Camera | null; // picked per scene when not set
   transition?: Transition | null; // picked per scene when not set
 };

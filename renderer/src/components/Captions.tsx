@@ -51,9 +51,35 @@ export const Captions: React.FC<{ words: Word[]; theme: Theme; format: Format }>
     >
       {group.map((w, i) => {
         const active = t >= w.start && t <= w.end + 0.05;
+        // The spoken word lifts a little and a red thread runs under it while it is said.
+        const said = Math.max(0, Math.min(1, (t - w.start) / Math.max(0.12, w.end - w.start)));
+        const lift = active ? spring({ frame: frame - Math.round(w.start * fps), fps, config: { damping: 10, mass: 0.4 } }) : 0;
         return (
-          <span key={i} style={{ color: active ? theme.accent : theme.text, marginRight: "0.28em", display: "inline-block" }}>
+          <span
+            key={i}
+            style={{
+              position: "relative",
+              color: active ? theme.accent : theme.text,
+              marginRight: "0.28em",
+              display: "inline-block",
+              transform: `translateY(${-0.06 * lift}em) scale(${1 + 0.1 * lift})`,
+            }}
+          >
             {w.word}
+            {active ? (
+              <span
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  bottom: "-0.04em",
+                  height: "0.09em",
+                  width: `${said * 100}%`,
+                  borderRadius: "0.05em",
+                  background: "#c3272b",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.6)",
+                }}
+              />
+            ) : null}
           </span>
         );
       })}
