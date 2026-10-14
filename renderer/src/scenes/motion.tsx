@@ -48,6 +48,80 @@ const Glow: React.FC<{ id: string; blur: number }> = ({ id, blur }) => (
   </filter>
 );
 
+// ---------- timings (shared with the sound effects, so every sound lands on its picture) ----------
+
+export const trendTimes = (n: number, D: number) => {
+  const start = 14;
+  const span = Math.max(30, D * 0.68 - start);
+  const seg = n > 1 ? span / (n - 1) : span;
+  return { start, span, seg, reach: Array.from({ length: n }, (_, i) => start + i * seg) };
+};
+
+export const proportionTimes = (D: number) => {
+  const fillFrom = 28;
+  return { fillFrom, fillTo: Math.max(fillFrom + 30, Math.round(D * 0.55)) };
+};
+
+export const scaleTimes = (scene: Scene, n: number, D: number, fps: number) => {
+  const at = revealFrames(scene, n, D, fps, 0.06, 0.7);
+  if (n) at[0] = Math.min(at[0], 12); // never open on an empty stage
+  return at;
+};
+
+export const cycleTimes = (scene: Scene, n: number, D: number, fps: number) => {
+  const at = revealFrames(scene, n, D, fps, 0.08, 0.6);
+  return { at, loopFrom: (at[n - 1] ?? 0) + 30 };
+};
+
+const scaleItems = (scene: Scene) => [...(scene.data ?? [])].filter((d) => d.value > 0).sort((a, b) => a.value - b.value).slice(0, 5);
+const cycleSteps = (scene: Scene) => (scene.items ?? []).filter(Boolean).slice(0, 5);
+
+export type Cue = { at: number; name: string; gain: number };
+
+// The sounds of a code-drawn scene, in frames from its start: ticks as points and dots land, a riser
+// into the biggest reveal and a hit as it lands.
+export const motionCues = (scene: Scene, D: number, fps: number): Cue[] => {
+  const cues: Cue[] = [];
+  if (scene.type === "trend") {
+    const n = (scene.data ?? []).length;
+    const { reach, start, span } = trendTimes(n, D);
+    reach.forEach((f) => cues.push({ at: Math.round(f), name: "tick", gain: 0.8 }));
+    cues.push({ at: Math.round(start + span + 6), name: "chime", gain: 0.5 });
+  } else if (scene.type === "proportion") {
+    const { fillFrom, fillTo } = proportionTimes(D);
+    cues.push({ at: Math.max(0, fillTo - Math.round(fps * 0.8)), name: "riser", gain: 0.5 });
+    cues.push({ at: fillTo, name: "hit", gain: 0.7 });
+    for (let f = fillFrom; f < fillTo - fps * 0.8 - 8; f += 7) cues.push({ at: Math.round(f), name: "tick", gain: 0.35 });
+  } else if (scene.type === "scale") {
+    const at = scaleTimes(scene, scaleItems(scene).length, D, fps);
+    at.forEach((f, i) => {
+      const last = i === at.length - 1 && i > 0;
+      if (last) cues.push({ at: Math.max(0, f - Math.round(fps * 0.8)), name: "riser", gain: 0.5 });
+      cues.push({ at: f, name: last ? "hit" : i ? "whoosh" : "pop", gain: last ? 0.85 : 0.6 });
+    });
+  } else if (scene.type === "cycle") {
+    const { at, loopFrom } = cycleTimes(scene, cycleSteps(scene).length, D, fps);
+    at.forEach((f) => cues.push({ at: f, name: "pop", gain: 0.6 }));
+    cues.push({ at: loopFrom, name: "whoosh", gain: 0.45 });
+  }
+  return cues;
+};
+
+// When a stat scene's count-up lands.
+export const statLands = (D: number) => Math.round(Math.min(D * 0.55, 60));
+
+// A white flash and a camera punch the moment a big reveal lands (an "impact cut").
+export const impact = (frame: number, at: number) => {
+  const k = frame - at;
+  return {
+    flash: k < 0 ? 0 : interpolate(k, [0, 1, 7], [0.45, 0.3, 0], clamp),
+    punch: k < 0 ? 1 : 1 + interpolate(k, [0, 2, 12], [0.1, 0.08, 0], { ...clamp, easing: Easing.out(Easing.cubic) }),
+  };
+};
+
+export const Flash: React.FC<{ amount: number }> = ({ amount }) =>
+  amount > 0.01 ? <AbsoluteFill style={{ background: "#fff8e6", opacity: amount, pointerEvents: "none" }} /> : null;
+
 // ---------- trend ----------
 
 const isYearLabel = (s: string) => /^-?\d{3,4}$/.test(s.trim());
@@ -79,10 +153,7 @@ export const TrendScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const Y = (v: number) => H - pad.b - ((v - lo) / (hi - lo)) * (H - pad.t - pad.b);
 
   // The pen travels point to point, easing into each one and pausing there a moment.
-  const start = 14;
-  const span = Math.max(30, D * 0.68 - start);
-  const seg = n > 1 ? span / (n - 1) : span;
-  const reach = data.map((_, i) => start + i * seg);
+  const { start, span, seg, reach } = trendTimes(n, D);
   const along = n < 2 ? 0 : Math.min(n - 1, Math.max(0, (frame - start) / seg));
   const i0 = Math.floor(along);
   const u = interpolate(along - i0, [0, 0.82], [0, 1], { ...clamp, easing: ease });
@@ -244,8 +315,8 @@ export const ProportionScene: React.FC<SceneProps> = ({ scene, theme, format }) 
   const lit = Math.round(share);
   const cell = short ? 70 : 60;
   const size = cell * 10;
-  const fillFrom = 28;
-  const fillTo = Math.max(fillFrom + 30, Math.round(D * 0.55));
+  const { fillFrom, fillTo } = proportionTimes(D);
+  const hit = impact(frame, fillTo);
   const filled = interpolate(frame, [fillFrom, fillTo], [0, share], { ...clamp, easing: ease });
   const counted = interpolate(frame, [fillFrom, fillTo], [0, share], { ...clamp, easing: ease });
   const shown = Number.isInteger(share) ? Math.round(counted) : Math.round(counted * 10) / 10;
@@ -292,15 +363,20 @@ export const ProportionScene: React.FC<SceneProps> = ({ scene, theme, format }) 
   );
 
   return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", padding: short ? "200px 60px 560px" : "70px 140px 170px", gap: 40 }}>
-      <Heading text={scene.heading} theme={theme} format={format} size={56} />
-      <div style={{ display: "flex", flexDirection: short ? "column" : "row", alignItems: "center", gap: short ? 40 : 110 }}>
-        {short ? figure : null}
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-          {dots}
-        </svg>
-        {short ? null : figure}
-      </div>
+    <AbsoluteFill>
+      <AbsoluteFill
+        style={{ alignItems: "center", justifyContent: "center", padding: short ? "200px 60px 560px" : "70px 140px 170px", gap: 40, transform: `scale(${hit.punch})` }}
+      >
+        <Heading text={scene.heading} theme={theme} format={format} size={56} />
+        <div style={{ display: "flex", flexDirection: short ? "column" : "row", alignItems: "center", gap: short ? 40 : 110 }}>
+          {short ? figure : null}
+          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+            {dots}
+          </svg>
+          {short ? null : figure}
+        </div>
+      </AbsoluteFill>
+      <Flash amount={hit.flash} />
     </AbsoluteFill>
   );
 };
@@ -314,7 +390,7 @@ export const ScaleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const { durationInFrames: D, fps, width, height } = useVideoConfig();
   const short = format === "short";
   const k = unit(format);
-  const items = [...(scene.data ?? [])].filter((d) => d.value > 0).sort((a, b) => a.value - b.value).slice(0, 5);
+  const items = scaleItems(scene);
   const n = items.length;
   const vmax = Math.max(...items.map((d) => d.value), 1);
   // Area follows the value, so a circle 4 times the value is twice as wide.
@@ -333,8 +409,8 @@ export const ScaleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
     const zoom = Math.min((groundY - top) / (2 * radius[i]), (width - 2 * sidePad) / (right - left));
     return { zoom, cx: (left + right) / 2 };
   });
-  const at = revealFrames(scene, n, D, fps, 0.06, 0.7);
-  if (n) at[0] = Math.min(at[0], 12); // never open on an empty stage
+  const at = scaleTimes(scene, n, D, fps);
+  const hit = impact(frame, n > 1 ? at[n - 1] : -999);
   const MOVE = Math.max(18, Math.min(34, Math.round(D / (3 * Math.max(n, 1)))));
   // Which stage the camera is in, and how far it has moved toward the next.
   let s = 0;
@@ -356,7 +432,7 @@ export const ScaleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const w = a.zoom === b.zoom ? u : (1 / a.zoom - 1 / zoom) / (1 / a.zoom - 1 / b.zoom);
   const cx = a.cx + (b.cx - a.cx) * w;
   const drift = interpolate(frame, [0, D], [1, 0.97]);
-  const Z = zoom * drift * kick(frame, at);
+  const Z = zoom * drift * kick(frame, at) * hit.punch;
   const sx = (x: number) => width / 2 + (x - cx) * Z;
 
   return (
@@ -444,6 +520,7 @@ export const ScaleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", padding: `${groundY + (short ? 90 : 64)}px 70px 0` }}>
         <Sub text={scene.text} theme={theme} format={format} delay={(at[n - 1] ?? 0) + MOVE} />
       </AbsoluteFill>
+      <Flash amount={hit.flash} />
     </AbsoluteFill>
   );
 };
@@ -465,7 +542,7 @@ export const CycleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
   const { durationInFrames: D, fps, width, height } = useVideoConfig();
   const short = format === "short";
-  const steps = (scene.items ?? []).filter(Boolean).slice(0, 5);
+  const steps = cycleSteps(scene);
   const n = steps.length;
   // The loop is an ellipse, wider than tall, so the steps leave room for the name in the middle.
   const [rx, ry] = short ? [320, 360] : [420, 280];
@@ -474,8 +551,7 @@ export const CycleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const [cx, cy] = [width / 2, short ? 820 : 520];
   const angle = (i: number) => -90 + (i * 360) / Math.max(n, 1);
   const pos = (deg: number): [number, number] => [cx + rx * Math.cos((deg * Math.PI) / 180), cy + ry * Math.sin((deg * Math.PI) / 180)];
-  const at = revealFrames(scene, n, D, fps, 0.08, 0.6);
-  const loopFrom = (at[n - 1] ?? 0) + 30;
+  const { at, loopFrom } = cycleTimes(scene, n, D, fps);
   const speed = 360 / (fps * 3.2); // one lap every ~3 seconds
   const comet = angle(0) + Math.max(0, frame - loopFrom) * speed;
   const running = frame >= loopFrom;

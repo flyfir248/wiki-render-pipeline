@@ -1,8 +1,9 @@
 """Sound effects, synthesised like the music (fyt.music), so there's nothing to license.
 
-The renderer decides when each one plays (a whoosh on a scene change, a pop when a pin drops or a
-prop appears, a boom for an explosion, a soft chime when a figure lands, a thud for a stamp); this
-module only writes the sounds into the job.
+The renderer decides when each one plays (a whoosh on a scene change, a zip as the red thread is
+pulled across, a pop when a pin drops or a prop appears, a tick as a chart point lands, a riser and a
+hit for a big reveal, a boom for an explosion, a soft chime when a figure lands, a thud for a stamp);
+this module only writes the sounds into the job.
 """
 
 from __future__ import annotations
@@ -14,7 +15,7 @@ import numpy as np
 
 from fyt.music import RATE, _lowpass
 
-NAMES = ("whoosh", "pop", "boom", "thunder", "chime", "thud", "flame", "sparkle")
+NAMES = ("whoosh", "pop", "boom", "thunder", "chime", "thud", "flame", "sparkle", "hit", "tick", "zip", "riser")
 
 
 def _t(seconds: float) -> np.ndarray:
@@ -101,6 +102,49 @@ def sparkle(rng: np.random.Generator) -> np.ndarray:
         tt = t[: len(t) - start]
         out[start:] += np.sin(2 * np.pi * f * tt) * np.exp(-tt * 6)
     return out * 0.18
+
+
+def hit(rng: np.random.Generator) -> np.ndarray:
+    """The impact under a big reveal: a sub-bass drop with a short, bright transient on top."""
+    t = _t(0.9)
+    n = len(t)
+    sub = np.sin(2 * np.pi * (45 * t + 90 * (1 - np.exp(-t * 14)) / 14)) * np.exp(-t * 5)
+    snap = (_noise(n, rng) - _lowpass(_noise(n, rng), 3000)) * np.exp(-t * 60) * 0.7
+    body = _lowpass(_noise(n, rng), 300) * np.exp(-t * 9) * 3
+    return np.tanh((sub * 1.3 + snap + body) * 1.3) * 0.9
+
+
+def tick(rng: np.random.Generator) -> np.ndarray:
+    """A small, dry click, like a pen tapping paper: for chart points and steps landing."""
+    t = _t(0.12)
+    click = np.sin(2 * np.pi * 2200 * t) * np.exp(-t * 160)
+    grit = _noise(len(t), rng) * np.exp(-t * 300) * 0.4
+    return (click + grit) * 0.6
+
+
+def zip(rng: np.random.Generator) -> np.ndarray:  # noqa: A001 - a sound, named for what it sounds like
+    """A taut string pulled fast through the fingers: noise through a sweeping resonance."""
+    t = _t(0.5)
+    n = len(t)
+    noise = _noise(n, rng)
+    # A cheap band that sweeps up: filter the whole noise at a few centres, then step through them.
+    centres = 600 + 2600 * np.linspace(0, 1, 10) ** 1.5
+    bands = [_lowpass(noise, f) - _lowpass(noise, f * 0.6) for f in centres]
+    which = np.minimum(9, (t / t[-1] * 10).astype(int))
+    out = np.choose(which, bands)
+    env = np.minimum(1, t / 0.05) * np.exp(-np.maximum(0, t - 0.3) * 18)
+    return out * env * 3.2
+
+
+def riser(rng: np.random.Generator) -> np.ndarray:
+    """A short swell that leans into a reveal: a rising tone under rising noise."""
+    t = _t(0.8)
+    n = len(t)
+    freq = 180 * 2 ** (t / t[-1] * 1.5)
+    tone = np.sin(2 * np.pi * np.cumsum(freq) / RATE)
+    air = (_noise(n, rng) - _lowpass(_noise(n, rng), 1800)) * 0.5
+    env = (t / t[-1]) ** 2
+    return (tone * 0.6 + air) * env * 0.7
 
 
 def write_all(public: Path, seed: int = 3) -> str:

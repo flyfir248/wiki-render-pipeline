@@ -5,7 +5,8 @@ import React from "react";
 import { Audio, Sequence, staticFile } from "remotion";
 import { effectStart, actorStart } from "../scenes/story";
 import { pinFrames } from "../scenes/map";
-import { shownType, transitionOf } from "../scenes";
+import { sceneSpans, shownType, transitionOf } from "../scenes";
+import { motionCues, statLands } from "../scenes/motion";
 import type { Scene } from "../types";
 
 type Cue = { at: number; name: string; gain: number };
@@ -20,12 +21,17 @@ const EFFECT_SOUNDS: Record<string, [string, number]> = {
 
 export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
   const cues: Cue[] = [];
-  for (const scene of scenes) {
-    const from = Math.round(scene.start * fps);
-    const len = Math.max(1, Math.round(scene.end * fps) - from);
+  const spans = sceneSpans(scenes, fps);
+  scenes.forEach((scene, i) => {
+    const { from, len } = spans[i];
     const transition = transitionOf(scene);
-    // A gentle fade needs no sound; the moving transitions get a whoosh as they start.
-    if (scene.id !== "s1" && transition !== "fade") cues.push({ at: from - 4, name: transition === "flash" ? "thud" : "whoosh", gain: 0.6 });
+    // A gentle fade needs no sound; the moving transitions get a whoosh as they start, and the red
+    // thread the zip of string pulled through fingers.
+    const enter = transition === "flash" ? "thud" : transition === "thread" ? "zip" : "whoosh";
+    if (scene.id !== "s1" && transition !== "fade") cues.push({ at: from - (transition === "thread" ? 1 : 4), name: enter, gain: 0.6 });
+    // The hook opens on a hit, so the first frame lands with weight.
+    if (scene.id === "s1") cues.push({ at: 0, name: "hit", gain: 0.7 });
+    motionCues(scene, len, fps).forEach((c) => cues.push({ ...c, at: from + c.at }));
     const type = shownType(scene); // no pops or booms for art or pins that never appear
     if (type === "map" && scene.globe) cues.push({ at: from + Math.round(len * 0.18), name: "whoosh", gain: 0.9 }); // the dive
     if (type === "map") pinFrames(scene, len).forEach((f) => cues.push({ at: from + Math.round(f), name: "pop", gain: 0.8 }));
@@ -37,14 +43,18 @@ export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
       const sound = scene.effect ? EFFECT_SOUNDS[scene.effect] : undefined;
       if (sound) cues.push({ at: from + effectStart(scene, len), name: sound[0], gain: sound[1] });
     }
-    if (scene.type === "stat" && scene.value != null) cues.push({ at: from + Math.round(Math.min(len * 0.55, 60)), name: "chime", gain: 0.7 });
+    if (scene.type === "stat" && scene.value != null) {
+      const lands = statLands(len);
+      cues.push({ at: from + lands - Math.round(fps * 0.8), name: "riser", gain: 0.45 });
+      cues.push({ at: from + lands, name: "hit", gain: 0.8 });
+    }
     if (scene.type === "document" && scene.author) cues.push({ at: from + Math.round(len * 0.55), name: "thud", gain: 0.8 });
-  }
+  });
   // Never stack two sounds within a few frames of each other: the first one wins.
   return cues
     .filter((c) => c.at >= 0)
     .sort((a, b) => a.at - b.at)
-    .filter((c, i, all) => i === 0 || c.at - all[i - 1].at >= 6);
+    .filter((c, i, all) => i === 0 || c.at - all[i - 1].at >= 6 || (c.name === "hit" && all[i - 1].name !== "hit"));
 };
 
 export const SoundEffects: React.FC<{ scenes: Scene[]; fps: number; dir: string; volume: number }> = ({ scenes, fps, dir, volume }) => (

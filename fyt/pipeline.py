@@ -200,6 +200,11 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
 
     problems = qa.check_render(cfg, props, video, voiced=provider != "silent")
+    try:  # a held picture loses viewers: say where, so the template or script can be fixed
+        for a, b in qa.static_spans(video, until=props.duration - props.endCard):
+            log(job, f"warning: the picture barely changes from {a:.0f}s to {b:.0f}s")
+    except Exception as e:
+        log(job, f"warning: could not check for still stretches: {e}")
     status = "qa_failed" if problems else ("ready" if cfg.require_review else "approved")
     job.update(status=status, problems=problems, duration=props.duration)
     log(job, f"done: {status}" + (f" -- {problems}" if problems else ""))

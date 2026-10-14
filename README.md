@@ -30,7 +30,16 @@ One motion system ties it together, in long videos and Shorts alike: the channel
 red thread (the evidence-board string) pulled across the frame to reveal the next scene, alternating
 with whip pans that smear sideways; charts and lists tip up into place in 3D and sway gently; reveals
 land with a small camera jolt; the spoken word in the captions lifts and gets a red-thread underline;
-and a paper grain that changes every other frame gives the whole picture a printed, hand-made feel. Every video looks different while
+and a paper grain that changes every other frame gives the whole picture a printed, hand-made feel.
+Statement words slam into place on the word the narrator says them; big reveals (a stat landing, the
+largest circle of a scale, a share filling up) hit like an impact cut, with a punch-in, a flash and a
+bass hit; collage photos drift in three layers (backdrop, print, cut-out) for 2.5D depth; and dust and an
+occasional light beam drift over everything, so even a held frame is alive. Sound follows the picture:
+a zip as the red thread is pulled, whooshes on whips, ticks as chart points land, a riser into each big
+reveal and a hit as it lands (all synthesised in `fyt/sfx.py`).
+
+After each render the pipeline logs any stretch of 4 seconds or more where the picture barely changes
+(`fyt/qa.py`), and `python -m fyt sheet video.mp4` prints them too. Every video looks different while
 the channel keeps one consistent style, which matters for monetization (see below).
 
 ## Quick start

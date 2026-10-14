@@ -28,8 +28,12 @@ const MediaEl: React.FC<{ media: Media; style: React.CSSProperties }> = ({ media
 // frame. The cut-out moves in small steps, like stop-motion paper.
 const Collage: React.FC<{ media: Media; style: React.CSSProperties }> = ({ media }) => {
   const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
+  const { fps, width, height, durationInFrames } = useVideoConfig();
   const step = Math.floor(frame / 3); // 10 poses a second
+  // 2.5D parallax: the backdrop, the print and the cut-out drift at different speeds, so the flat
+  // photo reads as three layers at different depths.
+  const t = interpolate(frame, [0, durationInFrames], [-0.5, 0.5], { extrapolateRight: "clamp" });
+  const dir = media.src.length % 2 ? 1 : -1;
   const lift = spring({ frame: frame - 4, fps, config: { damping: 12, mass: 0.6 } });
   const wobble = ((step * 7919) % 5) - 2; // -2..2, a stable "random" pose per step
   // The print as large as fits, leaving a margin of the backdrop around it.
@@ -43,8 +47,11 @@ const Collage: React.FC<{ media: Media; style: React.CSSProperties }> = ({ media
   const tilt = (((media.src.length * 31) % 5) - 2) * 0.6; // each photo sits at its own slight angle
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
-      <Img src={staticFile(media.styled!)} style={{ ...img, position: "absolute", transform: "scale(1.25)", filter: "brightness(0.42) blur(2px)" }} />
-      <div style={{ ...box, transform: `rotate(${tilt}deg)` }}>
+      <Img
+        src={staticFile(media.styled!)}
+        style={{ ...img, position: "absolute", transform: `scale(${1.25 + 0.04 * (t + 0.5)}) translateX(${-dir * t * 3}%)`, filter: "brightness(0.42) blur(2px)" }}
+      />
+      <div style={{ ...box, transform: `translateX(${dir * t * 1.5}%) rotate(${tilt}deg)` }}>
         <div style={{ position: "absolute", inset: 0, outline: "10px solid #f4eee0", boxShadow: "0 30px 70px rgba(0,0,0,0.6)" }}>
           <Img src={staticFile(media.styled!)} style={img} />
         </div>
@@ -56,7 +63,7 @@ const Collage: React.FC<{ media: Media; style: React.CSSProperties }> = ({ media
               position: "absolute",
               inset: 0,
               transformOrigin: "50% 100%",
-              transform: `translateY(${-2.5 * lift}%) scale(${1 + 0.12 * lift}) rotate(${wobble * 0.2 - tilt * 0.5}deg)`,
+              transform: `translateX(${dir * t * 3}%) translateY(${-2.5 * lift}%) scale(${1 + 0.12 * lift + 0.03 * (t + 0.5)}) rotate(${wobble * 0.2 - tilt * 0.5}deg)`,
             }}
           />
         ) : null}
@@ -285,6 +292,17 @@ const WhipBlur: React.FC<{ amount: number }> = ({ amount }) => (
 // Transitions where the outgoing scene stays on screen under the incoming one: the thread is pulled
 // across it, or it is whipped off to the side as the next one whips in.
 export const OVERLAP: Partial<Record<Transition, number>> = { thread: 16, whip: 9 };
+
+// Where each scene sits on the video's timeline, in frames. `len` includes the `tail` it stays on
+// screen under the next scene's transition, and is the length the scene's own animation is timed to.
+export const sceneSpans = (scenes: Scene[], fps: number) =>
+  scenes.map((scene, i) => {
+    const from = Math.round(scene.start * fps);
+    const next = scenes[i + 1];
+    const exit = next ? transitionOf(next) : undefined;
+    const tail = (exit && OVERLAP[exit]) ?? 0;
+    return { from, len: Math.max(1, Math.round(scene.end * fps) - from) + tail, tail, exit };
+  });
 
 export const SceneFrame: React.FC<{ transition?: Transition; instant?: boolean; tail?: number; exit?: Transition; children: React.ReactNode }> = ({
   transition = "fade",

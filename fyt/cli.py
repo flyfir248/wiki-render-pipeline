@@ -83,6 +83,11 @@ def main(argv: list[str] | None = None) -> None:
         from fyt.sheet import contact_sheet
 
         print(contact_sheet(args.source, args.out, args.every, args.public))
+        if args.source.suffix != ".json":
+            from fyt.qa import static_spans
+
+            for a, b in static_spans(args.source):
+                print(f"still from {a:.1f}s to {b:.1f}s")
         return
     if args.cmd == "demo":
         cfg.stock_footage = False

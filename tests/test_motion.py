@@ -67,3 +67,23 @@ def test_scripts_can_ask_for_the_signature_cuts():
                ScriptScene(narration="y", type="statement", text="t", transition="whip"))
     props = build_props(Config(), s, [(0.0, 1.0), (1.0, 2.0)], [[], []], {}, None, None)
     assert [sc.transition for sc in props.scenes] == ["thread", "whip"]
+
+
+def test_still_stretches_in_a_render_are_found(tmp_path):
+    import subprocess
+
+    import imageio_ffmpeg
+
+    from fyt.qa import static_spans
+
+    video = tmp_path / "v.mp4"
+    # 5 seconds of a moving test pattern, then 5 seconds of a held frame.
+    subprocess.run(
+        [imageio_ffmpeg.get_ffmpeg_exe(), "-loglevel", "error", "-f", "lavfi", "-i", "testsrc2=size=320x180:rate=10:duration=5",
+         "-f", "lavfi", "-i", "color=c=gray:size=320x180:rate=10:duration=5",
+         "-filter_complex", "[0][1]concat=n=2:v=1", "-pix_fmt", "yuv420p", str(video)],
+        check=True,
+    )
+    spans = static_spans(video, min_seconds=3)
+    assert len(spans) == 1 and 4.5 <= spans[0][0] <= 5.5 and spans[0][1] >= 9.5
+    assert static_spans(video, min_seconds=3, until=6) == []

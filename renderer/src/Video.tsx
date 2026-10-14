@@ -3,10 +3,10 @@ import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useVideoConfig 
 import { Background } from "./components/Background";
 import { Brand } from "./components/Brand";
 import { Captions } from "./components/Captions";
-import { Grain } from "./components/Grain";
+import { Atmosphere, Grain } from "./components/Grain";
 import { SoundEffects } from "./components/SoundEffects";
 import { Visualizer, energyOf, useVoiceSpectrum } from "./components/Visualizer";
-import { OVERLAP, SceneFrame, SceneView, transitionOf } from "./scenes";
+import { SceneFrame, SceneView, sceneSpans, transitionOf } from "./scenes";
 import type { RenderProps, Word } from "./types";
 
 const ReactiveLayer: React.FC<{ props: RenderProps; voice: string }> = ({ props, voice }) => {
@@ -32,16 +32,13 @@ const musicVolume = (base: number, words: Word[], fps: number, total: number) =>
 
 export const Video: React.FC<RenderProps> = (props) => {
   const { fps, durationInFrames } = useVideoConfig();
+  const spans = sceneSpans(props.scenes, fps);
   return (
     <AbsoluteFill style={{ backgroundColor: props.theme.background }}>
       {props.voice ? <ReactiveLayer props={props} voice={props.voice} /> : <Background theme={props.theme} />}
 
       {props.scenes.map((scene, i) => {
-        const from = Math.round(scene.start * fps);
-        const next = props.scenes[i + 1];
-        const exit = next ? transitionOf(next) : undefined;
-        const tail = (exit && OVERLAP[exit]) ?? 0;
-        const len = Math.max(1, Math.round(scene.end * fps) - from) + tail;
+        const { from, len, tail, exit } = spans[i];
         return (
           <Sequence key={scene.id} from={from} durationInFrames={len} name={`${scene.type}:${scene.id}`}>
             <SceneFrame transition={transitionOf(scene)} instant={i === 0} tail={tail} exit={exit}>
@@ -51,6 +48,7 @@ export const Video: React.FC<RenderProps> = (props) => {
         );
       })}
 
+      <Atmosphere />
       <Grain />
 
       {props.showCaptions && props.captions.length ? (
