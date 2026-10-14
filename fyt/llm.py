@@ -318,7 +318,9 @@ SHORT_STRUCTURE = """Structure of a Short (45-55 seconds, 6-8 scenes; viewers de
 2. Context (1-2 scenes): who or what this is, where and when, in plain words, so a viewer who has
    never heard of it can follow. Explain the hook here: why is that strange fact true?
 3. Build (2-3 scenes): each one follows from the one before ("so", "but", "then") and escalates
-   with a new, stranger or higher-stakes detail of the same thread.
+   with a new, stranger or higher-stakes detail of the same thread. When the story has a size, share,
+   change over time or place, show it in one of these with a moving graphic (scale, proportion, trend
+   or map) rather than a still: motion on screen is what keeps a thumb from swiping.
 4. Payoff (1 scene): the twist or answer, saying the core message in plain words.
 5. End on the payoff. No subscribe line, no "thanks for watching", no question to the audience:
    Shorts replay automatically, and a clean ending makes the replay seamless.
@@ -400,8 +402,9 @@ Scene templates (field names in brackets):
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 
 Every scene may also set `camera` (push_in, pull_out, pan_left, pan_right, parallax) for the move over
-its photo and `transition` (fade, slide, zoom, wipe, flash) for how it enters. Leave them unset unless
-a choice clearly fits the moment, e.g. flash for a sudden turn, pull_out to reveal scale.
+its photo and `transition` (fade, slide, zoom, wipe, flash, thread, whip) for how it enters. Leave them
+unset unless a choice clearly fits the moment, e.g. flash for a sudden turn, whip for a jump in place or
+time, thread when the next scene is a connected clue, pull_out to reveal scale.
 
 One message: before any scene, decide the single thing the viewer should walk away knowing and
 write it as `core_message` (one plain sentence). Every scene must move toward it. Cut any fact,

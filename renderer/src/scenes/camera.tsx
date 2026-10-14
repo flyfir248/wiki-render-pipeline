@@ -5,7 +5,8 @@ import type { Beat, Camera, Format, Media, Scene, Transition } from "../types";
 import { pick } from "./shared";
 
 const CAMERAS: Camera[] = ["push_in", "parallax", "pan_left", "pull_out", "pan_right"];
-const TRANSITIONS: Transition[] = ["slide", "zoom", "wipe", "fade", "flash"];
+// The red thread is the channel's signature cut, so it comes up most; the others keep it from wearing thin.
+const TRANSITIONS: Transition[] = ["thread", "whip", "zoom", "thread", "slide", "wipe", "thread", "whip", "fade", "flash"];
 
 export const cameraOf = (scene: Scene): Camera => scene.camera ?? pick(scene.id, CAMERAS);
 export const transitionOf = (scene: Scene): Transition =>
@@ -242,18 +243,84 @@ export const BeatCuts: React.FC<{ beats: Beat[]; format: Format; children: React
 };
 
 const ENTER = 12; // frames
+const THREAD = "#c3272b";
+
+// The signature cut: a red string, pinned at the top, is pulled across the frame and the new scene is
+// revealed in its wake. The string sags and sways a little, like real thread.
+const ThreadEdge: React.FC<{ p: number }> = ({ p }) => {
+  const { width, height } = useVideoConfig();
+  if (p <= 0 || p >= 1) return null;
+  const [top, bottom] = threadEdge(p);
+  const x1 = (top / 100) * width;
+  const x2 = (bottom / 100) * width;
+  const sway = Math.sin(p * Math.PI) * width * 0.03;
+  const d = `M${x1} -20 Q${(x1 + x2) / 2 + sway} ${height / 2} ${x2} ${height + 20}`;
+  return (
+    <svg width={width} height={height} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
+      <path d={d} stroke="rgba(0,0,0,0.45)" strokeWidth={14} fill="none" transform="translate(8 10)" />
+      <path d={d} stroke={THREAD} strokeWidth={9} fill="none" strokeLinecap="round" />
+      <path d={d} stroke="rgba(255,255,255,0.25)" strokeWidth={2} fill="none" strokeDasharray="10 14" />
+      <circle cx={x1 + 6} cy={26} r={15} fill="#e8e1cf" stroke="#000" strokeOpacity={0.3} strokeWidth={3} />
+    </svg>
+  );
+};
+
+// Where the thread crosses the top and bottom of the frame (% of width) as it is pulled across.
+const threadEdge = (p: number): [number, number] => {
+  const top = -20 + 145 * p;
+  return [top, top - 25];
+};
+
+// A horizontal motion blur for the whip pan (CSS blur can only blur both ways at once).
+const WhipBlur: React.FC<{ amount: number }> = ({ amount }) => (
+  <svg width={0} height={0} style={{ position: "absolute" }}>
+    <filter id="whip-blur" x="-20%" y="0" width="140%" height="100%">
+      <feGaussianBlur stdDeviation={`${amount} 0`} />
+    </filter>
+  </svg>
+);
 
 // Every scene enters with its transition, drifts in slightly over its length, and fades out briefly.
 // The first scene is on screen from the first frame: a fade from black there is a frame people swipe on.
-export const SceneFrame: React.FC<{ transition?: Transition; instant?: boolean; children: React.ReactNode }> = ({
+// Transitions where the outgoing scene stays on screen under the incoming one: the thread is pulled
+// across it, or it is whipped off to the side as the next one whips in.
+export const OVERLAP: Partial<Record<Transition, number>> = { thread: 16, whip: 9 };
+
+export const SceneFrame: React.FC<{ transition?: Transition; instant?: boolean; tail?: number; exit?: Transition; children: React.ReactNode }> = ({
   transition = "fade",
   instant = false,
+  tail = 0,
+  exit,
   children,
 }) => {
   const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
+  const { durationInFrames: total } = useVideoConfig();
+  if (tail > 0 && frame >= total - tail) {
+    // Leaving under the next scene's transition.
+    const q = (frame - (total - tail)) / tail;
+    // Scenes are see-through over the shared background, so under the thread the old scene is cut
+    // away exactly where the new one is revealed.
+    const [top, bottom] = threadEdge(Easing.inOut(Easing.cubic)(q));
+    const out: React.CSSProperties =
+      exit === "whip"
+        ? { transform: `translateX(${-70 * Easing.in(Easing.cubic)(q)}%) scale(1.03)`, filter: "url(#whip-blur-out)" }
+        : { transform: "scale(1.03)", clipPath: `polygon(${top}% 0%, 100% 0%, 100% 100%, ${bottom}% 100%)` };
+    return (
+      <AbsoluteFill style={out}>
+        {exit === "whip" ? (
+          <svg width={0} height={0} style={{ position: "absolute" }}>
+            <filter id="whip-blur-out" x="-20%" y="0" width="140%" height="100%">
+              <feGaussianBlur stdDeviation={`${40 * q} 0`} />
+            </filter>
+          </svg>
+        ) : null}
+        {children}
+      </AbsoluteFill>
+    );
+  }
+  const durationInFrames = total - tail;
   const p = instant ? 1 : interpolate(frame, [0, ENTER], [0, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
-  const fadeOut = interpolate(frame, [durationInFrames - 6, durationInFrames], [1, 0], {
+  const fadeOut = tail > 0 ? 1 : interpolate(frame, [durationInFrames - 6, durationInFrames], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -265,6 +332,30 @@ export const SceneFrame: React.FC<{ transition?: Transition; instant?: boolean; 
     style = { opacity: Math.min(p, fadeOut), transform: `scale(${drift * (1.25 - 0.25 * p)})`, filter: `blur(${(1 - p) * 12}px)` };
   } else if (transition === "wipe") {
     style = { opacity: fadeOut, transform: `scale(${drift})`, clipPath: `inset(0 ${(1 - p) * 100}% 0 0)` };
+  } else if (transition === "thread") {
+    const t = instant ? 1 : interpolate(frame, [0, 16], [0, 1], { extrapolateRight: "clamp", easing: Easing.inOut(Easing.cubic) });
+    const [top, bottom] = threadEdge(t);
+    style = {
+      opacity: fadeOut,
+      transform: `scale(${drift * (1.04 - 0.04 * t)})`,
+      clipPath: t >= 1 ? undefined : `polygon(0% 0%, ${top}% 0%, ${bottom}% 100%, 0% 100%)`,
+    };
+    return (
+      <AbsoluteFill>
+        <AbsoluteFill style={style}>{children}</AbsoluteFill>
+        <ThreadEdge p={t} />
+      </AbsoluteFill>
+    );
+  } else if (transition === "whip") {
+    // A fast pan that lands with a little overshoot, smeared sideways while it moves.
+    const t = instant ? 1 : interpolate(frame, [0, 9], [0, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.3)) });
+    const blur = instant ? 0 : interpolate(frame, [0, 8], [40, 0], { extrapolateRight: "clamp" });
+    return (
+      <AbsoluteFill style={{ opacity: fadeOut, transform: `translateX(${(1 - t) * 70}%) scale(${drift})`, filter: blur > 0.5 ? "url(#whip-blur)" : undefined }}>
+        <WhipBlur amount={blur} />
+        {children}
+      </AbsoluteFill>
+    );
   } else if (transition === "flash") {
     style = { opacity: fadeOut, transform: `scale(${drift})` };
   }

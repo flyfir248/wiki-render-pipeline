@@ -60,3 +60,10 @@ def test_contact_sheet_lays_frames_in_a_grid(tmp_path):
     out = tile(shots, tmp_path / "sheet.png")
     w, h = Image.open(out).size
     assert (w, h) == (480 * 4 + 12, 270 * 2 + 4)
+
+
+def test_scripts_can_ask_for_the_signature_cuts():
+    s = script(ScriptScene(narration="x", type="statement", text="t", transition="thread"),
+               ScriptScene(narration="y", type="statement", text="t", transition="whip"))
+    props = build_props(Config(), s, [(0.0, 1.0), (1.0, 2.0)], [[], []], {}, None, None)
+    assert [sc.transition for sc in props.scenes] == ["thread", "whip"]

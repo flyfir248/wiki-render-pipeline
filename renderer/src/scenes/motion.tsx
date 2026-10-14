@@ -24,6 +24,10 @@ const revealFrames = (scene: Scene, n: number, D: number, fps: number, from = 0.
   );
 };
 
+// A small jolt of the camera each time something lands, so reveals hit instead of just appearing.
+const kick = (frame: number, at: number[]) =>
+  1 + at.reduce((sum, a) => sum + Math.max(0, 1 - Math.abs(frame - a - 3) / 6) * 0.018, 0);
+
 const valueText = (scene: Scene, v: number) => `${scene.prefix ?? ""}${formatNumber(v)}${scene.suffix ?? ""}`;
 
 // A round step size for about `count` gridlines between 0 and `span`.
@@ -123,7 +127,7 @@ export const TrendScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
 
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", padding: short ? "200px 60px 560px" : "70px 120px 170px" }}>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18, transform: `scale(${zoom})` }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18, transform: `scale(${zoom * kick(frame, reach)})` }}>
         <Heading text={scene.heading} theme={theme} format={format} size={56} />
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ overflow: "visible" }}>
           <defs>
@@ -352,7 +356,7 @@ export const ScaleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const w = a.zoom === b.zoom ? u : (1 / a.zoom - 1 / zoom) / (1 / a.zoom - 1 / b.zoom);
   const cx = a.cx + (b.cx - a.cx) * w;
   const drift = interpolate(frame, [0, D], [1, 0.97]);
-  const Z = zoom * drift;
+  const Z = zoom * drift * kick(frame, at);
   const sx = (x: number) => width / 2 + (x - cx) * Z;
 
   return (
@@ -501,7 +505,7 @@ export const CycleScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
 
   const centre = spring({ frame: frame - loopFrom + 10, fps, config: { damping: 14 } });
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={{ transform: `scale(${kick(frame, at)})` }}>
       <AbsoluteFill style={{ alignItems: "center", padding: short ? "200px 60px 0" : "60px 120px 0" }}>
         <Heading text={scene.heading} theme={theme} format={format} size={56} />
       </AbsoluteFill>

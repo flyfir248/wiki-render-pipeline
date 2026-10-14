@@ -17,13 +17,20 @@ The visuals are **motion-graphics templates driven by the script**, not only sto
 animated titles, kinetic typography, count-up stats, bar charts, timelines, numbered lists,
 comparisons, quotes, code-drawn explainer graphics (a line chart drawn by a glowing pen, a grid of 100
 dots that lights up to show a share, circles where the camera pulls out from a speck to a giant to show
-scale, and a loop of steps with a pulse running round it), evidence boards (clue cards pinned and joined with red string as the narrator names them), animated maps (a globe that dives in, a plane, ship or army the camera follows over
+scale, and a loop of steps with a pulse running round it; any photo for the scene sits dim and soft
+behind them), evidence boards (clue cards pinned and joined with red string as the narrator names them), animated maps (a globe that dives in, a plane, ship or army the camera follows over
 a tilted map, empires that spread or shrink, a running year counter), cause-and-effect
 diagrams, highlighted documents, typed-out transcripts, and photos moved by a virtual camera
 (push in, pan, parallax) with varied transitions. Real photos get a Vox-style collage look: each one
 becomes a duotone halftone print pinned over a dim copy of itself, and its main subject is cut out in
 black and white and lifts off the print (`fyt/cutout.py`, free and local; turn off with `collage: {enabled: false}`). Word-highlighted captions and
-an audio-reactive background and visualizer sit on top. Every video looks different while
+an audio-reactive background and visualizer sit on top.
+
+One motion system ties it together, in long videos and Shorts alike: the channel's signature cut is a
+red thread (the evidence-board string) pulled across the frame to reveal the next scene, alternating
+with whip pans that smear sideways; charts and lists tip up into place in 3D and sway gently; reveals
+land with a small camera jolt; the spoken word in the captions lifts and gets a red-thread underline;
+and a paper grain that changes every other frame gives the whole picture a printed, hand-made feel. Every video looks different while
 the channel keeps one consistent style, which matters for monetization (see below).
 
 ## Quick start

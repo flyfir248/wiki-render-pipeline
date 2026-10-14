@@ -335,8 +335,6 @@ def scene_visuals(
 
     for i, s in enumerate(script.scenes):
         n = s.image
-        if s.type in DRAWN and s.type != "map":  # code-drawn charts keep the photo for another scene
-            continue
         if n is not None and 1 <= n <= len(images) and n not in taken and article_image(i, n):
             continue
         # Data scenes (charts, numbers, lists) get their photo in the second pass, behind the chart.

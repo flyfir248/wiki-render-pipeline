@@ -18,7 +18,7 @@ import { StoryScene } from "./story";
 import { CycleScene, ProportionScene, ScaleScene, TrendScene } from "./motion";
 import { Heading, PanelContext, Stage, Sub, formatNumber, useEnter, type SceneProps } from "./shared";
 
-export { SceneFrame, transitionOf } from "./camera";
+export { OVERLAP, SceneFrame, transitionOf } from "./camera";
 
 // A bare year (1968, not 1,968), shown as itself rather than counted up from zero.
 const isYear = (scene: Scene) =>
@@ -526,7 +526,34 @@ export const shownType = (raw: Scene): Scene["type"] =>
 const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll", "story"];
 
 // Scenes that draw their own full frame, so a photo is never put behind them.
-const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence", "trend", "proportion", "scale", "cycle"];
+const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence"];
+// Code-drawn charts: a photo goes far behind them, dim and soft, so the chart reads first.
+const CHARTS: Scene["type"][] = ["trend", "proportion", "scale", "cycle"];
+// Graphics that float in 3D space: they tip up into place and sway gently, so they never sit dead flat.
+const FLOATING: Scene["type"][] = [...CHARTS, "stat", "bars", "list", "timeline", "comparison", "process", "quote"];
+
+const Depth: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const land = spring({ frame, fps, config: { damping: 15, mass: 0.9 } });
+  const dir = id.length % 2 ? 1 : -1; // neighbouring scenes tip in from opposite sides
+  const tiltX = (1 - land) * 16 + Math.cos(frame / 70) * 1.6;
+  const tiltY = (1 - land) * 10 * dir + Math.sin(frame / 90) * 2.4;
+  return (
+    <AbsoluteFill style={{ perspective: 1800 }}>
+      <AbsoluteFill style={{ transform: `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`, transformStyle: "preserve-3d" }}>{children}</AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+const DimBackdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; theme: Theme; format: Format }> = ({ scene, media, theme, format }) => (
+  <AbsoluteFill>
+    <AbsoluteFill style={{ filter: "blur(4px) brightness(0.55) saturate(0.8)", transform: "scale(1.06)" }}>
+      <ShotReel media={media} shots={null} camera={cameraOf(scene)} flat format={format} />
+    </AbsoluteFill>
+    <AbsoluteFill style={{ background: `radial-gradient(ellipse at center, ${theme.background}aa 0%, ${theme.background}66 70%, ${theme.background}cc 100%)` }} />
+  </AbsoluteFill>
+);
 
 const SceneBody: React.FC<SceneProps> = (props) => {
   const type = shownType(props.scene);
@@ -534,17 +561,30 @@ const SceneBody: React.FC<SceneProps> = (props) => {
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
   const media = props.scene.media;
   if (type === "title" && props.scene.id === "s1") return <HookScene {...props} scene={scene} />;
+  const body = FLOATING.includes(type) ? (
+    <Depth id={props.scene.id}>
+      <Component {...props} scene={scene} />
+    </Depth>
+  ) : (
+    <Component {...props} scene={scene} />
+  );
+  if (media && CHARTS.includes(type)) {
+    return (
+      <AbsoluteFill>
+        <DimBackdrop scene={props.scene} media={media} theme={props.theme} format={props.format} />
+        {body}
+      </AbsoluteFill>
+    );
+  }
   if (media && !DRAWN_OVER.includes(type)) {
     return (
       <AbsoluteFill>
         <Backdrop scene={props.scene} media={media} theme={props.theme} format={props.format} />
-        <PanelContext.Provider value={props.theme.background}>
-          <Component {...props} scene={scene} />
-        </PanelContext.Provider>
+        <PanelContext.Provider value={props.theme.background}>{body}</PanelContext.Provider>
       </AbsoluteFill>
     );
   }
-  return <Component {...props} scene={scene} />;
+  return body;
 };
 
 export const SceneView: React.FC<SceneProps> = (props) => {

@@ -37,7 +37,7 @@ export type Actor = {
 // How the "camera" moves over a scene's photo or clip.
 export type Camera = "push_in" | "pull_out" | "pan_left" | "pan_right" | "parallax";
 // How a scene enters.
-export type Transition = "fade" | "slide" | "zoom" | "wipe" | "flash";
+export type Transition = "fade" | "slide" | "zoom" | "wipe" | "flash" | "thread" | "whip";
 
 export type SceneType =
   | "title"

@@ -3,9 +3,10 @@ import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useVideoConfig 
 import { Background } from "./components/Background";
 import { Brand } from "./components/Brand";
 import { Captions } from "./components/Captions";
+import { Grain } from "./components/Grain";
 import { SoundEffects } from "./components/SoundEffects";
 import { Visualizer, energyOf, useVoiceSpectrum } from "./components/Visualizer";
-import { SceneFrame, SceneView, transitionOf } from "./scenes";
+import { OVERLAP, SceneFrame, SceneView, transitionOf } from "./scenes";
 import type { RenderProps, Word } from "./types";
 
 const ReactiveLayer: React.FC<{ props: RenderProps; voice: string }> = ({ props, voice }) => {
@@ -37,15 +38,20 @@ export const Video: React.FC<RenderProps> = (props) => {
 
       {props.scenes.map((scene, i) => {
         const from = Math.round(scene.start * fps);
-        const len = Math.max(1, Math.round(scene.end * fps) - from);
+        const next = props.scenes[i + 1];
+        const exit = next ? transitionOf(next) : undefined;
+        const tail = (exit && OVERLAP[exit]) ?? 0;
+        const len = Math.max(1, Math.round(scene.end * fps) - from) + tail;
         return (
           <Sequence key={scene.id} from={from} durationInFrames={len} name={`${scene.type}:${scene.id}`}>
-            <SceneFrame transition={transitionOf(scene)} instant={i === 0}>
+            <SceneFrame transition={transitionOf(scene)} instant={i === 0} tail={tail} exit={exit}>
               <SceneView scene={scene} theme={props.theme} format={props.format} />
             </SceneFrame>
           </Sequence>
         );
       })}
+
+      <Grain />
 
       {props.showCaptions && props.captions.length ? (
         <Captions words={props.captions} theme={props.theme} format={props.format} />

@@ -11,11 +11,12 @@ SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
     "map", "process", "document", "dialogue", "story", "evidence", "trend", "proportion", "scale", "cycle",
 ]
-# Scenes that draw their whole picture themselves, so no photo is fetched for them.
-DRAWN = ("map", "story", "trend", "proportion", "scale", "cycle")
+# Scenes that draw their whole picture themselves, so no photo is fetched for them. Code-drawn charts
+# (trend, proportion, scale, cycle) do take one: it sits dim and soft far behind the chart.
+DRAWN = ("map", "story")
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
-Transition = Literal["fade", "slide", "zoom", "wipe", "flash"]
+Transition = Literal["fade", "slide", "zoom", "wipe", "flash", "thread", "whip"]
 # Feel of the background music, chosen from the story (see fyt.music).
 # What travels along a map route: a plane, ship, car or train icon, a walker, or an army's campaign arrow.
 Vehicle = Literal["plane", "ship", "car", "train", "walk", "army"]
