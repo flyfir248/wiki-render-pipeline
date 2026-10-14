@@ -3,6 +3,7 @@
 //   node render.mjs --props job/props.json --public job/public --out job/video.mp4
 //   node render.mjs --still --props job/thumb.json --public job/public --out job/thumb.png
 //   node render.mjs --frame 120 --props job/props.json --public job/public --out preview.png
+//   node render.mjs --frames 0,30,60 --props job/props.json --public job/public --out frames/
 //
 // The Python pipeline calls this; you can also run it by hand.
 import { bundle } from "@remotion/bundler";
@@ -25,6 +26,7 @@ const publicDir = path.resolve(opt("public", path.join(here, "public")));
 const out = path.resolve(opt("out", "out.mp4"));
 const still = flag("still");
 const frame = opt("frame");
+const frames = opt("frames");
 if (!propsPath) {
   console.error("--props is required");
   process.exit(2);
@@ -40,7 +42,14 @@ const composition = await selectComposition({
   browserExecutable,
 });
 
-if (still || frame !== undefined) {
+if (frames !== undefined) {
+  // --frames renders several frames as stills (frame-00030.png ...) from one bundle, for a contact sheet.
+  fs.mkdirSync(out, { recursive: true });
+  for (const f of frames.split(",").map(Number)) {
+    const file = path.join(out, `frame-${String(f).padStart(5, "0")}.png`);
+    await renderStill({ composition, serveUrl, output: file, inputProps, browserExecutable, frame: f, logLevel: "error" });
+  }
+} else if (still || frame !== undefined) {
   // --frame previews one frame of the video without rendering all of it.
   await renderStill({ composition, serveUrl, output: out, inputProps, browserExecutable, frame: Number(frame ?? 0) });
 } else {

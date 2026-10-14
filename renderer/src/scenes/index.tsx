@@ -15,12 +15,10 @@ import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
 import { EvidenceScene } from "./evidence";
 import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
-import { Heading, PanelContext, Stage, Sub, useEnter, type SceneProps } from "./shared";
+import { CycleScene, ProportionScene, ScaleScene, TrendScene } from "./motion";
+import { Heading, PanelContext, Stage, Sub, formatNumber, useEnter, type SceneProps } from "./shared";
 
 export { SceneFrame, transitionOf } from "./camera";
-
-const formatNumber = (n: number) =>
-  Math.abs(n) >= 1000 ? Math.round(n).toLocaleString("en-US") : n % 1 === 0 ? String(n) : n.toFixed(1);
 
 // A bare year (1968, not 1,968), shown as itself rather than counted up from zero.
 const isYear = (scene: Scene) =>
@@ -487,6 +485,10 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   dialogue: DialogueScene,
   story: StoryScene,
   evidence: EvidenceScene,
+  trend: TrendScene,
+  proportion: ProportionScene,
+  scale: ScaleScene,
+  cycle: CycleScene,
 };
 
 // A photo or clip behind a template scene, moved by the scene's camera. It stays bright: the scene's
@@ -508,17 +510,23 @@ const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; the
 );
 
 // What a scene is drawn as: a kinetic statement stands in for broll without media, a map without
-// places, a story without any art, or an evidence board without clues.
+// places, a story without any art, an evidence board without clues, or a chart without enough data.
 export const shownType = (raw: Scene): Scene["type"] =>
   (raw.type === "broll" && !raw.media) ||
   (raw.type === "map" && !validPlaces(raw.places).length && !mapRegions(raw).length) ||
   (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src)) ||
-  (raw.type === "evidence" && !(raw.items ?? []).some(Boolean))
+  (raw.type === "evidence" && !(raw.items ?? []).some(Boolean)) ||
+  (raw.type === "trend" && (raw.data ?? []).length < 2) ||
+  (raw.type === "scale" && (raw.data ?? []).filter((d) => d.value > 0).length < 2) ||
+  (raw.type === "cycle" && (raw.items ?? []).filter(Boolean).length < 3)
     ? "statement"
     : raw.type;
 
 // Scenes whose picture can change with the story (fyt/storyboard.py BEAT_TYPES).
 const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll", "story"];
+
+// Scenes that draw their own full frame, so a photo is never put behind them.
+const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence", "trend", "proportion", "scale", "cycle"];
 
 const SceneBody: React.FC<SceneProps> = (props) => {
   const type = shownType(props.scene);
@@ -526,7 +534,7 @@ const SceneBody: React.FC<SceneProps> = (props) => {
   const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
   const media = props.scene.media;
   if (type === "title" && props.scene.id === "s1") return <HookScene {...props} scene={scene} />;
-  if (media && type !== "broll" && type !== "map" && type !== "story" && type !== "evidence") {
+  if (media && !DRAWN_OVER.includes(type)) {
     return (
       <AbsoluteFill>
         <Backdrop scene={props.scene} media={media} theme={props.theme} format={props.format} />

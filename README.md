@@ -15,7 +15,9 @@ topics queue ─► Claude research (web search) ─► Claude script (structure
 
 The visuals are **motion-graphics templates driven by the script**, not only stock footage:
 animated titles, kinetic typography, count-up stats, bar charts, timelines, numbered lists,
-comparisons, quotes, evidence boards (clue cards pinned and joined with red string as the narrator names them), animated maps (a globe that dives in, a plane, ship or army the camera follows over
+comparisons, quotes, code-drawn explainer graphics (a line chart drawn by a glowing pen, a grid of 100
+dots that lights up to show a share, circles where the camera pulls out from a speck to a giant to show
+scale, and a loop of steps with a pulse running round it), evidence boards (clue cards pinned and joined with red string as the narrator names them), animated maps (a globe that dives in, a plane, ship or army the camera follows over
 a tilted map, empires that spread or shrink, a running year counter), cause-and-effect
 diagrams, highlighted documents, typed-out transcripts, and photos moved by a virtual camera
 (push in, pan, parallax) with varied transitions. Real photos get a Vox-style collage look: each one
@@ -48,6 +50,19 @@ python -m fyt make "How the Rule of 72 predicts when your money doubles"
 
 Rendering uses Chromium through Remotion. It downloads its own copy on first run; set
 `REMOTION_BROWSER_EXECUTABLE` to use an existing Chromium or headless shell instead.
+
+## Checking a render frame by frame
+
+Every frame is a pure function of time (React/SVG drawn in headless Chromium, stitched by ffmpeg), so
+any frame can be drawn on its own and looked at. `python -m fyt sheet` lays frames out on one image:
+
+```bash
+python -m fyt sheet jobs/<id>/video.mp4                # a frame a second from a finished video
+python -m fyt sheet jobs/<id>/props.json --every 0.5   # frames drawn straight from the props, no full render
+```
+
+Use it when adding or changing a scene template (`renderer/src/scenes/`): render, look at the sheet,
+fix what is wrong, repeat. It costs nothing at run time; the scheduled pipeline doesn't call it.
 
 ## Uploading to YouTube
 

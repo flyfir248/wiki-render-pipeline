@@ -54,6 +54,14 @@ def check_script(cfg: Config, script: Script) -> list[str]:
             problems.append(f"scene {i} is a transcript without lines")
         if s.type == "evidence" and len(s.items or []) < 2:
             problems.append(f"scene {i} is an evidence board with fewer than 2 clues")
+        if s.type == "trend" and len(s.data or []) < 2:
+            problems.append(f"scene {i} is a trend line with fewer than 2 points")
+        if s.type == "scale" and len([d for d in s.data or [] if d.value > 0]) < 2:
+            problems.append(f"scene {i} is a size comparison with fewer than 2 positive values")
+        if s.type == "proportion" and not (s.value is not None and 0 < s.value <= 100):
+            problems.append(f"scene {i} is a proportion without a share between 0 and 100")
+        if s.type == "cycle" and len(s.items or []) < 3:
+            problems.append(f"scene {i} is a cycle with fewer than 3 steps")
     return problems
 
 

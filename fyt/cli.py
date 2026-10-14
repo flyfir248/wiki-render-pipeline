@@ -68,11 +68,22 @@ def main(argv: list[str] | None = None) -> None:
     po.add_argument("--out", default="posts.md")
     po.add_argument("--now", action="store_true", help="draft them even if this week's are done")
 
+    sh = sub.add_parser("sheet", help="lay a video's frames out on one image, to check a render by eye")
+    sh.add_argument("source", type=Path, help="a rendered video, or a props.json to draw frames from directly")
+    sh.add_argument("--every", type=float, default=1.0, help="seconds between frames (at most 60 frames)")
+    sh.add_argument("--out", type=Path, help="where to save the sheet (default: next to the source)")
+    sh.add_argument("--public", type=Path, help="the job's public dir, for a props.json (default: next to it)")
+
     args = p.parse_args(argv)
     cfg = load_config(args.config)
     if args.format:
         cfg.format = args.format
 
+    if args.cmd == "sheet":
+        from fyt.sheet import contact_sheet
+
+        print(contact_sheet(args.source, args.out, args.every, args.public))
+        return
     if args.cmd == "demo":
         cfg.stock_footage = False
         cfg.target_minutes = 0.5  # the demo script is short

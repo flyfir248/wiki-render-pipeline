@@ -385,6 +385,17 @@ Scene templates (field names in brackets):
   by one and joined with red string, then an optional stamp lands [heading = the case name, items (2-5
   clues, max ~5 words each, each a real documented fact), text = a 1-2 word stamp such as Unsolved or
   Classified, only if true]. Use it where the story lays out the clues that don't add up.
+- trend: a line chart drawn point by point, its value counting up beside the pen, the peak circled at
+  the end [heading, data (3-10 real points in time order, label = year or date), prefix, suffix, optional
+  text]. Use it when a number rose or fell over time.
+- proportion: a grid of 100 dots that light up to show a share [heading, value (the percentage, 0-100),
+  text = what the share is of, e.g. "of the island collapsed into the sea"]. Use it for "1 in 3", "two thirds".
+- scale: circles sized by value; the camera starts on the smallest and pulls out to reveal each bigger
+  one [heading, data (2-5 things, label = the thing, value = a real number in the same unit), suffix =
+  the unit, optional text]. Use it to make a huge difference in size, energy, money or distance felt.
+- cycle: a loop of steps joined by arrows, with a pulse running round it [heading, items (3-5 steps,
+  max ~4 words each), optional text = a 1-3 word name for the loop shown in the middle]. Only for
+  something that really feeds back into itself.
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 
@@ -429,7 +440,8 @@ Rules:
   drawings, for the one or two moments a photo can't show (a journey, an accident, a chase) -- at most
   one scene in five. Viewers stay for seeing the story, not reading it.
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
-  (stat, bars, timeline, comparison, map, process, evidence) wherever the research supports them -- they
+  (stat, bars, trend, proportion, scale, timeline, comparison, map, process, cycle, evidence) wherever the
+  research supports them -- they
   are what makes this channel different from generic stock-footage channels.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.
