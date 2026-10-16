@@ -398,6 +398,16 @@ Scene templates (field names in brackets):
 - cycle: a loop of steps joined by arrows, with a pulse running round it [heading, items (3-5 steps,
   max ~4 words each), optional text = a 1-3 word name for the loop shown in the middle]. Only for
   something that really feeds back into itself.
+- aircraft: a cel-shaded 3D airliner flying through a toon sky, tracked by a moving camera, for stories
+  about flights and air incidents [heading = the flight or aircraft, e.g. "Flight 1549", optional text =
+  place and date, maneuver (cruise, climb, descend, dive, turn, takeoff, land, go_around), shot (chase,
+  side, front, below, orbit, wide), setting (sky, sea, countryside, city, desert, snow, night) for what
+  is below, optional altitude_from/altitude_to in feet for an altitude readout that counts as the
+  narrator says the figure, optional effect (smoke, fire or explosion at the engines) with effect_at 0-1 for when it happens
+  and effect_x for which engine: under 40 the left, over 60 the right, unset for both].
+  Use it for what the aircraft did: the take-off, the climb, the moment an engine failed, the turn back,
+  the descent, the landing or ditching (land over sea). Use only documented altitudes and events;
+  the aircraft is generic, never a real airline's livery. Pair it with map scenes for the route.
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 

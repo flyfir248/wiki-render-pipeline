@@ -15,6 +15,7 @@ import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
 import { EvidenceScene } from "./evidence";
 import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
+import { AircraftScene } from "./aircraft";
 import { CycleScene, Flash, ProportionScene, ScaleScene, TrendScene, impact, statLands } from "./motion";
 import { Heading, PanelContext, Stage, Sub, formatNumber, useEnter, type SceneProps } from "./shared";
 
@@ -516,6 +517,7 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   proportion: ProportionScene,
   scale: ScaleScene,
   cycle: CycleScene,
+  aircraft: AircraftScene,
 };
 
 // A photo or clip behind a template scene, moved by the scene's camera. It stays bright: the scene's
@@ -553,7 +555,7 @@ export const shownType = (raw: Scene): Scene["type"] =>
 const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll", "story"];
 
 // Scenes that draw their own full frame, so a photo is never put behind them.
-const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence"];
+const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence", "aircraft"];
 // Code-drawn charts: a photo goes far behind them, dim and soft, so the chart reads first.
 const CHARTS: Scene["type"][] = ["trend", "proportion", "scale", "cycle"];
 // Graphics that float in 3D space: they tip up into place and sway gently, so they never sit dead flat.

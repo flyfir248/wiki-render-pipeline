@@ -58,7 +58,8 @@ export type SceneType =
   | "trend"
   | "proportion"
   | "scale"
-  | "cycle";
+  | "cycle"
+  | "aircraft";
 
 export type Scene = {
   id: string;
@@ -98,6 +99,10 @@ export type Scene = {
   effectY?: number | null;
   effectAt?: number | null;
   effectSrc?: string | null;
+  maneuver?: "cruise" | "climb" | "descend" | "dive" | "turn" | "takeoff" | "land" | "go_around" | null; // aircraft scenes
+  shot?: "chase" | "side" | "front" | "below" | "orbit" | "wide" | null; // aircraft scenes: where the camera sits
+  altitudeFrom?: number | null; // aircraft scenes: altitude readout in feet, counting from this...
+  altitudeTo?: number | null; // ...to this, landing as the narrator says it
   landTimes?: number[] | null; // when the narrator says a stat's or proportion's figure, or each trend point, seconds from the scene's start
   revealTimes?: number[] | null; // when each evidence clue, document [hidden] word, scale item or cycle step is said, seconds from the scene's start
   camera?: Camera | null; // picked per scene when not set

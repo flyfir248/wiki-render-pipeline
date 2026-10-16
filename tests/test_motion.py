@@ -110,3 +110,20 @@ def test_figures_land_when_the_narrator_says_them():
     assert land_times(stat, words("Many people died."), 0) is None
     # Digits stay separate figures; "and" only joins spelled-out ones.
     assert [round(v, 1) for v, *_ in spoken_numbers(words("3.5% and 36,417 deaths, a quarter-million"))] == [3.5, 36417, 250000]
+
+
+def test_aircraft_scenes_carry_their_flight_and_land_the_altitude_on_the_word():
+    from fyt.config import Config
+    from fyt.models import Script, ScriptScene, Word
+    from fyt.timeline import build_props
+
+    scene = ScriptScene(
+        narration="Then, at about 2,800 feet, they saw birds.", type="aircraft", maneuver="climb", shot="chase",
+        setting="city", altitude_from=0, altitude_to=2800, effect="smoke", effect_at=0.3,
+    )
+    script = Script(title="T", description="D", tags=[], thumbnail_text="X", thumbnail_kicker="K", thumbnail_query="q", scenes=[scene], sources=[])
+    words = [Word(word=w, start=i * 0.4, end=i * 0.4 + 0.3) for i, w in enumerate(scene.narration.split())]
+    props = build_props(Config(format="short"), script, [(0.0, 3.2)], [words], {}, None, None)
+    s = props.scenes[0]
+    assert (s.maneuver, s.shot, s.altitudeFrom, s.altitudeTo, s.effect) == ("climb", "chase", 0, 2800, "smoke")
+    assert s.landTimes == [1.5]  # the end of "2,800"

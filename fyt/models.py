@@ -10,10 +10,11 @@ from pydantic.json_schema import SkipJsonSchema
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
     "map", "process", "document", "dialogue", "story", "evidence", "trend", "proportion", "scale", "cycle",
+    "aircraft",
 ]
 # Scenes that draw their whole picture themselves, so no photo is fetched for them. Code-drawn charts
 # (trend, proportion, scale, cycle) do take one: it sits dim and soft far behind the chart.
-DRAWN = ("map", "story")
+DRAWN = ("map", "story", "aircraft")
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
 Transition = Literal["fade", "slide", "zoom", "wipe", "flash", "thread", "whip"]
@@ -22,6 +23,9 @@ Transition = Literal["fade", "slide", "zoom", "wipe", "flash", "thread", "whip"]
 Vehicle = Literal["plane", "ship", "car", "train", "walk", "army"]
 # How the highlighted regions of a map change: they appear, spread out from their middle, shrink away or fade.
 RegionChange = Literal["appear", "spread", "shrink", "fade"]
+# What an aircraft scene's airliner does, and where its camera sits.
+Maneuver = Literal["cruise", "climb", "descend", "dive", "turn", "takeoff", "land", "go_around"]
+Shot = Literal["chase", "side", "front", "below", "orbit", "wide"]
 Mood = Literal["somber", "tense", "curious", "uplifting", "playful"]
 MOOD_HELP = (
     "Music mood that respects the story: somber for death, disaster, war, illness or other tragedy; "
@@ -131,6 +135,10 @@ class ScriptScene(BaseModel):
     effect_y: float | None = None
     effect_at: float | None = Field(default=None, description="story scenes: when the effect happens (0-1).")
     effect_src: SkipJsonSchema[str | None] = None  # set by the pipeline
+    maneuver: Maneuver | None = Field(default=None, description="aircraft scenes: what the airliner does.")
+    shot: Shot | None = Field(default=None, description="aircraft scenes: where the camera watches from.")
+    altitude_from: float | None = Field(default=None, description="aircraft scenes: altitude readout start, in feet (documented figures only).")
+    altitude_to: float | None = Field(default=None, description="aircraft scenes: altitude readout end, in feet.")
     camera: Camera | None = Field(default=None, description="Optional camera move over this scene's photo.")
     transition: Transition | None = Field(default=None, description="Optional way this scene enters.")
     image: int | None = Field(
@@ -231,6 +239,10 @@ class RenderScene(BaseModel):
     effectAt: float | None = None
     effectSrc: str | None = None
     revealTimes: list[float] | None = None  # evidence clues, document [hidden] words, scale items, cycle steps: when said
+    maneuver: Maneuver | None = None
+    shot: Shot | None = None
+    altitudeFrom: float | None = None
+    altitudeTo: float | None = None
     landTimes: list[float] | None = None  # stat and proportion figures, trend points: when the narrator says them
     camera: Camera | None = None
     transition: Transition | None = None

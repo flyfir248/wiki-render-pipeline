@@ -74,6 +74,10 @@ def build_props(
                 effectY=scene.effect_y,
                 effectAt=scene.effect_at,
                 effectSrc=scene.effect_src,
+                maneuver=scene.maneuver,
+                shot=scene.shot,
+                altitudeFrom=scene.altitude_from,
+                altitudeTo=scene.altitude_to,
                 revealTimes=reveal_times(revealed(scene), clip_words[i], start - vis_start),
                 landTimes=land_times(scene, clip_words[i], start - vis_start),
                 camera=scene.camera,
@@ -244,15 +248,16 @@ def _close(a: float, b: float, tolerance: float = 0.12) -> bool:
 
 def land_times(scene: ScriptScene, words: list[Word], offset: float) -> list[float] | None:
     """When a figure shown on screen is said, so it lands on the word and not before it: a stat's
-    number, a proportion's share, and each point of a trend line (its year or its value, whichever
+    number, a proportion's share, an aircraft's altitude readout, and each point of a trend line (its year or its value, whichever
     the narration says first). Seconds from the scene's start; None leaves the renderer's pacing."""
-    if not words or scene.type not in ("stat", "proportion", "trend"):
+    if not words or scene.type not in ("stat", "proportion", "trend", "aircraft"):
         return None
     said = spoken_numbers(words)
-    if scene.type in ("stat", "proportion"):
-        if scene.value is None:
+    if scene.type in ("stat", "proportion", "aircraft"):
+        target = scene.altitude_to if scene.type == "aircraft" else scene.value
+        if target is None:
             return None
-        hit = next((s for s in said if _close(s[0], scene.value)), None)
+        hit = next((s for s in said if _close(s[0], target)), None)
         return None if hit is None else [round(hit[2] + offset, 3)]
     points = scene.data or []
     times: list[float | None] = []
