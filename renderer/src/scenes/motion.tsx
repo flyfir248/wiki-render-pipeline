@@ -61,11 +61,12 @@ export const trendTimes = (scene: Scene, n: number, D: number, fps: number) => {
     // Each point arrives as its year or value is said, never two points in the same few frames.
     const reach = said.map((f, i) => (i === 0 ? Math.min(start, f) : f));
     for (let i = 1; i < n; i++) reach[i] = Math.max(reach[i], reach[i - 1] + 10);
-    return { start: reach[0], span: reach[n - 1] - reach[0], reach };
+    // The pen holds at each point and travels over the last stretch before the next figure is said.
+    return { start: reach[0], span: reach[n - 1] - reach[0], reach, move: 40 };
   }
   const span = Math.max(30, D * 0.68 - start);
   const seg = n > 1 ? span / (n - 1) : span;
-  return { start, span, reach: Array.from({ length: n }, (_, i) => start + i * seg) };
+  return { start, span, reach: Array.from({ length: n }, (_, i) => start + i * seg), move: 0 };
 };
 
 export const proportionTimes = (scene: Scene, D: number, fps: number) => {
@@ -170,13 +171,15 @@ export const TrendScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const Y = (v: number) => H - pad.b - ((v - lo) / (hi - lo)) * (H - pad.t - pad.b);
 
   // The pen travels point to point, easing into each one and pausing there a moment.
-  const { start, span, reach } = trendTimes(scene, n, D, fps);
-  // How far the pen is along the points: segment k runs from reach[k] to reach[k + 1].
+  const { start, span, reach, move } = trendTimes(scene, n, D, fps);
+  // How far the pen is along the points: segment k runs from reach[k] to reach[k + 1]. Paced by the
+  // narration, it leaves `move` frames before the next figure is said and arrives on the word.
   const k0 = Math.max(0, reach.findIndex((r, i) => i === n - 1 || frame < reach[i + 1]));
+  const from = k0 < n - 1 && move ? Math.max(reach[k0], reach[k0 + 1] - move) : reach[k0];
   const along =
-    n < 2 ? 0 : k0 >= n - 1 ? n - 1 : k0 + Math.max(0, Math.min(1, (frame - reach[k0]) / (reach[k0 + 1] - reach[k0])));
+    n < 2 ? 0 : k0 >= n - 1 ? n - 1 : k0 + Math.max(0, Math.min(1, (frame - from) / (reach[k0 + 1] - from)));
   const i0 = Math.floor(along);
-  const u = interpolate(along - i0, [0, 0.82], [0, 1], { ...clamp, easing: ease });
+  const u = interpolate(along - i0, [0, move ? 1 : 0.82], [0, 1], { ...clamp, easing: ease });
   const t = Math.min(n - 1, i0 + u);
   const lerp = (a: number, b: number) => a + (b - a) * (t - Math.floor(t));
   const j = Math.floor(t);
