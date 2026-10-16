@@ -106,6 +106,7 @@ WORD_ACRONYMS = {
     "MASH": "mash", "POTUS": "Potus", "NIMBY": "nimby", "YOLO": "yolo", "TASER": "taser",
     "WWI": "World War One", "WWII": "World War Two", "WW1": "World War One", "WW2": "World War Two",
     "USSR": "U S S R", "AI": "A I", "DNA": "D N A", "TV": "T V", "OK": "okay", "NOAA": "Noah", "SETI": "Setty", "MIT": "M I T", "SOS": "S O S",
+    "AWOL": "Awol", "OPSEC": "Opsec",
 }  # fmt: skip
 
 ABBREVIATIONS = {
@@ -354,13 +355,24 @@ def _core(core: str, prev: str, nxt: str, prev_raw: str, noun_next: bool = False
     if m := TIME_RE.match(core):
         h, mins = int(m[1]), int(m[2])
         return cardinal(h) + ("" if mins == 0 else f" oh {ONES[mins]}" if mins < 10 else f" {cardinal(mins)}")
+    if len(core) == 4 and core.isupper() and core.isalpha() and sayable(core):
+        # A four-letter acronym that reads as a word (MOAB, FEMA, AWOL) is said as one, like a name.
+        return core.capitalize()
     if 2 <= len(core) <= 4 and core.isupper() and core.isalpha():
-        # Short acronyms are spelled out (IUCN, IRA): espeak would read some as words.
+        # Other short acronyms are spelled out (IUCN, IRA): espeak would read some as words.
         # Longer capitals are left to espeak, which says NEVER or UNHCR sensibly.
         return " ".join(core)
     if re.fullmatch(r"(?:[A-Z]\.){2,}", core):
         return " ".join(core.replace(".", ""))
     return None
+
+
+def sayable(letters: str) -> bool:
+    """Whether capitals read naturally as a word: a consonant first, two vowels or more and no two
+    consonants side by side (MOAB, FEMA, NATO), unlike IUCN, NYPD or AARP, which people spell out.
+    A vowel first is too often letters (USAF, ASAP), so word-like ones (OPEC, AWOL) are listed instead."""
+    vowel = [c in "AEIOU" for c in letters.upper()]
+    return not vowel[0] and sum(vowel) >= 2 and not any(not a and not b for a, b in zip(vowel, vowel[1:]))
 
 
 def spoken_tokens(text: str) -> list[tuple[str, str]]:

@@ -82,3 +82,12 @@ def test_captions_keep_the_written_words_but_time_the_spoken_ones():
     year_span = words[1].end - words[1].start
     assert year_span > 2 * (words[2].end - words[2].start)  # "nineteen ninety-two" takes longer than "it"
     assert words[-1].end <= 2.0
+
+
+def test_four_letter_acronyms_that_read_as_words_are_said_as_words():
+    from fyt.speech import spoken_tokens
+
+    said = dict(spoken_tokens("MOAB FEMA SEAL AWOL USAF IUCN NYPD AARP ASAP CIA"))
+    assert said["MOAB"] == "Moab" and said["FEMA"] == "Fema" and said["SEAL"] == "Seal" and said["AWOL"] == "Awol"
+    assert said["USAF"] == "U S A F" and said["IUCN"] == "I U C N" and said["NYPD"] == "N Y P D"
+    assert said["AARP"] == "A A R P" and said["ASAP"] == "A S A P" and said["CIA"] == "C I A"
