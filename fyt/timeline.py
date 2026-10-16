@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import re
+import zlib
 
 from fyt.config import Config
 from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, ScriptScene, Sfx, Word
 
 TAIL_SECONDS = 1.5  # hold the last scene after the voice ends
+THREE_D = ("aircraft", "ship")  # scenes drawn in 3D: their clouds, cities and liveries come from the video's seed
 
 
 def build_props(
@@ -30,6 +32,7 @@ def build_props(
     scenes: list[RenderScene] = []
     captions: list[Word] = []
     # The video's first map opens on a globe that dives in; later maps start from the flat map.
+    video_seed = zlib.crc32(script.title.encode()) & 0x7FFFFFFF
     first_map = next((i for i, s in enumerate(script.scenes) if s.type == "map"), None)
     for i, (scene, (start, _end)) in enumerate(zip(script.scenes, spans)):
         # A scene stays on screen until the next one starts, so pauses are covered.
@@ -74,7 +77,17 @@ def build_props(
                 effectY=scene.effect_y,
                 effectAt=scene.effect_at,
                 effectSrc=scene.effect_src,
+                maneuver=scene.maneuver,
+                shot=scene.shot,
+                altitudeFrom=scene.altitude_from,
+                altitudeTo=scene.altitude_to,
+                vessel=scene.vessel,
+                shipAction=scene.ship_action,
+                obstacle=scene.obstacle,
+                weather=scene.weather,
+                seed=video_seed if scene.type in THREE_D else None,
                 revealTimes=reveal_times(revealed(scene), clip_words[i], start - vis_start),
+                landTimes=land_times(scene, clip_words[i], start - vis_start),
                 camera=scene.camera,
                 transition=scene.transition,
             )
@@ -147,6 +160,134 @@ def reveal_times(clues: list[str] | None, words: list[Word], offset: float) -> l
             nxt = next((x for x in times[k + 1:] if x is not None), end)
             filled[k] = round((prev + nxt) / 2, 3)
     return filled
+
+
+# Spoken figures: "36,417", "thirty-six thousand", "three hundred and thirty eight", "two thirds".
+_UNITS = {w: i for i, w in enumerate(
+    "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen "
+    "seventeen eighteen nineteen".split()
+)}
+_UNITS.update({w: 10 * i for i, w in enumerate("_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()) if i > 1})
+_UNITS.update({"a": 1, "an": 1})
+_SCALES = {"thousand": 1e3, "million": 1e6, "billion": 1e9, "trillion": 1e12}
+_FRACTIONS = {"half": 2, "halves": 2, "third": 3, "thirds": 3, "quarter": 4, "quarters": 4}
+
+
+def _token(word: str) -> str:
+    return re.sub(r"[^\w.,%-]", "", word.lower()).strip(".,")
+
+
+def _number_parts(word: str) -> list[str] | None:
+    """The number words a written word stands for, or None if it isn't part of a figure."""
+    t = _token(word)
+    if re.fullmatch(r"\d[\d,]*(\.\d+)?(%|[kmb])?", t):
+        return [t]
+    parts = [x for x in t.split("-") if x]
+    if parts and all(x in _UNITS or x in _SCALES or x in _FRACTIONS or x in ("hundred", "percent") for x in parts):
+        return parts
+    return None
+
+
+def _value(parts: list[str]) -> float | None:
+    total, cur, seen = 0.0, 0.0, False
+    for p in parts:
+        m = re.fullmatch(r"(\d[\d,]*(?:\.\d+)?)(%|[kmb])?", p)
+        if m:
+            cur += float(m.group(1).replace(",", "")) * {"k": 1e3, "m": 1e6, "b": 1e9}.get(m.group(2) or "", 1)
+            seen = True
+        elif p in _UNITS:
+            cur += _UNITS[p]
+            seen = seen or p not in ("a", "an")
+        elif p == "hundred":
+            cur = (cur or 1) * 100
+            seen = True
+        elif p in _SCALES:
+            total += (cur or 1) * _SCALES[p]
+            cur, seen = 0.0, True
+        elif p in _FRACTIONS:
+            cur = (cur or 1) / _FRACTIONS[p]
+            seen = True
+    return total + cur if seen else None
+
+
+def spoken_numbers(words: list[Word]) -> list[tuple[float, float, float, bool]]:
+    """Each figure the narrator says: (value, start, end, is_share) in clip seconds. is_share marks a
+    fraction or a percentage, whose value is then a percentage ("two thirds" -> 66.7)."""
+    out, j = [], 0
+    while j < len(words):
+        parts = _number_parts(words[j].word)
+        if parts is None or parts in (["a"], ["an"]):
+            j += 1
+            continue
+        k, run = j, list(parts)
+        while k + 1 < len(words) and not re.search(r"[.,;:!?%]$", words[k].word):
+            nxt = _number_parts(words[k + 1].word)
+            digits = run[-1][0].isdigit()
+            # "three hundred and thirty eight": an "and" after a hundred or a thousand stays in the figure.
+            if (
+                nxt is None and _token(words[k + 1].word) == "and" and not digits
+                and any(p == "hundred" or p in _SCALES for p in run)
+                and k + 2 < len(words) and (after := _number_parts(words[k + 2].word)) and after[0] in _UNITS
+            ):
+                k += 1
+                continue
+            # Spelled words join up ("thirty six thousand"); a digit only takes a scale ("3 million").
+            if nxt is None or nxt in (["a"], ["an"]) or nxt[0][0].isdigit() or (digits and nxt[0] not in _SCALES):
+                break
+            run += nxt
+            k += 1
+        value = _value(run)
+        if value is not None:
+            fraction = run[-1] in _FRACTIONS
+            share = fraction or run[-1] == "percent" or run[-1].endswith("%")
+            if not share and k + 1 < len(words) and _token(words[k + 1].word) in ("percent", "per"):
+                share = True
+            out.append((value * 100 if fraction else value, words[j].start, words[k].end, share))
+        j = k + 1
+    return out
+
+
+def _close(a: float, b: float, tolerance: float = 0.12) -> bool:
+    """Same figure as said aloud: rounding ("about thirty six thousand" for 36,417) is fine."""
+    if b == 0:
+        return a == 0
+    return abs(a - b) / abs(b) <= tolerance
+
+
+def land_times(scene: ScriptScene, words: list[Word], offset: float) -> list[float] | None:
+    """When a figure shown on screen is said, so it lands on the word and not before it: a stat's
+    number, a proportion's share, an aircraft's altitude readout, and each point of a trend line (its year or its value, whichever
+    the narration says first). Seconds from the scene's start; None leaves the renderer's pacing."""
+    if not words or scene.type not in ("stat", "proportion", "trend", "aircraft"):
+        return None
+    said = spoken_numbers(words)
+    if scene.type in ("stat", "proportion", "aircraft"):
+        target = scene.altitude_to if scene.type == "aircraft" else scene.value
+        if target is None:
+            return None
+        hit = next((s for s in said if _close(s[0], target)), None)
+        return None if hit is None else [round(hit[2] + offset, 3)]
+    points = scene.data or []
+    times: list[float | None] = []
+    after = 0.0
+    for d in points:
+        year = int(m.group()) if (m := re.search(r"-?\d{3,4}", d.label)) else None
+        hit = next(
+            (s for s in said if s[1] >= after and ((year is not None and s[0] == year) or (d.value and _close(s[0], d.value, 0.03)))),
+            None,
+        )
+        times.append(None if hit is None else round(hit[2] + offset, 3))
+        if hit is not None:
+            after = hit[2]
+    if not any(t is not None for t in times[1:]):
+        return None
+    end = words[-1].end + offset
+    for k, t in enumerate(times):
+        if t is None:
+            prev = times[k - 1] if k else offset
+            nxt = next((x for x in times[k + 1:] if x is not None), end)
+            times[k] = round((prev + nxt) / 2, 3)
+    return times
 
 
 def to_srt(words: list[Word], max_words: int = 7) -> str:

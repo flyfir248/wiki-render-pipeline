@@ -15,6 +15,8 @@ import { DialogueScene, DocumentScene, ProcessScene } from "./graphics";
 import { EvidenceScene } from "./evidence";
 import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
+import { AircraftScene } from "./aircraft";
+import { ShipScene } from "./ship";
 import { CycleScene, Flash, ProportionScene, ScaleScene, TrendScene, impact, statLands } from "./motion";
 import { Heading, PanelContext, Stage, Sub, formatNumber, useEnter, type SceneProps } from "./shared";
 
@@ -181,11 +183,13 @@ const StatementScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
 
 const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
+  const { durationInFrames, fps } = useVideoConfig();
   const target = scene.value ?? 0;
-  const lands = statLands(durationInFrames);
+  const lands = Math.max(20, statLands(scene, durationInFrames, fps));
+  // The count runs for the second and a half before the number is said, so it lands on the word.
+  const countFrom = Math.max(5, lands - 45);
   const statText = `${scene.prefix ?? ""}${isYear(scene) ? String(target) : formatNumber(target)}${scene.suffix ?? ""}`;
-  const progress = interpolate(frame, [5, lands], [0, 1], {
+  const progress = interpolate(frame, [countFrom, lands], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
@@ -207,6 +211,8 @@ const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
           lineHeight: 1,
           transform: `scale(${1 + 0.05 * pulse})`,
           textShadow: `0 0 60px ${theme.accent}55`,
+          // A number said late in the scene waits off screen instead of sitting at zero.
+          opacity: interpolate(frame, [countFrom - 8, countFrom], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}
       >
         {scene.prefix ?? ""}
@@ -512,6 +518,8 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   proportion: ProportionScene,
   scale: ScaleScene,
   cycle: CycleScene,
+  aircraft: AircraftScene,
+  ship: ShipScene,
 };
 
 // A photo or clip behind a template scene, moved by the scene's camera. It stays bright: the scene's
@@ -549,7 +557,7 @@ export const shownType = (raw: Scene): Scene["type"] =>
 const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll", "story"];
 
 // Scenes that draw their own full frame, so a photo is never put behind them.
-const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence"];
+const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence", "aircraft", "ship"];
 // Code-drawn charts: a photo goes far behind them, dim and soft, so the chart reads first.
 const CHARTS: Scene["type"][] = ["trend", "proportion", "scale", "cycle"];
 // Graphics that float in 3D space: they tip up into place and sway gently, so they never sit dead flat.

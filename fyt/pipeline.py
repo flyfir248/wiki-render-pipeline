@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artgen, cutout, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, wiki, youtube
+from fyt import artgen, cutout, factcheck, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, wiki, youtube
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -37,8 +37,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     images: list[wiki.WikiImage] = []
     article = None
     written = script is None
+    notes = ""
     if script is None:
-        notes = ""
         if wiki.is_wiki_topic(topic):
             log(job, "fetching Wikipedia article")
             article = wiki.fetch_article(cfg, wiki.title_of(topic))
@@ -72,6 +72,11 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
                 note = llm.PART2_NOTE.format(previous=previous, message=script.core_message)
                 log(job, "writing part 2")
                 part2 = _short_enough(cfg, job, subject, notes, True, menu, note)
+                if cfg.fact_check:
+                    log(job, "checking part 2's facts against the source")
+                    part2, wrong = factcheck.verify(cfg, part2, notes, log=lambda m: log(job, m))
+                    if wrong:
+                        raise RuntimeError("part 2 failed the fact check: " + "; ".join(wrong))
                 job.file("part2.json").write_text(wiki_attribute(part2, article).model_dump_json(indent=2))
                 last = script.scenes[-1]
                 if "part two" not in last.narration.lower():
@@ -96,6 +101,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     if written:
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)
+        script = check_facts(cfg, job, script, notes)
     if two_part:
         script = script.model_copy(update={"title": f"{script.title[:88]} (Part 1)"})
         job.update(two_part=True)
@@ -287,6 +293,25 @@ def make_sense(cfg: Config, job: Job, script: Script) -> Script:
     if problems:
         log(job, "story fixed where it lost the thread: " + "; ".join(problems))
     return fixed
+
+
+def check_facts(cfg: Config, job: Job, script: Script, notes: str) -> Script:
+    """Every figure, date, name and quote, said or shown, must match the source before the video is made.
+    Claims that are wrong are rewritten from the source once; any that still fail stop the video, and so
+    does a check that can't run: a wrong fact on a public video costs more than one skipped topic."""
+    if not cfg.fact_check or not notes.strip():
+        return script
+    log(job, "checking facts against the source")
+    try:
+        script, problems = factcheck.verify(cfg, script, notes, log=lambda m: log(job, m))
+    except Exception as e:
+        problems = [f"the fact check could not run: {e}"]
+    if problems:
+        job.file("script.json").write_text(script.model_dump_json(indent=2))
+        job.update(status="qa_failed", problems=problems)
+        raise RuntimeError("script failed the fact check: " + "; ".join(problems))
+    log(job, "facts check out")
+    return script
 
 
 def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:

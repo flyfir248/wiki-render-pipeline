@@ -50,14 +50,32 @@ const Glow: React.FC<{ id: string; blur: number }> = ({ id, blur }) => (
 
 // ---------- timings (shared with the sound effects, so every sound lands on its picture) ----------
 
-export const trendTimes = (n: number, D: number) => {
+// When the narrator says each figure, in frames from the scene's start (null: pace it evenly).
+const saidAt = (scene: Scene, n: number, fps: number, D: number) =>
+  scene.landTimes?.length === n ? scene.landTimes.map((t) => Math.min(D - 6, Math.round(t * fps))) : null;
+
+export const trendTimes = (scene: Scene, n: number, D: number, fps: number) => {
+  const said = saidAt(scene, n, fps, D);
   const start = 14;
+  if (said && n > 1) {
+    // Each point arrives as its year or value is said, never two points in the same few frames.
+    const reach = said.map((f, i) => (i === 0 ? Math.min(start, f) : f));
+    for (let i = 1; i < n; i++) reach[i] = Math.max(reach[i], reach[i - 1] + 10);
+    // The pen holds at each point and travels over the last stretch before the next figure is said.
+    return { start: reach[0], span: reach[n - 1] - reach[0], reach, move: 40 };
+  }
   const span = Math.max(30, D * 0.68 - start);
   const seg = n > 1 ? span / (n - 1) : span;
-  return { start, span, seg, reach: Array.from({ length: n }, (_, i) => start + i * seg) };
+  return { start, span, reach: Array.from({ length: n }, (_, i) => start + i * seg), move: 0 };
 };
 
-export const proportionTimes = (D: number) => {
+export const proportionTimes = (scene: Scene, D: number, fps: number) => {
+  const said = saidAt(scene, 1, fps, D);
+  if (said) {
+    // The grid fills over the second and a half before the share is said, and lands on the word.
+    const fillTo = Math.max(34, said[0]);
+    return { fillFrom: Math.max(4, fillTo - 45), fillTo };
+  }
   const fillFrom = 28;
   return { fillFrom, fillTo: Math.max(fillFrom + 30, Math.round(D * 0.55)) };
 };
@@ -84,11 +102,11 @@ export const motionCues = (scene: Scene, D: number, fps: number): Cue[] => {
   const cues: Cue[] = [];
   if (scene.type === "trend") {
     const n = (scene.data ?? []).length;
-    const { reach, start, span } = trendTimes(n, D);
+    const { reach, start, span } = trendTimes(scene, n, D, fps);
     reach.forEach((f) => cues.push({ at: Math.round(f), name: "tick", gain: 0.8 }));
     cues.push({ at: Math.round(start + span + 6), name: "chime", gain: 0.5 });
   } else if (scene.type === "proportion") {
-    const { fillFrom, fillTo } = proportionTimes(D);
+    const { fillFrom, fillTo } = proportionTimes(scene, D, fps);
     cues.push({ at: Math.max(0, fillTo - Math.round(fps * 0.8)), name: "riser", gain: 0.5 });
     cues.push({ at: fillTo, name: "hit", gain: 0.7 });
     for (let f = fillFrom; f < fillTo - fps * 0.8 - 8; f += 7) cues.push({ at: Math.round(f), name: "tick", gain: 0.35 });
@@ -107,8 +125,8 @@ export const motionCues = (scene: Scene, D: number, fps: number): Cue[] => {
   return cues;
 };
 
-// When a stat scene's count-up lands.
-export const statLands = (D: number) => Math.round(Math.min(D * 0.55, 60));
+// When a stat scene's count-up lands: as the narrator says the number, or early in the scene.
+export const statLands = (scene: Scene, D: number, fps: number) => saidAt(scene, 1, fps, D)?.[0] ?? Math.round(Math.min(D * 0.55, 60));
 
 // A white flash and a camera punch the moment a big reveal lands (an "impact cut").
 export const impact = (frame: number, at: number) => {
@@ -153,10 +171,15 @@ export const TrendScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const Y = (v: number) => H - pad.b - ((v - lo) / (hi - lo)) * (H - pad.t - pad.b);
 
   // The pen travels point to point, easing into each one and pausing there a moment.
-  const { start, span, seg, reach } = trendTimes(n, D);
-  const along = n < 2 ? 0 : Math.min(n - 1, Math.max(0, (frame - start) / seg));
+  const { start, span, reach, move } = trendTimes(scene, n, D, fps);
+  // How far the pen is along the points: segment k runs from reach[k] to reach[k + 1]. Paced by the
+  // narration, it leaves `move` frames before the next figure is said and arrives on the word.
+  const k0 = Math.max(0, reach.findIndex((r, i) => i === n - 1 || frame < reach[i + 1]));
+  const from = k0 < n - 1 && move ? Math.max(reach[k0], reach[k0 + 1] - move) : reach[k0];
+  const along =
+    n < 2 ? 0 : k0 >= n - 1 ? n - 1 : k0 + Math.max(0, Math.min(1, (frame - from) / (reach[k0 + 1] - from)));
   const i0 = Math.floor(along);
-  const u = interpolate(along - i0, [0, 0.82], [0, 1], { ...clamp, easing: ease });
+  const u = interpolate(along - i0, [0, move ? 1 : 0.82], [0, 1], { ...clamp, easing: ease });
   const t = Math.min(n - 1, i0 + u);
   const lerp = (a: number, b: number) => a + (b - a) * (t - Math.floor(t));
   const j = Math.floor(t);
@@ -315,7 +338,7 @@ export const ProportionScene: React.FC<SceneProps> = ({ scene, theme, format }) 
   const lit = Math.round(share);
   const cell = short ? 70 : 60;
   const size = cell * 10;
-  const { fillFrom, fillTo } = proportionTimes(D);
+  const { fillFrom, fillTo } = proportionTimes(scene, D, fps);
   const hit = impact(frame, fillTo);
   const filled = interpolate(frame, [fillFrom, fillTo], [0, share], { ...clamp, easing: ease });
   const counted = interpolate(frame, [fillFrom, fillTo], [0, share], { ...clamp, easing: ease });

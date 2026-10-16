@@ -7,6 +7,7 @@ import { effectStart, actorStart } from "../scenes/story";
 import { pinFrames } from "../scenes/map";
 import { sceneSpans, shownType, transitionOf } from "../scenes";
 import { motionCues, statLands } from "../scenes/motion";
+import { lightningFrames, sceneSeed } from "../scenes/world3d";
 import type { Scene } from "../types";
 
 type Cue = { at: number; name: string; gain: number };
@@ -43,8 +44,22 @@ export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
       const sound = scene.effect ? EFFECT_SOUNDS[scene.effect] : undefined;
       if (sound) cues.push({ at: from + effectStart(scene, len), name: sound[0], gain: sound[1] });
     }
+    if (type === "aircraft") {
+      // An engine strike lands with a bang, and the altitude readout with a chime as its figure is said.
+      if (scene.effect) cues.push({ at: from + Math.round((scene.effectAt ?? 0.25) * len), name: scene.effect === "smoke" ? "hit" : "boom", gain: 0.9 });
+      if (scene.altitudeTo != null && scene.landTimes?.length) cues.push({ at: from + Math.round(scene.landTimes[0] * fps), name: "chime", gain: 0.45 });
+    }
+    if (type === "ship") {
+      // A collision lands with a bang; an explosion on deck with a boom.
+      const at = Math.round((scene.effectAt ?? (scene.shipAction === "collide" ? 0.45 : 0.3)) * len);
+      if (scene.shipAction === "collide") cues.push({ at: from + at, name: "boom", gain: 0.9 });
+      else if (scene.effect === "explosion" || scene.effect === "fire") cues.push({ at: from + at, name: "boom", gain: 0.85 });
+    }
+    if ((type === "aircraft" || type === "ship") && scene.weather === "storm") {
+      lightningFrames(sceneSeed(scene), len, fps).forEach((f) => cues.push({ at: from + f + 4, name: "thunder", gain: 0.6 }));
+    }
     if (scene.type === "stat" && scene.value != null) {
-      const lands = statLands(len);
+      const lands = Math.max(20, statLands(scene, len, fps));
       cues.push({ at: from + lands - Math.round(fps * 0.8), name: "riser", gain: 0.45 });
       cues.push({ at: from + lands, name: "hit", gain: 0.8 });
     }

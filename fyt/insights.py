@@ -58,10 +58,17 @@ def scene_losses(outline: dict, curve: list[tuple[float, float]]) -> list[tuple[
 
 
 def opening_hold(outline: dict, curve: list[tuple[float, float]], seconds: float = 3.0) -> float | None:
-    """Share of viewers still there a few seconds in (for Shorts, the swipe-away test)."""
+    """Share of viewers still there a few seconds in (for Shorts, the swipe-away test).
+
+    YouTube's curve is a watch ratio, not a head count: a Short that loops is watched more than once,
+    so the curve can start above 1 and a raw reading said "122% still watching". Measured against the
+    curve's own start, it is the share of the opening audience that stays, at most 100%."""
     if not curve or outline["duration"] <= seconds:
         return None
-    return _at(curve, seconds / outline["duration"])
+    first = curve[0][1]
+    if first <= 0:
+        return None
+    return min(1.0, _at(curve, seconds / outline["duration"]) / first)
 
 
 def _curves(uploads: Uploads, video_ids: list[str]) -> dict[str, list[tuple[float, float]]]:
