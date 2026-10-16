@@ -1,0 +1,12 @@
+import pytest
+
+from fyt import factcheck
+
+
+@pytest.fixture(autouse=True)
+def facts_check_out(request, monkeypatch):
+    """Pipeline tests fake the scriptwriter, not the fact checker: let their scripts pass the check.
+    tests/test_factcheck.py tests the real one."""
+    if request.module.__name__.endswith("test_factcheck"):
+        return
+    monkeypatch.setattr(factcheck, "verify", lambda cfg, script, notes, log=print: (script, []))

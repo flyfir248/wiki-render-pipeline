@@ -38,6 +38,14 @@ occasional light beam drift over everything, so even a held frame is alive. Soun
 a zip as the red thread is pulled, whooshes on whips, ticks as chart points land, a riser into each big
 reveal and a hit as it lands (all synthesised in `fyt/sfx.py`).
 
+Numbers land on the word: a stat's count-up, a proportion's fill and each point of a trend line arrive
+as the narrator says that figure (`land_times` in `fyt/timeline.py`), not at a fixed point in the scene.
+
+Before a new script is voiced, `fyt/factcheck.py` checks every number, date, name and quote in it, said
+or shown, against the passages of the source article that mention the same things. Wrong or unsupported
+claims are rewritten from the source once; a script whose claims still fail (or that can't be checked)
+is not made, so it can never upload. Turn it off with `fact_check: false`.
+
 After each render the pipeline logs any stretch of 4 seconds or more where the picture barely changes
 (`fyt/qa.py`), and `python -m fyt sheet video.mp4` prints them too. Every video looks different while
 the channel keeps one consistent style, which matters for monetization (see below).
@@ -274,6 +282,7 @@ fyt/                 Python pipeline
   timeline.py        script + audio -> renderer props, SRT captions
   render.py          calls renderer/render.mjs
   qa.py              automatic checks on script and render
+  factcheck.py       checks every claim in a script against the source article before it is voiced
   youtube.py         OAuth, upload (video, thumbnail, captions), stats
   store.py           topic queue (SQLite) + job folders
 renderer/            Remotion (React) video templates

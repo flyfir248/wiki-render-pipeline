@@ -44,7 +44,7 @@ export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
       if (sound) cues.push({ at: from + effectStart(scene, len), name: sound[0], gain: sound[1] });
     }
     if (scene.type === "stat" && scene.value != null) {
-      const lands = statLands(len);
+      const lands = Math.max(20, statLands(scene, len, fps));
       cues.push({ at: from + lands - Math.round(fps * 0.8), name: "riser", gain: 0.45 });
       cues.push({ at: from + lands, name: "hit", gain: 0.8 });
     }

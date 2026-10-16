@@ -87,3 +87,26 @@ def test_still_stretches_in_a_render_are_found(tmp_path):
     spans = static_spans(video, min_seconds=3)
     assert len(spans) == 1 and 4.5 <= spans[0][0] <= 5.5 and spans[0][1] >= 9.5
     assert static_spans(video, min_seconds=3, until=6) == []
+
+
+def test_figures_land_when_the_narrator_says_them():
+    from fyt.models import DataPoint, ScriptScene, Word
+    from fyt.timeline import land_times, spoken_numbers
+
+    def words(text):
+        return [Word(word=w, start=i * 0.4, end=i * 0.4 + 0.3) for i, w in enumerate(text.split())]
+
+    stat = ScriptScene(narration="", type="stat", value=36417)
+    assert land_times(stat, words("In 1883 the tsunamis killed at least thirty six thousand people."), 0.5) == [round(3.9 + 0.5, 3)]
+    share = ScriptScene(narration="", type="proportion", value=67)
+    assert land_times(share, words("So about two thirds of the island collapsed."), 0) == [1.5]
+    trend = ScriptScene(
+        narration="", type="trend",
+        data=[DataPoint(label="1927", value=0), DataPoint(label="Mid 2018", value=338), DataPoint(label="Dec 2018", value=110)],
+    )
+    w = words("In 1927 it rose. It grew to three hundred and thirty eight metres, until it slid in 2018.")
+    assert land_times(trend, w, 0) == [0.7, 4.7, 7.1]
+    # A figure the narration never says leaves the renderer's own pacing.
+    assert land_times(stat, words("Many people died."), 0) is None
+    # Digits stay separate figures; "and" only joins spelled-out ones.
+    assert [round(v, 1) for v, *_ in spoken_numbers(words("3.5% and 36,417 deaths, a quarter-million"))] == [3.5, 36417, 250000]

@@ -59,7 +59,9 @@ youtube:
 
 # Publish slots that `python -m fyt fill` (the workflow's runs) keeps filled ahead of time.
 schedule:
-  short_slots: ["14:00", "22:00"]   # UTC
+  # One Short a day and one long video a week until the channel is in the Partner Program: YouTube's
+  # inauthentic-content review looks at the whole channel, and many look-alike uploads is what it flags.
+  short_slots: ["16:00"]            # UTC
   long_weekday: 5                   # Saturday (Monday = 0)
   long_slot: "16:00"                # UTC
   buffer_days: 2                    # Shorts are uploaded up to 2 days before they go live
@@ -78,13 +80,13 @@ growth:
     - Strange Science
     - Bizarre Places
     - Unbelievable People
-  bonus_shorts_per_day: 1   # extra Short on a trending topic that fits (if one does)
-  bonus_longs_per_week: 1   # extra long video, only for a very strong trending fit
+  bonus_shorts_per_day: 0   # extra Short on a trending topic that fits (off until monetized)
+  bonus_longs_per_week: 0   # extra long video, only for a very strong trending fit (off until monetized)
   bonus_min_fit: 7
   bonus_long_min_fit: 9
   # A weekly long explainer on a recent news incident (Wikipedia "In the news" and most read, at
   # least a day old). Factual and attributed, no speculation; see NEWS_GUIDE in fyt/llm.py.
-  news_longs_per_week: 1
+  news_longs_per_week: 0    # off until monetized
   news_min_fit: 8
   # Turning viewers into subscribers: the series name on screen, the reason to subscribe over a Short's
   # last seconds and on a long video's end card, and a one-click subscribe link in every description.

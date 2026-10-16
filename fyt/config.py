@@ -204,6 +204,9 @@ class Config(BaseModel):
     music_dir: str = "assets/music"
     music_volume: float = 0.07
     generate_music: bool = True  # compose an original background track when music_dir has none
+    # Check every figure, date, name and quote in a new script against the source before it is voiced;
+    # a script with claims that stay wrong after one fix is not made (fyt/factcheck.py).
+    fact_check: bool = True
     sound_effects: bool = True  # whooshes, pops and booms timed to the animation (fyt/sfx.py)
     sfx_volume: float = 0.3  # relative to the narrator at 1.0
     stock_footage: bool = True  # needs PEXELS_API_KEY

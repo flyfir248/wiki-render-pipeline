@@ -47,3 +47,13 @@ def test_uploads_keep_the_scene_outline(tmp_path):
     )
     Uploads(cfg).record("short", "job1", "yt1", None)
     assert Uploads(cfg).outlines()["yt1"]["scenes"] == [["title", 0, 4], ["map", 4, 12]]
+
+
+def test_opening_hold_is_measured_against_the_curves_start():
+    from fyt.insights import opening_hold
+
+    # A looping Short: the watch ratio starts above 1, so a raw reading would say "122% still watching".
+    curve = [(0.0, 1.5), (0.06, 1.22), (1.0, 0.6)]
+    hold = opening_hold({"duration": 50.0, "scenes": []}, curve)
+    assert hold is not None and abs(hold - 1.22 / 1.5) < 0.01
+    assert opening_hold({"duration": 50.0, "scenes": []}, [(0.0, 1.0), (1.0, 1.4)]) == 1.0

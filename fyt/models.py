@@ -231,6 +231,7 @@ class RenderScene(BaseModel):
     effectAt: float | None = None
     effectSrc: str | None = None
     revealTimes: list[float] | None = None  # evidence clues, document [hidden] words, scale items, cycle steps: when said
+    landTimes: list[float] | None = None  # stat and proportion figures, trend points: when the narrator says them
     camera: Camera | None = None
     transition: Transition | None = None
 
