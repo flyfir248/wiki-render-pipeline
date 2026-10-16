@@ -5,85 +5,22 @@
 // figure as the narrator says it. Everything is a pure function of the frame, so renders repeat exactly.
 //
 // The aircraft is built from code (no model file to license): a lathed fuselage, swept extruded wings
-// and tail, and nacelles, so it stays generic: no airline's real livery, colours from the theme.
+// and tail, and nacelles, so it stays generic: no airline's real livery; its colours come from the video's seed.
 import React, { useMemo } from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import type { Scene, Setting, Theme } from "../types";
+import type { Scene, Theme } from "../types";
 import { unit } from "../theme";
 import { formatNumber, type SceneProps } from "./shared";
+import {
+  City, Cloud, clamp, ease, fogRange, flashOf, groundTexture, HeadingPlate, Inked, lightningFrames, liveryOf, paletteOf, rng, sceneSeed, Sky, slab,
+  toonRamp, WeatherOverlay, type Livery, type Weather,
+} from "./world3d";
 
 export type Maneuver = "cruise" | "climb" | "descend" | "dive" | "turn" | "takeoff" | "land" | "go_around";
 export type Shot = "chase" | "side" | "front" | "below" | "orbit" | "wide";
-
-const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-const ease = Easing.inOut(Easing.cubic);
-
-// ---------- palette ----------
-
-type Palette = { top: string; horizon: string; ground: string; ground2: string; cloud: string; light: number };
-const PALETTES: Partial<Record<Setting, Palette>> & { sky: Palette } = {
-  sky: { top: "#3f8fd8", horizon: "#cfe9f7", ground: "#6fb36a", ground2: "#5a9d57", cloud: "#ffffff", light: 1 },
-  sea: { top: "#3f8fd8", horizon: "#d8eef8", ground: "#2f7fb8", ground2: "#276ea3", cloud: "#ffffff", light: 1 },
-  countryside: { top: "#4b9be0", horizon: "#e6f6ff", ground: "#86c66a", ground2: "#6cad55", cloud: "#ffffff", light: 1 },
-  city: { top: "#4f93d4", horizon: "#dbe9f3", ground: "#8a93a3", ground2: "#767f90", cloud: "#ffffff", light: 1 },
-  desert: { top: "#e9a258", horizon: "#fde4b8", ground: "#e2ad66", ground2: "#cf9850", cloud: "#fff6e8", light: 1 },
-  snow: { top: "#7d9ab8", horizon: "#dfe8f0", ground: "#eef3f8", ground2: "#d9e3ec", cloud: "#f4f7fa", light: 0.95 },
-  night: { top: "#070d26", horizon: "#27325e", ground: "#141b38", ground2: "#10162e", cloud: "#3a4570", light: 0.45 },
-};
-const paletteOf = (s: Setting | null | undefined): Palette => (s && PALETTES[s]) || PALETTES.sky;
-
-// ---------- deterministic randomness ----------
-
-const rng = (seed: number) => () => {
-  seed = (seed + 0x6d2b79f5) | 0;
-  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
-const seedOf = (s: string) => [...s].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7);
-
-// ---------- materials ----------
-
-// Three tones and hard steps between them: the cel look of a flat illustration.
-const toonRamp = (() => {
-  const data = new Uint8Array([90, 90, 90, 255, 175, 175, 175, 255, 255, 255, 255, 255]);
-  const tex = new THREE.DataTexture(data, 3, 1, THREE.RGBAFormat);
-  tex.minFilter = THREE.NearestFilter;
-  tex.magFilter = THREE.NearestFilter;
-  tex.needsUpdate = true;
-  return tex;
-})();
-
-const Toon: React.FC<{ color: string }> = ({ color }) => <meshToonMaterial color={color} gradientMap={toonRamp} />;
-
-// Ink outline: the back faces pushed out along their normals and drawn flat dark ("inverted hull").
-const outlineMaterial = (width: number) =>
-  new THREE.ShaderMaterial({
-    side: THREE.BackSide,
-    uniforms: { width: { value: width } },
-    vertexShader: "uniform float width; void main(){ gl_Position = projectionMatrix * modelViewMatrix * vec4(position + normal * width, 1.0); }",
-    fragmentShader: "void main(){ gl_FragColor = vec4(0.06, 0.07, 0.12, 1.0); }",
-  });
-
-const Inked: React.FC<{ geometry: THREE.BufferGeometry; color: string; outline?: number } & { position?: [number, number, number]; rotation?: [number, number, number] }> = ({
-  geometry,
-  color,
-  outline = 0.035,
-  ...rest
-}) => {
-  const ink = useMemo(() => outlineMaterial(outline), [outline]);
-  return (
-    <group {...rest}>
-      <mesh geometry={geometry}>
-        <Toon color={color} />
-      </mesh>
-      <mesh geometry={geometry} material={ink} />
-    </group>
-  );
-};
 
 // ---------- the aircraft (nose toward +x, up +y, right wing toward +z) ----------
 
@@ -102,14 +39,6 @@ const fuselageGeometry = () => {
   const g = new THREE.LatheGeometry(pts, 28);
   g.rotateZ(-Math.PI / 2); // lathe runs along y; turn it to run along x
   g.translate(-5, 0, 0); // centre the aircraft on the origin
-  return g;
-};
-
-// A flat outline extruded into a thin slab. Points are (x, z) for wings, (x, y) for the fin.
-const slab = (points: [number, number][], depth: number) => {
-  const shape = new THREE.Shape(points.map(([a, b]) => new THREE.Vector2(a, b)));
-  const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: depth * 0.4, bevelSize: depth * 0.4, bevelSegments: 1 });
-  g.translate(0, 0, -depth / 2);
   return g;
 };
 
@@ -162,7 +91,7 @@ const nacelleGeometry = () => {
   return g;
 };
 
-const Aircraft: React.FC<{ theme: Theme; gear: number }> = ({ theme, gear }) => {
+const Aircraft: React.FC<{ livery: Livery; gear: number }> = ({ livery, gear }) => {
   const parts = useMemo(
     () => ({
       body: fuselageGeometry(),
@@ -202,13 +131,13 @@ const Aircraft: React.FC<{ theme: Theme; gear: number }> = ({ theme, gear }) => 
       ))}
       <mesh position={[0.3, -0.1, 0]}>
         <boxGeometry args={[6.4, 0.07, 1.115]} />
-        <meshToonMaterial color={theme.accent2} gradientMap={toonRamp} />
+        <meshToonMaterial color={livery.accent} gradientMap={toonRamp} />
       </mesh>
       <Inked geometry={parts.wingL} color={grey} position={[0.6, -0.25, 0]} rotation={[0.05, 0, 0]} />
       <Inked geometry={parts.wingR} color={grey} position={[0.6, -0.25, 0]} rotation={[-0.05, 0, 0]} />
       <Inked geometry={parts.stabL} color={grey} position={[-3.9, 0.15, 0]} />
       <Inked geometry={parts.stabR} color={grey} position={[-3.9, 0.15, 0]} />
-      <Inked geometry={parts.fin} color={theme.accent2} position={[-3.6, 0.35, 0]} />
+      <Inked geometry={parts.fin} color={livery.accent} position={[-3.6, 0.35, 0]} />
       {[-1, 1].map((s) => (
         <group key={s} position={[0.55, -0.62, s * 1.9]}>
           <Inked geometry={parts.nacelle} color={white} outline={0.03} />
@@ -238,132 +167,6 @@ const Aircraft: React.FC<{ theme: Theme; gear: number }> = ({ theme, gear }) => 
 };
 
 // ---------- the world ----------
-
-// A cloud: a cluster of flat-shaded puffs.
-const Cloud: React.FC<{ seed: number; color: string }> = ({ seed, color }) => {
-  const puffs = useMemo(() => {
-    const r = rng(seed);
-    return Array.from({ length: 5 + Math.floor(r() * 4) }, () => ({
-      x: (r() - 0.5) * 9,
-      y: r() * 1.4,
-      z: (r() - 0.5) * 4,
-      s: 1.2 + r() * 1.6,
-    }));
-  }, [seed]);
-  const geo = useMemo(() => new THREE.IcosahedronGeometry(1, 1), []);
-  return (
-    <group>
-      {puffs.map((p, i) => (
-        <mesh key={i} geometry={geo} position={[p.x, p.y, p.z]} scale={[p.s * 1.3, p.s, p.s]}>
-          <meshToonMaterial color={color} gradientMap={toonRamp} emissive={color} emissiveIntensity={0.45} />
-        </mesh>
-      ))}
-    </group>
-  );
-};
-
-// Ground texture: patches of two tones (fields, sea swells, city blocks), drawn once per setting.
-const groundTexture = (pal: Palette, setting: Setting | null | undefined, seed: number) => {
-  const c = document.createElement("canvas");
-  c.width = c.height = 512;
-  const g = c.getContext("2d")!;
-  g.fillStyle = pal.ground;
-  g.fillRect(0, 0, 512, 512);
-  const r = rng(seed);
-  if (setting === "sea") {
-    g.strokeStyle = pal.ground2;
-    g.lineWidth = 6;
-    for (let i = 0; i < 40; i++) {
-      const x = r() * 512;
-      const y = r() * 512;
-      g.beginPath();
-      g.moveTo(x, y);
-      g.quadraticCurveTo(x + 18, y - 8, x + 36, y);
-      g.stroke();
-    }
-  } else if (setting === "city") {
-    for (let i = 0; i < 90; i++) {
-      g.fillStyle = r() > 0.5 ? pal.ground2 : "rgba(255,255,255,0.08)";
-      g.fillRect(Math.floor(r() * 16) * 32 + 4, Math.floor(r() * 16) * 32 + 4, 24, 24);
-    }
-  } else {
-    // Fields: soft-edged rounded patches in the second tone, and a couple of pale roads.
-    for (let i = 0; i < 18; i++) {
-      g.fillStyle = pal.ground2;
-      const x = r() * 512;
-      const y = r() * 512;
-      const w = 60 + r() * 110;
-      const h = 50 + r() * 90;
-      for (const [dx, dy] of [[0, 0], [-512, 0], [0, -512], [-512, -512]]) {
-        g.beginPath();
-        g.roundRect(x + dx, y + dy, w, h, 18);
-        g.fill();
-      }
-    }
-    g.strokeStyle = "rgba(255,255,255,0.22)";
-    g.lineWidth = 5;
-    for (let i = 0; i < 2; i++) {
-      const y = r() * 512;
-      g.beginPath();
-      g.moveTo(0, y);
-      g.bezierCurveTo(170, y + 60, 340, y - 60, 512, y);
-      g.stroke();
-    }
-  }
-  const tex = new THREE.CanvasTexture(c);
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(14, 14);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-};
-
-const Sky: React.FC<{ pal: Palette }> = ({ pal }) => {
-  const mat = useMemo(
-    () =>
-      new THREE.ShaderMaterial({
-        side: THREE.BackSide,
-        depthWrite: false,
-        uniforms: { top: { value: new THREE.Color(pal.top) }, horizon: { value: new THREE.Color(pal.horizon) } },
-        vertexShader: "varying vec3 p; void main(){ p = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
-        fragmentShader:
-          "uniform vec3 top; uniform vec3 horizon; varying vec3 p; void main(){ float h = clamp((p.y + 0.12) * 1.4, 0.0, 1.0); gl_FragColor = vec4(mix(horizon, top, smoothstep(0.0, 1.0, h)), 1.0); }",
-      }),
-    [pal.top, pal.horizon],
-  );
-  return (
-    <mesh material={mat}>
-      <sphereGeometry args={[900, 32, 16]} />
-    </mesh>
-  );
-};
-
-// City blocks: toon boxes in two tones on a street grid, streaming past with the ground.
-const City: React.FC<{ seed: number; distance: number }> = ({ seed, distance }) => {
-  const blocks = useMemo(() => {
-    const r = rng(seed + 5);
-    const out: { x: number; z: number; w: number; d: number; h: number; tone: number }[] = [];
-    for (let gx = 0; gx < 26; gx++)
-      for (let gz = -9; gz <= 9; gz++) {
-        if (r() < 0.35) continue;
-        out.push({ x: gx * 12, z: gz * 12, w: 5 + r() * 5, d: 5 + r() * 5, h: 2 + r() ** 2 * 16, tone: Math.floor(r() * 3) });
-      }
-    return out;
-  }, [seed]);
-  const box = useMemo(() => new THREE.BoxGeometry(1, 1, 1), []);
-  const tones = ["#c9ced8", "#a9b1c0", "#e2d6c3"];
-  return (
-    <group>
-      {blocks.map((b, i) => {
-        const x = ((((b.x - distance) % 312) + 312) % 312) - 80;
-        return (
-          <mesh key={i} geometry={box} position={[x, b.h / 2, b.z]} scale={[b.w, b.h, b.d]}>
-            <meshToonMaterial color={tones[b.tone]} gradientMap={toonRamp} />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-};
 
 // White spray thrown up as an aircraft touches down on water.
 const Spray: React.FC<{ u: number; D: number; height: number }> = ({ u, D, height }) => {
@@ -460,8 +263,10 @@ const World: React.FC<{ scene: Scene; theme: Theme; portrait: boolean }> = ({ sc
   const u = Math.min(1, frame / Math.max(1, D - 1));
   const maneuver = (scene.maneuver ?? "cruise") as Maneuver;
   const shot = (scene.shot ?? (maneuver === "turn" ? "chase" : maneuver === "takeoff" || maneuver === "land" ? "side" : "chase")) as Shot;
-  const pal = paletteOf(scene.setting);
-  const seed = seedOf(scene.id);
+  const weather = (scene.weather ?? "clear") as Weather;
+  const pal = paletteOf(scene.setting, weather);
+  const seed = sceneSeed(scene);
+  const lightning = weather === "storm" ? flashOf(lightningFrames(seed, D), frame) : 0;
   const pose = poseOf(maneuver, u, frame);
   const ground = useMemo(() => groundTexture(pal, scene.setting, seed), [pal, scene.setting, seed]);
 
@@ -490,8 +295,8 @@ const World: React.FC<{ scene: Scene; theme: Theme; portrait: boolean }> = ({ sc
   return (
     <>
       <Sky pal={pal} />
-      <fog attach="fog" args={[pal.horizon, 120, 620]} />
-      <ambientLight intensity={0.75 * pal.light} />
+      <fog attach="fog" args={[pal.horizon, ...fogRange(weather)]} />
+      <ambientLight intensity={0.75 * pal.light + 0.9 * lightning} />
       <directionalLight position={[20, 40, 25]} intensity={1.6 * pal.light} />
       {/* The world turns under a banking aircraft and drops away as it climbs. */}
       <group rotation={[0, -pose.yaw, 0]} position={[0, -pose.height, 0]}>
@@ -531,7 +336,7 @@ const World: React.FC<{ scene: Scene; theme: Theme; portrait: boolean }> = ({ sc
       {maneuver === "land" && scene.setting === "sea" ? <Spray u={u} D={D} height={pose.height} /> : null}
       <group rotation={[pose.roll, 0, pose.pitch]}>
         {/* A ditching is flown with the gear up. */}
-        <Aircraft theme={theme} gear={scene.setting === "sea" ? 0 : pose.gear} />
+        <Aircraft livery={liveryOf(scene.seed ?? 0)} gear={scene.setting === "sea" ? 0 : pose.gear} />
         {scene.effect
           ? enginesOf(scene.effectX).map((side) => <EngineTrouble key={side} side={side} effect={scene.effect!} at={scene.effectAt ?? 0.25} u={u} frame={frame} />)
           : null}
@@ -605,28 +410,7 @@ const Readout: React.FC<{ scene: Scene; theme: Theme; short: boolean }> = ({ sce
   const k = short ? 1.35 : 1;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      {scene.heading ? (
-        <div
-          style={{
-            position: "absolute",
-            left: short ? 70 : 90,
-            top: short ? 200 : 70,
-            padding: `${14 * k}px ${26 * k}px`,
-            background: `${theme.background}d9`,
-            borderLeft: `${8 * k}px solid ${theme.accent}`,
-            borderRadius: 10,
-            fontFamily: theme.font,
-            fontWeight: 800,
-            fontSize: 42 * k,
-            color: theme.text,
-            opacity: p,
-            transform: `translateX(${(1 - p) * -60}px)`,
-          }}
-        >
-          {scene.heading}
-          {scene.text ? <div style={{ fontSize: 26 * k, fontWeight: 600, color: theme.muted, marginTop: 4 }}>{scene.text}</div> : null}
-        </div>
-      ) : null}
+      <HeadingPlate scene={scene} theme={theme} short={short} />
       {alt ? (
         <div
           style={{
@@ -662,6 +446,7 @@ export const AircraftScene: React.FC<SceneProps> = ({ scene, theme, format }) =>
       <ThreeCanvas width={width} height={height} camera={{ fov: 36, position: [-15, 4, 6] }} gl={{ antialias: true }}>
         <World scene={scene} theme={theme} portrait={short} />
       </ThreeCanvas>
+      <WeatherOverlay weather={scene.weather} seed={sceneSeed(scene)} night={scene.setting === "night"} />
       <Readout scene={scene} theme={theme} short={short} />
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: height * 0.12 * unit(format), background: `linear-gradient(transparent, ${theme.background}88)` }} />
     </AbsoluteFill>

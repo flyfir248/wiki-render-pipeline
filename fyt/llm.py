@@ -408,6 +408,18 @@ Scene templates (field names in brackets):
   Use it for what the aircraft did: the take-off, the climb, the moment an engine failed, the turn back,
   the descent, the landing or ditching (land over sea). Use only documented altitudes and events;
   the aircraft is generic, never a real airline's livery. Pair it with map scenes for the route.
+  Optional weather (clear, rain, storm, fog, snow) when the weather was part of what happened.
+- ship: a cel-shaded 3D ship on a rolling low-poly sea, tracked by a moving camera, for stories about
+  ships and sea disasters [heading = the ship, e.g. "RMS Titanic", optional text = place and date,
+  vessel (liner, cargo, tanker, sailing, warship, submarine), ship_action (sail, turn, list, sink,
+  capsize, collide, dive, surface), obstacle for collide (iceberg, ship, rocks), shot (chase, side,
+  front, below = low at the waterline, orbit, wide), setting (sea for open water, night, snow for
+  Arctic water with ice floes, countryside, desert or city for a coast on the horizon), optional weather
+  (clear, rain, storm, fog, snow), optional effect (smoke, fire, explosion on deck) with effect_x 0-100
+  from stern to bow and effect_at 0-1; effect_at also sets when a collide strikes].
+  Use it for what the ship did: setting out, the storm, the collision, the list, the sinking. Use only
+  documented events and conditions (the night, the calm sea, the fog); the ship is generic, never a real
+  line's livery. Pair it with map scenes for the route.
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 
@@ -451,7 +463,9 @@ Rules:
 - Show, don't just tell: real photos of the subject (they get the channel's cut-out collage look), maps,
   and the animated templates carry most of the video. Save story scenes, which act a moment out in
   drawings, for the one or two moments a photo can't show (a journey, an accident, a chase) -- at most
-  one scene in five. Viewers stay for seeing the story, not reading it.
+  one scene in five. Viewers stay for seeing the story, not reading it. When the story is about a
+  flight or a ship, act its key moments out in aircraft or ship scenes instead: they are 3D and make the
+  video look like a produced explainer (one in three scenes at most, never twice in a row unchanged).
 - Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
   (stat, bars, trend, proportion, scale, timeline, comparison, map, process, cycle, evidence) wherever the
   research supports them -- they

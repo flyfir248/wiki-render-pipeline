@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import re
+import zlib
 
 from fyt.config import Config
 from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, ScriptScene, Sfx, Word
 
 TAIL_SECONDS = 1.5  # hold the last scene after the voice ends
+THREE_D = ("aircraft", "ship")  # scenes drawn in 3D: their clouds, cities and liveries come from the video's seed
 
 
 def build_props(
@@ -30,6 +32,7 @@ def build_props(
     scenes: list[RenderScene] = []
     captions: list[Word] = []
     # The video's first map opens on a globe that dives in; later maps start from the flat map.
+    video_seed = zlib.crc32(script.title.encode()) & 0x7FFFFFFF
     first_map = next((i for i, s in enumerate(script.scenes) if s.type == "map"), None)
     for i, (scene, (start, _end)) in enumerate(zip(script.scenes, spans)):
         # A scene stays on screen until the next one starts, so pauses are covered.
@@ -78,6 +81,11 @@ def build_props(
                 shot=scene.shot,
                 altitudeFrom=scene.altitude_from,
                 altitudeTo=scene.altitude_to,
+                vessel=scene.vessel,
+                shipAction=scene.ship_action,
+                obstacle=scene.obstacle,
+                weather=scene.weather,
+                seed=video_seed if scene.type in THREE_D else None,
                 revealTimes=reveal_times(revealed(scene), clip_words[i], start - vis_start),
                 landTimes=land_times(scene, clip_words[i], start - vis_start),
                 camera=scene.camera,

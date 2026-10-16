@@ -10,11 +10,11 @@ from pydantic.json_schema import SkipJsonSchema
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
     "map", "process", "document", "dialogue", "story", "evidence", "trend", "proportion", "scale", "cycle",
-    "aircraft",
+    "aircraft", "ship",
 ]
 # Scenes that draw their whole picture themselves, so no photo is fetched for them. Code-drawn charts
 # (trend, proportion, scale, cycle) do take one: it sits dim and soft far behind the chart.
-DRAWN = ("map", "story", "aircraft")
+DRAWN = ("map", "story", "aircraft", "ship")
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
 Transition = Literal["fade", "slide", "zoom", "wipe", "flash", "thread", "whip"]
@@ -26,6 +26,11 @@ RegionChange = Literal["appear", "spread", "shrink", "fade"]
 # What an aircraft scene's airliner does, and where its camera sits.
 Maneuver = Literal["cruise", "climb", "descend", "dive", "turn", "takeoff", "land", "go_around"]
 Shot = Literal["chase", "side", "front", "below", "orbit", "wide"]
+# What a ship scene's vessel is, what it does and what it hits, and the weather of the 3D scenes.
+Vessel = Literal["liner", "cargo", "tanker", "sailing", "warship", "submarine"]
+ShipAction = Literal["sail", "turn", "list", "sink", "capsize", "collide", "dive", "surface"]
+Obstacle = Literal["iceberg", "ship", "rocks"]
+Weather = Literal["clear", "rain", "storm", "fog", "snow"]
 Mood = Literal["somber", "tense", "curious", "uplifting", "playful"]
 MOOD_HELP = (
     "Music mood that respects the story: somber for death, disaster, war, illness or other tragedy; "
@@ -139,6 +144,10 @@ class ScriptScene(BaseModel):
     shot: Shot | None = Field(default=None, description="aircraft scenes: where the camera watches from.")
     altitude_from: float | None = Field(default=None, description="aircraft scenes: altitude readout start, in feet (documented figures only).")
     altitude_to: float | None = Field(default=None, description="aircraft scenes: altitude readout end, in feet.")
+    vessel: Vessel | None = Field(default=None, description="ship scenes: what kind of ship.")
+    ship_action: ShipAction | None = Field(default=None, description="ship scenes: what the ship does.")
+    obstacle: Obstacle | None = Field(default=None, description="ship scenes: what a collide hits.")
+    weather: Weather | None = Field(default=None, description="aircraft and ship scenes: the weather.")
     camera: Camera | None = Field(default=None, description="Optional camera move over this scene's photo.")
     transition: Transition | None = Field(default=None, description="Optional way this scene enters.")
     image: int | None = Field(
@@ -243,6 +252,11 @@ class RenderScene(BaseModel):
     shot: Shot | None = None
     altitudeFrom: float | None = None
     altitudeTo: float | None = None
+    vessel: Vessel | None = None
+    shipAction: ShipAction | None = None
+    obstacle: Obstacle | None = None
+    weather: Weather | None = None
+    seed: int | None = None  # 3D scenes: the video's seed (from its title), so no two videos share a sky or livery
     landTimes: list[float] | None = None  # stat and proportion figures, trend points: when the narrator says them
     camera: Camera | None = None
     transition: Transition | None = None

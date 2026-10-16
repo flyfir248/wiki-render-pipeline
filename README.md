@@ -41,6 +41,15 @@ reveal and a hit as it lands (all synthesised in `fyt/sfx.py`).
 Numbers land on the word: a stat's count-up, a proportion's fill and each point of a trend line arrive
 as the narrator says that figure (`land_times` in `fyt/timeline.py`), not at a fixed point in the scene.
 
+Flights and ships are acted out in 3D (three.js inside Remotion, drawn cel-shaded with ink outlines so
+it matches the flat illustration style): `aircraft` scenes fly a generic airliner through a toon sky
+(take-off, climb, turn, dive, landing, ditching, engine fire), and `ship` scenes put a liner, cargo ship,
+tanker, sailing ship, warship or submarine on a rolling low-poly sea (sailing, turning, listing,
+sinking, capsizing, hitting an iceberg, another ship or rocks, diving, surfacing). Both take a weather
+(rain, storm with lightning and thunder, fog, snow), and every video gets its own seed from its title,
+so its clouds, coast, containers and liveries are its own. The shared pieces live in
+`renderer/src/scenes/world3d.tsx`.
+
 Before a new script is voiced, `fyt/factcheck.py` checks every number, date, name and quote in it, said
 or shown, against the passages of the source article that mention the same things. Wrong or unsupported
 claims are rewritten from the source once; a script whose claims still fail (or that can't be checked)

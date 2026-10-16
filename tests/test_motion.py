@@ -127,3 +127,26 @@ def test_aircraft_scenes_carry_their_flight_and_land_the_altitude_on_the_word():
     s = props.scenes[0]
     assert (s.maneuver, s.shot, s.altitudeFrom, s.altitudeTo, s.effect) == ("climb", "chase", 0, 2800, "smoke")
     assert s.landTimes == [1.5]  # the end of "2,800"
+
+
+def test_ship_scenes_carry_their_voyage_weather_and_the_video_seed():
+    from fyt.config import Config
+    from fyt.models import Script, ScriptScene, Word
+    from fyt.timeline import build_props
+
+    ship = ScriptScene(
+        narration="At 11:40 that night, the lookout saw an iceberg.", type="ship", vessel="liner", ship_action="collide",
+        obstacle="iceberg", shot="wide", setting="night", weather="clear", effect_at=0.5,
+    )
+    plain = ScriptScene(narration="It was the largest ship afloat.", type="statement", heading="Largest ship")
+    words = [Word(word=w, start=i * 0.4, end=i * 0.4 + 0.3) for i, w in enumerate(ship.narration.split())]
+
+    def props(title):
+        script = Script(title=title, description="D", tags=[], thumbnail_text="X", thumbnail_kicker="K", thumbnail_query="q", scenes=[ship, plain], sources=[])
+        return build_props(Config(format="short"), script, [(0.0, 3.6), (3.6, 5.0)], [words, words[:3]], {}, None, None)
+
+    s, other = props("The Night of the Iceberg").scenes
+    assert (s.type, s.vessel, s.shipAction, s.obstacle, s.weather, s.setting) == ("ship", "liner", "collide", "iceberg", "clear", "night")
+    assert s.seed is not None and other.seed is None  # only 3D scenes take the seed
+    assert props("The Night of the Iceberg").scenes[0].seed == s.seed  # the same video renders the same
+    assert props("Another Story").scenes[0].seed != s.seed  # another video gets its own sky and livery

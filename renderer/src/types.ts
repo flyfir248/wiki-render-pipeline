@@ -59,7 +59,8 @@ export type SceneType =
   | "proportion"
   | "scale"
   | "cycle"
-  | "aircraft";
+  | "aircraft"
+  | "ship";
 
 export type Scene = {
   id: string;
@@ -103,6 +104,11 @@ export type Scene = {
   shot?: "chase" | "side" | "front" | "below" | "orbit" | "wide" | null; // aircraft scenes: where the camera sits
   altitudeFrom?: number | null; // aircraft scenes: altitude readout in feet, counting from this...
   altitudeTo?: number | null; // ...to this, landing as the narrator says it
+  weather?: "clear" | "rain" | "storm" | "fog" | "snow" | null; // aircraft and ship scenes
+  vessel?: "liner" | "cargo" | "tanker" | "sailing" | "warship" | "submarine" | null; // ship scenes: what kind of ship
+  shipAction?: "sail" | "turn" | "list" | "sink" | "capsize" | "collide" | "dive" | "surface" | null; // ship scenes: what it does
+  obstacle?: "iceberg" | "ship" | "rocks" | null; // ship scenes: what a collide hits
+  seed?: number | null; // 3D scenes: the video's seed, so its skies, cities and liveries are its own
   landTimes?: number[] | null; // when the narrator says a stat's or proportion's figure, or each trend point, seconds from the scene's start
   revealTimes?: number[] | null; // when each evidence clue, document [hidden] word, scale item or cycle step is said, seconds from the scene's start
   camera?: Camera | null; // picked per scene when not set
