@@ -62,7 +62,8 @@ LICENCE_NAMES = {"cc0": "CC0", "by": "CC BY 4.0", "by-sa": "CC BY-SA 4.0"}
 NOT_ONE_THING = re.compile(r"\b(pack|collection|bundle|kit|set of|diorama|scene|environment|room|level|map|asset ?pack)\b", re.I)
 # A model of a part or remains of the thing (a bear's jawbone scan), unless that part is what was asked for.
 A_PART = ("skull", "skeleton", "bone", "bones", "mandible", "jaw", "tooth", "teeth", "fossil", "fragment", "head", "paw",
-          "footprint", "track", "fur", "texture", "rig only", "base mesh", "sculpt", "bust", "statue", "figurine", "toy", "plush")
+          "footprint", "track", "fur", "texture", "femur", "tibia", "fibula", "radius", "ulna", "humerus", "rib",
+          "vertebra", "pelvis", "scapula", "limb", "leg", "claw", "hoof", "horn", "antler", "detector", "fountain", "rig only", "base mesh", "sculpt", "bust", "statue", "figurine", "toy", "plush")
 HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) FacelessYT model finder"}
 
 CHECK = """You check the preview of a 3D model before it is used in a documentary video. Pass it only if it
@@ -390,8 +391,7 @@ def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log) ->
                 return None
             ok, why = looks_right(cfg, entity, term, work / "thumb.jpg")
             if ok is None:
-                log(f"assets: {c['title']!r}: no vision check could be made; skipped")
-                return None
+                raise Unchecked(c["title"])
             if not ok:
                 log(f"assets: {c['title']!r} ({c['source']}) is not a {term}: {why}")
                 _note_rejected(c["uid"], f"vision: {why}")
@@ -425,6 +425,8 @@ def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log) ->
         log(f"assets: {entity.name} -> {c['title']!r} from {c['source']} ({c['licence']}, {info['triangles']} triangles, "
             f"{len(meta['clips'])} animations)")
         return meta | {"file": str(folder / "model.glb")}
+    except Unchecked:
+        raise
     except Exception as e:
         log(f"assets: {c['title']!r} ({c['source']}) failed: {str(e)[:160]}")
         return None
@@ -444,8 +446,20 @@ def project_model(entity: Entity) -> dict | None:
     return None
 
 
+class Unchecked(Exception):
+    """No vision check can be made now (the free allowance is spent, or none is configured)."""
+
+
 def resolve(cfg: Config, entity: Entity, fidelity: str = "medium", log=print) -> dict | None:
     """The model for one entity, best source first (see the module docstring), or None."""
+    try:
+        return _resolve(cfg, entity, fidelity, log)
+    except Unchecked as e:  # not a miss: the same search is tried again when the check is back
+        log(f"assets: no vision check could be made (first candidate {str(e)!r}); {entity.name} stays painted this time")
+        return None
+
+
+def _resolve(cfg: Config, entity: Entity, fidelity: str, log) -> dict | None:
     found = project_model(entity)
     if found:
         return found

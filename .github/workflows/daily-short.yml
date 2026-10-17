@@ -240,7 +240,7 @@ jobs:
               done
               cp "$job"/gate/*.png "$out/" 2>/dev/null || true
               if [ -f "$job/video.mp4" ]; then
-                ffmpeg -loglevel error -y -i "$job/video.mp4" -vf scale=-2:640 -b:v 350k -c:a aac -b:a 64k "$out/preview.mp4" || true
+                "$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" -loglevel error -y -i "$job/video.mp4" -vf scale=-2:640 -b:v 350k -c:a aac -b:a 64k "$out/preview.mp4" || true
               fi
             done
           fi

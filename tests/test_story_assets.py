@@ -187,10 +187,13 @@ def test_no_vision_check_no_model(cache, monkeypatch):
     cfg = Config(format="short")
     cfg.visuals.asset_sources = ["sketchfab"]
     assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None) is None
+    # Run 124: the free vision allowance was spent. That is not a miss; the search runs again next time.
+    assert not any(assetlib._missed(t) for t in BEAR.search)
 
 
 def test_a_part_or_remains_is_not_the_thing():
     assert assetlib.relevant("american black bear", "MSCC007 Ursus americanus Left Mandible", ["bear", "black bear"]) == 0
+    assert assetlib.relevant("black bear", "MSCC 007 U Americanus Left Femur Mesh", ["black bear"]) == 0
     assert assetlib.relevant("bear", "Bear skull", ["bear"]) == 0
     assert assetlib.relevant("human skull", "Human skull", ["anatomy"]) > 0  # unless the part is what's asked for
 

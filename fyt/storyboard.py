@@ -188,6 +188,8 @@ def _groq_vision_model(cfg: Config, key: str) -> str | None:
             r.raise_for_status()
             ids = sorted(m["id"] for m in r.json().get("data", []))
             _found["model"] = next((m for hint in VISION_HINTS for m in ids if hint in m.lower()), None)
+            if _found["model"] is None:
+                print(f"no image-reading model among the provider's: {', '.join(ids)[:400]}")
         except Exception as e:
             print(f"warning: could not list the provider's models: {str(e)[:200]}")
             _found["model"] = None
@@ -266,6 +268,7 @@ def review(cfg: Config, path: Path, meant: str, rules: str = REVIEW) -> Verdict 
     `rules` is the checker's brief (an illustration by default; fyt.assetlib passes its own for 3D)."""
     if not cfg.review_model:
         return None
+    model = None
     try:
         image = _small_jpeg(path)
         key = os.environ.get(cfg.llm.api_key_env)
@@ -273,11 +276,15 @@ def review(cfg: Config, path: Path, meant: str, rules: str = REVIEW) -> Verdict 
         if model:
             _say_once(f"pictures checked by {model}")
             return _ask_groq(cfg, key, model, image, meant, rules)
-        if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN"):
+        if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN") and not _found.get("cloudflare_out"):
             _say_once(f"pictures checked by {CLOUDFLARE_VISION}")
             return _ask_cloudflare(image, meant, rules)
     except Exception as e:  # the check is a safeguard; without it the picture is used as drawn
-        print(f"warning: could not check {path.name}: {str(e)[:200]}")
+        if "429" in str(e) and not model:  # Cloudflare's free daily allowance is spent: no use asking again today
+            _found["cloudflare_out"] = "yes"
+            print("warning: the free vision check's daily allowance is used up; pictures are not checked for the rest of this run")
+        else:
+            print(f"warning: could not check {path.name}: {str(e)[:200]}")
     return None
 
 
