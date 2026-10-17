@@ -151,3 +151,16 @@ def test_pipeline_skips_without_notes_or_when_off(monkeypatch, tmp_path):
     s = script()
     assert pipeline.check_facts(Config(), FakeJob(tmp_path), s, "") is s
     assert pipeline.check_facts(Config(fact_check=False), FakeJob(tmp_path), s, NOTES) is s
+
+
+def test_a_scene_the_source_does_not_back_is_cut_rather_than_losing_the_video(monkeypatch, tmp_path):
+    # Mary Celeste: one unsupported line in scene 9 of 10 stopped the whole video.
+    monkeypatch.setattr(pipeline, "log", lambda job, msg: None)
+    long = script().model_copy(update={"scenes": [ScriptScene(narration=f"Line {i}.", type="statement", text="t") for i in range(1, 11)]})
+    monkeypatch.setattr(factcheck, "verify", lambda cfg, s, notes, log: (s, ['scene 9: unsupported claim "x"']))
+    out = pipeline.check_facts(Config(), FakeJob(tmp_path), long, NOTES)
+    assert [s.narration for s in out.scenes] == [f"Line {i}." for i in range(1, 11) if i != 9]
+    for problems in (['scene 1: wrong claim'], ['the title: wrong'], ['scene 2: x', 'scene 3: x', 'scene 4: x']):
+        monkeypatch.setattr(factcheck, "verify", lambda cfg, s, notes, log, p=problems: (s, p))
+        with pytest.raises(RuntimeError, match="fact check"):
+            pipeline.check_facts(Config(), FakeJob(tmp_path), long, NOTES)

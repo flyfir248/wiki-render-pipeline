@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -371,11 +372,34 @@ def check_facts(cfg: Config, job: Job, script: Script, notes: str) -> Script:
     except Exception as e:
         problems = [f"the fact check could not run: {e}"]
     if problems:
+        cut = without_failed_scenes(script, problems)
+        if cut is not None:
+            log(job, f"dropped the scenes the source doesn't back after a rewrite: {'; '.join(problems)[:300]}")
+            return cut
         job.file("script.json").write_text(script.model_dump_json(indent=2))
         job.update(status="qa_failed", problems=problems)
         raise RuntimeError("script failed the fact check: " + "; ".join(problems))
     log(job, "facts check out")
     return script
+
+
+MIN_SCENES_LEFT = 5
+
+
+def without_failed_scenes(script: Script, problems: list[str]) -> Script | None:
+    """The script with the scenes that still fail the fact check taken out, when that is a clean cut:
+    every problem names a scene, the opening scene is not one of them, at most two go, and at least
+    MIN_SCENES_LEFT remain. Otherwise None, and the video stops. A claim cut is a claim not made."""
+    bad = set()
+    for p in problems:
+        m = re.match(r"scene (\d+):", p)
+        if not m:
+            return None
+        bad.add(int(m.group(1)))
+    n = len(script.scenes)
+    if 1 in bad or len(bad) > 2 or n - len(bad) < MIN_SCENES_LEFT or any(not 1 <= k <= n for k in bad):
+        return None
+    return script.model_copy(update={"scenes": [sc for i, sc in enumerate(script.scenes, 1) if i not in bad]})
 
 
 def read_story(cfg: Config, job: Job, script: Script, notes: str) -> "story_manifest.Manifest | None":
