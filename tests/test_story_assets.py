@@ -86,6 +86,24 @@ def test_story_entities_with_no_module_get_stage_scenes():
     assert by_scene[1].subject_name == "smuggler-plane"
 
 
+def test_a_moment_whose_entity_a_module_models_gets_that_module_when_the_planner_left_it_out():
+    # Mary Celeste: the planner chose no 3D at all, and the ship module was never used for the ship.
+    story = script("In 1872 the brigantine Mary Celeste left New York.", "A month later she was found adrift near the Azores, its sails half-raised.",
+                   "No one was ever found.", "Her cargo was intact.", "The lifeboat was gone.", title="Mary Celeste")
+    ship = Entity(id="mary-celeste", name="the Mary Celeste", kind="merchant brigantine", search=["mary celeste", "brigantine", "ship"],
+                  look="a two-masted wooden brigantine", certain=True, scenes=[1, 2])
+    m = Manifest(entities=[ship], moments=[Moment(scene=2, entity="mary-celeste", action="drifting", motion="present",
+                                                  cue="its sails half-raised", documented=True, priority=1)])
+    (r,) = visualplan.stage_plan(story, m, taken=set())
+    assert (r.subject, r.variant, r.subject_name, r.action) == ("ship", "sailing", "mary-celeste", "sail")
+    wine = Entity(id="cargo-wine", name="the cargo of wine", kind="wine barrels", search=["wine barrels", "cargo", "barrels"],
+                  look="oak barrels", certain=True, scenes=[4])
+    assert not any(visualplan.stands_for(k, wine) for k in scenes3d.subjects())  # "cargo" is not a "car"
+    assert relevance.text_gate(story.model_copy(update={"scenes": [
+        sc if i != 1 else sc.model_copy(update={"type": "world", "subject": "ship", "subject_name": "mary-celeste"})
+        for i, sc in enumerate(story.scenes)]}), m) == {}
+
+
 def test_plan_with_a_manifest_never_shows_an_unlisted_subject(monkeypatch):
     monkeypatch.setattr(visualplan, "_llm_plan", lambda *a: [
         visualplan.Reconstruction(scene=1, subject="aircraft", variant="airliner", action="cruise", priority=1),
