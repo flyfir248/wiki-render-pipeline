@@ -63,7 +63,7 @@ def test_make_draws_checks_and_times_each_beat(monkeypatch, tmp_path):
             storyboard.Beat(scene=4, sentence=2, picture="A woman sniffing the air on a hot street"),
         ],
     )
-    monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo: board)
+    monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo, known=None: board)
     verdicts = iter([storyboard.Verdict(matches=False, problems="blood on the street"), storyboard.Verdict(matches=True), None, None])
     meant = []
     monkeypatch.setattr(storyboard, "review", lambda cfg, path, m: meant.append(m) or next(verdicts))
@@ -99,7 +99,7 @@ def test_verdict_reads_text_or_parsed_json():
 def test_story_scene_pictures_count_against_the_budget_and_an_empty_allowance_stops_drawing(monkeypatch, tmp_path):
     s = _script()
     monkeypatch.setattr(artgen, "provider", lambda: "cloudflare")
-    monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo: storyboard.Board())
+    monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo, known=None: storyboard.Board())
     monkeypatch.setattr(storyboard, "review", lambda cfg, path, meant: None)
     calls = []
     monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=7: calls.append(p) or Image.new("RGB", (8, 8)))

@@ -58,6 +58,19 @@ class VisualsConfig(BaseModel):
     world_seconds_long: float = 180.0
     # Each video's own look (fyt/artdirect.py): palette and 3D grade from its subject, era and mood.
     art_direction: bool = True
+    # Story-driven 3D (fyt/manifest.py, fyt/assetlib.py): the story's own entities get 3D scenes from
+    # models found or made for them, never a renderer's stock subject the story doesn't name.
+    story_assets: bool = True
+    # Where models are looked for, in order, after the project library and the model cache:
+    # sketchfab: Sketchfab's search, downloaded from the Objaverse mirror (no key) or with SKETCHFAB_TOKEN;
+    # polypizza: Poly Pizza's CC0 / CC-BY low-poly library (POLY_PIZZA_KEY, free);
+    # image_to_3d: a picture drawn in the house style, made 3D by `image_to_3d_space` (Hugging Face).
+    asset_sources: list[str] = ["sketchfab", "polypizza", "image_to_3d"]
+    image_to_3d_space: str = ""  # e.g. "trellis-community/TRELLIS"; empty leaves generation out
+    licences: list[str] = ["cc0", "by", "by-sa"]  # free to use commercially, with credit for by / by-sa
+    max_model_mb: float = 12.0
+    # Triangle budget by how close the camera gets: a close-up needs the detail, a wide shot doesn't.
+    triangles: dict[str, int] = {"close": 80000, "medium": 40000, "wide": 15000}
 
     def world_seconds(self, fmt: str) -> float:
         return self.world_seconds_short if fmt == "short" else self.world_seconds_long

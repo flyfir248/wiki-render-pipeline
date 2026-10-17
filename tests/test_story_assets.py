@@ -1,0 +1,222 @@
+"""Story-driven 3D: the story's manifest decides what 3D scenes show, each entity gets one model found
+for it (or none), and a renderer's stock subject never stands in for something the story doesn't name
+(fyt/manifest.py, fyt/visualplan.py, fyt/assetlib.py, fyt/relevance.py)."""
+import json
+
+import pytest
+
+from fyt import assetlib, manifest, relevance, scenes3d, visualplan
+from fyt.config import Config
+from fyt.manifest import Entity, Manifest, Moment, Place
+from fyt.models import Script, ScriptScene
+
+
+def script(*lines: str, title: str = "Cocaine Bear") -> Script:
+    return Script(
+        title=title, description="D", tags=["a"], thumbnail_text="X", thumbnail_kicker="K", thumbnail_query="q",
+        scenes=[ScriptScene(narration=t, type="statement", text="t") for t in lines], sources=["https://example.com"],
+    )
+
+
+BEAR_STORY = script(
+    "In 1985 a smuggler dumped bags of cocaine from his Cessna over Georgia.",
+    "Months later a black bear found the duffel bags in the forest.",
+    "The bear tore the bags open and ate the cocaine.",
+    "Investigators found the bear dead beside forty opened packages.",
+)
+
+BEAR = Entity(id="bear", name="the black bear", kind="animal", search=["american black bear", "black bear", "bear"],
+              look="a young American black bear, glossy black fur, brown muzzle", certain=False, scenes=[2, 3, 4])
+PLANE = Entity(id="smuggler-plane", name="the smuggler's Cessna", kind="light aircraft", search=["cessna 404", "light aircraft"],
+               look="a twin-engine Cessna 404 Titan, white with a stripe", certain=False, scenes=[1])
+FOREST = Place(id="forest", name="Chattahoochee National Forest", look="dense Appalachian woodland, autumn leaves, a creek", scenes=[2, 3, 4])
+
+
+def bear_manifest(**kw) -> Manifest:
+    return Manifest(
+        entities=[BEAR, PLANE], places=[FOREST],
+        moments=kw.get("moments", [
+            Moment(scene=1, entity="smuggler-plane", action="dumped bags", motion="move", cue="dumped bags of cocaine", documented=True, priority=2),
+            Moment(scene=3, entity="bear", place="forest", action="tore the bags open", motion="shake", cue="tore the bags open", documented=True, priority=1),
+        ]),
+    )
+
+
+# The manifest is held to the script.
+
+def test_manifest_keeps_entities_to_the_scenes_that_name_them():
+    raw = Manifest(
+        entities=[BEAR.model_copy(update={"scenes": [1, 2, 3, 4, 9]}),
+                  Entity(id="airliner", name="a jumbo jet", kind="aircraft", search=["boeing 747"], look="x", certain=True, scenes=[1])],
+        moments=[Moment(scene=2, entity="bear", action="ate", motion="move", cue="not in the narration", documented=True),
+                 Moment(scene=1, entity="airliner", action="flew", motion="move", cue="", documented=False)],
+    )
+    m = manifest.checked(raw, BEAR_STORY)
+    ids = [e.id for e in m.entities]
+    assert ids == ["bear"]  # nothing in the script refers to a jumbo jet
+    assert m.entities[0].scenes == [2, 3, 4]  # scene 1 names no bear; scene 9 doesn't exist
+    # A moment whose cue isn't in the narration is not documented, and then does nothing on its own.
+    mo = m.moments[0]
+    assert (mo.documented, mo.motion, mo.cue) == (False, "present", "")
+
+
+# The plan works from the story, not from the renderer's catalog.
+
+def test_catalog_pick_without_a_matching_entity_is_dropped():
+    recon = [visualplan.Reconstruction(scene=1, subject="aircraft", variant="airliner", action="cruise", priority=1)]
+    kept, dropped = visualplan.story_fit(BEAR_STORY, bear_manifest(), recon)
+    assert kept == [] and dropped[0]["subject"] == "aircraft"  # a Cessna is not the airliner module's
+
+
+def test_catalog_pick_that_stands_for_an_entity_takes_its_name():
+    s = script("The Boeing 747 lifted off from Heathrow at dawn.", title="A flight")
+    jet = Entity(id="jumbo", name="the Boeing 747", kind="airliner", search=["boeing 747", "airliner", "airplane"], look="x", certain=True, scenes=[1])
+    recon = [visualplan.Reconstruction(scene=1, subject="aircraft", variant="airliner", action="takeoff", priority=1)]
+    kept, _ = visualplan.story_fit(s, Manifest(entities=[jet]), recon)
+    assert kept[0].subject_name == "jumbo"
+
+
+def test_story_entities_with_no_module_get_stage_scenes():
+    recon = visualplan.stage_plan(BEAR_STORY, bear_manifest(), taken=set())
+    by_scene = {r.scene: r for r in recon}
+    assert by_scene[3].subject == "stage" and by_scene[3].subject_name == "bear" and by_scene[3].action == "shake"
+    assert by_scene[3].backdrop.startswith("Chattahoochee") and by_scene[3].cue == "tore the bags open"
+    # The Cessna has no module that stands for it either: it is the stage's job, with its own model.
+    assert by_scene[1].subject_name == "smuggler-plane"
+
+
+def test_plan_with_a_manifest_never_shows_an_unlisted_subject(monkeypatch):
+    monkeypatch.setattr(visualplan, "_llm_plan", lambda *a: [
+        visualplan.Reconstruction(scene=1, subject="aircraft", variant="airliner", action="cruise", priority=1),
+        visualplan.Reconstruction(scene=2, subject="landscape", variant="forest", action="flyover", priority=2)
+        if "forest" in scenes3d.VARIANTS else visualplan.Reconstruction(scene=2, subject="landscape", action="flyover", priority=2),
+    ])
+    planned, report = visualplan.plan(Config(format="short"), BEAR_STORY, "", log=lambda m: None, story=bear_manifest())
+    world = [(i, s.subject, s.subject_name) for i, s in enumerate(planned.scenes, 1) if s.type == "world"]
+    assert all(subj != "aircraft" for _, subj, _ in world)
+    assert (3, "stage", "bear") in world
+    assert any(d["subject"] == "aircraft" for d in report["off_story"])
+
+
+def test_stage_event_rests_on_its_cue():
+    scene = ScriptScene(narration="The bear tore the bags open and ate the cocaine.", type="world", subject="stage",
+                        variant="model", action="shake", cue="tore the bags open", subject_name="bear")
+    out = scenes3d.guard(scene)
+    assert out.action == "shake" and not out.illustrative
+    out = scenes3d.guard(scene.model_copy(update={"cue": None}))
+    assert out.action == "present" and out.illustrative  # no words for it: the bear is only shown
+
+
+# Finding models: by the entity's own noun, a licence that allows it, and a look the checker accepts.
+
+def test_relevance_needs_the_entity_noun():
+    assert assetlib.relevant("american black bear", "Black Bear (rigged)", ["animal"]) > 0.5
+    assert assetlib.relevant("black bear", "Teddy", ["toy", "plush"]) == 0
+    assert assetlib.relevant("bear", "Forest animals pack: bear, deer, fox", []) == 0  # a pack is not one bear
+    assert assetlib.relevant("cessna 404", "Boeing 747-400", ["airliner"]) == 0
+
+
+def test_licence_codes():
+    assert assetlib.licence_code({"slug": "by"}) == "by"
+    assert assetlib.licence_code("CC Attribution-NonCommercial") == "by-nc"
+    assert assetlib.licence_code("CC0 1.0") == "cc0"
+
+
+@pytest.fixture
+def cache(tmp_path, monkeypatch):
+    monkeypatch.setattr(assetlib, "CACHE", tmp_path / "models")
+    monkeypatch.setattr(assetlib, "project_model", lambda e: None)
+    return tmp_path
+
+
+def fake_candidate(title: str, licence: str, raw: bytes = b"glb"):
+    def fetch(dest):
+        dest.write_bytes(raw)
+        return dest
+    return {"uid": f"test:{title}", "source": "sketchfab", "title": title, "tags": [], "author": "Ann", "licence": licence,
+            "url": "https://example.com/m", "thumb": None, "triangles": 5000, "animated": False, "score": 1.0, "fetch": fetch}
+
+
+def test_resolve_skips_bad_licences_and_broken_models_then_caches(cache, monkeypatch):
+    cands = [fake_candidate("Black Bear NC", "by-nc"), fake_candidate("Black Bear broken", "by", b"bad"), fake_candidate("Black Bear", "by")]
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: cands if term == "american black bear" else []})
+
+    def prepare(raw, out, triangles, texture=1024):
+        if raw.read_bytes() == b"bad":
+            return {"ok": False, "error": "not a glTF file"}
+        out.write_bytes(b"prepared")
+        return {"ok": True, "triangles": 4200, "bytes": 8, "size": [1.0, 0.8, 2.0], "clips": ["Walk"]}
+
+    monkeypatch.setattr(assetlib, "prepare", prepare)
+    cfg = Config(format="short")
+    cfg.visuals.asset_sources = ["sketchfab"]
+    hit = assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)
+    assert hit["title"] == "Black Bear" and hit["licence"] == "by" and hit["clips"] == ["Walk"]
+    meta = json.loads((cache / "models" / "american-black-bear" / "meta.json").read_text())
+    assert meta["author"] == "Ann" and meta["source"] == "sketchfab"
+    assert "test:Black Bear broken" in json.loads((cache / "models" / "_rejected.json").read_text())
+    # The next video that needs a bear reuses it without searching.
+    monkeypatch.setattr(assetlib, "SOURCES", {})
+    assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)["title"] == "Black Bear"
+    assert assetlib.credit(hit) == "Black Bear by Ann (CC BY 4.0) https://example.com/m"
+
+
+def test_resolve_finds_nothing_rather_than_something_else(cache, monkeypatch):
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: []})
+    cfg = Config(format="short")
+    cfg.visuals.asset_sources = ["sketchfab"]
+    assert assetlib.resolve(cfg, PLANE, "medium", log=lambda m: None) is None
+    assert assetlib._missed("cessna 404")  # not searched again for a while
+
+
+def test_vision_check_rejects_the_wrong_thing(cache, monkeypatch):
+    c = fake_candidate("Black Bear", "cc0") | {"thumb": "https://example.com/t.jpg"}
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: [c]})
+    monkeypatch.setattr(assetlib, "_download", lambda url, dest, headers=None, limit_mb=80: dest.write_bytes(b"jpg") or dest)
+    monkeypatch.setattr(assetlib, "looks_right", lambda cfg, e, term, pic: (False, "a teddy bear"))
+    cfg = Config(format="short")
+    cfg.visuals.asset_sources = ["sketchfab"]
+    assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None) is None
+
+
+def test_sound_rejects_primitives_and_oversize():
+    assert assetlib.sound({"ok": True, "triangles": 48, "bytes": 1, "size": [1, 1, 1]}, 12).startswith("only 48")
+    assert "MB" in assetlib.sound({"ok": True, "triangles": 5000, "bytes": 40e6, "size": [1, 1, 1]}, 12)
+    assert assetlib.sound({"ok": True, "triangles": 5000, "bytes": 1e6, "size": [1, 1, 1]}, 12) is None
+
+
+# Continuity and the gate.
+
+def stage_scene(n: str, cue: str | None, action="shake") -> ScriptScene:
+    return scenes3d.guard(ScriptScene(narration=n, type="world", subject="stage", variant="model", action=action, cue=cue,
+                                      subject_name="bear", fallback={"narration": n, "type": "statement", "text": "t"}))
+
+
+def test_one_model_for_every_scene_of_an_entity_and_honest_labels():
+    s = script("Months later a black bear found the duffel bags.", "The bear tore the bags open and ate the cocaine.")
+    s.scenes[0] = stage_scene(s.scenes[0].narration, "found the duffel bags", "move")
+    s.scenes[1] = stage_scene(s.scenes[1].narration, "tore the bags open")
+    story = Manifest(entities=[BEAR.model_copy(update={"scenes": [1, 2]})])
+    found = {"bear": {"key": "american-black-bear", "source": "sketchfab", "title": "Black Bear", "licence": "by", "url": "u", "clips": ["Walk"]}}
+    out, back = assetlib.attach(s, story, found, {"bear": "models/american-black-bear.glb"})
+    assert back == []
+    assert {sc.model["src"] for sc in out.scenes} == {"models/american-black-bear.glb"}
+    # The bear's exact look isn't documented: a reconstruction, said to be illustrative.
+    assert {sc.label for sc in out.scenes} == {"RECONSTRUCTION · ILLUSTRATIVE"}
+    # Without a model the scenes go back to 2D: no stand-in.
+    out, back = assetlib.attach(s, story, {}, {})
+    assert back == [0, 1] and all(sc.type == "statement" for sc in out.scenes)
+
+
+def test_text_gate_drops_3d_the_story_does_not_list():
+    s = script("The plane flew on over the trees.", "The bear tore the bags open.")
+    s.scenes[0] = s.scenes[0].model_copy(update={"type": "world", "subject": "aircraft", "subject_name": "aircraft:airliner"})
+    s.scenes[1] = stage_scene(s.scenes[1].narration, "tore the bags open")
+    bad = relevance.text_gate(s, Manifest(entities=[BEAR.model_copy(update={"scenes": [2]})]))
+    assert list(bad) == [0]
+    assert relevance.apply(s, bad).scenes[0].type == "statement"
+
+
+def test_clip_choice_follows_the_motion_by_name():
+    stage = (scenes3d.CATALOG_PATH.parent / "stage.tsx").read_text()
+    assert "walk|run" in stage and "idle|survey" in stage  # a walk for move, an idle for present, else none

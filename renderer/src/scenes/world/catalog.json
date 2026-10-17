@@ -1393,6 +1393,76 @@
           ]
         }
       }
+    },
+    "stage": {
+      "describe": "the story's own entity (an animal, a person, a vehicle, a building, an organ...) drawn from the 3D model found or made for it (fyt/assetlib.py), in front of a painted plate of its place",
+      "planner": false,
+      "keywords": [],
+      "variants": {
+        "model": []
+      },
+      "settings": [
+        "countryside",
+        "sky",
+        "sea",
+        "city",
+        "desert",
+        "snow",
+        "night",
+        "room"
+      ],
+      "obstacles": [],
+      "actions": {
+        "present": {
+          "describe": "seen as it is, the camera moving round it",
+          "keywords": [],
+          "neutral": true
+        },
+        "move": {
+          "describe": "goes across the frame (its own walk or run when the model has one)",
+          "keywords": []
+        },
+        "approach": {
+          "describe": "comes toward the camera",
+          "keywords": [],
+          "moment": 0.6
+        },
+        "depart": {
+          "describe": "goes away from the camera",
+          "keywords": [],
+          "moment": 0.6
+        },
+        "rise": {
+          "describe": "lifts or climbs up",
+          "keywords": [],
+          "moment": 0.4
+        },
+        "fall": {
+          "describe": "drops from above and lands",
+          "keywords": [],
+          "event": true,
+          "moment": 0.55,
+          "sound": [
+            "hit",
+            0.8
+          ]
+        },
+        "turn": {
+          "describe": "turns round",
+          "keywords": [],
+          "neutral": true
+        },
+        "shake": {
+          "describe": "is struck or shaken",
+          "keywords": [],
+          "event": true,
+          "moment": 0.5,
+          "sound": [
+            "hit",
+            0.7
+          ]
+        }
+      }
     }
   }
 }

@@ -38,7 +38,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write # to keep the 3D models found for stories on the asset-library branch
   actions: read # to fetch a video again from the run that made it
   issues: write # for the alert when the schedule runs low
 
@@ -157,6 +157,28 @@ jobs:
           path: assets/cutout
           key: cutout-isnet-general-use
 
+      # 3D models found for stories (fyt/assetlib.py) live on the asset-library branch, with their source,
+      # author and licence, so every later video reuses them instead of searching again.
+      - name: Restore the 3D model library
+        if: steps.need.outputs.needed == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if ! git clone --quiet --depth 1 --branch asset-library "$url" assets/models; then
+            mkdir -p assets/models
+            (cd assets/models && git init --quiet -b asset-library && git remote add origin "$url")
+          fi
+          ls assets/models
+
+      # Objaverse's index of downloadable models (about 20 MB), fetched once.
+      - name: Cache the Objaverse model index
+        if: steps.need.outputs.needed == 'yes'
+        uses: actions/cache@v5
+        with:
+          path: assets/models/_objaverse
+          key: objaverse-paths-v1
+
       - name: Clear the AI-content label on videos already up
         if: env.TASK == 'relabel'
         env:
@@ -195,6 +217,35 @@ jobs:
             python -m fyt --format "$TASK" run --count "$COUNT"
           fi
 
+      # New models go back to the library branch. A test render (a title given) also leaves its contact
+      # sheet, manifest, model registry and relevance verdicts there under _runs/, to review the result.
+      - name: Save new 3D models
+        if: always() && steps.need.outputs.needed == 'yes'
+        env:
+          TITLE: ${{ inputs.title }}
+          RUN: ${{ github.run_id }}
+        run: |
+          cd assets/models || exit 0
+          printf '_objaverse/\n' > .gitignore
+          if [ -n "$TITLE" ]; then
+            for job in ../../jobs/*/; do
+              out="_runs/$RUN/$(basename "$job")"
+              mkdir -p "$out"
+              for f in contact.png manifest.json assets.json relevance.json visualplan.json script.json qc.json; do
+                if [ -f "$job/$f" ]; then cp "$job/$f" "$out/"; fi
+              done
+              cp "$job"/gate/*.png "$out/" 2>/dev/null || true
+              if [ -f "$job/video.mp4" ]; then
+                ffmpeg -loglevel error -y -i "$job/video.mp4" -vf scale=-2:640 -b:v 350k -c:a aac -b:a 64k "$out/preview.mp4" || true
+              fi
+            done
+          fi
+          git add -A
+          if ! git diff --cached --quiet; then
+            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit --quiet -m "3D models and test renders from run $RUN"
+            git push --quiet origin HEAD:asset-library
+          fi
+
       - name: Check the schedule
         if: always() && env.TASK == 'fill'
         run: |
@@ -230,6 +281,9 @@ jobs:
             jobs/*/visualplan.json
             jobs/*/qc.json
             jobs/*/contact.png
+            jobs/*/manifest.json
+            jobs/*/assets.json
+            jobs/*/relevance.json
           retention-days: 7
           if-no-files-found: ignore
 
