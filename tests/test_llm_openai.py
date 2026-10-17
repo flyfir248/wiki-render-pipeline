@@ -228,3 +228,14 @@ def test_a_short_chapter_is_lengthened(monkeypatch):
     assert "Too short." in asks[2] and 'lead into the next chapter, "Part 2"' in asks[2]
     assert script.chapters[1].scene == 2  # the next chapter starts after the added scene
     assert len(asks) == n + 2
+
+
+def test_the_short_script_prompt_fits_a_free_tier_minute():
+    # Groq's free tier allows 8,000 tokens a minute, max_tokens (3,000) included. The guide plus the
+    # schema must leave room for research notes: about 19,000 characters (~3,300 tokens) after the
+    # 17 October trim; 25,000 was already too many.
+    from fyt.models import Script
+
+    guide = llm.SCRIPT_GUIDE + llm.WIKI_GUIDE + llm.SHORT_STRUCTURE
+    schema = _json.dumps(llm._compact(Script.model_json_schema(), guide=guide), separators=(",", ":"))
+    assert len(guide) + len(schema) < 21000

@@ -20,7 +20,7 @@ llm:
   api_key_env: GROQ_API_KEY
   # Used in turn if the main model is down or out of free tokens for the day
   # (each model on Groq has its own free limits).
-  fallback_models: [openai/gpt-oss-20b, llama-3.3-70b-versatile]
+  fallback_models: [openai/gpt-oss-20b, meta-llama/llama-4-scout-17b-16e-instruct, qwen/qwen3-32b]
 
 source: wikipedia
 wikipedia:
