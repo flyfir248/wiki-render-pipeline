@@ -89,6 +89,17 @@ growth:
   subscribe_line: "Subscribe for a strange true story every day"
   end_card_seconds: 15      # add the end screen (subscribe + best video) in YouTube Studio
 
+# Shorts cross-posted as Instagram Reels, pointing viewers to the YouTube channel (fyt/instagram.py).
+# Every Short gets instagram.txt (caption, call to action, hashtags) in the run's artifact.
+# Posting needs the INSTAGRAM_TOKEN and INSTAGRAM_USER_ID secrets; see "Instagram Reels" in the README.
+instagram:
+  enabled: true
+  publish: false            # true: each Short goes up as a Reel once it is public on YouTube
+  youtube_handle: ""        # e.g. "@FacelessYT", named in every caption
+  cta: "Full story, and a new one every day, on YouTube. Link in bio"
+  hashtags: [truestory, didyouknow]   # in every caption; the video's own tags fill the rest
+  max_hashtags: 5           # Instagram's limit per post
+
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is
 # set; without the secret it only makes the video.

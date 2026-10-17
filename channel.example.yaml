@@ -60,6 +60,13 @@ youtube:
   publish_jitter_minutes: 0        # e.g. 90: go public at a random minute up to 90 min later
   upload_captions: true
 
+instagram:              # Shorts also posted as Instagram Reels (see README)
+  enabled: false
+  publish: false
+  youtube_handle: ""
+  hashtags: []
+  max_hashtags: 5
+
 require_review: true    # videos wait for `fyt approve` before upload
 
 seed_topics:            # used first; after that Claude proposes topics

@@ -101,6 +101,17 @@ class Uploads:
                 posted text
             )"""
         )
+        self.db.execute(
+            """create table if not exists reels (
+                youtube_id text primary key,
+                job text,
+                run text,                  -- the Actions run whose artifact holds the video file
+                due text,                  -- when the Short goes public on YouTube (UTC ISO); null: already public
+                tries integer not null default 0,
+                media_id text,             -- the Reel's Instagram id, once posted
+                posted text
+            )"""
+        )
         self.db.commit()
 
     def note(self, key: str) -> str | None:
@@ -155,6 +166,30 @@ class Uploads:
             self.db.execute("update comments set posted=? where youtube_id=?", (now(), youtube_id))
         else:
             self.db.execute("update comments set tries=tries+1 where youtube_id=?", (youtube_id,))
+        self.db.commit()
+
+    def queue_reel(self, youtube_id: str, job: str, due: str | None) -> None:
+        run = os.environ.get("GITHUB_RUN_ID")
+        run = f"{run}-{os.environ.get('GITHUB_RUN_ATTEMPT', '1')}" if run else None
+        self.db.execute(
+            "insert or ignore into reels(youtube_id, job, run, due) values (?, ?, ?, ?)", (youtube_id, job, run, due)
+        )
+        self.db.commit()
+
+    def due_reels(self, now: str, since: str, max_tries: int = 3) -> list[tuple[str, str, str | None]]:
+        """(youtube_id, job, run) of Shorts public on YouTube by now, but not since before `since`, not yet Reels."""
+        rows = self.db.execute(
+            "select youtube_id, job, run from reels where posted is null and tries < ?"
+            " and coalesce(due, ?) <= ? and coalesce(due, ?) >= ? order by due",
+            (max_tries, now, now, now, since),
+        )
+        return rows.fetchall()
+
+    def reel_done(self, youtube_id: str, media_id: str | None) -> None:
+        if media_id:
+            self.db.execute("update reels set posted=?, media_id=? where youtube_id=?", (now(), media_id, youtube_id))
+        else:
+            self.db.execute("update reels set tries=tries+1 where youtube_id=?", (youtube_id,))
         self.db.commit()
 
     def filled(self) -> dict[str, tuple[str, str]]:
