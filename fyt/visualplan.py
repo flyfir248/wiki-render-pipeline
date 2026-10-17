@@ -312,7 +312,9 @@ def stands_for(subject: str, e: manifest.Entity) -> bool:
     about = _about(e)
     # Whole words only: the catalog's loose prefix match would make "cargo" a "car".
     named = any(re.search(rf"\b{re.escape(k.strip().lower())}(e?s)?\b", about.lower()) for k in s["keywords"] if k.strip())
-    return named and not scenes3d.unlike(subject, about + " " + e.look)
+    # `not_for`: kinds its models can't stand in for that a story may still mention beside the real
+    # subject (a lifeboat beside its ship), so they block only this entity, not the story's other scenes.
+    return named and not scenes3d.unlike(subject, about + " " + e.look) and not scenes3d.find(about, s.get("not_for", []))
 
 
 def _place_fits(subject: str, p: manifest.Place) -> bool:
@@ -330,7 +332,11 @@ def story_fit(script: Script, story: Manifest, recon: list[Reconstruction]) -> t
         ents = [e for e in manifest.in_scene(story, r.scene) if stands_for(r.subject, e)]
         places = [p for p in story.places if r.scene in p.scenes and _place_fits(r.subject, p)]
         if ents:
-            kept.append(r.model_copy(update={"subject_name": ents[0].id, "in_story": True}))
+            # The entity decides what the module draws: an 1872 brigantine is a sailing ship, whatever the
+            # planner picked (it had drawn the Mary Celeste as a container ship).
+            variant = scenes3d.variant_for(r.subject, f"{_about(ents[0])} {ents[0].look}", scenes3d.story_year(
+                " ".join([script.title] + [x.narration for x in script.scenes])))
+            kept.append(r.model_copy(update={"subject_name": ents[0].id, "in_story": True, "variant": variant or r.variant}))
         elif places and r.subject in ("city", "landscape"):
             kept.append(r.model_copy(update={"subject_name": places[0].id, "in_story": True}))
         else:

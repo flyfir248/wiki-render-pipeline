@@ -184,7 +184,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     drawn += stage_backdrops(cfg, job, script)
     script = relevance_gate(cfg, job, script, story, spans, [c.words for c in clips], scene_media, shots)
     beats = {}
-    if cfg.storyboard and artgen.provider():
+    if cfg.storyboard and artgen.provider() and not artgen.out_of_allowance():
+        staged = script
         script, back = visualplan.painted(script)
         if back:
             log(job, f"scenes {[i + 1 for i in back]}: illustrative 3D swapped for painted storyboard pictures, so the video keeps one style")
@@ -197,6 +198,11 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             )
         except Exception as e:  # the scenes still have their own graphics and photos
             log(job, f"warning: storyboard failed: {e}")
+        undrawn = [i for i in back if not beats.get(i)]
+        if undrawn:  # a painted picture that never came: the 3D scene beats a bare text card
+            script = script.model_copy(update={"scenes": [staged.scenes[i] if i in undrawn else sc for i, sc in enumerate(script.scenes)]})
+            log(job, f"scenes {[i + 1 for i in undrawn]}: no painted picture was drawn, so their 3D scenes stay")
+            job.file("script.json").write_text(script.model_dump_json(indent=2))
     effects = None
     if cfg.sound_effects:
         try:

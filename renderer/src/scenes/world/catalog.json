@@ -406,6 +406,13 @@
           "sailing"
         ]
       ],
+      "not_for": [
+        "lifeboat",
+        "small boat",
+        "rowing boat",
+        "model ship",
+        "ship in a bottle"
+      ],
       "unlike": [
         "canoe",
         "kayak",

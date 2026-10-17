@@ -96,9 +96,15 @@ def test_a_moment_whose_entity_a_module_models_gets_that_module_when_the_planner
                                                   cue="its sails half-raised", documented=True, priority=1)])
     (r,) = visualplan.stage_plan(story, m, taken=set())
     assert (r.subject, r.variant, r.subject_name, r.action) == ("ship", "sailing", "mary-celeste", "sail")
+    # The planner's own pick of the ship module is drawn as the entity is, not as the planner guessed.
+    (kept,), _ = visualplan.story_fit(story, m, [visualplan.Reconstruction(scene=2, subject="ship", variant="cargo", action="sail")])
+    assert kept.variant == "sailing" and kept.in_story
     wine = Entity(id="cargo-wine", name="the cargo of wine", kind="wine barrels", search=["wine barrels", "cargo", "barrels"],
                   look="oak barrels", certain=True, scenes=[4])
     assert not any(visualplan.stands_for(k, wine) for k in scenes3d.subjects())  # "cargo" is not a "car"
+    boat = Entity(id="lifeboat", name="the lifeboat", kind="boat", search=["lifeboat", "boat", "small boat"], look="small wooden boat",
+                  certain=True, scenes=[3])
+    assert not visualplan.stands_for("ship", boat)  # the ship module would draw an ocean liner
     assert relevance.text_gate(story.model_copy(update={"scenes": [
         sc if i != 1 else sc.model_copy(update={"type": "world", "subject": "ship", "subject_name": "mary-celeste"})
         for i, sc in enumerate(story.scenes)]}), m) == {}
