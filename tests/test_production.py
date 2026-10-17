@@ -301,3 +301,40 @@ def test_cold_is_not_snowfall():
     # "a freezing January afternoon" or "the icy water" is cold, not snow falling; drawing snow would be a claim.
     s = world("On a freezing January afternoon the airliner flew over the icy river in winter.", "aircraft", "cruise", "airliner")
     assert scenes3d.guard(s.model_copy(update={"weather": "snow"}), s.narration).weather is None
+
+
+# The Cocaine Bear Short (17 October): an airliner opened a story about a bear and a smuggler's small plane.
+
+
+def test_a_planned_3d_scene_must_show_what_its_narration_names():
+    from fyt import visualplan
+    from fyt.visualplan import Reconstruction
+
+    s = script(
+        ScriptScene(narration="In Georgia, a black bear found a 75-pound bag of cocaine.", type="title"),
+        ScriptScene(narration="The plane flew low over the forest at night.", type="statement"),
+    )
+    out, _ = visualplan.apply(s, [Reconstruction(scene=1, subject="aircraft", variant="airliner", action="descend"),
+                                  Reconstruction(scene=2, subject="aircraft", variant="airliner", action="cruise")])
+    assert out.scenes[0].type == "title"  # no plane in "a black bear found a bag"
+    assert out.scenes[1].type == "world"
+
+
+def test_no_airliner_for_a_small_plane():
+    from fyt import visualplan
+    from fyt.visualplan import Reconstruction
+
+    s = script(ScriptScene(narration="The smuggler's Cessna flew low over Tennessee and the plane dropped its cargo.", type="statement"))
+    out, _ = visualplan.apply(s, [Reconstruction(scene=1, subject="aircraft", variant="airliner", action="cruise")])
+    assert out.scenes[0].type == "statement"
+
+
+def test_with_the_storyboard_an_illustrative_3d_scene_becomes_a_painted_one():
+    from fyt import visualplan
+
+    old = ScriptScene(narration="The ship sailed on.", type="statement", heading="At sea")
+    sailing = world("The ship sailed on.", "ship", "sail", "liner").model_copy(update={"fallback": old.model_dump(exclude_none=True), "label": "ILLUSTRATION"})
+    sinking = world("The ship sank.", "ship", "sink", "liner").model_copy(update={"fallback": old.model_dump(exclude_none=True), "label": "RECONSTRUCTION"})
+    dna = world("DNA is a double helix.", "science", "rotate", "dna").model_copy(update={"fallback": old.model_dump(exclude_none=True), "label": "SCIENTIFIC MODEL"})
+    out, back = visualplan.painted(script(sailing, sinking, dna))
+    assert back == [0] and [x.type for x in out.scenes] == ["statement", "world", "world"]

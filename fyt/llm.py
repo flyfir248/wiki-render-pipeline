@@ -44,13 +44,30 @@ def _text(response) -> str:
     return "\n".join(b.text for b in response.content if b.type == "text").strip()
 
 
-def _compact(node, in_properties: bool = False):
-    """A JSON schema without the "title" pydantic gives every field (the field's name again), which
-    costs a few hundred tokens of a free tier's per-minute budget and tells the model nothing."""
+def _compact(node, in_properties: bool = False, guide: str = ""):
+    """A JSON schema trimmed to fit a free tier's per-minute token budget: without the "title" pydantic
+    gives every field (the field's name again), and, when the prompt already describes the scene
+    templates field by field (the script guide), without the scene fields' descriptions too."""
+    drop_scene_help = "Scene templates (field names in brackets)" in guide
     if isinstance(node, dict):
-        return {k: _compact(v, k == "properties") for k, v in node.items() if in_properties or not (k == "title" and isinstance(v, str))}
+        out = {}
+        for k, v in node.items():
+            if not in_properties and k == "title" and isinstance(v, str):
+                continue
+            if drop_scene_help and k == "ScriptScene" and isinstance(v, dict):
+                v = _strip_descriptions(v)
+            out[k] = _compact(v, k == "properties", guide)
+        return out
     if isinstance(node, list):
-        return [_compact(x) for x in node]
+        return [_compact(x, False, guide) for x in node]
+    return node
+
+
+def _strip_descriptions(node):
+    if isinstance(node, dict):
+        return {k: _strip_descriptions(v) for k, v in node.items() if k != "description" or not isinstance(v, str)}
+    if isinstance(node, list):
+        return [_strip_descriptions(x) for x in node]
     return node
 
 
@@ -87,7 +104,7 @@ def _openai_structured_once(
         raise ClaudeError(f"{c.api_key_env} is not set")
     system += (
         "\n\nReply with a single JSON object and nothing else. It must match this JSON schema:\n"
-        + json.dumps(_compact(schema.model_json_schema()), separators=(",", ":"))
+        + json.dumps(_compact(schema.model_json_schema(), guide=system), separators=(",", ":"))
     )
     body = {
         "model": model,
@@ -417,6 +434,7 @@ Scene templates (field names in brackets):
 - dialogue: a real recorded exchange, typed out like a transcript [heading, lines (2-4, speaker + exact
   words)]. Only for words that were actually recorded or documented; never invent dialogue.
 
+Every scene sets `purpose`: what the viewer must understand from it, max 15 words.
 Every scene may also set `camera` (push_in, pull_out, pan_left, pan_right, parallax) for the move over
 its photo and `transition` (fade, slide, zoom, wipe, flash, thread, whip) for how it enters. Leave them
 unset unless a choice clearly fits the moment, e.g. flash for a sudden turn, whip for a jump in place or
@@ -472,7 +490,9 @@ Rules:
 - Write `comment_question`: one specific, easy question about this story for the channel's first
   comment, the kind people answer in a few words. No "let me know in the comments".
 """
-SCRIPT_GUIDE = SCRIPT_GUIDE.replace("<<WORLD SCENE>>", scenes3d.guide_text())
+# The scriptwriter tells the story; it doesn't pick 3D scenes. The visual director decides what each
+# scene shows once the script is checked (fyt/visualplan.py, fyt/manifest.py), from what the story needs.
+SCRIPT_GUIDE = SCRIPT_GUIDE.replace("<<WORLD SCENE>>\n", "")
 
 
 WIKI_GUIDE = """
@@ -568,7 +588,7 @@ def write_script(
             except RequestTooLarge as e:
                 if attempt == 3:
                     # Still too large with the shortest notes: a fallback model may have a larger
-                    # per-minute allowance (Groq's llama-3.3-70b has 12,000 tokens a minute).
+                    # per-minute allowance than the primary.
                     for model in cfg.llm.fallback_models:
                         try:
                             print(f"request too large for {cfg.llm.model}; trying {model}")

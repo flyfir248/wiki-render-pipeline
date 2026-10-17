@@ -156,7 +156,7 @@ def test_the_model_plan_is_applied_and_guarded(monkeypatch):
         seen["system"] = system
         return visualplan.VisualPlan(reconstructions=[
             visualplan.Reconstruction(scene=2, subject="landscape", variant="volcano", action="erupt", cue="exploded", priority=1),
-            visualplan.Reconstruction(scene=1, subject="city", action="collapse", priority=1),  # not in the narration
+            visualplan.Reconstruction(scene=1, subject="city", action="collapse", priority=1),  # no city in the narration
             visualplan.Reconstruction(scene=9, subject="train", action="travel"),  # no such scene
         ])
 
@@ -167,8 +167,8 @@ def test_the_model_plan_is_applied_and_guarded(monkeypatch):
     ), "", log=lambda m: None)
     assert report["planner"] == "model"
     assert "landscape" in seen["system"] and "rocket" in seen["system"]  # the catalog reaches the planner
-    assert world(s) == [(1, "city", "flyover"), (2, "landscape", "erupt")]
-    assert s.scenes[0].illustrative and not s.scenes[1].illustrative
+    assert world(s) == [(2, "landscape", "erupt")]  # a city over "Mount Tambora stood..." is not shown
+    assert s.scenes[0].type == "statement" and not s.scenes[1].illustrative
     assert s.scenes[1].cue == "exploded"
 
 

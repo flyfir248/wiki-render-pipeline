@@ -106,6 +106,18 @@ def variant_for(subject: str, text: str, year: int | None = None) -> str:
     return next(iter(s["variants"]))
 
 
+def unlike(subject: str, text: str) -> str | None:
+    """A word in the story naming something this subject's models can't stand in for (a Cessna is
+    not an airliner): drawing it would show the wrong thing."""
+    return find(text, subjects()[subject].get("unlike", []))
+
+
+def grounded(subject: str, text: str, previous: str | None = None) -> bool:
+    """A scene may show a subject only if its own words name it, or it goes straight on from a scene
+    showing the same subject ("It climbed out over the Bronx")."""
+    return bool(count(text, subjects()[subject]["keywords"])) or previous == subject
+
+
 def neutral_action(subject: str) -> str:
     acts = subjects()[subject]["actions"]
     return next((a for a, v in acts.items() if v.get("neutral")), next(iter(acts)))

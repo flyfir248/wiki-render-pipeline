@@ -168,6 +168,10 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             log(job, f"warning: no story illustrations: {e}")
     beats = {}
     if cfg.storyboard and artgen.provider():
+        script, back = visualplan.painted(script)
+        if back:
+            log(job, f"scenes {[i + 1 for i in back]}: illustrative 3D swapped for painted storyboard pictures, so the video keeps one style")
+            job.file("script.json").write_text(script.model_dump_json(indent=2))
         try:
             log(job, "storyboarding: an illustration for each sentence")
             beats = storyboard.make(
