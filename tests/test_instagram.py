@@ -128,6 +128,7 @@ def test_nothing_is_posted_until_publish_is_on(tmp_path, monkeypatch):
     cfg.instagram.publish = False
     monkeypatch.setenv("INSTAGRAM_TOKEN", "tok")
     monkeypatch.setenv("INSTAGRAM_USER_ID", "1")
+    monkeypatch.setattr(instagram, "check", lambda cfg: "ok")
     monkeypatch.setattr(instagram, "publish", lambda *a: (_ for _ in ()).throw(AssertionError("posted")))
     assert instagram.post_due(cfg, now) == 0
 
@@ -139,3 +140,25 @@ def test_old_shorts_are_not_posted_as_a_backlog(tmp_path, monkeypatch):
     monkeypatch.setenv("INSTAGRAM_USER_ID", "1")
     monkeypatch.setattr(instagram, "publish", lambda *a: (_ for _ in ()).throw(AssertionError("posted")))
     assert instagram.post_due(cfg, now) == 0
+
+
+def test_with_posting_off_the_secrets_are_only_checked(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("INSTAGRAM_TOKEN", "tok")
+    monkeypatch.setenv("INSTAGRAM_USER_ID", "1")
+    monkeypatch.setattr(instagram, "check", lambda cfg: "Instagram secrets work: can post to @weirdbuttrue")
+    monkeypatch.setattr(instagram, "publish", lambda *a: (_ for _ in ()).throw(AssertionError("posted")))
+    assert instagram.post_due(_cfg(tmp_path), datetime(2026, 10, 17, tzinfo=timezone.utc)) == 0
+    assert "@weirdbuttrue" in capsys.readouterr().out
+
+
+def test_check_reports_the_account_and_quota(tmp_path, monkeypatch):
+    monkeypatch.setenv("INSTAGRAM_TOKEN", "tok")
+    monkeypatch.setenv("INSTAGRAM_USER_ID", "1")
+
+    class S:
+        def get(self, url, params=None, headers=None, timeout=None):
+            if url.endswith("content_publishing_limit"):
+                return _Resp({"data": [{"quota_usage": 2, "config": {"quota_total": 100}}]})
+            return _Resp({"username": "weirdbuttrue"})
+
+    assert instagram.check(_cfg(tmp_path), session=S()).endswith("@weirdbuttrue (2 of 100 posts used in the last 24 hours)")

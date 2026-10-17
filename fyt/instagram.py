@@ -160,6 +160,21 @@ def publish(cfg: Config, video: Path, text: str, session=requests, sleep=time.sl
     return media
 
 
+def check(cfg: Config, session=requests) -> str:
+    """Whether the secrets can post to the account, without posting anything."""
+    token, user = credentials()
+    v = cfg.instagram.api_version
+    auth = {"Authorization": f"OAuth {token}"}
+    try:
+        name = _json(session.get(f"{GRAPH}/{v}/{user}", params={"fields": "username"}, headers=auth, timeout=30)).get("username")
+        limit = _json(session.get(f"{GRAPH}/{v}/{user}/content_publishing_limit", params={"fields": "quota_usage,config"}, headers=auth, timeout=30))
+    except RuntimeError as e:
+        return f"::warning::the Instagram secrets don't work yet: {e}"
+    used = (limit.get("data") or [{}])[0]
+    total = (used.get("config") or {}).get("quota_total", "?")
+    return f"Instagram secrets work: can post to @{name} ({used.get('quota_usage', 0)} of {total} posts used in the last 24 hours)"
+
+
 def _from_artifact(run: str, job_id: str, into: Path) -> Path | None:
     """The job's folder from the Actions run that made it (artifacts are kept for a week)."""
     dest = into / run
@@ -191,11 +206,12 @@ def caption_for(cfg: Config, folder: Path) -> str:
 def post_due(cfg: Config, now: datetime | None = None) -> int:
     """Post the Shorts that have gone public on YouTube as Reels. Returns how many were posted."""
     ig = cfg.instagram
-    if not (ig.enabled and ig.publish):
-        print("Instagram posting is off (instagram.enabled and instagram.publish in channel.yaml)")
-        return 0
     if not credentials():
         print("no INSTAGRAM_TOKEN / INSTAGRAM_USER_ID; Reels not posted")
+        return 0
+    if not (ig.enabled and ig.publish):
+        print("Instagram posting is off (instagram.enabled and instagram.publish in channel.yaml)")
+        print(check(cfg))  # so the secrets can be tested before posting is turned on
         return 0
     now = now or datetime.now(timezone.utc)
     uploads = Uploads(cfg)
