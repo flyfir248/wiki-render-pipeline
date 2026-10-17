@@ -1,0 +1,116 @@
+{
+  "entities": [
+    {
+      "id": "mary-celeste",
+      "name": "the Mary Celeste",
+      "kind": "merchant brigantine",
+      "search": [
+        "mary celeste",
+        "brigantine",
+        "ship"
+      ],
+      "look": "wooden brigantine, white hull, two masts, partial sails, 31\u2011metre length",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "dei-gratia",
+      "name": "the Dei Gratia",
+      "kind": "light brig",
+      "search": [
+        "dei gratia",
+        "brig",
+        "ship"
+      ],
+      "look": "smaller wooden brig, dark hull, full sails, 19\u2011metre length",
+      "certain": true,
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "lifeboat",
+      "name": "the lifeboat",
+      "kind": "wooden lifeboat",
+      "search": [
+        "lifeboat",
+        "boat",
+        "small boat"
+      ],
+      "look": "small open wooden boat, oars, no canvas cover",
+      "certain": false,
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "cargo-wine",
+      "name": "the cargo of wine",
+      "kind": "wine barrels",
+      "search": [
+        "wine barrels",
+        "cargo",
+        "barrels"
+      ],
+      "look": "rows of oak barrels, dark glass, sealed",
+      "certain": true,
+      "scenes": [
+        4
+      ]
+    },
+    {
+      "id": "captain-log",
+      "name": "the captain\u2019s log",
+      "kind": "logbook",
+      "search": [
+        "logbook",
+        "captain log",
+        "book"
+      ],
+      "look": "leather\u2011bound book, yellowed pages, brass clasp",
+      "certain": true,
+      "scenes": [
+        4
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "azores",
+      "name": "off the Azores",
+      "look": "rocky island chain, Atlantic sea, overcast sky, waves",
+      "scenes": [
+        3,
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 3,
+      "entity": "mary-celeste",
+      "place": "azores",
+      "action": "sails half\u2011raised",
+      "motion": "present",
+      "cue": "its sails half\u2011raised",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "cargo-wine",
+      "place": "",
+      "action": "intact on deck",
+      "motion": "present",
+      "cue": "cargo of wine intact",
+      "documented": true,
+      "priority": 2
+    }
+  ]
+}

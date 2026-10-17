@@ -1,0 +1,29 @@
+fetching Wikipedia article
+8 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): map (lost viewers 44% slower than average, 7 scenes); story (lost viewers 34% slower than average, 9 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 30% faster than average, 10 scenes); statement (lost viewers 81% faster than average, 11 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene 1 mentions a 31‑metre brig but never names it until Scene 2, leaving viewers confused.; Scene 5 talks about a costly refit that was never introduced earlier, making the length change feel abrupt.
+checking facts against the source
+fact check found: scene 5: unsupported claim "After a costly refit that lengthened her from 30.3 to 31 metres, she vanished unchanged." (source says: The source does not provide the ship’s length before the refit; it only states that after the refit the length was 103 ft (≈31.4 m). No information is given about the ship’s length before the refit or that it “vanished unchanged.”); scene 6: unsupported claim "No sign of a struggle, no wreckage, no bodies—only the missing lifeboat and a sealed cabin door." (source says: The source mentions no bodies, no wreckage, and a missing lifeboat, but it does not state that there was no sign of a struggle or that the cabin door was sealed.)
+dropped the scenes the source doesn't back after a rewrite: scene 6: unsupported claim "No bodies were found and there was no wreckage; the only obvious missing item was the lifeboat."
+reading the story: what it shows
+story: the Mary Celeste, the Dei Gratia, the lifeboat, the cargo of wine, the captain’s log; 2 moments
+planning the visuals
+visual plan (model): 4 2.5D, 2 2D
+voicing 6 scenes with kokoro
+fetching visuals
+visuals: 3 Wikipedia/Commons images, 2 stock, 1 scenes on plain background
+cutaways: 2 extra photos across 2 scenes
+collage: 5 photos styled, 2 with a cut-out subject
+translating the title and description (es, pt, hi, fr, de)
+drawing story scenes (cloudflare)
+warning: no background art for scene 4: image generation failed: 429: the free daily image allowance is used up
+warning: no art for 'a 19th‑century wooden brigantine': image generation failed: the free daily image allowance is used up
+0 illustrations drawn
+1 story props had no matching illustration and are left out
+storyboarding: an illustration for each sentence
+art direction: archival
+rendering 40s short video
+rendering thumbnail
+done: approved
