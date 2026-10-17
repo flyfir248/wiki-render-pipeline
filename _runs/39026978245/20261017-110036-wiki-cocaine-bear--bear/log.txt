@@ -1,0 +1,45 @@
+fetching Wikipedia article
+1 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): map (lost viewers 44% slower than average, 7 scenes); story (lost viewers 34% slower than average, 9 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 30% faster than average, 10 scenes); statement (lost viewers 81% faster than average, 11 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene2 jumps from drop to discovery without linking the timeline; Scene4 mentions only a few grams contradicting “massive” claim; Dr. Alonso is introduced without context; Scene7 exceeds word limit
+checking facts against the source
+fact check found: scene 3: wrong claim "Smugglers flew from Knoxville, dropped cargo near Blairsville" (source says: According to the source, the smugglers dropped the cargo before abandoning the plane above Knoxville, Tennessee; they did not fly from Knoxville.)
+facts check out
+reading the story: what it shows
+story: the bear, plastic containers of cocaine, Kentucky mall; 6 moments
+planning the visuals
+visual plan (model): 4 3D, 1 2.5D, 2 2D; 3D: stage present, stage present, stage move, stage present
+assets: 'MSCC007 Ursus americanus Left Femur': no vision check could be made; skipped
+assets: 'MSCC 007 U Americanus Left Femur Mesh': no vision check could be made; skipped
+assets: 'MSCC 007 U Americanus Left Tibia Mesh': no vision check could be made; skipped
+assets: 'MSCC 007 U Americanus Left Radius Mesh': no vision check could be made; skipped
+assets: 'MSCC007 Ursus americanus Left Fibula': no vision check could be made; skipped
+assets: 'MSCC007 Ursus americanus Left Radius': no vision check could be made; skipped
+assets: 'Low-poly Black Bear': no vision check could be made; skipped
+assets: 'Unlucky Bear': no vision check could be made; skipped
+assets: 'Bear Detector - STALKER Fan Art': no vision check could be made; skipped
+assets: 'Nekomori Toast Bear': no vision check could be made; skipped
+assets: 'S.T.A.L.K.E.R. "Bear" detector (Fan Art)': no vision check could be made; skipped
+assets: 'Bärenbrunnen': no vision check could be made; skipped
+assets: 'Bear': no vision check could be made; skipped
+assets: 'Grizzly Bear': no vision check could be made; skipped
+assets: no usable model of the bear (american black bear, black bear, bear): its scenes stay painted
+scenes [1, 4, 5, 7]: no model of their entity, so they stay 2D
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 4 Wikipedia/Commons images, 1 stock, 2 scenes on plain background
+cutaways: 4 extra photos across 3 scenes
+collage: 8 photos styled, 3 with a cut-out subject
+translating the title and description (es, pt, hi, fr, de)
+drawing story scenes (cloudflare)
+warning: no background art for scene 5: image generation failed: 429: the free daily image allowance is used up
+warning: no art for 'large black bear, shaggy fur': image generation failed: the free daily image allowance is used up
+warning: no art for 'white powder spilling from a plastic sack': image generation failed: the free daily image allowance is used up
+0 illustrations drawn
+storyboarding: an illustration for each sentence
+art direction: signature
+rendering 44s short video
+rendering thumbnail
+done: approved

@@ -1,0 +1,156 @@
+{
+  "entities": [
+    {
+      "id": "bear",
+      "name": "the bear",
+      "kind": "animal",
+      "search": [
+        "american black bear",
+        "black bear",
+        "bear"
+      ],
+      "look": "175\u2011pound female American black bear, brownish fur",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "model": null
+    },
+    {
+      "id": "container",
+      "name": "plastic containers of cocaine",
+      "kind": "object",
+      "search": [
+        "plastic container",
+        "container",
+        "object"
+      ],
+      "look": "small yellow plastic containers, 40 units, black label",
+      "certain": true,
+      "scenes": [
+        2
+      ],
+      "model": null
+    },
+    {
+      "id": "mall",
+      "name": "Kentucky mall",
+      "kind": "building",
+      "search": [
+        "shopping mall",
+        "mall",
+        "building"
+      ],
+      "look": "modern interior, display case",
+      "certain": true,
+      "scenes": [
+        7
+      ],
+      "model": null
+    }
+  ],
+  "places": [
+    {
+      "id": "northern-forest",
+      "name": "Northern Georgia forest",
+      "look": "dense deciduous forest, pine and oak, misty",
+      "scenes": [
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "id": "blairsville",
+      "name": "Blairsville, Georgia",
+      "look": "small Appalachian town, highway, rural",
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "knoxville",
+      "name": "Knoxville, Tennessee",
+      "look": "city skyline, hills, airport",
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "kentucky-mall",
+      "name": "Kentucky mall",
+      "look": "modern interior, display case, visitors",
+      "scenes": [
+        7
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "bear",
+      "place": "",
+      "action": "died after swallowing cocaine",
+      "motion": "present",
+      "cue": "In 1985, a 175\u2011pound black bear died after swallowing a sky\u2011dropped stash of cocaine.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "container",
+      "place": "blairsville",
+      "action": "dropped into wilderness",
+      "motion": "depart",
+      "cue": "The plane dumped the drugs",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 3,
+      "entity": "bear",
+      "place": "northern-forest",
+      "action": "roamed forest",
+      "motion": "present",
+      "cue": "",
+      "documented": false,
+      "priority": 3
+    },
+    {
+      "scene": 4,
+      "entity": "bear",
+      "place": "northern-forest",
+      "action": "belly full of powder",
+      "motion": "present",
+      "cue": "Dr. Alonso found the bear\u2019s belly full of powder",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 5,
+      "entity": "bear",
+      "place": "northern-forest",
+      "action": "gulped powder",
+      "motion": "move",
+      "cue": "In the woods the bear discovered torn bags and gulped the powder",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 7,
+      "entity": "bear",
+      "place": "kentucky-mall",
+      "action": "displayed in mall",
+      "motion": "present",
+      "cue": "The bear ended up in a Kentucky mall, where visitors see the Cocaine Bear on display.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}
