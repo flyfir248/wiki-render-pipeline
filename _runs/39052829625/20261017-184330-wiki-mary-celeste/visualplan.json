@@ -1,0 +1,73 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 20.9,
+  "dropped_for_budget": [],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "ship",
+      "variant": "cargo",
+      "action": "sail",
+      "setting": "sea",
+      "weather": "clear",
+      "cue": "Ghost Ship Found",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "ship:cargo",
+        "level": "generic",
+        "title": "generic cargo"
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "ship",
+      "variant": "cargo",
+      "action": "sail",
+      "setting": "sea",
+      "weather": "clear",
+      "cue": "FROM NEW YORK TO GENOA",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "ship:cargo",
+        "level": "generic",
+        "title": "generic cargo"
+      }
+    },
+    {
+      "scene": 3,
+      "type": "world",
+      "kind": "3D",
+      "subject": "ship",
+      "variant": "cargo",
+      "action": "sail",
+      "setting": "sea",
+      "weather": "clear",
+      "cue": "MYSTERIOUS GAPS",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "ship:cargo",
+        "level": "generic",
+        "title": "generic cargo"
+      }
+    },
+    {
+      "scene": 4,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 5,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

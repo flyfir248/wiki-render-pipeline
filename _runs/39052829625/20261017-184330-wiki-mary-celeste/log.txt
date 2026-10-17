@@ -1,0 +1,29 @@
+fetching Wikipedia article
+8 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): map (lost viewers 44% slower than average, 7 scenes); story (lost viewers 34% slower than average, 9 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 30% faster than average, 10 scenes); statement (lost viewers 81% faster than average, 11 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 101 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene 3’s timing is confusing – it says a log entry was found a day after the ship was found but dated eleven days earlier, which muddles the chronology.; Scene 5 introduces Gibraltar court hearings without earlier context, leaving viewers unsure why Gibraltar matters.
+checking facts against the source
+fact check found: scene 3: wrong claim "The ship’s log, discovered after the wreck, recorded its final entry eleven days before the crew vanished." (source says: The last entry in the log was dated 10 days earlier.)
+dropped the scenes the source doesn't back after a rewrite: scene 3: wrong claim "LAST LOG ENTRY: The ship’s log, discovered after the wreck, recorded its final entry ten days before the crew vanished." (source says: The final log entry was dated 8 am on November 25, nine days before the crew vanished.)
+reading the story: what it shows
+story: the Mary Celeste, the Dei Gratia, the lifeboat, the barrels of spirits; 3 moments
+planning the visuals
+visual plan (model): 3 3D, 1 2.5D, 1 2D; 3D: ship sail, ship sail, ship sail
+voicing 5 scenes with kokoro
+fetching visuals
+visuals: 3 Wikipedia/Commons images, 0 stock, 2 scenes on plain background
+cutaways: 3 extra photos across 2 scenes
+collage: 6 photos styled, 2 with a cut-out subject
+translating the title and description (es, pt, hi, fr, de)
+relevance: checking 3 3D scenes by eye
+scenes [1, 2, 3]: illustrative 3D swapped for painted storyboard pictures, so the video keeps one style
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 1, sentence 2: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 9 planned, 4 in the cast; 0 checked, 0 redrawn, 1 left out
+art direction: archival
+rendering 44s short video
+rendering thumbnail
+done: approved

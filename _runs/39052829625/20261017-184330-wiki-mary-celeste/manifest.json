@@ -1,0 +1,132 @@
+{
+  "entities": [
+    {
+      "id": "mary-celeste",
+      "name": "the Mary Celeste",
+      "kind": "merchant brigantine",
+      "search": [
+        "mary celeste",
+        "brigantine",
+        "ship"
+      ],
+      "look": "wooden hull, white paint, two masts, partial sail, 103\u2011ft length",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "dei-gratia",
+      "name": "the Dei Gratia",
+      "kind": "merchant brigantine",
+      "search": [
+        "dei gratia",
+        "brigantine",
+        "ship"
+      ],
+      "look": "similar wooden brig, dark hull, full sails, 90\u2011ft length",
+      "certain": false,
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "id": "lifeboat",
+      "name": "the lifeboat",
+      "kind": "boat",
+      "search": [
+        "lifeboat",
+        "small boat",
+        "ship's boat"
+      ],
+      "look": "small wooden boat, canvas cover, hanging from davits",
+      "certain": false,
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "cargo-barrels",
+      "name": "the barrels of spirits",
+      "kind": "cargo barrels",
+      "search": [
+        "spirit barrels",
+        "casks",
+        "barrels"
+      ],
+      "look": "metal\u2011lined wooden barrels, dark brown, stacked in hold",
+      "certain": true,
+      "scenes": [
+        3
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "azores",
+      "name": "Azores, Atlantic Ocean",
+      "look": "open sea, gray sky, distant islands, gentle swell",
+      "scenes": [
+        1
+      ]
+    },
+    {
+      "id": "new-york",
+      "name": "New York Harbor",
+      "look": "busy 19th\u2011century harbor, steamers, warehouses, foggy morning",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "id": "genoa",
+      "name": "Genoa, Italy",
+      "look": "Mediterranean port, stone quay, sailboats, early evening light",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "id": "gibraltar",
+      "name": "Gibraltar",
+      "look": "rocky peninsula, harbor with court building, clear sky",
+      "scenes": [
+        4
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "mary-celeste",
+      "place": "azores",
+      "action": "drifts silently",
+      "motion": "present",
+      "cue": "drifted into sight, empty and silent",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "mary-celeste",
+      "place": "new-york",
+      "action": "under partial sail",
+      "motion": "present",
+      "cue": "",
+      "documented": false,
+      "priority": 2
+    },
+    {
+      "scene": 3,
+      "entity": "lifeboat",
+      "place": "",
+      "action": "missing",
+      "motion": "present",
+      "cue": "the lifeboat was missing",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}
