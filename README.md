@@ -51,7 +51,9 @@ capsizing, hitting an iceberg, another ship or rocks), trains (travelling, braki
 a bridge collapsing under them), road vehicles (driving, skidding, crashing, a chase), rockets (on the
 pad, launch, ascent, staging, breaking apart), space (orbits, fly-bys, an asteroid impact, a cutaway of
 a planet's layers), cities (modern or historic: fire, earthquake, collapse, flood, explosion) and
-landscapes (volcanic eruption, tsunami, wildfire, avalanche, or a fly-over). Any of them takes a weather
+landscapes (volcanic eruption, tsunami, wildfire, avalanche, or a fly-over), science (molecules, DNA
+unzipping, atoms, crystals, built from measured geometry) and technology (a neural network computing or
+training, a chip with data on its traces, always labelled illustrations). Any of them takes a weather
 (rain, storm with lightning, fog, snow) and an effect (smoke, fire, explosion). There is no fixed share
 of 3D: a story told moment by moment may be mostly reconstruction, one best told in maps and charts may
 have none, and the only limit is a render budget (`visuals.world_seconds_short` / `_long`, 60 s and
@@ -85,6 +87,54 @@ camera shot suits it). To add one:
 That is all: the scriptwriter's guide, the visual planner's menu, the allowed values in the script
 schema and the keyword planner are built from the catalog, so every video made after the change can use
 it. `tests/test_visualplan.py` fails if a catalog subject has no module.
+
+### Models: the exact object where it is known, and a label that says how exact it is
+
+`fyt/assets.py` works out which real object each world scene shows and draws the most faithful model
+that is available, in this order:
+
+1. **Library**: a glTF model in `renderer/public/models`, used only when the file is there and its
+   licence and source are recorded in `renderer/src/scenes/world/assets.json`. It is copied into the
+   job's own folder before rendering; a missing file falls back to the next step.
+2. **Spec**: a named object's measured structure driving the procedural module (Titanic's four funnels,
+   a 747's hump and four engines, Saturn V's three stages and escape tower, a molecule's bond lengths
+   and angles from NIST data in `molecules.json`, B-DNA's 10.5 base pairs a turn). Sources are recorded
+   with each spec; specs give the shape, not liveries.
+3. **Generic**: the subject's own procedural model.
+
+The on-screen label follows the model and the narration: RECONSTRUCTION for a named object the
+narration describes, RECONSTRUCTION · SIMPLIFIED for a generic one, SCIENTIFIC MODEL for a model built
+from measured data, ILLUSTRATION when the narration doesn't describe the action or the subject is a
+concept. A generic model is never labelled as the real object. All scenes about one object share one
+model, so it looks the same throughout. To add a named object, add a spec (or a library entry with its
+`licence` and `sources`, and the file) to `assets.json` with the names that point to it; names written
+`=word` match only the whole word.
+
+### Art direction
+
+Each video gets one look (`fyt/artdirect.py`), kept in every scene: archival for stories before 1950,
+scientific, cosmic, natural, noir for dark or tense stories, a news look for stories told mostly in
+numbers, and the channel's signature look otherwise. A profile sets the backgrounds, second accent and a
+grade on the 3D scenes; the channel's accent colour and font stay the same in all of them. Turn it off
+with `visuals.art_direction: false`.
+
+### The storyboard and the quality gate
+
+Once the narration is timed, `shotlist.json` records every scene: its timing and narration, what the
+viewer must take from it (`purpose`), the technique (3D, 2.5D, 2D) and template, every asset with its
+source and licence, the camera and transition, the sounds at its key moment, its status (documented,
+reconstruction, scientific model, illustration) and what is uncertain about it.
+
+A render is finished when it passes `fyt/qcheck.py`, not when the renderer exits. Before rendering it
+checks that every asset exists, timings and key moments fall inside their scenes, on-screen text can be
+read in the time it is shown, one object is drawn one way throughout, and every reconstruction is still
+backed by its narration and every library model by a licence. After rendering it checks the video's
+size, frame rate and sound, and samples frames from every scene: a black scene, or a 3D scene that does
+not move, has failed to draw. A broken 3D scene is swapped back to the 2D scene it replaced and the video
+renders once more; any other failure marks the job `qa_failed`, which holds it from upload. Results go
+to `qc.json`, with `contact.png` (a contact sheet of the video) beside it. The checks catch technical and
+some composition faults; they can't judge whether a scene looks good, so a held video is reviewed with
+the contact sheet and the shot list.
 
 Before a new script is voiced, `fyt/factcheck.py` checks every number, date, name and quote in it, said
 or shown, against the passages of the source article that mention the same things. Wrong or unsupported
@@ -328,6 +378,10 @@ fyt/                 Python pipeline
   render.py          calls renderer/render.mjs
   visualplan.py      the visual plan: which moments become 3D reconstructions, within the render budget
   scenes3d.py        the 3D catalog on the Python side, and the guards that keep world scenes true
+  assets.py          which real object each 3D scene shows, and the most faithful model of it available
+  artdirect.py       each video's look
+  shotlist.py        the production storyboard (shotlist.json)
+  qcheck.py          the quality gate before and after rendering (qc.json); a failure holds the video
   qa.py              automatic checks on script and render
   factcheck.py       checks every claim in a script against the source article before it is voiced
   youtube.py         OAuth, upload (video, thumbnail, captions), stats
@@ -336,11 +390,11 @@ renderer/            Remotion (React) video templates
   src/scenes/        scene templates: title, statement, stat, bars, list, quote, timeline, comparison, broll,
                      map (animated routes), process, document, dialogue, story (2D illustrated scenes
                      acting out the narration, drawn with Fluent Emoji, MIT); camera moves and transitions
-  src/scenes/world/  the 3D engine: catalog.json, the shared kit, and one module per subject
+  src/scenes/world/  the 3D engine: catalog.json, assets.json, molecules.json, the shared kit, and one module per subject
   src/components/    background, captions, audio visualizer
   render.mjs         CLI renderer (video, thumbnail, --frame preview)
 fixtures/            demo scripts used by `fyt demo`
-jobs/<id>/           per-video outputs: research.md, script.json, visualplan.json, props.json, video.mp4, thumbnail.png, captions.srt
+jobs/<id>/           per-video outputs: research.md, script.json, visualplan.json, props.json, shotlist.json, qc.json, contact.png, video.mp4, thumbnail.png, captions.srt
 ```
 
 A job folder keeps every intermediate file. You can edit `script.json` and rebuild with

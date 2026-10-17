@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import zlib
 
-from fyt import scenes3d
+from fyt import artdirect, scenes3d
 from fyt.config import Config
 from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, ScriptScene, Sfx, Word
 
@@ -24,6 +24,7 @@ def build_props(
     sfx: str | None = None,
     shots: dict[int, list[Media]] | None = None,
     beats: dict[int, list[RenderBeat]] | None = None,
+    look: str | None = None,
 ) -> RenderProps:
     if len(spans) != len(script.scenes):
         raise ValueError("one audio span per scene is required")
@@ -92,6 +93,8 @@ def build_props(
                 action=scene.action,
                 subjectName=scene.subject_name,
                 illustrative=scene.illustrative,
+                model=scene.model,
+                label=scene.label,
                 seed=video_seed if scene.type in THREE_D else None,
                 revealTimes=reveal_times(revealed(scene), clip_words[i], start - vis_start),
                 landTimes=land_times(scene, clip_words[i], start - vis_start),
@@ -106,7 +109,7 @@ def build_props(
         format=cfg.format,
         title=script.title,
         duration=round(duration, 3),
-        theme=cfg.theme.model_dump(),
+        theme=artdirect.theme(cfg.theme.model_dump(), look, script) if look else cfg.theme.model_dump() | {"era": artdirect.era(script)},
         voice=voice,
         music=Music(src=music, volume=cfg.music_volume) if music else None,
         sfx=Sfx(dir=sfx, volume=cfg.sfx_volume) if sfx else None,
@@ -276,12 +279,20 @@ def land_times(scene: ScriptScene, words: list[Word], offset: float) -> list[flo
         hit = next((s for s in said if _close(s[0], target)), None)
         return None if hit is None else [round(hit[2] + offset, 3)]
     points = scene.data or []
+    years = [int(m.group()) if (m := re.search(r"-?\d{3,4}", d.label)) else None for d in points]
+
+    def owner(value: float) -> int | None:
+        # A figure said aloud belongs to the point whose value it is closest to ("421" is 2023's 421.1,
+        # not 2020's 414.2, though both are within 3%).
+        near = [(abs(value - d.value) / abs(d.value), j) for j, d in enumerate(points) if d.value and _close(value, d.value, 0.03)]
+        return min(near)[1] if near else None
+
     times: list[float | None] = []
     after = 0.0
-    for d in points:
-        year = int(m.group()) if (m := re.search(r"-?\d{3,4}", d.label)) else None
+    for j, d in enumerate(points):
+        year = years[j]
         hit = next(
-            (s for s in said if s[1] >= after and ((year is not None and s[0] == year) or (d.value and _close(s[0], d.value, 0.03)))),
+            (s for s in said if s[1] >= after and ((year is not None and s[0] == year) or owner(s[0]) == j)),
             None,
         )
         times.append(None if hit is None else round(hit[2] + offset, 3))

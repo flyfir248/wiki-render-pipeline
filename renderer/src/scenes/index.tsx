@@ -19,7 +19,7 @@ import { AircraftScene } from "./aircraft";
 import { ShipScene } from "./ship";
 import { WorldScene } from "./world";
 import { CycleScene, Flash, ProportionScene, ScaleScene, TrendScene, impact, statLands } from "./motion";
-import { Heading, PanelContext, Stage, Sub, formatNumber, useEnter, type SceneProps } from "./shared";
+import { Heading, PanelContext, Stage, Sub, formatCount, formatNumber, useEnter, type SceneProps } from "./shared";
 
 export { OVERLAP, SceneFrame, sceneSpans, transitionOf } from "./camera";
 
@@ -217,7 +217,7 @@ const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
         }}
       >
         {scene.prefix ?? ""}
-        {isYear(scene) ? String(target) : formatNumber(target * progress)}
+        {isYear(scene) ? String(target) : formatCount(target * progress, target)}
         {scene.suffix ?? ""}
       </div>
       <Sub text={scene.text} theme={theme} format={format} delay={20} />
@@ -248,7 +248,7 @@ const BarsScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
           return (
             <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
               <div style={{ fontFamily: theme.font, fontWeight: 800, fontSize: 34 * unit(format), color: theme.text, opacity: g }}>
-                {formatNumber(d.value * Math.min(g, 1))}
+                {formatCount(d.value * Math.min(g, 1), d.value)}
               </div>
               <div
                 style={{

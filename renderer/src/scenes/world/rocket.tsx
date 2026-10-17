@@ -5,6 +5,7 @@ import React, { useMemo } from "react";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { Cloud, Flash, groundTexture, Inked, InkedBox, liveryOf, rng, Sea, slab, Smoke, Toon, toonRamp, type Livery } from "../world3d";
+import { Modelled } from "./library";
 import { aim, Atmosphere, Billow, Debris, Fireball, Hills, moduleScene, shake, useWorld, type WorldProps } from "./kit";
 
 const puff = new THREE.IcosahedronGeometry(1, 0);
@@ -43,8 +44,28 @@ const Plume: React.FC<{ at: [number, number, number]; frame: number; speed: numb
   </group>
 );
 
-const Rocket: React.FC<{ livery: Livery; split: number; lower: boolean; upper: boolean }> = ({ livery, split, lower, upper }) => {
+// A spec (fyt/assets.py) gives a named rocket its features: the Saturn V's three stages, black roll
+// pattern and escape tower; a Falcon 9's finless body. Without one, a generic two-stage rocket in livery colours.
+export type RocketSpec = { stages?: number; rollPattern?: boolean; tower?: boolean; fins?: boolean; band?: string; tank?: string };
+
+// Black quarter panels around the body, alternating with white: the roll pattern cameras tracked.
+const quarter = new THREE.CylinderGeometry(1.315, 1.315, 1, 18, 1, true, 0, Math.PI / 2);
+const RollPattern: React.FC<{ y: number; h: number; turn: number }> = ({ y, h, turn }) => (
+  <>
+    {[0, 2].map((k) => (
+      <mesh key={k} geometry={quarter} position={[0, y, 0]} scale={[1, h, 1]} rotation={[0, turn + (k * Math.PI) / 2, 0]}>
+        <meshBasicMaterial color="#16171c" side={THREE.DoubleSide} />
+      </mesh>
+    ))}
+  </>
+);
+
+const towerMotor = new THREE.CylinderGeometry(0.18, 0.26, 1.4, 12);
+
+const Rocket: React.FC<{ livery: Livery; split: number; lower: boolean; upper: boolean; spec?: RocketSpec }> = ({ livery, split, lower, upper, spec = {} }) => {
   const g = useMemo(() => ({ low: bodyGeometry(1.3, 0, 15, 0), high: bodyGeometry(1.3, 15.4, 26, 4.5), fin: slab([[0, 0], [-0, 3.2], [1.7, 0.6], [1.7, 0]], 0.12) }), []);
+  const band = spec.band ?? livery.accent;
+  const band2 = spec.band ?? livery.accent2;
   return (
     <group>
       {lower ? (
@@ -54,11 +75,18 @@ const Rocket: React.FC<{ livery: Livery; split: number; lower: boolean; upper: b
             <cylinderGeometry args={[1.32, 1.32, 0.8, 18]} />
             <meshBasicMaterial color="#1b1c22" />
           </mesh>
-          <mesh position={[0, 7, 0]}>
-            <cylinderGeometry args={[1.31, 1.31, 1.2, 18]} />
-            <meshBasicMaterial color={livery.accent} />
-          </mesh>
-          {[0, 1, 2, 3].map((k) => (
+          {spec.rollPattern ? (
+            <>
+              <RollPattern y={2.2} h={3.2} turn={0} />
+              <RollPattern y={12.6} h={2.4} turn={Math.PI / 2} />
+            </>
+          ) : spec.band ? null : (
+            <mesh position={[0, 7, 0]}>
+              <cylinderGeometry args={[1.31, 1.31, 1.2, 18]} />
+              <meshBasicMaterial color={band} />
+            </mesh>
+          )}
+          {(spec.fins ?? true ? [0, 1, 2, 3] : []).map((k) => (
             <mesh key={k} geometry={g.fin} rotation={[0, (k * Math.PI) / 2, 0]} position={[Math.cos((k * Math.PI) / 2) * 1.2, 0, -Math.sin((k * Math.PI) / 2) * 1.2]}>
               <Toon color="#1b1c22" />
             </mesh>
@@ -68,17 +96,35 @@ const Rocket: React.FC<{ livery: Livery; split: number; lower: boolean; upper: b
       {upper ? (
         <group>
           <Inked geometry={g.high} color="#f4f6f9" outline={0.06} />
-          <mesh position={[0, 20, 0]}>
-            <cylinderGeometry args={[1.31, 1.31, 0.6, 18]} />
-            <meshBasicMaterial color={livery.accent2} />
-          </mesh>
+          {spec.band ? null : (
+            <mesh position={[0, 20, 0]}>
+              <cylinderGeometry args={[1.31, 1.31, 0.6, 18]} />
+              <meshBasicMaterial color={band2} />
+            </mesh>
+          )}
+          {(spec.stages ?? 2) >= 3 ? (
+            <mesh position={[0, 21.8, 0]}>
+              <cylinderGeometry args={[1.31, 1.31, 0.5, 18]} />
+              <meshBasicMaterial color={band2} />
+            </mesh>
+          ) : null}
+          {spec.tower ? (
+            // The launch escape tower: a thin truss and its motor above the capsule.
+            <group position={[0, 30.2, 0]}>
+              <mesh position={[0, 1.6, 0]}>
+                <cylinderGeometry args={[0.12, 0.35, 3.2, 8]} />
+                <meshBasicMaterial color="#3a3d45" />
+              </mesh>
+              <Inked geometry={towerMotor} color="#e9e6df" outline={0.03} position={[0, 3.9, 0]} />
+            </group>
+          ) : null}
         </group>
       ) : null}
     </group>
   );
 };
 
-const Shuttle: React.FC<{ livery: Livery; split: number }> = ({ split }) => {
+const Shuttle: React.FC<{ livery: Livery; split: number; spec?: RocketSpec }> = ({ split, spec = {} }) => {
   const g = useMemo(
     () => ({
       tank: bodyGeometry(1.7, 0, 22, 4),
@@ -90,7 +136,7 @@ const Shuttle: React.FC<{ livery: Livery; split: number }> = ({ split }) => {
   );
   return (
     <group>
-      <Inked geometry={g.tank} color="#d9772f" outline={0.06} />
+      <Inked geometry={g.tank} color={spec.tank ?? "#d9772f"} outline={0.06} />
       {[1, -1].map((s) => (
         <group key={s} position={[0, -split, s * 2.6]} rotation={[s * split * 0.03, 0, 0]}>
           <Inked geometry={g.srb} color="#f1f1ee" outline={0.05} />
@@ -116,6 +162,7 @@ const World: React.FC<WorldProps> = ({ scene, portrait }) => {
   const { camera } = useThree();
   const action = scene.action ?? "launch";
   const shuttle = scene.variant === "shuttle";
+  const spec = scene.model?.params as RocketSpec | undefined;
   const livery = liveryOf(id);
   const tex = useMemo(() => groundTexture(pal, scene.setting === "desert" ? "desert" : "countryside", id), [pal.ground, pal.ground2, scene.setting, id]); // eslint-disable-line react-hooks/exhaustive-deps
   // "pad" waits on the pad with the engines cold; "launch" lights them at the key moment.
@@ -197,7 +244,9 @@ const World: React.FC<WorldProps> = ({ scene, portrait }) => {
 
       {!exploded ? (
         <group position={[0, onPad ? 2.2 + rise : 0, 0]}>
-          {shuttle ? <Shuttle livery={livery} split={split} /> : <Rocket livery={livery} split={split} lower upper />}
+          <Modelled model={scene.model} length={h} ground>
+            {shuttle ? <Shuttle livery={livery} split={split} spec={spec} /> : <Rocket livery={livery} split={split} lower upper spec={spec} />}
+          </Modelled>
           {(!onPad || lit > 0) && split < 4 ? <Plume at={[0, 0, 0]} frame={frame} speed={onPad ? 0.25 : 0.9} scale={shuttle ? 1.3 : 1} trail={!onPad} /> : null}
           {split > 0 && !shuttle ? <Plume at={[0, 15.4, 0]} frame={frame} speed={0.9} scale={0.7} trail={false} /> : null}
         </group>

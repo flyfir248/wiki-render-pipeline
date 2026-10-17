@@ -19,7 +19,7 @@ from typing import Callable, Literal
 
 from pydantic import BaseModel, Field
 
-from fyt import llm, scenes3d
+from fyt import assets, llm, scenes3d
 from fyt.config import Config
 from fyt.models import Action3D, Obstacle, Script, ScriptScene, Setting, Shot, Subject, Variant, Weather
 
@@ -78,6 +78,10 @@ Rules:
 - cue: copy the exact words from the scene's narration at which the key moment happens ("hit the iceberg").
 - subject_name: give the same short name to the same ship, plane, train, city or volcano in every scene
   so it looks the same each time; keep its variant and setting the same too unless the story changes them.
+  When the story names the exact object, use its name ("Titanic", "Saturn V", "Boeing 747"; for a science
+  scene the compound, "caffeine"): its real features are then drawn from published data.
+- Science and technology are 3D too: a molecule, DNA, a crystal, a neural network, a chip. Use them where
+  seeing the structure explains the idea better than words on screen.
 - Vary the shots from scene to scene. Rank each reconstruction by how much the story needs it."""
 
 
@@ -129,7 +133,8 @@ def rule_plan(script: Script, notes: str = "") -> list[Reconstruction]:
     dominant = max(story_scores, key=story_scores.get)
     if story_scores[dominant] < 3:
         dominant = None
-    variants = {k: _best(story, s["variants"]) or next(iter(s["variants"])) for k, s in subj.items()}
+    year = scenes3d.story_year(story)
+    variants = {k: scenes3d.variant_for(k, story, year) for k in subj}
     out: list[Reconstruction] = []
     last: dict[str, Reconstruction] = {}
     struck: set[str] = set()
@@ -205,11 +210,20 @@ def apply(script: Script, plan: list[Reconstruction], notes: str = "") -> tuple[
         if not (0 <= k < len(scenes)) or not convertible(scenes[k]) or k in ranked:
             continue
         old = scenes[k]
+        if old.type in ("world", "aircraft", "ship"):
+            # The scriptwriter already staged this one: keep what they chose, fill in only what's missing.
+            base = scenes3d.legacy_to_world(old)
+            plan_fields = {"subject": r.subject, "variant": r.variant, "action": r.action, "obstacle": r.obstacle, "shot": r.shot,
+                           "setting": r.setting, "weather": r.weather, "effect": r.effect, "cue": r.cue, "subject_name": r.subject_name}
+            scenes[k] = base.model_copy(update={f: v for f, v in plan_fields.items() if getattr(base, f, None) is None})
+            ranked[k] = max(1, min(3, r.priority))
+            continue
         scenes[k] = old.model_copy(update={
             "type": "world", "subject": r.subject, "variant": r.variant, "action": r.action, "obstacle": r.obstacle,
             "shot": r.shot, "setting": r.setting, "weather": r.weather, "effect": r.effect, "effect_x": r.effect_x,
             "cue": r.cue, "subject_name": r.subject_name, "image": None, "broll_query": None, "actors": None,
             "backdrop": None, "maneuver": None, "vessel": None, "ship_action": None,
+            "fallback": old.model_dump(exclude_none=True),
             "heading": old.heading or (old.text if old.type == "title" else None),
         })
         ranked[k] = max(1, min(3, r.priority))
@@ -262,6 +276,7 @@ def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None
         planner, recon = "rules", rule_plan(script, notes)
     planned, ranked = apply(script, recon, notes)
     planned, dropped = within_budget(cfg, script, planned, ranked)
+    planned = assets.resolve(planned)
     report = {
         "planner": planner,
         "budget_seconds": cfg.visuals.world_seconds(cfg.format),
@@ -270,7 +285,8 @@ def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None
         "scenes": [
             {"scene": i, "type": s.type, "kind": kind(s)}
             | ({"subject": s.subject, "variant": s.variant, "action": s.action, "setting": s.setting, "weather": s.weather,
-                "cue": s.cue, "illustrative": s.illustrative} if s.type == "world" else {})
+                "cue": s.cue, "illustrative": s.illustrative, "label": s.label,
+                "model": {k: (s.model or {}).get(k) for k in ("id", "level", "title")}} if s.type == "world" else {})
             for i, s in enumerate(planned.scenes, 1)
         ],
     }

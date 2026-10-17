@@ -177,7 +177,14 @@
             "landing",
             "touched down",
             "ditch",
-            "touchdown"
+            "touchdown",
+            "set down",
+            "set it down",
+            "set the plane down",
+            "set the airliner down",
+            "set the jet down",
+            "ditched",
+            "splashed down"
           ],
           "shot": "side"
         },
@@ -318,7 +325,11 @@
             "plunged"
           ],
           "event": true,
-          "shot": "side"
+          "shot": "side",
+          "sound": [
+            "thud",
+            0.6
+          ]
         },
         "capsize": {
           "describe": "rolls over",
@@ -329,7 +340,11 @@
             "keeled over"
           ],
           "event": true,
-          "shot": "side"
+          "shot": "side",
+          "sound": [
+            "thud",
+            0.6
+          ]
         },
         "collide": {
           "describe": "strikes an obstacle (iceberg, ship or rocks)",
@@ -347,7 +362,11 @@
           ],
           "event": true,
           "moment": 0.45,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "boom",
+            0.9
+          ]
         },
         "dive": {
           "describe": "a submarine dives",
@@ -363,19 +382,28 @@
             "surfac"
           ]
         }
-      }
+      },
+      "by_era": [
+        [
+          1830,
+          "sailing"
+        ]
+      ]
     },
     "train": {
       "describe": "a cel-shaded train (locomotive and carriages) on tracks through the landscape",
       "keywords": [
-        "train",
+        "=train",
+        "=trains",
         "locomotive",
         "railway",
         "railroad",
-        "rail",
-        "express",
+        "=rail",
+        "=rails",
+        "=express",
         "carriage",
-        "station",
+        "train station",
+        "railway station",
         "tracks",
         "freight train",
         "tram"
@@ -434,6 +462,10 @@
             "braking",
             "slowed",
             "emergency stop"
+          ],
+          "sound": [
+            "zip",
+            0.5
           ]
         },
         "derail": {
@@ -447,7 +479,11 @@
           ],
           "event": true,
           "moment": 0.4,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "boom",
+            0.85
+          ]
         },
         "collide": {
           "describe": "meets another train head-on",
@@ -460,7 +496,11 @@
           ],
           "event": true,
           "moment": 0.5,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "boom",
+            0.9
+          ]
         },
         "bridge": {
           "describe": "crosses a long bridge",
@@ -481,9 +521,19 @@
           ],
           "event": true,
           "moment": 0.45,
-          "shot": "side"
+          "shot": "side",
+          "sound": [
+            "boom",
+            0.9
+          ]
         }
-      }
+      },
+      "by_era": [
+        [
+          1940,
+          "steam"
+        ]
+      ]
     },
     "vehicle": {
       "describe": "a cel-shaded car, truck or bus on a road",
@@ -550,6 +600,10 @@
             "brake",
             "skid",
             "swerv"
+          ],
+          "sound": [
+            "zip",
+            0.5
           ]
         },
         "crash": {
@@ -563,7 +617,11 @@
           ],
           "event": true,
           "moment": 0.5,
-          "shot": "side"
+          "shot": "side",
+          "sound": [
+            "boom",
+            0.9
+          ]
         },
         "chase": {
           "describe": "a second car pursues it",
@@ -643,7 +701,11 @@
             "ignition"
           ],
           "moment": 0.35,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "boom",
+            0.8
+          ]
         },
         "ascent": {
           "describe": "climbs through the sky on its exhaust plume",
@@ -664,7 +726,11 @@
             "jettison",
             "fell away"
           ],
-          "moment": 0.5
+          "moment": 0.5,
+          "sound": [
+            "thud",
+            0.7
+          ]
         },
         "explode": {
           "describe": "breaks apart in the sky",
@@ -677,7 +743,11 @@
           ],
           "event": true,
           "moment": 0.5,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "boom",
+            1
+          ]
         }
       }
     },
@@ -766,6 +836,10 @@
             "swung past",
             "passed",
             "approach"
+          ],
+          "sound": [
+            "whoosh",
+            0.7
           ]
         },
         "impact": {
@@ -779,7 +853,11 @@
             "collided"
           ],
           "event": true,
-          "moment": 0.6
+          "moment": 0.6,
+          "sound": [
+            "boom",
+            1
+          ]
         },
         "layers": {
           "describe": "the planet opens to show its layers (crust, mantle, core)",
@@ -862,7 +940,11 @@
             "inferno"
           ],
           "event": true,
-          "moment": 0.15
+          "moment": 0.15,
+          "sound": [
+            "flame",
+            0.7
+          ]
         },
         "collapse": {
           "describe": "a building collapses",
@@ -875,7 +957,11 @@
             "razed"
           ],
           "event": true,
-          "moment": 0.4
+          "moment": 0.4,
+          "sound": [
+            "boom",
+            0.85
+          ]
         },
         "earthquake": {
           "describe": "the ground shakes and buildings fall",
@@ -887,7 +973,11 @@
             "seismic"
           ],
           "event": true,
-          "moment": 0.2
+          "moment": 0.2,
+          "sound": [
+            "thunder",
+            0.9
+          ]
         },
         "flood": {
           "describe": "water rises through the streets",
@@ -900,7 +990,11 @@
             "waters rose"
           ],
           "event": true,
-          "moment": 0.15
+          "moment": 0.15,
+          "sound": [
+            "whoosh",
+            0.6
+          ]
         },
         "explosion": {
           "describe": "a blast goes off among the buildings",
@@ -912,9 +1006,19 @@
             "bomb"
           ],
           "event": true,
-          "moment": 0.35
+          "moment": 0.35,
+          "sound": [
+            "boom",
+            1
+          ]
         }
-      }
+      },
+      "by_era": [
+        [
+          1900,
+          "historic"
+        ]
+      ]
     },
     "landscape": {
       "describe": "a cel-shaded landscape: a volcano, mountains, a coast or a forest",
@@ -1001,7 +1105,11 @@
           ],
           "event": true,
           "moment": 0.25,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "boom",
+            1
+          ]
         },
         "tsunami": {
           "describe": "a great wave rolls in and over the shore",
@@ -1015,7 +1123,11 @@
           ],
           "event": true,
           "moment": 0.55,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "whoosh",
+            0.9
+          ]
         },
         "wildfire": {
           "describe": "fire races through the trees",
@@ -1030,7 +1142,11 @@
           ],
           "event": true,
           "moment": 0.1,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "flame",
+            0.7
+          ]
         },
         "avalanche": {
           "describe": "snow pours down the mountainside",
@@ -1043,7 +1159,205 @@
           ],
           "event": true,
           "moment": 0.3,
-          "shot": "wide"
+          "shot": "wide",
+          "sound": [
+            "thunder",
+            0.8
+          ]
+        }
+      }
+    },
+    "science": {
+      "describe": "a scientific model: a molecule built from measured bond lengths and angles, B-form DNA, an atom, or a crystal lattice",
+      "keywords": [
+        "molecule",
+        "molecular",
+        "atom",
+        "atomic",
+        "=dna",
+        "double helix",
+        "gene",
+        "genome",
+        "chromosome",
+        "protein",
+        "chemical",
+        "chemistry",
+        "electron",
+        "proton",
+        "neutron",
+        "crystal",
+        "compound"
+      ],
+      "variants": {
+        "molecule": [
+          "molecule",
+          "molecular",
+          "compound",
+          "chemical",
+          "formula",
+          "bond"
+        ],
+        "dna": [
+          "=dna",
+          "double helix",
+          "gene",
+          "genome",
+          "chromosome",
+          "base pair",
+          "genetic"
+        ],
+        "atom": [
+          "atom",
+          "atomic",
+          "electron",
+          "proton",
+          "neutron",
+          "nucleus"
+        ],
+        "crystal": [
+          "crystal",
+          "lattice",
+          "salt"
+        ]
+      },
+      "settings": [
+        "room"
+      ],
+      "obstacles": [],
+      "actions": {
+        "rotate": {
+          "describe": "turns slowly so its shape can be seen",
+          "keywords": [
+            "structure",
+            "shape",
+            "made of",
+            "consists",
+            "looks like"
+          ],
+          "neutral": true,
+          "shot": "orbit"
+        },
+        "assemble": {
+          "describe": "its atoms fly in and join into the structure",
+          "keywords": [
+            "bond",
+            "combine",
+            "join",
+            "formed",
+            "form"
+          ],
+          "moment": 0.35,
+          "shot": "orbit",
+          "sound": [
+            "pop",
+            0.5
+          ]
+        },
+        "unzip": {
+          "describe": "DNA's two strands separate, as when it is copied",
+          "keywords": [
+            "unzip",
+            "replicat",
+            "copies itself",
+            "copied",
+            "strands separate"
+          ],
+          "moment": 0.3,
+          "shot": "orbit",
+          "sound": [
+            "zip",
+            0.5
+          ]
+        }
+      }
+    },
+    "technology": {
+      "describe": "a diagram of a technology drawn in 3D: a neural network passing signals, or a microchip on a circuit board (always labelled an illustration)",
+      "conceptual": true,
+      "keywords": [
+        "artificial intelligence",
+        "=ai",
+        "=a.i.",
+        "neural network",
+        "machine learning",
+        "deep learning",
+        "algorithm",
+        "chip",
+        "microchip",
+        "processor",
+        "transistor",
+        "semiconductor",
+        "computer",
+        "chatbot",
+        "language model"
+      ],
+      "variants": {
+        "network": [
+          "artificial intelligence",
+          "=ai",
+          "=a.i.",
+          "neural",
+          "machine learning",
+          "deep learning",
+          "algorithm",
+          "chatbot",
+          "language model",
+          "learn"
+        ],
+        "chip": [
+          "chip",
+          "microchip",
+          "processor",
+          "transistor",
+          "semiconductor",
+          "silicon",
+          "computer",
+          "circuit"
+        ]
+      },
+      "settings": [
+        "room"
+      ],
+      "obstacles": [],
+      "actions": {
+        "idle": {
+          "describe": "signals pulse through it",
+          "keywords": [
+            "works",
+            "runs",
+            "uses"
+          ],
+          "neutral": true,
+          "shot": "orbit"
+        },
+        "train": {
+          "describe": "signals run forward, then corrections run back, and its connections strengthen",
+          "keywords": [
+            "train",
+            "learn",
+            "taught"
+          ],
+          "moment": 0.4,
+          "shot": "orbit",
+          "sound": [
+            "chime",
+            0.4
+          ]
+        },
+        "compute": {
+          "describe": "bursts of data race through it",
+          "keywords": [
+            "calculat",
+            "comput",
+            "process",
+            "crunch"
+          ],
+          "moment": 0.3,
+          "shot": "orbit",
+          "sound": [
+            "whoosh",
+            0.5
+          ]
         }
       }
     }

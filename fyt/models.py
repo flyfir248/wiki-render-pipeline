@@ -97,6 +97,9 @@ class ScriptScene(BaseModel):
     """One beat of the video: what is said, and what is shown while it is said."""
 
     narration: str = Field(description="Exact words the narrator speaks for this scene.")
+    purpose: str | None = Field(
+        default=None, description="What the viewer must understand from this scene, max 15 words: 'the iceberg tore a long gash below the waterline'."
+    )
     type: SceneType = Field(description="Visual template used while the narration plays.")
     heading: str | None = Field(default=None, description="Short on-screen heading (max ~8 words).")
     text: str | None = Field(default=None, description="Supporting on-screen line, or the quote text for quote scenes.")
@@ -158,6 +161,9 @@ class ScriptScene(BaseModel):
     altitude_from: float | None = Field(default=None, description="world aircraft scenes: altitude readout start, in feet (documented figures only).")
     altitude_to: float | None = Field(default=None, description="world aircraft scenes: altitude readout end, in feet.")
     illustrative: SkipJsonSchema[bool | None] = None  # set by fyt.scenes3d.guard
+    model: SkipJsonSchema[dict | None] = None  # set by fyt.assets.resolve: which model, from where
+    label: SkipJsonSchema[str | None] = None  # set by fyt.assets.resolve: RECONSTRUCTION, ILLUSTRATION...
+    fallback: SkipJsonSchema[dict | None] = None  # set by fyt.visualplan: the scene before it became 3D
     # Written by scripts from before the world scene; fyt.scenes3d turns them into world scenes.
     maneuver: SkipJsonSchema[Maneuver | None] = None
     vessel: SkipJsonSchema[Vessel | None] = None
@@ -275,6 +281,8 @@ class RenderScene(BaseModel):
     action: Action3D | None = None
     subjectName: str | None = None
     illustrative: bool | None = None
+    model: dict | None = None  # world scenes: the resolved model (fyt.assets): spec params, or a library glTF
+    label: str | None = None  # world scenes: the on-screen label
     seed: int | None = None  # 3D scenes: the video's seed (from its title), so no two videos share a sky or livery
     landTimes: list[float] | None = None  # stat and proportion figures, trend points: when the narrator says them
     camera: Camera | None = None

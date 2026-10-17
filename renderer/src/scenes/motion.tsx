@@ -167,6 +167,8 @@ export const TrendScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const step = niceStep(hi0 - lo0);
   const lo = Math.floor(lo0 / step) * step;
   const hi = Math.ceil((hi0 * 1.04) / step) * step;
+  // Room on the left for the longest axis label ("600 ppm"), so it is never cut off at the frame's edge.
+  pad.l = Math.max(pad.l, Math.max(valueText(scene, hi).length, valueText(scene, lo).length) * 30 * k * 0.6 + 34);
   const X = (f: number) => pad.l + f * (W - pad.l - pad.r);
   const Y = (v: number) => H - pad.b - ((v - lo) / (hi - lo)) * (H - pad.t - pad.b);
 

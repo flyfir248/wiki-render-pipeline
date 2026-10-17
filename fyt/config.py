@@ -56,6 +56,8 @@ class VisualsConfig(BaseModel):
     # maps and charts may use none, an incident told moment by moment may use all of a Short.
     world_seconds_short: float = 60.0
     world_seconds_long: float = 180.0
+    # Each video's own look (fyt/artdirect.py): palette and 3D grade from its subject, era and mood.
+    art_direction: bool = True
 
     def world_seconds(self, fmt: str) -> float:
         return self.world_seconds_short if fmt == "short" else self.world_seconds_long

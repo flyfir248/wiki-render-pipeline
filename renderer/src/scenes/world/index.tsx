@@ -10,12 +10,15 @@ import { AircraftScene } from "../aircraft";
 import { ShipScene } from "../ship";
 import { lightningFrames, sceneSeed } from "../world3d";
 import { momentOf } from "./kit";
+import catalog from "./catalog.json";
 import { LandscapeScene } from "./landscape";
 import { TrainScene } from "./train";
 import { VehicleScene } from "./vehicle";
 import { RocketScene } from "./rocket";
 import { SpaceScene } from "./space";
 import { CityScene } from "./city";
+import { ScienceScene } from "./science";
+import { TechnologyScene } from "./technology";
 
 // The aircraft and ship modules came first, with their own field names; they read the world fields here.
 const AircraftModule: React.FC<SceneProps> = (p) => (
@@ -42,9 +45,12 @@ export const MODULES: Record<Subject, React.FC<SceneProps>> = {
   space: SpaceScene,
   city: CityScene,
   landscape: LandscapeScene,
+  science: ScienceScene,
+  technology: TechnologyScene,
 };
 
-// Says on screen what a 3D scene is: a reconstruction of what the narration describes, or an
+// Says on screen what a 3D scene is (fyt/assets.py decides): a reconstruction of what the narration
+// describes (simplified when the model is generic), a scientific model built from measured data, or an
 // illustration where it shows the subject without a documented event.
 const Label: React.FC<{ scene: Scene; theme: SceneProps["theme"]; short: boolean }> = ({ scene, theme, short }) => {
   const frame = useCurrentFrame();
@@ -68,7 +74,7 @@ const Label: React.FC<{ scene: Scene; theme: SceneProps["theme"]; short: boolean
         opacity: 0.9 * p,
       }}
     >
-      {scene.illustrative ? "ILLUSTRATION" : "RECONSTRUCTION"}
+      {scene.label ?? (scene.illustrative ? "ILLUSTRATION" : "RECONSTRUCTION")}
     </div>
   );
 };
@@ -77,25 +83,26 @@ export const WorldScene: React.FC<SceneProps> = (props) => {
   const Module = MODULES[(props.scene.subject ?? "landscape") as Subject] ?? LandscapeScene;
   return (
     <AbsoluteFill>
-      <Module {...props} />
+      {/* The video's art direction grades every 3D scene the same way (fyt/artdirect.py). */}
+      <AbsoluteFill style={{ filter: props.theme.grade && props.theme.grade !== "none" ? props.theme.grade : undefined }}>
+        <Module {...props} />
+      </AbsoluteFill>
       <Label scene={props.scene} theme={props.theme} short={props.format === "short"} />
     </AbsoluteFill>
   );
 };
 
-// Sounds for a world scene, frames from its start: the key moment lands with the sound its action makes.
-const SOUNDS: Record<string, [string, number]> = {
-  collide: ["boom", 0.9], crash: ["boom", 0.9], derail: ["boom", 0.85], explode: ["boom", 1], impact: ["boom", 1],
-  collapse: ["boom", 0.85], erupt: ["boom", 1], explosion: ["boom", 1], bridge_collapse: ["boom", 0.9],
-  earthquake: ["thunder", 0.9], tsunami: ["whoosh", 0.9], avalanche: ["thunder", 0.8], launch: ["boom", 0.8],
-  separation: ["thud", 0.7], flyby: ["whoosh", 0.7], fire: ["flame", 0.7], wildfire: ["flame", 0.7], sink: ["thud", 0.6],
-  capsize: ["thud", 0.6], brake: ["zip", 0.5], flood: ["whoosh", 0.6],
-};
+// Sounds for a world scene, frames from its start: the key moment lands with the sound its action makes
+// (each action's "sound" in catalog.json, which the production storyboard reads too).
+const soundOf = (scene: Scene): [string, number] | undefined =>
+  (catalog.subjects as Record<string, { actions: Record<string, { sound?: (string | number)[] }> }>)[scene.subject ?? ""]?.actions[scene.action ?? ""]?.sound as
+    | [string, number]
+    | undefined;
 
 export const worldCues = (scene: Scene, len: number, fps: number): { at: number; name: string; gain: number }[] => {
   const cues: { at: number; name: string; gain: number }[] = [];
   const at = Math.round(momentOf(scene) * len);
-  const sound = SOUNDS[scene.action ?? ""];
+  const sound = soundOf(scene);
   if (sound) {
     if (scene.action === "launch") cues.push({ at: at - Math.round(fps * 0.8), name: "riser", gain: 0.5 });
     cues.push({ at, name: sound[0], gain: sound[1] });

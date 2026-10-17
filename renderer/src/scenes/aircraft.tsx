@@ -18,6 +18,7 @@ import {
   City, Cloud, clamp, ease, fogRange, flashOf, groundTexture, HeadingPlate, Inked, lightningFrames, liveryOf, paletteOf, rng, sceneSeed, identityOf, Sky, slab,
   toonRamp, WeatherOverlay, type Livery, type Weather,
 } from "./world3d";
+import { Modelled } from "./world/library";
 
 export type Maneuver = "cruise" | "climb" | "descend" | "dive" | "turn" | "takeoff" | "land" | "go_around";
 export type Shot = "chase" | "side" | "front" | "below" | "orbit" | "wide";
@@ -91,7 +92,11 @@ const nacelleGeometry = () => {
   return g;
 };
 
-const Aircraft: React.FC<{ livery: Livery; gear: number }> = ({ livery, gear }) => {
+// A spec (fyt/assets.py) shapes the airframe to the type the story names: two or four engines, the 747's
+// hump or the A380's full double deck, a longer or shorter fuselage, the 777's big engines.
+export type AirframeSpec = { engines?: number; hump?: boolean; doubleDeck?: boolean; stretch?: number; bigEngines?: boolean };
+
+const Aircraft: React.FC<{ livery: Livery; gear: number; spec?: AirframeSpec }> = ({ livery, gear, spec = {} }) => {
   const parts = useMemo(
     () => ({
       body: fuselageGeometry(),
@@ -101,6 +106,7 @@ const Aircraft: React.FC<{ livery: Livery; gear: number }> = ({ livery, gear }) 
       stabR: stabiliserGeometry(1),
       fin: finGeometry(),
       nacelle: nacelleGeometry(),
+      hump: new THREE.SphereGeometry(1, 20, 12),
       intake: new THREE.CircleGeometry(0.24, 20),
       wheel: new THREE.CylinderGeometry(0.12, 0.12, 0.1, 12),
       strut: new THREE.CylinderGeometry(0.03, 0.03, 0.5, 6),
@@ -109,9 +115,28 @@ const Aircraft: React.FC<{ livery: Livery; gear: number }> = ({ livery, gear }) 
   );
   const white = "#f4f6fa";
   const grey = "#b8c0cf";
+  const stretch = spec.stretch ?? 1;
+  const tall = spec.doubleDeck ? 1.32 : 1;
+  const nacelle = spec.bigEngines ? 1.35 : 1;
+  // Engines under each wing, outward along its sweep: the inner pair, then the outer pair of a four-engine type.
+  const engines: [number, number][] = spec.engines === 4 ? [[0.55, 1.9], [-0.55, 3.3]] : [[0.55, 1.9]];
   return (
     <group>
+      <group scale={[stretch, tall, tall]} position={[0, (tall - 1) * 0.3, 0]}>
       <Inked geometry={parts.body} color={white} outline={0.03} />
+      {spec.hump ? <Inked geometry={parts.hump} color={white} outline={0.03} position={[3.15, 0.34, 0]} scale={[1.3, 0.4, 0.4]} /> : null}
+      {spec.doubleDeck
+        ? [1, -1].map((sd) => (
+            <group key={sd}>
+              {Array.from({ length: 16 }, (_, i) => (
+                <mesh key={i} position={[-2.1 + i * 0.38, 0.36, sd * 0.47]}>
+                  <boxGeometry args={[0.14, 0.1, 0.04]} />
+                  <meshBasicMaterial color="#1b2340" />
+                </mesh>
+              ))}
+            </group>
+          ))
+        : null}
       {/* Dark cockpit windows and cabin windows, and a cheatline in the theme colour below them. */}
       <mesh position={[4.45, 0.2, 0]} rotation={[0, 0, -0.5]}>
         <boxGeometry args={[0.32, 0.12, 0.62]} />
@@ -133,19 +158,20 @@ const Aircraft: React.FC<{ livery: Livery; gear: number }> = ({ livery, gear }) 
         <boxGeometry args={[6.4, 0.07, 1.115]} />
         <meshToonMaterial color={livery.accent} gradientMap={toonRamp} />
       </mesh>
+      </group>
       <Inked geometry={parts.wingL} color={grey} position={[0.6, -0.25, 0]} rotation={[0.05, 0, 0]} />
       <Inked geometry={parts.wingR} color={grey} position={[0.6, -0.25, 0]} rotation={[-0.05, 0, 0]} />
       <Inked geometry={parts.stabL} color={grey} position={[-3.9, 0.15, 0]} />
       <Inked geometry={parts.stabR} color={grey} position={[-3.9, 0.15, 0]} />
       <Inked geometry={parts.fin} color={livery.accent} position={[-3.6, 0.35, 0]} />
-      {[-1, 1].map((s) => (
-        <group key={s} position={[0.55, -0.62, s * 1.9]}>
+      {engines.flatMap(([x, z]) => [-1, 1].map((s) => (
+        <group key={`${x}${s}`} position={[x, -0.62, s * z]} scale={nacelle}>
           <Inked geometry={parts.nacelle} color={white} outline={0.03} />
           <mesh geometry={parts.intake} position={[0.66, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
             <meshBasicMaterial color="#2a3150" />
           </mesh>
         </group>
-      ))}
+      )))}
       {gear > 0.01
         ? [
             [3.4, 0],
@@ -336,7 +362,9 @@ const World: React.FC<{ scene: Scene; theme: Theme; portrait: boolean }> = ({ sc
       {maneuver === "land" && scene.setting === "sea" ? <Spray u={u} D={D} height={pose.height} /> : null}
       <group rotation={[pose.roll, 0, pose.pitch]}>
         {/* A ditching is flown with the gear up. */}
-        <Aircraft livery={liveryOf(identityOf(scene))} gear={scene.setting === "sea" ? 0 : pose.gear} />
+        <Modelled model={scene.model} length={10}>
+          <Aircraft livery={liveryOf(identityOf(scene))} gear={scene.setting === "sea" ? 0 : pose.gear} spec={scene.model?.params as AirframeSpec | undefined} />
+        </Modelled>
         {scene.effect
           ? enginesOf(scene.effectX).map((side) => <EngineTrouble key={side} side={side} effect={scene.effect!} at={scene.effectAt ?? 0.25} u={u} frame={frame} />)
           : null}

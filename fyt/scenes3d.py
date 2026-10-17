@@ -51,10 +51,12 @@ EFFECTS_3D = tuple(catalog()["effects"])
 
 def _pattern(words: list[str]) -> re.Pattern | None:
     # A word or phrase matches at the start of a word: "derail" finds "derailed", "explo" finds "exploded".
+    # A word written "=ai" matches only the whole word ("AI", not "aircraft").
     words = [w.strip().lower() for w in words if w.strip()]
     if not words:
         return None
-    return re.compile(r"(?<![a-z])(" + "|".join(re.escape(w) for w in sorted(words, key=len, reverse=True)) + ")")
+    alts = [re.escape(w[1:]) + r"(?![a-z])" if w.startswith("=") else re.escape(w) for w in sorted(words, key=len, reverse=True)]
+    return re.compile(r"(?<![a-z])(" + "|".join(alts) + ")")
 
 
 @lru_cache(maxsize=None)
@@ -74,6 +76,34 @@ def find(text: str, words: list[str]) -> str | None:
 def count(text: str, words: list[str]) -> int:
     p = _compiled(tuple(words))
     return len(p.findall(text.lower())) if p and text else 0
+
+
+YEAR = re.compile(
+    r"\b(?:in|of|since|by|until|from|during|before|after|around|circa|year|summer|winter|spring|autumn|"
+    r"january|february|march|april|may|june|july|august|september|october|november|december)\s+(1[0-9]{3}|20[0-9]{2})\b",
+    re.I,
+)
+
+
+def story_year(text: str) -> int | None:
+    """The earliest year the story is set in: years said as dates ("in 1518", "July 1518"), so a flight
+    number or a count ("Flight 1549", "1,500 people") is not read as one."""
+    years = [int(y) for y in YEAR.findall(text)]
+    return min(years) if years else None
+
+
+def variant_for(subject: str, text: str, year: int | None = None) -> str:
+    """The variant the words point to; with none named, the one the story's era implies (a city in
+    1518 is a historic one), else the subject's first."""
+    s = subjects()[subject]
+    hits = {v: count(text, words) for v, words in s["variants"].items()}
+    best = max(hits, key=hits.get)
+    if hits[best]:
+        return best
+    for before, variant in s.get("by_era", []):
+        if year is not None and year < before:
+            return variant
+    return next(iter(s["variants"]))
 
 
 def neutral_action(subject: str) -> str:
@@ -116,8 +146,10 @@ def guide_text() -> str:
         "  Shots: " + ", ".join(f"{k} ({v})" for k, v in catalog()["shots"].items()) + ".",
         "  Use world scenes for the moments a viewer should see happen: a launch, a voyage, a collision, an",
         "  eruption, a city burning, a wave coming ashore. Show only what the narration says happened; set",
-        "  weather or an effect only when the narration says so. The things shown are generic (no real",
-        "  company's livery or logo). Pair them with map scenes for where, and data scenes for how much.",
+        "  weather or an effect only when the narration says so. Name the exact object in subject_name when",
+        "  the story names it (Titanic, Saturn V, Boeing 747, caffeine): its published features are drawn",
+        "  (never a real company's livery or logo). Pair them with map scenes for where, and data scenes for",
+        "  how much.",
     ]
     return "\n".join(lines)
 
@@ -151,8 +183,7 @@ def guard(scene, context: str = ""):
     s = subjects()[subject]
     variant = scene.variant if scene.variant in s["variants"] else None
     if variant is None:
-        hits = {v: count(told + " " + context[:3000], words) for v, words in s["variants"].items()}
-        variant = max(hits, key=hits.get) if max(hits.values()) else next(iter(s["variants"]))
+        variant = variant_for(subject, told + " " + context[:3000], story_year(told + " " + context))
     action = scene.action if scene.action in s["actions"] else neutral_action(subject)
     # An event is drawn only when this scene's narration names it.
     documented = bool(find(scene.narration, action_words(subject, action)))
@@ -179,6 +210,7 @@ def guard(scene, context: str = ""):
         "effect": effect, "setting": setting, "shot": shot, "cue": cue,
         # A scene that shows what its narration says happened is a reconstruction; one that shows the
         # subject doing something neutral is an illustration, and says so on screen.
-        "illustrative": not (documented and not subjects()[subject]["actions"][action].get("neutral")),
+        # A conceptual subject (a neural network, a chip) is always a diagram of the idea, never the real thing.
+        "illustrative": bool(s.get("conceptual")) or not (documented and not s["actions"][action].get("neutral")),
         "maneuver": None, "vessel": None, "ship_action": None,
     })
