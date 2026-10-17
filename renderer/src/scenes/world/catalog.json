@@ -193,7 +193,28 @@
             "pulled up"
           ]
         }
-      }
+      },
+      "unlike": [
+        "cessna",
+        "piper",
+        "small plane",
+        "light aircraft",
+        "light plane",
+        "private plane",
+        "small aircraft",
+        "propeller plane",
+        "single-engine",
+        "twin-engine",
+        "seaplane",
+        "floatplane",
+        "biplane",
+        "bush plane",
+        "helicopter",
+        "fighter jet",
+        "warplane",
+        "bomber",
+        "drone"
+      ]
     },
     "ship": {
       "describe": "a cel-shaded vessel on a rolling low-poly sea that pitches and rolls with the waves",
@@ -384,6 +405,16 @@
           1830,
           "sailing"
         ]
+      ],
+      "unlike": [
+        "canoe",
+        "kayak",
+        "rowboat",
+        "raft",
+        "dinghy",
+        "speedboat",
+        "yacht",
+        "fishing boat"
       ]
     },
     "train": {
@@ -529,6 +560,12 @@
           1940,
           "steam"
         ]
+      ],
+      "unlike": [
+        "subway",
+        "metro",
+        "monorail",
+        "roller coaster"
       ]
     },
     "vehicle": {

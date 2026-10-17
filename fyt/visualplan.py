@@ -213,11 +213,21 @@ def apply(script: Script, plan: list[Reconstruction], notes: str = "") -> tuple[
     Returns the script and each reconstructed scene's priority, by scene index (from 0)."""
     scenes = list(script.scenes)
     ranked: dict[int, int] = {}
-    for r in plan:
+    story = " ".join([script.title] + [s.narration for s in script.scenes])
+    for r in sorted(plan, key=lambda r: r.scene):
         k = r.scene - 1
         if not (0 <= k < len(scenes)) or not convertible(scenes[k]) or k in ranked:
             continue
         old = scenes[k]
+        if old.type not in ("world", "aircraft", "ship") and r.subject in scenes3d.subjects():
+            # The planner's own picks must show what the scene talks about, and only a thing the
+            # engine can draw truthfully: no airliner over a narration about a bear, none for a Cessna.
+            told = " ".join(x for x in (old.narration, old.heading or "") if x)
+            before = scenes3d.legacy_to_world(scenes[k - 1]).subject if k else None
+            if not scenes3d.grounded(r.subject, told, before):
+                continue
+            if scenes3d.unlike(r.subject, story) and not assets.identify(r.subject, told, story):
+                continue
         if old.type in ("world", "aircraft", "ship"):
             # The scriptwriter already staged this one: keep what they chose, fill in only what's missing.
             base = scenes3d.legacy_to_world(old)
@@ -311,3 +321,18 @@ def summary(report: dict) -> str:
 
 def dumps(report: dict) -> str:
     return json.dumps(report, indent=2)
+
+
+def painted(script: Script) -> tuple[Script, list[int]]:
+    """With the storyboard on, a 3D scene that is only an illustration (the narration describes no
+    action it shows) goes back to the scene it replaced, which then gets a painted picture of what the
+    narration actually says, in the same style as the rest of the video. Reconstructions of documented
+    events stay, and so do scientific and technology models, which no illustration can replace."""
+    scenes, back = list(script.scenes), []
+    for i, s in enumerate(scenes):
+        if s.type != "world" or not s.fallback or s.subject in ("science", "technology"):
+            continue
+        if s.label == "ILLUSTRATION" or s.illustrative:
+            scenes[i] = ScriptScene.model_validate(s.fallback)
+            back.append(i)
+    return script.model_copy(update={"scenes": scenes}), back
