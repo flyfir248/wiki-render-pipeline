@@ -10,6 +10,9 @@ export type SceneProps = { scene: Scene; theme: Theme; format: Format };
 export const formatNumber = (n: number) =>
   Math.abs(n) >= 1000 ? Math.round(n).toLocaleString("en-US") : n % 1 === 0 ? String(n) : n.toFixed(1);
 
+// A number counting up to `target` shows only the decimals the target has (155 counts 0, 1, 2... not 148.0).
+export const formatCount = (v: number, target: number) => formatNumber(target % 1 === 0 ? Math.round(v) : v);
+
 export const useEnter = (delayFrames = 0) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();

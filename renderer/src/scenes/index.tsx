@@ -17,8 +17,9 @@ import { MapScene, mapRegions, validPlaces } from "./map";
 import { StoryScene } from "./story";
 import { AircraftScene } from "./aircraft";
 import { ShipScene } from "./ship";
+import { WorldScene } from "./world";
 import { CycleScene, Flash, ProportionScene, ScaleScene, TrendScene, impact, statLands } from "./motion";
-import { Heading, PanelContext, Stage, Sub, formatNumber, useEnter, type SceneProps } from "./shared";
+import { Heading, PanelContext, Stage, Sub, formatCount, formatNumber, useEnter, type SceneProps } from "./shared";
 
 export { OVERLAP, SceneFrame, sceneSpans, transitionOf } from "./camera";
 
@@ -216,7 +217,7 @@ const StatScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
         }}
       >
         {scene.prefix ?? ""}
-        {isYear(scene) ? String(target) : formatNumber(target * progress)}
+        {isYear(scene) ? String(target) : formatCount(target * progress, target)}
         {scene.suffix ?? ""}
       </div>
       <Sub text={scene.text} theme={theme} format={format} delay={20} />
@@ -247,7 +248,7 @@ const BarsScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
           return (
             <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
               <div style={{ fontFamily: theme.font, fontWeight: 800, fontSize: 34 * unit(format), color: theme.text, opacity: g }}>
-                {formatNumber(d.value * Math.min(g, 1))}
+                {formatCount(d.value * Math.min(g, 1), d.value)}
               </div>
               <div
                 style={{
@@ -520,6 +521,7 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   cycle: CycleScene,
   aircraft: AircraftScene,
   ship: ShipScene,
+  world: WorldScene,
 };
 
 // A photo or clip behind a template scene, moved by the scene's camera. It stays bright: the scene's
@@ -557,7 +559,7 @@ export const shownType = (raw: Scene): Scene["type"] =>
 const BEAT_TYPES: Scene["type"][] = ["title", "statement", "stat", "quote", "broll", "story"];
 
 // Scenes that draw their own full frame, so a photo is never put behind them.
-const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence", "aircraft", "ship"];
+const DRAWN_OVER: Scene["type"][] = ["broll", "map", "story", "evidence", "aircraft", "ship", "world"];
 // Code-drawn charts: a photo goes far behind them, dim and soft, so the chart reads first.
 const CHARTS: Scene["type"][] = ["trend", "proportion", "scale", "cycle"];
 // Graphics that float in 3D space: they tip up into place and sway gently, so they never sit dead flat.

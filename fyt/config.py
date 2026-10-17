@@ -44,6 +44,25 @@ class CollageConfig(BaseModel):
     model_dir: str = "assets/cutout"
 
 
+class VisualsConfig(BaseModel):
+    """The visual plan every video gets after its facts are checked (fyt/visualplan.py): which moments
+    are acted out as 3D reconstructions (the world scene), on top of the scriptwriter's maps and charts."""
+
+    plan: bool = True
+    # Seconds of 3D a video may carry, set by render time: measured at concurrency 2, a second of 3D
+    # costs about 13 s to render against about 4 s for a 2D scene, so 180 s of 3D adds roughly half an
+    # hour to a long video on the free runner, inside the scheduled run's 120-minute fill window.
+    # The planner keeps the reconstructions it ranks highest within it. Not a share: a story told in
+    # maps and charts may use none, an incident told moment by moment may use all of a Short.
+    world_seconds_short: float = 60.0
+    world_seconds_long: float = 180.0
+    # Each video's own look (fyt/artdirect.py): palette and 3D grade from its subject, era and mood.
+    art_direction: bool = True
+
+    def world_seconds(self, fmt: str) -> float:
+        return self.world_seconds_short if fmt == "short" else self.world_seconds_long
+
+
 class ChannelInfo(BaseModel):
     name: str = "My Channel"
     niche: str = "surprising explainers about money, science and history"
@@ -207,6 +226,7 @@ class Config(BaseModel):
     # Check every figure, date, name and quote in a new script against the source before it is voiced;
     # a script with claims that stay wrong after one fix is not made (fyt/factcheck.py).
     fact_check: bool = True
+    visuals: VisualsConfig = Field(default_factory=VisualsConfig)
     sound_effects: bool = True  # whooshes, pops and booms timed to the animation (fyt/sfx.py)
     sfx_volume: float = 0.3  # relative to the narrator at 1.0
     stock_footage: bool = True  # needs PEXELS_API_KEY

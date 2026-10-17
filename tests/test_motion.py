@@ -146,7 +146,8 @@ def test_ship_scenes_carry_their_voyage_weather_and_the_video_seed():
         return build_props(Config(format="short"), script, [(0.0, 3.6), (3.6, 5.0)], [words, words[:3]], {}, None, None)
 
     s, other = props("The Night of the Iceberg").scenes
-    assert (s.type, s.vessel, s.shipAction, s.obstacle, s.weather, s.setting) == ("ship", "liner", "collide", "iceberg", "clear", "night")
+    # A ship scene from before the world scene is drawn as a world scene with a ship subject.
+    assert (s.type, s.subject, s.variant, s.action, s.obstacle, s.weather, s.setting) == ("world", "ship", "liner", "collide", "iceberg", "clear", "night")
     assert s.seed is not None and other.seed is None  # only 3D scenes take the seed
     assert props("The Night of the Iceberg").scenes[0].seed == s.seed  # the same video renders the same
     assert props("Another Story").scenes[0].seed != s.seed  # another video gets its own sky and livery

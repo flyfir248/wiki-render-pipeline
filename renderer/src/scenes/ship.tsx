@@ -17,8 +17,9 @@ import { unit } from "../theme";
 import type { SceneProps } from "./shared";
 import {
   clamp, Cloud, ease, flashOf, Flash, fogRange, HeadingPlate, Inked, inkMaterial, InkedBox, lightningFrames, liveryOf, paletteOf, rng, sceneSeed, Sea,
-  Sky, Smoke, Splash, swellOf, Toon, toonRamp, waveAt, WeatherOverlay, type Livery, type Palette, type Weather,
+  Sky, Smoke, Splash, Stars, swellOf, Toon, toonRamp, waveAt, WeatherOverlay, identityOf, type Livery, type Palette, type Weather,
 } from "./world3d";
+import { Modelled } from "./world/library";
 
 export type Vessel = NonNullable<Scene["vessel"]>;
 export type ShipAction = NonNullable<Scene["shipAction"]>;
@@ -118,14 +119,14 @@ const lumpGeometry = (seed: number, radius: number, detail: number, squash: [num
 
 // ---------- the vessels (bow toward +x, up +y, starboard toward +z, waterline at y = 0) ----------
 
-const Funnel: React.FC<{ at: [number, number, number]; color: string; r?: number; h?: number }> = ({ at, color, r = 0.55, h = 2.4 }) => {
+const Funnel: React.FC<{ at: [number, number, number]; color: string; r?: number; h?: number; top?: string }> = ({ at, color, r = 0.55, h = 2.4, top = "#14161d" }) => {
   const body = useMemo(() => new THREE.CylinderGeometry(r, r * 1.05, h, 18), [r, h]);
   const band = useMemo(() => new THREE.CylinderGeometry(r * 1.01, r * 1.01, h * 0.18, 18), [r, h]);
   return (
     <group position={at} rotation={[0, 0, 0.1]}>
       <Inked geometry={body} color={color} outline={0.05} position={[0, h / 2, 0]} />
       <mesh geometry={band} position={[0, h * 0.92, 0]}>
-        <meshBasicMaterial color="#14161d" />
+        <meshBasicMaterial color={top} />
       </mesh>
     </group>
   );
@@ -179,21 +180,30 @@ const Windows: React.FC<{ x0: number; x1: number; y: number; halfBeam: number; s
   </>
 );
 
-const Liner: React.FC<{ d: Dims; livery: Livery }> = ({ d, livery }) => {
+// A spec (fyt/assets.py) gives a named liner its own features: how many funnels and their colours, the
+// hull and its band, the superstructure, the masts. Without one, three funnels in the livery's colour.
+export type LinerSpec = { funnels?: number; funnel?: string; funnelTop?: string; hull?: string; band?: string; superstructure?: string; masts?: number };
+
+const Liner: React.FC<{ d: Dims; livery: Livery; spec?: LinerSpec }> = ({ d, livery, spec = {} }) => {
   const top = d.F;
+  const white = spec.superstructure ?? "#f4f2ec";
+  const n = Math.max(1, Math.min(4, spec.funnels ?? 3));
+  // Funnels spread evenly over the superstructure, a little closer together on a three-funnel ship.
+  const funnelAt = Array.from({ length: n }, (_, i) => (n === 1 ? -0.04 : 0.17 - (i * (n === 4 ? 0.42 : 0.32)) / (n - 1)));
+  const masts = spec.masts ?? 2;
   return (
     <group>
-      <Hull d={d} color={livery.hull} deck="#c9a77a" stripe="#f2efe6" />
-      <InkedBox size={[d.L * 0.62, 0.9, d.B * 0.82]} color="#f4f2ec" at={[-d.L * 0.04, top + 0.45, 0]} />
-      <InkedBox size={[d.L * 0.48, 0.8, d.B * 0.7]} color="#f4f2ec" at={[-d.L * 0.06, top + 1.3, 0]} />
-      <InkedBox size={[2, 0.7, d.B * 0.6]} color="#f4f2ec" at={[d.L * 0.2, top + 2.0, 0]} />
+      <Hull d={d} color={spec.hull ?? livery.hull} deck="#c9a77a" stripe={spec.band ?? "#f2efe6"} />
+      <InkedBox size={[d.L * 0.62, 0.9, d.B * 0.82]} color={white} at={[-d.L * 0.04, top + 0.45, 0]} />
+      <InkedBox size={[d.L * 0.48, 0.8, d.B * 0.7]} color={white} at={[-d.L * 0.06, top + 1.3, 0]} />
+      <InkedBox size={[2, 0.7, d.B * 0.6]} color={white} at={[d.L * 0.2, top + 2.0, 0]} />
       <Windows x0={-d.L * 0.34} x1={d.L * 0.26} y={top + 0.45} halfBeam={d.B * 0.41} />
       <Windows x0={-d.L * 0.29} x1={d.L * 0.17} y={top + 1.3} halfBeam={d.B * 0.35} />
-      {[0.12, -0.04, -0.2].map((k, i) => (
-        <Funnel key={i} at={[d.L * k, top + 1.7, 0]} color={livery.accent} />
+      {funnelAt.map((k, i) => (
+        <Funnel key={i} at={[d.L * k, top + 1.7, 0]} color={spec.funnel ?? livery.accent} top={spec.funnelTop} />
       ))}
-      <Mast at={[d.L * 0.36, top, 0]} h={5.5} />
-      <Mast at={[-d.L * 0.38, top, 0]} h={5} />
+      {masts > 0 ? <Mast at={[d.L * 0.36, top, 0]} h={5.5} /> : null}
+      {masts > 1 ? <Mast at={[-d.L * 0.38, top, 0]} h={5} /> : null}
       {/* Lifeboats along the boat deck. */}
       {Array.from({ length: 6 }, (_, i) =>
         [1, -1].map((s) => <InkedBox key={`${i}${s}`} size={[0.9, 0.3, 0.35]} color="#f7f4ea" at={[-d.L * 0.24 + i * 1.6, top + 1.85, s * d.B * 0.33]} outline={0.03} />),
@@ -333,7 +343,7 @@ const Submarine: React.FC<{ d: Dims }> = ({ d }) => {
   );
 };
 
-const Vessel3D: React.FC<{ vessel: Vessel; livery: Livery; seed: number; frame: number }> = ({ vessel, livery, seed, frame }) => {
+const Vessel3D: React.FC<{ vessel: Vessel; livery: Livery; seed: number; frame: number; spec?: LinerSpec }> = ({ vessel, livery, seed, frame, spec }) => {
   const d = DIMS[vessel];
   switch (vessel) {
     case "cargo":
@@ -347,7 +357,7 @@ const Vessel3D: React.FC<{ vessel: Vessel; livery: Livery; seed: number; frame: 
     case "submarine":
       return <Submarine d={d} />;
     default:
-      return <Liner d={d} livery={livery} />;
+      return <Liner d={d} livery={livery} spec={spec} />;
   }
 };
 
@@ -471,7 +481,7 @@ const World: React.FC<{ scene: Scene; portrait: boolean }> = ({ scene, portrait 
   const action = (scene.shipAction ?? "sail") as ShipAction;
   const weather = (scene.weather ?? "clear") as Weather;
   const seed = sceneSeed(scene);
-  const livery = liveryOf(scene.seed ?? 0); // one livery for the whole video, so the ship stays the same ship
+  const livery = liveryOf(identityOf(scene)); // one livery per named ship, so it looks the same in every scene
   const pal = paletteOf(scene.setting === "sea" ? null : scene.setting, weather);
   const sea = seaOf(scene.setting, weather, pal);
   const amp = swellOf(weather);
@@ -581,7 +591,11 @@ const World: React.FC<{ scene: Scene; portrait: boolean }> = ({ scene, portrait 
 
       {/* The ship: heaving and tilting on the swell, going down by `sink`. */}
       <group position={[0, heave - pose.sink + shake, 0]} rotation={[pose.roll + waveRoll, pose.yaw, pose.pitch + wavePitch]}>
-        <Vessel3D vessel={vessel} livery={livery} seed={seed} frame={frame} />
+        <group position={[0, scene.model?.level === "library" ? -d.T : 0, 0]}>
+          <Modelled model={scene.model} length={d.L} ground>
+            <Vessel3D vessel={vessel} livery={livery} seed={seed} frame={frame} spec={scene.model?.params as LinerSpec | undefined} />
+          </Modelled>
+        </group>
         {funnelSmoke ? <Smoke at={[vessel === "liner" ? d.L * 0.12 : -d.L * 0.44, d.F + (vessel === "liner" ? 4.3 : 3.9), 0]} since={frame + 40} wind={[-0.12, 0.05, 0.01]} scale={0.38} seed={seed} /> : null}
         {scene.effect ? <DeckEffect effect={scene.effect} x={scene.effectX} d={d} since={since} seed={seed} /> : null}
       </group>
@@ -590,27 +604,6 @@ const World: React.FC<{ scene: Scene; portrait: boolean }> = ({ scene, portrait 
       {action === "surface" ? <Splash at={[d.L * 0.15, 0.1, 0]} since={(u - 0.45) * D} size={1.8} seed={seed + 4} /> : null}
       {action === "sink" && u > 0.8 ? <Splash at={[-d.L * 0.2, 0.1, 0]} since={(u - 0.8) * D * 0.6} size={1.1} seed={seed + 5} /> : null}
     </>
-  );
-};
-
-// Stars scattered over the upper sky.
-const Stars: React.FC<{ seed: number }> = ({ seed }) => {
-  const geo = useMemo(() => {
-    const r = rng(seed + 41);
-    const pts: number[] = [];
-    for (let i = 0; i < 500; i++) {
-      const a = r() * Math.PI * 2;
-      const el = 0.04 + r() ** 0.7 * 1.3;
-      pts.push(Math.cos(a) * Math.cos(el) * 850, Math.sin(el) * 850, Math.sin(a) * Math.cos(el) * 850);
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
-    return g;
-  }, [seed]);
-  return (
-    <points geometry={geo}>
-      <pointsMaterial color="#f4f1e0" size={2.4} sizeAttenuation={false} fog={false} />
-    </points>
   );
 };
 

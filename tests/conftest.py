@@ -10,3 +10,16 @@ def facts_check_out(request, monkeypatch):
     if request.module.__name__.endswith("test_factcheck"):
         return
     monkeypatch.setattr(factcheck, "verify", lambda cfg, script, notes, log=print: (script, []))
+
+
+@pytest.fixture(autouse=True)
+def plan_without_a_model(request, monkeypatch):
+    """Pipeline tests plan visuals with the rule-based planner (no model call); test_visualplan tests both."""
+    if request.module.__name__.endswith("test_visualplan"):
+        return
+    from fyt import visualplan
+
+    def offline(*a, **k):
+        raise RuntimeError("no model in tests")
+
+    monkeypatch.setattr(visualplan, "_llm_plan", offline)

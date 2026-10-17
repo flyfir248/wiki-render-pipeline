@@ -23,6 +23,9 @@ export const rng = (seed: number) => () => {
 export const seedOf = (s: string) => [...s].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7);
 // The scene's own seed: its place in the video mixed with the video's seed (from its title).
 export const sceneSeed = (scene: Scene) => seedOf(scene.id) ^ (scene.seed ?? 0);
+// The seed of the thing a scene shows: the video's seed mixed with its name, so the same ship, train or
+// city (the same subject_name) looks the same in every scene of a video, and different in another video.
+export const identityOf = (scene: Scene) => (scene.seed ?? 0) ^ seedOf(scene.subjectName ?? scene.subject ?? "");
 
 // ---------- palette ----------
 
@@ -362,11 +365,13 @@ export const Smoke: React.FC<{ at: [number, number, number]; since: number; wind
 };
 
 // A bright burst that swells and fades over a few frames.
+const ball = new THREE.IcosahedronGeometry(1, 3);
+
 export const Flash: React.FC<{ at: [number, number, number]; since: number; size?: number }> = ({ at, since, size = 1 }) => {
   const f = since < 0 ? 0 : Math.max(0, 1 - since / 10);
   if (f <= 0) return null;
   return (
-    <mesh geometry={puff} position={at} scale={size * (0.6 + 2.6 * (1 - f))}>
+    <mesh geometry={ball} position={at} scale={size * (0.6 + 2.6 * (1 - f))}>
       <meshBasicMaterial color="#fff1b0" transparent opacity={f} />
     </mesh>
   );
@@ -459,6 +464,27 @@ export const WeatherOverlay: React.FC<{ weather?: Weather | null; seed: number; 
       </svg>
       {flash > 0 ? <AbsoluteFill style={{ background: "#eef3ff", opacity: flash * 0.55 }} /> : null}
     </AbsoluteFill>
+  );
+};
+
+// Stars scattered over the upper sky.
+export const Stars: React.FC<{ seed: number }> = ({ seed }) => {
+  const geo = useMemo(() => {
+    const r = rng(seed + 41);
+    const pts: number[] = [];
+    for (let i = 0; i < 500; i++) {
+      const a = r() * Math.PI * 2;
+      const el = 0.04 + r() ** 0.7 * 1.3;
+      pts.push(Math.cos(a) * Math.cos(el) * 850, Math.sin(el) * 850, Math.sin(a) * Math.cos(el) * 850);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    return g;
+  }, [seed]);
+  return (
+    <points geometry={geo}>
+      <pointsMaterial color="#f4f1e0" size={2.4} sizeAttenuation={false} fog={false} />
+    </points>
   );
 };
 

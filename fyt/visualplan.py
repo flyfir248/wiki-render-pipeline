@@ -1,0 +1,313 @@
+"""The visual plan: every video's script, once its facts are checked, is read as a whole to decide which
+moments are acted out as 3D reconstructions (world scenes) and how.
+
+The scriptwriter already picks maps, charts, timelines and photos for what they carry best. This pass
+looks at the finished, fact-checked story and turns the moments a viewer should *see happen* (a launch,
+a collision, a sinking, an eruption, a city burning) into world scenes, keeping the same thing looking
+the same in every scene it appears in, and carrying the place, night and weather from scene to scene.
+How many it makes is up to the story and the render budget (`visuals.world_seconds_*`), not a quota.
+
+A model reads the script and the 3D catalog and returns the plan; if that call fails, a rule-based
+planner reads the same catalog's keywords, so no video goes without a plan. Either way every world
+scene then passes fyt.scenes3d.guard, which draws an event only when the narration names it.
+"""
+
+from __future__ import annotations
+
+import json
+from typing import Callable, Literal
+
+from pydantic import BaseModel, Field
+
+from fyt import assets, llm, scenes3d
+from fyt.config import Config
+from fyt.models import Action3D, Obstacle, Script, ScriptScene, Setting, Shot, Subject, Variant, Weather
+
+# Scenes whose picture can become a reconstruction without losing anything on screen: they carry a
+# heading and narration, no figures, quotes or places of their own. A photo scene keeps its real photo.
+CONVERTIBLE = ("statement", "title", "broll", "story", "world", "aircraft", "ship", "process")
+# A process scene's steps are only worth giving up for a 3D scene that acts the process out (the helix
+# unzipping); the keyword planner leaves it alone otherwise.
+ACTED_ONLY = ("process",)
+WORDS_PER_SECOND = {"short": 2.9, "long": 2.6}
+# The setting a scene's own words point to, checked in this order (night first: it changes the look most).
+SETTING_WORDS = {
+    "night": ["night", "midnight", "moonless", "darkness", "after dark", "nightfall"],
+    "space": ["space", "orbit"],
+    "snow": ["snow", "arctic", "antarctic", "blizzard", "glacier", "pack ice", "ice floe"],
+    "desert": ["desert", "sahara", "dune", "arid"],
+    "sea": ["sea", "ocean", "river", "gulf", "bay", "coast", "atlantic", "pacific"],
+    "road": ["road", "highway", "motorway", "street"],
+    "city": ["city", "town", "streets", "downtown"],
+    "countryside": ["countryside", "farm", "fields", "village", "rural", "valley"],
+}
+SHOT_CYCLE = ("chase", "orbit", "side", "front", "wide")
+
+
+class Reconstruction(BaseModel):
+    scene: int = Field(description="The scene number to act out in 3D.")
+    subject: Subject
+    variant: Variant | None = None
+    action: Action3D = Field(description="One of the subject's actions, as the narration describes it.")
+    obstacle: Obstacle | None = None
+    shot: Shot | None = None
+    setting: Setting | None = None
+    weather: Weather | None = Field(default=None, description="Only when the narration or source says so.")
+    effect: Literal["smoke", "fire", "explosion"] | None = Field(default=None, description="Only when the narration says so.")
+    effect_x: float | None = None
+    cue: str | None = Field(default=None, description="The exact words of the scene's narration at which the key moment happens.")
+    subject_name: str | None = Field(default=None, description="A short name for the thing shown; the same name in every scene that shows it.")
+    priority: int = Field(default=2, description="1 = the story needs this moment seen, 3 = nice to have.")
+
+
+class VisualPlan(BaseModel):
+    reconstructions: list[Reconstruction] = Field(description="The scenes to act out in 3D; scenes left out keep their own template.")
+
+
+PLAN_GUIDE = """You are the visual director of a YouTube channel that tells true stories with motion graphics. The
+script below is final and fact-checked. Decide which scenes are acted out as 3D reconstructions: a
+cel-shaded 3D scene of what the narration describes, filmed by a moving camera. The other scenes keep
+their maps, charts, timelines and photos.
+
+{catalog}
+
+Rules:
+- Reconstruct the moments a viewer should see happen: the departure, the collision, the launch, the
+  eruption, the wave, the fire, the sinking. A story about an incident may need many; a story told best
+  in maps and charts may need few or none. There is no quota.
+- Only scenes marked [can change] may be reconstructed. Keep scenes that carry figures, quotes or places.
+- Show only what that scene's narration says. Set weather or an effect only when the narration or the
+  source says so. Never show a crash, fire or sinking the narration doesn't describe.
+- cue: copy the exact words from the scene's narration at which the key moment happens ("hit the iceberg").
+- subject_name: give the same short name to the same ship, plane, train, city or volcano in every scene
+  so it looks the same each time; keep its variant and setting the same too unless the story changes them.
+  When the story names the exact object, use its name ("Titanic", "Saturn V", "Boeing 747"; for a science
+  scene the compound, "caffeine"): its real features are then drawn from published data.
+- Science and technology are 3D too: a molecule, DNA, a crystal, a neural network, a chip. Use them where
+  seeing the structure explains the idea better than words on screen.
+- Vary the shots from scene to scene. Rank each reconstruction by how much the story needs it."""
+
+
+def _catalog_text() -> str:
+    lines = ["3D subjects (variants; actions; obstacles):"]
+    for name, s in scenes3d.subjects().items():
+        acts = ", ".join(f"{a} ({v['describe']})" for a, v in s["actions"].items())
+        obs = f"; obstacles {', '.join(s['obstacles'])}" if s["obstacles"] else ""
+        lines.append(f"- {name}: {s['describe']}. Variants {', '.join(s['variants'])}; settings {', '.join(s['settings'])}; actions {acts}{obs}.")
+    lines.append("Shots: " + ", ".join(f"{k} ({v})" for k, v in scenes3d.catalog()["shots"].items()) + ".")
+    return "\n".join(lines)
+
+
+def convertible(scene: ScriptScene) -> bool:
+    if scene.type not in CONVERTIBLE:
+        return False
+    return not (scene.type == "broll" and scene.image is not None)  # a real photo of the subject stays
+
+
+def seconds(cfg: Config, scene: ScriptScene) -> float:
+    return len(scene.narration.split()) / WORDS_PER_SECOND.get(cfg.format, 2.6) + 0.3
+
+
+def _llm_plan(cfg: Config, script: Script, notes: str) -> list[Reconstruction]:
+    rows = []
+    for i, s in enumerate(script.scenes, 1):
+        tag = "can change" if convertible(s) else "keep"
+        extra = f" ({s.subject} {s.action})" if s.type == "world" else ""
+        rows.append(f"Scene {i} ({s.type}{extra}) [{tag}]: {s.heading or ''} | {s.narration}")
+    user = (
+        f"Title: {script.title}\nCore message: {script.core_message}\n\n"
+        f"<source>\n{notes[:2500]}\n</source>\n\n<script>\n" + "\n".join(rows) + "\n</script>"
+    )
+    plan = llm.structured(cfg, PLAN_GUIDE.format(catalog=_catalog_text()), user, VisualPlan, max_tokens=2500)
+    return plan.reconstructions
+
+
+def _best(text: str, options: dict[str, list[str]]) -> str | None:
+    hits = {k: scenes3d.count(text, words) for k, words in options.items()}
+    best = max(hits, key=hits.get) if hits else None
+    return best if best and hits[best] else None
+
+
+def rule_plan(script: Script, notes: str = "") -> list[Reconstruction]:
+    """A plan from the catalog's keywords alone: what the fallback planner reconstructs, and how."""
+    story = " ".join([script.title] + [s.narration for s in script.scenes]) + " " + notes[:4000]
+    subj = scenes3d.subjects()
+    story_scores = {k: scenes3d.count(story, s["keywords"]) for k, s in subj.items()}
+    dominant = max(story_scores, key=story_scores.get)
+    if story_scores[dominant] < 3:
+        dominant = None
+    year = scenes3d.story_year(story)
+    variants = {k: scenes3d.variant_for(k, story, year) for k in subj}
+    out: list[Reconstruction] = []
+    last: dict[str, Reconstruction] = {}
+    struck: set[str] = set()
+    previous = -2
+    for i, scene in enumerate(script.scenes, 1):
+        if not convertible(scene):
+            continue
+        text = " ".join(x for x in (scene.narration, scene.heading or "") if x)
+        best_subject, best_score, best_action = None, 0, None
+        # "It struck the Yucatan": a scene that goes on from the one before talks about the same subject.
+        recent = out[-1].subject if out and out[-1].scene == i - 1 else None
+        for name, s in subj.items():
+            lead = name in (dominant, recent)
+            event = next((a for a, v in s["actions"].items() if v.get("event") and scenes3d.find(scene.narration, v["keywords"])), None)
+            score = 3 * min(2, scenes3d.count(text, s["keywords"])) + (3 if event else 0) + (1 if lead else 0)
+            if lead and not event and any(
+                not v.get("neutral") and scenes3d.find(scene.narration, v["keywords"]) for v in s["actions"].values()
+            ):
+                score += 2  # the story's subject doing something it names ("the first stage fell away")
+            if event and not scenes3d.count(text, s["keywords"]) and not lead:
+                score = 0  # an event word alone ("struck") doesn't say what struck
+            if score > best_score:
+                best_subject, best_score, best_action = name, score, event
+        if best_subject is None or best_score < 3:
+            continue
+        s = subj[best_subject]
+        action = best_action or next(
+            (a for a, v in s["actions"].items() if not v.get("event") and not v.get("neutral") and scenes3d.find(scene.narration, v["keywords"])),
+            None,
+        )
+        # A neutral scene (the ship sailing on) is worth showing, but not back to back.
+        if action is None and i - previous < 2:
+            continue
+        # After its disaster the subject doesn't sail or cross on as if nothing happened, unless the scene
+        # names it again ("the inquiry found the bridge..." is not the train crossing the bridge).
+        if best_action is None and best_subject in struck and not scenes3d.count(text, s["keywords"]):
+            continue
+        if scene.type in ACTED_ONLY and (action is None or scenes3d.subjects()[best_subject]["actions"][action].get("neutral")):
+            continue
+        action = action or scenes3d.neutral_action(best_subject)
+        before = last.get(best_subject)
+        setting = next((k for k, words in SETTING_WORDS.items() if k in s["settings"] and scenes3d.find(text, words)), None)
+        setting = setting or (before.setting if before else None) or (s["settings"][0] if s["settings"] else None)
+        weather = next((w for w, words in scenes3d.catalog()["weather"].items() if words and scenes3d.find(text, words)), None)
+        weather = weather or (before.weather if before else None)
+        effect = None
+        if best_subject in ("aircraft", "ship", "train", "vehicle", "rocket"):
+            effect = next((e for e, words in scenes3d.catalog()["effects"].items() if scenes3d.find(scene.narration, words)), None)
+        obstacle = None
+        if best_subject == "train" and action == "collide":
+            obstacle = "train"
+        if best_subject == "vehicle" and action == "crash":
+            obstacle = "car" if scenes3d.find(scene.narration, ["car", "vehicle", "truck", "bus"]) else "wall"
+        shot = scenes3d.default_shot(best_subject, action) or SHOT_CYCLE[len(out) % len(SHOT_CYCLE)]
+        if before is not None and before.shot == shot and before.scene >= i - 2:
+            # The same subject again soon after: a new angle, so it doesn't look like the same scene twice.
+            shot = SHOT_CYCLE[(SHOT_CYCLE.index(shot) + 1) % len(SHOT_CYCLE)] if shot in SHOT_CYCLE else "wide"
+        r = Reconstruction(
+            scene=i, subject=best_subject, variant=variants[best_subject], action=action, obstacle=obstacle, shot=shot,
+            setting=setting, weather=weather, effect=effect, subject_name=f"{best_subject}:{variants[best_subject]}",
+            priority=1 if scenes3d.is_event(best_subject, action) else 2 if action != scenes3d.neutral_action(best_subject) else 3,
+        )
+        out.append(r)
+        last[best_subject] = r
+        if best_action:
+            struck.add(best_subject)
+        previous = i
+    return out
+
+
+def apply(script: Script, plan: list[Reconstruction], notes: str = "") -> tuple[Script, dict[int, int]]:
+    """The script with the plan's reconstructions made into world scenes, every world scene guarded.
+    Returns the script and each reconstructed scene's priority, by scene index (from 0)."""
+    scenes = list(script.scenes)
+    ranked: dict[int, int] = {}
+    for r in plan:
+        k = r.scene - 1
+        if not (0 <= k < len(scenes)) or not convertible(scenes[k]) or k in ranked:
+            continue
+        old = scenes[k]
+        if old.type in ("world", "aircraft", "ship"):
+            # The scriptwriter already staged this one: keep what they chose, fill in only what's missing.
+            base = scenes3d.legacy_to_world(old)
+            plan_fields = {"subject": r.subject, "variant": r.variant, "action": r.action, "obstacle": r.obstacle, "shot": r.shot,
+                           "setting": r.setting, "weather": r.weather, "effect": r.effect, "cue": r.cue, "subject_name": r.subject_name}
+            scenes[k] = base.model_copy(update={f: v for f, v in plan_fields.items() if getattr(base, f, None) is None})
+            ranked[k] = max(1, min(3, r.priority))
+            continue
+        scenes[k] = old.model_copy(update={
+            "type": "world", "subject": r.subject, "variant": r.variant, "action": r.action, "obstacle": r.obstacle,
+            "shot": r.shot, "setting": r.setting, "weather": r.weather, "effect": r.effect, "effect_x": r.effect_x,
+            "cue": r.cue, "subject_name": r.subject_name, "image": None, "broll_query": None, "actors": None,
+            "backdrop": None, "maneuver": None, "vessel": None, "ship_action": None,
+            "fallback": old.model_dump(exclude_none=True),
+            "heading": old.heading or (old.text if old.type == "title" else None),
+        })
+        ranked[k] = max(1, min(3, r.priority))
+    # Weather the script or the sources describe may be shown in any scene of the story (the storm the
+    # narrator mentioned a scene earlier is still blowing); events still need this scene's own words.
+    context = " ".join(s.narration for s in script.scenes) + " " + notes
+    for k, s in enumerate(scenes):
+        if s.type in ("world", "aircraft", "ship"):
+            scenes[k] = scenes3d.guard(s, context)
+            ranked.setdefault(k, 2)  # the scriptwriter's own reconstructions
+    return script.model_copy(update={"scenes": scenes}), ranked
+
+
+def within_budget(cfg: Config, original: Script, script: Script, ranked: dict[int, int]) -> tuple[Script, list[int]]:
+    """Keep the highest-ranked reconstructions that fit the render budget; the rest go back to what they
+    were (or a statement, for the scriptwriter's own). Returns the script and the scenes put back."""
+    budget = cfg.visuals.world_seconds(cfg.format)
+    order = sorted(ranked, key=lambda k: (ranked[k], k))
+    used, dropped = 0.0, []
+    scenes = list(script.scenes)
+    for k in order:
+        t = seconds(cfg, scenes[k])
+        if used + t <= budget:
+            used += t
+            continue
+        dropped.append(k)
+        before = original.scenes[k]
+        scenes[k] = before if before.type not in ("world", "aircraft", "ship") else scenes[k].model_copy(
+            update={"type": "statement", "heading": scenes[k].heading or " ".join(scenes[k].narration.split()[:6])}
+        )
+    return script.model_copy(update={"scenes": scenes}), dropped
+
+
+def kind(scene: ScriptScene) -> str:
+    """How a scene is drawn: 3D, 2.5D (photo collage, illustration) or 2D motion graphics."""
+    if scene.type in ("world", "aircraft", "ship"):
+        return "3D"
+    if scene.type in ("broll", "story", "map", "title") or scene.image is not None:
+        return "2.5D"
+    return "2D"
+
+
+def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None] = print) -> tuple[Script, dict]:
+    """Give the script its visual plan. Returns the planned script and a report of what was decided."""
+    planner = "model"
+    try:
+        recon = _llm_plan(cfg, script, notes)
+    except Exception as e:  # the catalog's keywords still give every video a plan
+        log(f"visual planner unavailable ({e}); planning from the catalog's keywords")
+        planner, recon = "rules", rule_plan(script, notes)
+    planned, ranked = apply(script, recon, notes)
+    planned, dropped = within_budget(cfg, script, planned, ranked)
+    planned = assets.resolve(planned)
+    report = {
+        "planner": planner,
+        "budget_seconds": cfg.visuals.world_seconds(cfg.format),
+        "world_seconds": round(sum(seconds(cfg, s) for s in planned.scenes if s.type == "world"), 1),
+        "dropped_for_budget": [k + 1 for k in dropped],
+        "scenes": [
+            {"scene": i, "type": s.type, "kind": kind(s)}
+            | ({"subject": s.subject, "variant": s.variant, "action": s.action, "setting": s.setting, "weather": s.weather,
+                "cue": s.cue, "illustrative": s.illustrative, "label": s.label,
+                "model": {k: (s.model or {}).get(k) for k in ("id", "level", "title")}} if s.type == "world" else {})
+            for i, s in enumerate(planned.scenes, 1)
+        ],
+    }
+    return planned, report
+
+
+def summary(report: dict) -> str:
+    kinds = [s["kind"] for s in report["scenes"]]
+    world = [s for s in report["scenes"] if s["type"] == "world"]
+    parts = [f"{kinds.count(k)} {k}" for k in ("3D", "2.5D", "2D") if kinds.count(k)]
+    acts = ", ".join(f"{s['subject']} {s['action']}" for s in world[:6]) + ("..." if len(world) > 6 else "")
+    return f"visual plan ({report['planner']}): " + ", ".join(parts) + (f"; 3D: {acts}" if world else "")
+
+
+def dumps(report: dict) -> str:
+    return json.dumps(report, indent=2)

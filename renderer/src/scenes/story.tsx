@@ -36,7 +36,7 @@ const PALETTES: Record<Setting, { top: string; bottom: string; ground?: string; 
   road: { top: "#9fd3f2", bottom: "#e3f3fb", ground: "#5d6470", ground2: "#4a505b" },
 };
 
-const Backdrop: React.FC<{ setting: Setting; stage: Stage }> = ({ setting, stage }) => {
+const Backdrop: React.FC<{ setting: Setting; stage: Stage; historic?: boolean }> = ({ setting, stage, historic }) => {
   const frame = useCurrentFrame();
   const { w, h, ground } = stage;
   const pal = PALETTES[setting] ?? PALETTES.sky;
@@ -80,7 +80,25 @@ const Backdrop: React.FC<{ setting: Setting; stage: Stage }> = ({ setting, stage
             );
           })
         : null}
-      {setting === "city"
+      {setting === "city" && historic
+        ? Array.from({ length: 11 }, (_, i) => {
+            // A town before 1900: gabled houses of two to four storeys, and a church spire.
+            const bw = w / 11;
+            const bh = 150 + random(`hb${i}`) * 170;
+            const x = i * bw;
+            const spire = i === 7;
+            return (
+              <g key={i}>
+                {spire ? <polygon points={`${x + bw * 0.2},${g - bh - 60} ${x + bw * 0.5},${g - bh - 420} ${x + bw * 0.8},${g - bh - 60}`} fill="#5a4a5e" /> : null}
+                <rect x={x} y={g - bh - (spire ? 60 : 0)} width={bw - 4} height={bh + (spire ? 60 : 0)} fill={i % 2 ? "#6b5a52" : "#7a685c"} />
+                <polygon points={`${x - 4},${g - bh} ${x + bw / 2 - 2},${g - bh - bw * 0.55} ${x + bw},${g - bh}`} fill="#4a3a3a" />
+                {Array.from({ length: Math.floor(bh / 70) }, (_, k) => (
+                  <rect key={k} x={x + bw * 0.3} y={g - bh + 26 + k * 70} width={bw * 0.36} height={30} fill="#ffd27a" opacity={random(`hw${i}-${k}`) > 0.5 ? 0.8 : 0.2} />
+                ))}
+              </g>
+            );
+          })
+        : setting === "city"
         ? Array.from({ length: 14 }, (_, i) => {
             const bw = w / 14;
             const bh = 160 + random(`b${i}`) * 380;
@@ -399,7 +417,7 @@ export const StoryScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const jolt = scene.effect === "explosion" && frame >= effectAt && frame < effectAt + 12 ? Math.sin((frame - effectAt) * 3) * 14 : 0;
   return (
     <AbsoluteFill style={{ transform: `translate(${jolt}px, ${jolt * 0.6}px)` }}>
-      <Backdrop setting={setting} stage={stage} />
+      <Backdrop setting={setting} stage={stage} historic={theme.era === "historic"} />
       {scene.backdropSrc ? <Plate src={scene.backdropSrc} stage={stage} /> : null}
       {actors.map((a, i) => (
         <ActorView key={i} actor={a} stage={stage} theme={theme} format={format} />

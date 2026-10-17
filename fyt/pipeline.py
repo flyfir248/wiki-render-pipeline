@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artgen, cutout, factcheck, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, wiki, youtube
+from fyt import artdirect, artgen, assets, cutout, factcheck, growth, illustrate, insights, llm, localize, media, playlists, qa, qcheck, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, youtube
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -102,6 +102,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)
         script = check_facts(cfg, job, script, notes)
+    script = plan_visuals(cfg, job, script, notes)
     if two_part:
         script = script.model_copy(update={"title": f"{script.title[:88]} (Part 1)"})
         job.update(two_part=True)
@@ -180,12 +181,48 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             effects = sfx.write_all(job.public)
         except Exception as e:  # a video without sound effects is still a video
             log(job, f"warning: no sound effects: {e}")
-    props = build_props(cfg, script, spans, [c.words for c in clips], scene_media, voice_src, music, effects, shots, beats)
-    job.file("props.json").write_text(props.model_dump_json(indent=2))
-    job.file("captions.srt").write_text(to_srt(props.captions))
+    missing = assets.stage(script, job.public)
+    if missing:
+        log(job, f"warning: library models missing, drawing the procedural ones: {missing}")
+        script = script.model_copy(update={"scenes": [
+            s.model_copy(update={"model": assets.generic(s), "label": assets.label(s, assets.generic(s))}) if (s.model or {}).get("src") in missing else s
+            for s in script.scenes
+        ]})
+    profile = artdirect.choose(script, news=wiki.is_news_topic(topic)) if cfg.visuals.art_direction else None
+    if profile:
+        log(job, f"art direction: {profile}")
+        job.update(art_direction=profile)
+    plan_report = json.loads(job.file("visualplan.json").read_text()) if job.file("visualplan.json").exists() else None
+    words = [c.words for c in clips]
+    for attempt in (1, 2):
+        props = build_props(cfg, script, spans, words, scene_media, voice_src, music, effects, shots, beats, look=profile)
+        job.file("props.json").write_text(props.model_dump_json(indent=2))
+        job.file("captions.srt").write_text(to_srt(props.captions))
+        job.file("shotlist.json").write_text(shotlist.dumps(shotlist.build(script, props, profile, plan_report)))
+        before = qcheck.before_render(cfg, script, props, job.public)
+        for w in before.warnings:
+            log(job, f"quality: {w}")
+        if before.problems:
+            job.file("qc.json").write_text(json.dumps(before.as_dict(), indent=2))
+            job.update(status="qa_failed", problems=before.problems)
+            raise RuntimeError("failed the quality gate before rendering: " + "; ".join(before.problems))
 
-    log(job, f"rendering {props.duration:.0f}s {cfg.format} video")
-    video = render.render(job.file("props.json"), job.public, job.file("video.mp4"))
+        log(job, f"rendering {props.duration:.0f}s {cfg.format} video")
+        video = render.render(job.file("props.json"), job.public, job.file("video.mp4"))
+        after = qcheck.after_render(cfg, script, props, video, voiced=provider != "silent")
+        for w in after.warnings:
+            log(job, f"quality: {w}")
+        if after.repair and attempt == 1:
+            # A 3D scene that failed to draw goes back to the scene it replaced, and the video renders again.
+            script = qcheck.repaired(script, after.repair)
+            job.file("script.json").write_text(script.model_dump_json(indent=2))
+            continue
+        break
+    qc = before.as_dict()
+    qc["checks"] |= after.checks
+    qc["problems"] += after.problems
+    qc["warnings"] += after.warnings
+    qc["repaired"] = after.repair if attempt == 2 else []
 
     log(job, "rendering thumbnail")
     # The subject's own photo makes a better thumbnail than a stock one.
@@ -205,12 +242,18 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     job.file("thumbnail.json").write_text(thumb.model_dump_json(indent=2))
     render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
 
-    problems = qa.check_render(cfg, props, video, voiced=provider != "silent")
+    problems = qa.check_render(cfg, props, video, voiced=provider != "silent") + qc["problems"]
     try:  # a held picture loses viewers: say where, so the template or script can be fixed
         for a, b in qa.static_spans(video, until=props.duration - props.endCard):
             log(job, f"warning: the picture barely changes from {a:.0f}s to {b:.0f}s")
+            qc["warnings"].append(f"the picture barely changes from {a:.0f}s to {b:.0f}s")
     except Exception as e:
         log(job, f"warning: could not check for still stretches: {e}")
+    try:  # kept with the job, so a person reviewing it sees the whole video at a glance
+        sheet.contact_sheet(video, job.file("contact.png"), every=1.0 if cfg.format == "short" else 4.0)
+    except Exception as e:
+        log(job, f"warning: no contact sheet: {e}")
+    job.file("qc.json").write_text(json.dumps(qc, indent=2))
     status = "qa_failed" if problems else ("ready" if cfg.require_review else "approved")
     job.update(status=status, problems=problems, duration=props.duration)
     log(job, f"done: {status}" + (f" -- {problems}" if problems else ""))
@@ -312,6 +355,25 @@ def check_facts(cfg: Config, job: Job, script: Script, notes: str) -> Script:
         raise RuntimeError("script failed the fact check: " + "; ".join(problems))
     log(job, "facts check out")
     return script
+
+
+def plan_visuals(cfg: Config, job: Job, script: Script, notes: str) -> Script:
+    """Every video's visual plan (fyt/visualplan.py): which moments become 3D reconstructions, guarded
+    so they show only what the narration says. Written to visualplan.json next to the script."""
+    if not cfg.visuals.plan:
+        return assets.resolve(visualplan.apply(script, [], notes)[0])
+    log(job, "planning the visuals")
+    try:
+        planned, report = visualplan.plan(cfg, script, notes, log=lambda m: log(job, m))
+    except Exception as e:  # the scriptwriter's own scenes still make a video
+        log(job, f"warning: visual planning failed: {e}")
+        return assets.resolve(visualplan.apply(script, [], notes)[0])
+    job.file("visualplan.json").write_text(visualplan.dumps(report))
+    log(job, visualplan.summary(report))
+    if report["dropped_for_budget"]:
+        log(job, f"kept within the 3D render budget: scenes {report['dropped_for_budget']} keep their 2D template")
+    job.update(visual_plan=visualplan.summary(report))
+    return planned
 
 
 def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:

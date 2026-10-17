@@ -1,3 +1,8 @@
+import type catalog from "./scenes/world/catalog.json";
+
+// The world scene's subjects: every module listed in renderer/src/scenes/world/catalog.json.
+export type Subject = keyof (typeof catalog)["subjects"];
+
 // Contract between the Python pipeline (fyt/models.py -> RenderProps) and the
 // renderer. Keep both sides in sync when adding fields or scene types.
 
@@ -60,7 +65,8 @@ export type SceneType =
   | "scale"
   | "cycle"
   | "aircraft"
-  | "ship";
+  | "ship"
+  | "world";
 
 export type Scene = {
   id: string;
@@ -107,12 +113,31 @@ export type Scene = {
   weather?: "clear" | "rain" | "storm" | "fog" | "snow" | null; // aircraft and ship scenes
   vessel?: "liner" | "cargo" | "tanker" | "sailing" | "warship" | "submarine" | null; // ship scenes: what kind of ship
   shipAction?: "sail" | "turn" | "list" | "sink" | "capsize" | "collide" | "dive" | "surface" | null; // ship scenes: what it does
-  obstacle?: "iceberg" | "ship" | "rocks" | null; // ship scenes: what a collide hits
+  obstacle?: string | null; // world scenes: what the subject hits, meets or circles (see world/catalog.json)
+  subject?: Subject | null; // world scenes: what is shown, one of world/catalog.json's subjects
+  variant?: string | null; // world scenes: which kind of it
+  action?: string | null; // world scenes: what it does
+  subjectName?: string | null; // world scenes: the thing's name; the same name looks the same in every scene
+  illustrative?: boolean | null; // world scenes: labelled an illustration rather than a reconstruction
+  model?: ModelRef | null; // world scenes: the model fyt/assets.py resolved (a spec's features, or a library glTF)
+  label?: string | null; // world scenes: what the on-screen label says (RECONSTRUCTION, ILLUSTRATION...)
   seed?: number | null; // 3D scenes: the video's seed, so its skies, cities and liveries are its own
   landTimes?: number[] | null; // when the narrator says a stat's or proportion's figure, or each trend point, seconds from the scene's start
   revealTimes?: number[] | null; // when each evidence clue, document [hidden] word, scale item or cycle step is said, seconds from the scene's start
   camera?: Camera | null; // picked per scene when not set
   transition?: Transition | null; // picked per scene when not set
+};
+
+// Which model a world scene draws (fyt/assets.py): a library glTF (`src`, fitted by `fit`), a spec whose
+// `params` drive the procedural module (funnels, engines, stages, a molecule's atoms), or the generic one.
+export type ModelRef = {
+  id: string;
+  level: "library" | "spec" | "generic";
+  title?: string;
+  kind?: string;
+  params?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  src?: string;
+  fit?: { forward?: "+x" | "-x" | "+z" | "-z"; up?: "+y" | "+z" };
 };
 
 // An illustration that takes over the scene when the sentence it shows begins (fyt/storyboard.py).
@@ -128,6 +153,9 @@ export type Theme = {
   text: string;
   muted: string;
   font: string;
+  era?: "historic" | "modern"; // a story set before 1900 gets period backdrops
+  grade?: string; // the video's art direction: a CSS filter over its 3D scenes (fyt/artdirect.py)
+  profile?: string;
 };
 
 export type RenderProps = {
