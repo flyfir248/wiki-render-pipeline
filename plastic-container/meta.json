@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "plastic-container",
+  "query": "plastic container",
+  "source": "objaverse",
+  "uid": "sketchfab:c846c3fd2686446d82985869f62fd258",
+  "title": "Plastic container",
+  "author": "jesperlindstrom93",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-c846c3fd2686446d82985869f62fd258",
+  "checked": "text",
+  "triangles": 660,
+  "bytes": 2619300,
+  "size": [
+    0.1843,
+    0.3152,
+    0.0626
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "small white plastic boxes, about the size of a coffee mug",
+  "added": "2026-10-17T10:53:02+00:00"
+}

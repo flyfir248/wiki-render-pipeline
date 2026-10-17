@@ -1,0 +1,141 @@
+{
+  "entities": [
+    {
+      "id": "bear",
+      "name": "the 175\u2011lb black bear",
+      "kind": "animal",
+      "search": [
+        "american black bear",
+        "black bear",
+        "bear"
+      ],
+      "look": "female black bear, 175\u202flb, dark fur, average size",
+      "certain": true,
+      "scenes": [
+        1,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "container",
+      "name": "plastic cocaine containers",
+      "kind": "object",
+      "search": [
+        "plastic container",
+        "cocaine container",
+        "container"
+      ],
+      "look": "small white plastic boxes, about the size of a coffee mug",
+      "certain": true,
+      "scenes": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "mall",
+      "name": "the Kentucky shopping mall",
+      "kind": "building",
+      "search": [
+        "shopping mall",
+        "mall interior"
+      ],
+      "look": "large indoor space, modern lighting, storefronts",
+      "certain": false,
+      "scenes": [
+        6
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "tennessee-wilderness",
+      "name": "Tennessee wilderness",
+      "look": "dense forest, rolling hills, 1980s daylight",
+      "scenes": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "knoxville",
+      "name": "over Knoxville, Tennessee",
+      "look": "mountain backdrop, sky, aerial view",
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "georgia-forest",
+      "name": "northern Georgia forest",
+      "look": "wooded area, leaf\u2011covered ground, early evening light",
+      "scenes": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "kentucky-mall",
+      "name": "Kentucky mall",
+      "look": "indoor mall corridor, polished floor, display cases",
+      "scenes": [
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "bear",
+      "place": "",
+      "action": "dead on forest floor",
+      "motion": "present",
+      "cue": "A 175\u2011lb black bear died after swallowing 75\u202flb of cocaine.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "container",
+      "place": "tennessee-wilderness",
+      "action": "falling from sky",
+      "motion": "fall",
+      "cue": "In 1985 a small plane dumped forty containers of cocaine over Tennessee\u2019s wilderness.",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 4,
+      "entity": "bear",
+      "place": "georgia-forest",
+      "action": "found dead with stomach full",
+      "motion": "present",
+      "cue": "Later, a 175\u2011pound black bear was found with its stomach packed with cocaine.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 5,
+      "entity": "bear",
+      "place": "georgia-forest",
+      "action": "eating containers",
+      "motion": "present",
+      "cue": "She ate enough to fill dozens of containers, yet only a few grams entered her blood.",
+      "documented": false,
+      "priority": 2
+    },
+    {
+      "scene": 6,
+      "entity": "bear",
+      "place": "kentucky-mall",
+      "action": "displayed as taxidermy",
+      "motion": "present",
+      "cue": "Recovered, the taxidermied bear now sits in a Kentucky mall, even officiating weddings.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}
