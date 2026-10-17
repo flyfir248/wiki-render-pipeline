@@ -4,6 +4,7 @@ for it (or none), and a renderer's stock subject never stands in for something t
 import json
 
 import pytest
+from PIL import Image
 
 from fyt import assetlib, manifest, relevance, scenes3d, visualplan
 from fyt.config import Config
@@ -291,3 +292,30 @@ def test_text_gate_drops_3d_the_story_does_not_list():
 def test_clip_choice_follows_the_motion_by_name():
     stage = (scenes3d.CATALOG_PATH.parent / "stage.tsx").read_text()
     assert "walk|run" in stage and "idle|survey" in stage  # a walk for move, an idle for present, else none
+
+
+def test_asset_check_passes_only_what_a_vision_model_saw_in_the_render(tmp_path, monkeypatch):
+    from fyt import assetcheck, render, storyboard
+    from fyt.storyboard import Verdict
+
+    model = tmp_path / "m" / "model.glb"
+    model.parent.mkdir()
+    model.write_bytes(b"glTF")
+    monkeypatch.setattr(assetlib, "generator_status", lambda cfg: "image-to-3D: off")
+    monkeypatch.setattr(assetlib, "resolve", lambda cfg, e, fid, log=print, generate=True: (
+        {"key": e.id, "file": str(model), "source": "sketchfab", "title": e.id, "licence": "cc0", "checked": "vision",
+         "triangles": 5000, "clips": []} if e.id in ("bear", "ship") else None))
+
+    def frames(props, public, out, at):
+        out.mkdir(parents=True, exist_ok=True)
+        files = [out / f"frame-{f:05d}.png" for f in at]
+        for f in files:
+            Image.new("RGB", (36, 64)).save(f)
+        return files
+
+    monkeypatch.setattr(render, "frames", frames)
+    monkeypatch.setattr(storyboard, "review", lambda cfg, path, meant, rules=None: Verdict(matches="bear" in meant, problems="a box"))
+    rows = assetcheck.run(Config(format="short"), tmp_path / "out", log=lambda m: None)
+    assert [r["pass"] for r in rows] == [True, False, False, False, False]
+    assert "1 of 5 passed" in (tmp_path / "out" / "report.md").read_text()
+    assert (tmp_path / "out" / "sheet.png").is_file()

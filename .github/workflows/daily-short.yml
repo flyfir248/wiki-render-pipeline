@@ -18,9 +18,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary)"
         type: choice
-        options: [fill, short, long, news, relabel, stats, playlists, posts]
+        options: [fill, short, long, news, relabel, stats, playlists, posts, assetcheck]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -214,6 +214,9 @@ jobs:
         run: |
           if [ "$TASK" = fill ]; then
             python -m fyt fill
+          elif [ "$TASK" = assetcheck ]; then
+            python -m fyt assetcheck --out jobs/assetcheck
+            cat jobs/assetcheck/report.md >> "$GITHUB_STEP_SUMMARY"
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
           elif [ -n "$TITLE" ]; then
@@ -246,6 +249,11 @@ jobs:
                 "$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" -loglevel error -y -i "$job/video.mp4" -vf scale=-2:640 -b:v 350k -c:a aac -b:a 64k "$out/preview.mp4" || true
               fi
             done
+          fi
+          if [ -f ../../jobs/assetcheck/report.md ]; then
+            mkdir -p "_checks/$RUN"
+            cp ../../jobs/assetcheck/report.md ../../jobs/assetcheck/report.json ../../jobs/assetcheck/sheet.png "_checks/$RUN/"
+            cp -r ../../jobs/assetcheck/frames "_checks/$RUN/" 2>/dev/null || true
           fi
           git add -A
           if ! git diff --cached --quiet; then
