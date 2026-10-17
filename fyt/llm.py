@@ -44,6 +44,20 @@ def _text(response) -> str:
     return "\n".join(b.text for b in response.content if b.type == "text").strip()
 
 
+def _compact(node, in_properties: bool = False):
+    """A JSON schema without the "title" pydantic gives every field (the field's name again), which
+    costs a few hundred tokens of a free tier's per-minute budget and tells the model nothing."""
+    if isinstance(node, dict):
+        return {k: _compact(v, k == "properties") for k, v in node.items() if in_properties or not (k == "title" and isinstance(v, str))}
+    if isinstance(node, list):
+        return [_compact(x) for x in node]
+    return node
+
+
+def _with_model(cfg: Config, model: str) -> Config:
+    return cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"model": model, "fallback_models": []})})
+
+
 def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 16000):
     """Structured output from an OpenAI-compatible API (Groq, OpenRouter, Ollama...).
 
@@ -73,7 +87,7 @@ def _openai_structured_once(
         raise ClaudeError(f"{c.api_key_env} is not set")
     system += (
         "\n\nReply with a single JSON object and nothing else. It must match this JSON schema:\n"
-        + json.dumps(schema.model_json_schema(), separators=(",", ":"))
+        + json.dumps(_compact(schema.model_json_schema()), separators=(",", ":"))
     )
     body = {
         "model": model,
@@ -548,12 +562,20 @@ def write_script(
         # Free tiers cap tokens per minute (Groq: 8000, counting max_tokens), so send a
         # slice of long notes and halve it if the request is still too large.
         limit = cfg.llm.max_note_chars
-        for attempt in range(3):
+        for attempt in range(4):
             try:
                 return _openai_structured(cfg, guide, user_message(notes[:limit]), Script, max_tokens=3000)
-            except RequestTooLarge:
-                if attempt == 2:
-                    raise
+            except RequestTooLarge as e:
+                if attempt == 3:
+                    # Still too large with the shortest notes: a fallback model may have a larger
+                    # per-minute allowance (Groq's llama-3.3-70b has 12,000 tokens a minute).
+                    for model in cfg.llm.fallback_models:
+                        try:
+                            print(f"request too large for {cfg.llm.model}; trying {model}")
+                            return _openai_structured(_with_model(cfg, model), guide, user_message(notes[:limit]), Script, max_tokens=3000)
+                        except (RequestTooLarge, ClaudeError) as err:
+                            e = err
+                    raise e
                 limit //= 2
                 print(f"request too large; retrying with {limit} characters of notes")
     user = user_message(notes)
