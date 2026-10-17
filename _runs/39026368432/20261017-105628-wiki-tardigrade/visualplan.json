@@ -1,0 +1,99 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 27.5,
+  "dropped_for_budget": [],
+  "off_story": [
+    {
+      "scene": 1,
+      "subject": "space",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 2,
+      "subject": "science",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 5,
+      "subject": "science",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 6,
+      "subject": "space",
+      "why": "no entity in this scene is that kind of thing"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "title",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "snow",
+      "weather": null,
+      "cue": "These eight\u2011legged micro\u2011animals are only half a millimetre long",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 4,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 5,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": "They entered a desiccated \u201ctun\u201d state, retracting their legs and sealing their bodies",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 6,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "When the capsule was opened back on Earth, only a portion of the tardigrades rehydrated",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    }
+  ]
+}

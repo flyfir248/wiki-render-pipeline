@@ -1,0 +1,96 @@
+{
+  "entities": [
+    {
+      "id": "tardigrade",
+      "name": "tardigrade",
+      "kind": "micro-animal",
+      "search": [
+        "tardigrade",
+        "water bear",
+        "micro-animal"
+      ],
+      "look": "0.5\u202fmm plump segmented animal, four pairs of clawed legs, translucent brownish body",
+      "certain": true,
+      "scenes": [
+        2,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "foton-m3-capsule",
+      "name": "FOTON\u2011M3 capsule",
+      "kind": "space capsule",
+      "search": [
+        "foton\u2011m3 capsule",
+        "space capsule",
+        "spacecraft"
+      ],
+      "look": "metallic cylindrical capsule, white thermal blankets, solar panels on side, 1990s era",
+      "certain": true,
+      "scenes": [
+        4
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "low-earth-orbit",
+      "name": "Low Earth Orbit",
+      "look": "dark space background, stars, Earth horizon curve, sunlight glare",
+      "scenes": [
+        4
+      ]
+    },
+    {
+      "id": "laboratory",
+      "name": "Laboratory",
+      "look": "clean bench, glass petri dishes, microscope, bright artificial light",
+      "scenes": [
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 2,
+      "entity": "tardigrade",
+      "place": "",
+      "action": "close\u2011up crawl",
+      "motion": "present",
+      "cue": "These eight\u2011legged micro\u2011animals are only half a millimetre long",
+      "documented": false,
+      "priority": 2
+    },
+    {
+      "scene": 4,
+      "entity": "foton-m3-capsule",
+      "place": "low-earth-orbit",
+      "action": "float in space",
+      "motion": "present",
+      "cue": "In the FOTON\u2011M3 mission, dehydrated tardigrades were taken into space",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 5,
+      "entity": "tardigrade",
+      "place": "",
+      "action": "retract legs, seal body",
+      "motion": "present",
+      "cue": "They entered a desiccated \u201ctun\u201d state, retracting their legs and sealing their bodies",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 6,
+      "entity": "tardigrade",
+      "place": "laboratory",
+      "action": "rehydrate on petri dish",
+      "motion": "present",
+      "cue": "When the capsule was opened back on Earth, only a portion of the tardigrades rehydrated",
+      "documented": true,
+      "priority": 2
+    }
+  ]
+}

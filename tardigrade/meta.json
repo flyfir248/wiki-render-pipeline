@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "tardigrade",
+  "query": "tardigrade",
+  "source": "objaverse",
+  "uid": "sketchfab:36b0b9e17f4e413c98af4145ef91b9d6",
+  "title": "Tardigrade - SEM Microphotogrammetry",
+  "author": "ijdonnelly11",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-36b0b9e17f4e413c98af4145ef91b9d6",
+  "checked": "text",
+  "triangles": 39697,
+  "bytes": 1140028,
+  "size": [
+    1168.2154,
+    1194.3704,
+    1351.6563
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "0.5\u202fmm plump segmented animal, four pairs of clawed legs, translucent brownish body",
+  "added": "2026-10-17T10:59:41+00:00"
+}
