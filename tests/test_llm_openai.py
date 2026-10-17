@@ -94,6 +94,32 @@ def test_openai_script_shrinks_notes_when_request_too_large(cfg, monkeypatch):
     assert sizes[1] < sizes[0] - 2000  # second try sent half the notes
 
 
+def test_openai_script_tries_a_fallback_model_when_still_too_large(cfg, monkeypatch):
+    # The scheduled run of 17 October failed this way: gpt-oss-120b's 8,000 tokens a minute couldn't
+    # hold the prompt even with the shortest notes, and the fallback models were never tried.
+    models = []
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["llama-3.3-70b-versatile"]})})
+
+    def post(url, headers, json, timeout):
+        models.append(json["model"])
+        if json["model"] == cfg.llm.model:
+            return Resp(413, {"error": {"message": "Request too large"}})
+        return reply(_json.dumps(SCRIPT))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    script = llm.write_script(cfg, "Mount Rushmore", "x" * 50000, from_wikipedia=True)
+    assert script.title == SCRIPT["title"]
+    assert models.count(cfg.llm.model) == 4 and models[-1] == cfg.llm.fallback_models[0]
+
+
+def test_the_schema_sent_carries_no_field_titles():
+    from fyt.models import Script
+
+    schema = llm._compact(Script.model_json_schema())
+    assert "title" in schema["properties"]  # the script's own title field stays
+    assert '"title":"Narration"' not in _json.dumps(schema, separators=(",", ":"))
+
+
 def test_split_notes_covers_the_article_in_order():
     notes = "\n".join(f"paragraph {i} " + "x" * 90 for i in range(100))
     chunks = llm.split_notes(notes, 4, 6000)
@@ -138,6 +164,7 @@ def test_long_script_is_written_chapter_by_chapter(monkeypatch):
 def test_falls_back_to_the_next_model_when_one_keeps_failing(cfg, monkeypatch):
     cfg.llm.fallback_models = ["llama-3.3-70b-versatile"]
     models = []
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["llama-3.3-70b-versatile"]})})
 
     def post(url, headers, json, timeout):
         models.append(json["model"])

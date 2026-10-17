@@ -141,7 +141,7 @@ def guide_text() -> str:
     for name, s in subjects().items():
         acts = ", ".join(s["actions"])
         obs = f"; obstacles {', '.join(s['obstacles'])}" if s["obstacles"] else ""
-        lines.append(f"  * {name}: {s['describe']} (variants {', '.join(s['variants'])}; actions {acts}{obs})")
+        lines.append(f"  * {name}: {s['describe'].replace('cel-shaded ', '')} (variants {', '.join(s['variants'])}; actions {acts}{obs})")
     lines += [
         "  Shots: " + ", ".join(f"{k} ({v})" for k, v in catalog()["shots"].items()) + ".",
         "  Use world scenes for the moments a viewer should see happen: a launch, a voyage, a collision, an",
