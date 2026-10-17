@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artgen, cutout, factcheck, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, wiki, youtube
+from fyt import artgen, cutout, factcheck, growth, illustrate, insights, llm, localize, media, playlists, qa, render, sfx, storyboard, tts, visualplan, wiki, youtube
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -102,6 +102,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)
         script = check_facts(cfg, job, script, notes)
+    script = plan_visuals(cfg, job, script, notes)
     if two_part:
         script = script.model_copy(update={"title": f"{script.title[:88]} (Part 1)"})
         job.update(two_part=True)
@@ -312,6 +313,25 @@ def check_facts(cfg: Config, job: Job, script: Script, notes: str) -> Script:
         raise RuntimeError("script failed the fact check: " + "; ".join(problems))
     log(job, "facts check out")
     return script
+
+
+def plan_visuals(cfg: Config, job: Job, script: Script, notes: str) -> Script:
+    """Every video's visual plan (fyt/visualplan.py): which moments become 3D reconstructions, guarded
+    so they show only what the narration says. Written to visualplan.json next to the script."""
+    if not cfg.visuals.plan:
+        return visualplan.apply(script, [], notes)[0]
+    log(job, "planning the visuals")
+    try:
+        planned, report = visualplan.plan(cfg, script, notes, log=lambda m: log(job, m))
+    except Exception as e:  # the scriptwriter's own scenes still make a video
+        log(job, f"warning: visual planning failed: {e}")
+        return visualplan.apply(script, [], notes)[0]
+    job.file("visualplan.json").write_text(visualplan.dumps(report))
+    log(job, visualplan.summary(report))
+    if report["dropped_for_budget"]:
+        log(job, f"kept within the 3D render budget: scenes {report['dropped_for_budget']} keep their 2D template")
+    job.update(visual_plan=visualplan.summary(report))
+    return planned
 
 
 def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:

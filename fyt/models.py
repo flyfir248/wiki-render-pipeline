@@ -7,14 +7,16 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from pydantic.json_schema import SkipJsonSchema
 
+from fyt import scenes3d
+
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
     "map", "process", "document", "dialogue", "story", "evidence", "trend", "proportion", "scale", "cycle",
-    "aircraft", "ship",
+    "aircraft", "ship", "world",
 ]
 # Scenes that draw their whole picture themselves, so no photo is fetched for them. Code-drawn charts
 # (trend, proportion, scale, cycle) do take one: it sits dim and soft far behind the chart.
-DRAWN = ("map", "story", "aircraft", "ship")
+DRAWN = ("map", "story", "aircraft", "ship", "world")
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
 Transition = Literal["fade", "slide", "zoom", "wipe", "flash", "thread", "whip"]
@@ -29,8 +31,13 @@ Shot = Literal["chase", "side", "front", "below", "orbit", "wide"]
 # What a ship scene's vessel is, what it does and what it hits, and the weather of the 3D scenes.
 Vessel = Literal["liner", "cargo", "tanker", "sailing", "warship", "submarine"]
 ShipAction = Literal["sail", "turn", "list", "sink", "capsize", "collide", "dive", "surface"]
-Obstacle = Literal["iceberg", "ship", "rocks"]
-Weather = Literal["clear", "rain", "storm", "fog", "snow"]
+# The world scene's subjects, variants, actions and obstacles come from the 3D scene catalog
+# (renderer/src/scenes/world/catalog.json, see fyt.scenes3d), so a new module needs no change here.
+Subject = Literal[scenes3d.SUBJECTS]  # type: ignore[valid-type]
+Variant = Literal[scenes3d.VARIANTS]  # type: ignore[valid-type]
+Action3D = Literal[scenes3d.ACTIONS]  # type: ignore[valid-type]
+Obstacle = Literal[scenes3d.OBSTACLES]  # type: ignore[valid-type]
+Weather = Literal[scenes3d.WEATHERS]  # type: ignore[valid-type]
 Mood = Literal["somber", "tense", "curious", "uplifting", "playful"]
 MOOD_HELP = (
     "Music mood that respects the story: somber for death, disaster, war, illness or other tragedy; "
@@ -140,14 +147,21 @@ class ScriptScene(BaseModel):
     effect_y: float | None = None
     effect_at: float | None = Field(default=None, description="story scenes: when the effect happens (0-1).")
     effect_src: SkipJsonSchema[str | None] = None  # set by the pipeline
-    maneuver: Maneuver | None = Field(default=None, description="aircraft scenes: what the airliner does.")
-    shot: Shot | None = Field(default=None, description="aircraft scenes: where the camera watches from.")
-    altitude_from: float | None = Field(default=None, description="aircraft scenes: altitude readout start, in feet (documented figures only).")
-    altitude_to: float | None = Field(default=None, description="aircraft scenes: altitude readout end, in feet.")
-    vessel: Vessel | None = Field(default=None, description="ship scenes: what kind of ship.")
-    ship_action: ShipAction | None = Field(default=None, description="ship scenes: what the ship does.")
-    obstacle: Obstacle | None = Field(default=None, description="ship scenes: what a collide hits.")
-    weather: Weather | None = Field(default=None, description="aircraft and ship scenes: the weather.")
+    subject: Subject | None = Field(default=None, description="world scenes: what is shown (see the subjects list).")
+    variant: Variant | None = Field(default=None, description="world scenes: which kind of that subject.")
+    action: Action3D | None = Field(default=None, description="world scenes: what it does (one of the subject's actions).")
+    obstacle: Obstacle | None = Field(default=None, description="world scenes: what it hits, meets or circles.")
+    shot: Shot | None = Field(default=None, description="world scenes: where the camera watches from.")
+    weather: Weather | None = Field(default=None, description="world scenes: the weather, only when the narration says so.")
+    cue: str | None = Field(default=None, description="world scenes: the exact words of the narration at which the key moment happens.")
+    subject_name: str | None = Field(default=None, description="world scenes: a short name for the thing shown, the same in every scene that shows it.")
+    altitude_from: float | None = Field(default=None, description="world aircraft scenes: altitude readout start, in feet (documented figures only).")
+    altitude_to: float | None = Field(default=None, description="world aircraft scenes: altitude readout end, in feet.")
+    illustrative: SkipJsonSchema[bool | None] = None  # set by fyt.scenes3d.guard
+    # Written by scripts from before the world scene; fyt.scenes3d turns them into world scenes.
+    maneuver: SkipJsonSchema[Maneuver | None] = None
+    vessel: SkipJsonSchema[Vessel | None] = None
+    ship_action: SkipJsonSchema[ShipAction | None] = None
     camera: Camera | None = Field(default=None, description="Optional camera move over this scene's photo.")
     transition: Transition | None = Field(default=None, description="Optional way this scene enters.")
     image: int | None = Field(
@@ -256,6 +270,11 @@ class RenderScene(BaseModel):
     shipAction: ShipAction | None = None
     obstacle: Obstacle | None = None
     weather: Weather | None = None
+    subject: Subject | None = None
+    variant: Variant | None = None
+    action: Action3D | None = None
+    subjectName: str | None = None
+    illustrative: bool | None = None
     seed: int | None = None  # 3D scenes: the video's seed (from its title), so no two videos share a sky or livery
     landTimes: list[float] | None = None  # stat and proportion figures, trend points: when the narrator says them
     camera: Camera | None = None

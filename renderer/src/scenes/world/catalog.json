@@ -1,0 +1,1051 @@
+{
+  "about": "The 3D scene catalog: every subject the world scene can draw, what each can do, and the words that point to it. The renderer, the scriptwriter's guide, the visual planner and the fact guards all read this file, so a subject added here (with its module in index.tsx) is available to every later video.",
+  "shots": {
+    "chase": "behind and above, following it",
+    "side": "side-on, the whole subject in frame",
+    "front": "ahead of it, looking back at it",
+    "below": "low, looking up at it",
+    "orbit": "circling it",
+    "wide": "far back, showing the place around it"
+  },
+  "weather": {
+    "clear": [],
+    "rain": [
+      "rain",
+      "downpour",
+      "drizzle",
+      "monsoon",
+      "wet"
+    ],
+    "storm": [
+      "storm",
+      "gale",
+      "hurricane",
+      "typhoon",
+      "cyclone",
+      "thunder",
+      "lightning",
+      "squall",
+      "tempest"
+    ],
+    "fog": [
+      "fog",
+      "mist",
+      "haze",
+      "visibility",
+      "murk"
+    ],
+    "snow": [
+      "snow",
+      "blizzard",
+      "ice",
+      "icy",
+      "frozen",
+      "freezing",
+      "winter",
+      "arctic",
+      "antarctic"
+    ]
+  },
+  "effects": {
+    "smoke": [
+      "smoke",
+      "smoking",
+      "smouldering",
+      "smoldering",
+      "fumes"
+    ],
+    "fire": [
+      "fire",
+      "flame",
+      "burn",
+      "blaze",
+      "ablaze",
+      "inferno",
+      "caught alight"
+    ],
+    "explosion": [
+      "explo",
+      "blast",
+      "blew up",
+      "detonat",
+      "bomb"
+    ]
+  },
+  "subjects": {
+    "aircraft": {
+      "describe": "a cel-shaded airliner flying through a toon sky; altitude_from/altitude_to (feet, documented only) add an altitude readout",
+      "keywords": [
+        "plane",
+        "aircraft",
+        "airliner",
+        "aeroplane",
+        "airplane",
+        "jet",
+        "flight",
+        "pilot",
+        "cockpit",
+        "airport",
+        "runway",
+        "boeing",
+        "airbus"
+      ],
+      "variants": {
+        "airliner": [
+          "airliner",
+          "plane",
+          "jet"
+        ]
+      },
+      "settings": [
+        "sky",
+        "sea",
+        "countryside",
+        "city",
+        "desert",
+        "snow",
+        "night"
+      ],
+      "obstacles": [],
+      "actions": {
+        "cruise": {
+          "describe": "flies level",
+          "keywords": [
+            "cruis",
+            "flying",
+            "flew",
+            "in flight"
+          ],
+          "neutral": true
+        },
+        "climb": {
+          "describe": "climbs",
+          "keywords": [
+            "climb",
+            "ascend",
+            "gained altitude"
+          ]
+        },
+        "descend": {
+          "describe": "descends or glides down",
+          "keywords": [
+            "descend",
+            "descent",
+            "glide",
+            "gliding",
+            "lost altitude"
+          ]
+        },
+        "dive": {
+          "describe": "dives steeply",
+          "keywords": [
+            "dive",
+            "dived",
+            "nosedive",
+            "plunge",
+            "plummet",
+            "spiral"
+          ],
+          "event": true
+        },
+        "turn": {
+          "describe": "banks and turns",
+          "keywords": [
+            "turn",
+            "banked",
+            "bank",
+            "circled",
+            "diverted"
+          ]
+        },
+        "takeoff": {
+          "describe": "takes off from a runway",
+          "keywords": [
+            "took off",
+            "take off",
+            "takeoff",
+            "take-off",
+            "departed",
+            "lifted off the runway"
+          ],
+          "shot": "side"
+        },
+        "land": {
+          "describe": "lands, or ditches when over sea",
+          "keywords": [
+            "landed",
+            "landing",
+            "touched down",
+            "ditch",
+            "touchdown"
+          ],
+          "shot": "side"
+        },
+        "go_around": {
+          "describe": "aborts a landing and climbs away",
+          "keywords": [
+            "go-around",
+            "go around",
+            "aborted landing",
+            "pulled up"
+          ]
+        }
+      }
+    },
+    "ship": {
+      "describe": "a cel-shaded vessel on a rolling low-poly sea that pitches and rolls with the waves",
+      "keywords": [
+        "ship",
+        "vessel",
+        "boat",
+        "liner",
+        "ferry",
+        "freighter",
+        "tanker",
+        "steamer",
+        "schooner",
+        "frigate",
+        "submarine",
+        "sailed",
+        "voyage",
+        "harbour",
+        "harbor",
+        "crew",
+        "deck",
+        "hull"
+      ],
+      "variants": {
+        "liner": [
+          "liner",
+          "ocean liner",
+          "passenger ship",
+          "ferry",
+          "steamer",
+          "steamship",
+          "cruise ship"
+        ],
+        "cargo": [
+          "cargo",
+          "freighter",
+          "container ship",
+          "merchant"
+        ],
+        "tanker": [
+          "tanker",
+          "oil"
+        ],
+        "sailing": [
+          "sailing",
+          "schooner",
+          "galleon",
+          "clipper",
+          "brig",
+          "sails",
+          "sailboat",
+          "yacht"
+        ],
+        "warship": [
+          "warship",
+          "destroyer",
+          "battleship",
+          "cruiser",
+          "frigate",
+          "navy",
+          "naval"
+        ],
+        "submarine": [
+          "submarine",
+          "u-boat",
+          "sub "
+        ]
+      },
+      "settings": [
+        "sea",
+        "night",
+        "snow",
+        "countryside",
+        "desert",
+        "city"
+      ],
+      "obstacles": [
+        "iceberg",
+        "ship",
+        "rocks"
+      ],
+      "actions": {
+        "sail": {
+          "describe": "sails on",
+          "keywords": [
+            "sail",
+            "steam",
+            "voyage",
+            "set out",
+            "crossing",
+            "headed"
+          ],
+          "neutral": true
+        },
+        "turn": {
+          "describe": "turns hard",
+          "keywords": [
+            "turn",
+            "swung",
+            "veered",
+            "hard a-port",
+            "hard to port",
+            "hard to starboard"
+          ]
+        },
+        "list": {
+          "describe": "tilts to one side",
+          "keywords": [
+            "list",
+            "tilt",
+            "lean",
+            "keeled"
+          ],
+          "event": true
+        },
+        "sink": {
+          "describe": "settles by the bow, the stern lifts, and it goes under",
+          "keywords": [
+            "sank",
+            "sink",
+            "sinking",
+            "went down",
+            "slipped beneath",
+            "foundered",
+            "plunged"
+          ],
+          "event": true,
+          "shot": "side"
+        },
+        "capsize": {
+          "describe": "rolls over",
+          "keywords": [
+            "capsiz",
+            "rolled over",
+            "overturned",
+            "keeled over"
+          ],
+          "event": true,
+          "shot": "side"
+        },
+        "collide": {
+          "describe": "strikes an obstacle (iceberg, ship or rocks)",
+          "keywords": [
+            "struck",
+            "collid",
+            "collision",
+            "rammed",
+            "ran aground",
+            "aground",
+            "scraped",
+            "hit an",
+            "hit the",
+            "hit a"
+          ],
+          "event": true,
+          "moment": 0.45,
+          "shot": "wide"
+        },
+        "dive": {
+          "describe": "a submarine dives",
+          "keywords": [
+            "dive",
+            "dived",
+            "submerg"
+          ]
+        },
+        "surface": {
+          "describe": "a submarine surfaces",
+          "keywords": [
+            "surfac"
+          ]
+        }
+      }
+    },
+    "train": {
+      "describe": "a cel-shaded train (locomotive and carriages) on tracks through the landscape",
+      "keywords": [
+        "train",
+        "locomotive",
+        "railway",
+        "railroad",
+        "rail",
+        "express",
+        "carriage",
+        "station",
+        "tracks",
+        "freight train",
+        "tram"
+      ],
+      "variants": {
+        "steam": [
+          "steam",
+          "steam engine",
+          "19th",
+          "1800s",
+          "victorian"
+        ],
+        "diesel": [
+          "diesel",
+          "freight",
+          "goods train",
+          "commuter"
+        ],
+        "highspeed": [
+          "high-speed",
+          "high speed",
+          "bullet train",
+          "shinkansen",
+          "tgv",
+          "maglev"
+        ]
+      },
+      "settings": [
+        "countryside",
+        "desert",
+        "snow",
+        "city",
+        "night"
+      ],
+      "obstacles": [
+        "train"
+      ],
+      "actions": {
+        "travel": {
+          "describe": "runs along the line",
+          "keywords": [
+            "travel",
+            "running",
+            "left the station",
+            "departed",
+            "headed",
+            "route",
+            "journey"
+          ],
+          "neutral": true
+        },
+        "brake": {
+          "describe": "brakes hard, sparks at the wheels",
+          "keywords": [
+            "brake",
+            "braking",
+            "slowed",
+            "emergency stop"
+          ]
+        },
+        "derail": {
+          "describe": "leaves the rails; the carriages jackknife",
+          "keywords": [
+            "derail",
+            "left the tracks",
+            "left the rails",
+            "jumped the rails",
+            "came off the rails"
+          ],
+          "event": true,
+          "moment": 0.4,
+          "shot": "wide"
+        },
+        "collide": {
+          "describe": "meets another train head-on",
+          "keywords": [
+            "collid",
+            "collision",
+            "head-on",
+            "crashed into",
+            "smashed into"
+          ],
+          "event": true,
+          "moment": 0.5,
+          "shot": "wide"
+        },
+        "bridge": {
+          "describe": "crosses a long bridge",
+          "keywords": [
+            "bridge",
+            "viaduct",
+            "crossing"
+          ]
+        },
+        "bridge_collapse": {
+          "describe": "a bridge gives way under it",
+          "keywords": [
+            "bridge collapsed",
+            "bridge gave way",
+            "bridge failed",
+            "fell into the river",
+            "plunged into"
+          ],
+          "event": true,
+          "moment": 0.45,
+          "shot": "side"
+        }
+      }
+    },
+    "vehicle": {
+      "describe": "a cel-shaded car, truck or bus on a road",
+      "keywords": [
+        "car",
+        "truck",
+        "lorry",
+        "bus",
+        "driver",
+        "drove",
+        "road",
+        "highway",
+        "motorway",
+        "vehicle",
+        "convoy",
+        "race"
+      ],
+      "variants": {
+        "car": [
+          "car",
+          "sedan",
+          "racing car",
+          "racecar",
+          "automobile",
+          "limousine"
+        ],
+        "truck": [
+          "truck",
+          "lorry",
+          "tanker truck",
+          "van"
+        ],
+        "bus": [
+          "bus",
+          "coach"
+        ]
+      },
+      "settings": [
+        "road",
+        "city",
+        "countryside",
+        "desert",
+        "snow",
+        "night"
+      ],
+      "obstacles": [
+        "wall",
+        "car"
+      ],
+      "actions": {
+        "drive": {
+          "describe": "drives along the road",
+          "keywords": [
+            "drove",
+            "driving",
+            "drive",
+            "on the road"
+          ],
+          "neutral": true
+        },
+        "brake": {
+          "describe": "brakes and skids",
+          "keywords": [
+            "brake",
+            "skid",
+            "swerv"
+          ]
+        },
+        "crash": {
+          "describe": "crashes into a wall or another car",
+          "keywords": [
+            "crash",
+            "collid",
+            "smashed",
+            "slammed into",
+            "hit a"
+          ],
+          "event": true,
+          "moment": 0.5,
+          "shot": "side"
+        },
+        "chase": {
+          "describe": "a second car pursues it",
+          "keywords": [
+            "chase",
+            "pursu",
+            "followed by",
+            "fled"
+          ]
+        }
+      }
+    },
+    "rocket": {
+      "describe": "a cel-shaded rocket at a launch site and climbing through the sky",
+      "keywords": [
+        "rocket",
+        "launch",
+        "liftoff",
+        "lift-off",
+        "launch pad",
+        "booster",
+        "shuttle",
+        "countdown",
+        "nasa",
+        "spacex",
+        "saturn v",
+        "ignition"
+      ],
+      "variants": {
+        "rocket": [
+          "rocket",
+          "booster",
+          "saturn",
+          "falcon",
+          "launcher"
+        ],
+        "shuttle": [
+          "shuttle",
+          "orbiter",
+          "challenger",
+          "columbia",
+          "discovery",
+          "atlantis",
+          "endeavour"
+        ]
+      },
+      "settings": [
+        "sky",
+        "desert",
+        "sea",
+        "night"
+      ],
+      "obstacles": [],
+      "actions": {
+        "pad": {
+          "describe": "stands on the pad venting vapour, before launch",
+          "keywords": [
+            "launch pad",
+            "on the pad",
+            "stood",
+            "countdown",
+            "waited"
+          ],
+          "neutral": true,
+          "shot": "wide"
+        },
+        "launch": {
+          "describe": "ignition, then lift-off from the pad",
+          "keywords": [
+            "launched",
+            "launching",
+            "launch of",
+            "lift-off",
+            "liftoff",
+            "lifted off",
+            "blasted off",
+            "ignition"
+          ],
+          "moment": 0.35,
+          "shot": "wide"
+        },
+        "ascent": {
+          "describe": "climbs through the sky on its exhaust plume",
+          "keywords": [
+            "climb",
+            "ascent",
+            "soared",
+            "rose",
+            "into the sky",
+            "seconds into the flight"
+          ]
+        },
+        "separation": {
+          "describe": "a stage separates and falls away",
+          "keywords": [
+            "separat",
+            "stage",
+            "jettison",
+            "fell away"
+          ],
+          "moment": 0.5
+        },
+        "explode": {
+          "describe": "breaks apart in the sky",
+          "keywords": [
+            "explo",
+            "broke apart",
+            "disintegrat",
+            "blew up",
+            "fireball"
+          ],
+          "event": true,
+          "moment": 0.5,
+          "shot": "wide"
+        }
+      }
+    },
+    "space": {
+      "describe": "a spacecraft or asteroid in space beside a planet or moon",
+      "keywords": [
+        "orbit",
+        "satellite",
+        "space station",
+        "probe",
+        "spacecraft",
+        "asteroid",
+        "comet",
+        "meteor",
+        "astronaut",
+        "planet",
+        "moon",
+        "mars",
+        "jupiter",
+        "saturn",
+        "space"
+      ],
+      "variants": {
+        "satellite": [
+          "satellite",
+          "sputnik",
+          "telescope"
+        ],
+        "probe": [
+          "probe",
+          "voyager",
+          "spacecraft",
+          "rover",
+          "lander"
+        ],
+        "station": [
+          "space station",
+          "iss",
+          "mir",
+          "skylab"
+        ],
+        "capsule": [
+          "capsule",
+          "apollo",
+          "soyuz",
+          "astronaut",
+          "crew"
+        ],
+        "asteroid": [
+          "asteroid",
+          "meteor",
+          "meteorite",
+          "impactor"
+        ],
+        "comet": [
+          "comet"
+        ]
+      },
+      "settings": [
+        "space"
+      ],
+      "obstacles": [
+        "earth",
+        "moon",
+        "mars",
+        "jupiter",
+        "saturn"
+      ],
+      "actions": {
+        "orbit": {
+          "describe": "circles the planet",
+          "keywords": [
+            "orbit",
+            "circled",
+            "around the earth",
+            "around the moon"
+          ],
+          "neutral": true
+        },
+        "flyby": {
+          "describe": "sweeps past the planet",
+          "keywords": [
+            "fly-by",
+            "flyby",
+            "flew past",
+            "swung past",
+            "passed",
+            "approach"
+          ]
+        },
+        "impact": {
+          "describe": "strikes the planet in a flash",
+          "keywords": [
+            "impact",
+            "struck",
+            "hit the",
+            "crashed into",
+            "slammed into",
+            "collided"
+          ],
+          "event": true,
+          "moment": 0.6
+        },
+        "layers": {
+          "describe": "the planet opens to show its layers (crust, mantle, core)",
+          "keywords": [
+            "core",
+            "mantle",
+            "crust",
+            "interior",
+            "layers"
+          ]
+        }
+      }
+    },
+    "city": {
+      "describe": "a cel-shaded town or city seen from the air",
+      "keywords": [
+        "city",
+        "town",
+        "street",
+        "building",
+        "buildings",
+        "district",
+        "skyline",
+        "tower",
+        "skyscraper",
+        "village",
+        "capital",
+        "houses",
+        "neighbourhood",
+        "neighborhood"
+      ],
+      "variants": {
+        "modern": [
+          "modern",
+          "skyscraper",
+          "tower",
+          "office"
+        ],
+        "historic": [
+          "medieval",
+          "historic",
+          "old town",
+          "timber",
+          "17th",
+          "18th",
+          "1600s",
+          "1700s",
+          "1800s",
+          "ancient",
+          "village"
+        ]
+      },
+      "settings": [
+        "city",
+        "night",
+        "snow",
+        "desert"
+      ],
+      "obstacles": [],
+      "actions": {
+        "flyover": {
+          "describe": "the camera sweeps over the streets",
+          "keywords": [
+            "city",
+            "town",
+            "streets",
+            "lived",
+            "capital"
+          ],
+          "neutral": true
+        },
+        "fire": {
+          "describe": "fire spreads from building to building",
+          "keywords": [
+            "fire",
+            "blaze",
+            "burn",
+            "flames",
+            "ablaze",
+            "inferno"
+          ],
+          "event": true,
+          "moment": 0.15
+        },
+        "collapse": {
+          "describe": "a building collapses",
+          "keywords": [
+            "collaps",
+            "crumbled",
+            "toppled",
+            "came down",
+            "caved in",
+            "razed"
+          ],
+          "event": true,
+          "moment": 0.4
+        },
+        "earthquake": {
+          "describe": "the ground shakes and buildings fall",
+          "keywords": [
+            "earthquake",
+            "quake",
+            "tremor",
+            "shook",
+            "seismic"
+          ],
+          "event": true,
+          "moment": 0.2
+        },
+        "flood": {
+          "describe": "water rises through the streets",
+          "keywords": [
+            "flood",
+            "inundat",
+            "submerged",
+            "water rose",
+            "deluge",
+            "waters rose"
+          ],
+          "event": true,
+          "moment": 0.15
+        },
+        "explosion": {
+          "describe": "a blast goes off among the buildings",
+          "keywords": [
+            "explo",
+            "blast",
+            "blew up",
+            "detonat",
+            "bomb"
+          ],
+          "event": true,
+          "moment": 0.35
+        }
+      }
+    },
+    "landscape": {
+      "describe": "a cel-shaded landscape: a volcano, mountains, a coast or a forest",
+      "keywords": [
+        "volcano",
+        "eruption",
+        "mountain",
+        "island",
+        "coast",
+        "forest",
+        "valley",
+        "glacier",
+        "landscape",
+        "summit",
+        "crater",
+        "tsunami",
+        "wildfire"
+      ],
+      "variants": {
+        "volcano": [
+          "volcano",
+          "volcanic",
+          "erupt",
+          "crater",
+          "lava",
+          "ash",
+          "magma"
+        ],
+        "mountain": [
+          "mountain",
+          "summit",
+          "peak",
+          "avalanche",
+          "glacier",
+          "alps",
+          "himalaya"
+        ],
+        "coast": [
+          "coast",
+          "tsunami",
+          "shore",
+          "beach",
+          "bay",
+          "harbour",
+          "harbor"
+        ],
+        "forest": [
+          "forest",
+          "wildfire",
+          "woods",
+          "bushfire",
+          "trees"
+        ]
+      },
+      "settings": [
+        "countryside",
+        "desert",
+        "snow",
+        "night",
+        "sea"
+      ],
+      "obstacles": [],
+      "actions": {
+        "flyover": {
+          "describe": "the camera sweeps over the land",
+          "keywords": [
+            "island",
+            "mountain",
+            "valley",
+            "landscape"
+          ],
+          "neutral": true
+        },
+        "erupt": {
+          "describe": "the volcano erupts: an ash column, lava and falling rock",
+          "keywords": [
+            "erupt",
+            "eruption",
+            "lava",
+            "ash cloud",
+            "ash column",
+            "pyroclastic",
+            "magma"
+          ],
+          "event": true,
+          "moment": 0.25,
+          "shot": "wide"
+        },
+        "tsunami": {
+          "describe": "a great wave rolls in and over the shore",
+          "keywords": [
+            "tsunami",
+            "tidal wave",
+            "giant wave",
+            "great wave",
+            "wall of water",
+            "tsunamis"
+          ],
+          "event": true,
+          "moment": 0.55,
+          "shot": "wide"
+        },
+        "wildfire": {
+          "describe": "fire races through the trees",
+          "keywords": [
+            "wildfire",
+            "bushfire",
+            "forest fire",
+            "fire",
+            "burn",
+            "blaze",
+            "flames"
+          ],
+          "event": true,
+          "moment": 0.1,
+          "shot": "wide"
+        },
+        "avalanche": {
+          "describe": "snow pours down the mountainside",
+          "keywords": [
+            "avalanche",
+            "snowslide",
+            "landslide",
+            "slid down",
+            "buried"
+          ],
+          "event": true,
+          "moment": 0.3,
+          "shot": "wide"
+        }
+      }
+    }
+  }
+}

@@ -41,14 +41,50 @@ reveal and a hit as it lands (all synthesised in `fyt/sfx.py`).
 Numbers land on the word: a stat's count-up, a proportion's fill and each point of a trend line arrive
 as the narrator says that figure (`land_times` in `fyt/timeline.py`), not at a fixed point in the scene.
 
-Flights and ships are acted out in 3D (three.js inside Remotion, drawn cel-shaded with ink outlines so
-it matches the flat illustration style): `aircraft` scenes fly a generic airliner through a toon sky
-(take-off, climb, turn, dive, landing, ditching, engine fire), and `ship` scenes put a liner, cargo ship,
-tanker, sailing ship, warship or submarine on a rolling low-poly sea (sailing, turning, listing,
-sinking, capsizing, hitting an iceberg, another ship or rocks, diving, surfacing). Both take a weather
-(rain, storm with lightning and thunder, fog, snow), and every video gets its own seed from its title,
-so its clouds, coast, containers and liveries are its own. The shared pieces live in
-`renderer/src/scenes/world3d.tsx`.
+Every video also gets a visual plan (`fyt/visualplan.py`), made after its facts are checked and before
+it is voiced: a visual director reads the whole script and picks the moments worth acting out as 3D
+reconstructions, on top of the maps, charts, collages and statements the scriptwriter chose. One scene
+type, `world`, draws them all (three.js inside Remotion, cel-shaded with ink outlines so it matches the
+flat illustration style). A world scene names a subject, a variant and an action, and the engine builds
+the rest: aircraft (take-off, climb, turn, dive, landing, ditching), ships (sailing, listing, sinking,
+capsizing, hitting an iceberg, another ship or rocks), trains (travelling, braking, derailing, colliding,
+a bridge collapsing under them), road vehicles (driving, skidding, crashing, a chase), rockets (on the
+pad, launch, ascent, staging, breaking apart), space (orbits, fly-bys, an asteroid impact, a cutaway of
+a planet's layers), cities (modern or historic: fire, earthquake, collapse, flood, explosion) and
+landscapes (volcanic eruption, tsunami, wildfire, avalanche, or a fly-over). Any of them takes a weather
+(rain, storm with lightning, fog, snow) and an effect (smoke, fire, explosion). There is no fixed share
+of 3D: a story told moment by moment may be mostly reconstruction, one best told in maps and charts may
+have none, and the only limit is a render budget (`visuals.world_seconds_short` / `_long`, 60 s and
+180 s of 3D, set from measured render time on the free runner; the planner keeps the moments it ranks
+highest). With no model available, a planner built from the catalog's keywords makes the plan instead.
+
+The plan stays true to the script. A collision, fire, eruption or sinking is drawn only when that
+scene's narration says it happened; otherwise the subject is shown doing something neutral (the ship
+sailing on) and the scene is labelled ILLUSTRATION on screen, while a scene that shows what the
+narration describes is labelled RECONSTRUCTION. Weather and effects need the script or the sources to
+mention them. A subject that has had its disaster does not carry on as if nothing happened. The key
+moment lands on the narrator's word for it (the `cue`, matched to the word timings), so the train leaves
+the rails as the narrator says "derailed". Every video gets its own seed from its title, and each
+recurring subject keeps its livery and layout across scenes, so the same ship looks the same in every
+scene of a video and different from the ship in the next one. Old `aircraft` and `ship` scenes still
+work; they are drawn as world scenes.
+
+### Adding a 3D subject or action
+
+Everything the planner, the scriptwriter, the fact guards and the renderer know about 3D comes from one
+file, `renderer/src/scenes/world/catalog.json`: each subject's keywords, variants, settings, and actions
+(which are events that need documenting, which is the neutral one, where the key moment falls, which
+camera shot suits it). To add one:
+
+1. Add the subject (or a new action or variant to an existing one) to `catalog.json`.
+2. For a new subject, write its module in `renderer/src/scenes/world/` (the shared camera, sky, weather,
+   smoke and debris are in `kit.tsx` and `../world3d.tsx`) and add it to `MODULES` in
+   `renderer/src/scenes/world/index.tsx`. A new action of an existing subject only needs the module to
+   draw it.
+
+That is all: the scriptwriter's guide, the visual planner's menu, the allowed values in the script
+schema and the keyword planner are built from the catalog, so every video made after the change can use
+it. `tests/test_visualplan.py` fails if a catalog subject has no module.
 
 Before a new script is voiced, `fyt/factcheck.py` checks every number, date, name and quote in it, said
 or shown, against the passages of the source article that mention the same things. Wrong or unsupported
@@ -290,6 +326,8 @@ fyt/                 Python pipeline
   media.py           Pexels b-roll/photos, background music
   timeline.py        script + audio -> renderer props, SRT captions
   render.py          calls renderer/render.mjs
+  visualplan.py      the visual plan: which moments become 3D reconstructions, within the render budget
+  scenes3d.py        the 3D catalog on the Python side, and the guards that keep world scenes true
   qa.py              automatic checks on script and render
   factcheck.py       checks every claim in a script against the source article before it is voiced
   youtube.py         OAuth, upload (video, thumbnail, captions), stats
@@ -298,10 +336,11 @@ renderer/            Remotion (React) video templates
   src/scenes/        scene templates: title, statement, stat, bars, list, quote, timeline, comparison, broll,
                      map (animated routes), process, document, dialogue, story (2D illustrated scenes
                      acting out the narration, drawn with Fluent Emoji, MIT); camera moves and transitions
+  src/scenes/world/  the 3D engine: catalog.json, the shared kit, and one module per subject
   src/components/    background, captions, audio visualizer
   render.mjs         CLI renderer (video, thumbnail, --frame preview)
 fixtures/            demo scripts used by `fyt demo`
-jobs/<id>/           per-video outputs: research.md, script.json, props.json, video.mp4, thumbnail.png, captions.srt
+jobs/<id>/           per-video outputs: research.md, script.json, visualplan.json, props.json, video.mp4, thumbnail.png, captions.srt
 ```
 
 A job folder keeps every intermediate file. You can edit `script.json` and rebuild with

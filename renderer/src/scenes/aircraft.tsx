@@ -15,7 +15,7 @@ import type { Scene, Theme } from "../types";
 import { unit } from "../theme";
 import { formatNumber, type SceneProps } from "./shared";
 import {
-  City, Cloud, clamp, ease, fogRange, flashOf, groundTexture, HeadingPlate, Inked, lightningFrames, liveryOf, paletteOf, rng, sceneSeed, Sky, slab,
+  City, Cloud, clamp, ease, fogRange, flashOf, groundTexture, HeadingPlate, Inked, lightningFrames, liveryOf, paletteOf, rng, sceneSeed, identityOf, Sky, slab,
   toonRamp, WeatherOverlay, type Livery, type Weather,
 } from "./world3d";
 
@@ -336,7 +336,7 @@ const World: React.FC<{ scene: Scene; theme: Theme; portrait: boolean }> = ({ sc
       {maneuver === "land" && scene.setting === "sea" ? <Spray u={u} D={D} height={pose.height} /> : null}
       <group rotation={[pose.roll, 0, pose.pitch]}>
         {/* A ditching is flown with the gear up. */}
-        <Aircraft livery={liveryOf(scene.seed ?? 0)} gear={scene.setting === "sea" ? 0 : pose.gear} />
+        <Aircraft livery={liveryOf(identityOf(scene))} gear={scene.setting === "sea" ? 0 : pose.gear} />
         {scene.effect
           ? enginesOf(scene.effectX).map((side) => <EngineTrouble key={side} side={side} effect={scene.effect!} at={scene.effectAt ?? 0.25} u={u} frame={frame} />)
           : null}

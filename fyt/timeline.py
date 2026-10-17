@@ -5,11 +5,12 @@ from __future__ import annotations
 import re
 import zlib
 
+from fyt import scenes3d
 from fyt.config import Config
 from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, ScriptScene, Sfx, Word
 
 TAIL_SECONDS = 1.5  # hold the last scene after the voice ends
-THREE_D = ("aircraft", "ship")  # scenes drawn in 3D: their clouds, cities and liveries come from the video's seed
+THREE_D = ("aircraft", "ship", "world")  # scenes drawn in 3D: their clouds, cities and liveries come from the video's seed
 
 
 def build_props(
@@ -35,6 +36,7 @@ def build_props(
     video_seed = zlib.crc32(script.title.encode()) & 0x7FFFFFFF
     first_map = next((i for i, s in enumerate(script.scenes) if s.type == "map"), None)
     for i, (scene, (start, _end)) in enumerate(zip(script.scenes, spans)):
+        scene = scenes3d.legacy_to_world(scene)
         # A scene stays on screen until the next one starts, so pauses are covered.
         vis_start = 0.0 if i == 0 else start
         vis_end = spans[i + 1][0] if i + 1 < len(spans) else duration
@@ -75,7 +77,7 @@ def build_props(
                 effect=scene.effect,
                 effectX=scene.effect_x,
                 effectY=scene.effect_y,
-                effectAt=scene.effect_at,
+                effectAt=key_moment(scene, clip_words[i], start - vis_start, vis_end - vis_start),
                 effectSrc=scene.effect_src,
                 maneuver=scene.maneuver,
                 shot=scene.shot,
@@ -85,6 +87,11 @@ def build_props(
                 shipAction=scene.ship_action,
                 obstacle=scene.obstacle,
                 weather=scene.weather,
+                subject=scene.subject,
+                variant=scene.variant,
+                action=scene.action,
+                subjectName=scene.subject_name,
+                illustrative=scene.illustrative,
                 seed=video_seed if scene.type in THREE_D else None,
                 revealTimes=reveal_times(revealed(scene), clip_words[i], start - vis_start),
                 landTimes=land_times(scene, clip_words[i], start - vis_start),
@@ -258,11 +265,12 @@ def land_times(scene: ScriptScene, words: list[Word], offset: float) -> list[flo
     """When a figure shown on screen is said, so it lands on the word and not before it: a stat's
     number, a proportion's share, an aircraft's altitude readout, and each point of a trend line (its year or its value, whichever
     the narration says first). Seconds from the scene's start; None leaves the renderer's pacing."""
-    if not words or scene.type not in ("stat", "proportion", "trend", "aircraft"):
+    aircraft = scene.type == "aircraft" or (scene.type == "world" and scene.subject == "aircraft")
+    if not words or not (scene.type in ("stat", "proportion", "trend") or aircraft):
         return None
     said = spoken_numbers(words)
-    if scene.type in ("stat", "proportion", "aircraft"):
-        target = scene.altitude_to if scene.type == "aircraft" else scene.value
+    if scene.type in ("stat", "proportion") or aircraft:
+        target = scene.altitude_to if aircraft else scene.value
         if target is None:
             return None
         hit = next((s for s in said if _close(s[0], target)), None)
@@ -288,6 +296,38 @@ def land_times(scene: ScriptScene, words: list[Word], offset: float) -> list[flo
             nxt = next((x for x in times[k + 1:] if x is not None), end)
             times[k] = round((prev + nxt) / 2, 3)
     return times
+
+
+def _tokens(text: str) -> list[str]:
+    return re.findall(r"[a-z0-9']+", text.lower())
+
+
+def cue_time(cue: str | None, words: list[Word], offset: float) -> float | None:
+    """When the narration says the cue phrase (its first word), seconds from the scene's start."""
+    want = _tokens(cue or "")
+    if not want or not words:
+        return None
+    said = [(_tokens(w.word) or [""])[0] for w in words]
+    for j in range(len(said)):
+        if said[j : j + len(want)] == want:
+            return round(words[j].start + offset, 3)
+    stem = want[0][:5]
+    hit = next((j for j, w in enumerate(said) if w.startswith(stem)), None)
+    return None if hit is None else round(words[hit].start + offset, 3)
+
+
+def key_moment(scene: ScriptScene, words: list[Word], offset: float, length: float) -> float | None:
+    """When a scene's key moment (a collision, an engine fire, an eruption) happens, 0-1 through the scene.
+
+    A world scene's moment lands on its cue words as the narrator says them, a beat after the word starts;
+    without a cue it falls back to the scene's own effect_at, then the catalog's moment for the action."""
+    if scene.type == "world" and scene.subject:
+        t = cue_time(scene.cue, words, offset)
+        if t is not None and length > 0:
+            return round(min(0.9, max(0.05, (t + 0.15) / length)), 3)
+        if scene.effect_at is None:
+            return scenes3d.moment(scene.subject, scene.action or "")
+    return scene.effect_at
 
 
 def to_srt(words: list[Word], max_words: int = 7) -> str:

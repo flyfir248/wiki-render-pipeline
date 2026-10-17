@@ -17,7 +17,7 @@ import { unit } from "../theme";
 import type { SceneProps } from "./shared";
 import {
   clamp, Cloud, ease, flashOf, Flash, fogRange, HeadingPlate, Inked, inkMaterial, InkedBox, lightningFrames, liveryOf, paletteOf, rng, sceneSeed, Sea,
-  Sky, Smoke, Splash, swellOf, Toon, toonRamp, waveAt, WeatherOverlay, type Livery, type Palette, type Weather,
+  Sky, Smoke, Splash, Stars, swellOf, Toon, toonRamp, waveAt, WeatherOverlay, identityOf, type Livery, type Palette, type Weather,
 } from "./world3d";
 
 export type Vessel = NonNullable<Scene["vessel"]>;
@@ -471,7 +471,7 @@ const World: React.FC<{ scene: Scene; portrait: boolean }> = ({ scene, portrait 
   const action = (scene.shipAction ?? "sail") as ShipAction;
   const weather = (scene.weather ?? "clear") as Weather;
   const seed = sceneSeed(scene);
-  const livery = liveryOf(scene.seed ?? 0); // one livery for the whole video, so the ship stays the same ship
+  const livery = liveryOf(identityOf(scene)); // one livery per named ship, so it looks the same in every scene
   const pal = paletteOf(scene.setting === "sea" ? null : scene.setting, weather);
   const sea = seaOf(scene.setting, weather, pal);
   const amp = swellOf(weather);
@@ -590,27 +590,6 @@ const World: React.FC<{ scene: Scene; portrait: boolean }> = ({ scene, portrait 
       {action === "surface" ? <Splash at={[d.L * 0.15, 0.1, 0]} since={(u - 0.45) * D} size={1.8} seed={seed + 4} /> : null}
       {action === "sink" && u > 0.8 ? <Splash at={[-d.L * 0.2, 0.1, 0]} since={(u - 0.8) * D * 0.6} size={1.1} seed={seed + 5} /> : null}
     </>
-  );
-};
-
-// Stars scattered over the upper sky.
-const Stars: React.FC<{ seed: number }> = ({ seed }) => {
-  const geo = useMemo(() => {
-    const r = rng(seed + 41);
-    const pts: number[] = [];
-    for (let i = 0; i < 500; i++) {
-      const a = r() * Math.PI * 2;
-      const el = 0.04 + r() ** 0.7 * 1.3;
-      pts.push(Math.cos(a) * Math.cos(el) * 850, Math.sin(el) * 850, Math.sin(a) * Math.cos(el) * 850);
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
-    return g;
-  }, [seed]);
-  return (
-    <points geometry={geo}>
-      <pointsMaterial color="#f4f1e0" size={2.4} sizeAttenuation={false} fog={false} />
-    </points>
   );
 };
 

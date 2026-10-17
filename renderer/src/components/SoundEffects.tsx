@@ -8,6 +8,7 @@ import { pinFrames } from "../scenes/map";
 import { sceneSpans, shownType, transitionOf } from "../scenes";
 import { motionCues, statLands } from "../scenes/motion";
 import { lightningFrames, sceneSeed } from "../scenes/world3d";
+import { worldCues } from "../scenes/world";
 import type { Scene } from "../types";
 
 type Cue = { at: number; name: string; gain: number };
@@ -55,6 +56,7 @@ export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
       if (scene.shipAction === "collide") cues.push({ at: from + at, name: "boom", gain: 0.9 });
       else if (scene.effect === "explosion" || scene.effect === "fire") cues.push({ at: from + at, name: "boom", gain: 0.85 });
     }
+    if (type === "world") worldCues(scene, len, fps).forEach((c) => cues.push({ ...c, at: from + c.at }));
     if ((type === "aircraft" || type === "ship") && scene.weather === "storm") {
       lightningFrames(sceneSeed(scene), len, fps).forEach((f) => cues.push({ at: from + f + 4, name: "thunder", gain: 0.6 }));
     }
