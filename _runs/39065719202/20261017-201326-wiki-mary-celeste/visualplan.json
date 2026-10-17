@@ -1,0 +1,101 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 18.4,
+  "dropped_for_budget": [],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "ship",
+      "variant": "sailing",
+      "action": "sail",
+      "setting": "sea",
+      "weather": null,
+      "cue": "A ghostly brigantine drifts empty, cargo untouched",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "ship:sailing",
+        "level": "generic",
+        "title": "generic sailing"
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "ship",
+      "variant": "sailing",
+      "action": "sail",
+      "setting": "sea",
+      "weather": null,
+      "cue": "Built in Canada in 1861, the Mary Celeste later sailed under the American flag",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "ship:sailing",
+        "level": "generic",
+        "title": "generic sailing"
+      }
+    },
+    {
+      "scene": 3,
+      "type": "world",
+      "kind": "3D",
+      "subject": "ship",
+      "variant": "sailing",
+      "action": "sail",
+      "setting": "sea",
+      "weather": "clear",
+      "cue": "found her near the Azores, lifeboat missing",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "ship:sailing",
+        "level": "generic",
+        "title": "generic sailing"
+      }
+    },
+    {
+      "scene": 4,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "type": "list",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 8,
+      "type": "world",
+      "kind": "3D",
+      "subject": "ship",
+      "variant": "sailing",
+      "action": "sail",
+      "setting": "sea",
+      "weather": null,
+      "cue": "Today, Mary Celeste stands as a symbol of the sea\u2019s unsolved mysteries",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "ship:sailing",
+        "level": "generic",
+        "title": "generic sailing"
+      }
+    }
+  ]
+}

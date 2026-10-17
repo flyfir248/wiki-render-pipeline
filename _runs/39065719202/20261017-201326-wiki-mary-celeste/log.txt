@@ -1,0 +1,30 @@
+fetching Wikipedia article
+8 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): map (lost viewers 44% slower than average, 7 scenes); story (lost viewers 34% slower than average, 9 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 30% faster than average, 10 scenes); statement (lost viewers 81% faster than average, 11 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 84 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene6 ruled out insurance fraud, but Scene7 claims insurance fraud, contradictory.; Scene8 original line was incomplete, ending with “for.”
+checking facts against the source
+fact check found: scene 5: unsupported claim "Storms" (source says: The source lists hypotheses such as alcohol fumes, submarine earthquakes, waterspouts, giant squid, and paranormal intervention, but does not mention storms as a theory.)
+facts check out
+reading the story: what it shows
+story: Mary Celeste, lifeboat, Dei Gratia, Azores, Atlantic Ocean, New York City; 4 moments
+planning the visuals
+visual plan (model): 4 3D, 1 2.5D, 3 2D; 3D: ship sail, ship sail, ship sail, ship sail
+voicing 8 scenes with kokoro
+fetching visuals
+visuals: 5 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+cutaways: 3 extra photos across 3 scenes
+collage: 8 photos styled, 3 with a cut-out subject
+translating the title and description (es, pt, hi, fr, de)
+relevance: checking 4 3D scenes by eye
+scenes [1, 2, 3, 8]: illustrative 3D swapped for painted storyboard pictures, so the video keeps one style
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 2, sentence 1: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 8 planned, 6 in the cast; 0 checked, 0 redrawn, 1 left out
+scenes [1, 2, 3, 8]: no painted picture was drawn, so their 3D scenes stay
+art direction: archival
+rendering 42s short video
+rendering thumbnail
+done: approved

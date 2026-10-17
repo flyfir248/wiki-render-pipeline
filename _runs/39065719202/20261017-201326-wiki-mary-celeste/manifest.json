@@ -1,0 +1,170 @@
+{
+  "entities": [
+    {
+      "id": "maryceleste",
+      "name": "Mary Celeste",
+      "kind": "brigantine",
+      "search": [
+        "mary celeste",
+        "brigantine",
+        "ship"
+      ],
+      "look": "Canadian-built, American-registered, wooden brigantine, 1861, 2-masted, white hull, tall rigging",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3,
+        8
+      ]
+    },
+    {
+      "id": "lifeboat",
+      "name": "lifeboat",
+      "kind": "boat",
+      "search": [
+        "lifeboat",
+        "small boat",
+        "boat"
+      ],
+      "look": "small wooden lifeboat, open canvas, 1-2 seats",
+      "certain": false,
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "deigratia",
+      "name": "Dei Gratia",
+      "kind": "brigantine",
+      "search": [
+        "dei gratia",
+        "brigantine",
+        "ship"
+      ],
+      "look": "Canadian-built brigantine, 1860s, white hull, two masts",
+      "certain": true,
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "azores",
+      "name": "Azores",
+      "kind": "place",
+      "search": [
+        "azores",
+        "islands",
+        "archipelago"
+      ],
+      "look": "tropical islands, green cliffs, scattered villages, Atlantic sea",
+      "certain": true,
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "atlantic",
+      "name": "Atlantic Ocean",
+      "kind": "place",
+      "search": [
+        "atlantic ocean",
+        "ocean",
+        "sea"
+      ],
+      "look": "vast blue ocean, waves, horizon line",
+      "certain": true,
+      "scenes": []
+    },
+    {
+      "id": "newyork",
+      "name": "New York City",
+      "kind": "place",
+      "search": [
+        "new york city",
+        "city",
+        "urban"
+      ],
+      "look": "19th century port, brick warehouses, steamship docks",
+      "certain": true,
+      "scenes": []
+    }
+  ],
+  "places": [
+    {
+      "id": "azores",
+      "name": "Azores",
+      "look": "tropical islands, green cliffs, scattered villages, Atlantic sea",
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "atlantic",
+      "name": "Atlantic Ocean",
+      "look": "vast blue ocean, waves, horizon line",
+      "scenes": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "newyork",
+      "name": "New York City",
+      "look": "19th century port, brick warehouses, steamship docks",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "id": "genoa",
+      "name": "Genoa",
+      "look": "Italian port, stone quays, 19th century ships",
+      "scenes": [
+        2
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "maryceleste",
+      "place": "",
+      "action": "drifts empty, cargo untouched",
+      "motion": "move",
+      "cue": "A ghostly brigantine drifts empty, cargo untouched",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "maryceleste",
+      "place": "",
+      "action": "built in Canada 1861",
+      "motion": "present",
+      "cue": "Built in Canada in 1861, the Mary Celeste later sailed under the American flag",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 3,
+      "entity": "maryceleste",
+      "place": "",
+      "action": "found near Azores",
+      "motion": "present",
+      "cue": "On December 4, 1872, the Dei Gratia found her near the Azores, lifeboat missing",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 8,
+      "entity": "maryceleste",
+      "place": "",
+      "action": "stands as a symbol",
+      "motion": "present",
+      "cue": "Today, Mary Celeste stands as a symbol of the sea\u2019s unsolved mysteries",
+      "documented": true,
+      "priority": 2
+    }
+  ]
+}
