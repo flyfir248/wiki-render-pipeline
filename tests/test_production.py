@@ -279,3 +279,25 @@ def test_a_trend_point_lands_on_its_own_figure_not_a_neighbours():
     pts = [DataPoint(label=y, value=v) for y, v in (("1960", 316.9), ("2000", 369.7), ("2020", 414.2), ("2023", 421.1))]
     t = land_times(ScriptScene(narration=said, type="trend", data=pts), words, 0)
     assert t[3] < 8.0 and t[1] < t[2] < t[3]  # 2023 lands on "2023", and 2020 sits between its neighbours
+
+
+def test_the_process_the_narration_acts_out_becomes_3d_and_repeats_change_angle():
+    from fyt import visualplan
+
+    s = script(
+        ScriptScene(narration="DNA is a double helix, two strands; its structure is a twisted ladder.", type="statement"),
+        ScriptScene(narration="The DNA double helix shape has about ten base pairs a turn; its structure repeats.", type="statement"),
+        ScriptScene(narration="To copy DNA, the helix unzips and the strands separate.", type="process", items=["Unzip", "Copy", "Two helices"]),
+        ScriptScene(narration="The process of DNA is a list of steps.", type="process", items=["One", "Two"]),
+    )
+    plan = {r.scene: r for r in visualplan.rule_plan(s)}
+    assert plan[3].action == "unzip"
+    assert 4 not in plan  # a process the narration doesn't act out keeps its steps
+    if 1 in plan and 2 in plan:
+        assert plan[1].shot != plan[2].shot
+
+
+def test_cold_is_not_snowfall():
+    # "a freezing January afternoon" or "the icy water" is cold, not snow falling; drawing snow would be a claim.
+    s = world("On a freezing January afternoon the airliner flew over the icy river in winter.", "aircraft", "cruise", "airliner")
+    assert scenes3d.guard(s.model_copy(update={"weather": "snow"}), s.narration).weather is None

@@ -25,7 +25,10 @@ from fyt.models import Action3D, Obstacle, Script, ScriptScene, Setting, Shot, S
 
 # Scenes whose picture can become a reconstruction without losing anything on screen: they carry a
 # heading and narration, no figures, quotes or places of their own. A photo scene keeps its real photo.
-CONVERTIBLE = ("statement", "title", "broll", "story", "world", "aircraft", "ship")
+CONVERTIBLE = ("statement", "title", "broll", "story", "world", "aircraft", "ship", "process")
+# A process scene's steps are only worth giving up for a 3D scene that acts the process out (the helix
+# unzipping); the keyword planner leaves it alone otherwise.
+ACTED_ONLY = ("process",)
 WORDS_PER_SECOND = {"short": 2.9, "long": 2.6}
 # The setting a scene's own words point to, checked in this order (night first: it changes the look most).
 SETTING_WORDS = {
@@ -172,6 +175,8 @@ def rule_plan(script: Script, notes: str = "") -> list[Reconstruction]:
         # names it again ("the inquiry found the bridge..." is not the train crossing the bridge).
         if best_action is None and best_subject in struck and not scenes3d.count(text, s["keywords"]):
             continue
+        if scene.type in ACTED_ONLY and (action is None or scenes3d.subjects()[best_subject]["actions"][action].get("neutral")):
+            continue
         action = action or scenes3d.neutral_action(best_subject)
         before = last.get(best_subject)
         setting = next((k for k, words in SETTING_WORDS.items() if k in s["settings"] and scenes3d.find(text, words)), None)
@@ -187,6 +192,9 @@ def rule_plan(script: Script, notes: str = "") -> list[Reconstruction]:
         if best_subject == "vehicle" and action == "crash":
             obstacle = "car" if scenes3d.find(scene.narration, ["car", "vehicle", "truck", "bus"]) else "wall"
         shot = scenes3d.default_shot(best_subject, action) or SHOT_CYCLE[len(out) % len(SHOT_CYCLE)]
+        if before is not None and before.shot == shot and before.scene >= i - 2:
+            # The same subject again soon after: a new angle, so it doesn't look like the same scene twice.
+            shot = SHOT_CYCLE[(SHOT_CYCLE.index(shot) + 1) % len(SHOT_CYCLE)] if shot in SHOT_CYCLE else "wide"
         r = Reconstruction(
             scene=i, subject=best_subject, variant=variants[best_subject], action=action, obstacle=obstacle, shot=shot,
             setting=setting, weather=weather, effect=effect, subject_name=f"{best_subject}:{variants[best_subject]}",

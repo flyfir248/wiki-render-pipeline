@@ -209,10 +209,20 @@ const World: React.FC<WorldProps> = ({ scene, portrait }) => {
   const open = variant === "dna" && action === "unzip" && since > 0 ? Math.min(1, since / 90) : 0;
   // DNA and molecules are filmed from the front while they turn, so a flat ring or the helix's grooves
   // face the camera; an atom's rings read best from a moving camera.
+  // The shot only changes how near and from how high: close in along the strands, pulled back, from below,
+  // or swinging round the front.
   const front = variant !== "atom";
-  const cam = front
-    ? { pos: new THREE.Vector3(Math.sin(u * 0.6 - 0.3) * size * 0.25, size * 0.12, size * (variant === "dna" ? 1.75 : 1.3)), look: new THREE.Vector3(0, 0, 0), fov: 34 }
-    : shotOf(scene.shot ?? "orbit", u, size);
+  const far = size * (variant === "dna" ? 1.75 : 1.3);
+  const shot = scene.shot ?? "orbit";
+  const framing: Record<string, { pos: THREE.Vector3; look: THREE.Vector3 }> = {
+    orbit: { pos: new THREE.Vector3(Math.sin(u * 0.6 - 0.3) * size * 0.25, size * 0.12, far), look: new THREE.Vector3(0, 0, 0) },
+    front: { pos: new THREE.Vector3(Math.sin(u * 0.6 - 0.3) * size * 0.25, size * 0.12, far), look: new THREE.Vector3(0, 0, 0) },
+    chase: { pos: new THREE.Vector3(size * 0.18, size * (0.3 - u * 0.5), far * 0.55), look: new THREE.Vector3(0, size * (0.22 - u * 0.5), 0) },
+    side: { pos: new THREE.Vector3(Math.sin(u * 1.4 - 0.7) * far * 0.6, 0, Math.cos(u * 1.4 - 0.7) * far * 0.6), look: new THREE.Vector3(0, 0, 0) },
+    wide: { pos: new THREE.Vector3(0, size * 0.1, far * (1.45 - u * 0.25)), look: new THREE.Vector3(0, 0, 0) },
+    below: { pos: new THREE.Vector3(size * 0.15, -size * 0.65, far * 0.8), look: new THREE.Vector3(0, size * 0.15, 0) },
+  };
+  const cam = front ? { ...(framing[shot] ?? framing.orbit), fov: 34 } : shotOf(shot, u, size);
   aim(camera, cam.pos, cam.look, cam.fov, portrait, 1.25);
   const spin = variant === "dna" ? 0 : -0.6 + u * 1.2;
   const dust = useMemo(() => {
