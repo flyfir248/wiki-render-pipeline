@@ -60,6 +60,10 @@ LICENCES = {  # Sketchfab's licence slugs and labels, and Poly Pizza's, to one c
 LICENCE_NAMES = {"cc0": "CC0", "by": "CC BY 4.0", "by-sa": "CC BY-SA 4.0"}
 # A model whose title says it is several things or a whole place, not the one thing asked for.
 NOT_ONE_THING = re.compile(r"\b(pack|collection|bundle|kit|set of|diorama|scene|environment|room|level|map|asset ?pack)\b", re.I)
+# A model of a part or remains of the thing (a bear's jawbone scan), unless that part is what was asked for.
+A_PART = ("skull", "skeleton", "bone", "bones", "mandible", "jaw", "tooth", "teeth", "fossil", "fragment", "head", "paw",
+          "footprint", "track", "fur", "texture", "rig only", "base mesh", "sculpt", "bust", "statue", "figurine", "toy", "plush")
+HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) FacelessYT model finder"}
 
 CHECK = """You check the preview of a 3D model before it is used in a documentary video. Pass it only if it
 shows one whole {thing} that a viewer would recognise as that at a glance. Fail it if it shows
@@ -90,6 +94,8 @@ def relevant(term: str, title: str, tags: list[str]) -> float:
     want = _words(term)
     if not want or head_noun(term) not in have or NOT_ONE_THING.search(title or ""):
         return 0.0
+    if any(p.rstrip("s") in _words(title) and p.rstrip("s") not in want for p in A_PART):
+        return 0.0
     return len(want & have) / len(want)
 
 
@@ -119,7 +125,8 @@ def _read(path: Path, default):
 
 def cached(key: str) -> dict | None:
     meta = _read(CACHE / key / "meta.json", None)
-    if meta and meta.get("ok") and (CACHE / key / "model.glb").is_file():
+    # Only models whose preview a vision check passed (an older, text-only match is searched for again).
+    if meta and meta.get("ok") and meta.get("checked") in ("vision", "vetted") and (CACHE / key / "model.glb").is_file():
         return meta | {"file": str(CACHE / key / "model.glb")}
     return None
 
@@ -153,6 +160,7 @@ def _note_rejected(uid: str, why: str) -> None:
 
 
 def _get(url: str, **kw) -> requests.Response:
+    kw["headers"] = HEADERS | kw.get("headers", {})
     r = requests.get(url, timeout=kw.pop("timeout", 30), **kw)
     r.raise_for_status()
     return r
@@ -176,7 +184,7 @@ def objaverse_paths() -> dict:
 
 
 def _download(url: str, dest: Path, headers: dict | None = None, limit_mb: float = 80) -> Path:
-    with requests.get(url, headers=headers or {}, timeout=120, stream=True) as r:
+    with requests.get(url, headers=HEADERS | (headers or {}), timeout=120, stream=True) as r:
         r.raise_for_status()
         size = 0
         with open(dest, "wb") as f:
@@ -369,17 +377,26 @@ def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log) ->
         return None
     work = Path(tempfile.mkdtemp(prefix="fyt-model-"))
     try:
-        if c.get("thumb"):
+        # Its preview must be seen to show the thing: a title and tags alone have let through a bear's
+        # jawbone for a bear. Without a preview or a vision check, the model is not used.
+        if c["source"] != "generated":
+            if not c.get("thumb"):
+                log(f"assets: {c['title']!r} ({c['source']}) has no preview to check; skipped")
+                return None
             try:
                 _download(c["thumb"], work / "thumb.jpg", limit_mb=5)
-                ok, why = looks_right(cfg, entity, term, work / "thumb.jpg")
-                if ok is False:
-                    log(f"assets: {c['title']!r} ({c['source']}) is not a {term}: {why}")
-                    _note_rejected(c["uid"], f"vision: {why}")
-                    return None
-                c["checked"] = "vision" if ok else "text"
-            except requests.RequestException:
-                c["checked"] = "text"
+            except requests.RequestException as e:
+                log(f"assets: {c['title']!r}: preview out of reach ({str(e)[:80]}); skipped")
+                return None
+            ok, why = looks_right(cfg, entity, term, work / "thumb.jpg")
+            if ok is None:
+                log(f"assets: {c['title']!r}: no vision check could be made; skipped")
+                return None
+            if not ok:
+                log(f"assets: {c['title']!r} ({c['source']}) is not a {term}: {why}")
+                _note_rejected(c["uid"], f"vision: {why}")
+                return None
+            c["checked"] = "vision"
         raw = c["fetch"](work / "raw.glb")
         budget = cfg.visuals.triangles.get(fidelity, 40000)
         info = prepare(raw, work / "model.glb", budget)

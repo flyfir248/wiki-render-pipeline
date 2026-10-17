@@ -18,6 +18,11 @@ from fyt.timeline import build_props, to_srt
 
 def log(job: Job, msg: str) -> None:
     print(f"[{job.id}] {msg}", flush=True)
+    try:  # kept with the job too, so a test render's report carries its log
+        with open(job.file("log.txt"), "a") as f:
+            f.write(msg + "\n")
+    except OSError:
+        pass
 
 
 def make_video(

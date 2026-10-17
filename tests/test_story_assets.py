@@ -126,6 +126,8 @@ def test_licence_codes():
 def cache(tmp_path, monkeypatch):
     monkeypatch.setattr(assetlib, "CACHE", tmp_path / "models")
     monkeypatch.setattr(assetlib, "project_model", lambda e: None)
+    monkeypatch.setattr(assetlib, "_download", lambda url, dest, headers=None, limit_mb=80: dest.write_bytes(b"jpg") or dest)
+    monkeypatch.setattr(assetlib, "looks_right", lambda cfg, e, term, pic: (True, ""))
     return tmp_path
 
 
@@ -134,7 +136,7 @@ def fake_candidate(title: str, licence: str, raw: bytes = b"glb"):
         dest.write_bytes(raw)
         return dest
     return {"uid": f"test:{title}", "source": "sketchfab", "title": title, "tags": [], "author": "Ann", "licence": licence,
-            "url": "https://example.com/m", "thumb": None, "triangles": 5000, "animated": False, "score": 1.0, "fetch": fetch}
+            "url": "https://example.com/m", "thumb": "https://example.com/t.jpg", "triangles": 5000, "animated": False, "score": 1.0, "fetch": fetch}
 
 
 def test_resolve_skips_bad_licences_and_broken_models_then_caches(cache, monkeypatch):
@@ -170,13 +172,27 @@ def test_resolve_finds_nothing_rather_than_something_else(cache, monkeypatch):
 
 
 def test_vision_check_rejects_the_wrong_thing(cache, monkeypatch):
-    c = fake_candidate("Black Bear", "cc0") | {"thumb": "https://example.com/t.jpg"}
+    c = fake_candidate("Black Bear", "cc0")
     monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: [c]})
-    monkeypatch.setattr(assetlib, "_download", lambda url, dest, headers=None, limit_mb=80: dest.write_bytes(b"jpg") or dest)
     monkeypatch.setattr(assetlib, "looks_right", lambda cfg, e, term, pic: (False, "a teddy bear"))
     cfg = Config(format="short")
     cfg.visuals.asset_sources = ["sketchfab"]
     assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None) is None
+
+
+def test_no_vision_check_no_model(cache, monkeypatch):
+    # Run 121 took a scan of a bear's jawbone for the bear when the preview check couldn't be made.
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: [fake_candidate("Black Bear", "cc0")]})
+    monkeypatch.setattr(assetlib, "looks_right", lambda cfg, e, term, pic: (None, ""))
+    cfg = Config(format="short")
+    cfg.visuals.asset_sources = ["sketchfab"]
+    assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None) is None
+
+
+def test_a_part_or_remains_is_not_the_thing():
+    assert assetlib.relevant("american black bear", "MSCC007 Ursus americanus Left Mandible", ["bear", "black bear"]) == 0
+    assert assetlib.relevant("bear", "Bear skull", ["bear"]) == 0
+    assert assetlib.relevant("human skull", "Human skull", ["anatomy"]) > 0  # unless the part is what's asked for
 
 
 def test_sound_rejects_primitives_and_oversize():

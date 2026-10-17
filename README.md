@@ -110,6 +110,38 @@ model, so it looks the same throughout. To add a named object, add a spec (or a 
 `licence` and `sources`, and the file) to `assets.json` with the names that point to it; names written
 `=word` match only the whole word.
 
+### Story-driven 3D: the story decides, not the renderer
+
+A renderer being available is never a reason for its subject to appear. Before any picture is chosen,
+`fyt/manifest.py` reads the fact-checked script and lists what the viewer will see: each entity (the
+bear, the smuggler's Cessna, a tardigrade), its look, the words a model library would file it under and
+the scenes it appears in; the places; and the moments worth showing, each documented only when its words
+are in the narration. Then:
+
+- The catalog modules above are reusable assets, not content: a catalog scene is kept only when its
+  subject is the kind of thing an entity in that scene is (the airliner module for an airliner, never for
+  a Cessna or a bear). Entities no module can draw get a **stage** scene (`renderer/src/scenes/world/stage.tsx`):
+  the entity's own glTF model, cel-shaded, playing its own animation clip when one fits the motion (a walk
+  for "move"), in front of a painted plate of its place. The stage's actions are a motion grammar any model
+  can perform (present, move, approach, depart, rise, fall, turn, shake), not a list of things.
+- `fyt/assetlib.py` finds one model per entity for the whole video: the project library, the model cache,
+  then Sketchfab's search (only CC0, CC BY and CC BY-SA models; downloaded from the Objaverse mirror on
+  Hugging Face with no key, or from Sketchfab with `SKETCHFAB_TOKEN`), Poly Pizza (`POLY_PIZZA_KEY`), and
+  an image-to-3D Space when `visuals.image_to_3d_space` is set. A candidate must name the entity's noun,
+  pass a vision check of its preview, load, and hold real detail; it is then simplified to the shot's
+  triangle budget (`renderer/prepare-model.mjs`) and stored with its source, author and licence. CC BY
+  models are credited in the video's description. Found models are kept on the `asset-library` branch, so
+  later videos reuse them. When nothing usable is found, the entity's scenes stay painted: a model of
+  something else is never used in its place.
+- `fyt/relevance.py` checks every 3D scene before the render: it must show an entity the manifest lists
+  in that scene, and a frame rendered at its key moment must show that entity to a vision model. A scene
+  that fails goes back to 2D and gets a painted picture.
+- The manifest's looks seed the storyboard's cast sheet, so the painted bear and the 3D bear are drawn
+  from the same description. The video's registry (entities, places, moments, the model for each, with its
+  licence) is written to `assets.json` in the job.
+
+All keys are optional and free; with none set, Sketchfab search plus the Objaverse mirror still work.
+
 ### Art direction
 
 Each video gets one look (`fyt/artdirect.py`), kept in every scene: archival for stories before 1950,

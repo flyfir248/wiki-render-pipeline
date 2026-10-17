@@ -69,9 +69,12 @@ const YAW: Record<string, number> = { "+x": 0, "-x": Math.PI, "+z": Math.PI / 2,
 const prepare = (m: Loaded, forward: string, up: string) => {
   const o = SkeletonUtils.clone(m.scene);
   const ink = outlineMaterial(0.012);
+  const meshes: THREE.Mesh[] = [];
   o.traverse((n) => {
-    const mesh = n as THREE.Mesh;
-    if (!mesh.isMesh) return;
+    if ((n as THREE.Mesh).isMesh) meshes.push(n as THREE.Mesh);
+  });
+  // Collected first: the outlines added below are meshes too, and must not be visited again.
+  meshes.forEach((mesh) => {
     mesh.castShadow = true;
     mesh.frustumCulled = false; // skinned bounds lag the pose
     const colours = Boolean(mesh.geometry.attributes.color);
