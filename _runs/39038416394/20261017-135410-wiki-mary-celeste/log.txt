@@ -1,0 +1,13 @@
+fetching Wikipedia article
+8 article images available
+writing part 1 of a two-part script
+using watch-time lessons: Scene types that held viewers best (use them more): map (lost viewers 44% slower than average, 7 scenes); story (lost viewers 34% slower than average, 9 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 30% faster than average, 10 scenes); statement (lost viewers 81% faster than average, 11 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 95 words; asking for a fuller one
+writing part 2
+using watch-time lessons: Scene types that held viewers best (use them more): map (lost viewers 44% slower than average, 7 scenes); story (lost viewers 34% slower than average, 9 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 30% faster than average, 10 scenes); statement (lost viewers 81% faster than average, 11 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 84 words; asking for a fuller one
+checking part 2's facts against the source
+fact check found: scene 3: wrong claim "The vessel was under partial sail, seaworthy, yet its crew had vanished ten days earlier." (source says: The last log entry was dated November 25, nine days before the discovery on December 4, 1872.); scene 5: wrong claim "Nov 17, 1872 – Last log entry" (source says: The final log entry was dated November 25, 1872.); scene 5: unsupported claim "Nov 17, 1872 – Last log entry"; scene 6: unsupported claim "Cargo sealed" (source says: The source states the cargo of alcohol was intact, but does not specify that it was sealed.)
+sharpening title, hook and thumbnail text
+checking facts against the source
+fact check found: scene 4: wrong claim "The ship’s log stopped ten days before it was found." (source says: The last log entry was dated 8 am on November 25, nine days earlier.); scene 5: unsupported claim "All provisions and the cargo of rum were untouched, yet the lifeboat was gone." (source says: The source states the cargo of alcohol was intact and the lifeboat was missing, but does not specify rum.); scene 9: unsupported claim "Investigators noted the rum cargo was sealed, making toxic fumes unlikely."
