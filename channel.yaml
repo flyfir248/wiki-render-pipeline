@@ -95,7 +95,7 @@ growth:
 instagram:
   enabled: true
   publish: false            # true: each Short goes up as a Reel once it is public on YouTube
-  youtube_handle: ""        # e.g. "@FacelessYT", named in every caption
+  youtube_handle: "@WeirdButTrueOfficialHQ"   # named in every caption
   cta: "Full story, and a new one every day, on YouTube. Link in bio"
   hashtags: [truestory, didyouknow]   # in every caption; the video's own tags fill the rest
   max_hashtags: 5           # Instagram's limit per post
