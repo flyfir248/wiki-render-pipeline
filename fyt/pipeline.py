@@ -401,6 +401,8 @@ def story_models(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     if story is None:
         return script, {}
     wanted = assetlib.wanted(script, story)
+    if wanted and "image_to_3d" in cfg.visuals.asset_sources:
+        log(job, assetlib.generator_status(cfg))
     found = assetlib.resolve_all(cfg, story, wanted, log=lambda m: log(job, m)) if wanted else {}
     srcs = assetlib.stage(found, job.public)
     script, back = assetlib.attach(script, story, found, srcs)

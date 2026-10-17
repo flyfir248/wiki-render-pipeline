@@ -303,6 +303,25 @@ def generator(cfg: Config) -> tuple[str, str]:
     return ("space", space) if space else ("", "")
 
 
+def generator_status(cfg: Config) -> str:
+    """One line on the generation setup, for the log: where it runs and whether it answers. Costs no GPU
+    time: a Space is only asked which endpoints it has. Secrets are named, never shown."""
+    kind, where = generator(cfg)
+    if not kind:
+        return "image-to-3D: off (set the IMAGE_TO_3D_SPACE variable or the IMAGE_TO_3D_URL secret)"
+    if kind == "worker":
+        return f"image-to-3D: GPU worker set; IMAGE_TO_3D_TOKEN {'set' if secret('IMAGE_TO_3D_TOKEN') else 'not set'}"
+    token = "set" if secret("HF_TOKEN") else "not set"
+    try:
+        from gradio_client import Client
+
+        names = sorted((Client(where, token=secret("HF_TOKEN"), verbose=False).view_api(return_format="dict", print_info=False)
+                        or {}).get("named_endpoints", {}))
+        return f"image-to-3D: Space {where} (HF_TOKEN {token}) answers; endpoints: {', '.join(names)[:300]}"
+    except Exception as e:
+        return f"image-to-3D: Space {where} (HF_TOKEN {token}) did not answer: {str(e)[:200]}"
+
+
 def concept(entity: Entity, out: Path) -> Path:
     """The picture a model is generated from: the entity alone on white, drawn in the house style."""
     from fyt import artgen
