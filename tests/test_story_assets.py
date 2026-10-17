@@ -191,6 +191,58 @@ def test_no_vision_check_no_model(cache, monkeypatch):
     assert not any(assetlib._missed(t) for t in BEAR.search)
 
 
+def fake_prepare(raw, out, triangles, texture=1024):
+    out.write_bytes(b"prepared")
+    return {"ok": True, "triangles": 6000, "bytes": 8, "size": [1.0, 0.8, 2.0], "clips": []}
+
+
+def generating(monkeypatch, made: list):
+    """Generation through a fake GPU worker; `made` records each concept picture sent."""
+    from fyt import artgen
+    from PIL import Image
+
+    monkeypatch.setattr(assetlib, "prepare", fake_prepare)
+    monkeypatch.setattr(artgen, "provider", lambda: "test")
+    monkeypatch.setattr(assetlib, "concept", lambda e, out: Image.new("RGB", (8, 8), "white").save(out) or out)
+
+    def worker(url, picture, dest):
+        made.append(picture.name)
+        dest.write_bytes(b"glTF....")
+        return dest
+
+    monkeypatch.setattr(assetlib, "_from_worker", worker)
+    cfg = Config(format="short")
+    cfg.visuals.asset_sources = ["sketchfab", "image_to_3d"]
+    cfg.visuals.image_to_3d_url = "https://gpu.example.com/trellis2"
+    return cfg
+
+
+def test_a_model_is_generated_only_when_no_library_has_one(cache, monkeypatch):
+    made: list = []
+    cfg = generating(monkeypatch, made)
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: [fake_candidate("Black Bear", "cc0")]})
+    assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)["source"] != "generated"
+    assert made == []
+
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: []})
+    plane = assetlib.resolve(cfg, PLANE, "medium", log=lambda m: None)
+    assert plane["source"] == "generated" and plane["illustrative"] and len(made) == 1
+    assert assetlib.cached(assetlib.slug("cessna 404"))  # cached, so the next video reuses it
+
+
+def test_generation_is_capped_per_video_and_a_failure_is_not_retried(cache, monkeypatch):
+    made: list = []
+    cfg = generating(monkeypatch, made)
+    cfg.visuals.max_generated = 1
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: []})
+    got = assetlib.resolve_all(cfg, bear_manifest(), {"bear": "medium", "smuggler-plane": "medium"}, log=lambda m: None)
+    assert list(got) == ["bear"] and len(made) == 1
+
+    monkeypatch.setattr(assetlib, "looks_right", lambda cfg, e, term, pic: (False, "a dog"))  # a bad concept picture
+    assert assetlib.resolve(cfg, PLANE, "medium", log=lambda m: None) is None
+    assert assetlib._missed("generated-cessna 404") and len(made) == 1  # no GPU time spent on it, nor again tomorrow
+
+
 def test_a_part_or_remains_is_not_the_thing():
     assert assetlib.relevant("american black bear", "MSCC007 Ursus americanus Left Mandible", ["bear", "black bear"]) == 0
     assert assetlib.relevant("black bear", "MSCC 007 U Americanus Left Femur Mesh", ["black bear"]) == 0

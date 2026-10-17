@@ -126,8 +126,15 @@ are in the narration. Then:
   can perform (present, move, approach, depart, rise, fall, turn, shake), not a list of things.
 - `fyt/assetlib.py` finds one model per entity for the whole video: the project library, the model cache,
   then Sketchfab's search (only CC0, CC BY and CC BY-SA models; downloaded from the Objaverse mirror on
-  Hugging Face with no key, or from Sketchfab with `SKETCHFAB_TOKEN`), Poly Pizza (`POLY_PIZZA_KEY`), and
-  an image-to-3D Space when `visuals.image_to_3d_space` is set. A candidate must name the entity's noun,
+  Hugging Face with no key, or from Sketchfab with `SKETCHFAB_TOKEN`), and Poly Pizza (`POLY_PIZZA_KEY`).
+  Only when none of those has the thing is a new model generated (at most `visuals.max_generated` a video).
+  A concept picture of it is drawn in the house style, checked by eye, and made 3D on a GPU, never on the
+  Actions runner. The GPU is either a worker you host (TRELLIS.2, Hunyuan3D or any other) at the
+  `IMAGE_TO_3D_URL` secret, or a Hugging Face Space named in the `IMAGE_TO_3D_SPACE` repository variable
+  (e.g. `microsoft/TRELLIS.2`, run on free ZeroGPU minutes with `HF_TOKEN`). The worker's contract: it takes
+  a POST with the picture as multipart field `image` and an optional `Authorization: Bearer
+  $IMAGE_TO_3D_TOKEN`, and answers with the GLB itself or `{"glb_url": ...}`. A generated model is labelled
+  illustrative, and it is cached like a found one, so it is generated once. A library candidate must name the entity's noun,
   pass a vision check of its preview, load, and hold real detail; it is then simplified to the shot's
   triangle budget (`renderer/prepare-model.mjs`) and stored with its source, author and licence. CC BY
   models are credited in the video's description. Found models are kept on the `asset-library` branch, so

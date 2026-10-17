@@ -127,7 +127,7 @@ def _read(path: Path, default):
 def cached(key: str) -> dict | None:
     meta = _read(CACHE / key / "meta.json", None)
     # Only models whose preview a vision check passed (an older, text-only match is searched for again).
-    if meta and meta.get("ok") and meta.get("checked") in ("vision", "vetted") and (CACHE / key / "model.glb").is_file():
+    if meta and meta.get("ok") and meta.get("checked") in ("vision", "concept", "vetted") and (CACHE / key / "model.glb").is_file():
         return meta | {"file": str(CACHE / key / "model.glb")}
     return None
 
@@ -289,12 +289,80 @@ def polypizza(cfg: Config, term: str, log) -> list[dict]:
     return out
 
 
+GENERATE_SECONDS = 600  # one image-to-3D job, queue included; a GPU worker that takes longer is given up on
+
+
+def generator(cfg: Config) -> tuple[str, str]:
+    """Where models are generated: ("worker", url) for the GPU worker at `image_to_3d_url` (or the
+    IMAGE_TO_3D_URL secret), else ("space", id) for the Hugging Face Space at `image_to_3d_space` (or
+    IMAGE_TO_3D_SPACE), else ("", "") when generation is off."""
+    url = cfg.visuals.image_to_3d_url or secret("IMAGE_TO_3D_URL")
+    if url:
+        return "worker", url
+    space = cfg.visuals.image_to_3d_space or secret("IMAGE_TO_3D_SPACE")
+    return ("space", space) if space else ("", "")
+
+
+def concept(entity: Entity, out: Path) -> Path:
+    """The picture a model is generated from: the entity alone on white, drawn in the house style."""
+    from fyt import artgen
+
+    thing = f"{entity.search[0]}, {entity.look}"
+    artgen.cut_out(artgen.generate(f"{artgen.PROP.format(thing=thing)} {artgen.STYLE}", seed=23)).save(out)
+    return out
+
+
+def _from_worker(url: str, picture: Path, dest: Path) -> Path:
+    """A GPU worker over plain HTTP (TRELLIS.2, Hunyuan3D or any other behind it): POST the picture as
+    multipart field `image`, get back the GLB itself or JSON {"glb_url": ...}. IMAGE_TO_3D_TOKEN, if set,
+    is sent as a bearer token."""
+    token = secret("IMAGE_TO_3D_TOKEN")
+    headers = {"Authorization": f"Bearer {token}"} if token else {}
+    with picture.open("rb") as f:
+        r = requests.post(url, files={"image": (picture.name, f, "image/png")}, headers=headers,
+                          timeout=GENERATE_SECONDS)
+    r.raise_for_status()
+    if r.content[:4] == b"glTF":
+        dest.write_bytes(r.content)
+        return dest
+    url = r.json().get("glb_url")
+    if not url:
+        raise RuntimeError(f"the worker sent neither a GLB nor a glb_url: {r.text[:120]}")
+    return _download(url, dest, limit_mb=200)
+
+
+def _from_space(space: str, picture: Path, dest: Path) -> Path:
+    from gradio_client import Client, handle_file
+
+    client = Client(space, token=secret("HF_TOKEN"), verbose=False)
+    names = set((client.view_api(return_format="dict", print_info=False) or {}).get("named_endpoints", {}))
+
+    def call(api: str, **kw):
+        return client.submit(api_name=api, **kw).result(timeout=GENERATE_SECONDS)
+
+    if "/start_session" in names:
+        call("/start_session")
+    if {"/image_to_3d", "/extract_glb"} <= names:
+        call("/image_to_3d", image=handle_file(str(picture)))
+        glb = call("/extract_glb")
+    elif "/generation_all" in names:
+        glb = call("/generation_all", image=handle_file(str(picture)))
+    elif "/shape_generation" in names:
+        glb = call("/shape_generation", image=handle_file(str(picture)))
+    else:
+        raise RuntimeError(f"{space} offers no image-to-3D endpoint this code knows: {sorted(names)[:10]}")
+    file = next((x for x in (glb if isinstance(glb, (list, tuple)) else [glb]) if str(x.get("path") if isinstance(x, dict) else x).endswith(".glb")), None)
+    if file is None:
+        raise RuntimeError(f"the Space returned no .glb: {str(glb)[:160]}")
+    shutil.copy2(file.get("path") if isinstance(file, dict) else file, dest)
+    return dest
+
+
 def image_to_3d(cfg: Config, term: str, log, entity: Entity | None = None) -> list[dict]:
-    """A model generated from a picture of the entity (drawn in the house style on white), by the
-    image-to-3D Space configured in `visuals.image_to_3d_space`. Its look is the picture's, so the
-    scene is labelled an illustration."""
-    space = cfg.visuals.image_to_3d_space
-    if not space or entity is None:
+    """A model generated for the entity: a concept picture of it is drawn and checked by eye, then made 3D
+    by a GPU worker (see `generator`). Its look is the picture's, so the scene is labelled illustrative."""
+    kind, where = generator(cfg)
+    if not kind or entity is None:
         return []
     from fyt import artgen
 
@@ -302,30 +370,19 @@ def image_to_3d(cfg: Config, term: str, log, entity: Entity | None = None) -> li
         return []
 
     def fetch(dest: Path) -> Path:
-        from gradio_client import Client, handle_file  # optional: pip install gradio_client
+        picture = concept(entity, dest.with_suffix(".png"))
+        ok, why = looks_right(cfg, entity, term, picture)
+        if ok is None:
+            raise Unchecked(f"{term} concept picture")
+        if not ok:
+            raise RuntimeError(f"the concept picture is not a {term}: {why}")
+        log(f"assets: generating {entity.name} in 3D with {'the GPU worker' if kind == 'worker' else where}")
+        return _from_worker(where, picture, dest) if kind == "worker" else _from_space(where, picture, dest)
 
-        picture = dest.with_suffix(".png")
-        thing = f"{entity.search[0]}, {entity.look}"
-        artgen.cut_out(artgen.generate(f"{artgen.PROP.format(thing=thing)} {artgen.STYLE}", seed=23)).save(picture)
-        client = Client(space, hf_token=secret("HF_TOKEN"))
-        names = {e for e in (client.view_api(return_format="dict", print_info=False) or {}).get("named_endpoints", {})}
-        if "/start_session" in names:
-            client.predict(api_name="/start_session")
-        if "/image_to_3d" in names and "/extract_glb" in names:  # TRELLIS
-            client.predict(image=handle_file(str(picture)), multiimages=[], api_name="/image_to_3d")
-            glb = client.predict(mesh_simplify=0.95, texture_size=1024, api_name="/extract_glb")
-        elif "/generation_all" in names:  # Hunyuan3D-style
-            glb = client.predict(image=handle_file(str(picture)), api_name="/generation_all")
-        else:
-            raise RuntimeError(f"{space} offers no image-to-3D endpoint this code knows: {sorted(names)[:8]}")
-        file = glb[0] if isinstance(glb, (list, tuple)) else glb
-        file = file.get("path") if isinstance(file, dict) else file
-        shutil.copy2(file, dest)
-        return dest
-
+    host = "" if kind == "worker" else f"https://huggingface.co/spaces/{where}"
     return [{
         "uid": f"generated:{slug(term)}", "source": "generated", "title": f"{term} (generated)", "tags": [term],
-        "author": f"generated with {space}", "licence": "generated", "url": f"https://huggingface.co/spaces/{space}",
+        "author": "generated on a GPU worker" if kind == "worker" else f"generated with {where}", "licence": "generated", "url": host,
         "thumb": None, "triangles": 0, "animated": False, "score": 1.0, "fetch": fetch, "illustrative": True,
     }]
 
@@ -397,6 +454,8 @@ def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log) ->
                 _note_rejected(c["uid"], f"vision: {why}")
                 return None
             c["checked"] = "vision"
+        else:
+            c["checked"] = "concept"  # its concept picture was checked by eye before it was generated (image_to_3d)
         raw = c["fetch"](work / "raw.glb")
         budget = cfg.visuals.triangles.get(fidelity, 40000)
         info = prepare(raw, work / "model.glb", budget)
@@ -450,16 +509,16 @@ class Unchecked(Exception):
     """No vision check can be made now (the free allowance is spent, or none is configured)."""
 
 
-def resolve(cfg: Config, entity: Entity, fidelity: str = "medium", log=print) -> dict | None:
+def resolve(cfg: Config, entity: Entity, fidelity: str = "medium", log=print, generate: bool = True) -> dict | None:
     """The model for one entity, best source first (see the module docstring), or None."""
     try:
-        return _resolve(cfg, entity, fidelity, log)
+        return _resolve(cfg, entity, fidelity, log, generate)
     except Unchecked as e:  # not a miss: the same search is tried again when the check is back
         log(f"assets: no vision check could be made (first candidate {str(e)!r}); {entity.name} stays painted this time")
         return None
 
 
-def _resolve(cfg: Config, entity: Entity, fidelity: str, log) -> dict | None:
+def _resolve(cfg: Config, entity: Entity, fidelity: str, log, generate: bool = True) -> dict | None:
     found = project_model(entity)
     if found:
         return found
@@ -467,26 +526,34 @@ def _resolve(cfg: Config, entity: Entity, fidelity: str, log) -> dict | None:
         hit = cached(slug(term))
         if hit:
             return hit
+    # Libraries first, every search term; a model is generated only when none of them has one.
     for term in entity.search:
         if _missed(term):
             continue
         searched = False
         for name in cfg.visuals.asset_sources:
             source = SOURCES.get(name)
-            if source is None:
+            if source is None or name == "image_to_3d":
                 continue
             try:
-                found_ = source(cfg, term, log, entity) if name == "image_to_3d" else source(cfg, term, log)
+                found_ = source(cfg, term, log)
             except Exception as e:
                 log(f"assets: {name} search for {term!r} failed: {str(e)[:120]}")
                 continue
-            searched = searched or name != "image_to_3d" or bool(found_)
+            searched = True
             for c in sorted(found_, key=lambda c: -c["score"]):
                 hit = _try(cfg, entity, term, c, fidelity, log)
                 if hit:
                     return hit
         if searched:  # a search that ran and found nothing usable; an outage is tried again next time
             _note_miss(term)
+    term = entity.search[0]
+    if generate and "image_to_3d" in cfg.visuals.asset_sources and not _missed(f"generated-{term}"):
+        for c in image_to_3d(cfg, term, log, entity):
+            hit = _try(cfg, entity, term, c, fidelity, log)
+            if hit:
+                return hit
+            _note_miss(f"generated-{term}")  # GPU time is not spent on the same failure every day
     return None
 
 
@@ -494,11 +561,13 @@ def resolve_all(cfg: Config, m: "manifest.Manifest", wanted: dict[str, str], log
     """Models for the entities the plan wants in 3D ({entity id: fidelity}), within a time limit."""
     out: dict[str, dict] = {}
     start = time.monotonic()
+    generated = 0
     for eid, fidelity in wanted.items():
         e = manifest.entity(m, eid)
         if e is None or time.monotonic() - start > time_limit:
             continue
-        hit = resolve(cfg, e, fidelity, log)
+        hit = resolve(cfg, e, fidelity, log, generate=generated < cfg.visuals.max_generated)
+        generated += bool(hit and hit.get("source") == "generated")
         if hit:
             out[eid] = hit
         else:

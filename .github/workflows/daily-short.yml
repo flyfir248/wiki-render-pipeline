@@ -208,6 +208,9 @@ jobs:
           SKETCHFAB_TOKEN: ${{ secrets.SKETCHFAB_TOKEN }}
           POLY_PIZZA_KEY: ${{ secrets.POLY_PIZZA_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          IMAGE_TO_3D_URL: ${{ secrets.IMAGE_TO_3D_URL }}
+          IMAGE_TO_3D_TOKEN: ${{ secrets.IMAGE_TO_3D_TOKEN }}
+          IMAGE_TO_3D_SPACE: ${{ vars.IMAGE_TO_3D_SPACE }}
         run: |
           if [ "$TASK" = fill ]; then
             python -m fyt fill

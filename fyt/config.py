@@ -64,9 +64,14 @@ class VisualsConfig(BaseModel):
     # Where models are looked for, in order, after the project library and the model cache:
     # sketchfab: Sketchfab's search, downloaded from the Objaverse mirror (no key) or with SKETCHFAB_TOKEN;
     # polypizza: Poly Pizza's CC0 / CC-BY low-poly library (POLY_PIZZA_KEY, free);
-    # image_to_3d: a picture drawn in the house style, made 3D by `image_to_3d_space` (Hugging Face).
+    # image_to_3d: only when no library has the thing, a concept picture of it is drawn, checked by eye
+    # and made 3D on a GPU (never on the Actions runner): the worker at `image_to_3d_url` if set (any host
+    # running TRELLIS.2 or Hunyuan3D; see fyt.assetlib._from_worker), else the Hugging Face Space at
+    # `image_to_3d_space` (free ZeroGPU minutes with HF_TOKEN). Both empty leaves generation out.
     asset_sources: list[str] = ["sketchfab", "polypizza", "image_to_3d"]
-    image_to_3d_space: str = ""  # e.g. "trellis-community/TRELLIS"; empty leaves generation out
+    image_to_3d_url: str = ""
+    image_to_3d_space: str = ""  # e.g. "microsoft/TRELLIS.2"
+    max_generated: int = 2  # new models generated per video at most; each is cached and reused after
     licences: list[str] = ["cc0", "by", "by-sa"]  # free to use commercially, with credit for by / by-sa
     max_model_mb: float = 12.0
     # Triangle budget by how close the camera gets: a close-up needs the detail, a wide shot doesn't.
