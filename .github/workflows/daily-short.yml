@@ -226,6 +226,10 @@ jobs:
             jobs/*/job.json
             jobs/*/localizations.json
             jobs/*/props.json
+            jobs/*/shotlist.json
+            jobs/*/visualplan.json
+            jobs/*/qc.json
+            jobs/*/contact.png
           retention-days: 7
           if-no-files-found: ignore
 
