@@ -50,7 +50,9 @@ permissions:
 jobs:
   make:
     runs-on: ubuntu-latest
-    timeout-minutes: 170 # fill stops starting new videos after 120 minutes
+    # fill stops starting new videos after 120 minutes; a test render waits out Groq's free
+    # rate limits on every step, so it gets longer
+    timeout-minutes: ${{ inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long') && 330 || 170 }}
     env:
       TASK: ${{ inputs.task || (github.event.schedule == '40 15,23 * * *' && 'reels') || 'fill' }}
     steps:
