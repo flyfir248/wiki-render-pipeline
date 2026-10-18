@@ -68,13 +68,14 @@ def _body(description: str) -> str:
     return ""
 
 
-def caption(cfg: Config, script: Script) -> str:
+def caption(cfg: Config, script: Script, cta: str | None = None) -> str:
+    """`cta` replaces instagram.cta, e.g. with a link where links can be tapped."""
     ig = cfg.instagram
     parts = [script.title.strip()]
     body = _body(script.description)
     if body and body != parts[0]:
         parts.append(body)
-    cta = ig.cta.strip()
+    cta = (ig.cta if cta is None else cta).strip()
     if cta:
         handle = ig.youtube_handle.strip()
         parts.append(f"▶️ {cta}" + (f" ({handle})" if handle and handle not in cta else ""))
@@ -251,7 +252,7 @@ def caption_for(cfg: Config, folder: Path) -> str:
     return caption(cfg, Script.model_validate_json((folder / "script.json").read_text()))
 
 
-def post_due(cfg: Config, now: datetime | None = None) -> int:
+def post_due(cfg: Config, now: datetime | None = None, tmp: Path | None = None) -> int:
     """Post the Shorts that have gone public on YouTube as Reels. Returns how many were posted."""
     ig = cfg.instagram
     if not credentials():
@@ -267,9 +268,9 @@ def post_due(cfg: Config, now: datetime | None = None) -> int:
     uploads.queue_recent_shorts(since)
     due = uploads.due_reels(now.isoformat(timespec="seconds"), since)
     posted = 0
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory() as own:  # `tmp`: where run artifacts fetched for other platforms are kept
         for youtube_id, job_id, run in due[: ig.max_per_run]:
-            folder = find_files(cfg, job_id, run, Path(tmp)) if job_id else None
+            folder = find_files(cfg, job_id, run, tmp or Path(own)) if job_id else None
             if folder is None:
                 print(f"::warning::no video file for https://youtu.be/{youtube_id}; not posted to Instagram")
                 uploads.reel_done(youtube_id, None)

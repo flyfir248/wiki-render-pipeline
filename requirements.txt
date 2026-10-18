@@ -11,3 +11,4 @@ kokoro-onnx>=0.4
 pillow>=10.0
 numpy>=1.24
 gradio_client>=1.5
+cryptography>=41

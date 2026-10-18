@@ -71,7 +71,7 @@ def main(argv: list[str] | None = None) -> None:
     rl = sub.add_parser("reel", help="write a Short's Instagram caption (instagram.txt); --post also posts it as a Reel")
     rl.add_argument("job")
     rl.add_argument("--post", action="store_true", help="post it to Instagram now")
-    sub.add_parser("reels", help="post Shorts that are public on YouTube as Instagram Reels (instagram.publish)")
+    sub.add_parser("reels", help="post Shorts that are public on YouTube to Instagram, Facebook and Threads (*.publish)")
     it = sub.add_parser("ig-token", help="make the INSTAGRAM_TOKEN and INSTAGRAM_USER_ID secrets from a Graph API Explorer token")
     it.add_argument("--app-id", required=True)
     it.add_argument("--app-secret", required=True)
@@ -247,9 +247,15 @@ def main(argv: list[str] | None = None) -> None:
                 Uploads(cfg).queue_reel(job.meta["youtube_id"], job.id, None)
                 Uploads(cfg).reel_done(job.meta["youtube_id"], media_id)
     elif args.cmd == "reels":
-        from fyt import instagram
+        import tempfile
 
-        print(f"posted {instagram.post_due(cfg)} Reels")
+        from fyt import crosspost, instagram
+
+        with tempfile.TemporaryDirectory() as tmp:  # run artifacts are fetched once for all three
+            print(f"posted {instagram.post_due(cfg, tmp=Path(tmp))} Reels")
+            for platform in crosspost.PLATFORMS:
+                if getattr(cfg, platform).publish:
+                    print(f"posted {crosspost.post_due(cfg, platform, tmp=Path(tmp))} to {platform.title()}")
     elif args.cmd == "ig-token":
         from fyt import instagram
 

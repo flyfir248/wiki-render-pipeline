@@ -101,6 +101,17 @@ instagram:
   max_hashtags: 5           # Instagram's limit per post
   host: litterbox           # Instagram fetches each Reel from a link on litterbox.catbox.moe, deleted after 1 hour
 
+# The same Shorts as Reels on the Facebook Page linked to the Instagram account, with a link to the
+# Short on YouTube. Uses INSTAGRAM_TOKEN, which needs the pages_manage_posts permission too.
+facebook:
+  publish: true
+
+# The same Shorts on Threads, with a link to the Short on YouTube. Needs the THREADS_TOKEN and
+# THREADS_APP_SECRET secrets; see "Facebook and Threads" in the README.
+threads:
+  publish: true
+  topic: "Weird History"    # Threads takes one topic tag per post
+
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is
 # set; without the secret it only makes the video.

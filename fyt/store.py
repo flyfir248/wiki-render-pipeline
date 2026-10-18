@@ -112,6 +112,16 @@ class Uploads:
                 posted text
             )"""
         )
+        self.db.execute(
+            """create table if not exists crossposts (
+                youtube_id text not null,  -- a Short in reels
+                platform text not null,    -- facebook, threads
+                tries integer not null default 0,
+                post_id text,
+                posted text,
+                primary key (youtube_id, platform)
+            )"""
+        )
         self.db.commit()
 
     def note(self, key: str) -> str | None:
@@ -200,6 +210,27 @@ class Uploads:
             self.db.execute("update reels set posted=?, media_id=? where youtube_id=?", (now(), media_id, youtube_id))
         else:
             self.db.execute("update reels set tries=tries+1 where youtube_id=?", (youtube_id,))
+        self.db.commit()
+
+    def due_crossposts(self, platform: str, now: str, since: str, max_tries: int = 6) -> list[tuple[str, str, str | None]]:
+        """Like due_reels, for another platform: queued Shorts public by now, not yet posted there."""
+        rows = self.db.execute(
+            "select r.youtube_id, r.job, r.run from reels r left join crossposts c"
+            " on c.youtube_id = r.youtube_id and c.platform = ?"
+            " where c.posted is null and coalesce(c.tries, 0) < ?"
+            " and coalesce(r.due, ?) <= ? and coalesce(r.due, ?) >= ? order by r.due",
+            (platform, max_tries, now, now, now, since),
+        )
+        return rows.fetchall()
+
+    def crosspost_done(self, youtube_id: str, platform: str, post_id: str | None) -> None:
+        self.db.execute("insert or ignore into crossposts(youtube_id, platform) values (?, ?)", (youtube_id, platform))
+        if post_id:
+            self.db.execute(
+                "update crossposts set posted=?, post_id=? where youtube_id=? and platform=?", (now(), post_id, youtube_id, platform)
+            )
+        else:
+            self.db.execute("update crossposts set tries=tries+1 where youtube_id=? and platform=?", (youtube_id, platform))
         self.db.commit()
 
     def filled(self) -> dict[str, tuple[str, str]]:

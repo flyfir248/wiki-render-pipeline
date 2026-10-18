@@ -425,6 +425,26 @@ Facebook Page. Once:
 
 Instagram allows 100 posts a day through the API; the channel makes about three Shorts a day.
 
+## Facebook and Threads
+
+The same Shorts can go up on the Facebook Page and on Threads (`fyt/crosspost.py`, `facebook` and `threads`
+in `channel.yaml`), from the same queue and in the same step as the Reels. Links can be tapped on both, so
+each post links straight to the Short on YouTube. A platform whose access doesn't work yet is skipped with
+a warning in the run, without using up the Shorts' retries.
+
+- **Facebook** posts a Reel to the Page the Instagram account is linked to, with the `INSTAGRAM_TOKEN`
+  secret. The token needs `pages_manage_posts` on top of the Instagram permissions: in Business Settings,
+  **Users > System users**, pick the system user, check it has the Page as an asset (full control), then
+  **Generate new token** with `pages_manage_posts`, `pages_read_engagement`, `pages_show_list` and the
+  Instagram permissions, and put it in `INSTAGRAM_TOKEN`.
+- **Threads** has its own API. In the Meta app, **Add use case > Access the Threads API** with
+  `threads_basic` and `threads_content_publish`; under **App roles > Roles** add the Threads account as a
+  Threads tester and accept the invite in the Threads app (**Settings > Account > Website permissions**).
+  Then generate a token for it in the use case's settings and add it as `THREADS_TOKEN`, with the Threads
+  app secret (**App settings > Basic**, Threads app secret) as `THREADS_APP_SECRET`. Threads tokens last
+  60 days; with the app secret the run renews it every week and keeps it in `state.db`, encrypted with the
+  app secret. Threads only takes videos from a link, so it always uses the temporary host.
+
 ## Monetization: read this before going hands-off
 
 - **YouTube Partner Program:** 1,000 subscribers plus 4,000 public watch hours in 12 months,
