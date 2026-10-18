@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "black-bear",
+  "query": "black bear",
+  "source": "objaverse",
+  "uid": "sketchfab:8061ded0b9fa4133bf02582d27caf2a6",
+  "title": "Low-poly Black Bear",
+  "author": "Zafflex",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-8061ded0b9fa4133bf02582d27caf2a6",
+  "checked": "vision",
+  "triangles": 888,
+  "bytes": 55696,
+  "size": [
+    1.2824,
+    0.6665,
+    0.5122
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "a full-grown American black bear, glossy black fur, brown muzzle, on all fours",
+  "added": "2026-10-18T00:18:04+00:00"
+}
