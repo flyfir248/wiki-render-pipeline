@@ -251,6 +251,25 @@ class InstagramConfig(BaseModel):
     api_version: str = "v26.0"
 
 
+class FacebookConfig(BaseModel):
+    """Shorts cross-posted as Reels on the Facebook Page linked to the Instagram account (fyt/crosspost.py).
+    Uses the INSTAGRAM_TOKEN secret, which needs pages_manage_posts on top of the Instagram permissions.
+    Shares instagram's caption, max_age_hours and host settings."""
+
+    # Post each Short queued for Instagram to the Page too, once it is public on YouTube.
+    publish: bool = False
+    max_per_run: int = 3
+
+
+class ThreadsConfig(BaseModel):
+    """Shorts cross-posted to Threads, with a link to the Short on YouTube (fyt/crosspost.py).
+    Needs the THREADS_TOKEN secret (and THREADS_APP_SECRET to keep it from expiring)."""
+
+    publish: bool = False
+    topic: str = ""  # Threads takes one topic tag per post (e.g. "Weird History")
+    max_per_run: int = 3
+
+
 class Config(BaseModel):
     channel: ChannelInfo = Field(default_factory=ChannelInfo)
     format: Literal["long", "short"] = "long"
@@ -294,6 +313,8 @@ class Config(BaseModel):
     schedule: ScheduleConfig = Field(default_factory=ScheduleConfig)
     growth: GrowthConfig = Field(default_factory=GrowthConfig)
     instagram: InstagramConfig = Field(default_factory=InstagramConfig)
+    facebook: FacebookConfig = Field(default_factory=FacebookConfig)
+    threads: ThreadsConfig = Field(default_factory=ThreadsConfig)
     # Upload only after `fyt approve <job>`; strongly recommended (see README).
     require_review: bool = True
     jobs_dir: str = "jobs"

@@ -66,6 +66,11 @@ instagram:              # Shorts also posted as Instagram Reels (see README)
   youtube_handle: ""
   hashtags: []
   max_hashtags: 5
+facebook:               # the same Shorts as Reels on the linked Facebook Page (see README)
+  publish: false
+threads:                # the same Shorts on Threads, with a link to YouTube (see README)
+  publish: false
+  topic: ""
 
 require_review: true    # videos wait for `fyt approve` before upload
 
