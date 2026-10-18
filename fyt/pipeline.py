@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import json
 import random
+import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, youtube
+from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, youtube
+from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
 from fyt.store import Job, Topics, Uploads, list_jobs
@@ -17,6 +19,11 @@ from fyt.timeline import build_props, to_srt
 
 def log(job: Job, msg: str) -> None:
     print(f"[{job.id}] {msg}", flush=True)
+    try:  # kept with the job too, so a test render's report carries its log
+        with open(job.file("log.txt"), "a") as f:
+            f.write(msg + "\n")
+    except OSError:
+        pass
 
 
 def make_video(
@@ -102,7 +109,9 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)
         script = check_facts(cfg, job, script, notes)
-    script = plan_visuals(cfg, job, script, notes)
+    story = read_story(cfg, job, script, notes)
+    script = plan_visuals(cfg, job, script, notes, story)
+    script, found = story_models(cfg, job, script, story)
     if two_part:
         script = script.model_copy(update={"title": f"{script.title[:88]} (Part 1)"})
         job.update(two_part=True)
@@ -137,6 +146,12 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             update={"description": script.description.rstrip() + "\n\nImages from Wikimedia Commons:\n" + "\n".join(credits)}
         )
         job.file("script.json").write_text(script.model_dump_json(indent=2))
+    model_credits = assetlib.credits(found)
+    if model_credits:
+        script = script.model_copy(
+            update={"description": script.description.rstrip() + "\n\n3D models:\n" + "\n".join(model_credits)}
+        )
+        job.file("script.json").write_text(script.model_dump_json(indent=2))
     chapters = chapter_list(script, spans)
     if chapters:
         script = script.model_copy(update={"description": script.description.rstrip() + "\n\n" + chapters})
@@ -168,8 +183,11 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
                 log(job, f"{missing} story props had no matching illustration and are left out")
         except Exception as e:  # without illustrations, story scenes fall back to text
             log(job, f"warning: no story illustrations: {e}")
+    drawn += stage_backdrops(cfg, job, script)
+    script = relevance_gate(cfg, job, script, story, spans, [c.words for c in clips], scene_media, shots)
     beats = {}
-    if cfg.storyboard and artgen.provider():
+    if cfg.storyboard and artgen.provider() and not artgen.out_of_allowance():
+        staged = script
         script, back = visualplan.painted(script)
         if back:
             log(job, f"scenes {[i + 1 for i in back]}: illustrative 3D swapped for painted storyboard pictures, so the video keeps one style")
@@ -177,10 +195,16 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         try:
             log(job, "storyboarding: an illustration for each sentence")
             beats = storyboard.make(
-                cfg, script, spans, [c.words for c in clips], job.public, log=lambda m: log(job, m), drawn=drawn
+                cfg, script, spans, [c.words for c in clips], job.public, log=lambda m: log(job, m), drawn=drawn,
+                known={e.name: e.look for e in story.entities} if story else None,
             )
         except Exception as e:  # the scenes still have their own graphics and photos
             log(job, f"warning: storyboard failed: {e}")
+        undrawn = [i for i in back if not beats.get(i)]
+        if undrawn:  # a painted picture that never came: the 3D scene beats a bare text card
+            script = script.model_copy(update={"scenes": [staged.scenes[i] if i in undrawn else sc for i, sc in enumerate(script.scenes)]})
+            log(job, f"scenes {[i + 1 for i in undrawn]}: no painted picture was drawn, so their 3D scenes stay")
+            job.file("script.json").write_text(script.model_dump_json(indent=2))
     effects = None
     if cfg.sound_effects:
         try:
@@ -356,6 +380,10 @@ def check_facts(cfg: Config, job: Job, script: Script, notes: str) -> Script:
     except Exception as e:
         problems = [f"the fact check could not run: {e}"]
     if problems:
+        cut = without_failed_scenes(script, problems)
+        if cut is not None:
+            log(job, f"dropped the scenes the source doesn't back after a rewrite: {'; '.join(problems)[:300]}")
+            return cut
         job.file("script.json").write_text(script.model_dump_json(indent=2))
         job.update(status="qa_failed", problems=problems)
         raise RuntimeError("script failed the fact check: " + "; ".join(problems))
@@ -363,14 +391,117 @@ def check_facts(cfg: Config, job: Job, script: Script, notes: str) -> Script:
     return script
 
 
-def plan_visuals(cfg: Config, job: Job, script: Script, notes: str) -> Script:
+MIN_SCENES_LEFT = 5
+
+
+def without_failed_scenes(script: Script, problems: list[str]) -> Script | None:
+    """The script with the scenes that still fail the fact check taken out, when that is a clean cut:
+    every problem names a scene, the opening scene is not one of them, at most two go, and at least
+    MIN_SCENES_LEFT remain. Otherwise None, and the video stops. A claim cut is a claim not made."""
+    bad = set()
+    for p in problems:
+        m = re.match(r"scene (\d+):", p)
+        if not m:
+            return None
+        bad.add(int(m.group(1)))
+    n = len(script.scenes)
+    if 1 in bad or len(bad) > 2 or n - len(bad) < MIN_SCENES_LEFT or any(not 1 <= k <= n for k in bad):
+        return None
+    return script.model_copy(update={"scenes": [sc for i, sc in enumerate(script.scenes, 1) if i not in bad]})
+
+
+def read_story(cfg: Config, job: Job, script: Script, notes: str) -> "story_manifest.Manifest | None":
+    """The story's asset manifest (fyt/manifest.py): its entities, places and showable moments, read
+    from the fact-checked script before any picture is chosen. Written to manifest.json."""
+    if not (cfg.visuals.plan and cfg.visuals.story_assets):
+        return None
+    log(job, "reading the story: what it shows")
+    try:
+        story = story_manifest.analyse(cfg, script, notes)
+    except Exception as e:  # without it, 3D comes only from the catalog's guarded keyword plan
+        log(job, f"warning: could not read the story's entities ({str(e)[:160]}); 3D limited to the catalog's guarded plan")
+        return None
+    job.file("manifest.json").write_text(story_manifest.dumps(story))
+    log(job, f"story: {', '.join(e.name for e in story.entities) or 'no showable entities'}; {len(story.moments)} moments")
+    return story
+
+
+def story_models(cfg: Config, job: Job, script: Script, story: "story_manifest.Manifest | None") -> tuple[Script, dict]:
+    """Models for the entities the plan put on the 3D stage (fyt/assetlib.py), one per entity for the
+    whole video; a stage scene whose entity has no usable model goes back to its 2D scene. The video's
+    asset registry is written to assets.json."""
+    if story is None:
+        return script, {}
+    wanted = assetlib.wanted(script, story)
+    if wanted and "image_to_3d" in cfg.visuals.asset_sources:
+        log(job, assetlib.generator_status(cfg))
+    found = assetlib.resolve_all(cfg, story, wanted, log=lambda m: log(job, m)) if wanted else {}
+    srcs = assetlib.stage(found, job.public)
+    script, back = assetlib.attach(script, story, found, srcs)
+    if back:
+        log(job, f"scenes {[i + 1 for i in back]}: no model of their entity, so they stay 2D")
+    job.file("assets.json").write_text(json.dumps(assetlib.registry(story, found), indent=2))
+    return script, found
+
+
+def stage_backdrops(cfg: Config, job: Job, script: Script) -> int:
+    """A painted plate of its place behind each stage scene, in the house style, one per place."""
+    if not artgen.provider():
+        return 0
+    made = 0
+    vertical = cfg.format == "short"
+    for i, s in enumerate(script.scenes):
+        if s.type != "world" or s.subject != "stage" or not s.backdrop or artgen.out_of_allowance():
+            continue
+        name = f"art/plate-{artgen._key(s.backdrop, str(vertical))}.jpg"
+        try:
+            if not (job.public / name).exists():
+                (job.public / "art").mkdir(parents=True, exist_ok=True)
+                artgen.generate(f"{artgen.PLATE.format(scene=s.backdrop)} {artgen.STYLE}", vertical, seed=11 + i).save(job.public / name, quality=90)
+                made += 1
+            script.scenes[i] = s.model_copy(update={"backdrop_src": name})
+        except Exception as e:  # the stage draws its own sky and ground instead
+            log(job, f"warning: no painted place for scene {i + 1}: {e}")
+    return made
+
+
+def relevance_gate(cfg: Config, job: Job, script: Script, story, spans, words, scene_media, shots) -> Script:
+    """Every 3D scene shows what the story is about (fyt/relevance.py), or goes back to 2D."""
+    text = relevance.text_gate(script, story)
+    if text:
+        for i, why in text.items():
+            log(job, f"scene {i + 1}: 3D dropped: {why}")
+        script = relevance.apply(script, text)
+    checked = [i for i, s in enumerate(script.scenes) if relevance.is_3d(s)]
+    picture: dict[int, str] = {}
+    if checked and cfg.review_model:
+        missing = assets.stage(script, job.public)
+        if missing:
+            script = qcheck.repaired(script, [i for i, s in enumerate(script.scenes) if (s.model or {}).get("src") in missing])
+        props = build_props(cfg, script, spans, words, scene_media, None, None, None, shots, {})
+        job.file("gate-props.json").write_text(props.model_dump_json())
+        log(job, f"relevance: checking {len(checked)} 3D scenes by eye")
+        picture = relevance.picture_gate(cfg, script, story, props, job.file("gate-props.json"), job.public, job.file("gate"), log=lambda m: log(job, m))
+        for i, why in picture.items():
+            log(job, f"scene {i + 1}: 3D dropped: {why}")
+            m = script.scenes[i].model or {}
+            if m.get("level") in ("found", "generated") and m.get("id"):
+                assetlib.forget(m["id"], why)  # the next video searches past it
+        script = relevance.apply(script, picture)
+    job.file("relevance.json").write_text(relevance.dumps(text, picture, checked))
+    if text or picture:
+        job.file("script.json").write_text(script.model_dump_json(indent=2))
+    return script
+
+
+def plan_visuals(cfg: Config, job: Job, script: Script, notes: str, story=None) -> Script:
     """Every video's visual plan (fyt/visualplan.py): which moments become 3D reconstructions, guarded
     so they show only what the narration says. Written to visualplan.json next to the script."""
     if not cfg.visuals.plan:
         return assets.resolve(visualplan.apply(script, [], notes)[0])
     log(job, "planning the visuals")
     try:
-        planned, report = visualplan.plan(cfg, script, notes, log=lambda m: log(job, m))
+        planned, report = visualplan.plan(cfg, script, notes, log=lambda m: log(job, m), story=story)
     except Exception as e:  # the scriptwriter's own scenes still make a video
         log(job, f"warning: visual planning failed: {e}")
         return assets.resolve(visualplan.apply(script, [], notes)[0])

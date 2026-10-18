@@ -132,12 +132,13 @@ export type Scene = {
 // `params` drive the procedural module (funnels, engines, stages, a molecule's atoms), or the generic one.
 export type ModelRef = {
   id: string;
-  level: "library" | "spec" | "generic";
+  level: "library" | "spec" | "generic" | "found" | "generated"; // found / generated: a stage model (fyt/assetlib.py)
   title?: string;
   kind?: string;
   params?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   src?: string;
   fit?: { forward?: "+x" | "-x" | "+z" | "-z"; up?: "+y" | "+z" };
+  clips?: string[]; // a stage model's animation clips, by name
 };
 
 // An illustration that takes over the scene when the sentence it shows begins (fyt/storyboard.py).

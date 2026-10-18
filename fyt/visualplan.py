@@ -15,12 +15,15 @@ scene then passes fyt.scenes3d.guard, which draws an event only when the narrati
 from __future__ import annotations
 
 import json
+import re
 from typing import Callable, Literal
 
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
 
-from fyt import assets, llm, scenes3d
+from fyt import assets, llm, manifest, scenes3d
 from fyt.config import Config
+from fyt.manifest import Manifest
 from fyt.models import Action3D, Obstacle, Script, ScriptScene, Setting, Shot, Subject, Variant, Weather
 
 # Scenes whose picture can become a reconstruction without losing anything on screen: they carry a
@@ -42,6 +45,7 @@ SETTING_WORDS = {
     "countryside": ["countryside", "farm", "fields", "village", "rural", "valley"],
 }
 SHOT_CYCLE = ("chase", "orbit", "side", "front", "wide")
+STAGE_SHOTS = ("side", "orbit", "front", "wide")  # no chase: a bear or a building seen from behind tells little
 
 
 class Reconstruction(BaseModel):
@@ -58,6 +62,10 @@ class Reconstruction(BaseModel):
     cue: str | None = Field(default=None, description="The exact words of the scene's narration at which the key moment happens.")
     subject_name: str | None = Field(default=None, description="A short name for the thing shown; the same name in every scene that shows it.")
     priority: int = Field(default=2, description="1 = the story needs this moment seen, 3 = nice to have.")
+    backdrop: SkipJsonSchema[str | None] = None  # a stage scene: the place it happens, painted behind it
+    # Shows a manifest entity in a scene the manifest checked it is in (fyt.manifest.checked): that, not
+    # the catalog's keywords in the scene's own words, is what grounds it ("its sails half-raised").
+    in_story: SkipJsonSchema[bool] = False
 
 
 class VisualPlan(BaseModel):
@@ -91,6 +99,8 @@ Rules:
 def _catalog_text() -> str:
     lines = ["3D subjects (variants; actions; obstacles):"]
     for name, s in scenes3d.subjects().items():
+        if s.get("planner") is False:
+            continue
         acts = ", ".join(f"{a} ({v['describe']})" for a, v in s["actions"].items())
         obs = f"; obstacles {', '.join(s['obstacles'])}" if s["obstacles"] else ""
         lines.append(f"- {name}: {s['describe']}. Variants {', '.join(s['variants'])}; settings {', '.join(s['settings'])}; actions {acts}{obs}.")
@@ -150,6 +160,8 @@ def rule_plan(script: Script, notes: str = "") -> list[Reconstruction]:
         # "It struck the Yucatan": a scene that goes on from the one before talks about the same subject.
         recent = out[-1].subject if out and out[-1].scene == i - 1 else None
         for name, s in subj.items():
+            if s.get("planner") is False:
+                continue
             lead = name in (dominant, recent)
             event = next((a for a, v in s["actions"].items() if v.get("event") and scenes3d.find(scene.narration, v["keywords"])), None)
             score = 3 * min(2, scenes3d.count(text, s["keywords"])) + (3 if event else 0) + (1 if lead else 0)
@@ -219,12 +231,12 @@ def apply(script: Script, plan: list[Reconstruction], notes: str = "") -> tuple[
         if not (0 <= k < len(scenes)) or not convertible(scenes[k]) or k in ranked:
             continue
         old = scenes[k]
-        if old.type not in ("world", "aircraft", "ship") and r.subject in scenes3d.subjects():
+        if old.type not in ("world", "aircraft", "ship") and r.subject in scenes3d.subjects() and r.subject != "stage":
             # The planner's own picks must show what the scene talks about, and only a thing the
             # engine can draw truthfully: no airliner over a narration about a bear, none for a Cessna.
             told = " ".join(x for x in (old.narration, old.heading or "") if x)
             before = scenes3d.legacy_to_world(scenes[k - 1]).subject if k else None
-            if not scenes3d.grounded(r.subject, told, before):
+            if not r.in_story and not scenes3d.grounded(r.subject, told, before):
                 continue
             if scenes3d.unlike(r.subject, story) and not assets.identify(r.subject, told, story):
                 continue
@@ -240,7 +252,7 @@ def apply(script: Script, plan: list[Reconstruction], notes: str = "") -> tuple[
             "type": "world", "subject": r.subject, "variant": r.variant, "action": r.action, "obstacle": r.obstacle,
             "shot": r.shot, "setting": r.setting, "weather": r.weather, "effect": r.effect, "effect_x": r.effect_x,
             "cue": r.cue, "subject_name": r.subject_name, "image": None, "broll_query": None, "actors": None,
-            "backdrop": None, "maneuver": None, "vessel": None, "ship_action": None,
+            "backdrop": r.backdrop, "maneuver": None, "vessel": None, "ship_action": None,
             "fallback": old.model_dump(exclude_none=True),
             "heading": old.heading or (old.text if old.type == "title" else None),
         })
@@ -284,14 +296,122 @@ def kind(scene: ScriptScene) -> str:
     return "2D"
 
 
-def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None] = print) -> tuple[Script, dict]:
-    """Give the script its visual plan. Returns the planned script and a report of what was decided."""
+# --- the story's own entities (fyt/manifest.py) ---------------------------------------------
+
+
+def _about(e: manifest.Entity) -> str:
+    return " ".join([e.name, e.kind, *e.search])
+
+
+def stands_for(subject: str, e: manifest.Entity) -> bool:
+    """A catalog module may draw the entity only if the entity is the kind of thing it models (an airliner
+    for an airliner, not for a Cessna or a bear)."""
+    s = scenes3d.subjects()[subject]
+    if s.get("planner") is False:
+        return False
+    about = _about(e)
+    # Whole words only: the catalog's loose prefix match would make "cargo" a "car".
+    named = any(re.search(rf"\b{re.escape(k.strip().lower())}(e?s)?\b", about.lower()) for k in s["keywords"] if k.strip())
+    # `not_for`: kinds its models can't stand in for that a story may still mention beside the real
+    # subject (a lifeboat beside its ship), so they block only this entity, not the story's other scenes.
+    return named and not scenes3d.unlike(subject, about + " " + e.look) and not scenes3d.find(about, s.get("not_for", []))
+
+
+def _place_fits(subject: str, p: manifest.Place) -> bool:
+    return bool(scenes3d.count(f"{p.name} {p.look}", scenes3d.subjects()[subject]["keywords"]))
+
+
+def story_fit(script: Script, story: Manifest, recon: list[Reconstruction]) -> tuple[list[Reconstruction], list[dict]]:
+    """The planner's catalog picks that show something the story is about: each must stand for an entity
+    (or, for a city or landscape, a place) the manifest lists in that scene; it is then named after that
+    entity, so it looks the same wherever it appears. The rest are dropped, with the reason."""
+    kept, dropped = [], []
+    for r in recon:
+        if r.subject == "stage":
+            continue
+        ents = [e for e in manifest.in_scene(story, r.scene) if stands_for(r.subject, e)]
+        places = [p for p in story.places if r.scene in p.scenes and _place_fits(r.subject, p)]
+        if ents:
+            # The entity decides what the module draws: an 1872 brigantine is a sailing ship, whatever the
+            # planner picked (it had drawn the Mary Celeste as a container ship).
+            variant = scenes3d.variant_for(r.subject, f"{_about(ents[0])} {ents[0].look}", scenes3d.story_year(
+                " ".join([script.title] + [x.narration for x in script.scenes])))
+            kept.append(r.model_copy(update={"subject_name": ents[0].id, "in_story": True, "variant": variant or r.variant}))
+        elif places and r.subject in ("city", "landscape"):
+            kept.append(r.model_copy(update={"subject_name": places[0].id, "in_story": True}))
+        else:
+            dropped.append({"scene": r.scene, "subject": r.subject, "why": "no entity in this scene is that kind of thing"})
+    return kept, dropped
+
+
+def _setting(text: str, settings: list[str]) -> str | None:
+    return next((k for k, words in SETTING_WORDS.items() if k in settings and scenes3d.find(text, words)), None)
+
+
+def _module_scene(script: Script, m: manifest.Moment, e: manifest.Entity, subject: str, where: str, n: int) -> Reconstruction:
+    """The catalog module that models the entity's kind (a sailing ship for the Mary Celeste) acting out a
+    manifest moment: an action of its own only when the moment is documented and its cue names it."""
+    s = scenes3d.subjects()[subject]
+    narration = script.scenes[m.scene - 1].narration
+    action = None
+    if m.documented and m.cue:
+        action = next((a for a, v in s["actions"].items() if not v.get("neutral") and scenes3d.find(m.cue, v["keywords"])), None)
+    action = action or scenes3d.neutral_action(subject)
+    text = f"{narration} {where}"
+    setting = next((k for k, words in SETTING_WORDS.items() if k in s["settings"] and scenes3d.find(text, words)), None)
+    return Reconstruction(
+        scene=m.scene, subject=subject, variant=scenes3d.variant_for(subject, f"{_about(e)} {e.look}", scenes3d.story_year(" ".join([script.title] + [x.narration for x in script.scenes]))),
+        action=action, shot=scenes3d.default_shot(subject, action) or SHOT_CYCLE[n % len(SHOT_CYCLE)],
+        setting=setting or (s["settings"][0] if s["settings"] else None), cue=m.cue or None, subject_name=e.id,
+        priority=m.priority if m.documented else 3, in_story=True,
+    )
+
+
+def stage_plan(script: Script, story: Manifest, taken: set[int]) -> list[Reconstruction]:
+    """A 3D scene for each moment the manifest lists that the planner left out: the catalog module that
+    models the entity's kind if there is one, otherwise the stage, where the entity's own model
+    (fyt.assetlib) does what the narration says in front of its place."""
+    out: list[Reconstruction] = []
+    settings = scenes3d.subjects()["stage"]["settings"]
+    for m in story.moments:
+        if m.scene in taken or not 1 <= m.scene <= len(script.scenes) or not convertible(script.scenes[m.scene - 1]):
+            continue
+        e = manifest.entity(story, m.entity)
+        if e is None:
+            continue
+        p = manifest.place(story, m.place)
+        where = f"{p.name}, {p.look}" if p else ""
+        module = next((subj for subj in scenes3d.subjects() if stands_for(subj, e)), None)
+        if module:
+            out.append(_module_scene(script, m, e, module, where, len(out)))
+            continue
+        shot = STAGE_SHOTS[len(out) % len(STAGE_SHOTS)]
+        if out and out[-1].subject_name == e.id and out[-1].shot == shot:
+            shot = "wide" if shot != "wide" else "side"
+        out.append(Reconstruction(
+            scene=m.scene, subject="stage", variant="model", action=m.motion, shot=shot,
+            setting=_setting(f"{script.scenes[m.scene - 1].narration} {where}", settings) or ("countryside" if p else "room"),
+            cue=m.cue or None, subject_name=e.id, backdrop=where or None,
+            priority=m.priority if m.documented else 3,
+        ))
+    return out
+
+
+def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None] = print,
+         story: Manifest | None = None) -> tuple[Script, dict]:
+    """Give the script its visual plan. Returns the planned script and a report of what was decided.
+    With the story's manifest, every 3D scene shows one of the story's own entities."""
     planner = "model"
     try:
         recon = _llm_plan(cfg, script, notes)
     except Exception as e:  # the catalog's keywords still give every video a plan
         log(f"visual planner unavailable ({e}); planning from the catalog's keywords")
         planner, recon = "rules", rule_plan(script, notes)
+    off_story: list[dict] = []
+    recon = [r for r in recon if r.subject != "stage"]  # stage scenes come from the manifest only
+    if story is not None:
+        recon, off_story = story_fit(script, story, recon)
+        recon += stage_plan(script, story, {r.scene for r in recon})
     planned, ranked = apply(script, recon, notes)
     planned, dropped = within_budget(cfg, script, planned, ranked)
     planned = assets.resolve(planned)
@@ -300,6 +420,7 @@ def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None
         "budget_seconds": cfg.visuals.world_seconds(cfg.format),
         "world_seconds": round(sum(seconds(cfg, s) for s in planned.scenes if s.type == "world"), 1),
         "dropped_for_budget": [k + 1 for k in dropped],
+        "off_story": off_story,
         "scenes": [
             {"scene": i, "type": s.type, "kind": kind(s)}
             | ({"subject": s.subject, "variant": s.variant, "action": s.action, "setting": s.setting, "weather": s.weather,

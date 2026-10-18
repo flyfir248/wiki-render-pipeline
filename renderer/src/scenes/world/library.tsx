@@ -46,9 +46,11 @@ const fitted = (obj: THREE.Object3D, model: ModelRef, length: number, ground: bo
   const yaw = { "+x": 0, "-x": Math.PI, "+z": Math.PI / 2, "-z": -Math.PI / 2 }[fit.forward ?? "+x"];
   turn.rotation.y = yaw;
   const ink = outlineMaterial(0.02);
+  const meshes: THREE.Mesh[] = [];
   o.traverse((m) => {
-    const mesh = m as THREE.Mesh;
-    if (!mesh.isMesh) return;
+    if ((m as THREE.Mesh).isMesh) meshes.push(m as THREE.Mesh);
+  });
+  meshes.forEach((mesh) => { // collected first: the outlines added here are meshes too
     const old = mesh.material as THREE.MeshStandardMaterial;
     mesh.material = new THREE.MeshToonMaterial({ color: old?.color ?? new THREE.Color("#d9dde3"), map: old?.map ?? null, gradientMap: toonRamp });
     if (mesh.geometry.attributes.normal) mesh.add(new THREE.Mesh(mesh.geometry, ink));

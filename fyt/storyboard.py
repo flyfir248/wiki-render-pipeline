@@ -124,8 +124,11 @@ def wanted(script: Script) -> list[tuple[int, int, str]]:
     return out
 
 
-def plan(cfg: Config, script: Script, todo: list[tuple[int, int, str]]) -> Board:
+def plan(cfg: Config, script: Script, todo: list[tuple[int, int, str]], known: dict[str, str] | None = None) -> Board:
     lines = [f"Story: {script.title}" + (f" -- {script.core_message}" if script.core_message else ""), ""]
+    if known:  # the story's manifest already fixed these looks (the 3D scenes draw them the same way)
+        lines += ["Cast already fixed for this video (use these names in the cast lists):"]
+        lines += [f"- {name}: {look}" for name, look in known.items()] + [""]
     lines += [f"Scene {i + 1}, sentence {k + 1}: {s}" for i, k, s in todo]
     context = " ".join(sc.narration for sc in script.scenes)
     user = "\n".join(lines) + f"\n\nThe whole narration, for context:\n{context[:2500]}"
@@ -185,6 +188,8 @@ def _groq_vision_model(cfg: Config, key: str) -> str | None:
             r.raise_for_status()
             ids = sorted(m["id"] for m in r.json().get("data", []))
             _found["model"] = next((m for hint in VISION_HINTS for m in ids if hint in m.lower()), None)
+            if _found["model"] is None:
+                print(f"no image-reading model among the provider's: {', '.join(ids)[:400]}")
         except Exception as e:
             print(f"warning: could not list the provider's models: {str(e)[:200]}")
             _found["model"] = None
@@ -210,14 +215,14 @@ def _small_jpeg(path: Path) -> bytes:
     return out.getvalue()
 
 
-def _ask_groq(cfg: Config, key: str, model: str, image: bytes, meant: str) -> Verdict:
+def _ask_groq(cfg: Config, key: str, model: str, image: bytes, meant: str, rules: str = REVIEW) -> Verdict:
     data = base64.b64encode(image).decode()
     body = {
         "model": model,
         "temperature": 0.1,
         "max_tokens": 200,
         "messages": [
-            {"role": "system", "content": REVIEW},
+            {"role": "system", "content": rules},
             {
                 "role": "user",
                 "content": [
@@ -234,12 +239,12 @@ def _ask_groq(cfg: Config, key: str, model: str, image: bytes, meant: str) -> Ve
     return _verdict(r.json()["choices"][0]["message"]["content"])
 
 
-def _ask_cloudflare(image: bytes, meant: str) -> Verdict:
+def _ask_cloudflare(image: bytes, meant: str, rules: str = REVIEW) -> Verdict:
     account, token = secret("CLOUDFLARE_ACCOUNT_ID"), secret("CLOUDFLARE_API_TOKEN")
     url = f"https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/{CLOUDFLARE_VISION}"
     headers = {"Authorization": f"Bearer {token}"}
     body = {
-        "messages": [{"role": "system", "content": REVIEW}, {"role": "user", "content": f"The subject it must show: {meant}"}],
+        "messages": [{"role": "system", "content": rules}, {"role": "user", "content": f"The subject it must show: {meant}"}],
         "image": list(image),
         "max_tokens": 200,
     }
@@ -257,23 +262,29 @@ def _say_once(message: str) -> None:
         print(message)
 
 
-def review(cfg: Config, path: Path, meant: str) -> Verdict | None:
+def review(cfg: Config, path: Path, meant: str, rules: str = REVIEW) -> Verdict | None:
     """A free vision model's verdict on one picture, or None when no check could be made: a Groq model
-    that reads images when the channel writes with Groq, else Cloudflare's, with the image key."""
+    that reads images when the channel writes with Groq, else Cloudflare's, with the image key.
+    `rules` is the checker's brief (an illustration by default; fyt.assetlib passes its own for 3D)."""
     if not cfg.review_model:
         return None
+    model = None
     try:
         image = _small_jpeg(path)
         key = os.environ.get(cfg.llm.api_key_env)
         model = _groq_vision_model(cfg, key) if key and cfg.llm.provider == "openai" else None
         if model:
             _say_once(f"pictures checked by {model}")
-            return _ask_groq(cfg, key, model, image, meant)
-        if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN"):
+            return _ask_groq(cfg, key, model, image, meant, rules)
+        if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN") and not _found.get("cloudflare_out"):
             _say_once(f"pictures checked by {CLOUDFLARE_VISION}")
-            return _ask_cloudflare(image, meant)
+            return _ask_cloudflare(image, meant, rules)
     except Exception as e:  # the check is a safeguard; without it the picture is used as drawn
-        print(f"warning: could not check {path.name}: {str(e)[:200]}")
+        if "429" in str(e) and not model:  # Cloudflare's free daily allowance is spent: no use asking again today
+            _found["cloudflare_out"] = "yes"
+            print("warning: the free vision check's daily allowance is used up; pictures are not checked for the rest of this run")
+        else:
+            print(f"warning: could not check {path.name}: {str(e)[:200]}")
     return None
 
 
@@ -288,15 +299,17 @@ def make(
     public: Path,
     log=print,
     drawn: int = 0,
+    known: dict[str, str] | None = None,
 ) -> dict[int, list[RenderBeat]]:
     """Plan, draw and check the illustrations; returns the beats per scene for the renderer.
-    `drawn` is how many pictures the video's story scenes already used from its budget."""
+    `drawn` is how many pictures the video's story scenes already used from its budget; `known` is the
+    story's entities and their looks (fyt.manifest), so a bear is drawn as the same bear throughout."""
     budget = BUDGET[cfg.format] - drawn
     todo = wanted(script)[: max(0, budget)]
     if not todo or not artgen.provider() or artgen.out_of_allowance():
         return {}
-    board = plan(cfg, script, todo)
-    cast = {c.name: c.look for c in board.cast}
+    board = plan(cfg, script, todo, known)
+    cast = {c.name: c.look for c in board.cast} | (known or {})
     by_key = {(b.scene - 1, b.sentence - 1): b for b in board.beats}
     (public / "art").mkdir(parents=True, exist_ok=True)
     beats: dict[int, list[RenderBeat]] = {}

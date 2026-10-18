@@ -37,3 +37,12 @@ def render(props_json: Path, public: Path, out: Path, still: bool = False) -> Pa
         cmd.append("--still")
     subprocess.run(cmd, cwd=RENDERER_DIR, check=True, env=_env())
     return out
+
+
+def frames(props_json: Path, public: Path, out_dir: Path, at: list[int]) -> list[Path]:
+    """Render single frames of a video (one bundle) as frame-00042.png files; returns their paths."""
+    ensure_renderer()
+    out_dir.mkdir(parents=True, exist_ok=True)
+    cmd = ["node", "render.mjs", "--frames", ",".join(str(f) for f in at), "--props", str(props_json), "--public", str(public), "--out", str(out_dir)]
+    subprocess.run(cmd, cwd=RENDERER_DIR, check=True, env=_env())
+    return [out_dir / f"frame-{f:05d}.png" for f in at]

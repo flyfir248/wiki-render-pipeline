@@ -197,8 +197,12 @@ def guard(scene, context: str = ""):
     if variant is None:
         variant = variant_for(subject, told + " " + context[:3000], story_year(told + " " + context))
     action = scene.action if scene.action in s["actions"] else neutral_action(subject)
-    # An event is drawn only when this scene's narration names it.
-    documented = bool(find(scene.narration, action_words(subject, action)))
+    # An event is drawn only when this scene's narration names it. A stage scene's actions are a motion
+    # grammar with no words of their own: it rests on the cue the story's manifest found in the narration.
+    if subject == "stage":
+        documented = bool(scene.cue and scene.cue.lower() in scene.narration.lower())
+    else:
+        documented = bool(find(scene.narration, action_words(subject, action)))
     if is_event(subject, action) and not documented:
         action = neutral_action(subject)
     obstacle = scene.obstacle if scene.obstacle in s["obstacles"] else None

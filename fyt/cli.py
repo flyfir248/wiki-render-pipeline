@@ -83,6 +83,9 @@ def main(argv: list[str] | None = None) -> None:
     sh.add_argument("--out", type=Path, help="where to save the sheet (default: next to the source)")
     sh.add_argument("--public", type=Path, help="the job's public dir, for a props.json (default: next to it)")
 
+    ac = sub.add_parser("assetcheck", help="test story-driven 3D on a fixed panel of things, without making a video")
+    ac.add_argument("--out", type=Path, default=Path("jobs/assetcheck"))
+
     args = p.parse_args(argv)
     cfg = load_config(args.config)
     if args.format:
@@ -97,6 +100,12 @@ def main(argv: list[str] | None = None) -> None:
 
             for a, b in static_spans(args.source):
                 print(f"still from {a:.1f}s to {b:.1f}s")
+        return
+    if args.cmd == "assetcheck":
+        from fyt import assetcheck
+
+        rows = assetcheck.run(cfg, args.out)
+        print((args.out / "report.md").read_text())
         return
     if args.cmd == "demo":
         cfg.stock_footage = False

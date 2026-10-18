@@ -19,6 +19,7 @@ import { SpaceScene } from "./space";
 import { CityScene } from "./city";
 import { ScienceScene } from "./science";
 import { TechnologyScene } from "./technology";
+import { StageScene } from "./stage";
 
 // The aircraft and ship modules came first, with their own field names; they read the world fields here.
 const AircraftModule: React.FC<SceneProps> = (p) => (
@@ -47,6 +48,7 @@ export const MODULES: Record<Subject, React.FC<SceneProps>> = {
   landscape: LandscapeScene,
   science: ScienceScene,
   technology: TechnologyScene,
+  stage: StageScene,
 };
 
 // Says on screen what a 3D scene is (fyt/assets.py decides): a reconstruction of what the narration

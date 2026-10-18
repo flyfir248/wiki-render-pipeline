@@ -146,7 +146,7 @@ def resolve(script: Script) -> Script:
     story = " ".join([script.title] + [s.narration for s in script.scenes])
     groups: dict[str, list[int]] = {}
     for i, s in enumerate(script.scenes):
-        if s.type == "world" and s.subject:
+        if s.type == "world" and s.subject and s.subject != "stage":  # stage models: fyt.assetlib
             groups.setdefault(s.subject_name or f"{s.subject}:{s.variant}", []).append(i)
     scenes = list(script.scenes)
     for name, idx in groups.items():
@@ -177,7 +177,7 @@ def stage(script: Script, public: Path) -> list[str]:
     missing = []
     for s in script.scenes:
         src = (s.model or {}).get("src")
-        if not src:
+        if not src or s.subject == "stage":  # stage models are copied in by fyt.assetlib.stage
             continue
         file = MODELS_DIR / Path(src).name
         if not file.is_file():
