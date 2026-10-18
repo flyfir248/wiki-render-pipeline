@@ -1,0 +1,120 @@
+{
+  "entities": [
+    {
+      "id": "a320",
+      "name": "Airbus A320 (US Airways Flight 1549)",
+      "kind": "airplane",
+      "search": [
+        "airbus a320",
+        "commercial jet",
+        "airplane"
+      ],
+      "look": "white fuselage with US Airways blue and red tail, registration N106US",
+      "certain": true,
+      "scenes": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "geese",
+      "name": "Canada geese",
+      "kind": "bird",
+      "search": [
+        "canada goose",
+        "goose",
+        "bird"
+      ],
+      "look": "large grey\u2011white geese with black heads and necks, flying in flock",
+      "certain": true,
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "captain",
+      "name": "Captain Chesley \"Sully\" Sullenberger",
+      "kind": "person (pilot)",
+      "search": [
+        "pilot",
+        "airline captain"
+      ],
+      "look": "middle\u2011aged man in US Airways uniform, navy shirt, name badge",
+      "certain": false,
+      "scenes": [
+        2,
+        4
+      ]
+    },
+    {
+      "id": "hudson-river",
+      "name": "Hudson River",
+      "kind": "water body",
+      "search": [
+        "hudson river",
+        "river"
+      ],
+      "look": "wide, calm river flanked by Manhattan skyscrapers, early morning light",
+      "certain": true,
+      "scenes": [
+        5,
+        6
+      ]
+    },
+    {
+      "id": "laguardia-airport",
+      "name": "LaGuardia Airport",
+      "kind": "airport",
+      "search": [
+        "laguardia airport",
+        "airport"
+      ],
+      "look": "runway with terminal buildings, US Airways signage, early 2000s architecture",
+      "certain": true,
+      "scenes": [
+        2
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "midtown-manhattan",
+      "name": "Midtown Manhattan",
+      "look": "dense skyline of skyscrapers, morning haze over Hudson River",
+      "scenes": [
+        5,
+        6
+      ]
+    },
+    {
+      "id": "laguardia-runway",
+      "name": "LaGuardia runway",
+      "look": "asphalt runway, runway lights, surrounding tarmac, early 2009 lighting",
+      "scenes": [
+        2
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 2,
+      "entity": "a320",
+      "place": "laguardia-runway",
+      "action": "takes off",
+      "motion": "move",
+      "cue": "US Airways Flight 1549 cleared LaGuardia Airport for Seattle.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 3,
+      "entity": "geese",
+      "place": "",
+      "action": "hits plane",
+      "motion": "approach",
+      "cue": "the plane hit a flock of Canada geese.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

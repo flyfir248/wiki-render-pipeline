@@ -1,0 +1,17 @@
+fetching Wikipedia article
+8 article images available
+writing part 1 of a two-part script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 13 scenes); quote (lost viewers 32% slower than average, 7 scenes); map (lost viewers 13% slower than average, 10 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 84% faster than average, 17 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 54 words; asking for a fuller one
+writing part 2
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 13 scenes); quote (lost viewers 32% slower than average, 7 scenes); map (lost viewers 13% slower than average, 10 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 84% faster than average, 17 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 95 words; asking for a fuller one
+checking part 2's facts against the source
+fact check found: scene 7: wrong claim "The NTSB called it the most successful ditching in aviation history." (source says: An NTSB board member called the ditching "the most successful ... in aviation history," not the NTSB as an organization.)
+sharpening title, hook and thumbnail text
+warning: could not check the story: the fixed script ran too long
+checking facts against the source
+facts check out
+reading the story: what it shows
+story: Airbus A320 (US Airways Flight 1549), Canada geese, Captain Chesley "Sully" Sullenberger, Hudson River, LaGuardia Airport; 2 moments
+planning the visuals
