@@ -162,3 +162,20 @@ def test_check_reports_the_account_and_quota(tmp_path, monkeypatch):
             return _Resp({"username": "weirdbuttrue"})
 
     assert instagram.check(_cfg(tmp_path), session=S()).endswith("@weirdbuttrue (2 of 100 posts used in the last 24 hours)")
+
+
+def test_shorts_uploaded_before_posting_was_on_are_picked_up(tmp_path, monkeypatch):
+    now = datetime(2026, 10, 17, 14, 0, tzinfo=timezone.utc)
+    cfg = _cfg(tmp_path, publish=True)
+    job = Job.create(cfg, "wiki:Longyearbyen")
+    job.file("video.mp4").write_bytes(b"x")
+    job.file("script.json").write_text(_script().model_dump_json())
+    uploads = Uploads(cfg)
+    uploads.record("short", job.id, "yt1", (now - timedelta(hours=1)).isoformat())
+    uploads.record("long", job.id, "yt2", (now - timedelta(hours=1)).isoformat())
+    uploads.record("short", job.id, "yt3", (now - timedelta(days=5)).isoformat())
+    monkeypatch.setenv("INSTAGRAM_TOKEN", "tok")
+    monkeypatch.setenv("INSTAGRAM_USER_ID", "1")
+    posted = []
+    monkeypatch.setattr(instagram, "publish", lambda cfg, video, text: posted.append(text) or "M1")
+    assert instagram.post_due(cfg, now) == 1

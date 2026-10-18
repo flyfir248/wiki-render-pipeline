@@ -176,6 +176,16 @@ class Uploads:
         )
         self.db.commit()
 
+    def queue_recent_shorts(self, since: str) -> None:
+        """Queue Shorts uploaded before Instagram posting was on, if they go public after `since`."""
+        self.db.execute(
+            "insert or ignore into reels(youtube_id, job, run, due) select youtube_id, job, run, publish_at from uploads"
+            " where kind in ('short', 'bonus-short') and job is not null and youtube_id is not null and problem is null"
+            " and publish_at >= ?",
+            (since,),
+        )
+        self.db.commit()
+
     def due_reels(self, now: str, since: str, max_tries: int = 3) -> list[tuple[str, str, str | None]]:
         """(youtube_id, job, run) of Shorts public on YouTube by now, but not since before `since`, not yet Reels."""
         rows = self.db.execute(

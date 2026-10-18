@@ -215,7 +215,9 @@ def post_due(cfg: Config, now: datetime | None = None) -> int:
         return 0
     now = now or datetime.now(timezone.utc)
     uploads = Uploads(cfg)
-    due = uploads.due_reels(now.isoformat(timespec="seconds"), (now - timedelta(hours=ig.max_age_hours)).isoformat(timespec="seconds"))
+    since = (now - timedelta(hours=ig.max_age_hours)).isoformat(timespec="seconds")
+    uploads.queue_recent_shorts(since)
+    due = uploads.due_reels(now.isoformat(timespec="seconds"), since)
     posted = 0
     with tempfile.TemporaryDirectory() as tmp:
         for youtube_id, job_id, run in due[: ig.max_per_run]:
