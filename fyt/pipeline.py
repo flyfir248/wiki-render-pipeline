@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, youtube
+from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -433,15 +433,64 @@ def story_models(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     if story is None:
         return script, {}
     wanted = assetlib.wanted(script, story)
+    if cfg.visuals.story_worlds:
+        # People and animals are always generated in their story world: a found mesh has no rig our verbs can drive.
+        wanted = {k: v for k, v in wanted.items() if worldgen.archetype_of(story_manifest.entity(story, k)) not in worldgen.LIVING}
     if wanted and "image_to_3d" in cfg.visuals.asset_sources:
         log(job, assetlib.generator_status(cfg))
     found = assetlib.resolve_all(cfg, story, wanted, log=lambda m: log(job, m)) if wanted else {}
     srcs = assetlib.stage(found, job.public)
-    script, back = assetlib.attach(script, story, found, srcs)
+    if cfg.visuals.story_worlds:
+        script, back = story_worlds(cfg, job, script, story, found, srcs)
+    else:
+        script, back = assetlib.attach(script, story, found, srcs)
     if back:
         log(job, f"scenes {[i + 1 for i in back]}: no model of their entity, so they stay 2D")
     job.file("assets.json").write_text(json.dumps(assetlib.registry(story, found), indent=2))
     return script, found
+
+
+def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.Manifest", found: dict, srcs: dict[str, str]) -> tuple[Script, list[int]]:
+    """Each stage scene's world generated for this story (fyt/worldgen.py): a build for every entity in
+    it, a setting for its place, and a shot that blocks who does what. Found models draw the non-living
+    things they match; everything else is procedural. The record of how each asset was made goes to
+    world.json. Returns (script, scene indexes put back to 2D)."""
+    staged = [i + 1 for i, s in enumerate(script.scenes) if s.type == "world" and s.subject == "stage" and story_manifest.entity(story, s.subject_name)]
+    if not staged:
+        return script, []
+    ids = list(dict.fromkeys(e.id for k in staged for e in story_manifest.in_scene(story, k)))
+    log(job, f"building the story world: {len(ids)} entities for {len(staged)} scenes")
+    style, builds, settings, made = worldgen.design(cfg, script, story, ids, log=lambda m: log(job, m))
+    shots, made["direction"] = worldgen.direct(cfg, script, story, builds, staged, log=lambda m: log(job, m))
+    models = {}
+    for eid, a in found.items():
+        if eid in srcs:
+            models[eid] = {"id": a["key"], "src": srcs[eid], "fit": a.get("fit") or assetlib.facing(story_manifest.entity(story, eid)),
+                           "clips": a.get("clips", []), "licence": a.get("licence"), "title": a.get("title")}
+    seed = sum(map(ord, script.title)) & 0xFFFF
+    scenes, back = list(script.scenes), []
+    for i, s in enumerate(scenes):
+        if s.type != "world" or s.subject != "stage":
+            continue
+        shot = shots.get(i + 1)
+        e = story_manifest.entity(story, s.subject_name)
+        if shot is None or e is None:
+            scenes[i] = assetlib.back_to_2d(s)
+            back.append(i)
+            continue
+        lead = shot.actors[0].entity
+        m = models.get(lead) if builds[lead].archetype not in worldgen.LIVING else None
+        model = {"id": m["id"] if m else f"world:{lead}", "level": "found" if m else "procedural", "title": (m or {}).get("title"),
+                 "kind": "object", "src": (m or {}).get("src"), "params": {}, "sources": [], "licence": (m or {}).get("licence"),
+                 "notes": f"story world: {builds[lead].archetype} built for {story_manifest.entity(story, lead).name}"}
+        lead_e = story_manifest.entity(story, lead)
+        label = "ILLUSTRATION" if s.illustrative else "RECONSTRUCTION" if (m and lead_e.certain) else "RECONSTRUCTION · ILLUSTRATIVE"
+        scenes[i] = s.model_copy(update={"subject_name": lead, "world": worldgen.world_of(style, seed, shot, builds, settings, models),
+                                         "model": model, "label": label})
+    job.file("world.json").write_text(json.dumps(worldgen.record(style, builds, settings, shots, made, models), indent=2))
+    log(job, f"story world ({style}): cast {made['cast']}, sets {made['sets']}, direction {made['direction']}; "
+             + ", ".join(f"{b.entity} as {b.archetype}" for b in builds.values()))
+    return script.model_copy(update={"scenes": scenes}), back
 
 
 def stage_backdrops(cfg: Config, job: Job, script: Script) -> int:
@@ -451,7 +500,7 @@ def stage_backdrops(cfg: Config, job: Job, script: Script) -> int:
     made = 0
     vertical = cfg.format == "short"
     for i, s in enumerate(script.scenes):
-        if s.type != "world" or s.subject != "stage" or not s.backdrop or artgen.out_of_allowance():
+        if s.type != "world" or s.subject != "stage" or s.world or not s.backdrop or artgen.out_of_allowance():
             continue
         name = f"art/plate-{artgen._key(s.backdrop, str(vertical))}.jpg"
         try:

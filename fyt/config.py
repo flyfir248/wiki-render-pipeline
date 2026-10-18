@@ -61,6 +61,14 @@ class VisualsConfig(BaseModel):
     # Story-driven 3D (fyt/manifest.py, fyt/assetlib.py): the story's own entities get 3D scenes from
     # models found or made for them, never a renderer's stock subject the story doesn't name.
     story_assets: bool = True
+    # Story worlds (fyt/worldgen.py): each stage scene's characters, creatures, objects and place are
+    # generated for this story by the renderer's procedural generators, from a per-video design, instead
+    # of a found model alone in front of a painted plate. People and animals are always generated (they
+    # get a rig the verbs can drive); a found model still draws a non-living thing it genuinely matches.
+    story_worlds: bool = True
+    # The look every story world is built in: auto lets the design pick per story, or one of the styles
+    # in renderer/src/scenes/world/storyworld/grammar.json (lowpoly, voxel, noir, diorama, clinical).
+    world_style: str = "auto"
     # Where models are looked for, in order, after the project library and the model cache:
     # sketchfab: Sketchfab's search, downloaded from the Objaverse mirror (no key) or with SKETCHFAB_TOKEN;
     # polypizza: Poly Pizza's CC0 / CC-BY low-poly library (POLY_PIZZA_KEY, free);

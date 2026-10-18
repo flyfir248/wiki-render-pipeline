@@ -1,0 +1,209 @@
+"""Story worlds (fyt/worldgen.py): every stage scene's cast and place are generated for its own story,
+stay true to the narration, keep one look per entity within a video, and share nothing with the next
+video unless its story asks for the same thing."""
+import json
+import re
+from pathlib import Path
+
+import pytest
+
+from fyt import manifest, pipeline, worldgen
+from fyt.config import Config
+from fyt.manifest import Entity, Manifest, Moment, Place
+from fyt.models import Script, ScriptScene
+
+RENDERER = Path(__file__).resolve().parent.parent / "renderer" / "src" / "scenes" / "world" / "storyworld"
+
+
+def script(*lines: str, title: str = "Cocaine Bear", mood: str = "curious") -> Script:
+    return Script(
+        title=title, description="D", tags=["a"], thumbnail_text="X", thumbnail_kicker="K", thumbnail_query="q", mood=mood,
+        scenes=[ScriptScene(narration=t, type="statement", text="t") for t in lines], sources=["https://example.com"],
+    )
+
+
+BEAR_STORY = script(
+    "In 1985 a smuggler dropped duffel bags of cocaine from his Cessna over Georgia.",
+    "Months later a black bear found the bags and ate the cocaine.",
+    "A hunter found the bear dead beside the torn bags.",
+)
+BEAR_MANIFEST = Manifest(
+    entities=[
+        Entity(id="bear", name="the black bear", kind="animal", search=["black bear"], look="large black American black bear, brown muzzle", certain=True, scenes=[2, 3]),
+        Entity(id="bags", name="duffel bags of cocaine", kind="duffel bag", search=["duffel bag"], look="green canvas duffel bags", certain=False, scenes=[1, 2, 3]),
+        Entity(id="hunter", name="a hunter", kind="person", search=["hunter"], look="hunter in an orange vest and cap", certain=False, scenes=[3]),
+        Entity(id="plane", name="the Cessna", kind="light aircraft", search=["cessna 404"], look="white twin-engine Cessna 404", certain=True, scenes=[1]),
+    ],
+    places=[Place(id="forest", name="Chattahoochee National Forest", look="dense pine forest, Georgia mountains", scenes=[1, 2, 3])],
+    moments=[
+        Moment(scene=1, entity="plane", place="forest", action="drops the bags", motion="move", cue="dropped duffel bags", documented=True),
+        Moment(scene=2, entity="bear", place="forest", action="eats the cocaine", motion="present", cue="ate the cocaine", documented=True),
+        Moment(scene=3, entity="bear", place="forest", action="found dead", motion="present", cue="found the bear dead", documented=True),
+    ],
+)
+FLIGHT_STORY = script(
+    "Minutes after take-off the Airbus hit a flock of Canada geese.",
+    "Captain Sullenberger glided the plane onto the Hudson River.",
+    "Ferries reached the passengers standing on the wings.",
+    title="Miracle on the Hudson", mood="tense",
+)
+FLIGHT_MANIFEST = Manifest(
+    entities=[
+        Entity(id="geese", name="Canada geese", kind="bird", search=["canada goose"], look="grey-brown geese with black necks", certain=True, scenes=[1]),
+        Entity(id="pilot", name="the captain", kind="pilot", search=["airline pilot"], look="airline captain in a dark uniform and cap", certain=False, scenes=[2]),
+        Entity(id="ferry", name="a commuter ferry", kind="ferry", search=["ferry"], look="white and blue New York commuter ferry", certain=False, scenes=[3]),
+        Entity(id="passengers", name="the passengers", kind="people", search=["passengers"], look="passengers in coats", certain=True, scenes=[3]),
+    ],
+    places=[Place(id="hudson", name="Hudson River", look="wide grey river between Manhattan and New Jersey, winter", scenes=[2, 3])],
+    moments=[
+        Moment(scene=1, entity="geese", action="fly into the engines", motion="move", cue="hit a flock", documented=True),
+        Moment(scene=3, entity="ferry", place="hudson", action="reaches the passengers", motion="approach", cue="Ferries reached", documented=True),
+    ],
+)
+
+
+@pytest.fixture
+def offline(monkeypatch):
+    def fail(*a, **k):
+        raise RuntimeError("no model")
+    monkeypatch.setattr(worldgen.llm, "structured", fail)
+
+
+def test_grammar_drives_the_schema():
+    g = worldgen.grammar()
+    assert set(g["archetypes"]) == set(worldgen.Archetype.__args__)
+    assert set(g["calm"]) <= set(worldgen.Verb.__args__)
+    for verb in g["events"]:
+        assert verb in worldgen.Verb.__args__, verb
+
+
+def test_every_archetype_set_and_mark_is_drawn():
+    index = (RENDERER / "index.tsx").read_text()
+    env = (RENDERER / "environment.tsx").read_text()
+    g = worldgen.grammar()
+    for arche in g["archetypes"]:
+        assert f'"{arche}"' in index or arche in ("vehicle", "object", "structure", "plant"), arche  # parts-built things share the rigid path
+    for kind in g["sets"]:
+        assert f'"{kind}"' in env, kind
+    for mark in g["marks"]:
+        assert f'"{mark}"' in index, mark
+    for move in g["camera"]:
+        assert f'"{move}"' in index, move
+
+
+@pytest.mark.parametrize("kind,name,expected", [
+    ("animal", "the black bear", "quadruped"), ("person", "a park ranger", "humanoid"), ("light aircraft", "a Cessna 404", "vehicle"),
+    ("bird", "Canada geese", "bird"), ("duffel bag", "bags of cocaine", "object"), ("cell", "a red blood cell", "cell"),
+    ("ferry", "a commuter ferry", "vehicle"), ("organ", "the heart", "cell"), ("building", "the lighthouse", "structure"),
+    ("microscopic animal", "a tardigrade", "insect"), ("pilot", "the captain", "humanoid"),
+])
+def test_archetype_from_the_entity_own_words(kind, name, expected):
+    e = Entity(id="x", name=name, kind=kind, search=[name], look="", certain=True, scenes=[1])
+    assert worldgen.archetype_of(e) == expected
+
+
+def test_rules_build_each_entity_from_its_own_words(offline):
+    style, builds, settings, made = worldgen.design(Config(), BEAR_STORY, BEAR_MANIFEST, ["bear", "bags", "hunter", "plane"], log=lambda m: None)
+    assert made == {"cast": "rules", "sets": "rules", "rules_built": ["bear", "bags", "hunter", "plane"]}
+    bear, bags, hunter, plane = (builds[k] for k in ("bear", "bags", "hunter", "plane"))
+    assert bear.archetype == "quadruped" and bear.primary == worldgen.COLOURS["black"] and bear.body.build > 0.6
+    assert bags.archetype == "object" and bags.parts and bags.primary == worldgen.COLOURS["green"]
+    assert hunter.outfit.hair == "cap" and hunter.primary == worldgen.COLOURS["orange"]
+    assert plane.archetype == "vehicle" and any(p.spin for p in plane.parts)
+    assert settings["forest"].kind == "forest"
+
+
+def test_unrelated_stories_get_unrelated_worlds(offline):
+    _, bear_builds, bear_sets, _ = worldgen.design(Config(), BEAR_STORY, BEAR_MANIFEST, [e.id for e in BEAR_MANIFEST.entities], log=lambda m: None)
+    _, flight_builds, flight_sets, _ = worldgen.design(Config(), FLIGHT_STORY, FLIGHT_MANIFEST, [e.id for e in FLIGHT_MANIFEST.entities], log=lambda m: None)
+    assert not set(bear_builds) & set(flight_builds)
+    assert {b.archetype for b in flight_builds.values()} == {"bird", "humanoid", "vehicle"}
+    assert flight_sets["hudson"].kind == "river" and bear_sets["forest"].kind == "forest"
+    assert flight_builds["pilot"].outfit.top == "uniform"
+
+
+def test_undocumented_or_untold_actions_are_calmed():
+    _, builds, _, _ = worldgen.design(Config(), BEAR_STORY, BEAR_MANIFEST, ["bear", "bags", "hunter", "plane"], log=lambda m: None) if False else (None, {
+        e.id: worldgen.rule_build(e, 1) for e in BEAR_MANIFEST.entities}, None, None)
+    shot = worldgen.Shot(scene=3, actors=[
+        worldgen.Actor(entity="bear", verb="lie"),
+        worldgen.Actor(entity="hunter", verb="crouch", face="bear"),  # the narration doesn't say he crouched
+        worldgen.Actor(entity="bags", verb="open", state="damaged"),  # "torn" is told
+        worldgen.Actor(entity="plane", verb="crash"),  # not in this scene
+    ], camera="establish", callouts=[worldgen.Callout(on="bear", text="FORTY KILOS"), worldgen.Callout(on="hunter", text="a hunter")])
+    c = worldgen.checked_shot(shot, BEAR_STORY, BEAR_MANIFEST, builds, 3)
+    verbs = {a.entity: a.verb for a in c.actors}
+    assert verbs == {"bear": "lie", "hunter": "idle", "bags": "open"}
+    assert [x.text for x in c.callouts] == ["a hunter"]  # invented figures never become labels
+    assert next(a for a in c.actors if a.entity == "bags").state == "damaged"
+
+
+def test_illustrative_moment_keeps_its_actor_calm():
+    builds = {e.id: worldgen.rule_build(e, 1) for e in BEAR_MANIFEST.entities}
+    m = BEAR_MANIFEST.model_copy(update={"moments": [BEAR_MANIFEST.moments[0], BEAR_MANIFEST.moments[1].model_copy(update={"documented": False, "cue": ""})]})
+    c = worldgen.checked_shot(worldgen.Shot(scene=2, actors=[worldgen.Actor(entity="bear", verb="eat")], camera="orbit"), BEAR_STORY, m, builds, 2)
+    assert c.actors[0].verb == "idle"
+
+
+def test_rule_direction_blocks_the_moment(offline):
+    builds = {e.id: worldgen.rule_build(e, 1) for e in BEAR_MANIFEST.entities}
+    shots, how = worldgen.direct(Config(), BEAR_STORY, BEAR_MANIFEST, builds, [1, 2, 3], log=lambda m: None)
+    assert how == "rules"
+    assert shots[1].actors[0].entity == "plane" and shots[1].actors[0].verb == "fly"
+    assert "hunter" not in [a.entity for a in shots[1].actors]
+    assert (shots[2].actors[0].entity, shots[2].actors[0].verb) == ("bear", "eat")
+    assert (shots[3].actors[0].entity, shots[3].actors[0].verb) == ("bear", "lie")
+    assert all(shots[k].camera != shots[k + 1].camera for k in (1, 2))
+
+
+def test_model_design_is_checked(monkeypatch):
+    cast = worldgen.Cast(style="noir", builds=[
+        worldgen.Build(entity="bear", archetype="object", size=1.7, primary="black", secondary="#8a6a48", accent="#222222",
+                       parts=[worldgen.Part(shape="box", at=[0, 0, 0], size=[1, 1, 1], color="#111111", bone="head")]),
+        worldgen.Build(entity="bags", archetype="object", size=0.9, primary="#3f5a2a", secondary="#222222", accent="#ffffff",
+                       parts=[worldgen.Part(shape="capsule", at=[0, 0.2, 0], size=[0.4, 0.9, 0.4], rot=[0, 0, 90], color="#3f5a2a", bone="hand_r"),
+                              worldgen.Part(shape="box", at=[0, 0.4, 0], size=[0.6, 0.03, 0.05], color="#222222")]),
+        worldgen.Build(entity="unicorn", archetype="quadruped", size=2, primary="#ffffff", secondary="#ffffff", accent="#ffffff"),
+    ])
+    calls = iter([cast, RuntimeError("sets down")])
+
+    def fake(*a, **k):
+        r = next(calls)
+        if isinstance(r, Exception):
+            raise r
+        return r
+    monkeypatch.setattr(worldgen.llm, "structured", fake)
+    style, builds, settings, made = worldgen.design(Config(), BEAR_STORY, BEAR_MANIFEST, ["bear", "bags"], log=lambda m: None)
+    assert style == "noir" and made["cast"] == "model" and made["sets"] == "rules"
+    assert builds["bear"].archetype == "quadruped"  # a bear is never a heap of parts
+    assert builds["bear"].primary == worldgen.rule_build(BEAR_MANIFEST.entities[0], 0).primary  # an invalid colour falls back
+    assert all(p.bone == "body" for p in builds["bags"].parts)
+    assert "unicorn" not in builds
+
+
+def test_story_worlds_turn_stage_scenes_into_generated_worlds(tmp_path, offline):
+    from fyt.store import Job
+    job = Job.create(Config(jobs_dir=str(tmp_path)), "cocaine bear")
+    staged = BEAR_STORY.model_copy(update={"scenes": [
+        s.model_copy(update={"type": "world", "subject": "stage", "variant": "model", "action": "present", "subject_name": sn, "fallback": s.model_dump()})
+        for s, sn in zip(BEAR_STORY.scenes, ["plane", "bear", "bear"])]})
+    out, back = pipeline.story_worlds(Config(), job, staged, BEAR_MANIFEST, {}, {})
+    assert back == []
+    worlds = [s.world for s in out.scenes]
+    assert all(w and w["cast"] for w in worlds)
+    # one build per entity for the whole video
+    bear_builds = [json.dumps(a["build"], sort_keys=True) for w in worlds for a in w["cast"] if a["entity"] == "bear"]
+    assert len(bear_builds) == 2 and len(set(bear_builds)) == 1
+    assert out.scenes[1].model["level"] == "procedural" and out.scenes[1].label.startswith("RECONSTRUCTION")
+    record = json.loads(job.file("world.json").read_text())
+    assert {b["entity"] for b in record["builds"]} == {"bear", "bags", "hunter", "plane"}
+    assert all(b["source"] == "procedural, from the entity's words" for b in record["builds"])
+    assert record["shots"]["2"]["actors"][0]["verb"] == "eat"
+
+
+def test_world_scenes_are_not_swapped_for_paintings():
+    from fyt import visualplan
+    s = ScriptScene(type="world", subject="stage", narration="x", label="ILLUSTRATION", illustrative=True,
+                    fallback=ScriptScene(type="statement", narration="x", text="t").model_dump(), world={"cast": []})
+    out, back = visualplan.painted(script("x").model_copy(update={"scenes": [s]}))
+    assert back == [] and out.scenes[0].world is not None

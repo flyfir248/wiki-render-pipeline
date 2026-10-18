@@ -258,7 +258,7 @@ jobs:
             for job in ../../jobs/*/; do
               out="_runs/$RUN/$(basename "$job")"
               mkdir -p "$out"
-              for f in contact.png manifest.json assets.json relevance.json visualplan.json script.json qc.json log.txt; do
+              for f in contact.png manifest.json assets.json relevance.json visualplan.json world.json script.json qc.json log.txt; do
                 if [ -f "$job/$f" ]; then cp "$job/$f" "$out/"; fi
               done
               cp "$job"/gate/*.png "$out/" 2>/dev/null || true

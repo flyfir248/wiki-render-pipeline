@@ -18,7 +18,7 @@ import { clamp, ease, groundTexture, HeadingPlate, outlineMaterial, toonRamp, We
 import { aim, Atmosphere, Billow, Hills, shake, useWorld } from "./kit";
 
 const SIZE = 4; // world units the model's largest side is scaled to
-type Loaded = { scene: THREE.Object3D; clips: THREE.AnimationClip[] };
+export type Loaded = { scene: THREE.Object3D; clips: THREE.AnimationClip[] };
 const loads = new Map<string, Promise<Loaded>>();
 const load = (src: string) => {
   let p = loads.get(src);
@@ -29,7 +29,7 @@ const load = (src: string) => {
   return p;
 };
 
-const useModel = (src: string | undefined) => {
+export const useModel = (src: string | undefined) => {
   const [state, setState] = useState<{ model: Loaded | null; failed: boolean }>({ model: null, failed: false });
   const [handle] = useState(() => (src ? delayRender(`loading model ${src}`, { timeoutInMilliseconds: 120000 }) : null));
   useEffect(() => {
@@ -66,7 +66,7 @@ const YAW: Record<string, number> = { "+x": 0, "-x": Math.PI, "+z": Math.PI / 2,
 
 // The model cel-shaded, turned to face +x (by its record's `forward`, else its long side; see below),
 // scaled so its largest side is SIZE and stood on y = 0.
-const prepare = (m: Loaded, forward: string, up: string) => {
+export const prepare = (m: Loaded, forward: string, up: string) => {
   const o = SkeletonUtils.clone(m.scene);
   const ink = outlineMaterial(0.012);
   const meshes: THREE.Mesh[] = [];

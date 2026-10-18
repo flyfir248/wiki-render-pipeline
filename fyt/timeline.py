@@ -74,6 +74,7 @@ def build_props(
                 lines=scene.lines,
                 setting=scene.setting,
                 backdropSrc=scene.backdrop_src,
+                world=scene.world,
                 actors=[a for a in scene.actors or [] if a.src] or None,
                 effect=scene.effect,
                 effectX=scene.effect_x,

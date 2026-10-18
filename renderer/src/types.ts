@@ -1,4 +1,5 @@
 import type catalog from "./scenes/world/catalog.json";
+import type { World } from "./scenes/world/storyworld/types";
 
 // The world scene's subjects: every module listed in renderer/src/scenes/world/catalog.json.
 export type Subject = keyof (typeof catalog)["subjects"];
@@ -100,6 +101,7 @@ export type Scene = {
   lines?: DialogueLine[] | null; // dialogue scenes
   setting?: Setting | null; // story scenes
   backdropSrc?: string | null; // story scenes: an illustrated plate, drawn over the setting
+  world?: World | null; // stage scenes: the story world generated for this story (fyt/worldgen.py)
   actors?: Actor[] | null;
   effect?: Effect | null;
   effectX?: number | null;

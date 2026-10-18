@@ -451,7 +451,8 @@ def painted(script: Script) -> tuple[Script, list[int]]:
     events stay, and so do scientific and technology models, which no illustration can replace."""
     scenes, back = list(script.scenes), []
     for i, s in enumerate(scenes):
-        if s.type != "world" or not s.fallback or s.subject in ("science", "technology"):
+        # A generated story world is already drawn in the video's one style, from the story's own design.
+        if s.type != "world" or not s.fallback or s.subject in ("science", "technology") or s.world:
             continue
         if s.label == "ILLUSTRATION" or s.illustrative:
             scenes[i] = ScriptScene.model_validate(s.fallback)
