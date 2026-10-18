@@ -132,7 +132,13 @@ def post_facebook(cfg: Config, video: Path, text: str, session=requests, sleep=t
                 raise RuntimeError(f"Facebook could not {phase.split('_')[0]} the video: {err}")
         return (status.get("publishing_phase") or {}).get("status") == "complete"
 
-    _wait(done, "Facebook", sleep)
+    try:
+        _wait(done, "Facebook", sleep)
+    except RuntimeError as e:
+        if "could not" in str(e):
+            raise
+        # The finish call already published it; a failed status read must not lead to a second post.
+        print(f"::warning::Facebook took the Reel but its status couldn't be read ({e}); counted as posted")
     try:
         link = _json(session.get(f"{instagram.GRAPH}/{v}/{video_id}", params={"fields": "permalink_url"}, headers=auth, timeout=30), "Facebook").get("permalink_url")
     except Exception:
