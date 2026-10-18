@@ -248,3 +248,16 @@ def test_a_still_model_shot_takes_the_action_its_moment_tells(monkeypatch):
     shots, how = worldgen.direct(Config(), BEAR_STORY, BEAR_MANIFEST, builds, [3], log=lambda m: None)
     assert how == "model" and shots[3].actors[0].verb == "lie" and shots[3].place == "forest"
     assert shots[3].actors[1].at != shots[3].actors[0].at
+
+
+def test_places_listed_as_entities_are_sets_not_cast():
+    river = Entity(id="hudson-river", name="Hudson River", kind="water body", search=["river"], look="", certain=True, scenes=[1])
+    jet = Entity(id="a320", name="Airbus A320", kind="aircraft", search=["a320"], look="", certain=True, scenes=[1])
+    assert worldgen.is_place(river) and not worldgen.is_place(jet)
+
+
+def test_with_story_worlds_catalog_picks_of_an_entity_become_stage_scenes():
+    from fyt import visualplan
+    kept, _ = visualplan.story_fit(FLIGHT_STORY, FLIGHT_MANIFEST, [visualplan.Reconstruction(scene=3, subject="ship", action="sail")])
+    r = visualplan.as_stage(FLIGHT_STORY, FLIGHT_MANIFEST, kept[0], 0)
+    assert r.subject == "stage" and r.subject_name == kept[0].subject_name and r.in_story

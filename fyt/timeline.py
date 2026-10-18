@@ -339,6 +339,8 @@ def key_moment(scene: ScriptScene, words: list[Word], offset: float, length: flo
             return round(min(0.9, max(0.05, (t + 0.15) / length)), 3)
         if scene.effect_at is None:
             return scenes3d.moment(scene.subject, scene.action or "")
+    if scene.effect_at is not None and not 0 <= scene.effect_at <= 1:
+        return round(min(0.95, max(0.05, scene.effect_at)), 3)  # the writer's guess past the scene's end
     return scene.effect_at
 
 

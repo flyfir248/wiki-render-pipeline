@@ -435,7 +435,9 @@ def story_models(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     wanted = assetlib.wanted(script, story)
     if cfg.visuals.story_worlds:
         # People and animals are always generated in their story world: a found mesh has no rig our verbs can drive.
-        wanted = {k: v for k, v in wanted.items() if worldgen.archetype_of(story_manifest.entity(story, k)) not in worldgen.LIVING}
+        # and a river or an airport is its set, not a model to find
+        wanted = {k: v for k, v in wanted.items() if worldgen.archetype_of(story_manifest.entity(story, k)) not in worldgen.LIVING
+                  and not worldgen.is_place(story_manifest.entity(story, k))}
     if wanted and "image_to_3d" in cfg.visuals.asset_sources:
         log(job, assetlib.generator_status(cfg))
     found = assetlib.resolve_all(cfg, story, wanted, log=lambda m: log(job, m)) if wanted else {}
@@ -458,7 +460,7 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     staged = [i + 1 for i, s in enumerate(script.scenes) if s.type == "world" and s.subject == "stage" and story_manifest.entity(story, s.subject_name)]
     if not staged:
         return script, []
-    ids = list(dict.fromkeys(e.id for k in staged for e in story_manifest.in_scene(story, k)))
+    ids = list(dict.fromkeys(e.id for k in staged for e in story_manifest.in_scene(story, k) if not worldgen.is_place(e)))
     log(job, f"building the story world: {len(ids)} entities for {len(staged)} scenes")
     style, builds, settings, made = worldgen.design(cfg, script, story, ids, log=lambda m: log(job, m))
     shots, made["direction"] = worldgen.direct(cfg, script, story, builds, staged, log=lambda m: log(job, m))

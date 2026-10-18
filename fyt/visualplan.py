@@ -367,7 +367,20 @@ def _module_scene(script: Script, m: manifest.Moment, e: manifest.Entity, subjec
     )
 
 
-def stage_plan(script: Script, story: Manifest, taken: set[int]) -> list[Reconstruction]:
+def as_stage(script: Script, story: Manifest, r: Reconstruction, n: int) -> Reconstruction:
+    """A catalog pick that stands for a manifest entity, turned into a stage scene of that entity, for its
+    story world to draw (the moment's motion, its place behind it)."""
+    m = next((x for x in story.moments if x.scene == r.scene), None)
+    p = manifest.place(story, m.place) if m else None
+    where = f"{p.name}, {p.look}" if p else ""
+    return Reconstruction(
+        scene=r.scene, subject="stage", variant="model", action=m.motion if m and m.entity == r.subject_name else "present",
+        shot=STAGE_SHOTS[n % len(STAGE_SHOTS)], setting=_setting(f"{script.scenes[r.scene - 1].narration} {where}", scenes3d.subjects()["stage"]["settings"]) or ("countryside" if p else "room"),
+        cue=r.cue or (m.cue if m else None), subject_name=r.subject_name, backdrop=where or None, priority=r.priority, in_story=True,
+    )
+
+
+def stage_plan(script: Script, story: Manifest, taken: set[int], modules: bool = True) -> list[Reconstruction]:
     """A 3D scene for each moment the manifest lists that the planner left out: the catalog module that
     models the entity's kind if there is one, otherwise the stage, where the entity's own model
     (fyt.assetlib) does what the narration says in front of its place."""
@@ -381,7 +394,7 @@ def stage_plan(script: Script, story: Manifest, taken: set[int]) -> list[Reconst
             continue
         p = manifest.place(story, m.place)
         where = f"{p.name}, {p.look}" if p else ""
-        module = next((subj for subj in scenes3d.subjects() if stands_for(subj, e)), None)
+        module = next((subj for subj in scenes3d.subjects() if stands_for(subj, e)), None) if modules else None
         if module:
             out.append(_module_scene(script, m, e, module, where, len(out)))
             continue
@@ -411,7 +424,10 @@ def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None
     recon = [r for r in recon if r.subject != "stage"]  # stage scenes come from the manifest only
     if story is not None:
         recon, off_story = story_fit(script, story, recon)
-        recon += stage_plan(script, story, {r.scene for r in recon})
+        if cfg.visuals.story_worlds:
+            # every entity is drawn by its story world's generators, not a catalog module
+            recon = [as_stage(script, story, r, n) if manifest.entity(story, r.subject_name) else r for n, r in enumerate(recon)]
+        recon += stage_plan(script, story, {r.scene for r in recon}, modules=not cfg.visuals.story_worlds)
     planned, ranked = apply(script, recon, notes)
     planned, dropped = within_budget(cfg, script, planned, ranked)
     planned = assets.resolve(planned)

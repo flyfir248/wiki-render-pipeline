@@ -244,6 +244,15 @@ def _has(text: str, word: str) -> bool:
     return re.search(rf"(?<![a-z]){re.escape(word)}{tail}", text) is not None
 
 
+PLACE_KINDS = ("river", "lake", "sea", "ocean", "water body", "waterway", "bay", "harbour", "harbor", "airport", "airfield", "city",
+               "town", "village", "mountain", "forest", "island", "valley", "desert", "region", "country", "state", "park", "landmark area")
+
+
+def is_place(e: Entity) -> bool:
+    """An 'entity' that is really somewhere (the Hudson River, LaGuardia Airport): it is a set, not a cast member."""
+    return any(_has(e.kind.lower(), w) for w in PLACE_KINDS)
+
+
 GENERIC = {"animal", "mammal", "beast", "vehicle", "human", "people", "person", "plant", "building"}
 
 
