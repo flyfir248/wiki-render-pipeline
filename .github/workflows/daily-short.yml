@@ -36,8 +36,10 @@ on:
         description: "For news: the incident's Wikipedia article title (blank picks the strongest recent one). For short / long: render that article as a test, without uploading"
         default: ""
 
+# A test render (short / long with a title) never uploads or touches the schedule, so it runs in a group
+# of its own: a scheduled run can't cancel it while it waits, and it never holds up the schedule.
 concurrency:
-  group: daily-videos
+  group: ${{ inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long') && format('test-render-{0}', github.run_id) || 'daily-videos' }}
   cancel-in-progress: false
 
 permissions:
@@ -275,7 +277,8 @@ jobs:
           git add -A
           if ! git diff --cached --quiet; then
             git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit --quiet -m "3D models and test renders from run $RUN"
-            git push --quiet origin HEAD:asset-library
+            # a scheduled run may have pushed models meanwhile
+            git push --quiet origin HEAD:asset-library || { git pull --quiet --rebase origin asset-library && git push --quiet origin HEAD:asset-library; }
           fi
 
       - name: Check the schedule
@@ -285,7 +288,7 @@ jobs:
           python -m fyt buffer --check | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Save schedule
-        if: always()
+        if: always() && !(inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long'))
         uses: actions/cache/save@v5
         with:
           path: |
