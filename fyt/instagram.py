@@ -110,6 +110,26 @@ def _json(r: requests.Response) -> dict:
     return data
 
 
+def for_instagram(video: Path, out: Path) -> Path:
+    """A copy in the exact format Instagram's Reels spec asks for: H.264 yuv420p (limited range),
+    AAC 48 kHz, 30 fps, the moov atom first and no extra metadata boxes. Falls back to the original."""
+    import imageio_ffmpeg
+
+    cmd = [
+        imageio_ffmpeg.get_ffmpeg_exe(), "-loglevel", "error", "-y", "-i", str(video),
+        "-map", "0:v:0", "-map", "0:a:0?", "-map_metadata", "-1",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-profile:v", "high", "-level", "4.1",
+        "-pix_fmt", "yuv420p", "-color_range", "tv", "-r", "30", "-maxrate", "20M", "-bufsize", "40M",
+        "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart", str(out),
+    ]
+    try:
+        subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=600)
+        return out
+    except (OSError, subprocess.SubprocessError) as e:
+        print(f"::warning::could not re-encode {video.name} for Instagram, sending it as is: {getattr(e, 'stderr', e)}")
+        return video
+
+
 def publish(cfg: Config, video: Path, text: str, session=requests, sleep=time.sleep) -> str:
     """Post a video as a Reel. Returns the Reel's media id."""
     creds = credentials()
@@ -118,7 +138,7 @@ def publish(cfg: Config, video: Path, text: str, session=requests, sleep=time.sl
     token, user = creds
     v = cfg.instagram.api_version
     auth = {"Authorization": f"OAuth {token}"}
-    container = _json(
+    created = _json(
         session.post(
             f"{GRAPH}/{v}/{user}/media",
             data={
@@ -131,16 +151,25 @@ def publish(cfg: Config, video: Path, text: str, session=requests, sleep=time.sl
             headers=auth,
             timeout=60,
         )
-    )["id"]
-    with video.open("rb") as f:
-        _json(
-            session.post(
-                f"{RUPLOAD}/{v}/{container}",
-                headers={**auth, "offset": "0", "file_size": str(video.stat().st_size)},
+    )
+    container = created["id"]
+    with tempfile.TemporaryDirectory() as tmp:
+        upload = for_instagram(video, Path(tmp) / "reel.mp4")
+        with upload.open("rb") as f:
+            r = session.post(
+                created.get("uri") or f"{RUPLOAD}/{v}/{container}",
+                headers={**auth, "offset": "0", "file_size": str(upload.stat().st_size)},
                 data=f,
                 timeout=900,
             )
-        )
+    try:
+        _json(r)
+    except RuntimeError as e:
+        try:  # the container's own status usually names what Instagram didn't like
+            state = session.get(f"{GRAPH}/{v}/{container}", params={"fields": "status,status_code,video_status"}, headers=auth, timeout=30).text
+        except Exception:
+            state = "(no status)"
+        raise RuntimeError(f"{e}; container {container}: {state[:500]}") from None
     for _ in range(MAX_CHECKS):
         state = _json(session.get(f"{GRAPH}/{v}/{container}", params={"fields": "status_code,status"}, headers=auth, timeout=60))
         code = state.get("status_code")

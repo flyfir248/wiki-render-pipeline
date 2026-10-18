@@ -179,3 +179,26 @@ def test_shorts_uploaded_before_posting_was_on_are_picked_up(tmp_path, monkeypat
     posted = []
     monkeypatch.setattr(instagram, "publish", lambda cfg, video, text: posted.append(text) or "M1")
     assert instagram.post_due(cfg, now) == 1
+
+
+def test_a_rejected_upload_reports_the_containers_status(tmp_path, monkeypatch):
+    monkeypatch.setenv("INSTAGRAM_TOKEN", "tok")
+    monkeypatch.setenv("INSTAGRAM_USER_ID", "1")
+    video = tmp_path / "video.mp4"
+    video.write_bytes(b"x")
+
+    class S(_Session):
+        def post(self, url, data=None, headers=None, timeout=None):
+            if "rupload" in url:
+                return _Resp({"debug_info": {"type": "ProcessingFailedError"}}, status=400)
+            return super().post(url, data, headers, timeout)
+
+        def get(self, url, params=None, headers=None, timeout=None):
+            return _Resp({"status": "Error: video codec not supported"})
+
+    try:
+        instagram.publish(_cfg(tmp_path), video, "hi", session=S([]), sleep=lambda _: None)
+    except RuntimeError as e:
+        assert "codec not supported" in str(e)
+    else:
+        raise AssertionError("no error")

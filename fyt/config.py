@@ -244,7 +244,7 @@ class InstagramConfig(BaseModel):
     # Shorts that went public longer ago than this aren't posted, so turning `publish` on doesn't
     # post a backlog all at once.
     max_age_hours: float = 48
-    api_version: str = "v25.0"
+    api_version: str = "v26.0"
 
 
 class Config(BaseModel):
