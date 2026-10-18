@@ -213,6 +213,7 @@ def test_with_a_temporary_host_instagram_fetches_the_video_from_its_link(tmp_pat
     class S(_Session):
         def post(self, url, data=None, headers=None, timeout=None, files=None):
             if url == instagram.LITTERBOX:
+                assert "python-requests" not in headers["User-Agent"]
                 assert files["fileToUpload"][2] == "video/mp4" and data["time"] == "1h"
                 r = _Resp({})
                 r.text = "https://litter.catbox.moe/abc.mp4"

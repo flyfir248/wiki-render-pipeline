@@ -30,6 +30,7 @@ from fyt.store import Job, Uploads
 GRAPH = "https://graph.facebook.com"
 RUPLOAD = "https://rupload.facebook.com/ig-api-upload"
 LITTERBOX = "https://litterbox.catbox.moe/resources/internals/api.php"
+USER_AGENT = "FacelessYT/0.1 (https://github.com/flyfir248/FacelessYT)"
 MAX_CAPTION = 2200
 BODY_CHARS = 300
 CHECK_EVERY = 15  # seconds between checks while Instagram processes the video
@@ -138,6 +139,7 @@ def litterbox(video: Path, session=requests) -> str:
             LITTERBOX,
             data={"reqtype": "fileupload", "time": "1h"},
             files={"fileToUpload": ("reel.mp4", f, "video/mp4")},
+            headers={"User-Agent": USER_AGENT},  # it answers 412 to python-requests' default agent
             timeout=600,
         )
     url = r.text.strip()
