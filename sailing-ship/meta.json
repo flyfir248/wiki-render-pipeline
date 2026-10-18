@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "sailing-ship",
+  "query": "sailing ship",
+  "source": "objaverse",
+  "uid": "sketchfab:ee9e5c89ef07454199212c4ac638e91a",
+  "title": "Voxel Art sailing ship",
+  "author": "P_4_N_D_A",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-ee9e5c89ef07454199212c4ac638e91a",
+  "checked": "vision",
+  "triangles": 63180,
+  "bytes": 4788788,
+  "size": [
+    93,
+    82,
+    16
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "a two-masted 19th-century wooden merchant brigantine, dark hull, square sails",
+  "added": "2026-10-18T00:07:25+00:00"
+}

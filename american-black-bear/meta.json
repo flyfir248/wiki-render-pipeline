@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "american-black-bear",
+  "query": "american black bear",
+  "source": "objaverse",
+  "uid": "sketchfab:1c1351af2301477ca81ec8d96d57b756",
+  "title": "MSCC007 Ursus americanus Left Astragalus",
+  "author": "The Mammoth Site of Hot Springs, SD, Inc.",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-1c1351af2301477ca81ec8d96d57b756",
+  "checked": "vision",
+  "triangles": 40000,
+  "bytes": 1042228,
+  "size": [
+    37.2483,
+    37.5728,
+    34.3814
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "a full-grown American black bear, glossy black fur, brown muzzle, on all fours",
+  "added": "2026-10-18T00:07:16+00:00"
+}

@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "human-heart",
+  "query": "human heart",
+  "source": "objaverse",
+  "uid": "sketchfab:30f93d9dae4948fe85cd4d60ac40c23f",
+  "title": "Human Heart",
+  "author": "sahilseth",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-30f93d9dae4948fe85cd4d60ac40c23f",
+  "checked": "vision",
+  "triangles": 14979,
+  "bytes": 2639152,
+  "size": [
+    0.1475,
+    0.247,
+    0.1433
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "an anatomical human heart with the aorta and main vessels, red and purple",
+  "added": "2026-10-18T00:07:38+00:00"
+}
