@@ -186,7 +186,7 @@ class Uploads:
         )
         self.db.commit()
 
-    def due_reels(self, now: str, since: str, max_tries: int = 4) -> list[tuple[str, str, str | None]]:
+    def due_reels(self, now: str, since: str, max_tries: int = 6) -> list[tuple[str, str, str | None]]:
         """(youtube_id, job, run) of Shorts public on YouTube by now, but not since before `since`, not yet Reels."""
         rows = self.db.execute(
             "select youtube_id, job, run from reels where posted is null and tries < ?"
