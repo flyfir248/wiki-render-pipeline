@@ -207,3 +207,30 @@ def test_world_scenes_are_not_swapped_for_paintings():
                     fallback=ScriptScene(type="statement", narration="x", text="t").model_dump(), world={"cast": []})
     out, back = visualplan.painted(script("x").model_copy(update={"scenes": [s]}))
     assert back == [] and out.scenes[0].world is not None
+
+
+def test_rules_shape_cells_and_vehicles_from_what_they_are_called():
+    def build(kind, name, look=""):
+        return worldgen.rule_build(Entity(id="x", name=name, kind=kind, search=[name], look=look, certain=True, scenes=[1]), 1)
+    disc, sickle, virus = build("cell", "a red blood cell", "red biconcave disc"), build("cell", "a sickled cell", "crescent"), build("virus", "the virus")
+    assert [p.shape for p in disc.parts] == ["torus", "cylinder"]
+    assert len(sickle.parts) == 7 and {p.shape for p in sickle.parts} == {"sphere"}
+    assert sum(p.shape == "cylinder" for p in virus.parts) >= 8
+    assert build("cell", "a cell").parts == []  # a generic cell keeps the nucleated blob
+    jet, car = build("airliner", "the Airbus A320"), build("car", "a sedan")
+    assert jet.size > car.size * 2 and not any(p.spin for p in jet.parts)  # no propeller on a jet
+
+
+def test_flocks_and_crowds_come_from_plural_living_things():
+    e = lambda name, kind: Entity(id="x", name=name, kind=kind, search=[name], look="", certain=True, scenes=[1])
+    assert worldgen.group_size(e("Canada geese", "bird"), "bird") == 7
+    assert worldgen.group_size(e("passengers", "person"), "humanoid") == 4
+    assert worldgen.group_size(e("the captain", "pilot"), "humanoid") == 1
+    assert worldgen.group_size(e("duffel bags", "duffel bag"), "object") == 1
+
+
+def test_backdrop_from_the_place_words():
+    p = lambda name, look: Place(id="p", name=name, look=look, scenes=[1])
+    assert worldgen.rule_setting(p("Hudson River", "grey river in winter, Manhattan skyline")).backdrop == "city"
+    assert worldgen.rule_setting(p("Chattahoochee National Forest", "Georgia mountains")).backdrop == "mountains"
+    assert worldgen.rule_setting(p("a farm", "fields")).backdrop == "hills"
