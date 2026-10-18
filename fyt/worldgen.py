@@ -33,6 +33,7 @@ The renderer's grammar (grammar.json) is the single source for verbs, set kinds,
 from __future__ import annotations
 
 import json
+import math
 import re
 from functools import lru_cache
 from pathlib import Path
@@ -130,6 +131,7 @@ class Setting(BaseModel):
     ground: str = Field(description="#rrggbb")
     sky: str = Field(description="#rrggbb")
     accent: str = Field(description="#rrggbb a light or glow colour.")
+    backdrop: Literal["hills", "mountains", "city", "none"] = Field(default="hills", description="What rings the horizon outdoors.")
     dressing: list[Dressing] = Field(default_factory=list, description="0-4 kinds of thing that make this place this place.")
 
 
@@ -150,6 +152,7 @@ class Actor(BaseModel):
     face: str = Field(default="", description="An entity id it turns to, 'camera', or empty.")
     state: State = "normal"
     holding: str = Field(default="", description="The id of an object entity it holds, or empty.")
+    count: int = Field(default=1, description="How many are shown together: 1, or 2-9 for a flock, crowd, herd or fleet the story names.")
 
 
 class Mark(BaseModel):
@@ -200,7 +203,7 @@ KIND_WORDS: list[tuple[str, tuple[str, ...]]] = [
                    "cheetah", "hyena", "monkey", "ape", "gorilla", "chimp", "kangaroo", "raccoon", "squirrel", "badger", "otter",
                    "hippo", "rhino", "zebra", "donkey", "mule", "llama", "panda", "koala", "dinosaur", "crocodile", "alligator",
                    "lizard", "tortoise", "turtle", "frog", "animal", "mammal", "cub", "puppy", "calf", "beast")),
-    ("vehicle", ("car", "truck", "lorry", "van", "plane", "aircraft", "airplane", "aeroplane", "jet", "airliner", "cessna", "helicopter",
+    ("vehicle", ("airbus", "boeing", "car", "truck", "lorry", "van", "plane", "aircraft", "airplane", "aeroplane", "jet", "airliner", "cessna", "helicopter",
                  "boat", "ship", "ferry", "yacht", "canoe", "kayak", "train", "locomotive", "bus", "bike", "bicycle", "motorcycle",
                  "tractor", "submarine", "rocket", "ambulance", "taxi", "jeep", "suv", "tank", "tram", "glider", "balloon", "raft",
                  "vessel", "tug", "trawler", "sled", "carriage", "wagon", "cart", "drone", "spacecraft", "vehicle")),
@@ -222,6 +225,14 @@ SKINS = ["#f1c9a5", "#e0ac84", "#c68b62", "#a5694a", "#7a4b32", "#5c3a26"]
 HAIRS = ["#2a1d14", "#4a3020", "#6b4424", "#a8743a", "#d9b15f", "#1a1612", "#8a8a8a"]
 SIZES = {"humanoid": 1.75, "quadruped": 1.6, "bird": 0.6, "fish": 1.0, "insect": 0.3, "serpent": 2.0, "vehicle": 4.5,
          "object": 0.6, "structure": 8.0, "plant": 6.0, "cell": 1.0}
+VEHICLE_LENGTHS = [
+    (("airliner", "airbus", "boeing", "jumbo", "a320", "a330", "a380", "737", "747", "757", "767", "777", "787"), 38.0),
+    (("ship", "liner", "tanker", "freighter", "cruise", "warship", "carrier", "submarine"), 90.0),
+    (("ferry", "trawler", "tug", "yacht", "vessel"), 30.0), (("train", "locomotive", "tram"), 20.0),
+    (("jet", "helicopter", "cessna", "plane", "aircraft", "airplane", "aeroplane", "glider"), 12.0),
+    (("bus", "lorry", "truck", "tractor", "ambulance", "fire engine"), 10.0), (("boat", "canoe", "kayak", "raft"), 5.0),
+    (("bike", "bicycle", "motorcycle"), 2.0),
+]
 BIG = ("large", "huge", "giant", "massive", "enormous", "big", "tall", "grizzly", "adult male")
 SMALL = ("small", "tiny", "little", "young", "cub", "juvenile", "baby", "miniature", "micro")
 
@@ -310,7 +321,16 @@ def _thing_parts(words: str, size: float, c: list[str]) -> list[Part]:
 def _vehicle_parts(words: str, size: float, c: list[str]) -> list[Part]:
     L, a, b, d = size, c[0], c[1], c[2]
     glass = "#2a3a4c"
-    if any(_has(words, w) for w in ("plane", "aircraft", "airplane", "aeroplane", "jet", "airliner", "cessna", "glider", "drone")):
+    if any(_has(words, w) for w in ("airliner", "airbus", "boeing", "jet", "jumbo", "a320", "a330", "a380", "737", "747", "757", "767", "777", "787", "dc-10")):
+        # low swept wings, engines slung under them, a tall fin, no propeller
+        return [Part(shape="capsule", at=[0, L * 0.13, 0], size=[L * 0.11, L * 0.95, L * 0.11], rot=[0, 0, 90], color=a),
+                Part(shape="box", at=[L * 0.03, L * 0.145, 0], size=[L * 0.72, L * 0.014, L * 0.113], color=glass),
+                Part(shape="box", at=[L * 0.43, L * 0.155, 0], size=[L * 0.05, L * 0.022, L * 0.085], color=glass),
+                *[Part(shape="box", at=[-L * 0.04, L * 0.095, z * L * 0.24], size=[L * 0.18, L * 0.016, L * 0.42], rot=[0, -z * 28, 0], color=a) for z in (-1, 1)],
+                *[Part(shape="cylinder", at=[L * 0.05, L * 0.06, z * L * 0.17], size=[L * 0.065, L * 0.15, L * 0.065], rot=[0, 0, 90], color=b) for z in (-1, 1)],
+                Part(shape="box", at=[-L * 0.41, L * 0.26, 0], size=[L * 0.15, L * 0.2, L * 0.016], rot=[0, 0, -18], color=d),
+                *[Part(shape="box", at=[-L * 0.43, L * 0.15, z * L * 0.09], size=[L * 0.09, L * 0.012, L * 0.17], rot=[0, -z * 25, 0], color=a) for z in (-1, 1)]]
+    if any(_has(words, w) for w in ("plane", "aircraft", "airplane", "aeroplane", "cessna", "glider", "drone")):
         return [Part(shape="capsule", at=[0, L * 0.12, 0], size=[L * 0.13, L, L * 0.13], rot=[0, 0, 90], color=a),
                 Part(shape="box", at=[L * 0.02, L * 0.14, 0], size=[L * 0.18, L * 0.02, L * 1.05], color=a),
                 Part(shape="box", at=[-L * 0.44, L * 0.2, 0], size=[L * 0.1, L * 0.16, L * 0.02], color=b),
@@ -374,6 +394,37 @@ def _structure_parts(words: str, size: float, c: list[str]) -> list[Part]:
             Part(shape="box", at=[H * 0.451, H * 0.42, -H * 0.22], size=[H * 0.01, H * 0.12, H * 0.12], color="#ffd98a", glow=True)]
 
 
+def _cell_parts(words: str, size: float, c: list[str]) -> list[Part]:
+    """Parts for a cell whose shape its words name; [] keeps the generic nucleated blob."""
+    L, a, b, d = size, c[0], c[1], c[2]
+    y = L * 0.6
+    if any(_has(words, w) for w in ("sickle", "crescent", "sickled")):
+        return [Part(shape="sphere", at=[math.cos(t) * L * 0.42, y + math.sin(t) * L * 0.42, 0],
+                     size=[L * (0.1 + 0.2 * math.sin(math.pi * i / 8))] * 2 + [L * (0.08 + 0.12 * math.sin(math.pi * i / 8))], color=a)
+                for i, t in ((i, math.radians(195 + i * 150 / 8)) for i in range(1, 8))]
+    if any(_has(words, w) for w in ("red blood", "erythrocyte", "biconcave", "disc", "disk", "platelet")):
+        return [Part(shape="torus", at=[0, y, 0], size=[L, L, L * 0.34], color=a),
+                Part(shape="cylinder", at=[0, y, 0], size=[L * 0.74, L * 0.1, L * 0.74], rot=[90, 0, 0], color=b)]
+    if any(_has(words, w) for w in ("virus", "coronavirus", "virion", "phage")):
+        spikes = [(0.0, z) for z in range(0, 360, 45)] + [(x, 0.0) for x in (45, 135, 225, 315)]
+        out = [Part(shape="sphere", at=[0, y, 0], size=[L * 0.7] * 3, color=a)]
+        for rx, rz in spikes:
+            dx, dy, dz = (-math.sin(math.radians(rz)), math.cos(math.radians(rz)), 0.0) if rx == 0 else (0.0, math.cos(math.radians(rx)), math.sin(math.radians(rx)))
+            out.append(Part(shape="cylinder", at=[dx * L * 0.42, y + dy * L * 0.42, dz * L * 0.42], size=[L * 0.04, L * 0.16, L * 0.04], rot=[rx, 0, rz], color=b))
+            out.append(Part(shape="sphere", at=[dx * L * 0.5, y + dy * L * 0.5, dz * L * 0.5], size=[L * 0.1] * 3, color=d))
+        return out[:24]
+    if any(_has(words, w) for w in ("bacteri", "bacillus", "e. coli", "rod", "microbe")):
+        return [Part(shape="capsule", at=[0, y, 0], size=[L * 0.34, L * 0.9, L * 0.34], rot=[0, 0, 90], color=a),
+                *[Part(shape="box", at=[-L * 0.62, y + k * L * 0.08, 0], size=[L * 0.35, L * 0.015, L * 0.015], rot=[0, 0, k * 12], color=b) for k in (-1, 0, 1)]]
+    if any(_has(words, w) for w in ("neuron", "nerve cell", "brain cell")):
+        return [Part(shape="sphere", at=[0, y, 0], size=[L * 0.36] * 3, color=a),
+                *[Part(shape="cone", at=[-math.sin(math.radians(z)) * L * 0.32, y + math.cos(math.radians(z)) * L * 0.32, 0], size=[L * 0.09, L * 0.42, L * 0.09], rot=[0, 0, z], color=a)
+                  for z in (20, 80, 140, 200, 300)],
+                Part(shape="cylinder", at=[L * 0.75, y - L * 0.2, 0], size=[L * 0.05, L * 1.1, L * 0.05], rot=[0, 0, 105], color=b),
+                Part(shape="sphere", at=[0.02 * L, y + 0.02 * L, L * 0.12], size=[L * 0.14] * 3, color=d)]
+    return []
+
+
 def rule_build(e: Entity, seed: int) -> Build:
     """A build from the entity's own words: its body plan, colours and size from its kind and look, and
     the outline of a thing from what it is called. Used when the design call fails."""
@@ -387,6 +438,10 @@ def rule_build(e: Entity, seed: int) -> Build:
             "plant": ["#4f8f45", "#6b4a2e", "#e8c33a"], "cell": ["#d0566a", "#f2b6c0", "#6a2028"]}[arche]
     c = (found + base)[:3] if found else base
     size = SIZES[arche]
+    if arche == "vehicle":
+        # real length, pulled towards a car's so people still read beside a ship or an airliner
+        real = next((m for ws, m in VEHICLE_LENGTHS if any(_has(words, w) for w in ws)), size)
+        size = round(4.5 * (real / 4.5) ** 0.5, 2)
     if any(_has(words, w) for w in BIG):
         size *= 1.35
     if any(_has(words, w) for w in SMALL):
@@ -419,6 +474,8 @@ def rule_build(e: Entity, seed: int) -> Build:
         parts = _structure_parts(words, size, c)
     elif arche == "object":
         parts = _thing_parts(words, size, c)
+    elif arche == "cell":
+        parts = _cell_parts(words, size, c)
     elif arche == "humanoid" and any(_has(words, w) for w in ("bag", "duffel", "duffle", "backpack")):
         parts = [Part(shape="capsule", at=[0, -0.05, -0.18], size=[0.35, 0.45, 0.2], color=c[2] if found else "#3a3a2a", bone="back")]
     return Build(
@@ -481,7 +538,12 @@ def rule_setting(p: manifest.Place) -> Setting:
     kind = set_kind(p.name, p.look)
     time = "night" if any(w in text for w in ("night", "dark", "midnight")) else "dusk" if any(w in text for w in ("dusk", "sunset", "evening")) else "dawn" if any(w in text for w in ("dawn", "sunrise", "morning")) else "day"
     g, sky, acc = SET_COLOURS[kind]
-    return Setting(place=p.id, kind=kind, time=time, ground=g, sky=sky, accent=acc)
+    backdrop = ("city" if kind == "city" or any(_has(text, w) for w in CITY_WORDS) else "mountains" if kind in ("mountain", "snow") or _has(text, "mountain")
+                else "none" if kind in ("sea", "sky", "space", "micro", "underwater") else "hills")
+    return Setting(place=p.id, kind=kind, time=time, ground=g, sky=sky, accent=acc, backdrop=backdrop)
+
+
+CITY_WORDS = ("skyline", "city", "downtown", "skyscraper", "manhattan", "new york", "london", "tokyo", "chicago", "harbour", "harbor", "port")
 
 
 # --- the model's design, checked ------------------------------------------------------------------
@@ -513,6 +575,7 @@ water, interiors, sky and light from a kind of set. Return JSON only.
 Set kinds: {sets}
 - kind: the closest kind; time: the time of day the story says, else day.
 - ground, sky, accent (a light or glow colour) as #rrggbb.
+- backdrop: what rings the horizon outdoors: hills, mountains, a city skyline, or none (open sea, sky).
 - dressing: 0-4 things that make this place this particular place (the story's kind of tree, a picnic
   table in a national forest, police cars at a roadblock), each built from 1-{max_parts} primitive parts in
   metres (x forward, y up, standing on y = 0), with how many copies and how far they spread. The engine
@@ -537,6 +600,7 @@ Rules:
   approaching: from far to center). face: the entity it looks at, or camera.
 - state: injured, dazed, asleep, damaged, burning or wet only when the narration says so.
 - holding: the id of an object entity a person or animal holds or carries in that scene.
+- count: 2-9 when the entity is a flock, crowd, herd or fleet (Canada geese, passengers), else 1.
 - camera: a move that tells the moment (establish for a new place, follow for travel, push_in for a
   reveal, low_angle for menace, over_shoulder for an encounter, top_down for a route or layout). Vary it.
 - marks: only where they explain something: a beam for a signal or call, a dome for a range, a path
@@ -680,8 +744,26 @@ MOTION_VERB = {
     "serpent": {"move": "move", "approach": "move", "depart": "move", "rise": "rear", "fall": "idle", "turn": "idle", "shake": "rear", "present": "idle"},
 }
 RIGID = {"move": "move", "approach": "approach", "depart": "depart", "rise": "rise", "fall": "fall", "turn": "turn", "shake": "shake", "present": "present"}
-WINGS = ("plane", "aircraft", "airplane", "aeroplane", "jet", "airliner", "cessna", "glider", "helicopter", "drone", "balloon", "spacecraft")
+WINGS = ("airbus", "boeing", "plane", "aircraft", "airplane", "aeroplane", "jet", "airliner", "cessna", "glider", "helicopter", "drone", "balloon", "spacecraft")
 MOVE_CYCLE = ("establish", "push_in", "orbit", "low_angle", "follow", "reveal")
+
+
+GROUPS = ("geese", "flock", "herd", "swarm", "crowd", "people", "passengers", "crew", "children", "pack", "school of", "colony", "fleet", "troops", "soldiers")
+
+
+def group_size(e: Entity | None, arche: str) -> int:
+    """How many of an entity a shot shows: one, unless its name is a flock, crowd or plural of living things."""
+    if e is None:
+        return 1
+    name = e.name.lower()
+    last = re.sub(r"[^a-z]", "", name.split()[-1]) if name.split() else ""
+    plural = any(_has(name, w) for w in GROUPS) or (arche in LIVING and last.endswith("s") and not last.endswith("ss") and len(last) > 3)
+    if not plural:
+        return 1
+    return 7 if arche in ("bird", "insect", "fish") else 4 if arche in ("humanoid", "quadruped") else 3 if arche == "cell" else 1
+
+
+LANDED = ("landed", "onto the river", "onto the water", "on the water", "ditched", "touched down", "splashed down", "on the runway", "floating", "sank", "wreck")
 
 
 def archetype_words(story: Manifest, eid: str, words: tuple[str, ...]) -> bool:
@@ -745,6 +827,7 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
             "entity": eid, "verb": _verb(a.verb, arche, narration, documented), "state": _state(a.state, narration),
             "face": a.face if a.face in ("camera", "") or _slug(a.face) in listed else "", "holding": holding,
             "to": a.to if a.to in G["places"] else "",
+            "count": max(1, min(9, a.count)) if group_size(manifest.entity(story, eid), arche) > 1 else 1,
         }))
     if moment and moment.entity in builds and moment.entity in listed and not any(x.entity == moment.entity for x in actors):
         arche = builds[moment.entity].archetype
@@ -777,12 +860,21 @@ def rule_shot(script: Script, story: Manifest, builds: dict[str, Build], scene: 
     lead = moment.entity if moment and moment.entity in builds else (listed[0] if listed else None)
     if lead is None:
         return None
+    crew = ("pilot", "captain", "crew", "co-pilot", "first officer", "passenger", "aboard", "flight attendant")
+    plane = next((x for x in listed if builds[x].archetype == "vehicle" and archetype_words(story, x, WINGS)), None)
+    if plane and builds[lead].archetype == "humanoid" and archetype_words(story, lead, crew):
+        lead = plane  # the crew are aboard: show the aircraft doing what they did
     arche = builds[lead].archetype
     motion = moment.motion if moment else "present"
     verb = MOTION_VERB.get(arche, RIGID).get(motion, calm_verb(arche))
     flying = arche == "vehicle" and archetype_words(story, lead, WINGS)
     if arche == "vehicle" and motion in ("move", "approach", "depart"):
         verb = "fly" if flying else "drive" if motion == "move" else verb
+    if flying and scenes3d.find(narration, LANDED):
+        verb = "present"  # down on the ground or the water
+        flying = False
+    elif flying and verb == "present":
+        verb = "fly"  # an aircraft the story hasn't brought down is still in the air
     if verb not in verbs_for(arche):
         verb = calm_verb(arche)
     verb = _verb(verb, arche, narration, bool(moment and moment.documented))
@@ -791,7 +883,9 @@ def rule_shot(script: Script, story: Manifest, builds: dict[str, Build], scene: 
         better = next((v for v in verbs_for(arche) if v not in G["calm"] and v not in drastic and told(v, moment.cue)), None)
         verb = better or verb
     at, to = ("far", "center") if motion == "approach" else ("center", "far") if motion == "depart" else ("left", "right") if motion == "move" else ("center", "")
-    actors = [Actor(entity=lead, verb=verb, at=at, to=to, state=next((s for s in G["states"] if s != "normal" and scenes3d.find(narration, G["states"][s])), "normal")
+    if verb in G["calm"] and verb in ("present", "idle", "sit", "talk", "work", "pulse", "glow", "sway", "turn", "spin", "peck", "sniff", "look_around"):
+        at, to = "center", ""  # staying put
+    actors = [Actor(entity=lead, verb=verb, at=at, to=to, count=group_size(manifest.entity(story, lead), arche), state=next((s for s in G["states"] if s != "normal" and scenes3d.find(narration, G["states"][s])), "normal")
                     if arche in LIVING or arche == "vehicle" else "normal")]
     spots = ["right", "left", "back", "front"]
     for k, other in enumerate(x for x in listed if x != lead):
@@ -803,7 +897,8 @@ def rule_shot(script: Script, story: Manifest, builds: dict[str, Build], scene: 
         if oa == "object" and arche in ("humanoid",) and verb in ("carry", "pick_up", "idle", "walk", "run"):
             actors[0] = actors[0].model_copy(update={"holding": other})
             continue
-        actors.append(Actor(entity=other, verb=calm_verb(oa), at=spots[k % len(spots)], face=lead))
+        calm = "fly" if flying and oa in ("bird", "insect") else calm_verb(oa)
+        actors.append(Actor(entity=other, verb=calm, at=spots[k % len(spots)], face=lead, count=group_size(manifest.entity(story, other), oa)))
     place = moment.place if moment and moment.place else next((p.id for p in story.places if scene in p.scenes), "")
     camera = "follow" if to else MOVE_CYCLE[n % len(MOVE_CYCLE)]
     return Shot(scene=scene, place=place, actors=actors, camera=camera, on=lead)

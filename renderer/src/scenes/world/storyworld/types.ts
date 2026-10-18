@@ -61,6 +61,7 @@ export type CastMember = {
   face: string;
   state: State;
   holding: string;
+  count?: number;
   build: Build;
   held?: Build;
   model?: { id: string; src: string; fit?: { forward?: string; up?: string }; clips?: string[] };
@@ -75,6 +76,7 @@ export type SetSpec = {
   ground: string;
   sky: string;
   accent: string;
+  backdrop?: "hills" | "mountains" | "city" | "none";
   dressing: Dressing[];
 };
 

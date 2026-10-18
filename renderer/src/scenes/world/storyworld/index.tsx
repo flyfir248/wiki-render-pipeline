@@ -12,7 +12,7 @@ import { HeadingPlate, WeatherOverlay } from "../../world3d";
 import { momentOf } from "../kit";
 import { prepare, useModel } from "../stage";
 import { Bird, Cell, Fish, Insect, Quadruped, quadDims, quadPose, Serpent } from "./creatures";
-import { Environment, INSIDE, type KeepOut, VOID } from "./environment";
+import { Environment, INSIDE, type KeepOut, VOID, waterBand } from "./environment";
 import { dimsOf, Flames, humanPose, Humanoid } from "./humanoid";
 import { PartMesh, partsBounds } from "./parts";
 import { lightOf, type Look, lookOf, material } from "./style";
@@ -50,7 +50,7 @@ export const footprint = (b: Build) => {
 
 const SPOTS: Record<Spot, [number, number]> = { center: [0, 0], left: [-1.7, 0.25], right: [1.7, 0.25], back: [0.2, -2.4], front: [-0.2, 1.3], far: [0.4, -7] };
 
-type Placed = { m: CastMember; pos: THREE.Vector3; yaw: number; phase: number; speed: number; h: number; w: number; air: number };
+type Placed = { m: CastMember; pos: THREE.Vector3; yaw: number; phase: number; speed: number; h: number; w: number; w0: number; air: number };
 export type Blocking = { actors: Placed[]; cam: { pos: THREE.Vector3; look: THREE.Vector3; fov: number }; U: number; t: number; k: number; u: number };
 
 const flies = (m: CastMember) => m.verb === "fly" && ["vehicle", "bird", "insect"].includes(m.build.archetype);
@@ -70,6 +70,12 @@ export const block = (world: World, frame: number, fps: number, D: number, at: n
     used.set(m.at, n + 1);
     const [sx, sz] = SPOTS[m.at] ?? SPOTS.center;
     const start = new THREE.Vector3(sx * U + n * U * 1.3, 0, sz * U + n * U * 0.4);
+    if (i > 0 && !flies(m) && !flies(world.cast[0])) {
+      // beside the lead, not inside it: clear of both bodies whatever their size
+      const gap = sizes[0].w / 2 + w / 2 + U * 0.35;
+      if (sx !== 0 && Math.abs(start.x) < gap) start.x = Math.sign(sx) * gap;
+      if (m.at === "back" && start.z > -gap) start.z = -gap;
+    }
     let end = start.clone();
     if (m.to && m.to !== m.at) {
       const [ex, ez] = SPOTS[m.to] ?? SPOTS.center;
@@ -81,13 +87,23 @@ export const block = (world: World, frame: number, fps: number, D: number, at: n
       end = start.clone().add(new THREE.Vector3(reach, 0, 0));
     }
     const go = m.verb === "crash" ? ease(Math.min(1, u / Math.max(0.1, at))) : m.verb === "approach" || m.verb === "depart" ? ease(u) : u;
+    // in a set with open water, what floats (boats, a ditched aircraft, swimmers) is out on it
+    const band = waterBand(world.set.kind);
+    const floats = band && (m.build.archetype === "fish" || m.verb === "swim" || (m.build.archetype === "vehicle" && !flies(m) && m.verb !== "drive"));
+    if (floats && band) {
+      const dz = band[0] * U - w * 0.4 - Math.max(start.z, end.z);
+      if (dz < 0) {
+        start.z += dz;
+        end.z += dz;
+      }
+    }
     const pos = start.clone().lerp(end, go);
     const dist = start.distanceTo(end) * go;
     const stride = m.build.archetype === "humanoid" ? dimsOf(m.build).hip * 1.5 : m.build.archetype === "quadruped" ? quadDims(m.build).leg * 2.4 : Math.max(0.2, w * 0.5);
     const inPlace = start.distanceTo(end) < 0.01 && ["walk", "run", "swim", "climb"].includes(m.verb);
     const phase = inPlace ? t * (m.verb === "run" ? 10 : 6) : (dist / stride) * Math.PI * 2 + t * 0.2;
     // facing: where it goes, else who it looks at, else the lead, else three-quarters to camera
-    let yaw = -0.55;
+    let yaw = world.cast.length === 1 ? -1.0 : -0.55;
     const dir = end.clone().sub(start);
     if (dir.lengthSq() > 1e-4) yaw = Math.atan2(-dir.z, dir.x);
     else if (m.face === "camera") yaw = -Math.PI / 2 + 0.35;
@@ -99,7 +115,8 @@ export const block = (world: World, frame: number, fps: number, D: number, at: n
       }
     }
     let air = 0;
-    if (flies(m)) air = m.build.archetype === "vehicle" ? U * 2.6 + h : ground.length ? U * 1.8 : U * 1.2;
+    const aircraft = world.cast.filter((c, j) => flies(c) && c.build.archetype === "vehicle" && j !== i);
+    if (flies(m)) air = m.build.archetype === "vehicle" ? U * 2.6 + h : aircraft.length ? U * 2.6 + footprint(aircraft[0].build).h * 1.2 : ground.length ? U * 1.8 : U * 1.2;
     if (m.verb === "fall" && m.build.archetype === "vehicle") air = (U * 2.6 + h) * (1 - ease((k + 1.2) / 1.2));
     if (m.verb === "rise") air = h * 1.4 * ease((k + 0.6) / 1.6);
     if (m.verb === "fall" && m.build.archetype !== "vehicle" && m.build.archetype !== "humanoid" && m.build.archetype !== "quadruped") {
@@ -107,9 +124,10 @@ export const block = (world: World, frame: number, fps: number, D: number, at: n
       const from = world.cast.some((c) => flies(c)) ? U * 2.6 + Math.max(...world.cast.filter(flies).map((c) => footprint(c.build).h)) : h * 4;
       air = from * (1 - Math.min(1, Math.max(0, (k + 1.2) / 1.2)) ** 2);
     }
-    pos.y = air;
+    pos.y = air || (floats ? -h * 0.12 : 0);
     const speed = dist / Math.max(0.1, t);
-    return { m, pos, yaw, phase, speed, h, w, air };
+    const many = Math.max(1, Math.min(9, m.count ?? 1));
+    return { m, pos, yaw, phase, speed, h, w: w * (1 + 0.9 * Math.sqrt(many - 1)), w0: w, air };
   });
   return { actors: placed, cam: direct(world, placed, u, t, U), U, t, k, u };
 };
@@ -290,37 +308,56 @@ const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (p
   const { p, look, b } = props;
   const { m } = p;
   const s = m.state;
-  let body: React.ReactNode;
-  switch (m.build.archetype) {
-    case "humanoid":
-      body = <Humanoid build={m.build} look={look} pose={humanPose(m.verb, b.t + p.yaw, p.phase, b.k, dimsOf(m.build), s)} t={b.t} state={s} held={m.held} />;
-      break;
-    case "quadruped":
-      body = <Quadruped build={m.build} look={look} pose={quadPose(m.verb, b.t + p.yaw, p.phase, b.k, quadDims(m.build), s)} t={b.t} state={s} />;
-      break;
-    case "bird":
-      body = <Bird build={m.build} look={look} verb={m.verb} t={b.t + p.yaw * 3} k={b.k} state={s} />;
-      break;
-    case "fish":
-      body = <Fish build={m.build} look={look} t={b.t} speed={p.speed} />;
-      break;
-    case "insect":
-      body = <Insect build={m.build} look={look} verb={m.verb} t={b.t} phase={p.phase} />;
-      break;
-    case "serpent":
-      body = <Serpent build={m.build} look={look} verb={m.verb} t={b.t} phase={p.phase + b.t * 2} />;
-      break;
-    case "cell":
-      body = <Cell build={m.build} look={look} verb={m.verb} t={b.t} k={b.k} />;
-      break;
-    default:
-      body = m.model?.src ? <FoundModel {...props} /> : <Rigid {...props} />;
-  }
+  const one = (dt: number) => {
+    const t = b.t + dt;
+    const phase = p.phase + dt * 3.1;
+    switch (m.build.archetype) {
+      case "humanoid":
+        return <Humanoid build={m.build} look={look} pose={humanPose(m.verb, t + p.yaw, phase, b.k, dimsOf(m.build), s)} t={t} state={s} held={dt ? undefined : m.held} />;
+      case "quadruped":
+        return <Quadruped build={m.build} look={look} pose={quadPose(m.verb, t + p.yaw, phase, b.k, quadDims(m.build), s)} t={t} state={s} />;
+      case "bird":
+        return <Bird build={m.build} look={look} verb={m.verb} t={t + p.yaw * 3} k={b.k} state={s} />;
+      case "fish":
+        return <Fish build={m.build} look={look} t={t} speed={p.speed} />;
+      case "insect":
+        return <Insect build={m.build} look={look} verb={m.verb} t={t} phase={phase} />;
+      case "serpent":
+        return <Serpent build={m.build} look={look} verb={m.verb} t={t} phase={phase + t * 2} />;
+      case "cell":
+        return <Cell build={m.build} look={look} verb={m.verb} t={t} k={b.k} />;
+      default:
+        return m.model?.src ? <FoundModel {...props} /> : <Rigid {...props} />;
+    }
+  };
   return (
     <group position={p.pos.toArray()} rotation={[0, p.yaw, 0]}>
-      {body}
+      {groupOffsets(m, p.w0).map(([x, y, z], i) => (
+        <group key={i} position={[x, y, z]}>
+          {one(i * 0.37)}
+        </group>
+      ))}
     </group>
   );
+};
+
+// Where each member of a flock, crowd or fleet stands relative to the first, in its own frame (x
+// forward): a V behind the leader for things that fly or swim, a loose cluster for the rest.
+const groupOffsets = (m: CastMember, w: number): [number, number, number][] => {
+  const n = Math.max(1, Math.min(9, m.count ?? 1));
+  const out: [number, number, number][] = [[0, 0, 0]];
+  const flock = ["bird", "insect", "fish"].includes(m.build.archetype) || m.verb === "fly";
+  for (let i = 1; i < n; i++) {
+    const row = Math.ceil(i / 2);
+    const side = i % 2 ? 1 : -1;
+    if (flock) out.push([-row * w * 0.9, Math.sin(i * 1.7) * w * 0.25, side * row * w * 0.9]);
+    else {
+      const a = i * 2.4;
+      const r = w * (1.1 + 0.35 * Math.sqrt(i));
+      out.push([Math.cos(a) * r, 0, Math.sin(a) * r]);
+    }
+  }
+  return out;
 };
 
 // --- marks ------------------------------------------------------------------------------------------

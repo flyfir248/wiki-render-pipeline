@@ -5,7 +5,7 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
 import { Flames, Stars } from "./humanoid";
-import { Block, PartMesh, PartsModel } from "./parts";
+import { Block, PartMesh, PartsModel, partsBounds } from "./parts";
 import { type Look, material } from "./style";
 import type { Build, Part, State } from "./types";
 
@@ -437,11 +437,20 @@ export const Cell: React.FC<{ build: Build; look: Look; verb: string; t: number;
   }
   pos.needsUpdate = true;
   geom.computeVertexNormals();
-  if (build.parts.length >= 3) {
-    return <PartsModel parts={build.parts} look={look} spin={t * 2} />;
-  }
   const pulse = verb === "pulse" ? 1 + Math.sin(t * 5) * 0.06 : 1;
   const grow = verb === "grow" ? 0.45 + 0.55 * ease((k + 1.5) / 2) : 1;
+  if (build.parts.length >= 2) {
+    // a cell with an outline of its own (a disc, a crescent, a virus): turned slowly about its centre
+    const c = partsBounds(build.parts).center;
+    const turn = verb === "spin" ? t * 1.2 : Math.sin(t * 0.4) * 0.5;
+    return (
+      <group position={[c.x, c.y, c.z]} scale={pulse * grow} rotation={[Math.sin(t * 0.3) * 0.15, turn, 0]}>
+        <group position={[-c.x, -c.y, -c.z]}>
+          <PartsModel parts={build.parts} look={look} spin={t * 2} />
+        </group>
+      </group>
+    );
+  }
   const split = verb === "split" ? ease((k + 0.3) / 1.0) : 0;
   const one = (dx: number, key: string) => (
     <group key={key} position={[dx, 0, 0]} scale={[1 - split * 0.18, 1, 1]}>

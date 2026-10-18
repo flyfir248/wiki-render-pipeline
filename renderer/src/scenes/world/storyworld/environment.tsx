@@ -17,6 +17,11 @@ export const WATER = ["sea", "lake", "river", "beach", "swamp"];
 export const INSIDE = ["room", "hall", "lab", "hospital", "cave"];
 export const VOID = ["space", "micro", "sky"];
 
+// The open water of a set as [near z, far z] in units: it begins just behind the centre spot, so
+// boats and ditched aircraft sit on it while people stand on the near bank.
+export const waterBand = (kind: string): [number, number] | null =>
+  kind === "river" ? [-0.8, -15] : kind === "lake" ? [-1.2, -34] : kind === "beach" ? [-3, -55] : null;
+
 // Spots round the stage, clear of the actors (radius `clear`) and thinner on the camera's side (+z).
 export type KeepOut = (x: number, z: number, r: number, h: number) => boolean;
 const scatter = (r: R, n: number, clear: number, spread: number, front = 0.35, keep?: KeepOut, size = 0, height = 0) => {
@@ -154,7 +159,7 @@ const Water: React.FC<{ size: number; color: string; t: number; amp: number; at?
   geom.computeVertexNormals();
   return (
     <mesh geometry={geom} position={at} receiveShadow>
-      <meshStandardMaterial color={color} roughness={0.25} metalness={0.15} flatShading transparent opacity={0.92} />
+      <meshStandardMaterial color={color} roughness={0.5} metalness={0} flatShading transparent opacity={0.92} />
     </mesh>
   );
 };
@@ -206,6 +211,31 @@ const Skyline: React.FC<{ U: number; seed: number; color: string; look: Look; he
   );
 };
 
+// A far ring of towers, for a story told against a city: lit windows after dark.
+const CitySkyline: React.FC<{ U: number; seed: number; color: string; look: Look; lit: boolean }> = ({ U, seed, color, look, lit }) => {
+  const towers = useMemo(() => {
+    const r = rng(seed ^ 0x2c17);
+    return Array.from({ length: 70 }, (_, i) => {
+      const a = (i / 70) * Math.PI * 2 + r() * 0.05;
+      const d = U * (46 + r() * 12);
+      return { x: Math.cos(a) * d, z: Math.sin(a) * d, w: U * (2.5 + r() * 3), h: U * (3 + r() ** 2 * 9), shade: 0.8 + r() * 0.35 };
+    });
+  }, [U, seed]);
+  return (
+    <>
+      {towers.map((b, i) => (
+        <group key={i} position={[b.x, 0, b.z]} rotation={[0, -Math.atan2(b.z, b.x), 0]}>
+          {look.blocky ? (
+            <Block look={look} color={tone(color, b.shade)} size={[b.w, b.h, b.w]} at={[0, b.h / 2 - U * 0.3, 0]} />
+          ) : (
+            <Building w={b.w} h={b.h} d={b.w} color={tone(color, b.shade)} seed={seed + (i % 5)} lit={lit ? 0.45 : 0.05} />
+          )}
+        </group>
+      ))}
+    </>
+  );
+};
+
 const Dressed: React.FC<{ d: Dressing; look: Look; seed: number; clear: number; keep?: KeepOut }> = ({ d, look, seed, clear, keep }) => {
   const bb = partsBounds(d.build.parts);
   const spots = useMemo(() => scatter(rng(seed), d.count, Math.max(clear, Math.max(bb.size.x, bb.size.z) * 0.6 + clear * 0.6), d.spread, 0.25, keep, Math.max(bb.size.x, bb.size.z) * 0.6, bb.size.y),
@@ -231,11 +261,18 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
   const green = mix(set.ground, "#3f7a3a", 0.5);
   const leaf = look.dark > 0.5 ? tone(green, 0.7) : green;
   const clear = U * 3.2;
+  const band = waterBand(kind);
+  // nothing grows in the water, and nothing stands in front of the camera
+  const dry: KeepOut | undefined = useMemo(
+    () => (band ? (x: number, z: number, size: number, height: number) => (z < (band[0] + 0.3) * U && z > (band[1] - 0.3) * U) || Boolean(keep && keep(x, z, size, height)) : keep),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [kind, U, keep],
+  );
   const items = useMemo(() => {
     const rr = rng(seed ^ 0x77);
     const out: React.ReactNode[] = [];
     const add = (n: number, spread: number, make: (s: { x: number; z: number; s: number; a: number }, i: number) => React.ReactNode, front = 0.3, near = clear) =>
-      scatter(rr, n, near, spread, front, keep, U * 1.2, U * 3).forEach((s, i) => out.push(<group key={`${out.length}`} position={[s.x, 0, s.z]} rotation={[0, s.a, 0]}>{make(s, i)}</group>));
+      scatter(rr, n, near, spread, front, dry, U * 1.2, U * 3).forEach((s, i) => out.push(<group key={`${out.length}`} position={[s.x, 0, s.z]} rotation={[0, s.a, 0]}>{make(s, i)}</group>));
     switch (kind) {
       case "forest":
         add(110, U * 26, (s, i) => (i % 3 ? <Pine look={look} h={U * 3.4 * s.s} color={leaf} /> : <Broadleaf look={look} h={U * 3 * s.s} color={mix(leaf, "#b5872a", set.time === "dusk" ? 0.25 : 0.1)} r={s.s} />));
@@ -274,8 +311,8 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         break;
       case "river":
       case "lake":
-        add(22, U * 20, (s, i) => (i % 2 ? <Pine look={look} h={U * 3 * s.s} color={leaf} /> : <Broadleaf look={look} h={U * 2.6 * s.s} color={leaf} r={s.s} />), 0.15, U * 5);
-        add(20, U * 8, (s) => <Block look={look} color="#6a8a3a" size={[U * 0.04, U * 0.6 * s.s, U * 0.04]} at={[0, U * 0.3, 0]} />, 0.5, U * 1.6);
+        add(kind === "river" ? 60 : 30, U * 28, (s, i) => (i % 2 ? <Pine look={look} h={U * 3 * s.s} color={leaf} /> : <Broadleaf look={look} h={U * 2.6 * s.s} color={leaf} r={s.s} />), 0.15, U * 5);
+        add(14, U * 8, (s) => <Rock look={look} s={U * 0.3 * s.s} color="#7f7d74" />, 0.5, U * 1.6);
         break;
       case "road":
       case "airfield":
@@ -337,7 +374,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kind, U, seed, look.name, set.time, leaf, keep]);
+  }, [kind, U, seed, look.name, set.time, leaf, dry]);
 
   const groundSize = U * 120;
   const bump = kind === "mountain" ? U * 2.2 : ["forest", "grassland", "snow", "desert"].includes(kind) ? U * 0.6 : kind === "underwater" ? U * 0.4 : 0;
@@ -348,6 +385,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
   const pal: Palette = { top: light.top, horizon: light.horizon, ground: ground, ground2: ground, cloud: "#ffffff", light: 1 };
 
   const showGround = !VOID.includes(kind) && kind !== "sea";
+  const backdrop = set.backdrop ?? (kind === "mountain" || kind === "snow" ? "mountains" : kind === "city" ? "city" : "hills");
   return (
     <group>
       {kind === "space" ? <color attach="background" args={["#03040c"]} /> : <Sky pal={pal} />}
@@ -358,9 +396,9 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         <mesh geometry={gGeom} receiveShadow material={gMat} />
       ) : null}
       {kind === "sea" ? <Water size={groundSize} color={water} t={t} amp={U * 0.06} /> : null}
-      {kind === "lake" ? <Water size={U * 30} color={water} t={t} amp={U * 0.02} at={[0, U * 0.02, -U * 18]} /> : null}
-      {kind === "river" ? <Water size={U * 30} shape={[U * 120, U * 7]} color={water} t={t} amp={U * 0.02} at={[0, U * 0.03, -U * 6]} /> : null}
-      {kind === "beach" ? <Water size={U * 60} shape={[U * 120, U * 50]} color={water} t={t} amp={U * 0.03} at={[0, U * 0.02, -U * 30]} /> : null}
+      {band ? (
+        <Water size={U * 30} shape={[U * (kind === "lake" ? 60 : 120), U * (band[0] - band[1])]} color={water} t={t} amp={U * (kind === "beach" ? 0.03 : 0.02)} at={[0, U * 0.03, U * (band[0] + band[1]) / 2]} />
+      ) : null}
       {kind === "swamp" ? <Water size={U * 40} color={tone(water, 0.6)} t={t} amp={U * 0.005} at={[0, U * 0.03, -U * 6]} /> : null}
       {kind === "road" || kind === "airfield" || kind === "town" || kind === "city" ? (
         <group>
@@ -370,10 +408,16 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
           ))}
         </group>
       ) : null}
-      {!INSIDE.includes(kind) && !VOID.includes(kind) ? <Skyline U={U} seed={seed} look={look} color={mix(kind === "snow" ? "#dfe8ee" : kind === "desert" ? "#c8a070" : tone(leaf, 0.8), light.horizon, 0.45)} height={kind === "mountain" ? 16 : kind === "sea" || kind === "beach" ? 3 : 7} /> : null}
+      {!INSIDE.includes(kind) && kind !== "space" && kind !== "micro" && backdrop === "city" ? (
+        <CitySkyline U={U} seed={seed} look={look} color={mix("#5a6577", light.horizon, 0.35)} lit={set.time === "night" || set.time === "dusk" || look.dark > 0.5} />
+      ) : null}
+      {!INSIDE.includes(kind) && !VOID.includes(kind) && (backdrop === "hills" || backdrop === "mountains") ? (
+        <Skyline U={U} seed={seed} look={look} color={mix(kind === "snow" ? "#dfe8ee" : kind === "desert" ? "#c8a070" : tone(leaf, 0.8), light.horizon, 0.45)}
+          height={backdrop === "mountains" ? 16 : kind === "sea" || kind === "beach" ? 3 : 7} />
+      ) : null}
       {items}
       {set.dressing.map((d, i) => (
-        <Dressed key={i} d={d} look={look} seed={seed + i * 101} clear={clear * 0.8} keep={keep} />
+        <Dressed key={i} d={d} look={look} seed={seed + i * 101} clear={clear * 0.8} keep={dry} />
       ))}
     </group>
   );
