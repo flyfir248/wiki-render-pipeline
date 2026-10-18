@@ -99,6 +99,7 @@ instagram:
   cta: "Full story, and a new one every day, on YouTube. Link in bio"
   hashtags: [truestory, didyouknow]   # in every caption; the video's own tags fill the rest
   max_hashtags: 5           # Instagram's limit per post
+  host: litterbox           # Instagram fetches each Reel from a link on litterbox.catbox.moe, deleted after 1 hour
 
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is
