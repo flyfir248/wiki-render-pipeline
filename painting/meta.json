@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "painting",
+  "query": "painting",
+  "source": "objaverse",
+  "uid": "sketchfab:b8013cbbe1de4f159895f269b7f8a9d2",
+  "title": "Morena",
+  "author": "danielpeixe",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-b8013cbbe1de4f159895f269b7f8a9d2",
+  "checked": "vision",
+  "triangles": 64932,
+  "bytes": 1387460,
+  "size": [
+    0.7684,
+    0.7111,
+    0.6867
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "over\u2011painted, bright colors, monkey\u2011like face, distorted features",
+  "added": "2026-10-18T06:04:20+00:00"
+}
