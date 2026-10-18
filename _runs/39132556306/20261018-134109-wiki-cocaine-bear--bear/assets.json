@@ -1,0 +1,169 @@
+{
+  "entities": [
+    {
+      "id": "bear",
+      "name": "a 175\u2011pound female American black bear",
+      "kind": "animal",
+      "search": [
+        "american black bear",
+        "black bear",
+        "bear"
+      ],
+      "look": "brown\u2011black fur, large adult female, approx. 175\u202flb",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "model": null
+    },
+    {
+      "id": "plane",
+      "name": "a Cessna 404 Titan",
+      "kind": "light aircraft",
+      "search": [
+        "cessna 404 titan",
+        "cessna 404",
+        "light aircraft"
+      ],
+      "look": "single\u2011engine, high\u2011wing, white with dark markings, 1970s era",
+      "certain": true,
+      "scenes": [
+        3,
+        4
+      ],
+      "model": {
+        "ok": true,
+        "key": "light-aircraft",
+        "query": "light aircraft",
+        "source": "objaverse",
+        "uid": "sketchfab:a8dd34a73737448f961d226734a3fc59",
+        "title": "Light Aircraft",
+        "author": "rhcreations",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-a8dd34a73737448f961d226734a3fc59",
+        "checked": "vision",
+        "triangles": 14704,
+        "bytes": 1859772,
+        "size": [
+          9.1892,
+          3.0071,
+          8.8081
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "single\u2011engine, high\u2011wing, white with dark markings, 1970s era",
+        "added": "2026-10-18T14:47:34+00:00",
+        "credit": "Light Aircraft by rhcreations (CC BY 4.0) https://sketchfab.com/3d-models/none-a8dd34a73737448f961d226734a3fc59"
+      }
+    },
+    {
+      "id": "containers",
+      "name": "plastic cocaine containers",
+      "kind": "object",
+      "search": [
+        "plastic drug container",
+        "cocaine container",
+        "container"
+      ],
+      "look": "small white plastic boxes, about fist\u2011size, sealed",
+      "certain": false,
+      "scenes": [
+        4,
+        5
+      ],
+      "model": null
+    },
+    {
+      "id": "smugglers",
+      "name": "drug smugglers Andrew Thornton and Bill Leonard",
+      "kind": "person",
+      "search": [
+        "male adult",
+        "person"
+      ],
+      "look": "men in 1980s flight gear, helmets, jackets",
+      "certain": false,
+      "scenes": [
+        3
+      ],
+      "model": null
+    }
+  ],
+  "places": [
+    {
+      "id": "forest",
+      "name": "Appalachian forest near Knoxville, Tennessee / northern Georgia",
+      "look": "dense pine forest, autumn light, rugged terrain, 1985",
+      "scenes": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "mall",
+      "name": "Kentucky shopping mall display area",
+      "look": "indoor mall hallway, bright lighting, display case for taxidermy",
+      "scenes": [
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "bear",
+      "place": "",
+      "action": "dead body on ground",
+      "motion": "present",
+      "cue": "A 175\u2011pound black bear died after eating 75 pounds of cocaine dropped from a smuggler\u2019s plane.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 3,
+      "entity": "plane",
+      "place": "",
+      "action": "flying over Knoxville",
+      "motion": "present",
+      "cue": "Drug smugglers Andrew Thornton and Bill Leonard were flying a Cessna 404 Titan over Knoxville.",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 4,
+      "entity": "containers",
+      "place": "forest",
+      "action": "jettisoned from plane",
+      "motion": "fall",
+      "cue": "To lighten their load, they jettisoned 40 cocaine containers, which fell to the forest below.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 5,
+      "entity": "bear",
+      "place": "forest",
+      "action": "ingests cocaine",
+      "motion": "present",
+      "cue": "The bear stumbled upon the packages, ingested about 75 pounds of cocaine, and overdosed.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 6,
+      "entity": "bear",
+      "place": "mall",
+      "action": "taxidermied on display",
+      "motion": "present",
+      "cue": "Later, her body was taxidermied and placed on display in a Kentucky shopping mall.",
+      "documented": true,
+      "priority": 2
+    }
+  ]
+}

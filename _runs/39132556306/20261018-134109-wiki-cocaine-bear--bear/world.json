@@ -1,0 +1,435 @@
+{
+  "style": "lowpoly",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "rules_built": [
+      "bear",
+      "plane",
+      "smugglers",
+      "containers"
+    ],
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "bear",
+      "archetype": "quadruped",
+      "size": 2.16,
+      "primary": "#6b4a2e",
+      "secondary": "#22201e",
+      "accent": "#6b4a2e",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.8,
+        "legs": 0.35,
+        "neck": 0.2,
+        "head": 0.5,
+        "snout": 0.55,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "belly",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [],
+      "source": "procedural, from the entity's words",
+      "scenes": [
+        1,
+        5,
+        6
+      ]
+    },
+    {
+      "entity": "plane",
+      "archetype": "vehicle",
+      "size": 4.5,
+      "primary": "#ece8e0",
+      "secondary": "#d9dde3",
+      "accent": "#3a6cc2",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            0.54,
+            0.0
+          ],
+          "size": [
+            0.585,
+            4.5,
+            0.585
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.09,
+            0.6300000000000001,
+            0.0
+          ],
+          "size": [
+            0.8099999999999999,
+            0.09,
+            4.7250000000000005
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -1.98,
+            0.9,
+            0.0
+          ],
+          "size": [
+            0.45,
+            0.72,
+            0.09
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -1.98,
+            0.585,
+            0.0
+          ],
+          "size": [
+            0.36,
+            0.09,
+            1.44
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.3499999999999999,
+            0.765,
+            0.0
+          ],
+          "size": [
+            0.45,
+            0.225,
+            0.54
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            2.295,
+            0.54,
+            0.0
+          ],
+          "size": [
+            0.045,
+            0.99,
+            0.135
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "x",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.225,
+            0.54,
+            -0.945
+          ],
+          "size": [
+            0.54,
+            0.27,
+            0.27
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3a6cc2",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.225,
+            0.54,
+            0.945
+          ],
+          "size": [
+            0.54,
+            0.27,
+            0.27
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3a6cc2",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "source": "found model",
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "entity": "smugglers",
+      "archetype": "humanoid",
+      "size": 1.75,
+      "primary": "#3a6cc2",
+      "secondary": "#2c3550",
+      "accent": "#e8c33a",
+      "skin": "#5c3a26",
+      "hair": "#a8743a",
+      "body": {
+        "build": 0.45,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": {
+        "top": "jacket",
+        "bottom": "trousers",
+        "hair": "helmet",
+        "beard": false,
+        "glasses": false
+      },
+      "parts": [],
+      "source": "procedural, from the entity's words",
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "entity": "containers",
+      "archetype": "fish",
+      "size": 0.6,
+      "primary": "#ece8e0",
+      "secondary": "#5d7f9a",
+      "accent": "#d8e2e8",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [],
+      "source": "procedural, from the entity's words",
+      "scenes": [
+        5
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "forest",
+      "kind": "forest",
+      "time": "day",
+      "ground": "#3f6a3a",
+      "sky": "#9fc0d8",
+      "accent": "#ffd9a0",
+      "dressing": [],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "mall",
+      "kind": "hall",
+      "time": "day",
+      "ground": "#9a9080",
+      "sky": "#d8d0c0",
+      "accent": "#ffe8c0",
+      "dressing": [],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "bear",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "camera",
+          "state": "normal",
+          "holding": ""
+        }
+      ],
+      "camera": "establish",
+      "on": "bear",
+      "marks": [],
+      "callouts": []
+    },
+    "3": {
+      "scene": 3,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "camera",
+          "state": "normal",
+          "holding": ""
+        },
+        {
+          "entity": "smugglers",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "camera",
+          "state": "normal",
+          "holding": ""
+        }
+      ],
+      "camera": "establish",
+      "on": "plane",
+      "marks": [],
+      "callouts": []
+    },
+    "5": {
+      "scene": 5,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "bear",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "camera",
+          "state": "normal",
+          "holding": ""
+        },
+        {
+          "entity": "containers",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "camera",
+          "state": "normal",
+          "holding": ""
+        }
+      ],
+      "camera": "establish",
+      "on": "bear",
+      "marks": [],
+      "callouts": []
+    },
+    "6": {
+      "scene": 6,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "bear",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "camera",
+          "state": "normal",
+          "holding": ""
+        }
+      ],
+      "camera": "push_in",
+      "on": "bear",
+      "marks": [],
+      "callouts": []
+    }
+  }
+}

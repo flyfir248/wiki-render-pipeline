@@ -1,0 +1,36 @@
+fetching Wikipedia article
+1 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 13 scenes); quote (lost viewers 32% slower than average, 7 scenes); map (lost viewers 13% slower than average, 10 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 84% faster than average, 17 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 94 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: The smugglers are introduced after the drop, leaving viewers confused about who released the cocaine.; The script mentions 40 containers but later states the bear ate 75 pounds, without linking containers to total weight.
+checking facts against the source
+facts check out
+reading the story: what it shows
+story: a 175‑pound female American black bear, a Cessna 404 Titan, plastic cocaine containers, drug smugglers Andrew Thornton and Bill Leonard; 5 moments
+planning the visuals
+visual plan (model): 4 3D, 3 2D; 3D: stage present, stage present, stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: a Cessna 404 Titan -> 'Light Aircraft' from objaverse (by, 14704 triangles, 0 animations)
+building the story world: 4 entities for 4 scenes
+story world (lowpoly): cast model, sets model, direction model; bear as quadruped, plane as vehicle, smugglers as humanoid, containers as fish
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 4 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+cutaways: 3 extra photos across 3 scenes
+collage: 7 photos styled, 2 with a cut-out subject
+translating the title and description (es, pt, hi, fr, de)
+relevance: checking 4 3D scenes by eye
+scene 3: 3D dropped: frame check: The plane is not a Cessna 404 Titan.
+storyboarding: an illustration for each sentence
+scene 2, sentence 1 redrawn: No readable text or garbled lettering. No badly distorted bodies, extra limbs or melted faces. No blood, wounds or dead bodies.
+scene 2, sentence 1 redrawn: blood, wounds or dead bodies
+scene 3, sentence 1 redrawn: The illustration shows a small plane flying over a forest, but there are no smugglers on board.
+scene 3, sentence 1 redrawn: blood, wounds or dead bodies
+scene 7, sentence 1 redrawn: The subject it must show: movie poster, but the illustration shows a bear with smoke coming out of its mouth.
+storyboard: 1 illustrated sentences of 3 planned, 9 in the cast; 6 checked, 3 redrawn, 2 left out
+art direction: signature
+rendering 46s short video
+rendering thumbnail
+done: approved
