@@ -29,6 +29,7 @@ from fyt.store import Job, Uploads
 
 GRAPH = "https://graph.facebook.com"
 RUPLOAD = "https://rupload.facebook.com/ig-api-upload"
+LITTERBOX = "https://litterbox.catbox.moe/resources/internals/api.php"
 MAX_CAPTION = 2200
 BODY_CHARS = 300
 CHECK_EVERY = 15  # seconds between checks while Instagram processes the video
@@ -130,6 +131,24 @@ def for_instagram(video: Path, out: Path) -> Path:
         return video
 
 
+def litterbox(video: Path, session=requests) -> str:
+    """A public link to the video that litterbox.catbox.moe deletes after an hour, for Instagram to fetch."""
+    with video.open("rb") as f:
+        r = session.post(
+            LITTERBOX,
+            data={"reqtype": "fileupload", "time": "1h"},
+            files={"fileToUpload": ("reel.mp4", f, "video/mp4")},
+            timeout=600,
+        )
+    url = r.text.strip()
+    if r.status_code >= 400 or not url.startswith("https://"):
+        raise RuntimeError(f"temporary host refused the video ({r.status_code}): {url[:200]}")
+    return url
+
+
+HOSTS = {"litterbox": litterbox}
+
+
 def publish(cfg: Config, video: Path, text: str, session=requests, sleep=time.sleep) -> str:
     """Post a video as a Reel. Returns the Reel's media id."""
     creds = credentials()
@@ -138,38 +157,36 @@ def publish(cfg: Config, video: Path, text: str, session=requests, sleep=time.sl
     token, user = creds
     v = cfg.instagram.api_version
     auth = {"Authorization": f"OAuth {token}"}
-    created = _json(
-        session.post(
-            f"{GRAPH}/{v}/{user}/media",
-            data={
-                "media_type": "REELS",
-                "upload_type": "resumable",
-                "caption": text,
-                "share_to_feed": "true" if cfg.instagram.share_to_feed else "false",
-                "thumb_offset": str(int(cfg.instagram.cover_seconds * 1000)),
-            },
-            headers=auth,
-            timeout=60,
-        )
-    )
-    container = created["id"]
+    fields = {
+        "media_type": "REELS",
+        "caption": text,
+        "share_to_feed": "true" if cfg.instagram.share_to_feed else "false",
+        "thumb_offset": str(int(cfg.instagram.cover_seconds * 1000)),
+    }
     with tempfile.TemporaryDirectory() as tmp:
         upload = for_instagram(video, Path(tmp) / "reel.mp4")
-        with upload.open("rb") as f:
-            r = session.post(
-                created.get("uri") or f"{RUPLOAD}/{v}/{container}",
-                headers={**auth, "offset": "0", "file_size": str(upload.stat().st_size)},
-                data=f,
-                timeout=900,
-            )
-    try:
-        _json(r)
-    except RuntimeError as e:
-        try:  # the container's own status usually names what Instagram didn't like
-            state = session.get(f"{GRAPH}/{v}/{container}", params={"fields": "status,status_code,video_status"}, headers=auth, timeout=30).text
-        except Exception:
-            state = "(no status)"
-        raise RuntimeError(f"{e}; container {container}: {state[:500]}") from None
+        if cfg.instagram.host in HOSTS:
+            # Instagram fetches the video from a public link.
+            fields["video_url"] = HOSTS[cfg.instagram.host](upload, session)
+            container = _json(session.post(f"{GRAPH}/{v}/{user}/media", data=fields, headers=auth, timeout=60))["id"]
+        else:
+            created = _json(session.post(f"{GRAPH}/{v}/{user}/media", data={**fields, "upload_type": "resumable"}, headers=auth, timeout=60))
+            container = created["id"]
+            with upload.open("rb") as f:
+                r = session.post(
+                    created.get("uri") or f"{RUPLOAD}/{v}/{container}",
+                    headers={**auth, "offset": "0", "file_size": str(upload.stat().st_size)},
+                    data=f,
+                    timeout=900,
+                )
+            try:
+                _json(r)
+            except RuntimeError as e:
+                try:  # the container's own status usually names what Instagram didn't like
+                    state = session.get(f"{GRAPH}/{v}/{container}", params={"fields": "status,status_code,video_status"}, headers=auth, timeout=30).text
+                except Exception:
+                    state = "(no status)"
+                raise RuntimeError(f"{e}; container {container}: {state[:500]}") from None
     for _ in range(MAX_CHECKS):
         state = _json(session.get(f"{GRAPH}/{v}/{container}", params={"fields": "status_code,status"}, headers=auth, timeout=60))
         code = state.get("status_code")

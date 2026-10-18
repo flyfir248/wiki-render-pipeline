@@ -202,3 +202,25 @@ def test_a_rejected_upload_reports_the_containers_status(tmp_path, monkeypatch):
         assert "codec not supported" in str(e)
     else:
         raise AssertionError("no error")
+
+
+def test_with_a_temporary_host_instagram_fetches_the_video_from_its_link(tmp_path, monkeypatch):
+    monkeypatch.setenv("INSTAGRAM_TOKEN", "tok")
+    monkeypatch.setenv("INSTAGRAM_USER_ID", "17841")
+    video = tmp_path / "video.mp4"
+    video.write_bytes(b"x")
+
+    class S(_Session):
+        def post(self, url, data=None, headers=None, timeout=None, files=None):
+            if url == instagram.LITTERBOX:
+                assert files["fileToUpload"][2] == "video/mp4" and data["time"] == "1h"
+                r = _Resp({})
+                r.text = "https://litter.catbox.moe/abc.mp4"
+                return r
+            return super().post(url, data, headers, timeout)
+
+    s = S(["FINISHED"])
+    assert instagram.publish(_cfg(tmp_path, host="litterbox"), video, "hi", session=s, sleep=lambda _: None) == "M1"
+    create = s.calls[0]
+    assert create[2]["video_url"] == "https://litter.catbox.moe/abc.mp4" and "upload_type" not in create[2]
+    assert not any("rupload" in c[1] for c in s.calls)

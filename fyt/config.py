@@ -244,6 +244,10 @@ class InstagramConfig(BaseModel):
     # Shorts that went public longer ago than this aren't posted, so turning `publish` on doesn't
     # post a backlog all at once.
     max_age_hours: float = 48
+    # How Instagram gets the video. rupload: a direct file upload to Meta (its upload service has been
+    # answering "file not found" since September 2026). litterbox: a public link on litterbox.catbox.moe,
+    # deleted after an hour, that Instagram fetches the video from.
+    host: Literal["rupload", "litterbox"] = "rupload"
     api_version: str = "v26.0"
 
 
