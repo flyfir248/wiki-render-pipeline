@@ -482,6 +482,9 @@ def relevance_gate(cfg: Config, job: Job, script: Script, story, spans, words, s
         picture = relevance.picture_gate(cfg, script, story, props, job.file("gate-props.json"), job.public, job.file("gate"), log=lambda m: log(job, m))
         for i, why in picture.items():
             log(job, f"scene {i + 1}: 3D dropped: {why}")
+            m = script.scenes[i].model or {}
+            if m.get("level") in ("found", "generated") and m.get("id"):
+                assetlib.forget(m["id"], why)  # the next video searches past it
         script = relevance.apply(script, picture)
     job.file("relevance.json").write_text(relevance.dumps(text, picture, checked))
     if text or picture:

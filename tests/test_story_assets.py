@@ -343,3 +343,17 @@ def test_asset_check_passes_only_what_a_vision_model_saw_in_the_render(tmp_path,
     assert [r["pass"] for r in rows] == [True, False, False, False, False]
     assert "1 of 5 passed" in (tmp_path / "out" / "report.md").read_text()
     assert (tmp_path / "out" / "sheet.png").is_file()
+
+
+def test_a_model_the_render_check_failed_is_forgotten_and_never_taken_again(cache, monkeypatch):
+    cands = [fake_candidate("Black Bear Calcanium", "cc0"), fake_candidate("Black Bear", "cc0")]
+    cands[0]["title"] = "Black Bear"  # a title the part rules can't catch
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: cands})
+    monkeypatch.setattr(assetlib, "prepare", fake_prepare)
+    cfg = Config(format="short")
+    cfg.visuals.asset_sources = ["sketchfab"]
+    first = assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)
+    assetlib.forget(first["key"], "frame check: a white bone")
+    assert assetlib.cached(first["key"]) is None
+    second = assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)
+    assert second["uid"] != first["uid"]

@@ -63,7 +63,7 @@ NOT_ONE_THING = re.compile(r"\b(pack|collection|bundle|kit|set of|diorama|scene|
 # A model of a part or remains of the thing (a bear's jawbone scan), unless that part is what was asked for.
 A_PART = ("skull", "skeleton", "bone", "bones", "mandible", "jaw", "tooth", "teeth", "fossil", "fragment", "head", "paw",
           "footprint", "track", "fur", "texture", "femur", "tibia", "fibula", "radius", "ulna", "humerus", "rib",
-          "vertebra", "pelvis", "scapula", "astragalus", "calcaneus", "metatarsal", "metacarpal", "phalanx", "carpal", "tarsal",
+          "vertebra", "pelvis", "scapula", "astragalus", "calcaneus", "calcanium", "metatarsal", "metacarpal", "phalanx", "carpal", "tarsal",
           "patella", "sacrum", "clavicle", "cranium", "specimen", "limb", "leg", "claw", "hoof", "horn", "antler", "detector", "fountain", "rig only", "base mesh", "sculpt", "bust", "statue", "figurine", "toy", "plush")
 HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) FacelessYT model finder"}
 
@@ -162,6 +162,16 @@ def _note_rejected(uid: str, why: str) -> None:
     seen = _rejected()
     seen[uid] = why[:120]
     (CACHE / "_rejected.json").write_text(json.dumps(seen, indent=1, sort_keys=True))
+
+
+def forget(key: str, why: str) -> None:
+    """A stored model that a render showed to be wrong (fyt.relevance's frame check): it is dropped from
+    the cache and never taken again, so the next search moves on to another candidate."""
+    meta = _read(CACHE / key / "meta.json", None)
+    if not meta or meta.get("checked") == "vetted":
+        return
+    _note_rejected(meta.get("uid", key), f"render: {why}")
+    shutil.rmtree(CACHE / key, ignore_errors=True)
 
 
 # --- sources ------------------------------------------------------------------------------

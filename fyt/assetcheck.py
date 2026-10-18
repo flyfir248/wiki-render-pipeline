@@ -127,6 +127,8 @@ def run(cfg: Config, out: Path, log=print) -> list[dict]:
             else:
                 row["pass"] = bool(v.matches)
                 row["why"] = "the rendered frame shows it" if v.matches else f"frame check: {v.problems or 'not recognisable'}"
+                if not v.matches:
+                    assetlib.forget(found[row["id"]]["key"], row["why"])  # the next check tries another model
 
     passed = sum(r["pass"] for r in rows)
     md = [f"# 3D asset check: {passed} of {len(rows)} passed", "", lines[0] if lines else "", ""]
