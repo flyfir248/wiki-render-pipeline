@@ -387,6 +387,44 @@ Change the times in the workflow's `cron` lines, and the niche in `channel.yaml`
 `python -m fyt make "wiki:Boston Molasses Disaster"`, or queue some with
 `python -m fyt topics wiki -n 5`.
 
+## Instagram Reels
+
+Every Short can also go up on Instagram as a Reel, to send Instagram viewers to the YouTube channel
+(`fyt/instagram.py`, settings under `instagram` in `channel.yaml`).
+
+- **Caption.** With `instagram.enabled`, each Short gets `instagram.txt` next to its video (and in the run's
+  artifact): the hook, one line of the story, a call to action naming the channel (`cta`, `youtube_handle`),
+  the video's comment question, the Wikipedia credit and at most five hashtags (Instagram's limit since
+  December 2025: the fixed `hashtags` first, then the video's own tags). Links in captions can't be tapped
+  on Instagram, so the caption points to the link in the bio. To post one by hand, download the run's
+  artifact and paste `instagram.txt` as the Reel's caption; `python -m fyt reel <job>` writes it for a local job.
+- **Posting.** With `instagram.publish: true` and the two secrets below, each run of **Daily videos** posts
+  the Shorts that have gone public on YouTube since the last run as Reels (the files come from the run that
+  made them), at most `max_per_run` a run. A Reel never comes out before its Short, and Shorts older than
+  `max_age_hours` aren't posted, so turning posting on doesn't post a backlog. Run the workflow with task
+  **reels** to post right away. Shorts render at 1080x1920 H.264/AAC, which Instagram takes as they are.
+
+Instagram only lets apps post through the Graph API with a professional account. The route used here
+(Facebook Login) is the one that uploads a video file directly; it needs the Instagram account linked to a
+Facebook Page. Once:
+
+1. In the Instagram app: **Settings > Account type and tools > Switch to professional account** (Creator or
+   Business), then link it to a Facebook Page (make an empty Page for the channel if you have none).
+2. Put the YouTube channel in the bio: **Edit profile > Links > Add external link**, the channel's URL. Apps
+   can't set the bio, so this stays manual.
+3. At [developers.facebook.com](https://developers.facebook.com/apps), create an app (use case: *Manage
+   messaging and content on Instagram*, or type *Business*) and add **Instagram** with Facebook Login for
+   Business. While you're an admin of the app it can post to your own account without App Review.
+4. In the [Graph API Explorer](https://developers.facebook.com/tools/explorer/), pick the app and generate a
+   user token with `instagram_basic`, `instagram_content_publish`, `pages_show_list`, `pages_read_engagement`
+   and `business_management`, choosing your Page and Instagram account when asked.
+5. Run `python -m fyt ig-token --app-id <id> --app-secret <secret> --token <token>` (the app's id and secret
+   are under **App settings > Basic**). It checks the token can post and prints `INSTAGRAM_USER_ID` and a
+   Page token that doesn't expire as `INSTAGRAM_TOKEN`; add both as repository secrets.
+6. Set `instagram.publish: true` (and `youtube_handle`) in `channel.yaml`.
+
+Instagram allows 100 posts a day through the API; the channel makes about three Shorts a day.
+
 ## Monetization: read this before going hands-off
 
 - **YouTube Partner Program:** 1,000 subscribers plus 4,000 public watch hours in 12 months,
@@ -424,6 +462,7 @@ fyt/                 Python pipeline
   qa.py              automatic checks on script and render
   factcheck.py       checks every claim in a script against the source article before it is voiced
   youtube.py         OAuth, upload (video, thumbnail, captions), stats
+  instagram.py       Shorts as Instagram Reels: the caption, and posting once the Short is public
   store.py           topic queue (SQLite) + job folders
 renderer/            Remotion (React) video templates
   src/scenes/        scene templates: title, statement, stat, bars, list, quote, timeline, comparison, broll,
@@ -433,7 +472,7 @@ renderer/            Remotion (React) video templates
   src/components/    background, captions, audio visualizer
   render.mjs         CLI renderer (video, thumbnail, --frame preview)
 fixtures/            demo scripts used by `fyt demo`
-jobs/<id>/           per-video outputs: research.md, script.json, visualplan.json, props.json, shotlist.json, qc.json, contact.png, video.mp4, thumbnail.png, captions.srt
+jobs/<id>/           per-video outputs: research.md, script.json, visualplan.json, props.json, shotlist.json, qc.json, contact.png, video.mp4, thumbnail.png, captions.srt, instagram.txt
 ```
 
 A job folder keeps every intermediate file. You can edit `script.json` and rebuild with

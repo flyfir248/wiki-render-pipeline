@@ -223,6 +223,30 @@ class GrowthConfig(BaseModel):
     end_card_seconds: float = 0.0
 
 
+class InstagramConfig(BaseModel):
+    """Shorts cross-posted as Instagram Reels, to bring Instagram viewers to the YouTube channel
+    (fyt/instagram.py)."""
+
+    # Write instagram.txt (the Reel's caption) next to every Short, and queue the Short to go up as a Reel.
+    enabled: bool = False
+    # Post each queued Short as a Reel once it is public on YouTube (`fyt reels`, run by the workflow).
+    # Needs the INSTAGRAM_TOKEN and INSTAGRAM_USER_ID secrets (`fyt ig-token` makes them).
+    publish: bool = False
+    # The YouTube channel's handle (e.g. @FacelessYT), named in every caption's call to action.
+    # Links in Instagram captions can't be tapped, so the caption points to the link in the bio.
+    youtube_handle: str = ""
+    cta: str = "Full story, and a new one every day, on YouTube. Link in bio"
+    hashtags: list[str] = Field(default_factory=list)  # in every caption, before the video's own
+    max_hashtags: int = 5  # Instagram takes at most 5 per post (from December 2025)
+    share_to_feed: bool = True  # also show the Reel in the profile grid and followers' feed
+    cover_seconds: float = 1.0  # the frame used as the Reel's cover
+    max_per_run: int = 3
+    # Shorts that went public longer ago than this aren't posted, so turning `publish` on doesn't
+    # post a backlog all at once.
+    max_age_hours: float = 48
+    api_version: str = "v25.0"
+
+
 class Config(BaseModel):
     channel: ChannelInfo = Field(default_factory=ChannelInfo)
     format: Literal["long", "short"] = "long"
@@ -265,6 +289,7 @@ class Config(BaseModel):
     youtube: YouTubeConfig = Field(default_factory=YouTubeConfig)
     schedule: ScheduleConfig = Field(default_factory=ScheduleConfig)
     growth: GrowthConfig = Field(default_factory=GrowthConfig)
+    instagram: InstagramConfig = Field(default_factory=InstagramConfig)
     # Upload only after `fyt approve <job>`; strongly recommended (see README).
     require_review: bool = True
     jobs_dir: str = "jobs"

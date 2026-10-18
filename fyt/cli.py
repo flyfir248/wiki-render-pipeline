@@ -68,6 +68,15 @@ def main(argv: list[str] | None = None) -> None:
     po.add_argument("--out", default="posts.md")
     po.add_argument("--now", action="store_true", help="draft them even if this week's are done")
 
+    rl = sub.add_parser("reel", help="write a Short's Instagram caption (instagram.txt); --post also posts it as a Reel")
+    rl.add_argument("job")
+    rl.add_argument("--post", action="store_true", help="post it to Instagram now")
+    sub.add_parser("reels", help="post Shorts that are public on YouTube as Instagram Reels (instagram.publish)")
+    it = sub.add_parser("ig-token", help="make the INSTAGRAM_TOKEN and INSTAGRAM_USER_ID secrets from a Graph API Explorer token")
+    it.add_argument("--app-id", required=True)
+    it.add_argument("--app-secret", required=True)
+    it.add_argument("--token", required=True, help="a user token from the Graph API Explorer")
+
     sh = sub.add_parser("sheet", help="lay a video's frames out on one image, to check a render by eye")
     sh.add_argument("source", type=Path, help="a rendered video, or a props.json to draw frames from directly")
     sh.add_argument("--every", type=float, default=1.0, help="seconds between frames (at most 60 frames)")
@@ -225,6 +234,31 @@ def main(argv: list[str] | None = None) -> None:
             print(f"wrote this week's Community post drafts to {args.out}")
         else:
             print("no Community post drafts due")
+    elif args.cmd == "reel":
+        from fyt import instagram
+        from fyt.models import Script
+
+        job = find_job(cfg, args.job)
+        path = instagram.write_caption(cfg, job, Script.model_validate_json(job.file("script.json").read_text()))
+        print(path.read_text())
+        if args.post:
+            media_id = instagram.publish(cfg, job.file("video.mp4"), path.read_text().strip())
+            if job.meta.get("youtube_id"):
+                Uploads(cfg).queue_reel(job.meta["youtube_id"], job.id, None)
+                Uploads(cfg).reel_done(job.meta["youtube_id"], media_id)
+    elif args.cmd == "reels":
+        from fyt import instagram
+
+        print(f"posted {instagram.post_due(cfg)} Reels")
+    elif args.cmd == "ig-token":
+        from fyt import instagram
+
+        found = instagram.setup_token(args.app_id, args.app_secret, args.token)
+        print(f"Instagram account @{found['username']} (linked to the Facebook Page {found['page']!r}).")
+        print("Add these as repository secrets (Settings > Secrets and variables > Actions):\n")
+        print(f"INSTAGRAM_USER_ID={found['user_id']}\nINSTAGRAM_TOKEN={found['token']}")
+        if found["expires"]:
+            print("\nThis token expires in about 60 days; run this again before then.")
     elif args.cmd == "relabel":
         from fyt import youtube
 

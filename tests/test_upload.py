@@ -119,3 +119,20 @@ def test_upload_queues_the_first_comment(tmp_path, monkeypatch):
     monkeypatch.setattr(youtube, "can_manage", lambda: False)
     pipeline.upload_job(cfg, job)
     assert Uploads(cfg).due_comments("2030-01-01") == [("vid9", "Would you sit in front of it?")]
+
+
+def test_uploading_a_short_queues_it_for_instagram(tmp_path, monkeypatch):
+    from fyt.models import Script
+    from fyt.store import Uploads
+
+    monkeypatch.delenv("GITHUB_RUN_ID", raising=False)
+    cfg = Config(jobs_dir=str(tmp_path), format="short", instagram={"enabled": True})
+    job = Job.create(cfg, "x")
+    job.update(status="approved")
+    s = Script(title="T", description="D", tags=[], thumbnail_text="", thumbnail_kicker="", thumbnail_query="",
+               scenes=[], sources=[])
+    job.file("script.json").write_text(s.model_dump_json())
+    monkeypatch.setattr(youtube, "upload", lambda *a, **k: "vid9")
+    monkeypatch.setattr(youtube, "can_manage", lambda: False)
+    pipeline.upload_job(cfg, job)
+    assert Uploads(cfg).due_reels("2030-01-01", "2000-01-01") == [("vid9", job.id, None)]

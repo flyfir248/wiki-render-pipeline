@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, youtube
+from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -157,6 +157,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = script.model_copy(update={"description": script.description.rstrip() + "\n\n" + chapters})
         job.file("script.json").write_text(script.model_dump_json(indent=2))
     job.file("youtube.txt").write_text(youtube.upload_sheet(cfg, script))
+    if cfg.format == "short" and cfg.instagram.enabled:
+        instagram.write_caption(cfg, job, script)
     if cfg.youtube.localize:
         log(job, f"translating the title and description ({', '.join(cfg.youtube.localize)})")
         translated = localize.translate(cfg, script, log=lambda m: log(job, m))
@@ -768,6 +770,9 @@ def upload_job(cfg: Config, job: Job, force: bool = False, publish_at: datetime 
     if script.comment_question.strip() and cfg.growth.first_comment:
         # Comments only work once the video is public, so `fill` posts it after the publish time.
         Uploads(cfg).queue_comment(video_id, script.comment_question.strip(), publish_at.isoformat() if publish_at else None)
+    if cfg.format == "short" and cfg.instagram.enabled:
+        # Posted as a Reel by `fyt reels` once the Short is public on YouTube.
+        Uploads(cfg).queue_reel(video_id, job.id, publish_at.isoformat() if publish_at else None)
     if script.series and youtube.can_manage():
         try:
             playlists.file_upload(cfg, video_id, script.series)
