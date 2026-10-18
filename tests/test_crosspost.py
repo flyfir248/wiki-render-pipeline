@@ -145,3 +145,18 @@ def test_each_platform_posts_a_short_once_and_setup_problems_cost_no_tries(tmp_p
     assert "https://youtu.be/yt1" in posted[0]
     assert crosspost.post_due(cfg, "facebook", now) == 0
     assert Uploads(cfg).due_reels(now.isoformat(), (now - timedelta(days=2)).isoformat())  # Instagram's own queue is untouched
+
+
+def test_a_facebook_reel_whose_status_cant_be_read_counts_as_posted(tmp_path, monkeypatch):
+    monkeypatch.setenv("INSTAGRAM_TOKEN", "tok")
+    monkeypatch.setenv("INSTAGRAM_USER_ID", "17841")
+    video = tmp_path / "video.mp4"
+    video.write_bytes(b"x")
+
+    class S(_FB):
+        def get(self, url, params=None, headers=None, timeout=None):
+            if params and params.get("fields") == "status":
+                return _Resp({"error": {"message": "Unsupported get request. Object with ID 'V1' does not exist"}}, status=400)
+            return super().get(url, params, headers, timeout)
+
+    assert crosspost.post_facebook(_cfg(tmp_path), video, "hi", session=S(), sleep=lambda _: None) == "V1"
