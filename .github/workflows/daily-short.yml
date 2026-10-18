@@ -15,6 +15,9 @@ on:
   schedule:
     # Four chances a day to top up the schedule. A run with nothing to do takes about a minute.
     - cron: "17 1,7,13,19 * * *"
+    # Right after the Shorts go public (14:00 and 22:00 UTC, up to 90 minutes later with the
+    # jitter): post them to Instagram, Facebook and Threads, so they come out with the Short.
+    - cron: "40 15,23 * * *"
   workflow_dispatch:
     inputs:
       task:
@@ -47,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 170 # fill stops starting new videos after 120 minutes
     env:
-      TASK: ${{ inputs.task || 'fill' }}
+      TASK: ${{ inputs.task || (github.event.schedule == '40 15,23 * * *' && 'reels') || 'fill' }}
     steps:
       - uses: actions/checkout@v6
 

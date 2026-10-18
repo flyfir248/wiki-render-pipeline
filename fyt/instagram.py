@@ -113,6 +113,19 @@ def _json(r: requests.Response) -> dict:
     return data
 
 
+def loudness(video: Path) -> float | None:
+    """The video's mean volume in dB, or None when it has no sound track."""
+    import imageio_ffmpeg
+
+    cmd = [imageio_ffmpeg.get_ffmpeg_exe(), "-hide_banner", "-i", str(video), "-map", "0:a:0?", "-af", "volumedetect", "-f", "null", "-"]
+    try:
+        err = subprocess.run(cmd, capture_output=True, text=True, timeout=300).stderr
+    except (OSError, subprocess.SubprocessError):
+        return None
+    found = re.search(r"mean_volume: (-?[\d.]+|-inf) dB", err)
+    return (float("-inf") if found.group(1) == "-inf" else float(found.group(1))) if found else None
+
+
 def for_instagram(video: Path, out: Path) -> Path:
     """A copy in the exact format Instagram's Reels spec asks for: H.264 yuv420p (limited range),
     AAC 48 kHz, 30 fps, the moov atom first and no extra metadata boxes. Falls back to the original."""
@@ -127,6 +140,11 @@ def for_instagram(video: Path, out: Path) -> Path:
     ]
     try:
         subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=600)
+        before, after = loudness(video), loudness(out)
+        print(f"{video.parent.name}: sound {_db(before)} in the video, {_db(after)} in the copy sent")
+        if before is not None and after is None:
+            print("::warning::the copy lost its sound; sending the original video")
+            return video
         return out
     except (OSError, subprocess.SubprocessError) as e:
         print(f"::warning::could not re-encode {video.name} for Instagram, sending it as is: {getattr(e, 'stderr', e)}")
@@ -150,6 +168,10 @@ def litterbox(video: Path, session=requests) -> str:
 
 
 HOSTS = {"litterbox": litterbox}
+
+
+def _db(level: float | None) -> str:
+    return "none" if level is None else f"{level:.0f} dB"
 
 
 def publish(cfg: Config, video: Path, text: str, session=requests, sleep=time.sleep) -> str:

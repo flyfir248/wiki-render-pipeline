@@ -400,7 +400,8 @@ Every Short can also go up on Instagram as a Reel, to send Instagram viewers to 
   artifact and paste `instagram.txt` as the Reel's caption; `python -m fyt reel <job>` writes it for a local job.
 - **Posting.** With `instagram.publish: true` and the two secrets below, each run of **Daily videos** posts
   the Shorts that have gone public on YouTube since the last run as Reels (the files come from the run that
-  made them), at most `max_per_run` a run. A Reel never comes out before its Short, and Shorts older than
+  made them), at most `max_per_run` a run. Two extra runs at 15:40 and 23:40 UTC, just after each Short slot
+  and its jitter, post them as soon as they're public. A Reel never comes out before its Short, and Shorts older than
   `max_age_hours` aren't posted, so turning posting on doesn't post a backlog. Run the workflow with task
   **reels** to post right away. Shorts render at 1080x1920 H.264/AAC, which Instagram takes as they are.
 
