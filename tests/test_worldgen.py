@@ -234,3 +234,17 @@ def test_backdrop_from_the_place_words():
     assert worldgen.rule_setting(p("Hudson River", "grey river in winter, Manhattan skyline")).backdrop == "city"
     assert worldgen.rule_setting(p("Chattahoochee National Forest", "Georgia mountains")).backdrop == "mountains"
     assert worldgen.rule_setting(p("a farm", "fields")).backdrop == "hills"
+
+
+def test_short_kind_words_match_whole_words_only():
+    e = Entity(id="c", name="plastic cocaine containers", kind="object", search=["container"], look="small white plastic boxes, sealed", certain=False, scenes=[1])
+    assert worldgen.archetype_of(e) == "object"  # 'sealed' is not a seal, 'containers' has no ant
+
+
+def test_a_still_model_shot_takes_the_action_its_moment_tells(monkeypatch):
+    lazy = worldgen.Direction(shots=[worldgen.Shot(scene=3, actors=[worldgen.Actor(entity="bear", verb="idle"), worldgen.Actor(entity="hunter", verb="idle")], camera="establish")])
+    monkeypatch.setattr(worldgen.llm, "structured", lambda *a, **k: lazy)
+    builds = {e.id: worldgen.rule_build(e, 1) for e in BEAR_MANIFEST.entities}
+    shots, how = worldgen.direct(Config(), BEAR_STORY, BEAR_MANIFEST, builds, [3], log=lambda m: None)
+    assert how == "model" and shots[3].actors[0].verb == "lie" and shots[3].place == "forest"
+    assert shots[3].actors[1].at != shots[3].actors[0].at

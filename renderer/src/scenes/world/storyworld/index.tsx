@@ -150,7 +150,7 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U: number)
   let target = look.clone();
   switch (world.camera) {
     case "establish":
-      off = side(0.5 - 0.15 * e, d * (1.9 - 0.75 * e), d * (1.1 - 0.75 * e) + on.h * 0.3);
+      off = side(0.5 - 0.15 * e, d * (1.45 - 0.5 * e), d * (0.8 - 0.5 * e) + on.h * 0.3);
       break;
     case "follow":
       off = side(0.12, d * 1.0, on.h * 0.35 + d * 0.12);

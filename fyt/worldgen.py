@@ -238,7 +238,10 @@ SMALL = ("small", "tiny", "little", "young", "cub", "juvenile", "baby", "miniatu
 
 
 def _has(text: str, word: str) -> bool:
-    return re.search(rf"(?<![a-z]){re.escape(word)}", text) is not None
+    """The word in the text: whole (or plural) for short words, so 'sealed' is no seal and 'containers'
+    no ant; long words and stems ('bacteri') may run on."""
+    tail = "" if len(word) >= 6 else r"(?:s|es)?(?![a-z])"
+    return re.search(rf"(?<![a-z]){re.escape(word)}{tail}", text) is not None
 
 
 GENERIC = {"animal", "mammal", "beast", "vehicle", "human", "people", "person", "plant", "building"}
@@ -779,6 +782,12 @@ def calm_verb(arche: str) -> str:
     return {"fish": "swim", "bird": "idle", "vehicle": "present", "object": "present", "structure": "present", "plant": "present", "cell": "present"}.get(arche, "idle")
 
 
+def told_in(action: str, narration: str) -> bool:
+    """Some content word of the moment's action is in the narration (so the action is what was said)."""
+    words = [w for w in re.findall(r"[a-z]+", action.lower()) if len(w) > 3]
+    return any(scenes3d.find(narration, [w[:5]]) for w in words)
+
+
 def told(verb: str, text: str) -> bool:
     """The narration names this verb's action (its grammar words), so it may be acted out."""
     words = G["events"].get(verb)
@@ -836,6 +845,13 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
         return None
     if moment and actors[0].entity != moment.entity:  # the moment's entity leads the scene
         actors.sort(key=lambda a: a.entity != moment.entity)
+    if any(a.verb == "fly" and builds[a.entity].archetype == "vehicle" for a in actors):
+        # people are aboard an aircraft in flight, not standing on the ground beneath it
+        actors = [a for a in actors if builds[a.entity].archetype != "humanoid"] or actors
+    free = [x for x in ("right", "left", "back", "front") if all(a.at != x for a in actors)]
+    for i, a in enumerate(actors):
+        if i and a.at == actors[0].at and not a.to and free:  # side by side, not inside one another
+            actors[i] = a.model_copy(update={"at": free.pop(0)})
     ids = {a.entity for a in actors}
     marks = [m.model_copy(update={"on": _slug(m.on), "to": _slug(m.to) if m.to and _slug(m.to) in ids else "", "color": _hex(m.color, "")})
              for m in sh.marks[:3] if _slug(m.on) in ids and (m.kind not in ("beam", "arrow") or (m.to and _slug(m.to) in ids))]
@@ -847,6 +863,8 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
         if on in ids and text:
             callouts.append(Callout(on=on, text=text))
     place = _slug(sh.place) if sh.place and _slug(sh.place) in {p.id for p in story.places} else ""
+    if not place:
+        place = moment.place if moment and moment.place else next((p.id for p in story.places if scene in p.scenes), "")
     on = _slug(sh.on) if sh.on and _slug(sh.on) in ids else actors[0].entity
     return Shot(scene=scene, place=place, time=sh.time, actors=actors[:5], camera=sh.camera, on=on, marks=marks, callouts=callouts)
 
@@ -878,10 +896,13 @@ def rule_shot(script: Script, story: Manifest, builds: dict[str, Build], scene: 
     if verb not in verbs_for(arche):
         verb = calm_verb(arche)
     verb = _verb(verb, arche, narration, bool(moment and moment.documented))
-    if moment and moment.documented and moment.cue and arche in LIVING:  # a verb the cue names outright beats the motion's
+    if moment and moment.documented and moment.cue and arche in LIVING:  # a verb the moment names outright beats the motion's
         drastic = ("fall", "crash", "collapse") if motion not in ("fall", "shake") else ()
-        better = next((v for v in verbs_for(arche) if v not in G["calm"] and v not in drastic and told(v, moment.cue)), None)
-        verb = better or verb
+        def named(text: str) -> str | None:  # the told verb whose words come first in the text
+            hits = [(min((m.start() for w in G["events"].get(v, [v]) for m in re.finditer(rf"(?<![a-z]){re.escape(w)}", text.lower())), default=10**6), v)
+                    for v in verbs_for(arche) if v not in G["calm"] and v not in drastic and told(v, text)]
+            return min(hits)[1] if hits else None
+        verb = (named(moment.action) if told_in(moment.action, narration) else None) or named(moment.cue) or verb
     at, to = ("far", "center") if motion == "approach" else ("center", "far") if motion == "depart" else ("left", "right") if motion == "move" else ("center", "")
     if verb in G["calm"] and verb in ("present", "idle", "sit", "talk", "work", "pulse", "glow", "sway", "turn", "spin", "peck", "sniff", "look_around"):
         at, to = "center", ""  # staying put
@@ -934,14 +955,21 @@ def direct(cfg: Config, script: Script, story: Manifest, builds: dict[str, Build
         except Exception as ex:
             log(f"world direction: call failed ({str(ex)[:140]}); blocking scenes from the manifest")
     for n, k in enumerate(scenes):
+        r = rule_shot(script, story, builds, k, n)
+        if r is None:
+            continue
         if k not in out:
-            r = rule_shot(script, story, builds, k, n)
-            if r is not None:
-                out[k] = r
+            out[k] = r
+            continue
+        # where the model left the moment's lead standing still but its own words tell an action, act it
+        lead, rl = out[k].actors[0], r.actors[0]
+        if lead.entity == rl.entity and lead.verb in G["calm"] and rl.verb not in G["calm"]:
+            acts = [lead.model_copy(update={"verb": rl.verb, "state": rl.state if lead.state == "normal" else lead.state})] + out[k].actors[1:]
+            out[k] = out[k].model_copy(update={"actors": acts})
     # The same camera move twice in a row reads as one long scene: vary the second.
     ordered = sorted(out)
     for a, b in zip(ordered, ordered[1:]):
-        if b == a + 1 and out[a].camera == out[b].camera:
+        if out[a].camera == out[b].camera:
             out[b] = out[b].model_copy(update={"camera": MOVE_CYCLE[(MOVE_CYCLE.index(out[b].camera) + 1) % len(MOVE_CYCLE)] if out[b].camera in MOVE_CYCLE else "orbit"})
     return out, how
 

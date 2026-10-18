@@ -33,7 +33,7 @@
     "roar": ["roar", "growl", "snarl", "attack", "charged"],
     "lie": ["dead", "died", "lay", "lying", "found", "collapsed", "unconscious", "overdos"],
     "sleep": ["sleep", "slept", "asleep", "nap"],
-    "eat": ["ate", "eat", "eaten", "devour", "consum", "swallow", "chew"],
+    "eat": ["ate", "eat", "eaten", "devour", "consum", "swallow", "chew", "ingest"],
     "run": ["ran", "run", "fled", "chase", "sprint", "rush", "raced", "bolted"],
     "climb": ["climb", "clamber", "scaled"],
     "cheer": ["cheer", "celebrat", "applau", "rescued", "saved"],
