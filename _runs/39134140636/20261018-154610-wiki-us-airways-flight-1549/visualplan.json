@@ -1,0 +1,97 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 20.2,
+  "dropped_for_budget": [],
+  "off_story": [
+    {
+      "scene": 6,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "aircraft",
+      "variant": "airliner",
+      "action": "takeoff",
+      "setting": "sky",
+      "weather": "clear",
+      "cue": "2,800\u202ffeet",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "airbus-a320",
+        "level": "spec",
+        "title": "Airbus A320"
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "aircraft",
+      "variant": "airliner",
+      "action": "takeoff",
+      "setting": "sky",
+      "weather": "clear",
+      "cue": "2,800 feet above the runway",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "airbus-a320",
+        "level": "spec",
+        "title": "Airbus A320"
+      }
+    },
+    {
+      "scene": 3,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "aircraft",
+      "variant": "airliner",
+      "action": "turn",
+      "setting": "sky",
+      "weather": "clear",
+      "cue": "Captain Sully Sullenberger turned the aircraft toward the Hudson",
+      "illustrative": false,
+      "label": "RECONSTRUCTION",
+      "model": {
+        "id": "airbus-a320",
+        "level": "spec",
+        "title": "Airbus A320"
+      }
+    },
+    {
+      "scene": 5,
+      "type": "world",
+      "kind": "3D",
+      "subject": "aircraft",
+      "variant": "airliner",
+      "action": "land",
+      "setting": "sea",
+      "weather": "clear",
+      "cue": "calibrated airspeed of 125 knots",
+      "illustrative": true,
+      "label": "ILLUSTRATION",
+      "model": {
+        "id": "airbus-a320",
+        "level": "spec",
+        "title": "Airbus A320"
+      }
+    },
+    {
+      "scene": 6,
+      "type": "statement",
+      "kind": "2.5D"
+    }
+  ]
+}

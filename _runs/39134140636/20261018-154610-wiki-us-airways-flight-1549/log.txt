@@ -1,0 +1,27 @@
+fetching Wikipedia article
+8 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 13 scenes); quote (lost viewers 32% slower than average, 7 scenes); map (lost viewers 13% slower than average, 10 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 84% faster than average, 17 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 85 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+checking facts against the source
+fact check found: scene 5: unsupported claim "The plane entered the river at 125 knots, just below the bridge, and skidded to a stop."; scene 6: unsupported claim "All 155 people aboard survived, a record for an unpowered water landing."
+facts check out
+reading the story: what it shows
+story: Airbus A320, Canada geese, Hudson River, LaGuardia Airport, Captain Sully Sullenberger; 4 moments
+planning the visuals
+visual plan (model): 4 3D, 1 2.5D, 1 2D; 3D: aircraft takeoff, aircraft takeoff, aircraft turn, aircraft land
+voicing 6 scenes with kokoro
+fetching visuals
+visuals: 3 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+collage: 3 photos styled, 1 with a cut-out subject
+translating the title and description (es, pt, hi, fr, de)
+scene 1: 3D dropped: shows aircraft 'airbus-a320', which the story's manifest doesn't list
+scene 2: 3D dropped: shows aircraft 'airbus-a320', which the story's manifest doesn't list
+scene 4: 3D dropped: shows aircraft 'airbus-a320', which the story's manifest doesn't list
+scene 5: 3D dropped: shows aircraft 'airbus-a320', which the story's manifest doesn't list
+storyboarding: an illustration for each sentence
+scene 6, sentence 1 redrawn: It does not show survivors on deck.
+scene 6, sentence 1 redrawn: The image shows an airplane cockpit, not a scene of survivors on deck.
+storyboard: 2 illustrated sentences of 3 planned, 5 in the cast; 4 checked, 1 redrawn, 1 left out
+art direction: signature

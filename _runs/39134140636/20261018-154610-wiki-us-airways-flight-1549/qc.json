@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "fail",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass"
+  },
+  "problems": [
+    "scene 5's key moment falls outside it (1.5)"
+  ],
+  "warnings": [],
+  "repair": []
+}

@@ -1,0 +1,160 @@
+{
+  "entities": [
+    {
+      "id": "a320",
+      "name": "Airbus A320",
+      "kind": "aircraft",
+      "search": [
+        "airbus a320",
+        "a320",
+        "airliner"
+      ],
+      "look": "white and blue Airbus A320, twin\u2011engine, modern cockpit",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "model": null
+    },
+    {
+      "id": "geese",
+      "name": "Canada geese",
+      "kind": "bird",
+      "search": [
+        "canada goose",
+        "goose",
+        "bird"
+      ],
+      "look": "large gray\u2011brown geese with white neck patches, flying V\u2011formation",
+      "certain": true,
+      "scenes": [
+        2
+      ],
+      "model": null
+    },
+    {
+      "id": "hudson-river",
+      "name": "Hudson River",
+      "kind": "water body",
+      "search": [
+        "hudson river",
+        "river",
+        "water"
+      ],
+      "look": "wide river, reflective water, Manhattan skyline in background",
+      "certain": true,
+      "scenes": [
+        1,
+        4,
+        5
+      ],
+      "model": null
+    },
+    {
+      "id": "laguardia-airport",
+      "name": "LaGuardia Airport",
+      "kind": "airport",
+      "search": [
+        "laguardia airport",
+        "airport",
+        "runway"
+      ],
+      "look": "busy runway with terminal buildings, New York City skyline",
+      "certain": true,
+      "scenes": [
+        2
+      ],
+      "model": null
+    },
+    {
+      "id": "sully-sullenberger",
+      "name": "Captain Sully Sullenberger",
+      "kind": "person",
+      "search": [
+        "pilot",
+        "captain",
+        "airline pilot"
+      ],
+      "look": "male pilot in US Airways uniform, dark hair, headset",
+      "certain": false,
+      "scenes": [
+        4
+      ],
+      "model": null
+    }
+  ],
+  "places": [
+    {
+      "id": "hudson",
+      "name": "Hudson River",
+      "look": "river with calm water, early morning light, Manhattan buildings distant",
+      "scenes": [
+        1,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "laguardia",
+      "name": "LaGuardia Airport",
+      "look": "asphalt runway, terminal structures, city backdrop",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "id": "midtown-manhattan",
+      "name": "Midtown Manhattan",
+      "look": "high\u2011rise skyline, skyscrapers, urban lighting",
+      "scenes": [
+        1,
+        5
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "a320",
+      "place": "hudson",
+      "action": "glide into Hudson",
+      "motion": "move",
+      "cue": "The Airbus lost both engines at 2,800\u202ffeet, forcing a glide into the Hudson.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "geese",
+      "place": "laguardia",
+      "action": "strike geese",
+      "motion": "present",
+      "cue": "The Airbus A320 struck the geese 2,800 feet above the runway, shutting down both engines.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "sully-sullenberger",
+      "place": "",
+      "action": "turn toward Hudson",
+      "motion": "turn",
+      "cue": "Captain Sully Sullenberger turned the aircraft toward the Hudson, refusing a return to LaGuardia.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 5,
+      "entity": "a320",
+      "place": "hudson",
+      "action": "impact river",
+      "motion": "present",
+      "cue": "The plane impacted the river at a calibrated airspeed of 125 knots.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

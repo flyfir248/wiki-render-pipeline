@@ -1,0 +1,10 @@
+{
+  "checked": [],
+  "failed_text": {
+    "1": "shows aircraft 'airbus-a320', which the story's manifest doesn't list",
+    "2": "shows aircraft 'airbus-a320', which the story's manifest doesn't list",
+    "4": "shows aircraft 'airbus-a320', which the story's manifest doesn't list",
+    "5": "shows aircraft 'airbus-a320', which the story's manifest doesn't list"
+  },
+  "failed_picture": {}
+}
