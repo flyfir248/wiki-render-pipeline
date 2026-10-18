@@ -63,7 +63,8 @@ NOT_ONE_THING = re.compile(r"\b(pack|collection|bundle|kit|set of|diorama|scene|
 # A model of a part or remains of the thing (a bear's jawbone scan), unless that part is what was asked for.
 A_PART = ("skull", "skeleton", "bone", "bones", "mandible", "jaw", "tooth", "teeth", "fossil", "fragment", "head", "paw",
           "footprint", "track", "fur", "texture", "femur", "tibia", "fibula", "radius", "ulna", "humerus", "rib",
-          "vertebra", "pelvis", "scapula", "limb", "leg", "claw", "hoof", "horn", "antler", "detector", "fountain", "rig only", "base mesh", "sculpt", "bust", "statue", "figurine", "toy", "plush")
+          "vertebra", "pelvis", "scapula", "astragalus", "calcaneus", "metatarsal", "metacarpal", "phalanx", "carpal", "tarsal",
+          "patella", "sacrum", "clavicle", "cranium", "specimen", "limb", "leg", "claw", "hoof", "horn", "antler", "detector", "fountain", "rig only", "base mesh", "sculpt", "bust", "statue", "figurine", "toy", "plush")
 HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) FacelessYT model finder"}
 
 CHECK = """You check the preview of a 3D model before it is used in a documentary video. Pass it only if it
@@ -95,9 +96,15 @@ def relevant(term: str, title: str, tags: list[str]) -> float:
     want = _words(term)
     if not want or head_noun(term) not in have or NOT_ONE_THING.search(title or ""):
         return 0.0
-    if any(p.rstrip("s") in _words(title) and p.rstrip("s") not in want for p in A_PART):
+    if a_part(term, title):
         return 0.0
     return len(want & have) / len(want)
+
+
+def a_part(term: str, title: str) -> bool:
+    """The title names a part or remains of the thing (an ankle bone of a bear), not the part asked for."""
+    want = _words(term)
+    return any(p.rstrip("s") in _words(title) and p.rstrip("s") not in want for p in A_PART)
 
 
 def licence_code(value: str | dict | None) -> str:
@@ -127,7 +134,9 @@ def _read(path: Path, default):
 def cached(key: str) -> dict | None:
     meta = _read(CACHE / key / "meta.json", None)
     # Only models whose preview a vision check passed (an older, text-only match is searched for again).
-    if meta and meta.get("ok") and meta.get("checked") in ("vision", "concept", "vetted") and (CACHE / key / "model.glb").is_file():
+    # A model the part rules learnt to refuse after it was stored is refused from the cache too.
+    if meta and meta.get("ok") and meta.get("checked") in ("vision", "concept", "vetted") and (CACHE / key / "model.glb").is_file() \
+            and not a_part(meta.get("query", ""), meta.get("title", "")):
         return meta | {"file": str(CACHE / key / "model.glb")}
     return None
 
@@ -627,6 +636,15 @@ def back_to_2d(scene):
                                     "subject": None, "action": None, "model": None, "label": None})
 
 
+WINGED = re.compile(r"\b(aircraft|airplane|aeroplane|plane|jet|airliner|glider|helicopter|drone|bomber|fighter)s?\b", re.I)
+
+
+def facing(e: Entity) -> dict:
+    """How the stage should turn a model nobody recorded the facing of (stage.tsx `prepare`): a winged
+    thing is wider than it is long, so its short horizontal side is its length."""
+    return {"forward": "short"} if WINGED.search(f"{e.kind} {' '.join(e.search)}") else {}
+
+
 def attach(script, story: "manifest.Manifest", found: dict[str, dict], srcs: dict[str, str]):
     """Stage scenes given their entity's model, the same one in every scene (continuity); a stage scene
     whose entity has no model goes back to its 2D scene. Returns (script, scene indexes put back)."""
@@ -641,7 +659,7 @@ def attach(script, story: "manifest.Manifest", found: dict[str, dict], srcs: dic
             continue
         generated = a.get("source") == "generated" or a.get("illustrative")
         model = {"id": a["key"], "level": "generated" if generated else "found", "title": a.get("title"), "kind": "object",
-                 "src": srcs[s.subject_name], "fit": a.get("fit") or {}, "clips": a.get("clips", []), "params": {},
+                 "src": srcs[s.subject_name], "fit": a.get("fit") or facing(e), "clips": a.get("clips", []), "params": {},
                  "sources": [a["url"]] if a.get("url") else [], "licence": a.get("licence"), "author": a.get("author", ""),
                  "notes": f"{a.get('source')} model for {e.name}: {e.look}"}
         if s.illustrative:

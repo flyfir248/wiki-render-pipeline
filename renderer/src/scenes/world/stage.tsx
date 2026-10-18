@@ -64,7 +64,7 @@ export const clipFor = (names: string[], motion: string): number => {
 
 const YAW: Record<string, number> = { "+x": 0, "-x": Math.PI, "+z": Math.PI / 2, "-z": -Math.PI / 2 };
 
-// The model cel-shaded, turned to face +x (glTF models face +z unless their record says otherwise),
+// The model cel-shaded, turned to face +x (by its record's `forward`, else its long side; see below),
 // scaled so its largest side is SIZE and stood on y = 0.
 const prepare = (m: Loaded, forward: string, up: string) => {
   const o = SkeletonUtils.clone(m.scene);
@@ -93,6 +93,15 @@ const prepare = (m: Loaded, forward: string, up: string) => {
   const turn = new THREE.Group();
   turn.add(o);
   if (up === "+z") o.rotation.x = -Math.PI / 2;
+  if (forward === "auto" || forward === "short") {
+    // No record of which way it faces: a ship or an animal is longest from front to back, so its long
+    // horizontal side is taken as its length ("auto"); a winged thing is wider than it is long ("short").
+    // Seen side-on, never head-on; which end is the front is a guess.
+    turn.updateMatrixWorld(true);
+    const raw = new THREE.Box3().setFromObject(turn).getSize(new THREE.Vector3());
+    const alongX = forward === "auto" ? raw.x > raw.z * 1.15 : raw.x * 1.15 < raw.z;
+    forward = alongX ? "+x" : "+z";
+  }
   turn.rotation.y = YAW[forward] ?? YAW["+z"];
   const outer = new THREE.Group();
   outer.add(turn);
@@ -184,7 +193,7 @@ const Stage: React.FC<{ scene: Scene; portrait: boolean; model: Loaded; plate: b
   const w = useWorld(scene);
   const motion = scene.action ?? "present";
   const fit = (scene.model?.fit ?? {}) as { forward?: string; up?: string };
-  const made = useMemo(() => prepare(model, fit.forward ?? "+z", fit.up ?? "+y"), [model, fit.forward, fit.up]);
+  const made = useMemo(() => prepare(model, fit.forward ?? "auto", fit.up ?? "+y"), [model, fit.forward, fit.up]);
   const names = useMemo(() => model.clips.map((c) => c.name), [model]);
   const mixer = useMemo(() => {
     const i = clipFor(names, motion);

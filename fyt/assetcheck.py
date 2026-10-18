@@ -37,6 +37,7 @@ PANEL = [
            look="an anatomical human heart with the aorta and main vessels, red and purple", certain=True, scenes=[1]),
 ]
 SECONDS = 5  # each thing's stage scene
+SETTINGS = {"ship": "sea", "tardigrade": "room", "heart": "room"}  # where each is shown; countryside otherwise
 
 
 def _props(cfg: Config, found: dict[str, dict], srcs: dict[str, str]) -> dict:
@@ -44,9 +45,9 @@ def _props(cfg: Config, found: dict[str, dict], srcs: dict[str, str]) -> dict:
     for i, (eid, a) in enumerate(found.items()):
         scenes.append({
             "id": f"s{i}", "type": "world", "start": i * SECONDS, "end": (i + 1) * SECONDS, "heading": a["entity"],
-            "subject": "stage", "variant": "model", "action": "present", "shot": "side", "setting": "countryside",
+            "subject": "stage", "variant": "model", "action": "present", "shot": "side", "setting": SETTINGS.get(eid, "countryside"),
             "model": {"id": eid, "level": "generated" if a.get("source") == "generated" else "found", "src": srcs[eid],
-                      "clips": a.get("clips", [])},
+                      "clips": a.get("clips", []), "fit": a.get("fit") or assetlib.facing(a["entity_obj"])},
             "label": "RECONSTRUCTION", "effectAt": 0.55, "backdropSrc": None, "seed": 5 + i,
         })
     return {"format": "short", "fps": 30, "title": "asset check", "duration": max(1, len(scenes)) * SECONDS,
@@ -74,6 +75,7 @@ def _sheet(rows: list[dict], out: Path) -> Path:
 
 
 def run(cfg: Config, out: Path, log=print) -> list[dict]:
+    out = out.resolve()  # the renderer runs in its own folder
     if out.exists():
         shutil.rmtree(out)
     (out / "public").mkdir(parents=True)
@@ -90,7 +92,7 @@ def run(cfg: Config, out: Path, log=print) -> list[dict]:
         hit = assetlib.resolve(cfg, e, "medium", log=note)
         row = {"id": e.id, "name": e.name, "pass": False, "log": lines[start:]}
         if hit:
-            found[e.id] = hit | {"entity": e.name}
+            found[e.id] = hit | {"entity": e.name, "entity_obj": e}
             row |= {k: hit.get(k) for k in ("source", "title", "author", "licence", "url", "checked", "triangles", "clips")}
             preview = Path(hit["file"]).with_name("preview.jpg")
             row["preview"] = str(preview) if preview.is_file() else None
