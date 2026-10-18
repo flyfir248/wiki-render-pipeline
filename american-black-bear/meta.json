@@ -3,18 +3,18 @@
   "key": "american-black-bear",
   "query": "american black bear",
   "source": "objaverse",
-  "uid": "sketchfab:1c1351af2301477ca81ec8d96d57b756",
-  "title": "MSCC007 Ursus americanus Left Astragalus",
+  "uid": "sketchfab:cefed14c39ae427382351c35785472bb",
+  "title": "MSCC007 Ursus americanus Right Calcanium",
   "author": "The Mammoth Site of Hot Springs, SD, Inc.",
   "licence": "by",
-  "url": "https://sketchfab.com/3d-models/none-1c1351af2301477ca81ec8d96d57b756",
+  "url": "https://sketchfab.com/3d-models/none-cefed14c39ae427382351c35785472bb",
   "checked": "vision",
-  "triangles": 40000,
-  "bytes": 1042228,
+  "triangles": 39996,
+  "bytes": 1500344,
   "size": [
-    37.2483,
-    37.5728,
-    34.3814
+    47.6547,
+    54.7252,
+    43.7664
   ],
   "clips": [],
   "skinned": false,
@@ -22,5 +22,5 @@
   "fidelity": "medium",
   "illustrative": false,
   "look": "a full-grown American black bear, glossy black fur, brown muzzle, on all fours",
-  "added": "2026-10-18T00:07:16+00:00"
+  "added": "2026-10-18T00:14:50+00:00"
 }
