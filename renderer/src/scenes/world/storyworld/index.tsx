@@ -563,6 +563,9 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
   gl.shadowMap.type = THREE.PCFShadowMap;
   const look = lookOf(world.style);
   const light = lightOf(look, world.set, b.U);
+  // everything in the air over a town: the town drops below, so the aircraft fly over the roofs, not down
+  // the street, and the haze thins so the town below keeps its shape
+  const aloft = ["city", "town", "street"].includes(world.set.kind) && world.cast.length > 0 && world.cast.every(flies);
   gl.toneMapping = THREE.ACESFilmicToneMapping;
   gl.toneMappingExposure = light.exposure;
   const p = portrait ? b.cam.look.clone().add(b.cam.pos.clone().sub(b.cam.look).multiplyScalar(PORTRAIT_BACK)) : b.cam.pos;
@@ -594,7 +597,7 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
   const off = (f: string) => ((world as unknown as { fx?: string }).fx ?? "").includes(f); // dev: switch features off to profile
   return (
     <>
-      {light.fogDensity > 0 ? <fogExp2 attach="fog" args={[light.horizon, light.fogDensity * Math.max(1, look.fogScale * 0.8)]} /> : null}
+      {light.fogDensity > 0 ? <fogExp2 attach="fog" args={[light.horizon, light.fogDensity * Math.max(1, look.fogScale * 0.8) * (aloft ? 0.45 : 1)]} /> : null}
       {world.set.kind === "space" ? <color attach="background" args={["#03040c"]} /> : off("sky") ? null : <SkyDome sky={sky} t={b.t} />}
       {off("ibl") ? null : <SkyLight sky={sky} intensity={light.envI} />}
       <hemisphereLight args={[light.amb, light.ground, light.ambI]} />
@@ -603,7 +606,11 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
         shadow-bias={-0.0003} shadow-normalBias={b.U * 0.01} shadow-radius={3} />
       <directionalLight position={rim.toArray()} target-position={b.cam.look.toArray()} intensity={light.rimI} color={light.rim} />
       {look.gloss ? <directionalLight position={[b.U * 6, b.U * 2, -b.U * 6]} intensity={1.0} color="#9ff0ff" /> : null}
-      {off("env") ? null : <Environment set={world.set} look={look} light={light} unit={b.U} seed={seed} t={b.t} keep={keep} fx={(world as unknown as { fx?: string }).fx} />}
+      {off("env") ? null : (
+        <group position={[0, aloft ? -b.U * 34 : 0, 0]}>
+          <Environment set={world.set} look={look} light={light} unit={b.U} seed={seed} t={b.t} keep={keep} fx={(world as unknown as { fx?: string }).fx} />
+        </group>
+      )}
       {b.actors.map((a, i) => (
         <group key={i} position={[0, water && !flies(a.m) ? -a.h * 0.18 : 0, 0]}>
           {off("actors") ? null : <Actor p={a} look={look} b={b} world={world} />}
