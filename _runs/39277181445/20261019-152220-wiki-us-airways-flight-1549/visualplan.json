@@ -1,0 +1,76 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 11.3,
+  "dropped_for_budget": [],
+  "off_story": [
+    {
+      "scene": 2,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "title",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 3,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "striking both engines",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "sea",
+      "weather": null,
+      "cue": "onto the Hudson River",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

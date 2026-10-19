@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "airbus-a320",
+  "query": "airbus a320",
+  "source": "objaverse",
+  "uid": "sketchfab:790a19f65d5646539ed975c96fedb313",
+  "title": "Airbus A320",
+  "author": "Andre11230",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-790a19f65d5646539ed975c96fedb313",
+  "checked": "vision",
+  "triangles": 43042,
+  "bytes": 1422496,
+  "size": [
+    35.7389,
+    11.8999,
+    37.6842
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "white fuselage with blue and gray accents, black windows, twin turbofan engines, tail fin with logo",
+  "added": "2026-10-19T16:43:21+00:00"
+}

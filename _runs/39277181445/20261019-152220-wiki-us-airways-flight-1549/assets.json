@@ -1,0 +1,106 @@
+{
+  "entities": [
+    {
+      "id": "geese",
+      "name": "Canada geese",
+      "kind": "animal",
+      "search": [
+        "canada goose",
+        "geese",
+        "bird"
+      ],
+      "look": "medium-sized white and black plumage, black head and wings, black wingtips, orange beak",
+      "certain": true,
+      "scenes": [
+        3,
+        7
+      ],
+      "model": null
+    },
+    {
+      "id": "plane",
+      "name": "Airbus A320",
+      "kind": "aircraft",
+      "search": [
+        "airbus a320",
+        "aircraft",
+        "airplane"
+      ],
+      "look": "white fuselage with blue and gray accents, black windows, twin turbofan engines, tail fin with logo",
+      "certain": true,
+      "scenes": [
+        3,
+        4
+      ],
+      "model": {
+        "ok": true,
+        "key": "airbus-a320",
+        "query": "airbus a320",
+        "source": "objaverse",
+        "uid": "sketchfab:790a19f65d5646539ed975c96fedb313",
+        "title": "Airbus A320",
+        "author": "Andre11230",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-790a19f65d5646539ed975c96fedb313",
+        "checked": "vision",
+        "triangles": 43042,
+        "bytes": 1422496,
+        "size": [
+          35.7389,
+          11.8999,
+          37.6842
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "white fuselage with blue and gray accents, black windows, twin turbofan engines, tail fin with logo",
+        "added": "2026-10-19T16:43:21+00:00",
+        "credit": "Airbus A320 by Andre11230 (CC BY 4.0) https://sketchfab.com/3d-models/none-790a19f65d5646539ed975c96fedb313"
+      }
+    }
+  ],
+  "places": [
+    {
+      "id": "airport",
+      "name": "LaGuardia Airport",
+      "look": "modern concrete runway, taxiways, airport terminal, early morning light",
+      "scenes": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "river",
+      "name": "Hudson River",
+      "look": "wide river, Manhattan skyline in distance, calm water, gray sky",
+      "scenes": [
+        4,
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 3,
+      "entity": "geese",
+      "place": "airport",
+      "action": "strike both engines",
+      "motion": "move",
+      "cue": "The flock of Canada geese crippled the Airbus A320\u2019s thrust by striking both engines.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "plane",
+      "place": "river",
+      "action": "glide onto Hudson",
+      "motion": "move",
+      "cue": "Captain Sully guided the powerless aircraft onto the Hudson River.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+fetching Wikipedia article
+8 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 15 scenes); quote (lost viewers 46% slower than average, 9 scenes); map (lost viewers 23% slower than average, 12 scenes); timeline (lost viewers 20% slower than average, 7 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 14% faster than average, 16 scenes); statement (lost viewers 94% faster than average, 21 scenes). On average 91% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene2 mentions 150 passengers but Scene6 says 155 people survived, leaving crew count unclear.; Timeline in Scene8 repeats 0:04 for glide and landing, causing confusion.
+checking facts against the source
+fact check found: scene 8: unsupported claim "Timeline: 0:00 takeoff, 0:02 bird strike, 0:03 engines fail, 0:04 glide to Hudson, 0:04 water landing."
+dropped the scenes the source doesn't back after a rewrite: scene 8: wrong claim "15:27:00 takeoff" (source says: The flight was cleared for takeoff at 15:24:56 and became airborne at 15:25:51.); scene 8: wrong claim "15:27:33 bird strike and engine failure" (source says: The plane struck a flock of Canada geese at 15:27:11.); scene 8: wrong claim "15:28:10 
+reading the story: what it shows
+story: Canada geese, Airbus A320; 2 moments
+planning the visuals
+visual plan (model): 2 3D, 2 2.5D, 3 2D; 3D: stage present, stage move
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: Airbus A320 -> 'Airbus A320' from objaverse (by, 43042 triangles, 0 animations)
+building the story world: 2 entities for 2 scenes
+story world (lowpoly): cast model, sets model, direction model; geese as bird, plane as vehicle
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 5 Wikipedia/Commons images, 0 stock, 2 scenes on plain background
+cutaways: 6 extra photos across 5 scenes
+collage: 11 photos styled, 4 with a cut-out subject
+relevance: checking 2 3D scenes by eye
+scene 3: 3D dropped: frame check: The image does not show a flock of Canada geese striking an Airbus A320.
+storyboarding: an illustration for each sentence
+scene 7, sentence 1 redrawn: The plane in the picture is Boeing 737.
+scene 7, sentence 1 redrawn: The cockpit view is of a Boeing 737.
+storyboard: 4 illustrated sentences of 5 planned, 2 in the cast; 6 checked, 1 redrawn, 1 left out
+art direction: signature
+rendering 48s short video
+rendering thumbnail
+done: approved

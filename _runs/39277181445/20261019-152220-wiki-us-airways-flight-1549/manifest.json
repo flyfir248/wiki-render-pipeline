@@ -1,0 +1,78 @@
+{
+  "entities": [
+    {
+      "id": "geese",
+      "name": "Canada geese",
+      "kind": "animal",
+      "search": [
+        "canada goose",
+        "geese",
+        "bird"
+      ],
+      "look": "medium-sized white and black plumage, black head and wings, black wingtips, orange beak",
+      "certain": true,
+      "scenes": [
+        3,
+        7
+      ]
+    },
+    {
+      "id": "plane",
+      "name": "Airbus A320",
+      "kind": "aircraft",
+      "search": [
+        "airbus a320",
+        "aircraft",
+        "airplane"
+      ],
+      "look": "white fuselage with blue and gray accents, black windows, twin turbofan engines, tail fin with logo",
+      "certain": true,
+      "scenes": [
+        3,
+        4
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "airport",
+      "name": "LaGuardia Airport",
+      "look": "modern concrete runway, taxiways, airport terminal, early morning light",
+      "scenes": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "river",
+      "name": "Hudson River",
+      "look": "wide river, Manhattan skyline in distance, calm water, gray sky",
+      "scenes": [
+        4,
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 3,
+      "entity": "geese",
+      "place": "airport",
+      "action": "strike both engines",
+      "motion": "move",
+      "cue": "The flock of Canada geese crippled the Airbus A320\u2019s thrust by striking both engines.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "plane",
+      "place": "river",
+      "action": "glide onto Hudson",
+      "motion": "move",
+      "cue": "Captain Sully guided the powerless aircraft onto the Hudson River.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}
