@@ -30,7 +30,7 @@ on:
         type: boolean
         default: true
       count:
-        description: "How many videos (for short / long)"
+        description: "How many videos (for short / long); for reels, how many days back to catch up"
         default: "1"
       title:
         description: "For news: the incident's Wikipedia article title (blank picks the strongest recent one). For short / long: render that article as a test, without uploading"
@@ -101,7 +101,9 @@ jobs:
           THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
           THREADS_APP_SECRET: ${{ secrets.THREADS_APP_SECRET }}
           GH_TOKEN: ${{ github.token }}
-        run: python -m fyt reels
+          COUNT: ${{ inputs.count || '1' }}
+        # task reels with count N catches up on the last N days (the runs keep their videos for a week)
+        run: python -m fyt reels $([ "$TASK" = reels ] && [ "$COUNT" -gt 1 ] && echo "--hours $((COUNT * 24))")
 
       # Uploads YouTube never finished processing: their slots are freed and their files, fetched from
       # the run that made them, go back in jobs/pending so this run uploads them again. Sent as an issue.

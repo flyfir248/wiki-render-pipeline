@@ -342,3 +342,14 @@ def test_a_set_too_bright_for_its_kind_is_toned_down():
     assert lab.sky != "#ffffff" and lab.ground != "#f0f0f0"
     ok = wg.checked_setting(wg.Setting(place="body", kind="lab", time="day", ground="#808890", sky="#a0aab4", accent="#ffcc00", backdrop="none"), p)
     assert (ok.ground, ok.sky) == ("#808890", "#a0aab4")
+
+
+def test_cells_with_no_place_are_shown_in_the_bloodstream():
+    from fyt import worldgen as wg
+    p = manifest.Place(id="africa", name="sub-Saharan Africa", look="savanna", scenes=[6])
+    savanna = wg.rule_setting(p)
+    e = Entity(id="rbc", name="red blood cell", kind="cell", search=["red blood cell"], look="red disc", certain=True, scenes=[1])
+    build = wg.rule_build(e, 1)
+    shot = wg.Shot(scene=1, place="", actors=[wg.Actor(entity="rbc", verb="move")], camera="follow")
+    world = wg.world_of("clinical", 1, shot, {"rbc": build}, {"africa": savanna}, {})
+    assert world["set"]["kind"] == "micro"

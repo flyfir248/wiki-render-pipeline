@@ -1089,6 +1089,10 @@ def world_of(style: str, seed: int, shot: Shot, builds: dict[str, Build], settin
     """What the renderer's StoryWorld needs for one scene: the style, the set and every actor with its
     build (or its found model), verb, blocking and state, the camera, the marks and the labels."""
     setting = settings.get(shot.place) if shot.place else None
+    if setting is None and any(builds[a.entity].archetype == "cell" for a in shot.actors if a.entity in builds):
+        # cells with no place named are in the bloodstream, not in whichever place the story visits
+        g, sky, acc = SET_COLOURS["micro"]
+        setting = Setting(place="", kind="micro", ground=g, sky=sky, accent=acc, backdrop="vessel")
     if setting is None:
         setting = next(iter(settings.values()), None)
     sett = setting.model_dump() if setting else Setting(place="", kind="grassland", ground="#6f9a4a", sky="#a8cde8", accent="#ffe0a0").model_dump()
