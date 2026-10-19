@@ -1,0 +1,1704 @@
+{
+  "core_message": "Sickle cell disease is a genetic blood disorder where red blood cells change shape, blocking vessels and causing pain.",
+  "mood": "curious",
+  "title": "7.7 million people live with blood cells that turn into crescents",
+  "description": "Sickle cell disease is a genetic condition affecting millions worldwide. It causes red blood cells to twist into rigid, crescent shapes that clog tiny blood vessels. This video explains the mechanics of the blockage and the real-world impact of this inherited trait.\n\nKey points:\n- Caused by an abnormal beta-globin gene inherited from both parents.\n- Rigidity prevents cells from squeezing through capillaries.\n- Affects about 7.7 million people globally.\n\nBased on the Wikipedia article \"Sickle cell disease\" (https://en.wikipedia.org/wiki/Sickle_cell_disease), licensed CC BY-SA 4.0.\n\nImages from Wikimedia Commons:\nPaludisme - Frequence statistique.png (Percherie, CC BY-SA 3.0): https://commons.wikimedia.org/wiki/File:Paludisme_-_Frequence_statistique.png\nSickle cells.jpg (Dr Graham Beards, CC BY-SA 3.0): https://commons.wikimedia.org/wiki/File:Sickle_cells.jpg\nThe diseases of infancy and childhood (1920) (14768428942).jpg (Internet Archive Book Images, No restrictions): https://commons.wikimedia.org/wiki/File:The_diseases_of_infancy_and_childhood_(1920)_(14768428942).jpg\nSchematic of alkaline hemoglobin electrophoresis.png (Spicy, CC BY-SA 4.0): https://commons.wikimedia.org/wiki/File:Schematic_of_alkaline_hemoglobin_electrophoresis.png\n1911 Sickle Cells.jpg (OpenStax College, CC BY 3.0): https://commons.wikimedia.org/wiki/File:1911_Sickle_Cells.jpg",
+  "tags": [
+    "sickle cell disease",
+    "blood cells anatomy",
+    "genetic disorders",
+    "red blood cells",
+    "medical animation",
+    "hemoglobin",
+    "capillaries",
+    "health facts",
+    "science explained"
+  ],
+  "thumbnail_text": "Crescent Crisis",
+  "thumbnail_kicker": "GENETIC TWIST",
+  "thumbnail_query": "red blood cells sickle cell disease microscope animation",
+  "scenes": [
+    {
+      "narration": "Your red blood cells change into a sickle shape, blocking small blood vessels and causing severe pain.",
+      "purpose": "Hook the viewer with the physical impossibility of the cell shape change.",
+      "type": "world",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": "Your red blood cells change into a sickle shape",
+      "subject_name": "rbc",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": false,
+      "model": {
+        "id": "world:rbc",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: cell built for red blood cell"
+      },
+      "label": "RECONSTRUCTION · ILLUSTRATIVE",
+      "fallback": {
+        "narration": "Your red blood cells change into a sickle shape, blocking small blood vessels and causing severe pain.",
+        "purpose": "Hook the viewer with the physical impossibility of the cell shape change.",
+        "type": "story",
+        "setting": "room",
+        "backdrop": "Interior of a human blood vessel, dark red, microscopic view.",
+        "actors": [
+          {
+            "thing": "cell",
+            "x": 20.0,
+            "y": 50.0,
+            "size": "m",
+            "enter": "slide_left",
+            "action": "spin",
+            "at": 0,
+            "label": "Normal",
+            "look": "normal round red blood cell, smooth, flexible"
+          },
+          {
+            "thing": "cell",
+            "x": 60.0,
+            "y": 50.0,
+            "size": "m",
+            "enter": "slide_right",
+            "action": "shake",
+            "at": 0,
+            "label": "Sickled",
+            "look": "sickle shape, crescent moon, rigid, jagged edges"
+          }
+        ],
+        "camera": "push_in",
+        "image": 3
+      },
+      "world": {
+        "style": "clinical",
+        "seed": 14321,
+        "set": {
+          "place": "africa",
+          "kind": "grassland",
+          "time": "day",
+          "ground": "#b5a377",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "hills",
+          "dressing": [
+            {
+              "name": "acacia tree",
+              "build": {
+                "entity": "africa:acacia-tree",
+                "archetype": "plant",
+                "size": 12.0,
+                "primary": "#5c4a3d",
+                "secondary": "#4a5d23",
+                "accent": "#6b8e23",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      1.809,
+                      0.0
+                    ],
+                    "size": [
+                      0.362,
+                      3.618,
+                      0.362
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#5c4a3d",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.0,
+                      4.07,
+                      0.0
+                    ],
+                    "size": [
+                      2.261,
+                      1.809,
+                      2.261
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#4a5d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      -0.678,
+                      4.297,
+                      0.226
+                    ],
+                    "size": [
+                      1.357,
+                      1.131,
+                      1.357
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#6b8e23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.678,
+                      4.297,
+                      -0.226
+                    ],
+                    "size": [
+                      1.357,
+                      1.131,
+                      1.357
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#6b8e23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 8,
+              "spread": 25.0
+            },
+            {
+              "name": "savanna grass clump",
+              "build": {
+                "entity": "africa:savanna-grass-clump",
+                "archetype": "plant",
+                "size": 1.5,
+                "primary": "#8fbc5a",
+                "secondary": "#7a9e4a",
+                "accent": "#a3cc6b",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.75,
+                      0.0
+                    ],
+                    "size": [
+                      0.6,
+                      1.5,
+                      0.6
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#8fbc5a",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 30,
+              "spread": 40.0
+            },
+            {
+              "name": "termite mound",
+              "build": {
+                "entity": "africa:termite-mound",
+                "archetype": "object",
+                "size": 3.0,
+                "primary": "#9c7b5e",
+                "secondary": "#8a6a4e",
+                "accent": "#b5927a",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      1.248,
+                      0.0
+                    ],
+                    "size": [
+                      1.664,
+                      2.496,
+                      1.664
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#9c7b5e",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      2.496,
+                      0.0
+                    ],
+                    "size": [
+                      0.333,
+                      0.416,
+                      0.333
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#8a6a4e",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 4,
+              "spread": 30.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "rbc",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "rbc",
+              "archetype": "cell",
+              "size": 0.6,
+              "primary": "#CC3333",
+              "secondary": "#FF7777",
+              "accent": "#FF9999",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#CC3333",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "torus",
+                  "at": [
+                    0.0,
+                    4e-7,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#FF7777",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.0,
+                    -4e-7,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#FF9999",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "rbc"
+            }
+          }
+        ],
+        "camera": "establish",
+        "on": "rbc",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": "push_in",
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "This rigidity stops them from bending, so they get stuck in capillaries, blocking oxygen delivery to your organs.",
+      "purpose": "Explain the mechanism: rigidity leads to vessel blockage.",
+      "type": "world",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": 50.0,
+      "effect_at": 0.6,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "orbit",
+      "weather": null,
+      "cue": "rigidity stops them from bending",
+      "subject_name": "rbc",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:rbc",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: cell built for red blood cell"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "This rigidity stops them from bending, so they get stuck in capillaries, blocking oxygen delivery to your organs.",
+        "purpose": "Explain the mechanism: rigidity leads to vessel blockage.",
+        "type": "story",
+        "setting": "room",
+        "backdrop": "Microscopic view of a narrow capillary tube, smooth walls.",
+        "actors": [
+          {
+            "thing": "cell",
+            "x": 10.0,
+            "y": 50.0,
+            "size": "m",
+            "to_x": 80.0,
+            "enter": "slide_left",
+            "action": "none",
+            "at": 0,
+            "label": "Flowing",
+            "look": "normal round red blood cell, smooth"
+          },
+          {
+            "thing": "cell",
+            "x": 50.0,
+            "y": 50.0,
+            "size": "l",
+            "enter": "drop",
+            "action": "none",
+            "at": 0.5,
+            "label": "Blockage",
+            "look": "sickle shape, rigid, blocking the path"
+          }
+        ],
+        "effect": "sparkles",
+        "effect_x": 50.0,
+        "effect_y": 50.0,
+        "effect_at": 0.6,
+        "camera": "pan_right",
+        "image": 5
+      },
+      "world": {
+        "style": "clinical",
+        "seed": 14321,
+        "set": {
+          "place": "africa",
+          "kind": "grassland",
+          "time": "day",
+          "ground": "#b5a377",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "hills",
+          "dressing": [
+            {
+              "name": "acacia tree",
+              "build": {
+                "entity": "africa:acacia-tree",
+                "archetype": "plant",
+                "size": 12.0,
+                "primary": "#5c4a3d",
+                "secondary": "#4a5d23",
+                "accent": "#6b8e23",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      1.809,
+                      0.0
+                    ],
+                    "size": [
+                      0.362,
+                      3.618,
+                      0.362
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#5c4a3d",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.0,
+                      4.07,
+                      0.0
+                    ],
+                    "size": [
+                      2.261,
+                      1.809,
+                      2.261
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#4a5d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      -0.678,
+                      4.297,
+                      0.226
+                    ],
+                    "size": [
+                      1.357,
+                      1.131,
+                      1.357
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#6b8e23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.678,
+                      4.297,
+                      -0.226
+                    ],
+                    "size": [
+                      1.357,
+                      1.131,
+                      1.357
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#6b8e23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 8,
+              "spread": 25.0
+            },
+            {
+              "name": "savanna grass clump",
+              "build": {
+                "entity": "africa:savanna-grass-clump",
+                "archetype": "plant",
+                "size": 1.5,
+                "primary": "#8fbc5a",
+                "secondary": "#7a9e4a",
+                "accent": "#a3cc6b",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.75,
+                      0.0
+                    ],
+                    "size": [
+                      0.6,
+                      1.5,
+                      0.6
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#8fbc5a",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 30,
+              "spread": 40.0
+            },
+            {
+              "name": "termite mound",
+              "build": {
+                "entity": "africa:termite-mound",
+                "archetype": "object",
+                "size": 3.0,
+                "primary": "#9c7b5e",
+                "secondary": "#8a6a4e",
+                "accent": "#b5927a",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      1.248,
+                      0.0
+                    ],
+                    "size": [
+                      1.664,
+                      2.496,
+                      1.664
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#9c7b5e",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      2.496,
+                      0.0
+                    ],
+                    "size": [
+                      0.333,
+                      0.416,
+                      0.333
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#8a6a4e",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 4,
+              "spread": 30.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "rbc",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "rbc",
+              "archetype": "cell",
+              "size": 0.6,
+              "primary": "#CC3333",
+              "secondary": "#FF7777",
+              "accent": "#FF9999",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#CC3333",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "torus",
+                  "at": [
+                    0.0,
+                    4e-7,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#FF7777",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.0,
+                    -4e-7,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#FF9999",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "rbc"
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "rbc",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": "pan_right",
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The blockage causes severe pain, known as a sickle cell crisis, which can strike without warning.",
+      "purpose": "Connect the physical blockage to the human experience of pain.",
+      "type": "story",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": "A human body silhouette, semi-transparent, showing internal organs.",
+      "backdrop_src": null,
+      "actors": [
+        {
+          "thing": "man",
+          "x": 50.0,
+          "y": 50.0,
+          "size": "l",
+          "to_x": null,
+          "to_y": null,
+          "enter": "fade",
+          "action": "shake",
+          "at": 0.0,
+          "label": "Patient",
+          "look": "person in pain, clutching joints, distressed expression",
+          "src": null
+        },
+        {
+          "thing": "explosion",
+          "x": 70.0,
+          "y": 40.0,
+          "size": "s",
+          "to_x": null,
+          "to_y": null,
+          "enter": "pop",
+          "action": "pulse",
+          "at": 0.4,
+          "label": "Pain",
+          "look": "red burst of light, representing pain signal",
+          "src": null
+        }
+      ],
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "flash",
+      "image": null,
+      "broll_query": "person experiencing sudden joint pain medical"
+    },
+    {
+      "narration": "The shape change is triggered by stress, cold, or dehydration, forcing healthy cells to twist into that dangerous form.",
+      "purpose": "Identify the environmental triggers that start the crisis.",
+      "type": "world",
+      "heading": "Trigger to Crisis",
+      "text": null,
+      "items": [
+        "Cold or Stress",
+        "Dehydration",
+        "Cell Twists to Sickle",
+        "Vessel Blocks"
+      ],
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "front",
+      "weather": null,
+      "cue": "triggered by stress",
+      "subject_name": "rbc",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:rbc",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: cell built for red blood cell"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "The shape change is triggered by stress, cold, or dehydration, forcing healthy cells to twist into that dangerous form.",
+        "purpose": "Identify the environmental triggers that start the crisis.",
+        "type": "process",
+        "heading": "Trigger to Crisis",
+        "items": [
+          "Cold or Stress",
+          "Dehydration",
+          "Cell Twists to Sickle",
+          "Vessel Blocks"
+        ],
+        "camera": "pull_out",
+        "broll_query": "person shivering in cold weather dehydration"
+      },
+      "world": {
+        "style": "clinical",
+        "seed": 14321,
+        "set": {
+          "place": "africa",
+          "kind": "grassland",
+          "time": "day",
+          "ground": "#b5a377",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "hills",
+          "dressing": [
+            {
+              "name": "acacia tree",
+              "build": {
+                "entity": "africa:acacia-tree",
+                "archetype": "plant",
+                "size": 12.0,
+                "primary": "#5c4a3d",
+                "secondary": "#4a5d23",
+                "accent": "#6b8e23",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      1.809,
+                      0.0
+                    ],
+                    "size": [
+                      0.362,
+                      3.618,
+                      0.362
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#5c4a3d",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.0,
+                      4.07,
+                      0.0
+                    ],
+                    "size": [
+                      2.261,
+                      1.809,
+                      2.261
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#4a5d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      -0.678,
+                      4.297,
+                      0.226
+                    ],
+                    "size": [
+                      1.357,
+                      1.131,
+                      1.357
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#6b8e23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.678,
+                      4.297,
+                      -0.226
+                    ],
+                    "size": [
+                      1.357,
+                      1.131,
+                      1.357
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#6b8e23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 8,
+              "spread": 25.0
+            },
+            {
+              "name": "savanna grass clump",
+              "build": {
+                "entity": "africa:savanna-grass-clump",
+                "archetype": "plant",
+                "size": 1.5,
+                "primary": "#8fbc5a",
+                "secondary": "#7a9e4a",
+                "accent": "#a3cc6b",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.75,
+                      0.0
+                    ],
+                    "size": [
+                      0.6,
+                      1.5,
+                      0.6
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#8fbc5a",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 30,
+              "spread": 40.0
+            },
+            {
+              "name": "termite mound",
+              "build": {
+                "entity": "africa:termite-mound",
+                "archetype": "object",
+                "size": 3.0,
+                "primary": "#9c7b5e",
+                "secondary": "#8a6a4e",
+                "accent": "#b5927a",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      1.248,
+                      0.0
+                    ],
+                    "size": [
+                      1.664,
+                      2.496,
+                      1.664
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#9c7b5e",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      2.496,
+                      0.0
+                    ],
+                    "size": [
+                      0.333,
+                      0.416,
+                      0.333
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#8a6a4e",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 4,
+              "spread": 30.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "rbc",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "rbc",
+              "archetype": "cell",
+              "size": 0.6,
+              "primary": "#CC3333",
+              "secondary": "#FF7777",
+              "accent": "#FF9999",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#CC3333",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "torus",
+                  "at": [
+                    0.0,
+                    4e-7,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#FF7777",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.0,
+                    -4e-7,
+                    0.0
+                  ],
+                  "size": [
+                    0.005,
+                    0.005,
+                    0.005
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#FF9999",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "rbc"
+            }
+          }
+        ],
+        "camera": "orbit",
+        "on": "rbc",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": "pull_out",
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "You inherit this gene from both parents. If you have just one, you are a carrier, usually with no symptoms.",
+      "purpose": "Clarify the genetic inheritance requirement for the disease.",
+      "type": "comparison",
+      "heading": "Genetics",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": "Carrier",
+      "left": [
+        "One abnormal gene",
+        "No symptoms",
+        "Healthy life"
+      ],
+      "right_title": "Disease",
+      "right": [
+        "Two abnormal genes",
+        "Sickle crises",
+        "Organ damage"
+      ],
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "slide",
+      "image": 4,
+      "broll_query": null
+    },
+    {
+      "narration": "Today, roughly 7.7 million people live with this condition, with most cases found in sub-Saharan Africa.",
+      "purpose": "Provide the global scale and geographic prevalence of the disease.",
+      "type": "map",
+      "heading": "Global Prevalence",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Sub-Saharan Africa",
+          "lat": 0.0,
+          "lon": 20.0
+        },
+        {
+          "name": "India",
+          "lat": 20.0,
+          "lon": 77.0
+        }
+      ],
+      "route": null,
+      "vehicle": null,
+      "regions": [
+        "Nigeria",
+        "India",
+        "United Kingdom",
+        "United States"
+      ],
+      "region_change": "spread",
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": "pan_right",
+      "transition": null,
+      "image": 4,
+      "broll_query": null
+    },
+    {
+      "narration": "New gene therapies now offer a potential cure by modifying stem cells in the bone marrow.",
+      "purpose": "End with the current medical breakthrough and hope for cure.",
+      "type": "broll",
+      "heading": "The Future",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "fade",
+      "image": 2,
+      "broll_query": "scientist in lab working with dna samples microscope"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Sickle_cell_disease"
+  ],
+  "comment_question": "Do you know if you have the carrier trait?",
+  "chapters": null,
+  "series": "Weird History"
+}

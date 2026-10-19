@@ -1,0 +1,104 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 19.5,
+  "dropped_for_budget": [],
+  "off_story": [
+    {
+      "scene": 1,
+      "subject": "science",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 2,
+      "subject": "science",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 3,
+      "subject": "science",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 4,
+      "subject": "science",
+      "why": "no entity in this scene is that kind of thing"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "room",
+      "weather": null,
+      "cue": "Your red blood cells change into a sickle shape",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "rigidity stops them from bending",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "triggered by stress",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "comparison",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 6,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 7,
+      "type": "broll",
+      "kind": "2.5D"
+    }
+  ]
+}

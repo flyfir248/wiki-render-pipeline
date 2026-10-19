@@ -1,0 +1,41 @@
+{
+  "warnings": [],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 1.89,
+      "contrast": 35.9,
+      "burnt": 0.0
+    },
+    {
+      "scene": 1,
+      "at": 5.17,
+      "contrast": 49.6,
+      "burnt": 0.0
+    },
+    {
+      "scene": 2,
+      "at": 8.43,
+      "contrast": 66.3,
+      "burnt": 0.01
+    },
+    {
+      "scene": 2,
+      "at": 12.09,
+      "contrast": 42.3,
+      "burnt": 0.0
+    },
+    {
+      "scene": 4,
+      "at": 21.76,
+      "contrast": 53.0,
+      "burnt": 0.0
+    },
+    {
+      "scene": 4,
+      "at": 25.82,
+      "contrast": 60.0,
+      "burnt": 0.0
+    }
+  ]
+}

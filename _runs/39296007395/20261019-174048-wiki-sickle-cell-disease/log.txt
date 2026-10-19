@@ -1,0 +1,32 @@
+fetching Wikipedia article
+5 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 15 scenes); quote (lost viewers 46% slower than average, 9 scenes); map (lost viewers 23% slower than average, 12 scenes); timeline (lost viewers 20% slower than average, 7 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 14% faster than average, 16 scenes); statement (lost viewers 94% faster than average, 21 scenes). On average 91% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+sharpening title, hook and thumbnail text
+checking facts against the source
+fact check found: scene 1: unsupported claim "Your red blood cells twist into rigid crescents, blocking tiny vessels and sparking excruciating pain." (source says: The source describes sickle-shaped cells that block vessels and cause pain, but does not use the term “crescents.”); scene 4: unsupported claim "Hemoglobin S Changes" (source says: The source lists temperature changes, stress, dehydration, and high altitude as triggers, but does not mention “Hemoglobin S Changes.”)
+facts check out
+reading the story: what it shows
+story: red blood cell, stem cell, bone marrow; 4 moments
+planning the visuals
+visual plan (model): 3 3D, 4 2.5D; 3D: stage move, stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: no vision check could be made (first candidate 'Red Blood Cell'); red blood cell stays painted this time
+assets: no usable model of red blood cell (red blood cell, blood cell, cell): its scenes stay painted
+building the story world: 1 entities for 3 scenes
+story world (clinical): cast model, sets model, direction model; rbc as cell
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 3 Wikipedia/Commons images, 0 stock, 4 scenes on plain background
+cutaways: 2 extra photos across 2 scenes
+collage: 5 photos styled, 2 with a cut-out subject
+drawing story scenes (cloudflare)
+warning: no background art for scene 3: image generation failed: 429: the free daily image allowance is used up
+warning: no art for 'person in pain, clutching joints, distressed expression': image generation failed: the free daily image allowance is used up
+warning: no art for 'red burst of light, representing pain signal': image generation failed: the free daily image allowance is used up
+0 illustrations drawn
+relevance: checking 3 3D scenes by eye
+art direction: signature
+rendering 48s short video
+rendering thumbnail
+done: approved
