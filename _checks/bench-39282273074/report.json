@@ -1,0 +1,37 @@
+{
+  "seconds": 199.1,
+  "frames": 240,
+  "seconds_per_frame": 0.83,
+  "look_warnings": [
+    "scene 1 at 1.3s: The subject it must show: a 3D shot of jet",
+    "scene 2 at 7.4s: The subject in the image is not a 3D shot of a jet."
+  ],
+  "look_frames": [
+    {
+      "scene": 1,
+      "at": 1.35,
+      "contrast": 21.9,
+      "polished": false,
+      "problems": "The subject it must show: a 3D shot of jet"
+    },
+    {
+      "scene": 1,
+      "at": 3.69,
+      "contrast": 26.2
+    },
+    {
+      "scene": 2,
+      "at": 5.55,
+      "contrast": 36.6,
+      "polished": true,
+      "problems": "none"
+    },
+    {
+      "scene": 2,
+      "at": 7.37,
+      "contrast": 23.9,
+      "polished": false,
+      "problems": "The subject in the image is not a 3D shot of a jet."
+    }
+  ]
+}
