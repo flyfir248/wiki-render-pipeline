@@ -1,0 +1,39 @@
+fetching Wikipedia article
+5 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 15 scenes); quote (lost viewers 46% slower than average, 9 scenes); map (lost viewers 23% slower than average, 12 scenes); timeline (lost viewers 20% slower than average, 7 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 14% faster than average, 16 scenes); statement (lost viewers 94% faster than average, 21 scenes). On average 91% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is 172 words; asking for a shorter one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene 1 mentions gene‑editing therapy before any explanation of the disease.; Scene 2 says one gene copy is harmless without clarifying its role.; Scene 6 repeats the gene‑editing claim already made in Scene 1, creating redundancy.
+checking facts against the source
+fact check found: scene 2: wrong claim "A child inherits two abnormal hemoglobin genes; one is normal, the other creates HbS." (source says: Sickle cell disease occurs when a person inherits two abnormal copies of the β-globin gene... The abnormal gene generates haemoglobin S (HbS)... In people with sickle cell trait, only one gene is abnormal.)
+facts check out
+reading the story: what it shows
+story: red blood cell, capillary, blood transfusion bag, hydroxyurea pill, gene‑editing therapy, stem cell; 5 moments
+planning the visuals
+visual plan (model): 5 3D, 1 2D; 3D: stage present, stage present, stage present, stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: red blood cell -> 'Human Hemoglobin Molecular Structure' from objaverse (by, 39881 triangles, 0 animations)
+assets: no vision check could be made (first candidate 'Cozy Blood Bag'); blood transfusion bag stays painted this time
+assets: no usable model of blood transfusion bag (blood bag, transfusion bag): its scenes stay painted
+assets: no vision check could be made (first candidate 'crispr therapy concept picture'); gene‑editing therapy stays painted this time
+assets: no usable model of gene‑editing therapy (crispr therapy, gene editing): its scenes stay painted
+building the story world: 5 entities for 5 scenes
+story world (clinical): cast model, sets model, direction model; red-blood-cell as cell, blood-transfusion-bag as object, hydroxyurea-pill as object, gene-editing-therapy as object, stem-cell as cell
+voicing 6 scenes with kokoro
+fetching visuals
+visuals: 2 Wikipedia/Commons images, 0 stock, 4 scenes on plain background
+cutaways: 1 extra photos across 1 scenes
+collage: 3 photos styled, 1 with a cut-out subject
+relevance: checking 5 3D scenes by eye
+scene 3: 3D dropped: frame check: The subject is not a red blood cell, it is a greyish cloud of fog.
+scene 5: 3D dropped: frame check: no blood transfusion bag, no IV tubing, no labeled
+storyboarding: an illustration for each sentence
+storyboard: 2 illustrated sentences of 2 planned, 6 in the cast; 2 checked, 0 redrawn, 0 left out
+art direction: signature
+rendering 36s short video
+look: scene 1 at 1.5s: The subject is not a 3D shot of a red-blood-cell.
+look: scene 1 at 4.2s: The subject is not a 3D shot of red-blood-cell
+look: scene 4 at 18.4s: The subject it must show: a 3D shot of red-blood-cell, but the image shows a banana
+rendering thumbnail
+done: approved

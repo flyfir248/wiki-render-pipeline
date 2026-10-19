@@ -1,0 +1,47 @@
+{
+  "warnings": [
+    "scene 1 at 1.5s: The subject is not a 3D shot of a red-blood-cell.",
+    "scene 1 at 4.2s: The subject is not a 3D shot of red-blood-cell",
+    "scene 4 at 18.4s: The subject it must show: a 3D shot of red-blood-cell, but the image shows a banana"
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 1.55,
+      "contrast": 33.9,
+      "polished": false,
+      "problems": "The subject is not a 3D shot of a red-blood-cell."
+    },
+    {
+      "scene": 1,
+      "at": 4.23,
+      "contrast": 31.9,
+      "polished": false,
+      "problems": "The subject is not a 3D shot of red-blood-cell"
+    },
+    {
+      "scene": 4,
+      "at": 18.36,
+      "contrast": 35.0,
+      "polished": false,
+      "problems": "The subject it must show: a 3D shot of red-blood-cell, but the image shows a banana"
+    },
+    {
+      "scene": 4,
+      "at": 21.04,
+      "contrast": 36.7,
+      "polished": true,
+      "problems": "None"
+    },
+    {
+      "scene": 6,
+      "at": 30.11,
+      "contrast": 54.1
+    },
+    {
+      "scene": 6,
+      "at": 34.41,
+      "contrast": 34.3
+    }
+  ]
+}

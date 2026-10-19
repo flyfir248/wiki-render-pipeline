@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 1 at 1.5s: The subject is not a 3D shot of a red-blood-cell.",
+    "scene 1 at 4.2s: The subject is not a 3D shot of red-blood-cell",
+    "scene 4 at 18.4s: The subject it must show: a 3D shot of red-blood-cell, but the image shows a banana"
+  ],
+  "repair": [],
+  "repaired": []
+}

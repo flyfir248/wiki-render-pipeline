@@ -1,0 +1,1145 @@
+{
+  "core_message": "Sickle‑cell disease turns red blood cells into rigid sickles that block blood flow, causing pain and organ damage.",
+  "mood": "curious",
+  "title": "5 Years of Pain: The Day Sickle Cells Became Rigid Clogs",
+  "description": "Sickle‑cell disease changes the shape of red blood cells, turning them into stiff sickles that clog tiny vessels. The blockage sparks severe pain, organ failure, and early death unless treated with blood transfusions, medication, and the newest gene therapies. This short explains how a single genetic mutation leads to a global health crisis.\n\nKey facts:\n- 7.7 million affected worldwide\n- 34 000 deaths annually\n- Gene therapy approved in 2023\n\nBased on the Wikipedia article \"Sickle cell disease\" (https://en.wikipedia.org/wiki/Sickle_cell_disease), licensed CC BY-SA 4.0.\n\nImages from Wikimedia Commons:\nThe diseases of infancy and childhood (1920) (14768428942).jpg (Internet Archive Book Images, No restrictions): https://commons.wikimedia.org/wiki/File:The_diseases_of_infancy_and_childhood_(1920)_(14768428942).jpg\nSickle cells.jpg (Dr Graham Beards, CC BY-SA 3.0): https://commons.wikimedia.org/wiki/File:Sickle_cells.jpg\nSchematic of alkaline hemoglobin electrophoresis.png (Spicy, CC BY-SA 4.0): https://commons.wikimedia.org/wiki/File:Schematic_of_alkaline_hemoglobin_electrophoresis.png\n\n3D models:\nHuman Hemoglobin Molecular Structure by S.Duce (CC BY 4.0) https://sketchfab.com/3d-models/none-70169635dec246a6af4db09f2abf68f6",
+  "tags": [
+    "sickle cell",
+    "blood disease",
+    "genetics",
+    "health",
+    "science"
+  ],
+  "thumbnail_text": "SICKLE‑SICKLE",
+  "thumbnail_kicker": "Disease",
+  "thumbnail_query": "red blood cell sickle shape",
+  "scenes": [
+    {
+      "narration": "Sickle‑cell disease makes red cells stiff, blocking tiny vessels and causing pain.",
+      "purpose": "Introduce the core idea",
+      "type": "world",
+      "heading": "SICKLE‑SICKLE",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "countryside",
+      "backdrop": "human body, interior view, blood vessels, organs, soft tissue, neutral lighting",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": "Sickle‑cell disease makes red cells stiff, blocking tiny vessels and causing pain.",
+      "subject_name": "red-blood-cell",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "sickle-red-blood-cell",
+        "level": "found",
+        "title": "Human Hemoglobin Molecular Structure",
+        "kind": "object",
+        "src": "models/sickle-red-blood-cell.glb",
+        "params": {},
+        "sources": [],
+        "licence": "by",
+        "notes": "story world: cell built for red blood cell"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "Sickle‑cell disease makes red cells stiff, blocking tiny vessels and causing pain.",
+        "purpose": "Introduce the core idea",
+        "type": "title",
+        "heading": "SICKLE‑SICKLE",
+        "image": 2
+      },
+      "world": {
+        "style": "clinical",
+        "seed": 13008,
+        "set": {
+          "place": "human-body",
+          "kind": "micro",
+          "time": "day",
+          "ground": "#ffe0e0",
+          "sky": "#ffffff",
+          "accent": "#ffcccc",
+          "backdrop": "vessel",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "red-blood-cell",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "red-blood-cell",
+              "archetype": "cell",
+              "size": 1.0,
+              "primary": "#ff0000",
+              "secondary": "#ff6666",
+              "accent": "#ffffff",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.0,
+                "neck": 0.0,
+                "head": 0.2,
+                "snout": 0.0,
+                "ears": "none",
+                "tail": "none",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "sphere",
+                  "at": [
+                    -0.4157348061512726,
+                    0.32221488349019883,
+                    0.0
+                  ],
+                  "size": [
+                    0.23949769241492336,
+                    0.23949769241492336,
+                    0.16122934917841436
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    -0.30438071450436044,
+                    0.2033233298543825,
+                    0.0
+                  ],
+                  "size": [
+                    0.3238477631085024,
+                    0.3238477631085024,
+                    0.2131370849898476
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    -0.1607197326515809,
+                    0.1265349352524472,
+                    0.0
+                  ],
+                  "size": [
+                    0.3802086784529346,
+                    0.3802086784529346,
+                    0.2478207252018059
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    -9.184850993605148e-17,
+                    0.09999999999999998,
+                    0.0
+                  ],
+                  "size": [
+                    0.4,
+                    0.4,
+                    0.26
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.16071973265158074,
+                    0.12653493525244713,
+                    0.0
+                  ],
+                  "size": [
+                    0.3802086784529346,
+                    0.3802086784529346,
+                    0.2478207252018059
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.3043807145043603,
+                    0.2033233298543824,
+                    0.0
+                  ],
+                  "size": [
+                    0.3238477631085024,
+                    0.3238477631085024,
+                    0.21313708498984762
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.4157348061512726,
+                    0.3222148834901989,
+                    0.0
+                  ],
+                  "size": [
+                    0.23949769241492339,
+                    0.23949769241492339,
+                    0.1612293491784144
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "sickle"
+            },
+            "model": {
+              "id": "sickle-red-blood-cell",
+              "src": "models/sickle-red-blood-cell.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "by",
+              "title": "Human Hemoglobin Molecular Structure"
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "red-blood-cell",
+        "marks": [
+          {
+            "kind": "glow",
+            "on": "red-blood-cell",
+            "to": "",
+            "color": "#ff0000"
+          }
+        ],
+        "callouts": [
+          {
+            "on": "red-blood-cell",
+            "text": "Stiff Cells"
+          }
+        ]
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "A child inherits two abnormal copies of the β‑globin gene, both producing haemoglobin S.",
+      "purpose": "Explain genetic cause",
+      "type": "statement",
+      "heading": "Genetic switch",
+      "text": "Inheritance of two HbS genes",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "In capillaries, sickled cells stick together, forming clogs that stop oxygen flow.",
+      "purpose": "Show blockage mechanism",
+      "type": "story",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "city",
+      "backdrop": "microscopic view of blood vessels",
+      "backdrop_src": null,
+      "actors": [
+        {
+          "thing": "red blood cell",
+          "x": 20.0,
+          "y": 70.0,
+          "size": "m",
+          "to_x": null,
+          "to_y": null,
+          "enter": "pop",
+          "action": "none",
+          "at": 0.0,
+          "label": "normal",
+          "look": null,
+          "src": null
+        },
+        {
+          "thing": "red blood cell",
+          "x": 80.0,
+          "y": 70.0,
+          "size": "m",
+          "to_x": null,
+          "to_y": null,
+          "enter": "pop",
+          "action": "none",
+          "at": 0.0,
+          "label": "sickle",
+          "look": null,
+          "src": null
+        }
+      ],
+      "effect": "smoke",
+      "effect_x": 50.0,
+      "effect_y": 70.0,
+      "effect_at": 1.5,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "When a clog forms, patients feel excruciating pain, often in the chest or legs.",
+      "purpose": "Describe crisis symptoms",
+      "type": "world",
+      "heading": "Painful crisis",
+      "text": "Vaso‑occlusive crisis",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "countryside",
+      "backdrop": "human body, interior view, blood vessels, organs, soft tissue, neutral lighting",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "front",
+      "weather": null,
+      "cue": "When a clog forms, patients feel excruciating pain, often in the chest or legs.",
+      "subject_name": "red-blood-cell",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "sickle-red-blood-cell",
+        "level": "found",
+        "title": "Human Hemoglobin Molecular Structure",
+        "kind": "object",
+        "src": "models/sickle-red-blood-cell.glb",
+        "params": {},
+        "sources": [],
+        "licence": "by",
+        "notes": "story world: cell built for red blood cell"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "When a clog forms, patients feel excruciating pain, often in the chest or legs.",
+        "purpose": "Describe crisis symptoms",
+        "type": "statement",
+        "heading": "Painful crisis",
+        "text": "Vaso‑occlusive crisis"
+      },
+      "world": {
+        "style": "clinical",
+        "seed": 13008,
+        "set": {
+          "place": "human-body",
+          "kind": "micro",
+          "time": "day",
+          "ground": "#ffe0e0",
+          "sky": "#ffffff",
+          "accent": "#ffcccc",
+          "backdrop": "vessel",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "red-blood-cell",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "red-blood-cell",
+              "archetype": "cell",
+              "size": 1.0,
+              "primary": "#ff0000",
+              "secondary": "#ff6666",
+              "accent": "#ffffff",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.0,
+                "neck": 0.0,
+                "head": 0.2,
+                "snout": 0.0,
+                "ears": "none",
+                "tail": "none",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "sphere",
+                  "at": [
+                    -0.4157348061512726,
+                    0.32221488349019883,
+                    0.0
+                  ],
+                  "size": [
+                    0.23949769241492336,
+                    0.23949769241492336,
+                    0.16122934917841436
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    -0.30438071450436044,
+                    0.2033233298543825,
+                    0.0
+                  ],
+                  "size": [
+                    0.3238477631085024,
+                    0.3238477631085024,
+                    0.2131370849898476
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    -0.1607197326515809,
+                    0.1265349352524472,
+                    0.0
+                  ],
+                  "size": [
+                    0.3802086784529346,
+                    0.3802086784529346,
+                    0.2478207252018059
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    -9.184850993605148e-17,
+                    0.09999999999999998,
+                    0.0
+                  ],
+                  "size": [
+                    0.4,
+                    0.4,
+                    0.26
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.16071973265158074,
+                    0.12653493525244713,
+                    0.0
+                  ],
+                  "size": [
+                    0.3802086784529346,
+                    0.3802086784529346,
+                    0.2478207252018059
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.3043807145043603,
+                    0.2033233298543824,
+                    0.0
+                  ],
+                  "size": [
+                    0.3238477631085024,
+                    0.3238477631085024,
+                    0.21313708498984762
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "sphere",
+                  "at": [
+                    0.4157348061512726,
+                    0.3222148834901989,
+                    0.0
+                  ],
+                  "size": [
+                    0.23949769241492339,
+                    0.23949769241492339,
+                    0.1612293491784144
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c23b2e",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "sickle"
+            },
+            "model": {
+              "id": "sickle-red-blood-cell",
+              "src": "models/sickle-red-blood-cell.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "by",
+              "title": "Human Hemoglobin Molecular Structure"
+            }
+          }
+        ],
+        "camera": "low_angle",
+        "on": "red-blood-cell",
+        "marks": [
+          {
+            "kind": "ring",
+            "on": "red-blood-cell",
+            "to": "",
+            "color": "#ff0000"
+          }
+        ],
+        "callouts": [
+          {
+            "on": "red-blood-cell",
+            "text": "Excruciating Pain"
+          }
+        ]
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Doctors treat severe attacks with blood transfusions and hydroxyurea, which reduces sickling.",
+      "purpose": "Show treatment",
+      "type": "statement",
+      "heading": "Treating the crisis",
+      "text": "Transfusion & hydroxyurea",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "In 2023, gene‑editing therapy replaced faulty stem cells, offering a chance at a normal lifespan.",
+      "purpose": "Highlight breakthrough",
+      "type": "world",
+      "heading": "Gene therapy breakthrough",
+      "text": "2023 approval",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "countryside",
+      "backdrop": "laboratory, clean bench, microscopes, reagents, bright overhead light",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": "In 2023, gene‑editing therapy replaced faulty stem cells, offering a chance at a normal lifespan.",
+      "subject_name": "gene-editing-therapy",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:gene-editing-therapy",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: object built for gene‑editing therapy"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "In 2023, gene‑editing therapy replaced faulty stem cells, offering a chance at a normal lifespan.",
+        "purpose": "Highlight breakthrough",
+        "type": "statement",
+        "heading": "Gene therapy breakthrough",
+        "text": "2023 approval"
+      },
+      "world": {
+        "style": "clinical",
+        "seed": 13008,
+        "set": {
+          "place": "laboratory",
+          "kind": "lab",
+          "time": "day",
+          "ground": "#e0e0e0",
+          "sky": "#ffffff",
+          "accent": "#ffcc00",
+          "backdrop": "none",
+          "dressing": [
+            {
+              "name": "microscope",
+              "build": {
+                "entity": "laboratory:microscope",
+                "archetype": "object",
+                "size": 1.5,
+                "primary": "#444444",
+                "secondary": "#888888",
+                "accent": "#ffcc00",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      0.75,
+                      0.0
+                    ],
+                    "size": [
+                      0.1,
+                      1.5,
+                      0.1
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#444444",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.5,
+                      0.5
+                    ],
+                    "size": [
+                      0.3,
+                      0.2,
+                      0.3
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#888888",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.0,
+                      1.2,
+                      0.0
+                    ],
+                    "size": [
+                      0.2,
+                      0.2,
+                      0.2
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#ffcc00",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 2,
+              "spread": 5.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "gene-editing-therapy",
+            "verb": "present",
+            "at": "left",
+            "to": "",
+            "face": "stem-cell",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "gene-editing-therapy",
+              "archetype": "object",
+              "size": 0.5,
+              "primary": "#0066ff",
+              "secondary": "#00ccff",
+              "accent": "#ffffff",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.25,
+                    0.0
+                  ],
+                  "size": [
+                    0.4,
+                    0.5,
+                    0.3
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#0066ff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.15,
+                    0.45,
+                    0.0
+                  ],
+                  "size": [
+                    0.02,
+                    0.2,
+                    0.02
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#00ccff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": true
+                }
+              ],
+              "form": ""
+            }
+          },
+          {
+            "entity": "stem-cell",
+            "verb": "present",
+            "at": "right",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "stem-cell",
+              "archetype": "cell",
+              "size": 0.6,
+              "primary": "#e0f7fa",
+              "secondary": "#b2ebf2",
+              "accent": "#ffffff",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.0,
+                "neck": 0.0,
+                "head": 0.3,
+                "snout": 0.0,
+                "ears": "none",
+                "tail": "none",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [],
+              "form": ""
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "stem-cell",
+        "marks": [
+          {
+            "kind": "beam",
+            "on": "gene-editing-therapy",
+            "to": "stem-cell",
+            "color": "#00ff00"
+          }
+        ],
+        "callouts": [
+          {
+            "on": "gene-editing-therapy",
+            "text": "Gene Editing"
+          }
+        ]
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Sickle_cell_disease"
+  ],
+  "comment_question": "What is the main symptom of a sickle‑cell crisis?",
+  "chapters": null,
+  "series": "Weird History"
+}
