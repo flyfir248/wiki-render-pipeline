@@ -98,10 +98,14 @@ export const partsBounds = (parts: Part[]) => {
   const box = new THREE.Box3();
   const v = new THREE.Vector3();
   if (!parts.length) return { size: new THREE.Vector3(1, 1, 1), center: new THREE.Vector3(0, 0.5, 0) };
+  const e = new THREE.Euler();
   for (const p of parts) {
+    // each part's corners as it is drawn, turned: a fuselage laid along x is long, not tall
     const h = new THREE.Vector3(...p.size).multiplyScalar(0.5);
-    box.expandByPoint(v.set(p.at[0] - h.x, p.at[1] - h.y, p.at[2] - h.z));
-    box.expandByPoint(v.set(p.at[0] + h.x, p.at[1] + h.y, p.at[2] + h.z));
+    const r = p.rot ?? [0, 0, 0];
+    e.set(r[0] * D, r[1] * D, r[2] * D);
+    for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1])
+      box.expandByPoint(v.set(sx * h.x, sy * h.y, sz * h.z).applyEuler(e).add(new THREE.Vector3(...p.at)));
   }
   return { size: box.getSize(new THREE.Vector3()), center: box.getCenter(new THREE.Vector3()), min: box.min.clone() };
 };

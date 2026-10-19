@@ -154,10 +154,12 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
 const direct = (world: World, placed: Placed[], u: number, t: number, U: number) => {
   const on = placed.find((p) => p.m.entity === world.on) ?? placed[0];
   const look = on.pos.clone().add(new THREE.Vector3(0, on.h * 0.55, 0));
-  let R = Math.max(on.w, on.h) * 0.7 + U * 0.3;
+  const own = Math.max(on.w, on.h) * 0.7 + U * 0.3;
+  let R = own;
   placed.forEach((p) => {
     if (p !== on && Math.abs(p.pos.y - on.pos.y) < U * 3) R = Math.max(R, p.pos.distanceTo(on.pos) * 0.55 + Math.max(p.w, p.h) * 0.5);
   });
+  R = Math.min(R, own * 1.8); // others share the frame, but never shrink the subject to a speck
   const fov = 36;
   let d = (R / Math.tan(((fov / 2) * Math.PI) / 180)) * 1.05;
   const inside = INSIDE.includes(world.set.kind) && world.set.kind !== "cave";
