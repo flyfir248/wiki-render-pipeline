@@ -261,3 +261,41 @@ def test_with_story_worlds_catalog_picks_of_an_entity_become_stage_scenes():
     kept, _ = visualplan.story_fit(FLIGHT_STORY, FLIGHT_MANIFEST, [visualplan.Reconstruction(scene=3, subject="ship", action="sail")])
     r = visualplan.as_stage(FLIGHT_STORY, FLIGHT_MANIFEST, kept[0], 0)
     assert r.subject == "stage" and r.subject_name == kept[0].subject_name and r.in_story
+
+
+HUDSON_STORY = script("Geese slammed into a US Airways A320 just after takeoff.", "The twin engines failed in under four minutes.",
+                      title="Miracle on the Hudson")
+HUDSON_MANIFEST = Manifest(
+    entities=[Entity(id="plane", name="US Airways Flight 1549", kind="light aircraft", search=["airbus a320"], look="Airbus A320, white with two black engines", certain=True, scenes=[1, 2]),
+              Entity(id="geese", name="Canada geese", kind="animal", search=["canada goose"], look="large geese", certain=True, scenes=[1])],
+    places=[Place(id="la", name="LaGuardia Airport", look="runway and control tower", scenes=[1])],
+    moments=[Moment(scene=1, entity="geese", action="slam into aircraft", motion="present", cue="Geese slammed", documented=True),
+             Moment(scene=2, entity="plane", action="engines fail", motion="present", cue="engines failed", documented=True)],
+)
+
+
+def test_a_model_drawn_airliner_keeps_the_airliner_outline_at_stage_scale():
+    # from the US Airways test render: a model's box-and-plank aircraft, 37.6 long, read as nothing
+    e = HUDSON_MANIFEST.entities[0]
+    b = worldgen.Build(entity="plane", archetype="vehicle", size=37.6, primary="#ffffff", secondary="#000000", accent="#ff0000",
+                       parts=[worldgen.Part(shape="box", at=[0, 1.5, 0], size=[4, 1.5, 4], color="#ffffff"), worldgen.Part(shape="box", at=[15, 1.5, 0], size=[30, 0.2, 6], color="#ffffff")])
+    c = worldgen.checked_build(b, e, 1)
+    assert c.size == worldgen.rule_build(e, 1).size < 20
+    assert c.parts[0].shape == "capsule" and c.parts[0].color == "#ffffff"  # the fuselage, in the model's colours
+
+
+def test_an_aircraft_not_brought_down_flies_and_its_flock_flies_with_it():
+    builds = {e.id: worldgen.rule_build(e, 1) for e in HUDSON_MANIFEST.entities}
+    sh = worldgen.Shot(scene=1, actors=[worldgen.Actor(entity="geese", verb="idle", count=1), worldgen.Actor(entity="plane", verb="present")], camera="establish", on="geese")
+    c = worldgen.checked_shot(sh, HUDSON_STORY, HUDSON_MANIFEST, builds, 1)
+    assert [(a.entity, a.verb) for a in c.actors] == [("geese", "fly"), ("plane", "fly")]
+    assert c.actors[0].count == worldgen.group_size(HUDSON_MANIFEST.entities[1], "bird") > 1  # "Canada geese" is a flock
+
+
+def test_set_dressing_is_pulled_to_stage_scale_and_slabs_lie_flat():
+    runway = worldgen.Dressing(name="runway", build=worldgen.Build(entity="r", archetype="structure", size=400, primary="#f0f0f0", secondary="#a0a0a0", accent="#ffeb3b", parts=[worldgen.Part(shape="box", at=[0, 0, 0], size=[400, 5, 30], color="#f0f0f0")]))
+    tower = worldgen.Dressing(name="tower", build=worldgen.Build(entity="t", archetype="structure", size=60, primary="#999999", secondary="#777777", accent="#ffffff", parts=[worldgen.Part(shape="box", at=[0, 0, 0], size=[20, 60, 20], color="#999999")]))
+    s = worldgen.checked_setting(worldgen.Setting(place="la", kind="airfield", ground="#d2d2d2", sky="#a0c4ff", accent="#ffeb3b", dressing=[runway, tower]), HUDSON_MANIFEST.places[0])
+    r, t = (d.build.parts[0] for d in s.dressing)
+    assert r.size[0] < 50 and r.size[1] <= 0.08
+    assert t.size[1] < 20

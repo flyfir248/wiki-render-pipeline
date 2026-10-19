@@ -56,7 +56,13 @@ export type Blocking = { actors: Placed[]; cam: { pos: THREE.Vector3; look: THRE
 const flies = (m: CastMember) => m.verb === "fly" && ["vehicle", "bird", "insect"].includes(m.build.archetype);
 
 // Where everyone is and where the camera is at this frame.
-export const block = (world: World, frame: number, fps: number, D: number, at: number): Blocking => {
+export const block = (w0: World, frame: number, fps: number, D: number, at: number): Blocking => {
+  // birds flying with an aircraft are drawn larger than life, or a flock beside an airliner is specks
+  const jet = w0.cast.find((c) => flies(c) && c.build.archetype === "vehicle");
+  const world = jet
+    ? { ...w0, cast: w0.cast.map((c) => (flies(c) && (c.build.archetype === "bird" || c.build.archetype === "insect") && c.build.size < jet.build.size * 0.2
+        ? { ...c, build: { ...c.build, size: jet.build.size * 0.2 } } : c)) }
+    : w0;
   const u = Math.min(1, frame / Math.max(1, D - 1));
   const t = frame / fps;
   const k = (u - at) * (D / fps);

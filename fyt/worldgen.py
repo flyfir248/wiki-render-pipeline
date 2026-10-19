@@ -648,12 +648,34 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
         if len(parts) < 2:  # too little to be recognisable: the rules' outline of what it is called
             parts = rules.parts
     outfit = (b.outfit or rules.outfit) if arche == "humanoid" else None
+    primary, secondary, accent = _hex(b.primary, rules.primary), _hex(b.secondary, rules.secondary), _hex(b.accent, rules.accent)
+    if arche == "vehicle" and rules.archetype == "vehicle" and rules.parts:
+        # a vehicle its name says is an airliner, a ship or a car keeps that outline, at the rules' size,
+        # in the model's colours: a model's own boxes for one rarely read as that kind of vehicle
+        size = rules.size
+        parts = _vehicle_parts(f"{e.name} {e.kind} {' '.join(e.search)} {e.look}".lower(), size, [primary, secondary, accent])
     return b.model_copy(update={
         "entity": e.id, "archetype": arche, "size": round(size, 3), "parts": parts, "outfit": outfit,
-        "primary": _hex(b.primary, rules.primary), "secondary": _hex(b.secondary, rules.secondary), "accent": _hex(b.accent, rules.accent),
+        "primary": primary, "secondary": secondary, "accent": accent,
         "skin": _hex(b.skin, rules.skin or SKINS[2]) if arche == "humanoid" else "",
         "hair": _hex(b.hair, rules.hair or HAIRS[0]) if arche == "humanoid" else "",
     })
+
+
+def _scaled_dressing(parts: list[Part]) -> list[Part]:
+    """Set dressing pulled to the stage's scale like a vehicle's length (a 400 m runway or a 60 m tower
+    would bury an airliner drawn 13 units long), and anything flat, like a runway, laid flat on the ground."""
+    span = max(max(abs(q.at[i]) + q.size[i] / 2 for q in parts) * 2 for i in range(3))
+    f = 4.5 * (span / 4.5) ** 0.5 / span if span > 4.5 else 1.0
+    out = []
+    for q in parts:
+        sz = [x * f for x in q.size]
+        at = [x * f for x in q.at]
+        if sz[1] < 0.25 * max(sz[0], sz[2]) and sz[1] > 0.08:  # a slab: a ground marking, not a wall
+            at[1] = min(at[1], 0.04)
+            sz[1] = 0.08
+        out.append(q.model_copy(update={"size": [round(x, 3) for x in sz], "at": [round(x, 3) for x in at]}))
+    return out
 
 
 def checked_setting(s: Setting, p: manifest.Place) -> Setting:
@@ -664,6 +686,7 @@ def checked_setting(s: Setting, p: manifest.Place) -> Setting:
         parts = [q for q in (_clean_part(x, b.size) for x in b.parts[:MAX_PARTS]) if q is not None]
         if not parts or b.archetype in LIVING:
             continue  # set dressing never carries people or animals
+        parts = _scaled_dressing(parts)
         dressing.append(d.model_copy(update={
             "count": max(1, min(40, d.count)), "spread": max(2.0, min(80.0, d.spread)),
             "build": b.model_copy(update={"entity": f"{p.id}:{_slug(d.name)}", "parts": [x.model_copy(update={"bone": "body"}) for x in parts]}),
@@ -845,7 +868,7 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
             "entity": eid, "verb": _verb(a.verb, arche, narration, documented), "state": _state(a.state, narration),
             "face": a.face if a.face in ("camera", "") or _slug(a.face) in listed else "", "holding": holding,
             "to": a.to if a.to in G["places"] else "",
-            "count": max(1, min(9, a.count)) if group_size(manifest.entity(story, eid), arche) > 1 else 1,
+            "count": (max(1, min(9, a.count)) if a.count > 1 else group) if (group := group_size(manifest.entity(story, eid), arche)) > 1 else 1,
         }))
     if moment and moment.entity in builds and moment.entity in listed and not any(x.entity == moment.entity for x in actors):
         arche = builds[moment.entity].archetype
@@ -854,6 +877,11 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
         return None
     if moment and actors[0].entity != moment.entity:  # the moment's entity leads the scene
         actors.sort(key=lambda a: a.entity != moment.entity)
+    aloft = [a.entity for a in actors if builds[a.entity].archetype == "vehicle" and archetype_words(story, a.entity, WINGS)]
+    if aloft and not scenes3d.find(narration, LANDED):
+        # an aircraft the story hasn't brought down is in the air, and birds beside it fly with it
+        actors = [a.model_copy(update={"verb": "fly"}) if (a.entity in aloft and a.verb in G["calm"])
+                  or (builds[a.entity].archetype in ("bird", "insect") and a.verb in G["calm"]) else a for a in actors]
     if any(a.verb == "fly" and builds[a.entity].archetype == "vehicle" for a in actors):
         # people are aboard an aircraft in flight, not standing on the ground beneath it
         actors = [a for a in actors if builds[a.entity].archetype != "humanoid"] or actors

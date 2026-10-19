@@ -316,9 +316,15 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         break;
       case "road":
       case "airfield":
-        for (let i = -8; i <= 8; i++) out.push(<Block key={`p${i}`} look={look} color="#6a5a4a" size={[U * 0.1, U * 2.4, U * 0.1]} at={[i * U * 3, U * 1.2, -U * 3]} />);
+        if (kind === "road") {
+          for (let i = -8; i <= 8; i++) out.push(<Block key={`p${i}`} look={look} color="#6a5a4a" size={[U * 0.1, U * 2.4, U * 0.1]} at={[i * U * 3, U * 1.2, -U * 3]} />);
+        } else {
+          // runway edge lights, and a low hangar well back from the runway
+          for (let i = -12; i <= 12; i++) for (const z of [-1, 1]) out.push(<Block key={`l${i}${z}`} look={look} color={set.time === "night" ? "#ffd27a" : "#e8e2c8"} glow={set.time === "night"} size={[U * 0.12, U * 0.08, U * 0.12]} at={[i * U * 4, U * 0.04, z * U * 2.8]} />);
+          out.push(<Block key="hangar" look={look} color="#9aa3ad" size={[U * 5, U * 1.6, U * 3.4]} at={[-U * 9, U * 0.8, -U * 15]} />);
+          out.push(<Block key="hangar-roof" look={look} color="#7d8691" size={[U * 5.2, U * 0.25, U * 3.6]} at={[-U * 9, U * 1.7, -U * 15]} />);
+        }
         add(14, U * 20, (s) => <Broadleaf look={look} h={U * 2.4 * s.s} color={leaf} r={s.s} />, 0.1, U * 6);
-        if (kind === "airfield") out.push(<group key="hangar" position={[-U * 6, 0, -U * 8]}><Building w={U * 6} h={U * 3} d={U * 4} color="#9aa3ad" seed={seed} lit={0} /></group>);
         break;
       case "town":
       case "city": {
