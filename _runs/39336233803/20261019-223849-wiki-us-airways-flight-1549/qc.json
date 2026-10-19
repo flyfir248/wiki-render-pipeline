@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "pass"
+  },
+  "problems": [],
+  "warnings": [],
+  "repair": [],
+  "repaired": []
+}

@@ -1,0 +1,23 @@
+story (given): a US Airways Airbus A320, Canada geese, rescue boats; 5 moments
+planning the visuals
+visual planner unavailable (https://api.groq.com/openai/v1 returned 429: {"error":{"message":"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01m3afa373eb68qg13zza0ytwe` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 197087, Requested 5121. Please try again in 15m53.856s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing","type":"tokens","code":"rate_limit_exceeded"}}
+); planning from the catalog's keywords
+visual plan (rules): 4 3D, 3 2.5D, 1 2D; 3D: stage present, stage rise, stage move, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+building the story world: 2 entities for 4 scenes
+world design: sets call failed (https://api.groq.com/openai/v1 returned 413: {"error":{"message":"Request too large for model `openai/gpt-oss-safeguard-20b` in organization); reading the places' own words
+story world (noir): cast model, sets rules, direction model; airbus-a320 as vehicle, canada-geese as bird
+voicing 8 scenes with kokoro
+fetching visuals
+visuals: 3 Wikipedia/Commons images, 0 stock, 5 scenes on plain background
+cutaways: 4 extra photos across 3 scenes
+collage: 7 photos styled, 1 with a cut-out subject
+relevance: checking 4 3D scenes by eye
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 5, sentence 2: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 2 planned, 6 in the cast; 0 checked, 0 redrawn, 1 left out
+art direction: noir
+rendering 55s short video
+rendering thumbnail
+thumbnail: world take
+done: approved
