@@ -1,0 +1,36 @@
+{
+  "seconds": 355.6,
+  "frames": 240,
+  "seconds_per_frame": 1.48,
+  "look_warnings": [],
+  "look_frames": [
+    {
+      "scene": 1,
+      "at": 1.35,
+      "contrast": 22.2,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 1,
+      "at": 3.69,
+      "contrast": 26.1,
+      "polished": true,
+      "problems": "the subject is a plane, but it's not a jet"
+    },
+    {
+      "scene": 2,
+      "at": 5.55,
+      "contrast": 36.7,
+      "polished": true,
+      "problems": "subject is a jet and background is cityscape"
+    },
+    {
+      "scene": 2,
+      "at": 7.37,
+      "contrast": 24.0,
+      "polished": true,
+      "problems": "None"
+    }
+  ]
+}
