@@ -76,6 +76,7 @@ def props_for(cfg: Config) -> dict:
 def run(cfg: Config, out: Path) -> dict:
     cfg = cfg.model_copy(deep=True)
     cfg.format = "short"
+    out = out.resolve()  # the renderer runs from its own folder
     out.mkdir(parents=True, exist_ok=True)
     (out / "public").mkdir(exist_ok=True)
     props = props_for(cfg)

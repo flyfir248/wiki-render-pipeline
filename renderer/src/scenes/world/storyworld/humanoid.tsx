@@ -368,7 +368,6 @@ export const Humanoid: React.FC<BodyProps> = ({ build, look, pose, t, state, hel
         ) : (
           <mesh geometry={torsoGeometry()} material={material(look, top)} scale={[d.td, d.torso, d.tw]} castShadow receiveShadow />
         )}
-        {!blocky ? <Block look={look} shape="sphere" color={top} size={[d.td * 1.02, d.td * 0.5, d.tw * 1.02]} at={[0, d.torso, 0]} /> : null}
         {extras}
         {arms}
         <group position={[0, d.torso / 2, 0]}>{parts("torso")}</group>
@@ -396,20 +395,18 @@ export const Humanoid: React.FC<BodyProps> = ({ build, look, pose, t, state, hel
               {[-1, 1].map((z) => (
                 <React.Fragment key={z}>
                   {/* an eye: white, a dark iris looking slightly toward the camera side, a lid shadow and a brow */}
-                  <Block look={look} shape="sphere" color="#f4f1ec" size={[hs * 0.12, hs * 0.15, hs * 0.17]} at={[face * 0.8, hs * 0.07, z * hs * 0.19]} />
-                  <Block look={look} shape="sphere" color="#231a14" size={[hs * 0.06, hs * 0.1, hs * 0.1]} at={[face * 0.88, hs * 0.065, z * hs * 0.19 + hs * 0.012]} />
-                  <Block look={look} shape="sphere" color="#ffffff" glow size={[hs * 0.02, hs * 0.025, hs * 0.025]} at={[face * 0.91, hs * 0.095, z * hs * 0.19 + hs * 0.03]} />
+                  <Block look={look} shape="sphere" color="#efe9e2" size={[hs * 0.08, hs * 0.11, hs * 0.13]} at={[face * 0.8, hs * 0.07, z * hs * 0.18]} />
+                  <Block look={look} shape="sphere" color="#2a1d14" size={[hs * 0.05, hs * 0.085, hs * 0.085]} at={[face * 0.86, hs * 0.065, z * hs * 0.18 + hs * 0.008]} />
+                  <Block look={look} shape="sphere" color="#ffffff" glow size={[hs * 0.015, hs * 0.02, hs * 0.02]} at={[face * 0.89, hs * 0.09, z * hs * 0.18 + hs * 0.022]} />
                   <Block look={look} shape="capsule" color={tone(hairC, 0.9)} size={[hs * 0.045, hs * 0.16, hs * 0.045]} at={[face * 0.86, hs * 0.2, z * hs * 0.2]} rot={[Math.PI / 2 + z * 0.12, 0, 0]} />
                   {/* ears */}
                   <Block look={look} shape="sphere" color={tone(skin, 0.95)} size={[hs * 0.16, hs * 0.24, hs * 0.08]} at={[-hs * 0.02, hs * 0.0, z * hs * 0.45]} />
                 </React.Fragment>
               ))}
-              <Block look={look} shape="sphere" color={tone(skin, 0.95)} size={[hs * 0.16, hs * 0.2, hs * 0.13]} at={[face * 0.9, -hs * 0.03, 0]} />
+              <Block look={look} shape="sphere" color={tone(skin, 0.95)} size={[hs * 0.12, hs * 0.17, hs * 0.11]} at={[face * 0.88, -hs * 0.03, 0]} />
               <group position={[face * 0.8, -hs * 0.21, 0]} rotation={[0, 0, -pose.jaw]}>
                 <Block look={look} shape="capsule" color="#8a3b36" size={[hs * 0.05, hs * 0.2 + pose.jaw * hs * 0.1, hs * 0.05 + pose.jaw * hs * 0.2]} rot={[Math.PI / 2, 0, 0]} />
               </group>
-              {/* cheeks, lightly flushed */}
-              {[-1, 1].map((z) => <Block key={`c${z}`} look={look} shape="sphere" color={tone(skin, 1.04)} size={[hs * 0.1, hs * 0.12, hs * 0.14]} at={[face * 0.72, -hs * 0.08, z * hs * 0.24]} />)}
             </>
           )}
           {o.beard ? <Block look={look} color={hairC} size={[hs * 0.3, hs * 0.38, hs * 0.72]} at={[face * 0.72, -hs * 0.3, 0]} /> : null}

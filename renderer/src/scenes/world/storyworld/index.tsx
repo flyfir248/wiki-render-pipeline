@@ -188,7 +188,9 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U: number,
       Rh = Math.max(Rh, Math.abs(p.pos.y - on.pos.y) + p.h * 0.6);
     }
   });
-  Rw = Math.min(Rw, own * 1.7); // others share the frame, but never shrink the subject to a speck
+  // others share the frame, but never shrink the subject to a speck; a tall frame keeps the subject
+  // large and lets the rest run off its sides
+  Rw = Math.min(Rw, portrait ? Math.max(on.w * 0.55 + U * 0.2, own * 1.15) : own * 1.7);
   Rh = Math.min(Rh, own * 1.7);
   const fov = 36;
   const tanV = Math.tan((((portrait ? fov * PORTRAIT_FOV : fov) / 2) * Math.PI) / 180);
@@ -230,10 +232,10 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U: number,
       // its front half
       const person = on.m.build.archetype === "humanoid";
       const front = Math.atan2(Math.cos(on.yaw), -Math.sin(on.yaw)) + hand * (0.5 - 0.3 * e);
-      const span = person ? on.h * 0.34 : Math.max(on.h, on.w * 0.6) * 0.6;
+      const span = person ? on.h * 0.48 : Math.max(on.h, on.w * 0.6) * 0.6;
       const dc = (span / tanV) * (1.05 - 0.08 * e);
       off = new THREE.Vector3(Math.sin(front) * dc, person ? 0 : on.h * 0.15 + dc * 0.08, Math.cos(front) * dc);
-      target = person ? on.pos.clone().add(new THREE.Vector3(0, on.h * 0.8, 0)) : look.clone().add(new THREE.Vector3(Math.cos(on.yaw) * on.w * 0.15, on.h * 0.05, -Math.sin(on.yaw) * on.w * 0.15));
+      target = person ? on.pos.clone().add(new THREE.Vector3(0, on.h * 0.72, 0)) : look.clone().add(new THREE.Vector3(Math.cos(on.yaw) * on.w * 0.15, on.h * 0.05, -Math.sin(on.yaw) * on.w * 0.15));
       break;
     }
     case "hero":

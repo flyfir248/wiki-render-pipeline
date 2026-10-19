@@ -340,8 +340,8 @@ const CitySkyline: React.FC<{ U: number; seed: number; color: string; look: Look
 // A city river's near bank: a stone quay wall, a paved promenade, a railing and lamps along it.
 const Quay: React.FC<{ U: number; z: number; look: Look; night: boolean; keep?: KeepOut }> = ({ U, z, look, night, keep }) => (
   <group>
-    <Block look={look} color="#6f6a63" size={[U * 240, U * 0.2, U * 0.3]} at={[0, U * 0.0, z + U * 0.15]} />
-    <Block look={look} color="#8d877d" size={[U * 240, U * 0.02, U * 2.4]} at={[0, U * 0.09, z + U * 1.5]} />
+    <Block look={look} color="#6f6a63" size={[U * 240, U * 0.24, U * 0.3]} at={[0, -U * 0.09, z + U * 0.15]} />
+    <Block look={look} color="#8d877d" size={[U * 240, U * 0.01, U * 1.6]} at={[0, U * 0.025, z + U * 1.1]} />
     {Array.from({ length: 41 }, (_, i) => (i - 20) * U * 1.6).filter((x) => !(keep && keep(x, z + U * 0.35, U * 0.6, U * 0.6))).map((x) => (
       <Block key={x} look={look} color="#2a2d33" size={[U * 0.04, U * 0.4, U * 0.04]} at={[x, U * 0.3, z + U * 0.35]} />
     ))}

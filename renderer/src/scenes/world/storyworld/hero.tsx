@@ -83,13 +83,15 @@ const airlinerGeometry = (L: number, top: string, belly: string, line: string) =
 const Windows: React.FC<{ L: number; y: number; from: number; to: number; z: number; size: [number, number]; color?: string }> = ({ L, y, from, to, z, size, color }) => {
   const n = Math.max(2, Math.floor(((to - from) * L) / (size[0] * 2.1)));
   const ref = React.useRef<THREE.InstancedMesh>(null);
-  const geom = useMemo(() => new THREE.CapsuleGeometry(0.5, 0.4, 2, 8), []);
+  const geom = useMemo(() => new THREE.SphereGeometry(0.5, 10, 8), []);
   React.useLayoutEffect(() => {
     const m = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
     for (let i = 0; i < n; i++) {
       const x = from * L + ((to - from) * L * (i + 0.5)) / n;
       for (const s of [-1, 1]) {
-        m.compose(new THREE.Vector3(x, y, s * z), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)), new THREE.Vector3(size[0], 0.02 * L, size[1] / 1.4));
+        // a small rounded pane set into the skin: an ellipsoid half sunk into the fuselage
+        m.compose(new THREE.Vector3(x, y, s * z), q, new THREE.Vector3(size[0], size[1], 0.012 * L));
         ref.current?.setMatrixAt(i * 2 + (s > 0 ? 1 : 0), m);
       }
     }
@@ -216,15 +218,11 @@ export const Airliner: React.FC<{ build: Build; t: number; spin: number; damaged
       <mesh geometry={body} position={[0, y0, 0]} material={paint("#ffffff", { gloss: 0.8, metal: 0.15, vertex: true })} castShadow receiveShadow />
       {/* cabin windows, doors and the cockpit glazing */}
       <group position={[0, y0, 0]}>
-        <Windows L={L} y={R * 0.28} from={-0.29} to={0.33} z={R * 0.955} size={[0.0095 * L, 0.013 * L]} />
-        <mesh position={[0.446 * L, R * 0.42, 0]} rotation={[0, 0, -0.62]} material={glass()}>
-          <boxGeometry args={[0.026 * L, 0.004 * L, 0.06 * L]} />
+        <Windows L={L} y={R * 0.3} from={-0.29} to={0.34} z={R * 0.95} size={[0.0068 * L, 0.0095 * L]} />
+        {/* the windscreen: a dark band wrapped over the nose */}
+        <mesh position={[0.43 * L, R * 0.42, 0]} rotation={[0, 0, -0.45]} scale={[0.032 * L, 0.014 * L, 0.078 * L]} material={glass()}>
+          <sphereGeometry args={[0.5, 24, 12]} />
         </mesh>
-        {[-1, 1].map((s) => (
-          <mesh key={s} position={[0.432 * L, R * 0.45, s * R * 0.62]} rotation={[s * 0.75, s * 0.35, -0.3]} material={glass()}>
-            <boxGeometry args={[0.022 * L, 0.004 * L, 0.03 * L]} />
-          </mesh>
-        ))}
       </group>
       {/* low swept wings with a little dihedral, winglets, engines on pylons */}
       <group position={[0, wingY, R * 0.6]} rotation={[-dihedral, 0, 0]}>
