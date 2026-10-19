@@ -1,0 +1,4 @@
+fetching Wikipedia article
+5 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 54% slower than average, 17 scenes); quote (lost viewers 47% slower than average, 11 scenes); timeline (lost viewers 31% slower than average, 8 scenes); map (lost viewers 22% slower than average, 15 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 72% faster than average, 25 scenes); broll (lost viewers 150% faster than average, 6 scenes). On average 92% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
