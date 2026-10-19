@@ -15,7 +15,7 @@ import json
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 from fyt import render, storyboard
 from fyt.config import Config
@@ -76,22 +76,33 @@ def world_take(props: RenderProps, job_dir: Path, public: Path) -> Media | None:
     frame = round((key.start + (key.end - key.start) * 0.6) * props.fps)
     shot = render.frames(path.resolve(), public.resolve(), (job_dir / "thumb-world").resolve(), [frame])[0]
     img = Image.open(shot).convert("RGB")
+    img = ImageOps.autocontrast(img, cutoff=1, preserve_tone=True)  # a dim night set still reads at phone size
+    img = ImageEnhance.Color(img).enhance(1.15)
     img.save(public / "thumb-world.jpg", quality=92)
     return Media(src="thumb-world.jpg", kind="image")
 
 
 def make(cfg: Config, job_dir: Path, public: Path, title: str, photo: Media | None, props: RenderProps | None,
-         meant: str, log=print) -> Path:
-    """Render the takes, judge them and copy the chosen one to thumbnail.png. Returns its path."""
+         meant: str, log=print, photos: list[Media] = (), stock=None) -> Path:
+    """Render the takes, judge them and copy the chosen one to thumbnail.png. Returns its path.
+    The cut-out is tried on `photo`, then each of `photos`, then the photo `stock()` finds, until one
+    has a clear subject."""
     base = {"format": cfg.format, "title": title, "kicker": "", "theme": cfg.theme.model_dump()}
     takes: list[tuple[str, ThumbnailProps]] = []
-    if photo is not None and photo.kind == "image":
+    tried = []
+    for p in [photo, *photos, stock]:
         try:
-            cut = cutout_take(cfg, public, photo)
+            p = p() if callable(p) else p
+            if p is None or p.kind != "image" or p.src in tried:
+                continue
+            tried.append(p.src)
+            cut = cutout_take(cfg, public, p)
             if cut:
                 takes.append(("cutout", ThumbnailProps(**base, background=cut[0], subject=cut[1])))
+                break
         except Exception as e:  # the cut-out model is optional
             log(f"warning: no cut-out thumbnail: {str(e)[:160]}")
+            break
     if props is not None:
         try:
             frame = world_take(props, job_dir, public)

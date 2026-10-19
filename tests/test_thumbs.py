@@ -32,3 +32,22 @@ def test_the_first_take_that_passes_is_used(tmp_path, monkeypatch):
     assert out.read_bytes() == b"thumbnail-world.json"
     choice = json.loads((tmp_path / "thumbnail-choice.json").read_text())
     assert choice["chosen"] == "world" and choice["takes"][0]["problems"] == "words cover the face"
+
+
+def test_the_cut_out_tries_more_photos_until_one_has_a_subject(tmp_path, monkeypatch):
+    public = tmp_path / "public"
+    public.mkdir()
+    seen = []
+
+    def cut(cfg, public, photo):
+        seen.append(photo.src)
+        return (Media(src="b.jpg", kind="image"), Media(src="s.png", kind="image")) if photo.src == "stock.jpg" else None
+
+    monkeypatch.setattr(thumbs, "cutout_take", cut)
+    monkeypatch.setattr(thumbs.render, "render", lambda spec, public, out, still: out.write_bytes(spec.name.encode()))
+    monkeypatch.setattr(thumbs.storyboard, "review", lambda cfg, path, meant, rules: None)
+    photos = [Media(src="a.jpg", kind="image"), Media(src="b.jpg", kind="image")]
+    out = thumbs.make(Config(format="short"), tmp_path, public, "IT ATE 40 KG", photos[0], None, "a bear",
+                      log=lambda m: None, photos=photos, stock=lambda: Media(src="stock.jpg", kind="image"))
+    assert seen == ["a.jpg", "b.jpg", "stock.jpg"]
+    assert out.read_bytes() == b"thumbnail-cutout.json"

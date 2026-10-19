@@ -283,7 +283,10 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         except Exception as e:
             log(job, f"warning: no stock thumbnail background: {e}")
     try:  # a few takes (cut-out subject, the 3D world's key moment, the photo); the best one is used
-        thumbs.make(cfg, job.path, job.public, script.thumbnail_text, bg, props, script.core_message or script.title, log=lambda m: log(job, m))
+        photos = [m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)][:4]
+        stock = (lambda: media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-stock", used)) if cfg.stock_footage else None
+        thumbs.make(cfg, job.path, job.public, script.thumbnail_text, bg, props, script.core_message or script.title,
+                    log=lambda m: log(job, m), photos=photos, stock=stock)
     except Exception as e:  # never lose the video over its thumbnail: the plain take
         log(job, f"warning: thumbnail takes failed ({str(e)[:160]}); using the plain one")
         thumb = ThumbnailProps(format=cfg.format, title=script.thumbnail_text, theme=cfg.theme.model_dump(), background=bg)

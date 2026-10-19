@@ -11,12 +11,16 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({ title, kicker, theme, back
   // the last word carries the twist ("SURVIVED 3 SINKINGS"): it takes the accent colour
   const lead = words.slice(0, -1).join(" ");
   const last = words[words.length - 1] ?? "";
+  // the longest word must fit on one line: heavy capitals run about 0.7em wide
+  const room = short ? 960 : subject ? 680 : 1010;
+  const longest = Math.max(...words.map((w) => w.length), 1);
+  const size = Math.min(short ? (words.length > 3 ? 132 : 150) : 128, Math.floor(room / (0.7 * longest)));
   const text = (
     <div
       style={{
         fontFamily: theme.font,
         fontWeight: 900,
-        fontSize: short ? (words.length > 3 ? 132 : 150) : 128,
+        fontSize: size,
         lineHeight: 0.98,
         color: theme.text,
         textTransform: "uppercase",
