@@ -235,6 +235,10 @@ def look_check(cfg: Config, script: Script, props: RenderProps, video: Path, wor
             row = {"scene": i + 1, "at": round(t, 2), "contrast": round(contrast, 1)}
             if contrast < 14:
                 warns.append(f"scene {i + 1} at {t:.1f}s looks flat (contrast {contrast:.0f})")
+            burnt = float((band > 235).mean())
+            row["burnt"] = round(burnt, 2)
+            if burnt > 0.15 or band.mean() > 205:
+                warns.append(f"scene {i + 1} at {t:.1f}s is washed out ({burnt:.0%} of the frame burnt to white)")
             f = work / f"scene{i + 1:02}-{int(k * 100)}.jpg"
             subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-loglevel", "error", "-y", "-ss", f"{t:.3f}", "-i", str(video), "-frames:v", "1", "-vf", "scale=540:-1", str(f)], check=False)
             v = storyboard.review(cfg, f, f"a 3D shot of {p.subjectName or s.subject or 'the story'}", rules=LOOK) if f.is_file() else None

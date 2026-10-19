@@ -112,8 +112,9 @@ export const lightOf = (look: Look, set: SetSpec, unit: number): Light => {
       fogDensity: set.kind === "space" ? 0 : (set.kind === "underwater" ? 0.05 : 0.026) / unit, rim: mix(sky, "#ffffff", 0.6), rimI: 2.0, bloom: 0.5, threshold: 0.9 };
   }
   if (look.name === "clinical" && ["lab", "hospital", "room", "hall"].includes(set.kind)) {
-    l = { ...l, top: "#dfe7ee", horizon: "#f6f8fa", below: "#c9d1d8", sun: "#ffffff", sunI: 2.2, amb: "#e8f4ff", ambI: 0.85, rim: "#bfe8ff", rimI: 1.2, night: 0, clouds: 0,
-      envI: 1.0, fogDensity: 0.008 / unit, lift: "#04080c", gain: "#f4fbff" };
+    // a cool mid-key room: soft sky-lit walls and one window key, so white coats and kit keep their shape
+    l = { ...l, top: "#b4c2cf", horizon: "#cfd8e0", below: "#8e9aa6", sun: "#fff6ea", sunI: 2.0, amb: "#d6e6f4", ambI: 0.55, rim: "#bfe8ff", rimI: 1.4, night: 0, clouds: 0,
+      envI: 0.7, fogDensity: 0.008 / unit, exposure: 0.9, bloom: 0.2, threshold: 1.05, lift: "#04080c", gain: "#f4fbff" };
   }
   if (INSIDE_KINDS.includes(set.kind)) l = { ...l, fogDensity: l.fogDensity * 0.5, clouds: 0 };
   return l;

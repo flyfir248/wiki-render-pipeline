@@ -331,3 +331,14 @@ def test_vehicle_and_cell_forms_name_the_detailed_model():
     assert worldgen.cell_form("a sickled red blood cell") == "sickle"
     assert worldgen.cell_form("a healthy red blood cell") == "rbc"
     assert worldgen.cell_form("a neuron") == ""
+
+
+def test_a_set_too_bright_for_its_kind_is_toned_down():
+    from fyt import worldgen as wg
+    p = manifest.Place(id="body", name="inside the body", look="blood vessel", scenes=[1])
+    micro = wg.checked_setting(wg.Setting(place="body", kind="micro", time="day", ground="#ffe0e0", sky="#ffffff", accent="#ffcccc", backdrop="vessel"), p)
+    assert (micro.ground, micro.sky) == wg.SET_COLOURS["micro"][:2]  # deep red, not white
+    lab = wg.checked_setting(wg.Setting(place="body", kind="lab", time="day", ground="#f0f0f0", sky="#ffffff", accent="#ffcc00", backdrop="none"), p)
+    assert lab.sky != "#ffffff" and lab.ground != "#f0f0f0"
+    ok = wg.checked_setting(wg.Setting(place="body", kind="lab", time="day", ground="#808890", sky="#a0aab4", accent="#ffcc00", backdrop="none"), p)
+    assert (ok.ground, ok.sky) == ("#808890", "#a0aab4")

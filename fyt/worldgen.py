@@ -590,6 +590,8 @@ def rule_setting(p: manifest.Place) -> Setting:
     backdrop = ("vessel" if kind == "micro" and any(_has(text, w) for w in VESSEL_WORDS)
                 else "city" if kind == "city" or any(_has(text, w) for w in CITY_WORDS) else "mountains" if kind in ("mountain", "snow") or _has(text, "mountain")
                 else "none" if kind in ("sea", "sky", "space", "micro", "underwater") else "hills")
+    if kind in SET_LIGHT and kind not in DEEP_SETS:
+        g, sky = _capped(g, SET_LIGHT[kind][1]), _capped(sky, SET_LIGHT[kind][0])
     return Setting(place=p.id, kind=kind, time=time, ground=g, sky=sky, accent=acc, backdrop=backdrop)
 
 
@@ -659,6 +661,24 @@ Rules:
 
 def _hex(v: str, fallback: str) -> str:
     return v if isinstance(v, str) and HEX.match(v) else fallback
+
+
+def _capped(c: str, most: float) -> str:
+    """The colour darkened (hue kept) until its luminance is at most `most` (0-1)."""
+    r, g, b = (int(c[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    if lum <= most:
+        return c
+    k = most / lum
+    return "#" + "".join(f"{round(min(1.0, x * k) * 255):02x}" for x in (r, g, b))
+
+
+# How bright a set may be. A white sky and floor leave a pale subject nothing to stand out from and
+# burn out under the lights, so the inside of a body stays deep and a room stays a soft mid-tone.
+# Too bright for a deep set, the rules' own colours are used, so the inside of a body stays red.
+SET_LIGHT = {"micro": (0.12, 0.22), "underwater": (0.2, 0.75), "space": (0.05, 0.3),
+             "room": (0.72, 0.6), "hall": (0.72, 0.6), "lab": (0.72, 0.6), "hospital": (0.72, 0.6)}
+DEEP_SETS = ("micro", "underwater", "space")
 
 
 def _clean_part(p: Part, size: float) -> Part | None:
@@ -734,7 +754,14 @@ def checked_setting(s: Setting, p: manifest.Place) -> Setting:
             "count": max(1, min(40, d.count)), "spread": max(2.0, min(80.0, d.spread)),
             "build": b.model_copy(update={"entity": f"{p.id}:{_slug(d.name)}", "parts": [x.model_copy(update={"bone": "body"}) for x in parts]}),
         }))
-    return s.model_copy(update={"place": p.id, "ground": _hex(s.ground, rules.ground), "sky": _hex(s.sky, rules.sky),
+    sky, ground = _hex(s.sky, rules.sky), _hex(s.ground, rules.ground)
+    if s.kind in SET_LIGHT:
+        most_sky, most_ground = SET_LIGHT[s.kind]
+        if s.kind in DEEP_SETS and (_capped(sky, most_sky) != sky or _capped(ground, most_ground) != ground):
+            ground, sky, _ = SET_COLOURS[s.kind]
+        else:
+            sky, ground = _capped(sky, most_sky), _capped(ground, most_ground)
+    return s.model_copy(update={"place": p.id, "ground": ground, "sky": sky,
                                 "backdrop": "vessel" if rules.backdrop == "vessel" else s.backdrop if s.backdrop != "vessel" else rules.backdrop,
                                 "accent": _hex(s.accent, rules.accent), "dressing": dressing})
 
