@@ -72,7 +72,23 @@ def _strip_descriptions(node):
 
 
 def _with_model(cfg: Config, model: str) -> Config:
-    return cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"model": model, "fallback_models": []})})
+    return cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"model": model, "fallback_models": [], "backup": None})})
+
+
+class RateLimited(ClaudeError):
+    pass
+
+
+def _chain(cfg: Config) -> list[Config]:
+    """Who to ask, in order: the main model, the backup provider's models (when its key is set), then the
+    fallback models on the main provider."""
+    steps = [_with_model(cfg, cfg.llm.model)]
+    b = cfg.llm.backup
+    if b and b.models and os.environ.get(b.api_key_env):
+        for m in b.models:
+            steps.append(cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
+                "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None})}))
+    return steps + [_with_model(cfg, m) for m in cfg.llm.fallback_models]
 
 
 def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 16000):
@@ -80,23 +96,29 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
 
     Asks for JSON matching the schema, validates it, and on a bad answer retries
     with the validation error so the model can correct itself. If the model keeps
-    failing, tries each of `llm.fallback_models` in turn.
+    failing, tries the backup provider and then each of `llm.fallback_models` in turn.
+    With a backup set up, the main model and the backup's models move on after a couple of
+    rate-limit waits instead of seven, since the next one has limits of its own.
     """
-    models = [cfg.llm.model, *cfg.llm.fallback_models]
-    for i, model in enumerate(models):
+    steps = _chain(cfg)
+    hurry = len(steps) - len(cfg.llm.fallback_models)  # the main model and the backup's
+    for i, step in enumerate(steps):
+        last = i == len(steps) - 1
         try:
-            return _openai_structured_once(cfg, model, system, user, schema, max_tokens)
+            return _openai_structured_once(step, step.llm.model, system, user, schema, max_tokens, patient=last or hurry == 1 or i >= hurry)
         except RequestTooLarge:
-            raise  # the caller shrinks the request
+            if i == 0 or last:
+                raise  # the caller shrinks the request
+            print(f"request too large for {step.llm.model}; trying {steps[i + 1].llm.model}")
         except ClaudeError as e:
-            if i == len(models) - 1:
+            if last:
                 raise
-            print(f"{model} failed ({str(e)[:200]}); trying {models[i + 1]}")
+            print(f"{step.llm.model} failed ({str(e)[:200]}); trying {steps[i + 1].llm.model}")
     raise AssertionError("unreachable")
 
 
 def _openai_structured_once(
-    cfg: Config, model: str, system: str, user: str, schema: type[BaseModel], max_tokens: int
+    cfg: Config, model: str, system: str, user: str, schema: type[BaseModel], max_tokens: int, patient: bool = True
 ):
     c = cfg.llm
     key = os.environ.get(c.api_key_env)
@@ -137,6 +159,8 @@ def _openai_structured_once(
             print(f"{c.base_url} returned {r.status_code}; retrying")
             time.sleep(min(10 * (attempt + 1), 60))
             continue
+        if r.status_code == 429 and not patient and attempt >= 2:  # someone else may have room now
+            raise RateLimited(f"{c.base_url} returned 429: {r.text[:300]}")
         if r.status_code == 429 and attempt < 7:  # free tiers limit tokens per minute
             wait = min(max(float(r.headers.get("retry-after") or 30), 10), 65)
             print(f"rate limited by {c.base_url}; waiting {wait:.0f}s")

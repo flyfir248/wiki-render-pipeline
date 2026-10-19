@@ -144,6 +144,12 @@ class YouTubeConfig(BaseModel):
     localize: list[str] = Field(default_factory=list)
 
 
+class BackupLLM(BaseModel):
+    base_url: str = "https://router.huggingface.co/v1"  # Hugging Face's inference router
+    api_key_env: str = "HF_TOKEN"
+    models: list[str] = Field(default_factory=list)  # tried in order
+
+
 class LLMConfig(BaseModel):
     # anthropic: Claude (uses `model` and ANTHROPIC_API_KEY; web research works).
     # openai: any OpenAI-compatible API, e.g. Groq's free tier serving open models,
@@ -160,6 +166,9 @@ class LLMConfig(BaseModel):
     # Tried in order when `model` keeps failing (outage, daily token cap). On Groq each
     # model has its own free limits.
     fallback_models: list[str] = Field(default_factory=list)
+    # A second OpenAI-compatible provider tried when `model` is rate limited or failing, before the
+    # fallback models: its own limits, so runs side by side don't all wait on the first one.
+    backup: BackupLLM | None = None
 
 
 class WikipediaConfig(BaseModel):

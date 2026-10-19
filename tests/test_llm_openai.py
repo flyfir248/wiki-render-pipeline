@@ -239,3 +239,32 @@ def test_the_short_script_prompt_fits_a_free_tier_minute():
     guide = llm.SCRIPT_GUIDE + llm.WIKI_GUIDE + llm.SHORT_STRUCTURE
     schema = _json.dumps(llm._compact(Script.model_json_schema(), guide=guide), separators=(",", ":"))
     assert len(guide) + len(schema) < 21000
+
+
+def test_a_rate_limited_model_hands_over_to_the_backup_provider(cfg, monkeypatch):
+    from fyt.config import BackupLLM
+
+    monkeypatch.setenv("HF_TOKEN", "hf-test")
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
+        "fallback_models": ["small"], "backup": BackupLLM(models=["big/open-model"])})})
+    calls = []
+
+    def post(url, headers, json, timeout):
+        calls.append((url, headers["Authorization"], json["model"]))
+        if "groq" in url:
+            return Resp(429, {"error": "rate limit"}, {"retry-after": "30"})
+        return reply(_json.dumps(SCRIPT))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    script = llm.write_script(cfg, "Mary", "notes")
+    assert script.title == SCRIPT["title"]
+    assert [c[2] for c in calls].count(cfg.llm.model) == 3  # gives up on the main model after a few waits
+    assert calls[-1] == ("https://router.huggingface.co/v1/chat/completions", "Bearer hf-test", "big/open-model")
+
+
+def test_no_backup_key_means_the_old_order(cfg, monkeypatch):
+    from fyt.config import BackupLLM
+
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["small"], "backup": BackupLLM(models=["big/open-model"])})})
+    assert [c.llm.model for c in llm._chain(cfg)] == [cfg.llm.model, "small"]
