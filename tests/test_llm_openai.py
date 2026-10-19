@@ -290,3 +290,17 @@ def test_a_backup_out_of_credit_is_not_asked_again(cfg, monkeypatch):
     llm.write_script(cfg, "Mary", "notes")
     assert asked.count("a/one") == 1 and "b/two" not in asked
     assert [c.llm.model for c in llm._chain(cfg)] == [cfg.llm.model]
+
+
+def test_a_small_fallback_saying_too_large_is_not_blamed_on_the_main_model(cfg, monkeypatch):
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["tiny"]})})
+
+    def post(url, headers, json, timeout):
+        if json["model"] == "tiny":
+            return Resp(413, {"error": "Request too large"})
+        return Resp(503, {"error": "over capacity"})
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    with pytest.raises(llm.ClaudeError) as e:
+        llm._openai_structured(cfg, "s", "u", llm.Script)
+    assert not isinstance(e.value, llm.RequestTooLarge)

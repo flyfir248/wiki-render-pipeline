@@ -112,9 +112,11 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
         last = i == len(steps) - 1
         try:
             return _openai_structured_once(step, step.llm.model, system, user, schema, max_tokens, patient=last or hurry == 1 or i >= hurry)
-        except RequestTooLarge:
-            if i == 0 or last:
+        except RequestTooLarge as e:
+            if i == 0:
                 raise  # the caller shrinks the request
+            # too large only for a later model with a smaller allowance: not a reason to cut the notes
+            error = ClaudeError(str(e))
             print(f"request too large for {step.llm.model}; trying the next model")
         except ClaudeError as e:
             if last and not isinstance(e, RateLimited) and step.llm.base_url not in _SPENT:
