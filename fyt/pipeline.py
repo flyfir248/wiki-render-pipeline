@@ -263,6 +263,16 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     qc["problems"] += after.problems
     qc["warnings"] += after.warnings
     qc["repaired"] = after.repair if attempt == 2 else []
+    try:  # the 3D scenes judged as pictures: flat frames and unpolished shots, kept with their frames
+        look = qcheck.look_check(cfg, script, props, video, job.file("look"))
+        frames = look.checks.pop("look_frames", [])
+        job.file("look.json").write_text(json.dumps({"warnings": look.warnings, "frames": frames}, indent=2))
+        for w in look.warnings:
+            log(job, f"look: {w}")
+        qc["checks"] |= look.checks
+        qc["warnings"] += look.warnings
+    except Exception as e:
+        log(job, f"warning: could not check the 3D look: {str(e)[:160]}")
 
     log(job, "rendering thumbnail")
     # The subject's own photo makes a better thumbnail than a stock one.

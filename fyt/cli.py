@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import argparse
 from pathlib import Path
 
@@ -86,6 +88,9 @@ def main(argv: list[str] | None = None) -> None:
     sh.add_argument("--out", type=Path, help="where to save the sheet (default: next to the source)")
     sh.add_argument("--public", type=Path, help="the job's public dir, for a props.json (default: next to it)")
 
+    bn = sub.add_parser("bench", help="render the fixed 8-second 3D quality benchmark (contact sheet, timing, look check)")
+    bn.add_argument("--out", type=Path, default=Path("jobs/bench"))
+
     ac = sub.add_parser("assetcheck", help="test story-driven 3D on a fixed panel of things, without making a video")
     ac.add_argument("--out", type=Path, default=Path("jobs/assetcheck"))
 
@@ -103,6 +108,11 @@ def main(argv: list[str] | None = None) -> None:
 
             for a, b in static_spans(args.source):
                 print(f"still from {a:.1f}s to {b:.1f}s")
+        return
+    if args.cmd == "bench":
+        from fyt import bench
+
+        print(json.dumps(bench.run(cfg, args.out), indent=2))
         return
     if args.cmd == "assetcheck":
         from fyt import assetcheck

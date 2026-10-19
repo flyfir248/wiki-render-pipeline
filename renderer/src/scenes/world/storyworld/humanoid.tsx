@@ -230,6 +230,16 @@ const LONG = ["shirt", "jacket", "coat", "uniform", "suit", "hoodie", "labcoat",
 
 type BodyProps = { build: Build; look: Look; pose: Pose; t: number; state: State; held?: Build };
 
+// A torso that tapers from the shoulders to the waist, rounded over the top: 1 x 1 x 1, base at y = 0.
+let torsoGeo: THREE.BufferGeometry | null = null;
+const torsoGeometry = () => {
+  if (torsoGeo) return torsoGeo;
+  const prof = [[0.0, 0], [0.4, 0], [0.42, 0.12], [0.44, 0.35], [0.5, 0.62], [0.52, 0.8], [0.48, 0.92], [0.36, 0.99], [0.0, 1.02]].map(([r, y]) => new THREE.Vector2(r, y));
+  torsoGeo = new THREE.LatheGeometry(prof, 28);
+  torsoGeo.computeVertexNormals();
+  return torsoGeo;
+};
+
 export const Humanoid: React.FC<BodyProps> = ({ build, look, pose, t, state, held }) => {
   const d = dimsOf(build);
   const o = build.outfit ?? { top: "shirt", bottom: "trousers", hair: "short", beard: false, glasses: false };
@@ -257,7 +267,7 @@ export const Humanoid: React.FC<BodyProps> = ({ build, look, pose, t, state, hel
         <Block look={look} shape={limb} color={thighC} size={[lw, d.thigh * (blocky ? 1 : 0.95), lw]} at={[0, -d.thigh / 2, 0]} />
         <group position={[0, -d.thigh, 0]} rotation={[0, 0, knee]}>
           <Block look={look} shape={limb} color={shinC} size={[lw * 0.9, d.shin * (blocky ? 1 : 0.95), lw * 0.9]} at={[0, -d.shin / 2, 0]} />
-          <Block look={look} color={shoe} size={[lw * 1.5, lw * 0.5, lw * 1.05]} at={[lw * 0.3, -d.shin + lw * 0.22, 0]} />
+          <Block look={look} shape={blocky ? "box" : "sphere"} color={shoe} size={[lw * 1.7, lw * 0.6, lw * 1.05]} at={[lw * 0.35, -d.shin + lw * 0.2, 0]} />
         </group>
       </group>
     );
@@ -353,7 +363,11 @@ export const Humanoid: React.FC<BodyProps> = ({ build, look, pose, t, state, hel
         )
       ) : null}
       <group rotation={[0, pose.twist, pose.lean]}>
-        <Block look={look} shape={blocky ? "box" : "cylinder"} color={top} size={[d.td, d.torso, d.tw]} at={[0, d.torso / 2, 0]} />
+        {blocky ? (
+          <Block look={look} color={top} size={[d.td, d.torso, d.tw]} at={[0, d.torso / 2, 0]} />
+        ) : (
+          <mesh geometry={torsoGeometry()} material={material(look, top)} scale={[d.td, d.torso, d.tw]} castShadow receiveShadow />
+        )}
         {!blocky ? <Block look={look} shape="sphere" color={top} size={[d.td * 1.02, d.td * 0.5, d.tw * 1.02]} at={[0, d.torso, 0]} /> : null}
         {extras}
         {arms}
@@ -362,17 +376,42 @@ export const Humanoid: React.FC<BodyProps> = ({ build, look, pose, t, state, hel
         <group position={[0, d.torso + hs * 0.7, 0]} rotation={pose.head}>
           <Block look={look} shape={blocky ? "box" : "cylinder"} color={skin} size={[hs * 0.35, hs * 0.3, hs * 0.35]} at={[0, -hs * 0.5, 0]} />
           <Block look={look} shape={headShape} color={skin} size={[hs * 0.92, hs * 1.02, hs * 0.86]} />
+          {!blocky ? <Block look={look} shape="sphere" color={skin} size={[hs * 0.78, hs * 0.7, hs * 0.72]} at={[hs * 0.06, -hs * 0.2, 0]} /> : null}
           {/* face: eyes, brows, nose and mouth on the +x side, big enough to read on a phone */}
-          {[-1, 1].map((z) => (
-            <React.Fragment key={z}>
-              <Block look={look} color="#15151a" size={[hs * 0.05, hs * 0.13, hs * 0.11]} at={[face * 0.86, hs * 0.08, z * hs * 0.19]} />
-              <Block look={look} color={tone(hairC, 0.9)} size={[hs * 0.05, hs * 0.04, hs * 0.17]} at={[face * 0.86, hs * 0.22, z * hs * 0.19]} />
-            </React.Fragment>
-          ))}
-          <Block look={look} color={tone(skin, 0.86)} size={[hs * 0.14, hs * 0.14, hs * 0.1]} at={[face * 0.92, -hs * 0.02, 0]} />
-          <group position={[face * 0.85, -hs * 0.2, 0]} rotation={[0, 0, -pose.jaw]}>
-            <Block look={look} color="#5a2a28" size={[hs * 0.05, hs * 0.04 + pose.jaw * hs * 0.25, hs * 0.22]} />
-          </group>
+          {blocky ? (
+            <>
+              {[-1, 1].map((z) => (
+                <React.Fragment key={z}>
+                  <Block look={look} color="#15151a" size={[hs * 0.05, hs * 0.13, hs * 0.11]} at={[face * 0.86, hs * 0.08, z * hs * 0.19]} />
+                  <Block look={look} color={tone(hairC, 0.9)} size={[hs * 0.05, hs * 0.04, hs * 0.17]} at={[face * 0.86, hs * 0.22, z * hs * 0.19]} />
+                </React.Fragment>
+              ))}
+              <Block look={look} color={tone(skin, 0.86)} size={[hs * 0.14, hs * 0.14, hs * 0.1]} at={[face * 0.92, -hs * 0.02, 0]} />
+              <group position={[face * 0.85, -hs * 0.2, 0]} rotation={[0, 0, -pose.jaw]}>
+                <Block look={look} color="#5a2a28" size={[hs * 0.05, hs * 0.04 + pose.jaw * hs * 0.25, hs * 0.22]} />
+              </group>
+            </>
+          ) : (
+            <>
+              {[-1, 1].map((z) => (
+                <React.Fragment key={z}>
+                  {/* an eye: white, a dark iris looking slightly toward the camera side, a lid shadow and a brow */}
+                  <Block look={look} shape="sphere" color="#f4f1ec" size={[hs * 0.12, hs * 0.15, hs * 0.17]} at={[face * 0.8, hs * 0.07, z * hs * 0.19]} />
+                  <Block look={look} shape="sphere" color="#231a14" size={[hs * 0.06, hs * 0.1, hs * 0.1]} at={[face * 0.88, hs * 0.065, z * hs * 0.19 + hs * 0.012]} />
+                  <Block look={look} shape="sphere" color="#ffffff" glow size={[hs * 0.02, hs * 0.025, hs * 0.025]} at={[face * 0.91, hs * 0.095, z * hs * 0.19 + hs * 0.03]} />
+                  <Block look={look} shape="capsule" color={tone(hairC, 0.9)} size={[hs * 0.045, hs * 0.16, hs * 0.045]} at={[face * 0.86, hs * 0.2, z * hs * 0.2]} rot={[Math.PI / 2 + z * 0.12, 0, 0]} />
+                  {/* ears */}
+                  <Block look={look} shape="sphere" color={tone(skin, 0.95)} size={[hs * 0.16, hs * 0.24, hs * 0.08]} at={[-hs * 0.02, hs * 0.0, z * hs * 0.45]} />
+                </React.Fragment>
+              ))}
+              <Block look={look} shape="sphere" color={tone(skin, 0.95)} size={[hs * 0.16, hs * 0.2, hs * 0.13]} at={[face * 0.9, -hs * 0.03, 0]} />
+              <group position={[face * 0.8, -hs * 0.21, 0]} rotation={[0, 0, -pose.jaw]}>
+                <Block look={look} shape="capsule" color="#8a3b36" size={[hs * 0.05, hs * 0.2 + pose.jaw * hs * 0.1, hs * 0.05 + pose.jaw * hs * 0.2]} rot={[Math.PI / 2, 0, 0]} />
+              </group>
+              {/* cheeks, lightly flushed */}
+              {[-1, 1].map((z) => <Block key={`c${z}`} look={look} shape="sphere" color={tone(skin, 1.04)} size={[hs * 0.1, hs * 0.12, hs * 0.14]} at={[face * 0.72, -hs * 0.08, z * hs * 0.24]} />)}
+            </>
+          )}
           {o.beard ? <Block look={look} color={hairC} size={[hs * 0.3, hs * 0.38, hs * 0.72]} at={[face * 0.72, -hs * 0.3, 0]} /> : null}
           {o.glasses
             ? [-1, 1].map((z) => <Block key={`g${z}`} look={look} shape="torus" color="#1a1a1e" size={[hs * 0.22, hs * 0.22, hs * 0.04]} at={[face * 0.95, hs * 0.08, z * hs * 0.19]} rot={[0, Math.PI / 2, 0]} />)

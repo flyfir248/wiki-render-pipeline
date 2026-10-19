@@ -115,6 +115,7 @@ class Build(BaseModel):
     body: Body = Field(default_factory=Body)
     outfit: Outfit | None = Field(default=None, description="Humans only.")
     parts: list[Part] = Field(default_factory=list, description=f"0-{MAX_PARTS} primitives: accessories on living things, the whole shape of anything else.")
+    form: str = Field(default="", description="Leave empty: filled from the entity's name.")
 
 
 class Dressing(BaseModel):
@@ -331,10 +332,42 @@ def _thing_parts(words: str, size: float, c: list[str]) -> list[Part]:
             Part(shape="box", at=[0, s * 0.62, 0], size=[s * 0.7, s * 0.06, s * 0.5], color=b)]
 
 
+AIRLINER_WORDS = ("airliner", "airbus", "boeing", "jet", "jumbo", "a320", "a330", "a380", "737", "747", "757", "767", "777", "787", "dc-10")
+
+
+def vehicle_form(words: str) -> str:
+    """Which detailed vehicle model the renderer draws for one the name places: its parts outline still
+    gives the size and footprint, the form the finished shape (a lathed fuselage, a hull, a car body)."""
+    if any(_has(words, w) for w in AIRLINER_WORDS):
+        return "airliner"
+    if any(_has(words, w) for w in ("plane", "aircraft", "airplane", "aeroplane", "cessna", "glider")):
+        return "plane"
+    if any(_has(words, w) for w in ("helicopter",)):
+        return "helicopter"
+    if any(_has(words, w) for w in ("boat", "ship", "ferry", "yacht", "vessel", "tug", "trawler", "liner")):
+        return "boat"
+    if any(_has(words, w) for w in ("train", "locomotive", "tram", "canoe", "kayak", "raft", "submarine", "bike", "bicycle", "motorcycle", "drone")):
+        return ""
+    if any(_has(words, w) for w in ("truck", "lorry", "bus", "van", "ambulance", "suv", "jeep", "tractor")):
+        return "truck"
+    if any(_has(words, w) for w in ("car", "taxi", "sedan", "police car", "cab", "coupe", "hatchback")):
+        return "car"
+    return ""
+
+
+def cell_form(words: str) -> str:
+    """The detailed cell model the renderer draws: a biconcave red cell or a sickled crescent."""
+    if any(_has(words, w) for w in ("sickle", "crescent", "sickled")):
+        return "sickle"
+    if any(_has(words, w) for w in ("red blood", "erythrocyte", "biconcave")):
+        return "rbc"
+    return ""
+
+
 def _vehicle_parts(words: str, size: float, c: list[str]) -> list[Part]:
     L, a, b, d = size, c[0], c[1], c[2]
     glass = "#2a3a4c"
-    if any(_has(words, w) for w in ("airliner", "airbus", "boeing", "jet", "jumbo", "a320", "a330", "a380", "737", "747", "757", "767", "777", "787", "dc-10")):
+    if any(_has(words, w) for w in AIRLINER_WORDS):
         # low swept wings, engines slung under them, a tall fin, no propeller
         return [Part(shape="capsule", at=[0, L * 0.13, 0], size=[L * 0.11, L * 0.95, L * 0.11], rot=[0, 0, 90], color=a),
                 Part(shape="box", at=[L * 0.03, L * 0.145, 0], size=[L * 0.72, L * 0.014, L * 0.113], color=glass),
@@ -494,7 +527,7 @@ def rule_build(e: Entity, seed: int) -> Build:
     return Build(
         entity=e.id, archetype=arche, size=round(size, 2), primary=c[0], secondary=c[1], accent=c[2],
         skin=_pick(s, SKINS) if arche == "humanoid" else "", hair=_pick(s >> 3, HAIRS) if arche == "humanoid" else "",
-        body=body, outfit=outfit, parts=parts,
+        body=body, outfit=outfit, parts=parts, form=vehicle_form(words) if arche == "vehicle" else cell_form(words) if arche == "cell" else "",
     )
 
 
@@ -665,6 +698,7 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
         parts = _vehicle_parts(f"{e.name} {e.kind} {' '.join(e.search)} {e.look}".lower(), size, [primary, secondary, accent])
     return b.model_copy(update={
         "entity": e.id, "archetype": arche, "size": round(size, 3), "parts": parts, "outfit": outfit,
+        "form": rules.form if arche in ("vehicle", "cell") and rules.archetype == arche else "",
         "primary": primary, "secondary": secondary, "accent": accent,
         "skin": _hex(b.skin, rules.skin or SKINS[2]) if arche == "humanoid" else "",
         "hair": _hex(b.hair, rules.hair or HAIRS[0]) if arche == "humanoid" else "",

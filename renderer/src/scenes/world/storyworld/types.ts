@@ -48,6 +48,7 @@ export type Build = {
   body: Body;
   outfit: Outfit | null;
   parts: Part[];
+  form?: string; // a detailed model the renderer draws for a vehicle its name places (airliner, boat, car)
 };
 
 export type Spot = "center" | "left" | "right" | "back" | "front" | "far";

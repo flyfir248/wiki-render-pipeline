@@ -319,3 +319,15 @@ def test_a_blood_vessel_place_is_drawn_as_a_vessel():
     assert worldgen.checked_setting(model, vessel).backdrop == "vessel"
     lab = Place(id="l", name="a laboratory", look="bright lab", scenes=[1])
     assert worldgen.checked_setting(model.model_copy(update={"backdrop": "vessel"}), lab).backdrop != "vessel"
+
+
+def test_vehicle_and_cell_forms_name_the_detailed_model():
+    assert worldgen.vehicle_form("the airbus a320 airliner") == "airliner"
+    assert worldgen.vehicle_form("a small cessna plane") == "plane"
+    assert worldgen.vehicle_form("a commuter ferry") == "boat"
+    assert worldgen.vehicle_form("a police car") == "car"
+    assert worldgen.vehicle_form("a delivery truck") == "truck"
+    assert worldgen.vehicle_form("a steam locomotive") == ""
+    assert worldgen.cell_form("a sickled red blood cell") == "sickle"
+    assert worldgen.cell_form("a healthy red blood cell") == "rbc"
+    assert worldgen.cell_form("a neuron") == ""

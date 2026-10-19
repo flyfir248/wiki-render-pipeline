@@ -5,6 +5,7 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
 import { Flames, Stars } from "./humanoid";
+import { panel } from "./hero";
 import { Block, PartMesh, PartsModel, partsBounds } from "./parts";
 import { type Look, material } from "./style";
 import type { Build, Part, State } from "./types";
@@ -275,6 +276,43 @@ export const Quadruped: React.FC<{ build: Build; look: Look; pose: QPose; t: num
 
 export const birdLift = (verb: string, size: number) => (verb === "fly" ? size * 6 : 0);
 
+// A bird's wing in two panels, arm and hand, with a feathered trailing edge. In flight the hand lags
+// the arm, so the wing bends through the stroke like a real one instead of flipping like a plank.
+const wingShapes = new Map<string, [THREE.BufferGeometry, THREE.BufferGeometry]>();
+const wingGeometry = (L: number, side: number) => {
+  const key = `${L.toFixed(3)}|${side}`;
+  let g = wingShapes.get(key);
+  if (!g) {
+    const arm: [number, number][] = [[0.09, 0], [0.07, 0.36], [-0.11, 0.36], [-0.13, 0]];
+    const hand: [number, number][] = [[0.07, 0], [0.0, 0.3], [-0.08, 0.42], [-0.15, 0.4], [-0.12, 0.34], [-0.16, 0.3], [-0.13, 0.24], [-0.16, 0.18], [-0.12, 0.12], [-0.15, 0.06], [-0.11, 0]];
+    const f = (pts: [number, number][]) => pts.map(([x, y]) => [x * L, y * L * side] as [number, number]);
+    g = [panel(f(arm), L * 0.018), panel(f(hand), L * 0.012)];
+    wingShapes.set(key, g);
+  }
+  return g;
+};
+
+const Wing: React.FC<{ L: number; side: number; flap: number; folded: boolean; color: string; tip: string; look: Look }> = ({ L, side, flap, folded, color, tip, look }) => {
+  const [arm, hand] = wingGeometry(L, side);
+  const up = folded ? 0.15 : flap * 0.75 + 0.12;
+  const bend = folded ? 0 : Math.sin(Math.asin(Math.max(-1, Math.min(1, flap))) - 0.7) * 0.45;
+  if (folded) {
+    return (
+      <group position={[L * 0.02, L * 0.1, side * L * 0.1]} rotation={[0, side * 1.35, 0]}>
+        <mesh geometry={arm} material={material(look, color)} scale={[0.9, 1, 0.8]} castShadow />
+      </group>
+    );
+  }
+  return (
+    <group position={[L * 0.06, L * 0.08, side * L * 0.1]} rotation={[-side * up, 0, 0]}>
+      <mesh geometry={arm} material={material(look, color)} castShadow />
+      <group position={[0, 0, side * L * 0.355]} rotation={[-side * bend, side * 0.12, 0]}>
+        <mesh geometry={hand} material={material(look, tip)} castShadow />
+      </group>
+    </group>
+  );
+};
+
 export const Bird: React.FC<{ build: Build; look: Look; verb: string; t: number; k: number; state: State }> = ({ build, look, verb, t, k, state }) => {
   const L = Math.max(0.1, build.size);
   const B = build.body;
@@ -292,12 +330,15 @@ export const Bird: React.FC<{ build: Build; look: Look; verb: string; t: number;
       <Block look={look} shape={blob} color={build.primary} size={[L * 0.6, L * (0.28 + 0.12 * B.build), L * (0.26 + 0.1 * B.build)]} />
       {B.pattern === "belly" ? <Block look={look} shape={blob} color={build.secondary} size={[L * 0.5, L * 0.2, L * 0.24]} at={[L * 0.03, -L * 0.07, 0]} /> : null}
       <Block look={look} shape="wedge" color={tone(build.primary, 0.75)} size={[L * 0.32, L * 0.06, L * 0.2]} at={[-L * 0.38, L * 0.03, 0]} />
-      {[-1, 1].map((z) => (
-        <group key={z} position={[L * 0.06, L * 0.08, z * L * 0.12]} rotation={[z * (flap + fold * 0.0) - z * 0.1, 0, fold * -0.15]}>
-          <Block look={look} color={tone(build.primary, 0.85)} size={[L * (fold ? 0.5 : 0.36), L * 0.03, L * (fold ? 0.16 : 0.75)]} at={[fold ? -L * 0.08 : 0, 0, z * L * (fold ? 0.06 : 0.37)]} />
-          {!fold ? <Block look={look} color={tone(build.accent, 0.9)} size={[L * 0.22, L * 0.025, L * 0.3]} at={[-L * 0.05, 0, z * L * 0.62]} /> : null}
-        </group>
-      ))}
+      {[-1, 1].map((z) =>
+        look.blocky ? (
+          <group key={z} position={[L * 0.06, L * 0.08, z * L * 0.12]} rotation={[z * flap - z * 0.1, 0, fold * -0.15]}>
+            <Block look={look} color={tone(build.primary, 0.85)} size={[L * (fold ? 0.5 : 0.36), L * 0.03, L * (fold ? 0.16 : 0.75)]} at={[fold ? -L * 0.08 : 0, 0, z * L * (fold ? 0.06 : 0.37)]} />
+          </group>
+        ) : (
+          <Wing key={z} L={L} side={z} flap={flying ? Math.sin(t * (verb === "fly" ? 9 : 14)) : 0} folded={!flying} color={tone(build.primary, 0.9)} tip={tone(build.accent, 0.9)} look={look} />
+        ),
+      )}
       <group position={[L * 0.26, L * 0.08, 0]} rotation={[0, 0, (flying ? -0.9 : 0.55 - B.neck * 0.1) - peck]}>
         <Block look={look} shape={look.blocky ? "box" : "capsule"} color={B.neck > 0.5 ? build.accent : build.primary} size={[L * 0.11, neck + L * 0.06, L * 0.11]} at={[0, neck / 2, 0]} />
         <group position={[0, neck, 0]} rotation={[0, 0, (flying ? 0.9 : -0.55 + B.neck * 0.1) + peck * 0.6]}>
@@ -425,8 +466,66 @@ export const Serpent: React.FC<{ build: Build; look: Look; verb: string; t: numb
 const blobGeometry = new THREE.IcosahedronGeometry(0.5, 3);
 const blobBase = (blobGeometry.attributes.position as THREE.BufferAttribute).array.slice() as Float32Array;
 
+// A red blood cell's biconcave disc (the Evans-Fung profile), diameter 1, lying in the x-y plane.
+let rbcGeo: THREE.BufferGeometry | null = null;
+export const rbcGeometry = () => {
+  if (rbcGeo) return rbcGeo;
+  const n = 40;
+  const pts: THREE.Vector2[] = [];
+  const half = (r: number) => 0.5 * Math.sqrt(Math.max(0, 1 - r * r)) * (0.207 + 2.003 * r * r - 1.123 * r ** 4);
+  for (let i = 0; i <= n; i++) {
+    const r = Math.sin((i / n) * Math.PI * 0.5);
+    pts.push(new THREE.Vector2(r * 0.5, half(r) * 0.55));
+  }
+  for (let i = n - 1; i >= 0; i--) {
+    const r = Math.sin((i / n) * Math.PI * 0.5);
+    pts.push(new THREE.Vector2(r * 0.5, -half(r) * 0.55));
+  }
+  rbcGeo = new THREE.LatheGeometry(pts, 48);
+  rbcGeo.rotateX(Math.PI / 2);
+  rbcGeo.computeVertexNormals();
+  return rbcGeo;
+};
+
+// A sickled cell: a stiff, tapered crescent, length 1 along x.
+let sickleGeo: THREE.BufferGeometry | null = null;
+const sickleGeometry = () => {
+  if (sickleGeo) return sickleGeo;
+  const curve = new THREE.CatmullRomCurve3(Array.from({ length: 9 }, (_, i) => {
+    const a = Math.PI * (1.15 + (i / 8) * 0.7);
+    return new THREE.Vector3(Math.cos(a) * 0.55, Math.sin(a) * 0.55 + 0.42, 0);
+  }));
+  const g = new THREE.TubeGeometry(curve, 48, 1, 16, false);
+  const pos = g.attributes.position as THREE.BufferAttribute;
+  // taper: shrink each ring toward the curve by how near the ends it is
+  const center = new THREE.Vector3(), p = new THREE.Vector3();
+  for (let i = 0; i <= 48; i++) {
+    const u = i / 48;
+    curve.getPointAt(u, center);
+    const r = 0.03 + 0.15 * Math.sin(Math.PI * u) ** 0.8;
+    for (let j = 0; j <= 16; j++) {
+      const idx = i * 17 + j;
+      p.fromBufferAttribute(pos, idx).sub(center).multiplyScalar(r).add(center);
+      pos.setXYZ(idx, p.x, p.y, p.z * 0.75);
+    }
+  }
+  g.computeVertexNormals();
+  sickleGeo = g;
+  return g;
+};
+
 export const Cell: React.FC<{ build: Build; look: Look; verb: string; t: number; k: number }> = ({ build, look, verb, t, k }) => {
   const L = Math.max(0.01, build.size);
+  if ((build.form === "rbc" || build.form === "sickle") && !look.blocky) {
+    const sick = build.form === "sickle";
+    const turn = verb === "spin" ? t * 1.2 : Math.sin(t * 0.4) * 0.5;
+    const squeeze = verb === "squeeze" || verb === "move" ? 1 + Math.sin(t * 2.2) * 0.04 : 1;
+    return (
+      <group position={[0, L * 0.6, 0]} rotation={[Math.sin(t * 0.3) * 0.2 + (sick ? 0 : 0.25), turn + (sick ? 0 : 0.55), sick ? 0 : 0.15]} scale={[L * squeeze, L / squeeze, L]}>
+        <mesh geometry={sick ? sickleGeometry() : rbcGeometry()} material={material(look, build.primary, { rough: sick ? 0.45 : 0.3 })} castShadow receiveShadow />
+      </group>
+    );
+  }
   const geom = useMemo(() => blobGeometry.clone(), []);
   // A soft membrane that wobbles: the unit icosphere pushed in and out by slow waves.
   const pos = geom.attributes.position as THREE.BufferAttribute;

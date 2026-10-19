@@ -4,9 +4,11 @@
 // and a story's pines, picnic tables or police cars stand among them.
 import React, { useMemo } from "react";
 import * as THREE from "three";
-import { rng, Sky, type Palette } from "../../world3d";
+import { rng } from "../../world3d";
+import { ReflectiveWater } from "./cinema";
+import { rbcGeometry } from "./creatures";
 import { Block, PartMesh, partsBounds } from "./parts";
-import { type Light, type Look, material } from "./style";
+import { Background, type Light, type Look, material } from "./style";
 import type { Dressing, SetSpec } from "./types";
 
 type R = () => number;
@@ -99,37 +101,55 @@ const Cactus: React.FC<{ look: Look; h: number }> = ({ look, h }) => (
   </group>
 );
 
-function windowTexture(base: string, seed: number, lit: number) {
+function windowTexture(base: string, seed: number, lit: number, glowOnly = false) {
   const c = document.createElement("canvas");
   c.width = 64;
   c.height = 128;
   const g = c.getContext("2d")!;
-  g.fillStyle = base;
+  g.fillStyle = glowOnly ? "#000000" : base;
   g.fillRect(0, 0, 64, 128);
+  if (!glowOnly) {
+    // floor slabs and mullions so a facade has structure, not just a colour
+    g.fillStyle = "rgba(0,0,0,0.18)";
+    for (let y = 0; y < 128; y += 14) g.fillRect(0, y + 12, 64, 2);
+  }
   const r = rng(seed);
-  for (let y = 6; y < 124; y += 14)
-    for (let x = 5; x < 60; x += 14) {
-      g.fillStyle = r() < lit ? "#ffd98a" : "#2b3442";
-      g.fillRect(x, y, 8, 9);
+  for (let y = 4; y < 124; y += 14)
+    for (let x = 4; x < 60; x += 14) {
+      const on = r() < lit;
+      const warm = r();
+      g.fillStyle = on ? (warm > 0.3 ? "#ffd38a" : "#cfe4ff") : glowOnly ? "#000000" : "#26303d";
+      g.fillRect(x, y, 9, 9);
     }
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
-  t.magFilter = THREE.NearestFilter;
+  t.anisotropy = 8;
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   return t;
 }
 
-const Building: React.FC<{ w: number; h: number; d: number; color: string; seed: number; lit: number; roof?: boolean }> = ({ w, h, d, color, seed, lit, roof }) => {
-  const tex = useMemo(() => {
-    const t = windowTexture(color, seed, lit);
-    t.repeat.set(Math.max(1, Math.round(w / 4)), Math.max(1, Math.round(h / 7)));
-    return t;
-  }, [color, seed, lit, w, h]);
+const texCache = new Map<string, THREE.Texture>();
+const Building: React.FC<{ w: number; h: number; d: number; color: string; seed: number; lit: number; roof?: boolean; glow?: boolean; unit?: number; far?: boolean }> = ({ w, h, d, color, seed, lit, roof, glow, unit, far }) => {
+  const unitHint = unit ?? 1;
+  const mat = useMemo(() => {
+    const get = (only: boolean) => {
+      const key = `${color}|${seed % 7}|${lit}|${only}`;
+      let t = texCache.get(key);
+      if (!t) {
+        t = windowTexture(color, seed % 7, lit, only);
+        texCache.set(key, t);
+      }
+      const c = t.clone();
+      c.repeat.set(Math.max(1, Math.round(w / (unitHint * 1.1))), Math.max(1, Math.round(h / (unitHint * 1.6))));
+      c.needsUpdate = true;
+      return c;
+    };
+    return new THREE.MeshLambertMaterial({ map: get(false), emissiveMap: glow ? get(true) : null, emissive: glow ? new THREE.Color("#ffffff") : new THREE.Color("#000000"), emissiveIntensity: glow ? 1.6 : 0 });
+  }, [color, seed, lit, w, h, glow, unitHint]);
   return (
     <group>
-      <mesh position={[0, h / 2, 0]} castShadow receiveShadow>
+      <mesh position={[0, h / 2, 0]} castShadow={!far} receiveShadow={!far} material={mat}>
         <boxGeometry args={[w, h, d]} />
-        <meshStandardMaterial map={tex} roughness={0.9} />
       </mesh>
       {roof ? (
         <mesh position={[0, h + w * 0.18, 0]} rotation={[0, 0, 0]} castShadow>
@@ -192,8 +212,52 @@ const groundGeometry = (size: number, bump: number, seed: number, flat: number, 
   return g;
 };
 
-// A ring of far hills, so the ground meets the sky in a skyline rather than a hard edge.
-const Skyline: React.FC<{ U: number; seed: number; color: string; look: Look; height: number }> = ({ U, seed, color, look, height }) => {
+// Far ridgelines in two layers, so the ground meets the sky in a real horizon: a continuous ring of
+// terrain whose height is layered noise round the circle, with rock showing on steep faces and snow on
+// high peaks. Voxel looks keep stacked blocks.
+const ridgeGeometry = (U: number, seed: number, height: number, radius: number, depth: number, base: string, snow: boolean) => {
+  const seg = 220, rows = 10;
+  const g = new THREE.BufferGeometry();
+  const pos: number[] = [], col: number[] = [], idx: number[] = [];
+  const r = rng(seed);
+  const ph = Array.from({ length: 6 }, () => r() * Math.PI * 2);
+  const hAt = (a: number) => {
+    let h = 0.55 + 0.45 * Math.sin(a * 3 + ph[0]);
+    h += 0.5 * Math.abs(Math.sin(a * 7 + ph[1])) + 0.25 * Math.sin(a * 17 + ph[2]) + 0.12 * Math.sin(a * 41 + ph[3]) + 0.06 * Math.sin(a * 83 + ph[4]);
+    return Math.max(0.05, h / 1.6);
+  };
+  const c0 = new THREE.Color(base), rock = new THREE.Color(base).lerp(new THREE.Color("#6d6a66"), 0.55), white = new THREE.Color("#eef2f6"), c = new THREE.Color();
+  for (let i = 0; i <= seg; i++) {
+    const a = (i / seg) * Math.PI * 2;
+    const peak = hAt(a) * height * U;
+    for (let j = 0; j <= rows; j++) {
+      const v = j / rows; // 0 at the foot (near), 1 at the crest
+      const d = radius * U + depth * U * (1 - v) * 0.5 - depth * U * v * 0.3;
+      const y = peak * Math.sin((v * Math.PI) / 2) ** 1.4 - U * 0.5;
+      pos.push(Math.cos(a) * d, y, Math.sin(a) * d);
+      const steep = v > 0.45 ? (v - 0.45) / 0.55 : 0;
+      c.copy(c0).lerp(rock, steep * 0.8);
+      if (snow && y > height * U * 0.55) c.lerp(white, Math.min(1, (y - height * U * 0.55) / (height * U * 0.15)));
+      c.multiplyScalar(0.92 + 0.12 * Math.sin(a * 29 + j));
+      col.push(c.r, c.g, c.b);
+    }
+  }
+  for (let i = 0; i < seg; i++)
+    for (let j = 0; j < rows; j++) {
+      const q = i * (rows + 1) + j, n = q + rows + 1;
+      idx.push(q, n, q + 1, n, n + 1, q + 1);
+    }
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+};
+
+const Skyline: React.FC<{ U: number; seed: number; color: string; look: Look; height: number; far?: string; snow?: boolean }> = ({ U, seed, color, look, height, far, snow }) => {
+  const near = useMemo(() => (look.blocky ? null : ridgeGeometry(U, seed ^ 0x4111, height * 0.6, 40, 10, color, Boolean(snow) && height > 10)), [U, seed, height, color, look.blocky, snow]);
+  const back = useMemo(() => (look.blocky ? null : ridgeGeometry(U, seed ^ 0x9a3, height * 1.15, 60, 14, far ?? color, Boolean(snow) || height > 10)), [U, seed, height, color, far, look.blocky, snow]);
+  const mat = useMemo(() => new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }), []);
   const hills = useMemo(() => {
     const r = rng(seed ^ 0x4111);
     return Array.from({ length: 22 }, (_, i) => {
@@ -202,39 +266,93 @@ const Skyline: React.FC<{ U: number; seed: number; color: string; look: Look; he
       return { x: Math.cos(a) * d, z: Math.sin(a) * d, w: U * (14 + r() * 14), h: U * height * (0.5 + r()) };
     });
   }, [U, seed, height]);
+  if (look.blocky || !near || !back)
+    return (
+      <>
+        {hills.map((h, i) => (
+          <Block key={i} look={look} color={color} size={[h.w, h.h, h.w * 0.8]} at={[h.x, h.h / 2 - U * 0.4, h.z]} />
+        ))}
+      </>
+    );
   return (
     <>
-      {hills.map((h, i) => (
-        <Block key={i} look={look} shape={look.blocky ? "box" : "cone"} color={color} size={[h.w, h.h, h.w * 0.8]} at={[h.x, h.h / 2 - U * 0.4, h.z]} />
-      ))}
+      <mesh geometry={back} material={mat} />
+      <mesh geometry={near} material={mat} receiveShadow />
     </>
   );
 };
 
-// A far ring of towers, for a story told against a city: lit windows after dark.
-const CitySkyline: React.FC<{ U: number; seed: number; color: string; look: Look; lit: boolean }> = ({ U, seed, color, look, lit }) => {
+// A city against the sky in three layers of depth: a near row of mid-rise blocks just beyond the set,
+// a middle band of towers with setbacks and spires, and a far ring. Windows light after dark.
+const CitySkyline: React.FC<{ U: number; seed: number; color: string; look: Look; lit: boolean; near: number }> = ({ U, seed, color, look, lit, near }) => {
   const towers = useMemo(() => {
     const r = rng(seed ^ 0x2c17);
-    return Array.from({ length: 70 }, (_, i) => {
-      const a = (i / 70) * Math.PI * 2 + r() * 0.05;
-      const d = U * (46 + r() * 12);
-      return { x: Math.cos(a) * d, z: Math.sin(a) * d, w: U * (2.5 + r() * 3), h: U * (3 + r() ** 2 * 9), shade: 0.8 + r() * 0.35 };
-    });
-  }, [U, seed]);
+    const out: { x: number; z: number; w: number; d: number; h: number; shade: number; top: number; layer: number }[] = [];
+    const row = (n: number, z0: number, z1: number, h0: number, h1: number, spanX: number, layer: number) => {
+      for (let i = 0; i < n; i++) {
+        const x = (i / (n - 1) - 0.5) * spanX + (r() - 0.5) * U * 2;
+        const z = -(z0 + r() * (z1 - z0));
+        out.push({ x, z, w: U * (2.4 + r() * 2.6), d: U * (2.4 + r() * 2.2), h: U * (h0 + r() ** 1.6 * (h1 - h0)), shade: 0.75 + r() * 0.45, top: r(), layer });
+      }
+    };
+    row(16, near, near + U * 6, 3, 8, U * 70, 0);
+    row(22, near + U * 9, near + U * 20, 6, 22, U * 110, 1);
+    for (let i = 0; i < 46; i++) {
+      const a = (i / 46) * Math.PI * 2 + r() * 0.05;
+      const d = U * (62 + r() * 14);
+      out.push({ x: Math.cos(a) * d, z: Math.sin(a) * d, w: U * (3 + r() * 4), d: U * (3 + r() * 3), h: U * (5 + r() ** 2 * 16), shade: 0.7 + r() * 0.3, top: r(), layer: 2 });
+    }
+    return out;
+  }, [U, seed, near]);
   return (
     <>
       {towers.map((b, i) => (
-        <group key={i} position={[b.x, 0, b.z]} rotation={[0, -Math.atan2(b.z, b.x), 0]}>
+        <group key={i} position={[b.x, 0, b.z]} rotation={[0, b.layer === 2 ? -Math.atan2(b.z, b.x) : (b.top - 0.5) * 0.3, 0]}>
           {look.blocky ? (
-            <Block look={look} color={tone(color, b.shade)} size={[b.w, b.h, b.w]} at={[0, b.h / 2 - U * 0.3, 0]} />
+            <Block look={look} color={tone(color, b.shade)} size={[b.w, b.h, b.d]} at={[0, b.h / 2 - U * 0.3, 0]} />
           ) : (
-            <Building w={b.w} h={b.h} d={b.w} color={tone(color, b.shade)} seed={seed + (i % 5)} lit={lit ? 0.45 : 0.05} />
+            <>
+              <Building w={b.w} h={b.h} d={b.d} color={tone(color, b.shade)} seed={seed + (i % 7)} lit={lit ? 0.5 : 0.08} glow={lit} unit={U} far={b.layer > 0} />
+              {b.layer < 2 && b.h > U * 9 ? (
+                // a setback crown, and on some a spire
+                <group position={[0, b.h, 0]}>
+                  <Building w={b.w * 0.66} h={b.h * 0.14} d={b.d * 0.66} color={tone(color, b.shade * 0.95)} seed={seed + i} lit={lit ? 0.5 : 0.08} glow={lit} unit={U} far={b.layer > 0} />
+                  {b.top > 0.6 ? (
+                    <mesh position={[0, b.h * 0.14 + b.h * 0.08, 0]} material={material(look, "#c7ccd4")}>
+                      <cylinderGeometry args={[U * 0.04, U * 0.12, b.h * 0.16, 8]} />
+                    </mesh>
+                  ) : null}
+                  {lit && b.top > 0.6 ? (
+                    <mesh position={[0, b.h * 0.14 + b.h * 0.17, 0]} scale={U * 0.12} material={material(look, "#ff4a3a", { glow: true })}>
+                      <sphereGeometry args={[1, 8, 6]} />
+                    </mesh>
+                  ) : null}
+                </group>
+              ) : null}
+            </>
           )}
         </group>
       ))}
     </>
   );
 };
+
+// A city river's near bank: a stone quay wall, a paved promenade, a railing and lamps along it.
+const Quay: React.FC<{ U: number; z: number; look: Look; night: boolean; keep?: KeepOut }> = ({ U, z, look, night, keep }) => (
+  <group>
+    <Block look={look} color="#6f6a63" size={[U * 240, U * 0.2, U * 0.3]} at={[0, U * 0.0, z + U * 0.15]} />
+    <Block look={look} color="#8d877d" size={[U * 240, U * 0.02, U * 2.4]} at={[0, U * 0.09, z + U * 1.5]} />
+    {Array.from({ length: 41 }, (_, i) => (i - 20) * U * 1.6).filter((x) => !(keep && keep(x, z + U * 0.35, U * 0.6, U * 0.6))).map((x) => (
+      <Block key={x} look={look} color="#2a2d33" size={[U * 0.04, U * 0.4, U * 0.04]} at={[x, U * 0.3, z + U * 0.35]} />
+    ))}
+    {Array.from({ length: 9 }, (_, i) => (i - 4) * U * 7).filter((x) => !(keep && keep(x, z + U * 0.9, U * 0.3, U * 2))).map((x) => (
+      <group key={`l${x}`} position={[x, 0, z + U * 0.9]}>
+        <Block look={look} shape="cylinder" color="#23262b" size={[U * 0.07, U * 1.9, U * 0.07]} at={[0, U * 1.1, 0]} />
+        <Block look={look} shape="sphere" color="#ffe3a8" glow={night} size={[U * 0.22, U * 0.22, U * 0.22]} at={[0, U * 2.1, 0]} />
+      </group>
+    ))}
+  </group>
+);
 
 const Dressed: React.FC<{ d: Dressing; look: Look; seed: number; clear: number; keep?: KeepOut }> = ({ d, look, seed, clear, keep }) => {
   const bb = partsBounds(d.build.parts);
@@ -254,7 +372,7 @@ const Dressed: React.FC<{ d: Dressing; look: Look; seed: number; clear: number; 
   );
 };
 
-export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; unit: number; seed: number; t: number; keep?: KeepOut }> = ({ set, look, light, unit: U, seed, t, keep }) => {
+export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; unit: number; seed: number; t: number; keep?: KeepOut; fx?: string }> = ({ set, look, light, unit: U, seed, t, keep, fx = "" }) => {
   const kind = set.kind;
   const r = useMemo(() => rng(seed ^ 0x5e7), [seed]);
   const ground = light.ground;
@@ -287,7 +405,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         if (kind === "farm") {
           for (let i = 0; i < 14; i++) out.push(<Block key={`f${i}`} look={look} color="#7a5a3a" size={[U * 0.08, U * 0.6, U * 0.08]} at={[-U * 9 + i * U * 1.4, U * 0.3, -U * 3.5]} />);
           out.push(<Block key="rail" look={look} color="#8a6a4a" size={[U * 18.5, U * 0.06, U * 0.05]} at={[0, U * 0.45, -U * 3.5]} />);
-          out.push(<group key="barn" position={[-U * 7, 0, -U * 9]}><Building w={U * 4} h={U * 2.6} d={U * 3} color="#a33a2a" seed={seed} lit={0} roof /></group>);
+          out.push(<group key="barn" position={[-U * 7, 0, -U * 9]}><Building w={U * 4} h={U * 2.6} d={U * 3} color="#a33a2a" seed={seed} lit={0} roof unit={U} /></group>);
         }
         break;
       case "mountain":
@@ -331,11 +449,23 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         const tall = kind === "city";
         const cols = ["#c98e6b", "#e1d3b8", "#9fa7b5", "#b9705a", "#d8c08f", "#8e9bb0"];
         const lit = set.time === "night" || set.time === "dusk" ? 0.55 : 0.2;
-        for (let i = -6; i <= 6; i++) {
-          const h = U * (tall ? 6 + rr() * 10 : 2 + rr() * 1.6);
-          const w = U * (2.6 + rr() * 1.2);
-          out.push(<group key={`b${i}`} position={[i * U * 3.6, 0, -U * 5.5 - rr() * U]}><Building w={w} h={h} d={U * 3} color={cols[(i + 12) % cols.length]} seed={seed + i} lit={lit} roof={!tall && rr() > 0.4} /></group>);
-        }
+        // blocks of buildings in rows going back, and down both sides, so the street is a canyon
+        const rows: [number, number, number][] = tall ? [[-5.5, 6, 1], [-12, 9, 1.5], [-19, 12, 2]] : [[-5.5, 2, 1], [-11, 2.6, 1.2]];
+        rows.forEach(([z, hBase, hk], ri) => {
+          for (let i = -7; i <= 7; i++) {
+            const h = U * (hBase + rr() * (tall ? 10 : 1.8) * hk);
+            const w = U * (2.6 + rr() * 1.2);
+            if (keep && keep(i * U * 3.6, z * U - U * 1.5, w / 2, h)) continue;
+            out.push(<group key={`b${ri}${i}`} position={[i * U * 3.6 + (ri % 2) * U * 1.8, 0, z * U - rr() * U]}><Building w={w} h={h} d={U * 3} color={cols[(i + ri * 3 + 12) % cols.length]} seed={seed + i + ri * 17} lit={lit} roof={!tall && rr() > 0.4} unit={U} glow={lit > 0.3} /></group>);
+          }
+        });
+        for (const sx of [-1, 1])
+          for (let j = 0; j < 5; j++) {
+            const h = U * (tall ? 5 + rr() * 9 : 2 + rr() * 1.4);
+            const x = sx * U * (9 + rr() * 2), z = -U * 2 + j * U * 4;
+            if (keep && keep(x, z, U * 1.5, h)) continue;
+            out.push(<group key={`s${sx}${j}`} position={[x, 0, z]}><Building w={U * 3} h={h} d={U * 3.4} color={cols[(j * 2 + (sx > 0 ? 1 : 0)) % cols.length]} seed={seed + j * 5 + sx} lit={lit} roof={!tall && rr() > 0.5} unit={U} glow={lit > 0.3} /></group>);
+          }
         for (let i = -3; i <= 3; i++) out.push(<Block key={`lamp${i}`} look={look} color="#3a3d44" size={[U * 0.07, U * 1.8, U * 0.07]} at={[i * U * 5, U * 0.9, -U * 2.6]} />,
           <Block key={`lt${i}`} look={look} color="#ffe2a0" glow={set.time !== "day"} size={[U * 0.25, U * 0.12, U * 0.25]} at={[i * U * 5, U * 1.82, -U * 2.6]} />);
         break;
@@ -386,25 +516,31 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
   const bump = kind === "mountain" ? U * 2.2 : ["forest", "grassland", "snow", "desert"].includes(kind) ? U * 0.6 : kind === "underwater" ? U * 0.4 : 0;
   const floorColor = INSIDE.includes(kind) ? (kind === "cave" ? "#3a322a" : kind === "lab" || kind === "hospital" ? "#c8cdd0" : tone(set.ground, 1)) : ground;
   const gGeom = useMemo(() => groundGeometry(groundSize, bump, seed, U * 4, floorColor, U), [groundSize, bump, seed, U, floorColor]);
-  const gMat = useMemo(() => (look.toon ? new THREE.MeshToonMaterial({ vertexColors: true }) : new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, flatShading: !look.gloss })), [look]);
+  const gMat = useMemo(() => (look.toon ? new THREE.MeshToonMaterial({ vertexColors: true }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: look.blocky })), [look]);
   const water = mix(set.sky, "#1d4a6a", 0.55);
-  const pal: Palette = { top: light.top, horizon: light.horizon, ground: ground, ground2: ground, cloud: "#ffffff", light: 1 };
+  const mirror = !look.toon && !look.blocky && !fx.includes("water");
+  const sunDir = new THREE.Vector3(...light.sunDir);
 
   const showGround = !VOID.includes(kind) && kind !== "sea";
   const backdrop = set.backdrop ?? (kind === "mountain" || kind === "snow" ? "mountains" : kind === "city" ? "city" : "hills");
   return (
+    <Background.Provider value>
     <group>
-      {kind === "space" ? <color attach="background" args={["#03040c"]} /> : <Sky pal={pal} />}
       {kind === "space" ? <SpaceBits seed={seed} U={U} accent={set.accent} look={look} /> : null}
       {kind === "micro" ? <MicroBits seed={seed} U={U} set={set} t={t} look={look} /> : null}
-      {kind === "sky" ? <SkyBits seed={seed} U={U} ground={set.ground} look={look} /> : null}
+      {kind === "sky" ? <SkyBits seed={seed} U={U} ground={set.ground} look={look} light={light} t={t} /> : null}
       {showGround ? (
         <mesh geometry={gGeom} receiveShadow material={gMat} />
       ) : null}
-      {kind === "sea" ? <Water size={groundSize} color={water} t={t} amp={U * 0.06} /> : null}
+      {kind === "sea" ? (mirror ? <ReflectiveWater w={groundSize * 4} d={groundSize * 4} at={[0, 0, 0]} color={tone(water, 0.55)} sun={light.sun} sunDir={sunDir} t={t} fog /> : <Water size={groundSize} color={water} t={t} amp={U * 0.06} />) : null}
       {band ? (
-        <Water size={U * 30} shape={[U * (kind === "lake" ? 60 : 120), U * (band[0] - band[1])]} color={water} t={t} amp={U * (kind === "beach" ? 0.03 : 0.02)} at={[0, U * (kind === "beach" ? 0.09 : 0.07), U * (band[0] + band[1]) / 2]} />
+        mirror ? (
+          <ReflectiveWater w={U * (kind === "lake" ? 60 : 240)} d={U * (band[0] - band[1])} at={[0, U * (kind === "beach" ? 0.09 : 0.07), U * (band[0] + band[1]) / 2]} color={tone(water, 0.55)} sun={light.sun} sunDir={sunDir} t={t} distortion={1.6} fog />
+        ) : (
+          <Water size={U * 30} shape={[U * (kind === "lake" ? 60 : 120), U * (band[0] - band[1])]} color={water} t={t} amp={U * (kind === "beach" ? 0.03 : 0.02)} at={[0, U * (kind === "beach" ? 0.09 : 0.07), U * (band[0] + band[1]) / 2]} />
+        )
       ) : null}
+      {band && backdrop === "city" ? <Quay U={U} z={band[0] * U} look={look} night={set.time === "night" || set.time === "dusk"} keep={keep} /> : null}
       {kind === "swamp" ? <Water size={U * 40} color={tone(water, 0.6)} t={t} amp={U * 0.005} at={[0, U * 0.03, -U * 6]} /> : null}
       {kind === "road" || kind === "airfield" || kind === "town" || kind === "city" ? (
         <group>
@@ -414,18 +550,22 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
           ))}
         </group>
       ) : null}
-      {!INSIDE.includes(kind) && kind !== "space" && kind !== "micro" && backdrop === "city" ? (
-        <CitySkyline U={U} seed={seed} look={look} color={mix("#5a6577", light.horizon, 0.35)} lit={set.time === "night" || set.time === "dusk" || look.dark > 0.5} />
+      {!INSIDE.includes(kind) && kind !== "space" && kind !== "micro" && backdrop === "city" && !fx.includes("city") ? (
+        <group position={[0, kind === "sky" ? -U * 36 : 0, 0]}>
+          <CitySkyline U={U} seed={seed} look={look} color={mix("#6a7587", light.horizon, 0.25)} lit={set.time === "night" || set.time === "dusk"} near={band ? -band[1] * U + U * 1.5 : U * 16} />
+        </group>
       ) : null}
       {!INSIDE.includes(kind) && !VOID.includes(kind) && (backdrop === "hills" || backdrop === "mountains") ? (
-        <Skyline U={U} seed={seed} look={look} color={mix(kind === "snow" ? "#dfe8ee" : kind === "desert" ? "#c8a070" : tone(leaf, 0.8), light.horizon, 0.45)}
-          height={backdrop === "mountains" ? 16 : kind === "sea" || kind === "beach" ? 3 : 7} />
+        <Skyline U={U} seed={seed} look={look} color={mix(kind === "snow" ? "#dfe8ee" : kind === "desert" ? "#c8a070" : tone(leaf, 0.8), light.horizon, 0.3)}
+          far={mix(kind === "desert" ? "#b89070" : "#6f7f8a", light.horizon, 0.55)} snow={kind === "snow" || backdrop === "mountains"}
+          height={backdrop === "mountains" ? 16 : kind === "sea" || kind === "beach" ? 3 : 8} />
       ) : null}
-      {items}
+      {fx.includes("items") ? null : items}
       {set.dressing.map((d, i) => (
         <Dressed key={i} d={d} look={look} seed={seed + i * 101} clear={clear * 0.8} keep={dry} />
       ))}
     </group>
+    </Background.Provider>
   );
 };
 
@@ -468,7 +608,11 @@ const MicroBits: React.FC<{ seed: number; U: number; set: SetSpec; t: number; lo
     <group>
       {bits.map((b, i) => (
         <group key={i} position={[flow(b.x) + Math.sin(t * 0.4 + b.a) * U * 0.3, b.y + Math.cos(t * 0.3 + b.a) * U * 0.2, b.z]} rotation={[b.a + t * 0.2, b.a, 0]}>
-          <Block look={look} shape="torus" color={i % 4 ? tone(set.ground, 1.6) : set.accent} size={[U * b.s, U * b.s, U * b.s * 0.45]} />
+          {look.blocky ? (
+            <Block look={look} shape="torus" color={i % 4 ? tone(set.ground, 1.6) : set.accent} size={[U * b.s, U * b.s, U * b.s * 0.45]} />
+          ) : (
+            <mesh geometry={rbcGeometry()} material={material(look, i % 4 ? tone(set.ground, 1.6) : set.accent, { rough: 0.35 })} scale={U * b.s} />
+          )}
         </group>
       ))}
       {vessel ? (
@@ -478,12 +622,6 @@ const MicroBits: React.FC<{ seed: number; U: number; set: SetSpec; t: number; lo
             <cylinderGeometry args={[R, R, U * 90, 40, 1, true]} />
             <meshStandardMaterial color={tone(set.ground, 1.45)} side={THREE.BackSide} roughness={0.55} flatShading={look.blocky} />
           </mesh>
-          {Array.from({ length: 15 }, (_, i) => (
-            <mesh key={i} position={[0, (i - 7) * U * 6, 0]} rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[R * 0.99, U * 0.14, 8, 40]} />
-              <meshStandardMaterial color={tone(set.ground, 1.15)} side={THREE.BackSide} roughness={0.7} />
-            </mesh>
-          ))}
         </group>
       ) : null}
       <mesh>
@@ -494,21 +632,53 @@ const MicroBits: React.FC<{ seed: number; U: number; set: SetSpec; t: number; lo
   );
 };
 
-const SkyBits: React.FC<{ seed: number; U: number; ground: string; look: Look }> = ({ seed, U, ground, look }) => {
+let cloudTex: THREE.Texture | null = null;
+// A soft cumulus puff: overlapping blurred discs, brighter on top, for sprites that read as vapour.
+const cloudTexture = () => {
+  if (cloudTex) return cloudTex;
+  const c = document.createElement("canvas");
+  c.width = c.height = 256;
+  const g = c.getContext("2d")!;
+  const r = rng(5);
+  for (let i = 0; i < 26; i++) {
+    const x = 50 + r() * 156, y = 90 + r() * 90, rad = 28 + r() * 46;
+    const gr = g.createRadialGradient(x, y - rad * 0.2, 0, x, y, rad);
+    const top = y < 130 ? 1 : 0.86;
+    gr.addColorStop(0, `rgba(${255 * top},${255 * top},${255 * top},0.55)`);
+    gr.addColorStop(1, "rgba(255,255,255,0)");
+    g.fillStyle = gr;
+    g.beginPath();
+    g.arc(x, y, rad, 0, Math.PI * 2);
+    g.fill();
+  }
+  cloudTex = new THREE.CanvasTexture(c);
+  cloudTex.colorSpace = THREE.SRGBColorSpace;
+  return cloudTex;
+};
+
+const SkyBits: React.FC<{ seed: number; U: number; ground: string; look: Look; light: Light; t: number }> = ({ seed, U, ground, look, light, t }) => {
   const clouds = useMemo(() => {
     const r = rng(seed);
-    return Array.from({ length: 16 }, () => ({ x: (r() - 0.5) * U * 60, y: (r() - 0.6) * U * 8, z: -r() * U * 50 + U * 4, s: 1 + r() * 2 }));
+    // a broken deck of cloud well below, a few banks at the aircraft's height far off, and wisps that
+    // stream past close by so the shot reads as speed
+    return Array.from({ length: 64 }, (_, i) => {
+      const far = r();
+      const kind = i < 40 ? "deck" : i < 52 ? "bank" : "wisp";
+      if (kind === "deck") return { x: (r() - 0.5) * U * (60 + far * 160), y: -U * (8 + far * 14), z: -U * (2 + far * 80) + U * 6, s: U * (6 + r() * 10) * (0.7 + far), o: 0.5, sp: 1 + r() };
+      if (kind === "bank") return { x: (r() - 0.5) * U * 160, y: -U * 2 + r() * U * 6, z: -U * (50 + r() * 40), s: U * (10 + r() * 12), o: 0.6, sp: 0.3 };
+      return { x: (r() - 0.5) * U * 60, y: (r() - 0.7) * U * 4, z: U * (r() * 4 - 6), s: U * (1.5 + r() * 2.5), o: 0.35, sp: 6 + r() * 4 };
+    });
   }, [seed, U]);
+  const mats = useMemo(() => {
+    const lit = mix(light.horizon, "#ffffff", 0.55);
+    return [0.75, 0.9, 1].map((k) => new THREE.SpriteMaterial({ map: cloudTexture(), color: new THREE.Color(tone(lit, k)), transparent: true, depthWrite: false, fog: true }));
+  }, [light.horizon]);
   return (
     <group>
       {clouds.map((c, i) => (
-        <group key={i} position={[c.x, c.y, c.z]}>
-          {[0, 1, 2].map((j) => (
-            <Block key={j} look={look} shape="sphere" color="#f4f6f8" size={[U * c.s * 2, U * c.s, U * c.s * 1.4]} at={[(j - 1) * U * c.s * 0.9, j === 1 ? U * c.s * 0.3 : 0, 0]} />
-          ))}
-        </group>
+        <sprite key={i} material={mats[i % 3]} position={[(((c.x - t * U * 0.8 * c.sp + U * 90) % (U * 180)) + U * 180) % (U * 180) - U * 90, c.y, c.z]} scale={[c.s * 1.8, c.s, 1]} />
       ))}
-      <Block look={look} color={ground} size={[U * 600, U * 0.1, U * 600]} at={[0, -U * 40, 0]} />
+      <Block look={look} color={ground} size={[U * 900, U * 0.1, U * 900]} at={[0, -U * 36, 0]} />
     </group>
   );
 };

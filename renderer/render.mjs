@@ -4,6 +4,7 @@
 //   node render.mjs --still --props job/thumb.json --public job/public --out job/thumb.png
 //   node render.mjs --frame 120 --props job/props.json --public job/public --out preview.png
 //   node render.mjs --frames 0,30,60 --props job/props.json --public job/public --out frames/
+//   node render.mjs --range 0-149 --props job/props.json --public job/public --out clip.mp4
 //
 // The Python pipeline calls this; you can also run it by hand.
 import { bundle } from "@remotion/bundler";
@@ -27,6 +28,7 @@ const out = path.resolve(opt("out", "out.mp4"));
 const still = flag("still");
 const frame = opt("frame");
 const frames = opt("frames");
+const range = opt("range"); // --range 0-149 renders only those frames of the video
 if (!propsPath) {
   console.error("--props is required");
   process.exit(2);
@@ -47,7 +49,9 @@ if (frames !== undefined) {
   fs.mkdirSync(out, { recursive: true });
   for (const f of frames.split(",").map(Number)) {
     const file = path.join(out, `frame-${String(f).padStart(5, "0")}.png`);
-    await renderStill({ composition, serveUrl, output: file, inputProps, browserExecutable, frame: f, logLevel: "error" });
+    const t0 = Date.now();
+    await renderStill({ composition, serveUrl, output: file, inputProps, browserExecutable, frame: f, logLevel: "error", timeoutInMilliseconds: 240000 });
+    if (process.env.FYT_TIMING) console.log(`frame ${f}: ${Date.now() - t0} ms`);
   }
 } else if (still || frame !== undefined) {
   // --frame previews one frame of the video without rendering all of it.
@@ -59,11 +63,13 @@ if (frames !== undefined) {
     serveUrl,
     codec: "h264",
     crf: 20,
+    ...(range ? { frameRange: range.split("-").map(Number) } : {}),
     audioCodec: "aac",
     outputLocation: out,
     inputProps,
     browserExecutable,
     // Remotion rejects a concurrency above the machine's core count, so clamp it.
+    timeoutInMilliseconds: 240000,
     concurrency: Math.min(os.cpus().length, Number(process.env.REMOTION_CONCURRENCY) || os.cpus().length),
     onProgress: ({ progress }) => {
       const pct = Math.floor(progress * 100);

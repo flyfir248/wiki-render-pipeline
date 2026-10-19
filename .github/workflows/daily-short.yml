@@ -21,9 +21,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary)"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary)"
         type: choice
-        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck]
+        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck, bench]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -42,7 +42,7 @@ on:
 # A test render (short / long with a title) never uploads or touches the schedule, so it runs in a group
 # of its own: a scheduled run can't cancel it while it waits, and it never holds up the schedule.
 concurrency:
-  group: ${{ inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long') && format('test-render-{0}', github.run_id) || 'daily-videos' }}
+  group: ${{ ((inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long')) || inputs.task == 'bench') && format('test-render-{0}', github.run_id) || 'daily-videos' }}
   cancel-in-progress: false
 
 permissions:
@@ -242,6 +242,9 @@ jobs:
           elif [ "$TASK" = assetcheck ]; then
             python -m fyt assetcheck --out jobs/assetcheck
             cat jobs/assetcheck/report.md >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$TASK" = bench ]; then
+            python -m fyt bench --out jobs/bench
+            { echo "## 3D quality benchmark"; echo '```json'; cat jobs/bench/report.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
           elif [ -n "$TITLE" ] && [ -n "$REPLAY" ]; then
@@ -272,14 +275,21 @@ jobs:
             for job in ../../jobs/*/; do
               out="_runs/$RUN/$(basename "$job")"
               mkdir -p "$out"
-              for f in contact.png manifest.json written.json assets.json relevance.json visualplan.json world.json script.json qc.json log.txt; do
+              for f in contact.png manifest.json written.json assets.json relevance.json visualplan.json world.json script.json qc.json look.json log.txt; do
                 if [ -f "$job/$f" ]; then cp "$job/$f" "$out/"; fi
               done
               cp "$job"/gate/*.png "$out/" 2>/dev/null || true
+              cp "$job"/look/*.jpg "$out/" 2>/dev/null || true
               if [ -f "$job/video.mp4" ]; then
                 "$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" -loglevel error -y -i "$job/video.mp4" -vf scale=-2:640 -b:v 350k -c:a aac -b:a 64k "$out/preview.mp4" || true
               fi
             done
+          fi
+          if [ -f ../../jobs/bench/report.json ]; then
+            mkdir -p "_checks/bench-$RUN"
+            cp ../../jobs/bench/report.json ../../jobs/bench/contact.png "_checks/bench-$RUN/"
+            cp ../../jobs/bench/look/*.jpg "_checks/bench-$RUN/" 2>/dev/null || true
+            "$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" -loglevel error -y -i ../../jobs/bench/bench.mp4 -vf scale=-2:960 -b:v 900k "_checks/bench-$RUN/bench.mp4" || true
           fi
           if [ -f ../../jobs/assetcheck/report.md ]; then
             mkdir -p "_checks/$RUN"
@@ -332,6 +342,9 @@ jobs:
             jobs/*/manifest.json
             jobs/*/assets.json
             jobs/*/relevance.json
+            jobs/*/look.json
+            jobs/bench/bench.mp4
+            jobs/bench/report.json
           retention-days: 7
           if-no-files-found: ignore
 
