@@ -452,17 +452,40 @@ const SpaceBits: React.FC<{ seed: number; U: number; accent: string; look: Look 
 };
 
 const MicroBits: React.FC<{ seed: number; U: number; set: SetSpec; t: number; look: Look }> = ({ seed, U, set, t, look }) => {
+  const vessel = set.backdrop === "vessel";
+  const R = U * 4.5; // a blood vessel's radius, round the stage along x
   const bits = useMemo(() => {
     const r = rng(seed);
-    return Array.from({ length: 40 }, () => ({ x: (r() - 0.5) * U * 16, y: r() * U * 6 - U, z: -r() * U * 14 + U * 2, s: 0.3 + r() * 0.6, a: r() * 6 }));
-  }, [seed, U]);
+    return Array.from({ length: vessel ? 34 : 40 }, () => {
+      if (!vessel) return { x: (r() - 0.5) * U * 16, y: r() * U * 6 - U, z: -r() * U * 14 + U * 2, s: 0.3 + r() * 0.6, a: r() * 6 };
+      // behind and around the stage, never between it and the camera
+      return { x: (r() - 0.5) * U * 24, y: U * 1.2 + (r() - 0.5) * R * 1.4, z: -(U * 1.6 + r() * R * 0.6), s: 0.45 + r() * 0.45, a: r() * 6 };
+    });
+  }, [seed, U, vessel, R]);
+  // in a vessel the cells stream past along it, wrapping round
+  const flow = (x: number) => (vessel ? ((((x + t * U * 1.4 + U * 12) % (U * 24)) + U * 24) % (U * 24)) - U * 12 : x);
   return (
     <group>
       {bits.map((b, i) => (
-        <group key={i} position={[b.x + Math.sin(t * 0.4 + b.a) * U * 0.3, b.y + Math.cos(t * 0.3 + b.a) * U * 0.2, b.z]} rotation={[b.a + t * 0.2, b.a, 0]}>
+        <group key={i} position={[flow(b.x) + Math.sin(t * 0.4 + b.a) * U * 0.3, b.y + Math.cos(t * 0.3 + b.a) * U * 0.2, b.z]} rotation={[b.a + t * 0.2, b.a, 0]}>
           <Block look={look} shape="torus" color={i % 4 ? tone(set.ground, 1.6) : set.accent} size={[U * b.s, U * b.s, U * b.s * 0.45]} />
         </group>
       ))}
+      {vessel ? (
+        <group position={[0, U * 1.2, 0]} rotation={[0, 0, Math.PI / 2]}>
+          {/* the wall, seen from inside: the near side never hides the stage */}
+          <mesh>
+            <cylinderGeometry args={[R, R, U * 90, 40, 1, true]} />
+            <meshStandardMaterial color={tone(set.ground, 1.45)} side={THREE.BackSide} roughness={0.55} flatShading={look.blocky} />
+          </mesh>
+          {Array.from({ length: 15 }, (_, i) => (
+            <mesh key={i} position={[0, (i - 7) * U * 6, 0]} rotation={[Math.PI / 2, 0, 0]}>
+              <torusGeometry args={[R * 0.99, U * 0.14, 8, 40]} />
+              <meshStandardMaterial color={tone(set.ground, 1.15)} side={THREE.BackSide} roughness={0.7} />
+            </mesh>
+          ))}
+        </group>
+      ) : null}
       <mesh>
         <sphereGeometry args={[U * 30, 24, 16]} />
         <meshStandardMaterial color={set.ground} side={THREE.BackSide} roughness={1} flatShading />

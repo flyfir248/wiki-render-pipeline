@@ -35,6 +35,9 @@ on:
       title:
         description: "For news: the incident's Wikipedia article title (blank picks the strongest recent one). For short / long: render that article as a test, without uploading"
         default: ""
+      replay:
+        description: "For a test render: the run id of an earlier test of the same title, to re-render its saved script and story without writing them again (far fewer minutes)"
+        default: ""
 
 # A test render (short / long with a title) never uploads or touches the schedule, so it runs in a group
 # of its own: a scheduled run can't cancel it while it waits, and it never holds up the schedule.
@@ -218,6 +221,7 @@ jobs:
           UPLOAD: ${{ inputs.upload }}
           COUNT: ${{ inputs.count || '1' }}
           TITLE: ${{ inputs.title }}
+          REPLAY: ${{ inputs.replay }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
@@ -240,8 +244,14 @@ jobs:
             cat jobs/assetcheck/report.md >> "$GITHUB_STEP_SUMMARY"
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
+          elif [ -n "$TITLE" ] && [ -n "$REPLAY" ]; then
+            # a test re-render: the earlier test's script and story, so only the visuals are redone
+            saved=$(ls -d assets/models/_runs/"$REPLAY"/*/ | head -1)
+            [ -f "$saved/written.json" ] || { echo "run $REPLAY saved no written.json to replay"; exit 1; }
+            python -m fyt --format "$TASK" make "wiki:$TITLE" --script "$saved/written.json" \
+              $([ -f "$saved/manifest.json" ] && echo --manifest "$saved/manifest.json") --no-localize
           elif [ -n "$TITLE" ]; then
-            python -m fyt --format "$TASK" make "wiki:$TITLE" # a test render, never uploaded
+            python -m fyt --format "$TASK" make "wiki:$TITLE" --no-localize # a test render, never uploaded
           elif [ "$UPLOAD" = false ]; then
             python -m fyt --format "$TASK" run --count "$COUNT" --no-upload
           else
@@ -262,7 +272,7 @@ jobs:
             for job in ../../jobs/*/; do
               out="_runs/$RUN/$(basename "$job")"
               mkdir -p "$out"
-              for f in contact.png manifest.json assets.json relevance.json visualplan.json world.json script.json qc.json log.txt; do
+              for f in contact.png manifest.json written.json assets.json relevance.json visualplan.json world.json script.json qc.json log.txt; do
                 if [ -f "$job/$f" ]; then cp "$job/$f" "$out/"; fi
               done
               cp "$job"/gate/*.png "$out/" 2>/dev/null || true

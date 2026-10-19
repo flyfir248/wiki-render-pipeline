@@ -131,7 +131,7 @@ class Setting(BaseModel):
     ground: str = Field(description="#rrggbb")
     sky: str = Field(description="#rrggbb")
     accent: str = Field(description="#rrggbb a light or glow colour.")
-    backdrop: Literal["hills", "mountains", "city", "none"] = Field(default="hills", description="What rings the horizon outdoors.")
+    backdrop: Literal["hills", "mountains", "city", "vessel", "none"] = Field(default="hills", description="What rings the horizon outdoors (vessel: the walls of a blood vessel round a microscopic scene).")
     dressing: list[Dressing] = Field(default_factory=list, description="0-4 kinds of thing that make this place this place.")
 
 
@@ -412,8 +412,8 @@ def _cell_parts(words: str, size: float, c: list[str]) -> list[Part]:
     L, a, b, d = size, c[0], c[1], c[2]
     y = L * 0.6
     if any(_has(words, w) for w in ("sickle", "crescent", "sickled")):
-        return [Part(shape="sphere", at=[math.cos(t) * L * 0.42, y + math.sin(t) * L * 0.42, 0],
-                     size=[L * (0.1 + 0.2 * math.sin(math.pi * i / 8))] * 2 + [L * (0.08 + 0.12 * math.sin(math.pi * i / 8))], color=a)
+        return [Part(shape="sphere", at=[math.cos(t) * L * 0.5, y + math.sin(t) * L * 0.5, 0],
+                     size=[L * (0.14 + 0.26 * math.sin(math.pi * i / 8))] * 2 + [L * (0.1 + 0.16 * math.sin(math.pi * i / 8))], color=a)
                 for i, t in ((i, math.radians(195 + i * 150 / 8)) for i in range(1, 8))]
     if any(_has(words, w) for w in ("red blood", "erythrocyte", "biconcave", "disc", "disk", "platelet")):
         return [Part(shape="torus", at=[0, y, 0], size=[L, L, L * 0.34], color=a),
@@ -546,12 +546,16 @@ def set_kind(name: str, look: str) -> str:
     return "grassland"
 
 
+VESSEL_WORDS = ("vessel", "artery", "arteries", "vein", "capillary", "capillaries", "bloodstream", "blood stream")
+
+
 def rule_setting(p: manifest.Place) -> Setting:
     text = f"{p.name} {p.look}".lower()
     kind = set_kind(p.name, p.look)
     time = "night" if any(w in text for w in ("night", "dark", "midnight")) else "dusk" if any(w in text for w in ("dusk", "sunset", "evening")) else "dawn" if any(w in text for w in ("dawn", "sunrise", "morning")) else "day"
     g, sky, acc = SET_COLOURS[kind]
-    backdrop = ("city" if kind == "city" or any(_has(text, w) for w in CITY_WORDS) else "mountains" if kind in ("mountain", "snow") or _has(text, "mountain")
+    backdrop = ("vessel" if kind == "micro" and any(_has(text, w) for w in VESSEL_WORDS)
+                else "city" if kind == "city" or any(_has(text, w) for w in CITY_WORDS) else "mountains" if kind in ("mountain", "snow") or _has(text, "mountain")
                 else "none" if kind in ("sea", "sky", "space", "micro", "underwater") else "hills")
     return Setting(place=p.id, kind=kind, time=time, ground=g, sky=sky, accent=acc, backdrop=backdrop)
 
@@ -697,6 +701,7 @@ def checked_setting(s: Setting, p: manifest.Place) -> Setting:
             "build": b.model_copy(update={"entity": f"{p.id}:{_slug(d.name)}", "parts": [x.model_copy(update={"bone": "body"}) for x in parts]}),
         }))
     return s.model_copy(update={"place": p.id, "ground": _hex(s.ground, rules.ground), "sky": _hex(s.sky, rules.sky),
+                                "backdrop": "vessel" if rules.backdrop == "vessel" else s.backdrop if s.backdrop != "vessel" else rules.backdrop,
                                 "accent": _hex(s.accent, rules.accent), "dressing": dressing})
 
 

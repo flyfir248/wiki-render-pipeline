@@ -310,3 +310,12 @@ def test_a_thing_whose_kind_says_object_is_never_built_as_a_creature():
     quokka = Entity(id="q", name="a quokka", kind="marsupial", search=["quokka"], look="small brown furry", certain=True, scenes=[1])
     q = worldgen.Build(entity="q", archetype="quadruped", size=0.5, primary="#6b4a2e", secondary="#a8835a", accent="#22201e")
     assert worldgen.checked_build(q, quokka, 1).archetype == "quadruped"  # a creature the words don't place keeps the model's body plan
+
+
+def test_a_blood_vessel_place_is_drawn_as_a_vessel():
+    vessel = Place(id="v", name="inside a blood vessel", look="microscopic inside of a blood vessel", scenes=[1])
+    assert worldgen.rule_setting(vessel).backdrop == "vessel"
+    model = worldgen.Setting(place="v", kind="micro", ground="#6a1c2c", sky="#3a0c18", accent="#ff9fb0", backdrop="none")
+    assert worldgen.checked_setting(model, vessel).backdrop == "vessel"
+    lab = Place(id="l", name="a laboratory", look="bright lab", scenes=[1])
+    assert worldgen.checked_setting(model.model_copy(update={"backdrop": "vessel"}), lab).backdrop != "vessel"

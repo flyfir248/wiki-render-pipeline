@@ -76,7 +76,7 @@ export type SetSpec = {
   ground: string;
   sky: string;
   accent: string;
-  backdrop?: "hills" | "mountains" | "city" | "none";
+  backdrop?: "hills" | "mountains" | "city" | "vessel" | "none";
   dressing: Dressing[];
 };
 

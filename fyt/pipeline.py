@@ -27,20 +27,23 @@ def log(job: Job, msg: str) -> None:
 
 
 def make_video(
-    cfg: Config, topic: str, script: Script | None = None, voice: str | None = None, polish: bool | None = None
+    cfg: Config, topic: str, script: Script | None = None, voice: str | None = None, polish: bool | None = None,
+    story: "story_manifest.Manifest | None" = None,
 ) -> Job:
     """Topic -> rendered video + thumbnail + captions, ready for review/upload.
-    `polish` (default: when the script is written here) sharpens title, hook and thumbnail text."""
+    `polish` (default: when the script is written here) sharpens title, hook and thumbnail text.
+    `story`, a manifest already read from this same script, skips reading it again (a test re-render)."""
     job = Job.create(cfg, topic)
     try:
-        _make(cfg, job, topic, script, voice, script is None if polish is None else polish)
+        _make(cfg, job, topic, script, voice, script is None if polish is None else polish, story)
     except Exception as e:
         job.update(status="failed", error=f"{type(e).__name__}: {e}")
         raise
     return job
 
 
-def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False) -> None:
+def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False,
+          given_story: "story_manifest.Manifest | None" = None) -> None:
     images: list[wiki.WikiImage] = []
     article = None
     written = script is None
@@ -109,7 +112,14 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)
         script = check_facts(cfg, job, script, notes)
-    story = read_story(cfg, job, script, notes)
+    # the script as written and checked, before any visual is planned: a test can re-render from it
+    job.file("written.json").write_text(script.model_dump_json(indent=2))
+    if given_story is not None:
+        story = given_story
+        job.file("manifest.json").write_text(story_manifest.dumps(story))
+        log(job, f"story (given): {', '.join(e.name for e in story.entities) or 'no showable entities'}; {len(story.moments)} moments")
+    else:
+        story = read_story(cfg, job, script, notes)
     script = plan_visuals(cfg, job, script, notes, story)
     script, found = story_models(cfg, job, script, story)
     if two_part:

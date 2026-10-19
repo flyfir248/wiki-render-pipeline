@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from fyt import manifest as story_manifest
 from fyt import pipeline, tts
 from fyt.config import ROOT, load_config
 from fyt.store import Topics, Uploads, find_job, list_jobs
@@ -22,6 +23,8 @@ def main(argv: list[str] | None = None) -> None:
     m = sub.add_parser("make", help="build one video for a topic (no upload)")
     m.add_argument("topic", help='a topic, or "wiki:<Article title>" to build it from Wikipedia')
     m.add_argument("--script", type=Path, help="use an existing script.json instead of calling Claude")
+    m.add_argument("--manifest", type=Path, help="with --script: the story manifest already read from it (skips reading it again)")
+    m.add_argument("--no-localize", action="store_true", help="skip translating the title and description (a test render)")
     m.add_argument("--no-research", action="store_true", help="skip web research")
     m.add_argument("--voice", choices=list(tts.PROVIDERS))
 
@@ -116,8 +119,11 @@ def main(argv: list[str] | None = None) -> None:
     elif args.cmd == "make":
         if args.no_research:
             cfg.research = False
+        if args.no_localize:
+            cfg.youtube.localize = []
         script = pipeline.load_script(args.script) if args.script else None
-        job = pipeline.make_video(cfg, args.topic, script=script, voice=args.voice)
+        story = story_manifest.Manifest.model_validate_json(args.manifest.read_text()) if args.manifest and script else None
+        job = pipeline.make_video(cfg, args.topic, script=script, voice=args.voice, story=story)
         print(f"\nVideo: {job.file('video.mp4')}\nReview it, then: python -m fyt approve {job.id} --upload")
     elif args.cmd == "topics":
         topics = Topics(cfg)
