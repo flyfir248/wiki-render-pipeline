@@ -67,6 +67,8 @@ def world_take(props: RenderProps, job_dir: Path, public: Path) -> Media | None:
     clean.update({"showCaptions": False, "showVisualizer": False, "badge": None, "subscribe": None, "captions": []})
     for s in clean["scenes"]:
         s["label"] = ""  # no "RECONSTRUCTION" tag
+        s["heading"] = None  # nor the scene's title card under the thumbnail's words
+        s["text"] = None
         if s.get("world"):
             s["world"]["callouts"] = []
     path = job_dir / "thumb-world-props.json"
