@@ -79,12 +79,15 @@ class RateLimited(ClaudeError):
     pass
 
 
+_SPENT: set[str] = set()  # providers that said the account has no credit left: not asked again this run
+
+
 def _chain(cfg: Config) -> list[Config]:
     """Who to ask, in order: the main model, the backup provider's models (when its key is set), then the
     fallback models on the main provider."""
     steps = [_with_model(cfg, cfg.llm.model)]
     b = cfg.llm.backup
-    if b and b.models and os.environ.get(b.api_key_env):
+    if b and b.models and os.environ.get(b.api_key_env) and b.base_url not in _SPENT:
         for m in b.models:
             steps.append(cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
                 "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None})}))
@@ -102,19 +105,25 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
     """
     steps = _chain(cfg)
     hurry = len(steps) - len(cfg.llm.fallback_models)  # the main model and the backup's
+    error: ClaudeError | None = None
     for i, step in enumerate(steps):
+        if step.llm.base_url in _SPENT:
+            continue  # it ran out of credit earlier in this call
         last = i == len(steps) - 1
         try:
             return _openai_structured_once(step, step.llm.model, system, user, schema, max_tokens, patient=last or hurry == 1 or i >= hurry)
         except RequestTooLarge:
             if i == 0 or last:
                 raise  # the caller shrinks the request
-            print(f"request too large for {step.llm.model}; trying {steps[i + 1].llm.model}")
+            print(f"request too large for {step.llm.model}; trying the next model")
         except ClaudeError as e:
-            if last:
+            if last and not isinstance(e, RateLimited) and step.llm.base_url not in _SPENT:
                 raise
-            print(f"{step.llm.model} failed ({str(e)[:200]}); trying {steps[i + 1].llm.model}")
-    raise AssertionError("unreachable")
+            error = e
+            print(f"{step.llm.model} failed ({str(e)[:200]}); trying the next model")
+    if hurry > 1:  # the backup couldn't help: wait for the main model as before
+        return _openai_structured_once(steps[0], steps[0].llm.model, system, user, schema, max_tokens, patient=True)
+    raise error or ClaudeError("no model answered")
 
 
 def _openai_structured_once(
@@ -166,6 +175,10 @@ def _openai_structured_once(
             print(f"rate limited by {c.base_url}; waiting {wait:.0f}s")
             time.sleep(wait)
             continue
+        if r.status_code == 402:  # out of credit: no use asking this provider again today
+            _SPENT.add(c.base_url)
+            print(f"{c.base_url} has no credit left; not asking it again this run")
+            raise ClaudeError(f"{c.base_url} returned 402: {r.text[:300]}")
         if r.status_code == 413:
             raise RequestTooLarge(f"{c.base_url} returned 413: {r.text[:500]}")
         if r.status_code == 400 and "json_validate_failed" in r.text:

@@ -268,3 +268,25 @@ def test_no_backup_key_means_the_old_order(cfg, monkeypatch):
     monkeypatch.delenv("HF_TOKEN", raising=False)
     cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["small"], "backup": BackupLLM(models=["big/open-model"])})})
     assert [c.llm.model for c in llm._chain(cfg)] == [cfg.llm.model, "small"]
+
+
+def test_a_backup_out_of_credit_is_not_asked_again(cfg, monkeypatch):
+    from fyt.config import BackupLLM
+
+    monkeypatch.setenv("HF_TOKEN", "hf-test")
+    monkeypatch.setattr(llm, "_SPENT", set())
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"backup": BackupLLM(models=["a/one", "b/two"])})})
+    asked = []
+
+    def post(url, headers, json, timeout):
+        asked.append(json["model"])
+        if "groq" in url and len(asked) < 4:
+            return Resp(429, {"error": "rate limit"})
+        if "huggingface" in url:
+            return Resp(402, {"error": "You have no remaining credits."})
+        return reply(_json.dumps(SCRIPT))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    llm.write_script(cfg, "Mary", "notes")
+    assert asked.count("a/one") == 1 and "b/two" not in asked
+    assert [c.llm.model for c in llm._chain(cfg)] == [cfg.llm.model]
