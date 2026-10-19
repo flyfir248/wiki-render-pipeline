@@ -1,0 +1,19 @@
+{
+  "warnings": [
+    "scene 5 at 24.4s: The subject is a 3D shot of a brown bear."
+  ],
+  "frames": [
+    {
+      "scene": 5,
+      "at": 24.45,
+      "contrast": 28.4,
+      "polished": false,
+      "problems": "The subject is a 3D shot of a brown bear."
+    },
+    {
+      "scene": 5,
+      "at": 25.66,
+      "contrast": 25.3
+    }
+  ]
+}

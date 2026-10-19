@@ -1,0 +1,34 @@
+fetching Wikipedia article
+2 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 15 scenes); quote (lost viewers 46% slower than average, 9 scenes); map (lost viewers 23% slower than average, 12 scenes); timeline (lost viewers 20% slower than average, 7 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 14% faster than average, 16 scenes); statement (lost viewers 94% faster than average, 21 scenes). On average 91% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 102 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene 2 mentions a pilot dropping drugs but never introduces him before the crash.; Scene 6 says the police never found who else got hurt, leaving the audience wondering about additional victims.
+checking facts against the source
+fact check found: scene 1: unsupported claim "In 1985, a bear in Georgia ate a bag of cocaine and then went on a rampage."; scene 2: unsupported claim "A drug‑smuggling pilot, mid‑flight, accidentally hit the plane’s door and fell to his death, scattering the stash."; scene 3: unsupported claim "The bag landed in the Chattahoochee forest, where a hungry black bear discovered it."; scene 4: unsupported claim "Police later found the bear’s stomach full of cocaine – the only clue to the mystery."; scene 4: unsupported claim "The animal's stomach contained [75 pounds] of cocaine."; scene 5: unsupported claim "The cocaine didn’t make the bear happy; it made it violently aggressive."; scene 6: unsupported claim "One hiker named Elsa was killed, and investigators could not locate any other victims."; scene 6: unsupported claim "The bear was found to be heavily intoxicated."; scene 7: unsupported claim "The case remains unsolved, but the cocaine‑fueled bear lives on as legend."
+facts check out
+reading the story: what it shows
+story: the black bear, duffel bag of cocaine, drug‑smuggling pilot; 5 moments
+planning the visuals
+visual plan (model): 4 3D, 1 2.5D, 2 2D; 3D: stage present, landscape flyover, stage present, stage present
+building the story world: 2 entities for 3 scenes
+story world (lowpoly): cast model, sets model, direction model; blackbear as quadruped, pilot as humanoid
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 1 Wikipedia/Commons images, 2 stock, 4 scenes on plain background
+cutaways: 1 extra photos across 1 scenes
+collage: 2 photos styled, 1 with a cut-out subject
+relevance: checking 4 3D scenes by eye
+scene 2: 3D dropped: frame check: The subject is not a drug-smuggling pilot, mid-flight, knocked himself unconscious on the doorframe and fell to his death.
+scene 7: 3D dropped: frame check: The subject in the image is not a black bear.
+scenes [3]: illustrative 3D swapped for painted storyboard pictures, so the video keeps one style
+storyboarding: an illustration for each sentence
+scene 7, sentence 2 redrawn: The bear named Cocaine Bear is not shown in the image.
+scene 7, sentence 2 redrawn: a bear, but not Cocaine Bear
+storyboard: 2 illustrated sentences of 3 planned, 3 in the cast; 3 checked, 1 redrawn, 1 left out
+art direction: signature
+rendering 40s short video
+look: scene 5 at 24.4s: The subject is a 3D shot of a brown bear.
+rendering thumbnail
+done: approved

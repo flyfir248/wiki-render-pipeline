@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 5 at 24.4s: The subject is a 3D shot of a brown bear."
+  ],
+  "repair": [],
+  "repaired": []
+}

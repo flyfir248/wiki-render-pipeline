@@ -1,0 +1,522 @@
+{
+  "style": "lowpoly",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "blackbear",
+      "archetype": "quadruped",
+      "size": 2.0,
+      "primary": "#4b3621",
+      "secondary": "#8b5a2b",
+      "accent": "#000000",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.6,
+        "legs": 0.6,
+        "neck": 0.2,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [],
+      "form": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        5,
+        7
+      ]
+    },
+    {
+      "entity": "pilot",
+      "archetype": "humanoid",
+      "size": 1.75,
+      "primary": "#555555",
+      "secondary": "#000000",
+      "accent": "#cccccc",
+      "skin": "#f5c6a5",
+      "hair": "#4a2c2a",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.3,
+        "ears": "none",
+        "tail": "none",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": {
+        "top": "jacket",
+        "bottom": "trousers",
+        "hair": "short",
+        "beard": false,
+        "glasses": false
+      },
+      "parts": [],
+      "form": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        2
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "forest",
+      "kind": "forest",
+      "time": "day",
+      "ground": "#4a5d23",
+      "sky": "#87ceeb",
+      "accent": "#ffd700",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "rocky terrain",
+          "build": {
+            "entity": "forest:rocky-terrain",
+            "archetype": "object",
+            "size": 1.5,
+            "primary": "#795548",
+            "secondary": "#8d6e63",
+            "accent": "#a1887f",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.3,
+                  0.0
+                ],
+                "size": [
+                  1.2,
+                  0.6,
+                  1.5
+                ],
+                "rot": [
+                  0.0,
+                  15.0,
+                  0.0
+                ],
+                "color": "#795548",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.5,
+                  0.5,
+                  0.3
+                ],
+                "size": [
+                  0.8,
+                  0.4,
+                  1.0
+                ],
+                "rot": [
+                  10.0,
+                  0.0,
+                  5.0
+                ],
+                "color": "#8d6e63",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 8,
+          "spread": 20.0
+        },
+        {
+          "name": "pines",
+          "build": {
+            "entity": "forest:pines",
+            "archetype": "plant",
+            "size": 10.0,
+            "primary": "#2e7d32",
+            "secondary": "#bcaaa4",
+            "accent": "#1b5e20",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "size": [
+                  0.2,
+                  2.0,
+                  0.2
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#bcaaa4",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  3.25,
+                  0.0
+                ],
+                "size": [
+                  1.25,
+                  2.5,
+                  1.25
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#2e7d32",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 15,
+          "spread": 40.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "knoxville",
+      "kind": "city",
+      "time": "day",
+      "ground": "#616161",
+      "sky": "#87ceeb",
+      "accent": "#ffffff",
+      "backdrop": "city",
+      "dressing": [
+        {
+          "name": "traffic light",
+          "build": {
+            "entity": "knoxville:traffic-light",
+            "archetype": "object",
+            "size": 3.0,
+            "primary": "#212121",
+            "secondary": "#ff0000",
+            "accent": "#00ff00",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  1.299,
+                  0.0
+                ],
+                "size": [
+                  0.173,
+                  2.598,
+                  0.173
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#212121",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.433,
+                  2.165,
+                  0.0
+                ],
+                "size": [
+                  0.26,
+                  0.693,
+                  0.26
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#424242",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  0.433,
+                  2.425,
+                  0.0
+                ],
+                "size": [
+                  0.13,
+                  0.13,
+                  0.13
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#ff0000",
+                "bone": "body",
+                "spin": "",
+                "glow": true
+              }
+            ],
+            "form": ""
+          },
+          "count": 4,
+          "spread": 15.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "kentucky",
+      "kind": "town",
+      "time": "day",
+      "ground": "#9e9e9e",
+      "sky": "#87ceeb",
+      "accent": "#4fc3f7",
+      "backdrop": "hills",
+      "dressing": [
+        {
+          "name": "museum facade",
+          "build": {
+            "entity": "kentucky:museum-facade",
+            "archetype": "structure",
+            "size": 10.0,
+            "primary": "#eceff1",
+            "secondary": "#4fc3f7",
+            "accent": "#ffffff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  1.837,
+                  0.0
+                ],
+                "size": [
+                  6.124,
+                  3.674,
+                  2.449
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#eceff1",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  1.837,
+                  1.225
+                ],
+                "size": [
+                  5.511,
+                  3.062,
+                  0.122
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#4fc3f7",
+                "bone": "body",
+                "spin": "",
+                "glow": true
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.612,
+                  1.286
+                ],
+                "size": [
+                  2.449,
+                  1.225,
+                  0.061
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#ffffff",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 1,
+          "spread": 2.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "2": {
+      "scene": 2,
+      "place": "knoxville",
+      "time": "",
+      "actors": [
+        {
+          "entity": "pilot",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "pilot",
+      "marks": [],
+      "callouts": []
+    },
+    "5": {
+      "scene": 5,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "blackbear",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "follow",
+      "on": "blackbear",
+      "marks": [],
+      "callouts": []
+    },
+    "7": {
+      "scene": 7,
+      "place": "kentucky",
+      "time": "",
+      "actors": [
+        {
+          "entity": "blackbear",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "blackbear",
+      "marks": [],
+      "callouts": []
+    }
+  }
+}

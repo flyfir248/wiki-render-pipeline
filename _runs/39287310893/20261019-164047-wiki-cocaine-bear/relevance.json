@@ -1,0 +1,13 @@
+{
+  "checked": [
+    2,
+    3,
+    5,
+    7
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "2": "frame check: The subject is not a drug-smuggling pilot, mid-flight, knocked himself unconscious on the doorframe and fell to his death.",
+    "7": "frame check: The subject in the image is not a black bear."
+  }
+}
