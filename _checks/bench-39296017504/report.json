@@ -1,0 +1,32 @@
+{
+  "seconds": 357.1,
+  "frames": 240,
+  "seconds_per_frame": 1.49,
+  "look_warnings": [],
+  "look_frames": [
+    {
+      "scene": 1,
+      "at": 1.35,
+      "contrast": 22.2,
+      "burnt": 0.0
+    },
+    {
+      "scene": 1,
+      "at": 3.69,
+      "contrast": 26.1,
+      "burnt": 0.0
+    },
+    {
+      "scene": 2,
+      "at": 5.55,
+      "contrast": 36.7,
+      "burnt": 0.0
+    },
+    {
+      "scene": 2,
+      "at": 7.37,
+      "contrast": 24.0,
+      "burnt": 0.0
+    }
+  ]
+}
