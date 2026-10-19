@@ -221,12 +221,13 @@ def test_rules_shape_cells_and_vehicles_from_what_they_are_called():
     assert jet.size > car.size * 2 and not any(p.spin for p in jet.parts)  # no propeller on a jet
 
 
-def test_flocks_and_crowds_come_from_plural_living_things():
+def test_flocks_crowds_and_piles_come_from_plural_names():
     e = lambda name, kind: Entity(id="x", name=name, kind=kind, search=[name], look="", certain=True, scenes=[1])
     assert worldgen.group_size(e("Canada geese", "bird"), "bird") == 7
     assert worldgen.group_size(e("passengers", "person"), "humanoid") == 4
     assert worldgen.group_size(e("the captain", "pilot"), "humanoid") == 1
-    assert worldgen.group_size(e("duffel bags", "duffel bag"), "object") == 1
+    assert worldgen.group_size(e("duffel bags", "duffel bag"), "object") == 4
+    assert worldgen.group_size(e("a duffel bag", "bag"), "object") == 1
 
 
 def test_backdrop_from_the_place_words():
@@ -299,3 +300,13 @@ def test_set_dressing_is_pulled_to_stage_scale_and_slabs_lie_flat():
     r, t = (d.build.parts[0] for d in s.dressing)
     assert r.size[0] < 50 and r.size[1] <= 0.08
     assert t.size[1] < 20
+
+
+def test_a_thing_whose_kind_says_object_is_never_built_as_a_creature():
+    # from the Cocaine Bear render: "plastic cocaine containers" came back from the model as a fish
+    e = Entity(id="containers", name="plastic cocaine containers", kind="object", search=["container"], look="small white plastic boxes", certain=True, scenes=[1])
+    b = worldgen.Build(entity="containers", archetype="fish", size=0.6, primary="#ffffff", secondary="#dddddd", accent="#000000")
+    assert worldgen.checked_build(b, e, 1).archetype == "object"
+    quokka = Entity(id="q", name="a quokka", kind="marsupial", search=["quokka"], look="small brown furry", certain=True, scenes=[1])
+    q = worldgen.Build(entity="q", archetype="quadruped", size=0.5, primary="#6b4a2e", secondary="#a8835a", accent="#22201e")
+    assert worldgen.checked_build(q, quokka, 1).archetype == "quadruped"  # a creature the words don't place keeps the model's body plan

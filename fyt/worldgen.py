@@ -253,6 +253,7 @@ def is_place(e: Entity) -> bool:
     return any(_has(e.kind.lower(), w) for w in PLACE_KINDS)
 
 
+NOT_ALIVE = ("object", "item", "container", "package", "box", "bag", "tool", "device", "machine", "weapon", "artifact", "artefact", "product", "substance", "drug")
 GENERIC = {"animal", "mammal", "beast", "vehicle", "human", "people", "person", "plant", "building"}
 
 
@@ -639,7 +640,11 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
     parts, a duffel bag never on a skeleton), colours valid, size plausible, at most MAX_PARTS parts."""
     rules = rule_build(e, seed)
     arche = b.archetype
-    if (arche in LIVING) != (rules.archetype in LIVING) and archetype_of(e) != "object":
+    # the entity's own words win the living/non-living split, except that a thing the words don't place
+    # at all (rules fall back to "object") may be a creature the model knows; one whose kind says it is
+    # an object, a container or a tool is never one
+    said_thing = any(_has(e.kind.lower(), w) for w in NOT_ALIVE)
+    if (arche in LIVING) != (rules.archetype in LIVING) and (archetype_of(e) != "object" or said_thing):
         arche = rules.archetype
     size = b.size if 0.002 <= b.size <= 400 else rules.size
     parts = [q for q in (_clean_part(p, size) for p in b.parts[:MAX_PARTS]) if q is not None]
@@ -787,15 +792,15 @@ GROUPS = ("geese", "flock", "herd", "swarm", "crowd", "people", "passengers", "c
 
 
 def group_size(e: Entity | None, arche: str) -> int:
-    """How many of an entity a shot shows: one, unless its name is a flock, crowd or plural of living things."""
+    """How many of an entity a shot shows: one, unless its name is a flock, crowd or plural of living things or objects."""
     if e is None:
         return 1
     name = e.name.lower()
     last = re.sub(r"[^a-z]", "", name.split()[-1]) if name.split() else ""
-    plural = any(_has(name, w) for w in GROUPS) or (arche in LIVING and last.endswith("s") and not last.endswith("ss") and len(last) > 3)
+    plural = any(_has(name, w) for w in GROUPS) or (arche in LIVING + ("object",) and last.endswith("s") and not last.endswith("ss") and len(last) > 3)
     if not plural:
         return 1
-    return 7 if arche in ("bird", "insect", "fish") else 4 if arche in ("humanoid", "quadruped") else 3 if arche == "cell" else 1
+    return 7 if arche in ("bird", "insect", "fish") else 4 if arche in ("humanoid", "quadruped", "object") else 3 if arche == "cell" else 1
 
 
 LANDED = ("landed", "onto the river", "onto the water", "on the water", "ditched", "touched down", "splashed down", "on the runway", "floating", "sank", "wreck")

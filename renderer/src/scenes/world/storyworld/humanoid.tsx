@@ -38,7 +38,8 @@ export type Dims = { H: number; thigh: number; shin: number; hip: number; torso:
 export const dimsOf = (b: Build): Dims => {
   const H = Math.max(0.5, b.size);
   const child = b.body.age === "child";
-  const head = H * (child ? 0.17 : 0.125) * (0.85 + 0.3 * b.body.head);
+  // heads a little larger than life, so faces read on a phone
+  const head = H * (child ? 0.2 : 0.155) * (0.85 + 0.3 * b.body.head);
   const legs = H * (child ? 0.42 : 0.47) * (0.9 + 0.2 * b.body.legs);
   const torso = H * 0.3;
   const tw = H * (0.2 + 0.09 * b.body.build);
@@ -337,23 +338,28 @@ export const Humanoid: React.FC<BodyProps> = ({ build, look, pose, t, state, hel
   }
   if (o.top === "hoodie") extras.push(<Block key="hood" look={look} shape={blocky ? "box" : "sphere"} color={top} size={[d.td * 0.7, d.torso * 0.35, d.tw * 0.7]} at={[-d.td * 0.45, d.torso * 0.92, 0]} />);
   if (o.top === "scrubs" || o.top === "labcoat") extras.push(<Block key="pocket" look={look} color={tone(top, 0.85)} size={[d.td * 0.08, d.torso * 0.16, d.tw * 0.22]} at={[d.td * 0.51, d.torso * 0.68, -d.tw * 0.25]} />);
-  const skirtLen = o.top === "robe" ? d.hip * 0.95 : o.top === "dress" || o.top === "labcoat" || o.top === "coat" ? d.hip * 0.55 : o.bottom === "skirt" ? d.hip * 0.45 : 0;
+  const skirtLen = o.top === "robe" ? d.hip * 0.95 : o.top === "labcoat" || o.top === "coat" ? d.hip * 0.72 : o.top === "dress" ? d.hip * 0.55 : o.bottom === "skirt" ? d.hip * 0.45 : 0;
   const skirtC = o.top === "robe" || o.top === "dress" || o.top === "labcoat" || o.top === "coat" ? top : bottom;
   return (
     <group position={[0, d.hip + pose.y, 0]} rotation={[pose.roll, 0, pose.pitch]}>
       {legs}
       {parts("hips")}
       {skirtLen ? (
-        <Block look={look} shape={blocky ? "box" : "cone"} color={skirtC} size={[d.td * 1.5, skirtLen, d.tw * 1.35]} at={[0, -skirtLen / 2 + d.H * 0.02, 0]} rot={blocky ? [0, 0, 0] : [Math.PI, 0, 0]} />
+        o.top === "labcoat" || o.top === "coat" ? (
+          // a coat's tails hang straight from the waist, as wide as the torso
+          <Block look={look} shape={blocky ? "box" : "cylinder"} color={skirtC} size={[d.td * 1.12, skirtLen, d.tw * 1.08]} at={[-d.td * 0.04, -skirtLen / 2 + d.H * 0.02, 0]} />
+        ) : (
+          <Block look={look} shape={blocky ? "box" : "cone"} color={skirtC} size={[d.td * 1.5, skirtLen, d.tw * 1.35]} at={[0, -skirtLen / 2 + d.H * 0.02, 0]} rot={blocky ? [0, 0, 0] : [Math.PI, 0, 0]} />
+        )
       ) : null}
       <group rotation={[0, pose.twist, pose.lean]}>
         <Block look={look} shape={blocky ? "box" : "cylinder"} color={top} size={[d.td, d.torso, d.tw]} at={[0, d.torso / 2, 0]} />
-        {!blocky ? <Block look={look} shape="sphere" color={top} size={[d.td * 1.02, d.td * 0.9, d.tw * 1.02]} at={[0, d.torso, 0]} /> : null}
+        {!blocky ? <Block look={look} shape="sphere" color={top} size={[d.td * 1.02, d.td * 0.5, d.tw * 1.02]} at={[0, d.torso, 0]} /> : null}
         {extras}
         {arms}
         <group position={[0, d.torso / 2, 0]}>{parts("torso")}</group>
         <group position={[0, d.torso / 2, 0]}>{parts("back")}</group>
-        <group position={[0, d.torso + hs * 0.62, 0]} rotation={pose.head}>
+        <group position={[0, d.torso + hs * 0.7, 0]} rotation={pose.head}>
           <Block look={look} shape={blocky ? "box" : "cylinder"} color={skin} size={[hs * 0.35, hs * 0.3, hs * 0.35]} at={[0, -hs * 0.5, 0]} />
           <Block look={look} shape={headShape} color={skin} size={[hs * 0.92, hs * 1.02, hs * 0.86]} />
           {/* face: eyes, brows, nose and mouth on the +x side, big enough to read on a phone */}

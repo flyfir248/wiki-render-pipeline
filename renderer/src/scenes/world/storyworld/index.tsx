@@ -109,10 +109,11 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     const inPlace = start.distanceTo(end) < 0.01 && ["walk", "run", "swim", "climb"].includes(m.verb);
     const phase = inPlace ? t * (m.verb === "run" ? 10 : 6) : (dist / stride) * Math.PI * 2 + t * 0.2;
     // facing: where it goes, else who it looks at, else the lead, else three-quarters to camera
-    let yaw = world.cast.length === 1 ? -1.0 : -0.55;
+    // alone: three-quarters to camera, and a person standing or talking turns to face it
+    let yaw = world.cast.length === 1 ? (m.build.archetype === "humanoid" && ["idle", "talk", "work"].includes(m.verb) ? -Math.PI / 2 + 0.45 : -1.0) : -0.55;
     const dir = end.clone().sub(start);
     if (dir.lengthSq() > 1e-4) yaw = Math.atan2(-dir.z, dir.x);
-    else if (m.face === "camera") yaw = -Math.PI / 2 + 0.35;
+    else if (m.face === "camera") yaw = -Math.PI / 2 + (m.build.archetype === "humanoid" ? 0.35 : 0.9); // an animal head-on is a block: three-quarters
     else {
       const target = m.face ? world.cast.findIndex((c) => c.entity === m.face) : i > 0 ? 0 : -1;
       if (target >= 0 && target !== i) {
@@ -135,6 +136,17 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     const many = Math.max(1, Math.min(9, m.count ?? 1));
     return { m, pos, yaw, phase, speed, h, w: w * (1 + 0.9 * Math.sqrt(many - 1)), w0: w, air };
   });
+  // people beside something afloat (a ditched airliner, a boat) stand on it, not on the water
+  const lead = placed[0];
+  if (lead && waterBand(world.set.kind) && lead.m.build.archetype === "vehicle" && !flies(lead.m) && lead.m.verb !== "drive") {
+    const c = Math.cos(lead.yaw), s = Math.sin(lead.yaw);
+    placed.forEach((p, i) => {
+      if (i === 0 || p.m.build.archetype !== "humanoid") return;
+      const along = (i % 2 ? -0.08 : 0.08) * lead.w0, across = (i % 2 ? 1 : -1) * 0.22 * lead.w0;
+      p.pos.set(lead.pos.x + along * c + across * s, lead.pos.y + lead.h * 0.3, lead.pos.z - along * s + across * c);
+      p.air = 0;
+    });
+  }
   return { actors: placed, cam: direct(world, placed, u, t, U), U, t, k, u };
 };
 
@@ -156,7 +168,7 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U: number)
   let target = look.clone();
   switch (world.camera) {
     case "establish":
-      off = side(0.5 - 0.15 * e, d * (1.45 - 0.5 * e), d * (0.8 - 0.5 * e) + on.h * 0.3);
+      off = side(0.5 - 0.15 * e, d * (1.3 - 0.45 * e), d * (0.72 - 0.45 * e) + on.h * 0.3);
       break;
     case "follow":
       off = side(0.12, d * 1.0, on.h * 0.35 + d * 0.12);

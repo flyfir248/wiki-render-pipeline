@@ -403,7 +403,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
       ) : null}
       {kind === "sea" ? <Water size={groundSize} color={water} t={t} amp={U * 0.06} /> : null}
       {band ? (
-        <Water size={U * 30} shape={[U * (kind === "lake" ? 60 : 120), U * (band[0] - band[1])]} color={water} t={t} amp={U * (kind === "beach" ? 0.03 : 0.02)} at={[0, U * 0.03, U * (band[0] + band[1]) / 2]} />
+        <Water size={U * 30} shape={[U * (kind === "lake" ? 60 : 120), U * (band[0] - band[1])]} color={water} t={t} amp={U * (kind === "beach" ? 0.03 : 0.02)} at={[0, U * (kind === "beach" ? 0.09 : 0.07), U * (band[0] + band[1]) / 2]} />
       ) : null}
       {kind === "swamp" ? <Water size={U * 40} color={tone(water, 0.6)} t={t} amp={U * 0.005} at={[0, U * 0.03, -U * 6]} /> : null}
       {kind === "road" || kind === "airfield" || kind === "town" || kind === "city" ? (
