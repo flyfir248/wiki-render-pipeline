@@ -1,0 +1,31 @@
+fetching Wikipedia article
+8 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 15 scenes); quote (lost viewers 46% slower than average, 9 scenes); map (lost viewers 23% slower than average, 12 scenes); timeline (lost viewers 20% slower than average, 7 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 14% faster than average, 16 scenes); statement (lost viewers 94% faster than average, 21 scenes). On average 91% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene 4 calls the Hudson River “solid ground,” which is inaccurate.; Scene 7 says the plane could glide on one engine even though both engines failed, a contradiction.
+checking facts against the source
+fact check found: scene 2: wrong claim "At 8:42 am, Flight 1549 left LaGuardia" (source says: The flight was cleared for takeoff at 15:24:56 Eastern Standard Time (3:24 PM), not 8:42 AM.)
+facts check out
+reading the story: what it shows
+story: a US Airways Airbus A320, Canada geese, rescue boats; 5 moments
+planning the visuals
+visual plan (model): 4 3D, 3 2.5D, 1 2D; 3D: stage present, stage rise, stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: no vision check could be made (first candidate 'Airbus A320'); a US Airways Airbus A320 stays painted this time
+assets: no usable model of a US Airways Airbus A320 (airbus a320, regional jet, airplane): its scenes stay painted
+building the story world: 2 entities for 4 scenes
+story world (noir): cast model, sets model, direction model; airbus-a320 as vehicle, canada-geese as bird
+voicing 8 scenes with kokoro
+fetching visuals
+visuals: 5 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+cutaways: 4 extra photos across 3 scenes
+collage: 9 photos styled, 4 with a cut-out subject
+relevance: checking 4 3D scenes by eye
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 5, sentence 2: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 2 planned, 4 in the cast; 0 checked, 0 redrawn, 1 left out
+art direction: noir
+rendering 55s short video
+rendering thumbnail
+done: approved

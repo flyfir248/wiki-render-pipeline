@@ -1,0 +1,45 @@
+{
+  "warnings": [],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 1.95,
+      "contrast": 23.6
+    },
+    {
+      "scene": 1,
+      "at": 5.33,
+      "contrast": 30.6
+    },
+    {
+      "scene": 2,
+      "at": 9.19,
+      "contrast": 36.9
+    },
+    {
+      "scene": 2,
+      "at": 13.86,
+      "contrast": 31.2
+    },
+    {
+      "scene": 3,
+      "at": 17.15,
+      "contrast": 30.0
+    },
+    {
+      "scene": 3,
+      "at": 20.06,
+      "contrast": 52.7
+    },
+    {
+      "scene": 8,
+      "at": 49.64,
+      "contrast": 25.0
+    },
+    {
+      "scene": 8,
+      "at": 53.61,
+      "contrast": 39.3
+    }
+  ]
+}
