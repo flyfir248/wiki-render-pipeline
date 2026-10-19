@@ -31,7 +31,8 @@ void main(){
   vec3 d = normalize(vDir);
   float h = d.y;
   vec3 col = mix(horizon, top, pow(smoothstep(-0.02, 0.65, h), 0.65));
-  col = mix(col, below, smoothstep(0.0, -0.2, h));
+  // below the horizon the sky holds the horizon (fog) colour a while, so a fogged ground meets it without a seam
+  col = mix(col, below, smoothstep(-0.1, -0.45, h));
   float s = max(dot(d, normalize(sunDir)), 0.0);
   col += sunCol * (pow(s, 900.0) * 6.0 * (1.0 - night * 0.6) + pow(s, 24.0) * 0.45 + pow(s, 4.0) * 0.16);
   // a haze band at the horizon

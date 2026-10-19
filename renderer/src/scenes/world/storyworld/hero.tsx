@@ -21,7 +21,7 @@ export const paint = (c: string, opts: { gloss?: number; metal?: number; vertex?
     const g = opts.gloss ?? 0.5;
     m = new THREE.MeshStandardMaterial({
       color: opts.vertex ? "#ffffff" : col(c), vertexColors: Boolean(opts.vertex), roughness: 0.5 - g * 0.38, metalness: opts.metal ?? 0.1, envMapIntensity: 1.2,
-      emissive: opts.emissive ? col(opts.emissive) : undefined, emissiveIntensity: opts.emissive ? 1.4 : 0,
+      emissive: col(opts.emissive ?? "#000000"), emissiveIntensity: opts.emissive ? 1.4 : 0,
     });
     mats.set(key, m);
   }

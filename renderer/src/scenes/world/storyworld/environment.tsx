@@ -678,7 +678,7 @@ const SkyBits: React.FC<{ seed: number; U: number; ground: string; look: Look; l
       {clouds.map((c, i) => (
         <sprite key={i} material={mats[i % 3]} position={[(((c.x - t * U * 0.8 * c.sp + U * 90) % (U * 180)) + U * 180) % (U * 180) - U * 90, c.y, c.z]} scale={[c.s * 1.8, c.s, 1]} />
       ))}
-      <Block look={look} color={ground} size={[U * 900, U * 0.1, U * 900]} at={[0, -U * 36, 0]} />
+      <Block look={look} color={ground} size={[U * 3000, U * 0.1, U * 3000]} at={[0, -U * 36, 0]} />
     </group>
   );
 };
