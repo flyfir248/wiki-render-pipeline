@@ -1,0 +1,696 @@
+{
+  "style": "lowpoly",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "plane",
+      "archetype": "vehicle",
+      "size": 37.6,
+      "primary": "#ffffff",
+      "secondary": "#000000",
+      "accent": "#ff0000",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            1.5,
+            0.0
+          ],
+          "size": [
+            4.0,
+            1.5,
+            4.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffffff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -15.0,
+            1.5,
+            0.0
+          ],
+          "size": [
+            30.0,
+            0.2,
+            6.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffffff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            15.0,
+            1.5,
+            0.0
+          ],
+          "size": [
+            30.0,
+            0.2,
+            6.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffffff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            2.5,
+            0.0
+          ],
+          "size": [
+            0.5,
+            1.0,
+            0.5
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -12.0,
+            1.5,
+            2.5
+          ],
+          "size": [
+            0.5,
+            2.0,
+            0.5
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -12.0,
+            1.5,
+            -2.5
+          ],
+          "size": [
+            0.5,
+            2.0,
+            0.5
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            12.0,
+            1.5,
+            2.5
+          ],
+          "size": [
+            0.5,
+            2.0,
+            0.5
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            12.0,
+            1.5,
+            -2.5
+          ],
+          "size": [
+            0.5,
+            2.0,
+            0.5
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.5,
+            0.0
+          ],
+          "size": [
+            0.5,
+            1.0,
+            0.5
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ff0000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "source": "procedural, designed by the model",
+      "scenes": [
+        1,
+        2
+      ]
+    },
+    {
+      "entity": "geese",
+      "archetype": "bird",
+      "size": 0.9,
+      "primary": "#ffffff",
+      "secondary": "#000000",
+      "accent": "#ff8800",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.4,
+        "legs": 0.2,
+        "neck": 0.7,
+        "head": 0.6,
+        "snout": 0.3,
+        "ears": "none",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "sphere",
+          "at": [
+            0.0,
+            0.45,
+            0.0
+          ],
+          "size": [
+            0.3,
+            0.3,
+            0.3
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffffff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cone",
+          "at": [
+            0.0,
+            0.6,
+            0.2
+          ],
+          "size": [
+            0.05,
+            0.15,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cone",
+          "at": [
+            0.0,
+            0.6,
+            -0.2
+          ],
+          "size": [
+            0.05,
+            0.15,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cone",
+          "at": [
+            0.0,
+            0.3,
+            0.1
+          ],
+          "size": [
+            0.02,
+            0.08,
+            0.02
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ff8800",
+          "bone": "head",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "source": "procedural, designed by the model",
+      "scenes": [
+        1
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "la",
+      "kind": "airfield",
+      "time": "day",
+      "ground": "#d2d2d2",
+      "sky": "#a0c4ff",
+      "accent": "#ffeb3b",
+      "backdrop": "city",
+      "dressing": [
+        {
+          "name": "runway",
+          "build": {
+            "entity": "la:runway",
+            "archetype": "structure",
+            "size": 400.0,
+            "primary": "#f0f0f0",
+            "secondary": "#a0a0a0",
+            "accent": "#ffeb3b",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  400.0,
+                  5.0,
+                  30.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#f0f0f0",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  -100.0,
+                  0.0,
+                  15.0
+                ],
+                "size": [
+                  200.0,
+                  5.0,
+                  30.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#f0f0f0",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  100.0,
+                  0.0,
+                  15.0
+                ],
+                "size": [
+                  200.0,
+                  5.0,
+                  30.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#f0f0f0",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ]
+          },
+          "count": 1,
+          "spread": 2.0
+        },
+        {
+          "name": "taxiway",
+          "build": {
+            "entity": "la:taxiway",
+            "archetype": "structure",
+            "size": 200.0,
+            "primary": "#e0e0e0",
+            "secondary": "#a0a0a0",
+            "accent": "#ffeb3b",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  200.0,
+                  5.0,
+                  20.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#e0e0e0",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  -50.0,
+                  0.0,
+                  10.0
+                ],
+                "size": [
+                  100.0,
+                  5.0,
+                  20.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#e0e0e0",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  50.0,
+                  0.0,
+                  10.0
+                ],
+                "size": [
+                  100.0,
+                  5.0,
+                  20.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#e0e0e0",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ]
+          },
+          "count": 1,
+          "spread": 2.0
+        },
+        {
+          "name": "control tower",
+          "build": {
+            "entity": "la:control-tower",
+            "archetype": "structure",
+            "size": 60.0,
+            "primary": "#bdbdbd",
+            "secondary": "#808080",
+            "accent": "#ffeb3b",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  20.0,
+                  60.0,
+                  20.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#bdbdbd",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  60.0,
+                  0.0
+                ],
+                "size": [
+                  15.0,
+                  10.0,
+                  15.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#bdbdbd",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ]
+          },
+          "count": 1,
+          "spread": 2.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "geese",
+          "verb": "fly",
+          "at": "far",
+          "to": "center",
+          "face": "plane",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "plane",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "geese",
+      "marks": [
+        {
+          "kind": "arrow",
+          "on": "geese",
+          "to": "plane",
+          "color": ""
+        }
+      ],
+      "callouts": []
+    },
+    "2": {
+      "scene": 2,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "plane",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "plane",
+      "marks": [],
+      "callouts": []
+    }
+  }
+}

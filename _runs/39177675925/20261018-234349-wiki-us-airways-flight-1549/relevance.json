@@ -1,0 +1,11 @@
+{
+  "checked": [
+    1,
+    2
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "1": "frame check: Geese are not shown, and the plane is not shown.",
+    "2": "frame check: No visible engines, not an Airbus A320, not white, no registration number visible, no crew visible, no decision visible, not a forced landing, no water visible, not a bird strike, not under four minutes, no crew decision visible, not a twin-engine plane."
+  }
+}

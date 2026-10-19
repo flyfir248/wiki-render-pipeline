@@ -1,0 +1,33 @@
+fetching Wikipedia article
+8 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 13 scenes); quote (lost viewers 32% slower than average, 7 scenes); map (lost viewers 13% slower than average, 10 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 84% faster than average, 17 scenes). On average 90% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 71 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+checking facts against the source
+fact check found: scene 4: unsupported claim "Glide 2,500 feet"
+facts check out
+reading the story: what it shows
+story: US Airways Flight 1549, Canada geese, Hudson River, rescue boats; 4 moments
+planning the visuals
+visual plan (model): 2 3D, 5 2.5D; 3D: stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: no vision check could be made (first candidate 'Airbus A320'); US Airways Flight 1549 stays painted this time
+assets: no usable model of US Airways Flight 1549 (airbus a320, airbus, aircraft): its scenes stay painted
+building the story world: 2 entities for 2 scenes
+story world (lowpoly): cast model, sets model, direction model; plane as vehicle, geese as bird
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 6 Wikipedia/Commons images, 0 stock, 1 scenes on plain background
+cutaways: 2 extra photos across 2 scenes
+collage: 8 photos styled, 4 with a cut-out subject
+translating the title and description (es, pt, hi, fr, de)
+relevance: checking 2 3D scenes by eye
+scene 1: 3D dropped: frame check: Geese are not shown, and the plane is not shown.
+scene 2: 3D dropped: frame check: No visible engines, not an Airbus A320, not white, no registration number visible, no crew visible, no decision visible, not a forced landing, no water visible, not a bird strike, not under four minutes, no crew decision visible, not a twin-engine plane.
+storyboarding: an illustration for each sentence
+storyboard: 2 illustrated sentences of 2 planned, 4 in the cast; 2 checked, 0 redrawn, 0 left out
+art direction: signature
+rendering 39s short video
+rendering thumbnail
+done: approved

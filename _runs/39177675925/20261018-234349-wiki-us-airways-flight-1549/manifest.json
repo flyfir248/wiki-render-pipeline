@@ -1,0 +1,122 @@
+{
+  "entities": [
+    {
+      "id": "plane",
+      "name": "US Airways Flight 1549",
+      "kind": "light aircraft",
+      "search": [
+        "airbus a320",
+        "airbus",
+        "aircraft"
+      ],
+      "look": "Airbus A320, white with two black engines, registration N106US",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "geese",
+      "name": "Canada geese",
+      "kind": "animal",
+      "search": [
+        "canada goose",
+        "geese",
+        "bird"
+      ],
+      "look": "large white geese with black wingtips",
+      "certain": true,
+      "scenes": [
+        1
+      ]
+    },
+    {
+      "id": "river",
+      "name": "Hudson River",
+      "kind": "body of water",
+      "search": [
+        "hudson river",
+        "river",
+        "water"
+      ],
+      "look": "wide, brownish water near Midtown Manhattan",
+      "certain": true,
+      "scenes": [
+        3,
+        4,
+        5,
+        7
+      ]
+    },
+    {
+      "id": "boat",
+      "name": "rescue boats",
+      "kind": "vehicle",
+      "search": [
+        "rescue boat",
+        "boat",
+        "watercraft"
+      ],
+      "look": "small yellow and white boats with crew",
+      "certain": true,
+      "scenes": [
+        7
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "la",
+      "name": "LaGuardia Airport",
+      "look": "small concrete runway, taxiways, control tower, 2009 era",
+      "scenes": [
+        3
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "geese",
+      "place": "",
+      "action": "slam into aircraft",
+      "motion": "present",
+      "cue": "Geese slammed into a US Airways A320 just after takeoff.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "plane",
+      "place": "",
+      "action": "engines fail",
+      "motion": "present",
+      "cue": "The twin engines failed in under four minutes",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 3,
+      "entity": "plane",
+      "place": "",
+      "action": "glide toward Hudson",
+      "motion": "move",
+      "cue": "pilots chose the Hudson River",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 7,
+      "entity": "boat",
+      "place": "",
+      "action": "rescue survivors",
+      "motion": "move",
+      "cue": "Rescue boats pulled everyone from the water",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}
