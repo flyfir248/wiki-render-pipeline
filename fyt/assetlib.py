@@ -65,7 +65,7 @@ A_PART = ("skull", "skeleton", "bone", "bones", "mandible", "jaw", "tooth", "tee
           "footprint", "track", "fur", "texture", "femur", "tibia", "fibula", "radius", "ulna", "humerus", "rib",
           "vertebra", "pelvis", "scapula", "astragalus", "calcaneus", "calcanium", "metatarsal", "metacarpal", "phalanx", "carpal", "tarsal",
           "patella", "sacrum", "clavicle", "cranium", "specimen", "limb", "leg", "claw", "hoof", "horn", "antler", "detector", "fountain", "rig only", "base mesh", "sculpt", "bust", "statue", "figurine", "toy", "plush")
-HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) FacelessYT model finder"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) wiki-render-pipeline model finder"}
 
 CHECK = """You check the preview of a 3D model before it is used in a documentary video. Pass it only if it
 shows one whole {thing} that a viewer would recognise as that at a glance. Fail it if it shows
