@@ -1,0 +1,20 @@
+story (given): the black bear, duffel bag of cocaine, drug‑smuggling pilot; 5 moments
+planning the visuals
+visual plan (model): 4 3D, 1 2.5D, 2 2D; 3D: stage present, stage present, stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: no vision check could be made (first candidate 'Military Duffel bag'); duffel bag of cocaine stays painted this time
+assets: no usable model of duffel bag of cocaine (duffel bag, bag, object): its scenes stay painted
+building the story world: 3 entities for 4 scenes
+story world (noir): cast model, sets model, direction model; blackbear as quadruped, duffelbag as object, pilot as humanoid
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 1 Wikipedia/Commons images, 2 stock, 4 scenes on plain background
+cutaways: 1 extra photos across 1 scenes
+collage: 2 photos styled, 1 with a cut-out subject
+relevance: checking 4 3D scenes by eye
+storyboarding: an illustration for each sentence
+art direction: signature
+rendering 40s short video
+rendering thumbnail
+thumbnail: world take
+done: approved

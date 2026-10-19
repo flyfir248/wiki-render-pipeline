@@ -1,0 +1,53 @@
+{
+  "warnings": [],
+  "frames": [
+    {
+      "scene": 2,
+      "at": 7.54,
+      "contrast": 32.9,
+      "burnt": 0.0
+    },
+    {
+      "scene": 2,
+      "at": 10.74,
+      "contrast": 32.6,
+      "burnt": 0.0
+    },
+    {
+      "scene": 3,
+      "at": 13.36,
+      "contrast": 48.3,
+      "burnt": 0.0
+    },
+    {
+      "scene": 3,
+      "at": 15.97,
+      "contrast": 31.9,
+      "burnt": 0.0
+    },
+    {
+      "scene": 5,
+      "at": 24.45,
+      "contrast": 37.3,
+      "burnt": 0.0
+    },
+    {
+      "scene": 5,
+      "at": 25.66,
+      "contrast": 36.4,
+      "burnt": 0.0
+    },
+    {
+      "scene": 7,
+      "at": 34.94,
+      "contrast": 38.0,
+      "burnt": 0.0
+    },
+    {
+      "scene": 7,
+      "at": 38.38,
+      "contrast": 40.6,
+      "burnt": 0.0
+    }
+  ]
+}

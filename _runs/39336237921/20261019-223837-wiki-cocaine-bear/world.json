@@ -1,0 +1,873 @@
+{
+  "style": "noir",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "blackbear",
+      "archetype": "quadruped",
+      "size": 1.2,
+      "primary": "#1A1A1A",
+      "secondary": "#2E2E2E",
+      "accent": "#4A4A4A",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.9,
+        "legs": 0.6,
+        "neck": 0.2,
+        "head": 0.6,
+        "snout": 0.3,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "belly",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [],
+      "form": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        3,
+        5,
+        7
+      ]
+    },
+    {
+      "entity": "duffelbag",
+      "archetype": "object",
+      "size": 0.5,
+      "primary": "#111111",
+      "secondary": "#333333",
+      "accent": "#FFFFFF",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            0.15,
+            0.0
+          ],
+          "size": [
+            0.3,
+            0.5,
+            0.3
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#111111",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.25,
+            0.15,
+            0.0
+          ],
+          "size": [
+            0.1,
+            0.1,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            0.3,
+            0.2,
+            0.0
+          ],
+          "size": [
+            0.05,
+            0.05,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#EEEEEE",
+          "bone": "body",
+          "spin": "",
+          "glow": true
+        }
+      ],
+      "form": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "entity": "pilot",
+      "archetype": "humanoid",
+      "size": 1.75,
+      "primary": "#555555",
+      "secondary": "#222222",
+      "accent": "#AAAAAA",
+      "skin": "#D2B48C",
+      "hair": "#2C2C2C",
+      "body": {
+        "build": 0.6,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.2,
+        "ears": "none",
+        "tail": "none",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": {
+        "top": "jacket",
+        "bottom": "trousers",
+        "hair": "short",
+        "beard": false,
+        "glasses": false
+      },
+      "parts": [],
+      "form": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        2
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "forest",
+      "kind": "forest",
+      "time": "day",
+      "ground": "#4a5d23",
+      "sky": "#a8c8e5",
+      "accent": "#fff2a8",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "longleaf pine",
+          "build": {
+            "entity": "forest:longleaf-pine",
+            "archetype": "plant",
+            "size": 22.0,
+            "primary": "#5c4033",
+            "secondary": "#2d5a27",
+            "accent": "#1e3d1a",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  1.677,
+                  0.0
+                ],
+                "size": [
+                  0.268,
+                  3.354,
+                  0.268
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#5c4033",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  4.36,
+                  0.0
+                ],
+                "size": [
+                  2.012,
+                  2.683,
+                  2.012
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#2d5a27",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  5.702,
+                  0.0
+                ],
+                "size": [
+                  1.342,
+                  2.012,
+                  1.342
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#1e3d1a",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "tall slender pine"
+          },
+          "count": 35,
+          "spread": 40.0
+        },
+        {
+          "name": "weathered granite boulder",
+          "build": {
+            "entity": "forest:weathered-granite-boulder",
+            "archetype": "object",
+            "size": 2.5,
+            "primary": "#7a7a7a",
+            "secondary": "#5c5c5c",
+            "accent": "#404040",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "sphere",
+                "at": [
+                  0.0,
+                  1.2,
+                  0.0
+                ],
+                "size": [
+                  2.5,
+                  2.0,
+                  2.2
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#7a7a7a",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  0.8,
+                  0.8,
+                  0.5
+                ],
+                "size": [
+                  1.5,
+                  1.2,
+                  1.4
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#5c5c5c",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "large rounded rock"
+          },
+          "count": 12,
+          "spread": 25.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "knoxville",
+      "kind": "city",
+      "time": "day",
+      "ground": "#333333",
+      "sky": "#87ceeb",
+      "accent": "#ffcc00",
+      "backdrop": "city",
+      "dressing": [
+        {
+          "name": "glass skyscraper",
+          "build": {
+            "entity": "knoxville:glass-skyscraper",
+            "archetype": "structure",
+            "size": 80.0,
+            "primary": "#a0a0a0",
+            "secondary": "#d0d0d0",
+            "accent": "#ffffff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  6.708,
+                  0.0
+                ],
+                "size": [
+                  3.354,
+                  13.416,
+                  3.354
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#a0a0a0",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  6.708,
+                  0.0
+                ],
+                "size": [
+                  3.438,
+                  13.249,
+                  3.438
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#87ceeb",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "modern glass tower"
+          },
+          "count": 8,
+          "spread": 60.0
+        },
+        {
+          "name": "yellow taxi cab",
+          "build": {
+            "entity": "knoxville:yellow-taxi-cab",
+            "archetype": "vehicle",
+            "size": 4.5,
+            "primary": "#ffd700",
+            "secondary": "#111111",
+            "accent": "#ffffff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.6,
+                  0.0
+                ],
+                "size": [
+                  4.5,
+                  1.2,
+                  1.8
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#ffd700",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.2,
+                  1.4,
+                  0.0
+                ],
+                "size": [
+                  2.5,
+                  0.8,
+                  1.6
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#87ceeb",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cylinder",
+                "at": [
+                  -1.2,
+                  0.3,
+                  0.9
+                ],
+                "size": [
+                  0.6,
+                  0.6,
+                  0.6
+                ],
+                "rot": [
+                  90.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#111111",
+                "bone": "body",
+                "spin": "x",
+                "glow": false
+              },
+              {
+                "shape": "cylinder",
+                "at": [
+                  -1.2,
+                  0.3,
+                  -0.9
+                ],
+                "size": [
+                  0.6,
+                  0.6,
+                  0.6
+                ],
+                "rot": [
+                  90.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#111111",
+                "bone": "body",
+                "spin": "x",
+                "glow": false
+              },
+              {
+                "shape": "cylinder",
+                "at": [
+                  1.2,
+                  0.3,
+                  0.9
+                ],
+                "size": [
+                  0.6,
+                  0.6,
+                  0.6
+                ],
+                "rot": [
+                  90.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#111111",
+                "bone": "body",
+                "spin": "x",
+                "glow": false
+              },
+              {
+                "shape": "cylinder",
+                "at": [
+                  1.2,
+                  0.3,
+                  -0.9
+                ],
+                "size": [
+                  0.6,
+                  0.6,
+                  0.6
+                ],
+                "rot": [
+                  90.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#111111",
+                "bone": "body",
+                "spin": "x",
+                "glow": false
+              }
+            ],
+            "form": "sedan taxi"
+          },
+          "count": 5,
+          "spread": 30.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "kentucky",
+      "kind": "town",
+      "time": "day",
+      "ground": "#808080",
+      "sky": "#b0c4de",
+      "accent": "#e0e0e0",
+      "backdrop": "hills",
+      "dressing": [
+        {
+          "name": "museum glass facade",
+          "build": {
+            "entity": "kentucky:museum-glass-facade",
+            "archetype": "structure",
+            "size": 15.0,
+            "primary": "#d3d3d3",
+            "secondary": "#a0a0a0",
+            "accent": "#4682b4",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  2.867,
+                  0.0
+                ],
+                "size": [
+                  11.467,
+                  5.734,
+                  7.645
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#d3d3d3",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  5.81,
+                  2.867,
+                  0.0
+                ],
+                "size": [
+                  0.153,
+                  5.351,
+                  6.88
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#4682b4",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "modern museum building"
+          },
+          "count": 1,
+          "spread": 5.0
+        },
+        {
+          "name": "museum signage",
+          "build": {
+            "entity": "kentucky:museum-signage",
+            "archetype": "object",
+            "size": 3.0,
+            "primary": "#ffffff",
+            "secondary": "#000000",
+            "accent": "#ff0000",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  1.258,
+                  0.0
+                ],
+                "size": [
+                  0.168,
+                  2.516,
+                  0.168
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#000000",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  2.348,
+                  0.0
+                ],
+                "size": [
+                  1.677,
+                  0.671,
+                  0.084
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#ffffff",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "metal sign on pole"
+          },
+          "count": 2,
+          "spread": 10.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "2": {
+      "scene": 2,
+      "place": "knoxville",
+      "time": "",
+      "actors": [
+        {
+          "entity": "pilot",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "pilot",
+      "marks": [],
+      "callouts": []
+    },
+    "3": {
+      "scene": 3,
+      "place": "forest",
+      "time": "",
+      "actors": [
+        {
+          "entity": "duffelbag",
+          "verb": "present",
+          "at": "far",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "blackbear",
+          "verb": "sniff",
+          "at": "left",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "duffelbag",
+      "marks": [
+        {
+          "kind": "beam",
+          "on": "duffelbag",
+          "to": "blackbear",
+          "color": ""
+        }
+      ],
+      "callouts": []
+    },
+    "5": {
+      "scene": 5,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "blackbear",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "low_angle",
+      "on": "blackbear",
+      "marks": [],
+      "callouts": []
+    },
+    "7": {
+      "scene": 7,
+      "place": "kentucky",
+      "time": "",
+      "actors": [
+        {
+          "entity": "blackbear",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "blackbear",
+      "marks": [],
+      "callouts": []
+    }
+  }
+}
