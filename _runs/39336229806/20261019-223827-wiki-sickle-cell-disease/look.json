@@ -1,0 +1,45 @@
+{
+  "warnings": [
+    "scene 1 at 1.9s looks flat (contrast 12)",
+    "scene 4 at 21.8s looks flat (contrast 13)",
+    "scene 4 at 25.8s looks flat (contrast 12)"
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 1.89,
+      "contrast": 11.8,
+      "burnt": 0.0
+    },
+    {
+      "scene": 1,
+      "at": 5.17,
+      "contrast": 29.6,
+      "burnt": 0.0
+    },
+    {
+      "scene": 2,
+      "at": 8.43,
+      "contrast": 15.0,
+      "burnt": 0.0
+    },
+    {
+      "scene": 2,
+      "at": 12.09,
+      "contrast": 21.4,
+      "burnt": 0.0
+    },
+    {
+      "scene": 4,
+      "at": 21.76,
+      "contrast": 13.5,
+      "burnt": 0.0
+    },
+    {
+      "scene": 4,
+      "at": 25.82,
+      "contrast": 12.0,
+      "burnt": 0.0
+    }
+  ]
+}
