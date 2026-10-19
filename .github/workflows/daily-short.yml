@@ -299,8 +299,22 @@ jobs:
           git add -A
           if ! git diff --cached --quiet; then
             git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit --quiet -m "3D models and test renders from run $RUN"
-            # a scheduled run may have pushed models meanwhile
-            git push --quiet origin HEAD:asset-library || { git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" pull --quiet --rebase origin asset-library && git push --quiet origin HEAD:asset-library; }
+            # other runs (a scheduled one, or test renders running side by side) may have pushed meanwhile:
+            # rebase onto theirs, keeping both runs' entries in the shared indexes, and try again
+            export GIT_COMMITTER_NAME="github-actions[bot]" GIT_COMMITTER_EMAIL="41898282+github-actions[bot]@users.noreply.github.com"
+            for try in 1 2 3 4 5 6; do
+              git push --quiet origin HEAD:asset-library && break
+              [ "$try" = 6 ] && exit 1
+              sleep $((try * 3))
+              git fetch --quiet origin asset-library
+              if ! git rebase --quiet origin/asset-library >/dev/null 2>&1; then
+                for step in 1 2 3 4 5 6 7 8; do
+                  [ -d "$(git rev-parse --git-path rebase-merge)" ] || [ -d "$(git rev-parse --git-path rebase-apply)" ] || break
+                  python -c "import sys; sys.path.insert(0, '../..'); from fyt.assetlib import settle_rebase; settle_rebase()"
+                  git -c core.editor=true rebase --continue >/dev/null 2>&1 || true
+                done
+              fi
+            done
           fi
 
       - name: Check the schedule
