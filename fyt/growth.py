@@ -25,7 +25,7 @@ from fyt.models import Script, ScriptScene
 class Polish(BaseModel):
     titles: list[str] = Field(description="5 different title ideas, each max 70 characters.")
     best_title: str = Field(description="The strongest of the titles (or a better one), max 70 characters.")
-    thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail, different from the title.")
+    thumbnail_text: str = Field(description="2-4 punchy words for the thumbnail that add to the title.")
     hook: str = Field(description="New opening narration: 1-2 sentences, max 35 words, facts from the script only.")
     loop_line: str = Field(default="", description="Shorts only: last sentence, max 12 words, that flows back into the hook.")
     hook_heading: str = Field(default="", description="Shorts only: 2-5 words shown huge on the first frame, over the photo.")
@@ -43,7 +43,9 @@ Titles:
 - max 70 characters, specific, create a curiosity gap about something the video really answers
 - lead with the most surprising concrete detail (a number, an odd object, a strange outcome)
 - no clickbait lies, no ALL CAPS words except one short one at most, no emoji, no "you won't believe"
-Thumbnail text: 2-5 words that add to the title rather than repeat it.
+Thumbnail text: 2-4 words, read in a glance on a phone, that add what the title doesn't say: the
+number, the twist or the stakes ("SURVIVED 3 SINKINGS", "IT ATE 40 KG", "HE LIVED"). Never the topic's
+name, never a repeat of the title, never a full sentence.
 Hook: rewrite the opening so the first sentence alone makes someone stop scrolling: open on the strangest
 concrete fact or the moment of tension. {hook_rule} No "welcome back", no "in this video", no questions like
 "did you know". Use only facts that appear in the script.

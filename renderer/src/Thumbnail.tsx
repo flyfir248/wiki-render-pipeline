@@ -3,61 +3,90 @@ import { AbsoluteFill, Img, staticFile } from "remotion";
 import { Background } from "./components/Background";
 import type { ThumbnailProps } from "./types";
 
-// Big, high-contrast text over an optional image: readable at phone size.
-export const Thumbnail: React.FC<ThumbnailProps> = ({ title, kicker, theme, background, format }) => {
+// One subject, big, and 2-4 words that read at phone size. With a cut-out subject it stands over a dark
+// blurred copy of its photo; otherwise the picture fills the frame under the words.
+export const Thumbnail: React.FC<ThumbnailProps> = ({ title, kicker, theme, background, subject, format }) => {
   const short = format === "short";
+  const words = title.trim().split(/\s+/);
+  // the last word carries the twist ("SURVIVED 3 SINKINGS"): it takes the accent colour
+  const lead = words.slice(0, -1).join(" ");
+  const last = words[words.length - 1] ?? "";
+  const text = (
+    <div
+      style={{
+        fontFamily: theme.font,
+        fontWeight: 900,
+        fontSize: short ? (words.length > 3 ? 132 : 150) : 128,
+        lineHeight: 0.98,
+        color: theme.text,
+        textTransform: "uppercase",
+        letterSpacing: -1,
+        textShadow: "0 6px 0 rgba(0,0,0,0.55), 0 12px 40px rgba(0,0,0,0.8)",
+        WebkitTextStroke: "3px rgba(0,0,0,0.6)",
+        textAlign: short ? "center" : "left",
+      }}
+    >
+      {lead ? <span>{lead} </span> : null}
+      <span style={{ color: theme.accent }}>{last}</span>
+    </div>
+  );
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={{ background: theme.background }}>
       <Background theme={theme} energy={0.6} />
       {background ? (
         <AbsoluteFill>
           <Img src={staticFile(background.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          <AbsoluteFill
+          {subject ? null : (
+            <AbsoluteFill
+              style={{
+                background: short
+                  ? `linear-gradient(${theme.background}e0 0%, transparent 34%, transparent 70%, ${theme.background}90 100%)`
+                  : `linear-gradient(90deg, ${theme.background}f0 0%, ${theme.background}99 45%, transparent 75%)`,
+              }}
+            />
+          )}
+        </AbsoluteFill>
+      ) : null}
+      {subject ? (
+        <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: short ? "center" : "flex-end" }}>
+          <Img
+            src={staticFile(subject.src)}
             style={{
-              background: short
-                ? `linear-gradient(transparent 30%, ${theme.background}f0 75%)`
-                : `linear-gradient(90deg, ${theme.background}f5 0%, ${theme.background}bb 55%, transparent 100%)`,
+              width: short ? "96%" : "62%",
+              height: short ? "74%" : "96%",
+              objectFit: "contain",
+              objectPosition: short ? "center bottom" : "right bottom",
+              filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.7))",
             }}
           />
         </AbsoluteFill>
       ) : null}
       <AbsoluteFill
         style={{
-          padding: short ? "0 70px 260px" : "0 90px",
-          justifyContent: short ? "flex-end" : "center",
-          gap: 26,
-          maxWidth: short ? undefined : 1250,
+          padding: short ? "150px 60px 0" : "0 70px",
+          justifyContent: short ? "flex-start" : "center",
+          maxWidth: short ? undefined : subject ? 820 : 1150,
+          gap: 22,
         }}
       >
-        <div
-          style={{
-            alignSelf: "flex-start",
-            padding: "12px 26px",
-            borderRadius: 12,
-            background: theme.accent,
-            color: theme.background,
-            fontFamily: theme.font,
-            fontWeight: 900,
-            fontSize: short ? 56 : 48,
-            letterSpacing: 2,
-          }}
-        >
-          {kicker}
-        </div>
-        <div
-          style={{
-            fontFamily: theme.font,
-            fontWeight: 900,
-            fontSize: short ? 124 : 118,
-            lineHeight: 1.0,
-            color: theme.text,
-            textTransform: "uppercase",
-            textShadow: "0 8px 30px rgba(0,0,0,0.8)",
-            WebkitTextStroke: "2px rgba(0,0,0,0.35)",
-          }}
-        >
-          {title}
-        </div>
+        {kicker ? (
+          <div
+            style={{
+              alignSelf: short ? "center" : "flex-start",
+              padding: "10px 24px",
+              borderRadius: 12,
+              background: theme.accent,
+              color: theme.background,
+              fontFamily: theme.font,
+              fontWeight: 900,
+              fontSize: short ? 52 : 44,
+              letterSpacing: 2,
+            }}
+          >
+            {kicker}
+          </div>
+        ) : null}
+        {text}
       </AbsoluteFill>
     </AbsoluteFill>
   );

@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, worldgen, youtube
+from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -282,15 +282,13 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used)
         except Exception as e:
             log(job, f"warning: no stock thumbnail background: {e}")
-    thumb = ThumbnailProps(
-        format=cfg.format,
-        title=script.thumbnail_text,
-        kicker=script.thumbnail_kicker.upper(),
-        theme=cfg.theme.model_dump(),
-        background=bg,
-    )
-    job.file("thumbnail.json").write_text(thumb.model_dump_json(indent=2))
-    render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
+    try:  # a few takes (cut-out subject, the 3D world's key moment, the photo); the best one is used
+        thumbs.make(cfg, job.path, job.public, script.thumbnail_text, bg, props, script.core_message or script.title, log=lambda m: log(job, m))
+    except Exception as e:  # never lose the video over its thumbnail: the plain take
+        log(job, f"warning: thumbnail takes failed ({str(e)[:160]}); using the plain one")
+        thumb = ThumbnailProps(format=cfg.format, title=script.thumbnail_text, theme=cfg.theme.model_dump(), background=bg)
+        job.file("thumbnail.json").write_text(thumb.model_dump_json(indent=2))
+        render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
 
     problems = qa.check_render(cfg, props, video, voiced=provider != "silent") + qc["problems"]
     try:  # a held picture loses viewers: say where, so the template or script can be fixed

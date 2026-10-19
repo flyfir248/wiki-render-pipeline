@@ -322,6 +322,7 @@ class RenderProps(BaseModel):
 class ThumbnailProps(BaseModel):
     format: Literal["long", "short"]
     title: str
-    kicker: str
+    kicker: str = ""  # a small label above the words; empty for the current takes (fyt/thumbs.py)
     theme: dict
     background: Media | None
+    subject: Media | None = None  # the subject cut out, drawn big over the background

@@ -185,4 +185,5 @@ export type ThumbnailProps = {
   kicker: string;
   theme: Theme;
   background: Media | null;
+  subject?: Media | null; // the subject cut out, drawn big over the background
 };

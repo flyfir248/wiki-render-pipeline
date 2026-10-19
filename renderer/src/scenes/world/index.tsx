@@ -61,6 +61,7 @@ const Label: React.FC<{ scene: Scene; theme: SceneProps["theme"]; short: boolean
   const { fps } = useVideoConfig();
   const p = spring({ frame: frame - 12, fps, config: { damping: 18 } });
   const k = short ? 1.3 : 1;
+  if (scene.label === "") return null; // a clean frame (the thumbnail's 3D take)
   return (
     <div
       style={{
