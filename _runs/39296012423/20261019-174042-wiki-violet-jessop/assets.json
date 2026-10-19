@@ -1,0 +1,193 @@
+{
+  "entities": [
+    {
+      "id": "olympic",
+      "name": "RMS Olympic",
+      "kind": "light aircraft",
+      "search": [
+        "rms olympic",
+        "ocean liner",
+        "liner"
+      ],
+      "look": "early 1900s transatlantic ocean liner, white hull, steel construction",
+      "certain": true,
+      "scenes": [
+        2,
+        3
+      ],
+      "model": {
+        "ok": true,
+        "key": "ocean-liner",
+        "query": "ocean liner",
+        "source": "objaverse",
+        "uid": "sketchfab:465f425b342a41118f78c83758eaab39",
+        "title": "Titanic",
+        "author": "6F5Jedi",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-465f425b342a41118f78c83758eaab39",
+        "checked": "vision",
+        "triangles": 39989,
+        "bytes": 1412684,
+        "size": [
+          23.1769,
+          16.201,
+          11.4446
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "early 1900s transatlantic ocean liner, white hull, steel construction",
+        "added": "2026-10-19T20:40:57+00:00",
+        "credit": "Titanic by 6F5Jedi (CC BY 4.0) https://sketchfab.com/3d-models/none-465f425b342a41118f78c83758eaab39"
+      }
+    },
+    {
+      "id": "hawke",
+      "name": "HMS Hawke",
+      "kind": "naval ship",
+      "search": [
+        "hms hawke",
+        "warship",
+        "naval vessel"
+      ],
+      "look": "British warship, early 20th century, black and white, steel hull",
+      "certain": true,
+      "scenes": [
+        2
+      ],
+      "model": null
+    },
+    {
+      "id": "titanic",
+      "name": "RMS Titanic",
+      "kind": "light aircraft",
+      "search": [
+        "rms titanic",
+        "ocean liner",
+        "liner"
+      ],
+      "look": "early 20th century transatlantic ocean liner, white hull, steel construction",
+      "certain": true,
+      "scenes": [
+        4,
+        5
+      ],
+      "model": {
+        "ok": true,
+        "key": "ocean-liner",
+        "query": "ocean liner",
+        "source": "objaverse",
+        "uid": "sketchfab:465f425b342a41118f78c83758eaab39",
+        "title": "Titanic",
+        "author": "6F5Jedi",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-465f425b342a41118f78c83758eaab39",
+        "checked": "vision",
+        "triangles": 39989,
+        "bytes": 1412684,
+        "size": [
+          23.1769,
+          16.201,
+          11.4446
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "early 1900s transatlantic ocean liner, white hull, steel construction",
+        "added": "2026-10-19T20:40:57+00:00",
+        "credit": "Titanic by 6F5Jedi (CC BY 4.0) https://sketchfab.com/3d-models/none-465f425b342a41118f78c83758eaab39"
+      }
+    },
+    {
+      "id": "carpathia",
+      "name": "SS Carpathia",
+      "kind": "light aircraft",
+      "search": [
+        "ss carpathia",
+        "ocean liner",
+        "liner"
+      ],
+      "look": "early 20th century ocean liner, white hull, steel construction",
+      "certain": true,
+      "scenes": [
+        5
+      ],
+      "model": null
+    },
+    {
+      "id": "britannic",
+      "name": "HMHS Britannic",
+      "kind": "light aircraft",
+      "search": [
+        "hmhs britannic",
+        "hospital ship",
+        "liner"
+      ],
+      "look": "early 20th century ocean liner, white hull, steel construction",
+      "certain": true,
+      "scenes": [
+        6
+      ],
+      "model": null
+    }
+  ],
+  "places": [
+    {
+      "id": "atlantic",
+      "name": "Atlantic Ocean",
+      "look": "vast ocean, blue water, horizon, no visible ships",
+      "scenes": [
+        2,
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 2,
+      "entity": "olympic",
+      "place": "",
+      "action": "collides with warship",
+      "motion": "move",
+      "cue": "she was aboard the Olympic when it collided with a British warship",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "titanic",
+      "place": "",
+      "action": "hits iceberg",
+      "motion": "move",
+      "cue": "the Titanic, which struck an iceberg in 1912",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 5,
+      "entity": "carpathia",
+      "place": "",
+      "action": "rescues crew",
+      "motion": "move",
+      "cue": "was rescued by the Carpathia",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 6,
+      "entity": "britannic",
+      "place": "",
+      "action": "sinks",
+      "motion": "move",
+      "cue": "she served on the Britannic when it sank",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

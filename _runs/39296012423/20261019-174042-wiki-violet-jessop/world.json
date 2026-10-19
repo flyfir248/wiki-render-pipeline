@@ -1,0 +1,849 @@
+{
+  "style": "noir",
+  "made": {
+    "cast": "rules",
+    "sets": "model",
+    "rules_built": [
+      "olympic",
+      "hawke",
+      "titanic",
+      "carpathia"
+    ],
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "olympic",
+      "archetype": "vehicle",
+      "size": 20.12,
+      "primary": "#ece8e0",
+      "secondary": "#d9dde3",
+      "accent": "#3a6cc2",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            2.4144,
+            0.0
+          ],
+          "size": [
+            2.6156,
+            20.12,
+            2.6156
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.40240000000000004,
+            2.8168,
+            0.0
+          ],
+          "size": [
+            3.6216,
+            0.40240000000000004,
+            21.126
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -8.8528,
+            4.024,
+            0.0
+          ],
+          "size": [
+            2.012,
+            3.2192000000000003,
+            0.40240000000000004
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -8.8528,
+            2.6156,
+            0.0
+          ],
+          "size": [
+            1.6096000000000001,
+            0.40240000000000004,
+            6.438400000000001
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            6.0360000000000005,
+            3.4204000000000003,
+            0.0
+          ],
+          "size": [
+            2.012,
+            1.006,
+            2.4144
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            10.2612,
+            2.4144,
+            0.0
+          ],
+          "size": [
+            0.20120000000000002,
+            4.4264,
+            0.6036
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "x",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.006,
+            2.4144,
+            -4.2252
+          ],
+          "size": [
+            2.4144,
+            1.2072,
+            1.2072
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3a6cc2",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.006,
+            2.4144,
+            4.2252
+          ],
+          "size": [
+            2.4144,
+            1.2072,
+            1.2072
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3a6cc2",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "plane",
+      "source": "found model",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "entity": "hawke",
+      "archetype": "vehicle",
+      "size": 20.12,
+      "primary": "#22201e",
+      "secondary": "#ece8e0",
+      "accent": "#d9dde3",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "wedge",
+          "at": [
+            0.0,
+            1.2072,
+            0.0
+          ],
+          "size": [
+            20.12,
+            2.4144,
+            5.6336
+          ],
+          "rot": [
+            180.0,
+            0.0,
+            0.0
+          ],
+          "color": "#22201e",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -1.6096000000000001,
+            3.4204000000000003,
+            0.0
+          ],
+          "size": [
+            8.048,
+            2.012,
+            4.4264
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -2.012,
+            5.2312,
+            0.0
+          ],
+          "size": [
+            4.024,
+            1.6096000000000001,
+            3.6216
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#f2f2ee",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -2.012,
+            5.2312,
+            0.0
+          ],
+          "size": [
+            4.2252,
+            0.6036,
+            3.7222
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -4.024,
+            6.639600000000001,
+            0.0
+          ],
+          "size": [
+            1.006,
+            2.012,
+            1.006
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "boat",
+      "source": "procedural, from the entity's words",
+      "scenes": []
+    },
+    {
+      "entity": "titanic",
+      "archetype": "vehicle",
+      "size": 20.12,
+      "primary": "#ece8e0",
+      "secondary": "#d9dde3",
+      "accent": "#3a6cc2",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            2.4144,
+            0.0
+          ],
+          "size": [
+            2.6156,
+            20.12,
+            2.6156
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.40240000000000004,
+            2.8168,
+            0.0
+          ],
+          "size": [
+            3.6216,
+            0.40240000000000004,
+            21.126
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -8.8528,
+            4.024,
+            0.0
+          ],
+          "size": [
+            2.012,
+            3.2192000000000003,
+            0.40240000000000004
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -8.8528,
+            2.6156,
+            0.0
+          ],
+          "size": [
+            1.6096000000000001,
+            0.40240000000000004,
+            6.438400000000001
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            6.0360000000000005,
+            3.4204000000000003,
+            0.0
+          ],
+          "size": [
+            2.012,
+            1.006,
+            2.4144
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            10.2612,
+            2.4144,
+            0.0
+          ],
+          "size": [
+            0.20120000000000002,
+            4.4264,
+            0.6036
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "x",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.006,
+            2.4144,
+            -4.2252
+          ],
+          "size": [
+            2.4144,
+            1.2072,
+            1.2072
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3a6cc2",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.006,
+            2.4144,
+            4.2252
+          ],
+          "size": [
+            2.4144,
+            1.2072,
+            1.2072
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3a6cc2",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "plane",
+      "source": "found model",
+      "scenes": [
+        5
+      ]
+    },
+    {
+      "entity": "carpathia",
+      "archetype": "vehicle",
+      "size": 20.12,
+      "primary": "#ece8e0",
+      "secondary": "#d9dde3",
+      "accent": "#3a6cc2",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            2.4144,
+            0.0
+          ],
+          "size": [
+            2.6156,
+            20.12,
+            2.6156
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.40240000000000004,
+            2.8168,
+            0.0
+          ],
+          "size": [
+            3.6216,
+            0.40240000000000004,
+            21.126
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -8.8528,
+            4.024,
+            0.0
+          ],
+          "size": [
+            2.012,
+            3.2192000000000003,
+            0.40240000000000004
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -8.8528,
+            2.6156,
+            0.0
+          ],
+          "size": [
+            1.6096000000000001,
+            0.40240000000000004,
+            6.438400000000001
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d9dde3",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            6.0360000000000005,
+            3.4204000000000003,
+            0.0
+          ],
+          "size": [
+            2.012,
+            1.006,
+            2.4144
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            10.2612,
+            2.4144,
+            0.0
+          ],
+          "size": [
+            0.20120000000000002,
+            4.4264,
+            0.6036
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "x",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.006,
+            2.4144,
+            -4.2252
+          ],
+          "size": [
+            2.4144,
+            1.2072,
+            1.2072
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3a6cc2",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.006,
+            2.4144,
+            4.2252
+          ],
+          "size": [
+            2.4144,
+            1.2072,
+            1.2072
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3a6cc2",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "plane",
+      "source": "procedural, from the entity's words",
+      "scenes": [
+        5
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "atlantic",
+      "kind": "sea",
+      "time": "day",
+      "ground": "#1e90ff",
+      "sky": "#87ceeb",
+      "accent": "#ffffff",
+      "backdrop": "none",
+      "dressing": [],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "2": {
+      "scene": 2,
+      "place": "atlantic",
+      "time": "",
+      "actors": [
+        {
+          "entity": "olympic",
+          "verb": "fly",
+          "at": "center",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "olympic",
+      "marks": [],
+      "callouts": [
+        {
+          "on": "olympic",
+          "text": "Olympic"
+        }
+      ]
+    },
+    "5": {
+      "scene": 5,
+      "place": "atlantic",
+      "time": "",
+      "actors": [
+        {
+          "entity": "carpathia",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "titanic",
+          "verb": "fly",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "titanic",
+      "marks": [],
+      "callouts": [
+        {
+          "on": "carpathia",
+          "text": "Carpathia"
+        }
+      ]
+    }
+  }
+}

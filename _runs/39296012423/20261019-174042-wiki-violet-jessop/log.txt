@@ -1,0 +1,32 @@
+fetching Wikipedia article
+2 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 50% slower than average, 15 scenes); quote (lost viewers 46% slower than average, 9 scenes); map (lost viewers 23% slower than average, 12 scenes); timeline (lost viewers 20% slower than average, 7 scenes). Scene types that lost viewers fastest (use them less, or keep them short): stat (lost viewers 14% faster than average, 16 scenes); statement (lost viewers 94% faster than average, 21 scenes). On average 91% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 69 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene 5 implies Violet was rescued by Carpathia while holding a baby, unclear who held the baby.; Scene 6 says "Two years later" but Britannic sank four years after Titanic, not two.
+checking facts against the source
+fact check found: scene 1: wrong claim "not a single passenger lost under her watch" (source says: The source states that the Britannic sinking killed 30 of the 1,066 people aboard. While Jessop was a nurse (crew), the claim implies no passengers died in the events she was involved in, which is factually incorrect regarding the Britannic.); scene 3: unsupported claim "The only major collision on the Olympic's first voyage." (source says: The source states the collision occurred on 20 September 1911, when Olympic left from Southampton, but does not explicitly state it was the 'first voyage' or that it was the 'only major collision' on that specific voyage.); scene 5: wrong claim "later helped aboard the Carpathia, caring for a rescued infant" (source says: The source states she was 'rescued by the RMS Carpathia' and that a woman 'grabbed the baby she was holding and ran off crying'. It does not state she 'helped' aboard the Carpathia; she was a survivor being transported, and the baby was taken from her by its mother.)
+facts check out
+reading the story: what it shows
+story: RMS Olympic, HMS Hawke, RMS Titanic, SS Carpathia, HMHS Britannic; 4 moments
+planning the visuals
+visual plan (model): 2 3D, 2 2.5D, 3 2D; 3D: stage move, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: RMS Olympic -> 'Titanic' from objaverse (by, 39989 triangles, 0 animations)
+building the story world: 4 entities for 2 scenes
+world design: cast call failed (https://api.groq.com/openai/v1 returned 413: {"error":{"message":"Request too large for model `openai/gpt-oss-safeguard-20b` in organization); building from the entities' own words
+story world (noir): cast rules, sets model, direction model; olympic as vehicle, hawke as vehicle, titanic as vehicle, carpathia as vehicle
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 4 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+collage: 4 photos styled, 4 with a cut-out subject
+relevance: checking 2 3D scenes by eye
+scene 2: 3D dropped: frame check: the subject is a futuristic white and blue aircraft, not a ship
+scene 5: 3D dropped: frame check: The plane is not the SS Carpathia, the subject is not a white hull ocean liner.
+storyboarding: an illustration for each sentence
+storyboard: 2 illustrated sentences of 2 planned, 6 in the cast; 2 checked, 0 redrawn, 0 left out
+art direction: archival
+rendering 34s short video
+rendering thumbnail
+done: approved

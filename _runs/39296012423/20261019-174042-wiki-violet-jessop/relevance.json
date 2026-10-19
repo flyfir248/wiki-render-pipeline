@@ -1,0 +1,11 @@
+{
+  "checked": [
+    2,
+    5
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "2": "frame check: the subject is a futuristic white and blue aircraft, not a ship",
+    "5": "frame check: The plane is not the SS Carpathia, the subject is not a white hull ocean liner."
+  }
+}
