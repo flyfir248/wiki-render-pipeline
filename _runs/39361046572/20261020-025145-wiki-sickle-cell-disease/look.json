@@ -1,0 +1,19 @@
+{
+  "warnings": [
+    "scene 4 at 21.8s looks flat (contrast 13)"
+  ],
+  "frames": [
+    {
+      "scene": 4,
+      "at": 21.76,
+      "contrast": 13.0,
+      "burnt": 0.0
+    },
+    {
+      "scene": 4,
+      "at": 25.82,
+      "contrast": 21.3,
+      "burnt": 0.0
+    }
+  ]
+}

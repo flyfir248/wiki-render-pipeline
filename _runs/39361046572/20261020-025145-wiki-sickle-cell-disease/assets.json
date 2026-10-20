@@ -1,0 +1,133 @@
+{
+  "entities": [
+    {
+      "id": "rbc",
+      "name": "red blood cell",
+      "kind": "cell",
+      "search": [
+        "red blood cell",
+        "blood cell",
+        "cell"
+      ],
+      "look": "small, disc-shaped, pinkish-red, 7-8 micron diameter, flexible",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "model": {
+        "ok": true,
+        "key": "red-blood-cell",
+        "query": "red blood cell",
+        "source": "objaverse",
+        "uid": "sketchfab:43699fbe9bf4452facbfbab37867eb0d",
+        "title": "Red Blood Cell",
+        "author": "James Bogucheski",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-43699fbe9bf4452facbfbab37867eb0d",
+        "checked": "vision",
+        "triangles": 16068,
+        "bytes": 608164,
+        "size": [
+          19.4454,
+          20.3081,
+          17.4159
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "small, disc-shaped, pinkish-red, 7-8 micron diameter, flexible",
+        "added": "2026-10-20T02:54:05+00:00",
+        "credit": "Red Blood Cell by James Bogucheski (CC BY 4.0) https://sketchfab.com/3d-models/none-43699fbe9bf4452facbfbab37867eb0d"
+      }
+    },
+    {
+      "id": "stemcell",
+      "name": "stem cell",
+      "kind": "cell",
+      "search": [
+        "hematopoietic stem cell",
+        "stem cell",
+        "cell"
+      ],
+      "look": "small, round, white, found in bone marrow",
+      "certain": true,
+      "scenes": [
+        7
+      ],
+      "model": null
+    },
+    {
+      "id": "bone",
+      "name": "bone marrow",
+      "kind": "tissue",
+      "search": [
+        "bone marrow",
+        "marrow",
+        "tissue"
+      ],
+      "look": "spongy, pinkish tissue inside bones",
+      "certain": true,
+      "scenes": [
+        7
+      ],
+      "model": null
+    }
+  ],
+  "places": [
+    {
+      "id": "africa",
+      "name": "sub-Saharan Africa",
+      "look": "tropical, dense forests, savanna",
+      "scenes": [
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "rbc",
+      "place": "",
+      "action": "transform into sickle shape",
+      "motion": "move",
+      "cue": "Your red blood cells change into a sickle shape",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "rbc",
+      "place": "",
+      "action": "block capillary",
+      "motion": "present",
+      "cue": "rigidity stops them from bending",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "rbc",
+      "place": "",
+      "action": "shape change triggered",
+      "motion": "present",
+      "cue": "triggered by stress",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 7,
+      "entity": "stemcell",
+      "place": "",
+      "action": "modify stem cells",
+      "motion": "move",
+      "cue": "modifying stem cells in the bone marrow",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

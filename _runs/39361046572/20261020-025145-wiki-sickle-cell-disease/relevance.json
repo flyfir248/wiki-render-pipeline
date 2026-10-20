@@ -1,0 +1,12 @@
+{
+  "checked": [
+    1,
+    2,
+    4
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "1": "frame check: not a red blood cell",
+    "2": "frame check: It is not a blood cell. It is a red planet."
+  }
+}
