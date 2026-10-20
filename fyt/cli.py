@@ -66,6 +66,7 @@ def main(argv: list[str] | None = None) -> None:
     w = sub.add_parser("watchdog", help="find uploads YouTube never processed and queue them to upload again")
     w.add_argument("--out", default="watchdog.md", help="where to write the report when something is found")
     sub.add_parser("comments", help="post the first comment on videos that have gone public")
+    sub.add_parser("cleanruns", help="delete old Actions runs once their uploads are confirmed on every platform")
     sub.add_parser("relabel", help="clear YouTube's AI-content label on the channel's recent videos")
     pl = sub.add_parser("playlists", help="file the channel's videos into series playlists (long and Shorts)")
     pl.add_argument("--max", type=int, default=40, help="most changes to make (50 quota units each)")
@@ -234,6 +235,10 @@ def main(argv: list[str] | None = None) -> None:
 
         if youtube.authorised():
             print(f"posted {schedule.post_comments(cfg, datetime.now(timezone.utc))} comments")
+    elif args.cmd == "cleanruns":
+        from fyt import cleanup
+
+        print(f"deleted {cleanup.run(cfg)} old runs")
     elif args.cmd == "watchdog":
         from fyt import watchdog
 

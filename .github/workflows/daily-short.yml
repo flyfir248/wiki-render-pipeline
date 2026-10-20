@@ -47,7 +47,7 @@ concurrency:
 
 permissions:
   contents: write # to keep the 3D models found for stories on the asset-library branch
-  actions: read # to fetch a video again from the run that made it
+  actions: write # to fetch a video again from the run that made it, and delete old runs
   issues: write # for the alert when the schedule runs low
 
 jobs:
@@ -118,6 +118,20 @@ jobs:
           if [ -f watchdog.md ]; then
             gh issue create --repo "$GITHUB_REPOSITORY" --title "YouTube didn't process $(grep -c '^| \[' watchdog.md) upload(s)" --body-file watchdog.md
           fi
+
+      # Old runs leave the Actions tab once nothing needs them: a run that uploaded videos only when
+      # YouTube has processed each one and every platform posting Shorts has posted it (the steps above
+      # fetch the files from its artifact until then), anything else a day after it ran (see fyt/cleanup.py).
+      - name: Delete old runs
+        if: env.TASK == 'fill'
+        continue-on-error: true
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        run: python -m fyt cleanruns
 
       # Older videos are filed into the series playlists a few at a time, to spare the upload quota.
       - name: Organise playlists
