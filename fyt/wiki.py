@@ -17,7 +17,7 @@ import requests
 from fyt.config import Config
 
 PREFIX = "wiki:"
-USER_AGENT = "FacelessYT/0.1 (https://github.com/flyfir248/FacelessYT)"
+USER_AGENT = "wiki-render-pipeline/0.1 (https://github.com/flyfir248/wiki-render-pipeline)"
 
 
 @dataclass
