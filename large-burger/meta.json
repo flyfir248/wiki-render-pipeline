@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "large-burger",
+  "query": "large burger",
+  "source": "objaverse",
+  "uid": "sketchfab:4ffa3d242d624f0cb53782451f43b92e",
+  "title": "Burger",
+  "author": "Akshat",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-4ffa3d242d624f0cb53782451f43b92e",
+  "checked": "vision",
+  "triangles": 34528,
+  "bytes": 3326392,
+  "size": [
+    480.4225,
+    219.6209,
+    480.4225
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "towering multi\u2011patty beef burger, cheese, bacon, sauce, buns",
+  "added": "2026-10-20T18:51:27+00:00"
+}
