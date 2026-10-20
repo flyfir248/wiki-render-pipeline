@@ -7,6 +7,7 @@ video is still made the plain way.
 
 from __future__ import annotations
 
+import json
 import math
 import random
 from datetime import date, datetime, timedelta, timezone
@@ -120,7 +121,11 @@ PAGEVIEWS = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{la
 def pageviews(cfg: Config, title: str, days: int = 30, today: date | None = None) -> int:
     """How many people read the article over the last `days` days: a free signal of interest."""
     end = (today or datetime.now(timezone.utc).date()) - timedelta(days=1)
-    start = end - timedelta(days=days - 1)
+    return sum(daily_pageviews(cfg, title, end - timedelta(days=days - 1), end))
+
+
+def daily_pageviews(cfg: Config, title: str, start: date, end: date) -> list[int]:
+    """Readers of the article on each day from start to end (both included), oldest first."""
     url = PAGEVIEWS.format(
         lang=cfg.wikipedia.lang,
         title=quote(title.replace(" ", "_"), safe=""),
@@ -129,9 +134,9 @@ def pageviews(cfg: Config, title: str, days: int = 30, today: date | None = None
     )
     r = requests.get(url, headers={"User-Agent": wiki.USER_AGENT}, timeout=30)
     if r.status_code == 404:
-        return 0
+        return []
     r.raise_for_status()
-    return sum(item.get("views", 0) for item in r.json().get("items", []))
+    return [item.get("views", 0) for item in r.json().get("items", [])]
 
 
 def page_lengths(cfg: Config, titles: list[str]) -> dict[str, int]:
@@ -255,14 +260,11 @@ def _title(page: dict) -> str:
 
 def pick_trending(cfg: Config, used: set[str], min_fit: int, min_chars: int, day: date | None = None) -> str | None:
     """The trending article that fits the channel best, if any fits well enough."""
+    day = day or datetime.now(timezone.utc).date()
     cands = [(t, v) for t, v in trending_candidates(cfg, day) if wiki.topic_for(t) not in used]
     if not cands:
         return None
-    extra = (
-        "These are trending today (most read yesterday, or today's anniversaries). Only rate high what a "
-        "viewer of this channel would genuinely want; a trending subject outside the niche is still off-niche.\n"
-    )
-    fits = score_topics(cfg, cands, extra)
+    fits = _trending_fits(cfg, cands, day)
     views = dict(cands)
     for title in rank(fits, views, min_fit):
         try:
@@ -274,6 +276,28 @@ def pick_trending(cfg: Config, used: set[str], min_fit: int, min_chars: int, day
             print(f"trending pick: {article.title} (fit {fits[title]}/10, {views[title]} readers)")
             return article.title
     return None
+
+
+def _trending_fits(cfg: Config, cands: list[tuple[str, int]], day: date) -> dict[str, int]:
+    """Fit scores for the day's trending articles. The feed changes once a day and a fill run can ask up
+    to four times (timely slot, bonus Short, bonus long), so each day's scores are kept in state.db and
+    only articles not scored yet go to the model."""
+    from fyt.store import Uploads
+
+    uploads = Uploads(cfg)
+    saved = json.loads(uploads.note("trending-fits") or "{}")
+    fits = saved.get("fits", {}) if saved.get("day") == day.isoformat() else {}
+    new = [(t, v) for t, v in cands if t not in fits]
+    if new:
+        extra = (
+            "These are trending today (most read yesterday, or today's anniversaries). Only rate high what a "
+            "viewer of this channel would genuinely want; a trending subject outside the niche is still off-niche.\n"
+        )
+        fits.update(score_topics(cfg, new, extra))
+        for t, _ in new:
+            fits.setdefault(t, 0)  # one the model skipped isn't sent again
+        uploads.set_note("trending-fits", json.dumps({"day": day.isoformat(), "fits": fits}))
+    return {t: fits[t] for t, _ in cands if t in fits}
 
 
 # --- News incidents -----------------------------------------------------------------

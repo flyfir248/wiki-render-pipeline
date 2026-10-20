@@ -39,6 +39,7 @@ def utcnow() -> datetime:
 class Slot:
     at: datetime
     kind: str  # short | long
+    timely: bool = False  # kept for a topic in the news that day (schedule.timely_slots)
 
     @property
     def key(self) -> str:
@@ -50,19 +51,23 @@ def _at(day: date, hhmm: str) -> datetime:
     return datetime.combine(day, dtime(h, m), tzinfo=timezone.utc)
 
 
-def upcoming_slots(cfg: Config, now: datetime) -> list[Slot]:
-    """Publish slots from now (plus a lead time) to the end of the buffer, earliest first."""
+def upcoming_slots(cfg: Config, now: datetime, hold: bool = True) -> list[Slot]:
+    """Publish slots from now (plus a lead time) to the end of the buffer, earliest first. A timely
+    slot only counts once it is close enough to be filled with what is in the news, unless `hold` is
+    off (for matching videos already on YouTube to their slots)."""
     sc = cfg.schedule
     start = now + timedelta(minutes=LEAD_MINUTES)
     short_end = now + timedelta(days=sc.buffer_days)
+    timely_end = now + timedelta(hours=sc.timely_hold_hours)
     long_end = now + timedelta(days=sc.long_lead_days)
     slots = []
     day = now.date()
     while day <= max(short_end, long_end).date():
         for hhmm in sc.short_slots:
             at = _at(day, hhmm)
-            if start <= at <= short_end:
-                slots.append(Slot(at, "short"))
+            timely = hhmm in sc.timely_slots
+            if start <= at <= (timely_end if timely and hold else short_end):
+                slots.append(Slot(at, "short", timely))
         if sc.long_weekday is not None and day.weekday() == sc.long_weekday:
             at = _at(day, sc.long_slot)
             if start <= at <= long_end:
@@ -127,7 +132,7 @@ def _upload(
             return None if _is_quota_error(e) else False
         # The video is on YouTube; only a later step failed. Count it, never upload it again.
         print(f"::warning::{job.id} is up as https://youtu.be/{video_id}, but a later step failed: {e}")
-    key = None if kind else slot.key  # bonus videos fill no slot
+    key = None if kind and kind.startswith("bonus") else slot.key  # bonus videos fill no slot
     Uploads(cfg).record(kind or slot.kind, job.id, video_id, publish_at.isoformat(), key, at=now.isoformat(timespec="seconds"))
     print(f"scheduled https://youtu.be/{video_id} ({kind or slot.kind}) for {publish_at:%a %d %b %H:%M} UTC")
     return True
@@ -162,7 +167,7 @@ def settle_posted(cfg: Config, now: datetime, channel_titles: list[str] = ()) ->
         video_id = job.meta.get("youtube_id")
         if video_id:
             if video_id not in known:
-                slots, filled = upcoming_slots(cfg, now), uploads.filled()
+                slots, filled = upcoming_slots(cfg, now, hold=False), uploads.filled()
                 slot = _slot_for(cfg, job.meta.get("publish_at"), slots, filled)
                 kind = slot.kind if slot else job.meta.get("format", "short")
                 uploads.record(kind, job.id, video_id, job.meta.get("publish_at"), slot.key if slot else None,
@@ -192,7 +197,7 @@ def sync(cfg: Config, now: datetime) -> int:
     uploads, topics = Uploads(cfg), Topics(cfg)
     known = set(uploads.video_ids())
     filled = uploads.filled()
-    slots = upcoming_slots(cfg, now)
+    slots = upcoming_slots(cfg, now, hold=False)
     added = 0
     for v in videos:
         m = ARTICLE.search(v["description"])
@@ -270,14 +275,16 @@ def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = N
         if elapsed + MAKE_MINUTES[slot.kind] > cfg.schedule.max_run_minutes:
             print(f"not enough time left in this run for a {slot.kind} video; the next run continues")
             continue  # a Short may still fit after a skipped long video
-        job = pipeline.make_next(cfg.model_copy(update={"format": slot.kind}), topics)
+        job = make_timely(cfg, topics) if slot.timely else None
+        kind = "timely-short" if job else None
+        job = job or pipeline.make_next(cfg.model_copy(update={"format": slot.kind}), topics)
         if job is None or job.meta.get("status") != "approved":
             failures += 1
             if failures >= 3:
                 print("::warning::3 videos in a row failed; stopping this run")
                 break
             continue
-        result = _upload(cfg, job, slot, rng, now)
+        result = _upload(cfg, job, slot, rng, now, kind=kind)
         if result:
             budget -= 1
             filled += 1
@@ -290,6 +297,32 @@ def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = N
     if budget > 0 and failures < 3:
         filled += bonus(cfg, now, rng, clock, started, budget, topics)
     return filled
+
+
+def make_timely(cfg: Config, topics: Topics) -> Job | None:
+    """A Short on the trending article that fits the channel best, or None when none fits (or it fails)."""
+    from fyt import growth, wiki
+
+    try:
+        title = growth.pick_trending(cfg, set(topics.titles()), cfg.growth.bonus_min_fit, cfg.wikipedia.min_chars)
+    except Exception as e:
+        print(f"::warning::could not check trending topics: {e}")
+        return None
+    if title is None:
+        print("nothing trending fits the channel; this slot gets an evergreen topic")
+        return None
+    topic = wiki.topic_for(title)
+    topics.add([topic])
+    topic_id, _ = topics.find(topic)
+    topics.set(topic_id, "in_progress")
+    try:
+        job = pipeline.make_video(cfg.model_copy(update={"format": "short"}), topic)
+    except Exception as e:
+        topics.set(topic_id, "failed")
+        print(f"::warning::timely Short failed: {topic}: {e}")
+        return None
+    topics.set(topic_id, "done", job.id)
+    return job
 
 
 BONUS_MIN_FIT = {"short": "bonus_min_fit", "long": "bonus_long_min_fit", "news": "news_min_fit"}
@@ -370,9 +403,10 @@ def report(cfg: Config, now: datetime | None = None) -> tuple[str, list[Slot]]:
     now = now or utcnow()
     filled = Uploads(cfg).filled()
     rows = ["| Goes live (UTC) | Kind | Video |", "|---|---|---|"]
-    for s in upcoming_slots(cfg, now):
-        video = f"https://youtu.be/{filled[s.key][0]}" if s.key in filled else "**empty**"
-        rows.append(f"| {s.at:%a %d %b %H:%M} | {s.kind} | {video} |")
+    due = {s.key for s in upcoming_slots(cfg, now)}
+    for s in upcoming_slots(cfg, now, hold=False):
+        video = f"https://youtu.be/{filled[s.key][0]}" if s.key in filled else "**empty**" if s.key in due else "kept for the day's news"
+        rows.append(f"| {s.at:%a %d %b %H:%M} | {s.kind}{' (timely)' if s.timely else ''} | {video} |")
     pending = pending_jobs(cfg)
     if pending:
         rows.append(f"\n{len(pending)} made video(s) waiting to be uploaded.")

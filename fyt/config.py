@@ -196,6 +196,12 @@ class ScheduleConfig(BaseModel):
     # The YouTube Data API allows 10,000 units a day and an upload with thumbnail and captions uses ~2,050.
     max_uploads_per_day: int = 4
     max_run_minutes: int = 120  # stop starting new videos after this, so the job never times out
+    # Short slots (some of short_slots) kept for a topic in the news that day. Such a slot is left
+    # empty until timely_hold_hours before it goes live, then gets the trending Wikipedia article that
+    # fits the channel best (growth.bonus_min_fit), or the next evergreen topic when none fits.
+    # On this channel Shorts on trending topics got about twice the first-week views of evergreen ones.
+    timely_slots: list[str] = Field(default_factory=list)
+    timely_hold_hours: float = 10.0
 
 
 class GrowthConfig(BaseModel):
