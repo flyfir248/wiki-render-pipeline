@@ -149,6 +149,53 @@ are in the narration. Then:
 
 All keys are optional and free; with none set, Sketchfab search plus the Objaverse mirror still work.
 
+### Story worlds: a new 3D world for every video
+
+Stage scenes are built by generators, not picked from a library (`visuals.story_worlds`, on by default).
+`fyt/worldgen.py` designs, for each video, from the manifest and the narration:
+
+- **the cast**: one build per entity, kept for the whole video. Living things are always generated: a
+  rigged humanoid (body, age, outfit, hair, hat, held props), a quadruped (build, legs, neck, snout, ears,
+  tail, horns, coat), a bird, fish, insect, serpent or cell, each with its own proportions and colours.
+  Vehicles, objects, structures and plants are assembled from primitive parts (a twin-engine Cessna, a
+  duffel bag, a red blood cell's disc). A found model from the library is used only for non-living things.
+- **the sets**: one per place: a kind of terrain or interior (forest, river, airfield, hospital, inside a
+  vessel...), time of day, colours, horizon (hills, mountains, a city) and up to four story-specific
+  things scattered round it (loblolly pines, police cars).
+- **the direction**: per scene, who is in it, what each one does (a verb from its body plan's grammar),
+  where they stand and move, how the camera moves, and overlay marks and labels.
+- **the style**: lowpoly, voxel, noir, diorama or clinical, one for the whole video; it changes materials,
+  light and fog, never what is in the scene.
+
+`renderer/src/scenes/world/storyworld/grammar.json` is the shared vocabulary: the Python schemas and
+the renderer are both built from it, so a verb, set kind or style added there (and drawn in the
+renderer) is open to every later video. Three model calls do the design (cast, sets, direction); when
+one fails, rules build the same things from the manifest's words. Guards keep it honest: a dramatic
+verb (crash, fall, eat) or a state (injured, burning) only when the narration says it and the moment is
+documented, labels only in words the narration or the entity's name uses, and only entities the
+manifest lists in that scene. The whole design and how each asset was made (model, rules, found) is
+written to `world.json` in the job, and copied to `_runs/` with test renders.
+
+What is procedural, and what isn't: every body, part, terrain, sky, light, mark and camera move is
+generated at render time from the design; nothing is reused between videos except a found model of a
+non-living thing (cached on the `asset-library` branch) and the GPU image-to-3D models the asset
+library already made. The engine runs on the Actions runner with no GPU. Its limits: bodies are built
+from primitives, so a species reads by proportion and colour rather than detail; people are figures by
+role and clothing, never likenesses; there is no physics, cloth or facial animation; and a design is
+only as specific as the manifest's looks.
+
+Trying changes without spending Actions minutes: most of a test render's time is the free LLM's rate
+limits while the script is written, not the 3D. Every job saves the script as written and checked
+(`written.json`) next to its `manifest.json`, so a 3D change can be re-rendered from them:
+
+```bash
+python -m fyt --format short make "wiki:Sickle cell disease" --script written.json --manifest manifest.json --no-localize
+```
+
+This runs offline too: without an API key the story world is designed and directed by the rules. In
+the workflow, a test render with `replay` set to an earlier test run's id does the same from that run's
+saved files on the `asset-library` branch.
+
 ### Art direction
 
 Each video gets one look (`fyt/artdirect.py`), kept in every scene: archival for stories before 1950,
@@ -476,6 +523,7 @@ fyt/                 Python pipeline
   render.py          calls renderer/render.mjs
   visualplan.py      the visual plan: which moments become 3D reconstructions, within the render budget
   scenes3d.py        the 3D catalog on the Python side, and the guards that keep world scenes true
+  worldgen.py        each video's story world: cast, sets, direction and style, designed from the story
   assets.py          which real object each 3D scene shows, and the most faithful model of it available
   artdirect.py       each video's look
   shotlist.py        the production storyboard (shotlist.json)
@@ -490,10 +538,11 @@ renderer/            Remotion (React) video templates
                      map (animated routes), process, document, dialogue, story (2D illustrated scenes
                      acting out the narration, drawn with Fluent Emoji, MIT); camera moves and transitions
   src/scenes/world/  the 3D engine: catalog.json, assets.json, molecules.json, the shared kit, and one module per subject
+    storyworld/      the generators: grammar.json, humanoid and creature rigs, parts, environments, styles
   src/components/    background, captions, audio visualizer
   render.mjs         CLI renderer (video, thumbnail, --frame preview)
 fixtures/            demo scripts used by `fyt demo`
-jobs/<id>/           per-video outputs: research.md, script.json, visualplan.json, props.json, shotlist.json, qc.json, contact.png, video.mp4, thumbnail.png, captions.srt, instagram.txt
+jobs/<id>/           per-video outputs: research.md, script.json, visualplan.json, world.json, props.json, shotlist.json, qc.json, contact.png, video.mp4, thumbnail.png, captions.srt, instagram.txt
 ```
 
 A job folder keeps every intermediate file. You can edit `script.json` and rebuild with

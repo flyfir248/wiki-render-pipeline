@@ -697,3 +697,26 @@ def registry(story: "manifest.Manifest", found: dict[str, dict]) -> dict:
 def credits(found: dict[str, dict]) -> list[str]:
     """Description lines for the models a video shows that ask for credit (CC BY, CC BY-SA)."""
     return sorted({credit(a) for a in found.values() if a.get("licence") in ("by", "by-sa")})
+
+
+def settle_rebase(repo: Path = Path(".")) -> None:
+    """Resolve a rebase of a run's library commit onto one another run pushed meanwhile: the shared
+    indexes (_misses.json, _rejected.json) keep both runs' entries, and any other clash keeps this run's
+    file. Several test renders run at once and each saves to the same library branch."""
+    def git(*args: str) -> str:
+        return subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True).stdout
+
+    for path in git("diff", "--name-only", "--diff-filter=U").split():
+        if path.endswith(".json"):
+            merged: dict = {}
+            for stage in ("2", "3"):  # 2: the branch as pushed, 3: this run's commit
+                try:
+                    side = json.loads(git("show", f":{stage}:{path}"))
+                except (subprocess.CalledProcessError, json.JSONDecodeError):
+                    side = {}
+                if isinstance(side, dict):
+                    merged.update(side)
+            (repo / path).write_text(json.dumps(merged, indent=1, sort_keys=True))
+        else:
+            git("checkout", "--theirs", "--", path)
+        git("add", "--", path)

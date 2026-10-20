@@ -61,6 +61,14 @@ class VisualsConfig(BaseModel):
     # Story-driven 3D (fyt/manifest.py, fyt/assetlib.py): the story's own entities get 3D scenes from
     # models found or made for them, never a renderer's stock subject the story doesn't name.
     story_assets: bool = True
+    # Story worlds (fyt/worldgen.py): each stage scene's characters, creatures, objects and place are
+    # generated for this story by the renderer's procedural generators, from a per-video design, instead
+    # of a found model alone in front of a painted plate. People and animals are always generated (they
+    # get a rig the verbs can drive); a found model still draws a non-living thing it genuinely matches.
+    story_worlds: bool = True
+    # The look every story world is built in: auto lets the design pick per story, or one of the styles
+    # in renderer/src/scenes/world/storyworld/grammar.json (lowpoly, voxel, noir, diorama, clinical).
+    world_style: str = "auto"
     # Where models are looked for, in order, after the project library and the model cache:
     # sketchfab: Sketchfab's search, downloaded from the Objaverse mirror (no key) or with SKETCHFAB_TOKEN;
     # polypizza: Poly Pizza's CC0 / CC-BY low-poly library (POLY_PIZZA_KEY, free);
@@ -136,6 +144,12 @@ class YouTubeConfig(BaseModel):
     localize: list[str] = Field(default_factory=list)
 
 
+class BackupLLM(BaseModel):
+    base_url: str = "https://router.huggingface.co/v1"  # Hugging Face's inference router
+    api_key_env: str = "HF_TOKEN"
+    models: list[str] = Field(default_factory=list)  # tried in order
+
+
 class LLMConfig(BaseModel):
     # anthropic: Claude (uses `model` and ANTHROPIC_API_KEY; web research works).
     # openai: any OpenAI-compatible API, e.g. Groq's free tier serving open models,
@@ -152,6 +166,9 @@ class LLMConfig(BaseModel):
     # Tried in order when `model` keeps failing (outage, daily token cap). On Groq each
     # model has its own free limits.
     fallback_models: list[str] = Field(default_factory=list)
+    # A second OpenAI-compatible provider tried when `model` is rate limited or failing, before the
+    # fallback models: its own limits, so runs side by side don't all wait on the first one.
+    backup: BackupLLM | None = None
 
 
 class WikipediaConfig(BaseModel):

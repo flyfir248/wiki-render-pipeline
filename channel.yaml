@@ -21,6 +21,13 @@ llm:
   # Used in turn if the main model is down or out of free tokens for the day
   # (each model on Groq has its own free limits).
   fallback_models: [openai/gpt-oss-20b, qwen/qwen3.8-27b]
+  # Hugging Face's inference router with HF_TOKEN, asked when the main model is rate limited or
+  # failing, before the smaller fallbacks above. Its own limits, so runs side by side don't all wait
+  # on Groq. Billed to the Hugging Face account past its monthly free credit.
+  backup:
+    base_url: https://router.huggingface.co/v1
+    api_key_env: HF_TOKEN
+    models: [Qwen/Qwen3-235B-A22B-Instruct-2507, deepseek-ai/DeepSeek-V3.1]
 
 source: wikipedia
 wikipedia:

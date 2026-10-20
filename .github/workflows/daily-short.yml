@@ -21,23 +21,28 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary)"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary)"
         type: choice
-        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck]
+        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck, bench]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
         type: boolean
         default: true
       count:
-        description: "How many videos (for short / long)"
+        description: "How many videos (for short / long); for reels, how many days back to catch up"
         default: "1"
       title:
         description: "For news: the incident's Wikipedia article title (blank picks the strongest recent one). For short / long: render that article as a test, without uploading"
         default: ""
+      replay:
+        description: "For a test render: the run id of an earlier test of the same title, to re-render its saved script and story without writing them again (far fewer minutes)"
+        default: ""
 
+# A test render (short / long with a title) never uploads or touches the schedule, so it runs in a group
+# of its own: a scheduled run can't cancel it while it waits, and it never holds up the schedule.
 concurrency:
-  group: daily-videos
+  group: ${{ ((inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long')) || inputs.task == 'bench') && format('test-render-{0}', github.run_id) || 'daily-videos' }}
   cancel-in-progress: false
 
 permissions:
@@ -48,7 +53,9 @@ permissions:
 jobs:
   make:
     runs-on: ubuntu-latest
-    timeout-minutes: 170 # fill stops starting new videos after 120 minutes
+    # fill stops starting new videos after 120 minutes; a test render waits out Groq's free
+    # rate limits on every step, so it gets longer
+    timeout-minutes: ${{ inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long') && 330 || 170 }}
     env:
       TASK: ${{ inputs.task || (github.event.schedule == '40 15,23 * * *' && 'reels') || 'fill' }}
     steps:
@@ -94,7 +101,9 @@ jobs:
           THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
           THREADS_APP_SECRET: ${{ secrets.THREADS_APP_SECRET }}
           GH_TOKEN: ${{ github.token }}
-        run: python -m fyt reels
+          COUNT: ${{ inputs.count || '1' }}
+        # task reels with count N catches up on the last N days (the runs keep their videos for a week)
+        run: python -m fyt reels $([ "$TASK" = reels ] && [ "$COUNT" -gt 1 ] && echo "--hours $((COUNT * 24))")
 
       # Uploads YouTube never finished processing: their slots are freed and their files, fetched from
       # the run that made them, go back in jobs/pending so this run uploads them again. Sent as an issue.
@@ -117,6 +126,7 @@ jobs:
         env:
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           COUNT: ${{ inputs.count || '1' }}
         # By hand: up to `count` changes (40 when count is 1); each costs 50 of the 10,000 daily quota units.
@@ -130,6 +140,7 @@ jobs:
         env:
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -214,6 +225,7 @@ jobs:
           UPLOAD: ${{ inputs.upload }}
           COUNT: ${{ inputs.count || '1' }}
           TITLE: ${{ inputs.title }}
+          REPLAY: ${{ inputs.replay }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
@@ -234,10 +246,19 @@ jobs:
           elif [ "$TASK" = assetcheck ]; then
             python -m fyt assetcheck --out jobs/assetcheck
             cat jobs/assetcheck/report.md >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$TASK" = bench ]; then
+            python -m fyt bench --out jobs/bench
+            { echo "## 3D quality benchmark"; echo '```json'; cat jobs/bench/report.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
+          elif [ -n "$TITLE" ] && [ -n "$REPLAY" ]; then
+            # a test re-render: the earlier test's script and story, so only the visuals are redone
+            saved=$(ls -d assets/models/_runs/"$REPLAY"/*/ | head -1)
+            [ -f "$saved/written.json" ] || { echo "run $REPLAY saved no written.json to replay"; exit 1; }
+            python -m fyt --format "$TASK" make "wiki:$TITLE" --script "$saved/written.json" \
+              $([ -f "$saved/manifest.json" ] && echo --manifest "$saved/manifest.json") --no-localize
           elif [ -n "$TITLE" ]; then
-            python -m fyt --format "$TASK" make "wiki:$TITLE" # a test render, never uploaded
+            python -m fyt --format "$TASK" make "wiki:$TITLE" --no-localize # a test render, never uploaded
           elif [ "$UPLOAD" = false ]; then
             python -m fyt --format "$TASK" run --count "$COUNT" --no-upload
           else
@@ -258,14 +279,22 @@ jobs:
             for job in ../../jobs/*/; do
               out="_runs/$RUN/$(basename "$job")"
               mkdir -p "$out"
-              for f in contact.png manifest.json assets.json relevance.json visualplan.json script.json qc.json log.txt; do
+              for f in contact.png manifest.json written.json assets.json relevance.json visualplan.json world.json script.json qc.json look.json log.txt; do
                 if [ -f "$job/$f" ]; then cp "$job/$f" "$out/"; fi
               done
               cp "$job"/gate/*.png "$out/" 2>/dev/null || true
+              cp "$job"/look/*.jpg "$out/" 2>/dev/null || true
+            cp "$job"/thumbnail*.png "$job"/thumbnail-choice.json "$out/" 2>/dev/null || true
               if [ -f "$job/video.mp4" ]; then
                 "$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" -loglevel error -y -i "$job/video.mp4" -vf scale=-2:640 -b:v 350k -c:a aac -b:a 64k "$out/preview.mp4" || true
               fi
             done
+          fi
+          if [ -f ../../jobs/bench/report.json ]; then
+            mkdir -p "_checks/bench-$RUN"
+            cp ../../jobs/bench/report.json ../../jobs/bench/contact.png "_checks/bench-$RUN/"
+            cp ../../jobs/bench/look/*.jpg "_checks/bench-$RUN/" 2>/dev/null || true
+            "$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" -loglevel error -y -i ../../jobs/bench/bench.mp4 -vf scale=-2:960 -b:v 900k "_checks/bench-$RUN/bench.mp4" || true
           fi
           if [ -f ../../jobs/assetcheck/report.md ]; then
             mkdir -p "_checks/$RUN"
@@ -275,7 +304,22 @@ jobs:
           git add -A
           if ! git diff --cached --quiet; then
             git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit --quiet -m "3D models and test renders from run $RUN"
-            git push --quiet origin HEAD:asset-library
+            # other runs (a scheduled one, or test renders running side by side) may have pushed meanwhile:
+            # rebase onto theirs, keeping both runs' entries in the shared indexes, and try again
+            export GIT_COMMITTER_NAME="github-actions[bot]" GIT_COMMITTER_EMAIL="41898282+github-actions[bot]@users.noreply.github.com"
+            for try in 1 2 3 4 5 6; do
+              git push --quiet origin HEAD:asset-library && break
+              [ "$try" = 6 ] && exit 1
+              sleep $((try * 3))
+              git fetch --quiet origin asset-library
+              if ! git rebase --quiet origin/asset-library >/dev/null 2>&1; then
+                for step in 1 2 3 4 5 6 7 8; do
+                  [ -d "$(git rev-parse --git-path rebase-merge)" ] || [ -d "$(git rev-parse --git-path rebase-apply)" ] || break
+                  python -c "import sys; sys.path.insert(0, '../..'); from fyt.assetlib import settle_rebase; settle_rebase()"
+                  git -c core.editor=true rebase --continue >/dev/null 2>&1 || true
+                done
+              fi
+            done
           fi
 
       - name: Check the schedule
@@ -285,7 +329,7 @@ jobs:
           python -m fyt buffer --check | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Save schedule
-        if: always()
+        if: always() && !(inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long'))
         uses: actions/cache/save@v5
         with:
           path: |
@@ -317,6 +361,9 @@ jobs:
             jobs/*/manifest.json
             jobs/*/assets.json
             jobs/*/relevance.json
+            jobs/*/look.json
+            jobs/bench/bench.mp4
+            jobs/bench/report.json
           retention-days: 7
           if-no-files-found: ignore
 

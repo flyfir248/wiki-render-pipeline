@@ -239,3 +239,68 @@ def test_the_short_script_prompt_fits_a_free_tier_minute():
     guide = llm.SCRIPT_GUIDE + llm.WIKI_GUIDE + llm.SHORT_STRUCTURE
     schema = _json.dumps(llm._compact(Script.model_json_schema(), guide=guide), separators=(",", ":"))
     assert len(guide) + len(schema) < 21000
+
+
+def test_a_rate_limited_model_hands_over_to_the_backup_provider(cfg, monkeypatch):
+    from fyt.config import BackupLLM
+
+    monkeypatch.setenv("HF_TOKEN", "hf-test")
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
+        "fallback_models": ["small"], "backup": BackupLLM(models=["big/open-model"])})})
+    calls = []
+
+    def post(url, headers, json, timeout):
+        calls.append((url, headers["Authorization"], json["model"]))
+        if "groq" in url:
+            return Resp(429, {"error": "rate limit"}, {"retry-after": "30"})
+        return reply(_json.dumps(SCRIPT))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    script = llm.write_script(cfg, "Mary", "notes")
+    assert script.title == SCRIPT["title"]
+    assert [c[2] for c in calls].count(cfg.llm.model) == 3  # gives up on the main model after a few waits
+    assert calls[-1] == ("https://router.huggingface.co/v1/chat/completions", "Bearer hf-test", "big/open-model")
+
+
+def test_no_backup_key_means_the_old_order(cfg, monkeypatch):
+    from fyt.config import BackupLLM
+
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["small"], "backup": BackupLLM(models=["big/open-model"])})})
+    assert [c.llm.model for c in llm._chain(cfg)] == [cfg.llm.model, "small"]
+
+
+def test_a_backup_out_of_credit_is_not_asked_again(cfg, monkeypatch):
+    from fyt.config import BackupLLM
+
+    monkeypatch.setenv("HF_TOKEN", "hf-test")
+    monkeypatch.setattr(llm, "_SPENT", set())
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"backup": BackupLLM(models=["a/one", "b/two"])})})
+    asked = []
+
+    def post(url, headers, json, timeout):
+        asked.append(json["model"])
+        if "groq" in url and len(asked) < 4:
+            return Resp(429, {"error": "rate limit"})
+        if "huggingface" in url:
+            return Resp(402, {"error": "You have no remaining credits."})
+        return reply(_json.dumps(SCRIPT))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    llm.write_script(cfg, "Mary", "notes")
+    assert asked.count("a/one") == 1 and "b/two" not in asked
+    assert [c.llm.model for c in llm._chain(cfg)] == [cfg.llm.model]
+
+
+def test_a_small_fallback_saying_too_large_is_not_blamed_on_the_main_model(cfg, monkeypatch):
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["tiny"]})})
+
+    def post(url, headers, json, timeout):
+        if json["model"] == "tiny":
+            return Resp(413, {"error": "Request too large"})
+        return Resp(503, {"error": "over capacity"})
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    with pytest.raises(llm.ClaudeError) as e:
+        llm._openai_structured(cfg, "s", "u", llm.Script)
+    assert not isinstance(e.value, llm.RequestTooLarge)

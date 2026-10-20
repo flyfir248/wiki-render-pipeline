@@ -26,7 +26,9 @@ FRAME = """You check a frame of a documentary video before it is published. It i
 the subject below while the narrator says the line given. Pass it only if the frame clearly shows
 that subject, recognisable as that kind of thing, and nothing about it is broken: not floating in
 the air when it should stand, not cut off or hidden, not inside-out, black or blank. A simple or
-stylised look is fine. Fail it if it shows something else, or nothing recognisable.
+stylised look is fine, and so is a missing detail: judge only what a picture can show (what kind of
+thing it is and its rough shape), never makes, models, markings, exact colours, numbers, times or
+decisions the narrator mentions. Fail it if it shows something else, or nothing recognisable.
 Reply with a single JSON object: {"matches": true or false, "problems": "at most 12 words, or empty"}."""
 
 

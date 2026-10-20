@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, tts, visualplan, wiki, youtube
+from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -27,20 +27,23 @@ def log(job: Job, msg: str) -> None:
 
 
 def make_video(
-    cfg: Config, topic: str, script: Script | None = None, voice: str | None = None, polish: bool | None = None
+    cfg: Config, topic: str, script: Script | None = None, voice: str | None = None, polish: bool | None = None,
+    story: "story_manifest.Manifest | None" = None,
 ) -> Job:
     """Topic -> rendered video + thumbnail + captions, ready for review/upload.
-    `polish` (default: when the script is written here) sharpens title, hook and thumbnail text."""
+    `polish` (default: when the script is written here) sharpens title, hook and thumbnail text.
+    `story`, a manifest already read from this same script, skips reading it again (a test re-render)."""
     job = Job.create(cfg, topic)
     try:
-        _make(cfg, job, topic, script, voice, script is None if polish is None else polish)
+        _make(cfg, job, topic, script, voice, script is None if polish is None else polish, story)
     except Exception as e:
         job.update(status="failed", error=f"{type(e).__name__}: {e}")
         raise
     return job
 
 
-def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False) -> None:
+def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False,
+          given_story: "story_manifest.Manifest | None" = None) -> None:
     images: list[wiki.WikiImage] = []
     article = None
     written = script is None
@@ -109,7 +112,14 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)
         script = check_facts(cfg, job, script, notes)
-    story = read_story(cfg, job, script, notes)
+    # the script as written and checked, before any visual is planned: a test can re-render from it
+    job.file("written.json").write_text(script.model_dump_json(indent=2))
+    if given_story is not None:
+        story = given_story
+        job.file("manifest.json").write_text(story_manifest.dumps(story))
+        log(job, f"story (given): {', '.join(e.name for e in story.entities) or 'no showable entities'}; {len(story.moments)} moments")
+    else:
+        story = read_story(cfg, job, script, notes)
     script = plan_visuals(cfg, job, script, notes, story)
     script, found = story_models(cfg, job, script, story)
     if two_part:
@@ -253,6 +263,16 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     qc["problems"] += after.problems
     qc["warnings"] += after.warnings
     qc["repaired"] = after.repair if attempt == 2 else []
+    try:  # the 3D scenes judged as pictures: flat frames and unpolished shots, kept with their frames
+        look = qcheck.look_check(cfg, script, props, video, job.file("look"))
+        frames = look.checks.pop("look_frames", [])
+        job.file("look.json").write_text(json.dumps({"warnings": look.warnings, "frames": frames}, indent=2))
+        for w in look.warnings:
+            log(job, f"look: {w}")
+        qc["checks"] |= look.checks
+        qc["warnings"] += look.warnings
+    except Exception as e:
+        log(job, f"warning: could not check the 3D look: {str(e)[:160]}")
 
     log(job, "rendering thumbnail")
     # The subject's own photo makes a better thumbnail than a stock one.
@@ -262,15 +282,16 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used)
         except Exception as e:
             log(job, f"warning: no stock thumbnail background: {e}")
-    thumb = ThumbnailProps(
-        format=cfg.format,
-        title=script.thumbnail_text,
-        kicker=script.thumbnail_kicker.upper(),
-        theme=cfg.theme.model_dump(),
-        background=bg,
-    )
-    job.file("thumbnail.json").write_text(thumb.model_dump_json(indent=2))
-    render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
+    try:  # a few takes (cut-out subject, the 3D world's key moment, the photo); the best one is used
+        photos = [m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)][:4]
+        stock = (lambda: media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-stock", used)) if cfg.stock_footage else None
+        thumbs.make(cfg, job.path, job.public, script.thumbnail_text, bg, props, script.core_message or script.title,
+                    log=lambda m: log(job, m), photos=photos, stock=stock)
+    except Exception as e:  # never lose the video over its thumbnail: the plain take
+        log(job, f"warning: thumbnail takes failed ({str(e)[:160]}); using the plain one")
+        thumb = ThumbnailProps(format=cfg.format, title=script.thumbnail_text, theme=cfg.theme.model_dump(), background=bg)
+        job.file("thumbnail.json").write_text(thumb.model_dump_json(indent=2))
+        render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
 
     problems = qa.check_render(cfg, props, video, voiced=provider != "silent") + qc["problems"]
     try:  # a held picture loses viewers: say where, so the template or script can be fixed
@@ -433,15 +454,66 @@ def story_models(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     if story is None:
         return script, {}
     wanted = assetlib.wanted(script, story)
+    if cfg.visuals.story_worlds:
+        # People and animals are always generated in their story world: a found mesh has no rig our verbs can drive.
+        # and a river or an airport is its set, not a model to find
+        wanted = {k: v for k, v in wanted.items() if worldgen.archetype_of(story_manifest.entity(story, k)) not in worldgen.LIVING
+                  and not worldgen.is_place(story_manifest.entity(story, k))}
     if wanted and "image_to_3d" in cfg.visuals.asset_sources:
         log(job, assetlib.generator_status(cfg))
     found = assetlib.resolve_all(cfg, story, wanted, log=lambda m: log(job, m)) if wanted else {}
     srcs = assetlib.stage(found, job.public)
-    script, back = assetlib.attach(script, story, found, srcs)
+    if cfg.visuals.story_worlds:
+        script, back = story_worlds(cfg, job, script, story, found, srcs)
+    else:
+        script, back = assetlib.attach(script, story, found, srcs)
     if back:
         log(job, f"scenes {[i + 1 for i in back]}: no model of their entity, so they stay 2D")
     job.file("assets.json").write_text(json.dumps(assetlib.registry(story, found), indent=2))
     return script, found
+
+
+def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.Manifest", found: dict, srcs: dict[str, str]) -> tuple[Script, list[int]]:
+    """Each stage scene's world generated for this story (fyt/worldgen.py): a build for every entity in
+    it, a setting for its place, and a shot that blocks who does what. Found models draw the non-living
+    things they match; everything else is procedural. The record of how each asset was made goes to
+    world.json. Returns (script, scene indexes put back to 2D)."""
+    staged = [i + 1 for i, s in enumerate(script.scenes) if s.type == "world" and s.subject == "stage" and story_manifest.entity(story, s.subject_name)]
+    if not staged:
+        return script, []
+    ids = list(dict.fromkeys(e.id for k in staged for e in story_manifest.in_scene(story, k) if not worldgen.is_place(e)))
+    log(job, f"building the story world: {len(ids)} entities for {len(staged)} scenes")
+    style, builds, settings, made = worldgen.design(cfg, script, story, ids, log=lambda m: log(job, m))
+    shots, made["direction"] = worldgen.direct(cfg, script, story, builds, staged, log=lambda m: log(job, m))
+    models = {}
+    for eid, a in found.items():
+        if eid in srcs:
+            models[eid] = {"id": a["key"], "src": srcs[eid], "fit": a.get("fit") or assetlib.facing(story_manifest.entity(story, eid)),
+                           "clips": a.get("clips", []), "licence": a.get("licence"), "title": a.get("title")}
+    seed = sum(map(ord, script.title)) & 0xFFFF
+    scenes, back = list(script.scenes), []
+    for i, s in enumerate(scenes):
+        if s.type != "world" or s.subject != "stage":
+            continue
+        shot = shots.get(i + 1)
+        e = story_manifest.entity(story, s.subject_name)
+        if shot is None or e is None:
+            scenes[i] = assetlib.back_to_2d(s)
+            back.append(i)
+            continue
+        lead = shot.actors[0].entity
+        m = models.get(lead) if builds[lead].archetype not in worldgen.LIVING else None
+        model = {"id": m["id"] if m else f"world:{lead}", "level": "found" if m else "procedural", "title": (m or {}).get("title"),
+                 "kind": "object", "src": (m or {}).get("src"), "params": {}, "sources": [], "licence": (m or {}).get("licence"),
+                 "notes": f"story world: {builds[lead].archetype} built for {story_manifest.entity(story, lead).name}"}
+        lead_e = story_manifest.entity(story, lead)
+        label = "ILLUSTRATION" if s.illustrative else "RECONSTRUCTION" if (m and lead_e.certain) else "RECONSTRUCTION · ILLUSTRATIVE"
+        scenes[i] = s.model_copy(update={"subject_name": lead, "world": worldgen.world_of(style, seed, shot, builds, settings, models),
+                                         "model": model, "label": label})
+    job.file("world.json").write_text(json.dumps(worldgen.record(style, builds, settings, shots, made, models), indent=2))
+    log(job, f"story world ({style}): cast {made['cast']}, sets {made['sets']}, direction {made['direction']}; "
+             + ", ".join(f"{b.entity} as {b.archetype}" for b in builds.values()))
+    return script.model_copy(update={"scenes": scenes}), back
 
 
 def stage_backdrops(cfg: Config, job: Job, script: Script) -> int:
@@ -451,7 +523,7 @@ def stage_backdrops(cfg: Config, job: Job, script: Script) -> int:
     made = 0
     vertical = cfg.format == "short"
     for i, s in enumerate(script.scenes):
-        if s.type != "world" or s.subject != "stage" or not s.backdrop or artgen.out_of_allowance():
+        if s.type != "world" or s.subject != "stage" or s.world or not s.backdrop or artgen.out_of_allowance():
             continue
         name = f"art/plate-{artgen._key(s.backdrop, str(vertical))}.jpg"
         try:

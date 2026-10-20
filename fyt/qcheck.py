@@ -206,6 +206,53 @@ def after_render(cfg: Config, script: Script, props: RenderProps, video: Path, v
     return r
 
 
+LOOK = """You review one frame of a 3D-animated documentary short for polish before it is published. Pass it
+if it reads as a lit, composed shot: the main subject is large and clear enough to read on a phone, lit
+with visible light and shadow, and set against a background with depth (not a bare plane or an empty
+void); and nothing looks broken (an object clipping through another, the subject cut off by the frame
+edge, floating, black or blank areas). A stylised look is fine; judge the picture, not the facts.
+Reply with a single JSON object: {"matches": true or false, "problems": "at most 12 words, or empty"}."""
+
+
+def look_check(cfg: Config, script: Script, props: RenderProps, video: Path, work: Path, limit: int = 12) -> Report:
+    """The 3D scenes judged as pictures: each one's two camera setups (before and after its cut) for
+    contrast (a washed-out or murky frame), and, where a vision model is set up, for polish (a subject
+    large, lit and set in depth, nothing broken). Findings are warnings kept in look.json with the
+    frames, for whoever reviews the video; they do not hold it."""
+    from fyt import storyboard
+
+    r = Report()
+    work.mkdir(parents=True, exist_ok=True)
+    warns, rows = [], []
+    scenes = [(i, s, p) for i, (s, p) in enumerate(zip(script.scenes, props.scenes)) if s.type == "world" and p.end - p.start >= 1][:limit]
+    for i, s, p in scenes:
+        for k in (0.3, 0.82):
+            t = p.start + (p.end - p.start) * k
+            grey = frames_at(video, [t])[0]
+            h = grey.shape[0]
+            band = grey[int(h * 0.12) : int(h * 0.62)]
+            contrast = float(band.std())
+            row = {"scene": i + 1, "at": round(t, 2), "contrast": round(contrast, 1)}
+            if contrast < 14:
+                warns.append(f"scene {i + 1} at {t:.1f}s looks flat (contrast {contrast:.0f})")
+            burnt = float((band > 235).mean())
+            row["burnt"] = round(burnt, 2)
+            if burnt > 0.15 or band.mean() > 205:
+                warns.append(f"scene {i + 1} at {t:.1f}s is washed out ({burnt:.0%} of the frame burnt to white)")
+            f = work / f"scene{i + 1:02}-{int(k * 100)}.jpg"
+            subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-loglevel", "error", "-y", "-ss", f"{t:.3f}", "-i", str(video), "-frames:v", "1", "-vf", "scale=540:-1", str(f)], check=False)
+            v = storyboard.review(cfg, f, f"a 3D shot of {p.subjectName or s.subject or 'the story'}", rules=LOOK) if f.is_file() else None
+            if v is not None:
+                row["polished"] = v.matches
+                row["problems"] = v.problems
+                if not v.matches:
+                    warns.append(f"scene {i + 1} at {t:.1f}s: {v.problems or 'not polished'}")
+            rows.append(row)
+    r.mark("look", [], warns)
+    r.checks["look_frames"] = rows  # type: ignore[assignment]
+    return r
+
+
 def repaired(script: Script, scenes: list[int]) -> Script:
     """The script with the given 3D scenes put back to the scenes they replaced."""
     out = list(script.scenes)
