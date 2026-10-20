@@ -112,10 +112,17 @@ def post_facebook(cfg: Config, video: Path, text: str, session=requests, sleep=t
     upload_url = start.get("upload_url") or f"{FB_UPLOAD}/{v}/{video_id}"
     with tempfile.TemporaryDirectory() as tmp:
         upload = instagram.for_instagram(video, Path(tmp) / "reel.mp4")
+        r = None
         if cfg.instagram.host in instagram.HOSTS:
-            url = instagram.HOSTS[cfg.instagram.host](upload, session)
-            r = session.post(upload_url, headers={**auth, "file_url": url}, timeout=300)
-        else:
+            try:
+                url = instagram.HOSTS[cfg.instagram.host](upload, session)
+                r = session.post(upload_url, headers={**auth, "file_url": url}, timeout=300)
+                if r.status_code >= 400:  # Facebook couldn't fetch the link: send the file itself
+                    print(f"::warning::Facebook couldn't fetch the video from its link ({r.status_code}: {r.text[:160]}); uploading the file")
+                    r = None
+            except RuntimeError as e:
+                print(f"::warning::{e}; uploading the file to Facebook instead")
+        if r is None:  # Facebook, unlike Instagram, takes the file directly
             with upload.open("rb") as f:
                 r = session.post(upload_url, headers={**auth, "offset": "0", "file_size": str(upload.stat().st_size)}, data=f, timeout=900)
         _json(r, "Facebook upload")

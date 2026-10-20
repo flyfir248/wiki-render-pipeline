@@ -227,7 +227,7 @@ def test_with_a_temporary_host_instagram_fetches_the_video_from_its_link(tmp_pat
     assert not any("rupload" in c[1] for c in s.calls)
 
 
-def test_a_failing_litterbox_is_asked_again_then_tmpfiles_is_used(tmp_path):
+def test_a_failing_litterbox_is_asked_again_then_uguu_is_used(tmp_path):
     video = tmp_path / "video.mp4"
     video.write_bytes(b"x")
     asked, waits = [], []
@@ -235,9 +235,9 @@ def test_a_failing_litterbox_is_asked_again_then_tmpfiles_is_used(tmp_path):
     class S:
         def post(self, url, data=None, files=None, headers=None, timeout=None):
             asked.append(url)
-            r = _Resp({"status": "success", "data": {"url": "https://tmpfiles.org/123/reel.mp4"}})
+            r = _Resp({"success": True, "files": [{"url": "https://h.uguu.se/abc.mp4"}]})
             r.status_code, r.text = (500, "<html>500</html>") if url == instagram.LITTERBOX else (200, "{}")
             return r
 
-    assert instagram.litterbox(video, S(), sleep=waits.append) == "https://tmpfiles.org/dl/123/reel.mp4"
-    assert asked == [instagram.LITTERBOX] * 3 + [instagram.TMPFILES] and waits == [0, 20, 60]
+    assert instagram.litterbox(video, S(), sleep=waits.append) == "https://h.uguu.se/abc.mp4"
+    assert asked == [instagram.LITTERBOX] * 3 + [instagram.UGUU] and waits == [0, 20, 60]
