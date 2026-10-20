@@ -73,7 +73,7 @@ def _detail(img: Image.Image) -> float:
 
 def world_take(props: RenderProps, job_dir: Path, public: Path) -> Media | None:
     """A clean frame of the story's 3D world at its key moment: a few moments of the two longest world
-    scenes, with captions, labels and badges off; the fullest frame is kept, none if all are empty."""
+    scenes, with captions, labels and badges off; the first that isn't empty is kept."""
     worlds = sorted((s for s in props.scenes if s.type == "world" and s.world), key=lambda s: s.end - s.start, reverse=True)
     if not worlds:
         return None
@@ -87,10 +87,11 @@ def world_take(props: RenderProps, job_dir: Path, public: Path) -> Media | None:
             s["world"]["callouts"] = []
     path = job_dir / "thumb-world-props.json"
     path.write_text(json.dumps(clean))
-    at = sorted({round((k.start + (k.end - k.start) * t) * props.fps) for k in worlds[:2] for t in (0.35, 0.6, 0.85)})
+    # the key moment first, then others in case it caught an empty sky or the gap between cells
+    at = list(dict.fromkeys(round((k.start + (k.end - k.start) * t) * props.fps) for k in worlds[:2] for t in (0.6, 0.35, 0.85)))
     shots = render.frames(path.resolve(), public.resolve(), (job_dir / "thumb-world").resolve(), at)
-    img = max((Image.open(p).convert("RGB") for p in shots), key=_detail)
-    if _detail(img) < 2.5:
+    img = next((i for i in (Image.open(p).convert("RGB") for p in shots) if _detail(i) >= 2.5), None)
+    if img is None:
         return None
     img = ImageOps.autocontrast(img, cutoff=1, preserve_tone=True)  # a dim night set still reads at phone size
     img = ImageEnhance.Color(img).enhance(1.15)
