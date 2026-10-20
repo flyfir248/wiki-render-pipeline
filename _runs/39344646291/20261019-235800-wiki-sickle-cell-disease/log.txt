@@ -1,0 +1,27 @@
+story (given): red blood cell, stem cell, bone marrow; 4 moments
+planning the visuals
+visual plan (model): 3 3D, 4 2.5D; 3D: stage move, stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: no vision check could be made (first candidate 'Red Blood Cell'); red blood cell stays painted this time
+assets: no usable model of red blood cell (red blood cell, blood cell, cell): its scenes stay painted
+building the story world: 1 entities for 3 scenes
+story world (clinical): cast model, sets model, direction model; rbc as cell
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 1 Wikipedia/Commons images, 1 stock, 5 scenes on plain background
+cutaways: 1 extra photos across 1 scenes
+collage: 2 photos styled, 0 with a cut-out subject
+drawing story scenes (cloudflare)
+warning: no background art for scene 3: image generation failed: 429: the free daily image allowance is used up
+warning: no art for 'person in pain, clutching joints, distressed expression': image generation failed: the free daily image allowance is used up
+warning: no art for 'red burst of light, representing pain signal': image generation failed: the free daily image allowance is used up
+0 illustrations drawn
+relevance: checking 3 3D scenes by eye
+art direction: signature
+rendering 48s short video
+look: scene 1 at 1.9s is washed out (25% of the frame burnt to white)
+look: scene 1 at 5.2s is washed out (20% of the frame burnt to white)
+look: scene 4 at 25.8s is washed out (75% of the frame burnt to white)
+rendering thumbnail
+thumbnail: cutout take
+done: approved

@@ -1,0 +1,580 @@
+{
+  "style": "clinical",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "rbc",
+      "archetype": "cell",
+      "size": 0.6,
+      "primary": "#ff6666",
+      "secondary": "#ffcccc",
+      "accent": "#ff0000",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "torus",
+          "at": [
+            0.0,
+            0.36,
+            0.0
+          ],
+          "size": [
+            0.6,
+            0.6,
+            0.20400000000000001
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#c23b2e",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            0.0,
+            0.36,
+            0.0
+          ],
+          "size": [
+            0.444,
+            0.06,
+            0.444
+          ],
+          "rot": [
+            90.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d0566a",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "rbc",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        1,
+        2,
+        4
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "africa",
+      "kind": "grassland",
+      "time": "day",
+      "ground": "#8b7355",
+      "sky": "#87ceeb",
+      "accent": "#ff8c00",
+      "backdrop": "hills",
+      "dressing": [
+        {
+          "name": "acacia tree",
+          "build": {
+            "entity": "africa:acacia-tree",
+            "archetype": "plant",
+            "size": 8.0,
+            "primary": "#6b4423",
+            "secondary": "#556b2f",
+            "accent": "#8b4513",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  1.5,
+                  0.0
+                ],
+                "size": [
+                  0.24,
+                  3.0,
+                  0.24
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#6b4423",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  0.0,
+                  3.3,
+                  0.0
+                ],
+                "size": [
+                  2.4,
+                  0.9,
+                  2.4
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#556b2f",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.9,
+                  2.1,
+                  0.3
+                ],
+                "size": [
+                  0.12,
+                  1.2,
+                  0.12
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  315.0
+                ],
+                "color": "#6b4423",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cylinder",
+                "at": [
+                  -0.72,
+                  2.28,
+                  -0.48
+                ],
+                "size": [
+                  0.12,
+                  1.2,
+                  0.12
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  40.0
+                ],
+                "color": "#6b4423",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  1.2,
+                  3.0,
+                  0.6
+                ],
+                "size": [
+                  0.9,
+                  0.48,
+                  0.9
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#556b2f",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  -1.08,
+                  3.12,
+                  -0.72
+                ],
+                "size": [
+                  0.9,
+                  0.48,
+                  0.9
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#556b2f",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 12,
+          "spread": 45.0
+        },
+        {
+          "name": "tall grass tuft",
+          "build": {
+            "entity": "africa:tall-grass-tuft",
+            "archetype": "plant",
+            "size": 1.2,
+            "primary": "#daa520",
+            "secondary": "#cd853f",
+            "accent": "#b8860b",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  0.6,
+                  0.0
+                ],
+                "size": [
+                  0.6,
+                  1.2,
+                  0.6
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#daa520",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.2,
+                  0.5,
+                  0.1
+                ],
+                "size": [
+                  0.4,
+                  1.0,
+                  0.4
+                ],
+                "rot": [
+                  10.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#cd853f",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  -0.2,
+                  0.5,
+                  -0.1
+                ],
+                "size": [
+                  0.4,
+                  1.0,
+                  0.4
+                ],
+                "rot": [
+                  350.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#b8860b",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 30,
+          "spread": 20.0
+        },
+        {
+          "name": "dry riverbed",
+          "build": {
+            "entity": "africa:dry-riverbed",
+            "archetype": "structure",
+            "size": 10.0,
+            "primary": "#d2b48c",
+            "secondary": "#deb887",
+            "accent": "#f5f5dc",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.024,
+                  0.0
+                ],
+                "size": [
+                  9.487,
+                  0.047,
+                  2.372
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#d2b48c",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.009,
+                  0.0
+                ],
+                "size": [
+                  8.538,
+                  0.019,
+                  1.423
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#deb887",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  0.949,
+                  0.047,
+                  0.474
+                ],
+                "size": [
+                  0.237,
+                  0.095,
+                  0.237
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#8b7355",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  -1.423,
+                  0.047,
+                  -0.237
+                ],
+                "size": [
+                  0.19,
+                  0.071,
+                  0.19
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#8b7355",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 1,
+          "spread": 5.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "rbc",
+          "verb": "turn",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "rbc",
+      "marks": [
+        {
+          "kind": "glow",
+          "on": "rbc",
+          "to": "",
+          "color": ""
+        }
+      ],
+      "callouts": [
+        {
+          "on": "rbc",
+          "text": "sickle shape"
+        }
+      ]
+    },
+    "2": {
+      "scene": 2,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "rbc",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "top_down",
+      "on": "rbc",
+      "marks": [
+        {
+          "kind": "ring",
+          "on": "rbc",
+          "to": "",
+          "color": ""
+        }
+      ],
+      "callouts": [
+        {
+          "on": "rbc",
+          "text": "stuck in capillaries"
+        }
+      ]
+    },
+    "4": {
+      "scene": 4,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "rbc",
+          "verb": "spin",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "orbit",
+      "on": "rbc",
+      "marks": [
+        {
+          "kind": "glow",
+          "on": "rbc",
+          "to": "",
+          "color": ""
+        }
+      ],
+      "callouts": [
+        {
+          "on": "rbc",
+          "text": "twist into form"
+        }
+      ]
+    }
+  }
+}

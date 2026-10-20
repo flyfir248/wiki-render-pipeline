@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 1 at 1.9s is washed out (25% of the frame burnt to white)",
+    "scene 1 at 5.2s is washed out (20% of the frame burnt to white)",
+    "scene 4 at 25.8s is washed out (75% of the frame burnt to white)"
+  ],
+  "repair": [],
+  "repaired": []
+}
