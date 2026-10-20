@@ -30,7 +30,7 @@ from fyt.store import Job, Uploads
 GRAPH = "https://graph.facebook.com"
 RUPLOAD = "https://rupload.facebook.com/ig-api-upload"
 LITTERBOX = "https://litterbox.catbox.moe/resources/internals/api.php"
-TMPFILES = "https://tmpfiles.org/api/v1/upload"
+UGUU = "https://uguu.se/upload"
 USER_AGENT = "wiki-render-pipeline/0.1 (https://github.com/flyfir248/wiki-render-pipeline)"
 MAX_CAPTION = 2200
 BODY_CHARS = 300
@@ -167,19 +167,22 @@ def _litterbox_once(video: Path, session) -> str:
     return url
 
 
-def _tmpfiles_once(video: Path, session) -> str:
+def _uguu_once(video: Path, session) -> str:
     with video.open("rb") as f:
-        r = session.post(TMPFILES, files={"file": ("reel.mp4", f, "video/mp4")}, headers={"User-Agent": USER_AGENT}, timeout=600)
+        r = session.post(UGUU, files={"files[]": ("reel.mp4", f, "video/mp4")}, headers={"User-Agent": USER_AGENT}, timeout=600)
     try:
-        page = r.json()["data"]["url"]  # https://tmpfiles.org/123/reel.mp4 is a page; /dl/ is the file
-    except (ValueError, KeyError, TypeError):
+        url = r.json()["files"][0]["url"]  # a direct link to the file, served as video/mp4, kept 3 hours
+    except (ValueError, KeyError, IndexError, TypeError):
         raise RuntimeError(f"second temporary host refused the video ({r.status_code}): {r.text[:200]}")
-    return re.sub(r"^https?://tmpfiles\.org/", "https://tmpfiles.org/dl/", page)
+    if not url.startswith("https://"):
+        raise RuntimeError(f"second temporary host gave no link: {url[:200]}")
+    return url
 
 
 def litterbox(video: Path, session=requests, sleep=time.sleep) -> str:
     """A public link to the video, deleted within the hour, for Instagram or Threads to fetch: litterbox.catbox.moe,
-    asked three times since it often answers 500 for a while, then tmpfiles.org."""
+    asked three times since it often answers 500 for a while, then uguu.se. (tmpfiles.org's links answer
+    Meta with a web page, not the video.)"""
     error = None
     for wait in (0, 20, 60):
         sleep(wait)
@@ -188,7 +191,7 @@ def litterbox(video: Path, session=requests, sleep=time.sleep) -> str:
         except (RuntimeError, requests.RequestException) as e:
             error = e
     try:
-        return _tmpfiles_once(video, session)
+        return _uguu_once(video, session)
     except (RuntimeError, requests.RequestException) as e:
         raise RuntimeError(f"{error}; {e}") from e
 
