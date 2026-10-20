@@ -1,0 +1,817 @@
+{
+  "style": "noir",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "airbus-a320",
+      "archetype": "vehicle",
+      "size": 13.08,
+      "primary": "#f0f0f0",
+      "secondary": "#003366",
+      "accent": "#cccccc",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "none",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            1.7004000000000001,
+            0.0
+          ],
+          "size": [
+            1.4388,
+            12.426,
+            1.4388
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#f0f0f0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.39239999999999997,
+            1.8965999999999998,
+            0.0
+          ],
+          "size": [
+            9.4176,
+            0.18312,
+            1.47804
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            5.6244,
+            2.0274,
+            0.0
+          ],
+          "size": [
+            0.654,
+            0.28775999999999996,
+            1.1118000000000001
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -0.5232,
+            1.2426,
+            -3.1391999999999998
+          ],
+          "size": [
+            2.3544,
+            0.20928,
+            5.4936
+          ],
+          "rot": [
+            0.0,
+            28.0,
+            0.0
+          ],
+          "color": "#f0f0f0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -0.5232,
+            1.2426,
+            3.1391999999999998
+          ],
+          "size": [
+            2.3544,
+            0.20928,
+            5.4936
+          ],
+          "rot": [
+            0.0,
+            -28.0,
+            0.0
+          ],
+          "color": "#f0f0f0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            0.654,
+            0.7847999999999999,
+            -2.2236000000000002
+          ],
+          "size": [
+            0.8502000000000001,
+            1.962,
+            0.8502000000000001
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#003366",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            0.654,
+            0.7847999999999999,
+            2.2236000000000002
+          ],
+          "size": [
+            0.8502000000000001,
+            1.962,
+            0.8502000000000001
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#003366",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -5.3628,
+            3.4008000000000003,
+            0.0
+          ],
+          "size": [
+            1.962,
+            2.616,
+            0.20928
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            -18.0
+          ],
+          "color": "#cccccc",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -5.6244,
+            1.962,
+            -1.1772
+          ],
+          "size": [
+            1.1772,
+            0.15696000000000002,
+            2.2236000000000002
+          ],
+          "rot": [
+            0.0,
+            25.0,
+            0.0
+          ],
+          "color": "#f0f0f0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -5.6244,
+            1.962,
+            1.1772
+          ],
+          "size": [
+            1.1772,
+            0.15696000000000002,
+            2.2236000000000002
+          ],
+          "rot": [
+            0.0,
+            -25.0,
+            0.0
+          ],
+          "color": "#f0f0f0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "airliner",
+      "source": "found model",
+      "scenes": [
+        2,
+        3,
+        8
+      ]
+    },
+    {
+      "entity": "canada-geese",
+      "archetype": "bird",
+      "size": 1.2,
+      "primary": "#5c5c5c",
+      "secondary": "#111111",
+      "accent": "#ffffff",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.6,
+        "legs": 0.4,
+        "neck": 0.7,
+        "head": 0.4,
+        "snout": 0.6,
+        "ears": "none",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "belly",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "sphere",
+          "at": [
+            0.2,
+            0.5,
+            0.0
+          ],
+          "size": [
+            0.9,
+            0.6,
+            0.5
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#5c5c5c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "sphere",
+          "at": [
+            0.6,
+            0.9,
+            0.0
+          ],
+          "size": [
+            0.6,
+            0.4,
+            0.4
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#a8a8a8",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        1,
+        3
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "laguardia-airport",
+      "kind": "airfield",
+      "time": "day",
+      "ground": "#8a8f94",
+      "sky": "#b0b5b9",
+      "accent": "#ffffff",
+      "backdrop": "city",
+      "dressing": [
+        {
+          "name": "runway-tower",
+          "build": {
+            "entity": "laguardia-airport:runway-tower",
+            "archetype": "structure",
+            "size": 25.0,
+            "primary": "#cccccc",
+            "secondary": "#888888",
+            "accent": "#111111",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  3.559,
+                  0.0
+                ],
+                "size": [
+                  0.854,
+                  7.119,
+                  0.854
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#cccccc",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  7.403,
+                  0.0
+                ],
+                "size": [
+                  1.708,
+                  0.854,
+                  1.708
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#888888",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.04,
+                  0.0
+                ],
+                "size": [
+                  1.993,
+                  0.08,
+                  1.993
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#111111",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 1,
+          "spread": 2.0
+        },
+        {
+          "name": "windsock",
+          "build": {
+            "entity": "laguardia-airport:windsock",
+            "archetype": "structure",
+            "size": 4.0,
+            "primary": "#ff6600",
+            "secondary": "#ffffff",
+            "accent": "#333333",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  1.43,
+                  0.0
+                ],
+                "size": [
+                  0.072,
+                  2.86,
+                  0.072
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#333333",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  1.073,
+                  2.717,
+                  0.0
+                ],
+                "size": [
+                  0.286,
+                  0.858,
+                  0.286
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  90.0
+                ],
+                "color": "#ff6600",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 3,
+          "spread": 40.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "hudson-river",
+      "kind": "river",
+      "time": "day",
+      "ground": "#2c3e50",
+      "sky": "#9aa5ad",
+      "accent": "#aaddff",
+      "backdrop": "city",
+      "dressing": [
+        {
+          "name": "manhattan-skyline",
+          "build": {
+            "entity": "hudson-river:manhattan-skyline",
+            "archetype": "structure",
+            "size": 100.0,
+            "primary": "#555555",
+            "secondary": "#333333",
+            "accent": "#88aaff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  -2.449,
+                  4.899,
+                  -9.798
+                ],
+                "size": [
+                  1.837,
+                  9.798,
+                  1.837
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#555555",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  1.225,
+                  6.736,
+                  -10.41
+                ],
+                "size": [
+                  1.47,
+                  13.472,
+                  1.47
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#444444",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  4.287,
+                  3.674,
+                  -9.186
+                ],
+                "size": [
+                  2.205,
+                  7.348,
+                  2.205
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#666666",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.612,
+                  9.186,
+                  -11.023
+                ],
+                "size": [
+                  1.225,
+                  18.371,
+                  1.225
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#333333",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 1,
+          "spread": 80.0
+        },
+        {
+          "name": "ice-floe",
+          "build": {
+            "entity": "hudson-river:ice-floe",
+            "archetype": "object",
+            "size": 2.0,
+            "primary": "#d6eaf8",
+            "secondary": "#aec6cf",
+            "accent": "#ffffff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.04,
+                  0.0
+                ],
+                "size": [
+                  2.5,
+                  0.08,
+                  1.5
+                ],
+                "rot": [
+                  0.0,
+                  15.0,
+                  0.0
+                ],
+                "color": "#d6eaf8",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": ""
+          },
+          "count": 12,
+          "spread": 25.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "canada-geese",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 7
+        }
+      ],
+      "camera": "establish",
+      "on": "canada-geese",
+      "marks": [],
+      "callouts": []
+    },
+    "2": {
+      "scene": 2,
+      "place": "laguardia-airport",
+      "time": "",
+      "actors": [
+        {
+          "entity": "airbus-a320",
+          "verb": "fly",
+          "at": "center",
+          "to": "far",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "airbus-a320",
+      "marks": [],
+      "callouts": []
+    },
+    "3": {
+      "scene": 3,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "canada-geese",
+          "verb": "fly",
+          "at": "center",
+          "to": "front",
+          "face": "airbus-a320",
+          "state": "normal",
+          "holding": "",
+          "count": 7
+        },
+        {
+          "entity": "airbus-a320",
+          "verb": "fly",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "over_shoulder",
+      "on": "canada-geese",
+      "marks": [
+        {
+          "kind": "beam",
+          "on": "canada-geese",
+          "to": "airbus-a320",
+          "color": ""
+        }
+      ],
+      "callouts": []
+    },
+    "8": {
+      "scene": 8,
+      "place": "hudson-river",
+      "time": "",
+      "actors": [
+        {
+          "entity": "airbus-a320",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "airbus-a320",
+      "marks": [
+        {
+          "kind": "glow",
+          "on": "airbus-a320",
+          "to": "",
+          "color": ""
+        }
+      ],
+      "callouts": []
+    }
+  }
+}
