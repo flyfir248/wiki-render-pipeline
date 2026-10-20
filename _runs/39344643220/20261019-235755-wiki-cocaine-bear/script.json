@@ -1,0 +1,1060 @@
+{
+  "core_message": "A bear eating a lost drug drop became a real 1985 murder mystery.",
+  "mood": "curious",
+  "title": "Cocaine‑Fueled Bear Rampage: The 1985 Georgia Murder Puzzle",
+  "description": "In 1985, a pilot dropped a bag of cocaine in a Georgia forest and died hitting the doorframe. A black bear ate the drugs, became violent, and one hiker never came home.\n\nThe police found the bear's stomach full of cocaine. The case never got solved, but it became a legend.\n\nBased on the Wikipedia article \"Cocaine Bear\" (https://en.wikipedia.org/wiki/Cocaine_Bear), licensed CC BY-SA 4.0.\n\nImages from Wikimedia Commons:\nDiscovery Channel comes to the Defense Language Institute Foreign Language Center at the Presidio of Monterey, California on 10 January 2008 - 4.jpg (Presidio of Monterey: DLIFLC &amp; USAG, Public domain): https://commons.wikimedia.org/wiki/File:Discovery_Channel_comes_to_the_Defense_Language_Institute_Foreign_Language_Center_at_the_Presidio_of_Monterey,_California_on_10_January_2008_-_4.jpg\nDiscovery Channel comes to the Defense Language Institute Foreign Language Center at the Presidio of Monterey, California on 10 January 2008 - 1.jpg (Presidio of Monterey: DLIFLC &amp; USAG, Public domain): https://commons.wikimedia.org/wiki/File:Discovery_Channel_comes_to_the_Defense_Language_Institute_Foreign_Language_Center_at_the_Presidio_of_Monterey,_California_on_10_January_2008_-_1.jpg",
+  "tags": [
+    "cocaine bear",
+    "true story",
+    "weird history",
+    "bear attack",
+    "1985 mystery",
+    "georgia",
+    "true crime",
+    "strange facts"
+  ],
+  "thumbnail_text": "Cocaine‑Fueled Rampage",
+  "thumbnail_kicker": "1985",
+  "thumbnail_query": "black bear in forest",
+  "scenes": [
+    {
+      "narration": "In December 1985, a bear in Georgia ate a duffel bag of cocaine and died.",
+      "purpose": null,
+      "type": "title",
+      "heading": "Cocaine‑Fueled Bear",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": "black bear walking in forest"
+    },
+    {
+      "narration": "A drug-smuggling pilot, mid-flight, knocked himself unconscious on the doorframe and fell to his death.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": "knocked himself unconscious on the doorframe and fell to his death",
+      "subject_name": "pilot",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:pilot",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: humanoid built for drug‑smuggling pilot"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "A drug-smuggling pilot, mid-flight, knocked himself unconscious on the doorframe and fell to his death.",
+        "type": "story",
+        "setting": "sky",
+        "actors": [
+          {
+            "thing": "airplane",
+            "x": 20.0,
+            "y": 20.0,
+            "size": "m",
+            "enter": "pop",
+            "action": "none",
+            "at": 0.0,
+            "look": "a small white private plane in the clouds"
+          },
+          {
+            "thing": "man",
+            "x": 20.0,
+            "y": 30.0,
+            "size": "s",
+            "to_y": 95.0,
+            "enter": "pop",
+            "action": "fall",
+            "at": 0.0,
+            "look": "a man in a flight jacket"
+          }
+        ],
+        "transition": "slide",
+        "broll_query": "plane dropping objects from sky"
+      },
+      "world": {
+        "style": "lowpoly",
+        "seed": 13336,
+        "set": {
+          "place": "knoxville",
+          "kind": "city",
+          "time": "day",
+          "ground": "#a67d52",
+          "sky": "#87ceeb",
+          "accent": "#f4e042",
+          "backdrop": "city",
+          "dressing": [
+            {
+              "name": "trafficlight",
+              "build": {
+                "entity": "knoxville:trafficlight",
+                "archetype": "object",
+                "size": 3.0,
+                "primary": "#ffffff",
+                "secondary": "#000000",
+                "accent": "#ff0000",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      0.3,
+                      1.5,
+                      0.3
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#000000",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.0,
+                      1.5,
+                      0.0
+                    ],
+                    "size": [
+                      0.2,
+                      0.2,
+                      0.2
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#ff0000",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.0,
+                      1.1,
+                      0.0
+                    ],
+                    "size": [
+                      0.2,
+                      0.2,
+                      0.2
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#ffff00",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.0,
+                      0.7,
+                      0.0
+                    ],
+                    "size": [
+                      0.2,
+                      0.2,
+                      0.2
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#00ff00",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 15,
+              "spread": 20.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "pilot",
+            "verb": "idle",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "asleep",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "pilot",
+              "archetype": "humanoid",
+              "size": 1.75,
+              "primary": "#8a8f96",
+              "secondary": "#3a6cc2",
+              "accent": "#2c3550",
+              "skin": "#7a4b32",
+              "hair": "#6b4424",
+              "body": {
+                "build": 0.45,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": {
+                "top": "uniform",
+                "bottom": "trousers",
+                "hair": "cap",
+                "beard": false,
+                "glasses": false
+              },
+              "parts": [],
+              "form": ""
+            }
+          }
+        ],
+        "camera": "establish",
+        "on": "pilot",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "slide",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The bag landed in the Chattahoochee forest, where a black bear ingested the cocaine.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "countryside",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "landscape",
+      "variant": "forest",
+      "action": "flyover",
+      "obstacle": null,
+      "shot": "wide",
+      "weather": null,
+      "cue": "bag landed in the Chattahoochee forest",
+      "subject_name": "forest",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "landscape:forest",
+        "level": "generic",
+        "title": "generic forest",
+        "kind": "object",
+        "params": {},
+        "sources": [],
+        "notes": "The module's own model of this kind of thing."
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "The bag landed in the Chattahoochee forest, where a black bear ingested the cocaine.",
+        "type": "story",
+        "setting": "countryside",
+        "actors": [
+          {
+            "thing": "bear",
+            "x": 40.0,
+            "y": 85.0,
+            "size": "l",
+            "enter": "pop",
+            "action": "none",
+            "at": 0.0,
+            "look": "a large black bear with a full belly"
+          },
+          {
+            "thing": "bag",
+            "x": 60.0,
+            "y": 90.0,
+            "size": "m",
+            "enter": "pop",
+            "action": "none",
+            "at": 0.0,
+            "look": "a dirty white duffel bag"
+          }
+        ],
+        "transition": "fade",
+        "broll_query": "black bear eating in woods"
+      },
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "fade",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The bear was found three months later in northern Georgia alongside forty opened plastic containers of cocaine.",
+      "purpose": null,
+      "type": "document",
+      "heading": "Discovery, 1985",
+      "text": "The animal was found with 40 opened plastic containers of cocaine.",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": "Georgia State Police",
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "thread",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The cocaine made the bear highly aggressive.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "Violent. Unpredictable. Dangerous.",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": null,
+      "subject_name": "blackbear",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:blackbear",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: quadruped built for the black bear"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "The cocaine made the bear highly aggressive.",
+        "type": "statement",
+        "text": "Violent. Unpredictable. Dangerous.",
+        "transition": "flash"
+      },
+      "world": {
+        "style": "lowpoly",
+        "seed": 13336,
+        "set": {
+          "place": "forest",
+          "kind": "forest",
+          "time": "day",
+          "ground": "#0c7d27",
+          "sky": "#87ceeb",
+          "accent": "#f4e042",
+          "backdrop": "hills",
+          "dressing": [
+            {
+              "name": "pinetree",
+              "build": {
+                "entity": "forest:pinetree",
+                "archetype": "plant",
+                "size": 12.0,
+                "primary": "#0e4d23",
+                "secondary": "#0e4d23",
+                "accent": "#0e4d23",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      0.75,
+                      2.25,
+                      0.75
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#0e4d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      1.5,
+                      3.0,
+                      1.5
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#0e4d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      2.25,
+                      3.75,
+                      2.25
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#0e4d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      3.0,
+                      4.5,
+                      3.0
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#0e4d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      3.75,
+                      5.25,
+                      3.75
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#0e4d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      4.5,
+                      6.0,
+                      4.5
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#0e4d23",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 20,
+              "spread": 30.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "blackbear",
+            "verb": "idle",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "dazed",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "blackbear",
+              "archetype": "quadruped",
+              "size": 2.16,
+              "primary": "#22201e",
+              "secondary": "#4a3220",
+              "accent": "#6b4a2e",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.8,
+                "legs": 0.35,
+                "neck": 0.2,
+                "head": 0.5,
+                "snout": 0.55,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "belly",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [],
+              "form": ""
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "blackbear",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "flash",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The bear was found three months later in northern Georgia alongside 40 opened plastic containers of cocaine.",
+      "purpose": null,
+      "type": "quote",
+      "heading": null,
+      "text": "The bear died after ingesting a duffel bag full of cocaine in December 1985.",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": "Wikipedia, 2023",
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "fade",
+      "image": null,
+      "broll_query": "hiking trail in forest"
+    },
+    {
+      "narration": "The bear is on display in Kentucky, where it was named Cocaine Bear in 2015.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "A legend.",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "orbit",
+      "weather": null,
+      "cue": null,
+      "subject_name": "blackbear",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:blackbear",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: quadruped built for the black bear"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "The bear is on display in Kentucky, where it was named Cocaine Bear in 2015.",
+        "type": "statement",
+        "text": "A legend.",
+        "transition": "fade",
+        "broll_query": "empty forest path"
+      },
+      "world": {
+        "style": "lowpoly",
+        "seed": 13336,
+        "set": {
+          "place": "kentucky",
+          "kind": "town",
+          "time": "day",
+          "ground": "#d8c3a5",
+          "sky": "#87ceeb",
+          "accent": "#f4e042",
+          "backdrop": "hills",
+          "dressing": [
+            {
+              "name": "glassfacade",
+              "build": {
+                "entity": "kentucky:glassfacade",
+                "archetype": "object",
+                "size": 5.0,
+                "primary": "#ffffff",
+                "secondary": "#ffffff",
+                "accent": "#000000",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      4.743,
+                      2.846,
+                      1.897
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#ffffff",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "size": [
+                      4.743,
+                      0.08,
+                      1.897
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#000000",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": ""
+              },
+              "count": 5,
+              "spread": 10.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "blackbear",
+            "verb": "idle",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "blackbear",
+              "archetype": "quadruped",
+              "size": 2.16,
+              "primary": "#22201e",
+              "secondary": "#4a3220",
+              "accent": "#6b4a2e",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.8,
+                "legs": 0.35,
+                "neck": 0.2,
+                "head": 0.5,
+                "snout": 0.55,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "belly",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [],
+              "form": ""
+            }
+          }
+        ],
+        "camera": "orbit",
+        "on": "blackbear",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "fade",
+      "image": null,
+      "broll_query": null
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Cocaine_Bear"
+  ],
+  "comment_question": "Would you have stopped to look at such a bear?",
+  "chapters": null,
+  "series": "Weird History"
+}

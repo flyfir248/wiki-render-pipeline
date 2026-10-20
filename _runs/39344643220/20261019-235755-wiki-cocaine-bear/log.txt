@@ -1,0 +1,23 @@
+story (given): the black bear, duffel bag of cocaine, drug‑smuggling pilot; 5 moments
+planning the visuals
+visual plan (model): 4 3D, 1 2.5D, 2 2D; 3D: stage present, landscape flyover, stage present, stage present
+building the story world: 2 entities for 3 scenes
+world design: cast call failed (https://api.groq.com/openai/v1 returned 429: {"error":{"message":"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01); building from the entities' own words
+world direction: call failed (https://api.groq.com/openai/v1 returned 413: {"error":{"message":"Request too large for model `openai/gpt-oss-safeguard-20b` in organization); blocking scenes from the manifest
+story world (lowpoly): cast rules, sets model, direction rules; pilot as humanoid, blackbear as quadruped
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 1 Wikipedia/Commons images, 2 stock, 4 scenes on plain background
+cutaways: 1 extra photos across 1 scenes
+collage: 2 photos styled, 1 with a cut-out subject
+relevance: checking 4 3D scenes by eye
+scenes [3]: illustrative 3D swapped for painted storyboard pictures, so the video keeps one style
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 3, sentence 2: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 1 planned, 3 in the cast; 0 checked, 0 redrawn, 1 left out
+scenes [3]: no painted picture was drawn, so their 3D scenes stay
+art direction: signature
+rendering 40s short video
+rendering thumbnail
+thumbnail: cutout take
+done: approved
