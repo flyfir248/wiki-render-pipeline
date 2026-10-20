@@ -317,6 +317,11 @@ def main(argv: list[str] | None = None) -> None:
             cfg.format = fmt
             lessons = insights.scene_lessons(cfg)
             print(f"\n{fmt} videos, scene by scene:\n{lessons or '(not enough watch-time data yet)'}")
+        if youtube.authorised() and youtube.can_analyze():
+            try:
+                print("\n" + insights.timeliness_report(cfg))
+            except Exception as e:
+                print(f"\ncould not compare timely and evergreen topics: {e}")
 
 
 def growth_report(rows: list[dict], days: int = 28) -> str:

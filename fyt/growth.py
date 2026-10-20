@@ -120,7 +120,11 @@ PAGEVIEWS = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{la
 def pageviews(cfg: Config, title: str, days: int = 30, today: date | None = None) -> int:
     """How many people read the article over the last `days` days: a free signal of interest."""
     end = (today or datetime.now(timezone.utc).date()) - timedelta(days=1)
-    start = end - timedelta(days=days - 1)
+    return sum(daily_pageviews(cfg, title, end - timedelta(days=days - 1), end))
+
+
+def daily_pageviews(cfg: Config, title: str, start: date, end: date) -> list[int]:
+    """Readers of the article on each day from start to end (both included), oldest first."""
     url = PAGEVIEWS.format(
         lang=cfg.wikipedia.lang,
         title=quote(title.replace(" ", "_"), safe=""),
@@ -129,9 +133,9 @@ def pageviews(cfg: Config, title: str, days: int = 30, today: date | None = None
     )
     r = requests.get(url, headers={"User-Agent": wiki.USER_AGENT}, timeout=30)
     if r.status_code == 404:
-        return 0
+        return []
     r.raise_for_status()
-    return sum(item.get("views", 0) for item in r.json().get("items", []))
+    return [item.get("views", 0) for item in r.json().get("items", [])]
 
 
 def page_lengths(cfg: Config, titles: list[str]) -> dict[str, int]:

@@ -57,3 +57,27 @@ def test_opening_hold_is_measured_against_the_curves_start():
     hold = opening_hold({"duration": 50.0, "scenes": []}, curve)
     assert hold is not None and abs(hold - 1.22 / 1.5) < 0.01
     assert opening_hold({"duration": 50.0, "scenes": []}, [(0.0, 1.0), (1.0, 1.4)]) == 1.0
+
+
+def test_spike_ratio_compares_the_days_before_publishing_with_the_usual_day():
+    usual = [100] * 50
+    assert insights.spike_ratio(usual + [100] * 7) == 1.0
+    assert insights.spike_ratio(usual + [100] * 4 + [500, 600, 700]) == 6.0
+    assert insights.spike_ratio([100] * 5) is None  # too little history
+
+
+def test_timely_and_evergreen_groups_are_compared_by_views():
+    rows = [
+        {"group": "Trending Shorts", "format": "short", "views": 900 + i, "percent": 80.0, "gained": 2, "spike": 5.0 + i}
+        for i in range(3)
+    ] + [
+        {"group": "Scheduled Shorts (evergreen pick)", "format": "short", "views": 100 + i, "percent": 70.0, "gained": 1, "spike": 1.0}
+        for i in range(4)
+    ]
+    text = insights.compare_groups(rows)
+    lines = text.splitlines()
+    trending = next(line for line in lines if line.startswith("| Trending Shorts"))
+    assert "| 3 | 901 |" in trending
+    assert lines.index(trending) < lines.index(next(line for line in lines if line.startswith("| Scheduled Shorts")))
+    assert "article spiking" in text and "Rank correlation" in text
+    assert "Long videos" not in text
