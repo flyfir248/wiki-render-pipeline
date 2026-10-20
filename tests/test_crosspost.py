@@ -77,6 +77,25 @@ def test_facebook_posts_a_reel_to_the_linked_page_from_a_link(tmp_path, monkeypa
     assert "https://www.facebook.com/reel/123" in capsys.readouterr().out
 
 
+def test_facebook_gets_the_file_itself_when_it_cant_fetch_the_link(tmp_path, monkeypatch):
+    monkeypatch.setenv("INSTAGRAM_TOKEN", "tok")
+    monkeypatch.setenv("INSTAGRAM_USER_ID", "17841")
+    video = tmp_path / "video.mp4"
+    video.write_bytes(b"x")
+
+    class S(_FB):
+        def post(self, url, data=None, headers=None, timeout=None, files=None):
+            if "rupload" in url and "file_url" in headers:
+                self.calls.append(("post", url, None, headers))
+                return _Resp({"debug_info": {"type": "FileUrlProcessingError"}}, status=422)
+            return super().post(url, data, headers, timeout, files)
+
+    s = S()
+    assert crosspost.post_facebook(_cfg(tmp_path), video, "hi", session=s, sleep=lambda _: None) == "V1"
+    uploads = [c[3] for c in s.calls if "rupload" in c[1]]
+    assert "file_url" in uploads[0] and uploads[1]["file_size"] == "1" and "file_url" not in uploads[1]
+
+
 class _Threads:
     def __init__(self, refreshed="tok2"):
         self.calls, self.refreshed = [], refreshed
