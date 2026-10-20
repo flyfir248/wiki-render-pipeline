@@ -65,13 +65,18 @@ def cutout_take(cfg: Config, public: Path, photo: Media) -> tuple[Media, Media] 
     return Media(src="thumb-back.jpg", kind="image"), Media(src="thumb-subject.png", kind="image")
 
 
+def _detail(img: Image.Image) -> float:
+    """How much is in a frame below its top (where the words go): an empty sky or fog scores near 0."""
+    a = np.asarray(img.convert("L").resize((270, 480)), dtype=np.float32)[120:]
+    return float(np.abs(np.diff(a, axis=1)).mean() + np.abs(np.diff(a, axis=0)).mean())
+
+
 def world_take(props: RenderProps, job_dir: Path, public: Path) -> Media | None:
-    """A clean frame of the story's 3D world at its key moment: the longest world scene, past its
-    middle, with captions, labels and badges off."""
-    worlds = [s for s in props.scenes if s.type == "world" and s.world]
+    """A clean frame of the story's 3D world at its key moment: a few moments of the two longest world
+    scenes, with captions, labels and badges off; the fullest frame is kept, none if all are empty."""
+    worlds = sorted((s for s in props.scenes if s.type == "world" and s.world), key=lambda s: s.end - s.start, reverse=True)
     if not worlds:
         return None
-    key = max(worlds, key=lambda s: s.end - s.start)
     clean = props.model_dump()
     clean.update({"showCaptions": False, "showVisualizer": False, "badge": None, "subscribe": None, "captions": []})
     for s in clean["scenes"]:
@@ -82,9 +87,11 @@ def world_take(props: RenderProps, job_dir: Path, public: Path) -> Media | None:
             s["world"]["callouts"] = []
     path = job_dir / "thumb-world-props.json"
     path.write_text(json.dumps(clean))
-    frame = round((key.start + (key.end - key.start) * 0.6) * props.fps)
-    shot = render.frames(path.resolve(), public.resolve(), (job_dir / "thumb-world").resolve(), [frame])[0]
-    img = Image.open(shot).convert("RGB")
+    at = sorted({round((k.start + (k.end - k.start) * t) * props.fps) for k in worlds[:2] for t in (0.35, 0.6, 0.85)})
+    shots = render.frames(path.resolve(), public.resolve(), (job_dir / "thumb-world").resolve(), at)
+    img = max((Image.open(p).convert("RGB") for p in shots), key=_detail)
+    if _detail(img) < 2.5:
+        return None
     img = ImageOps.autocontrast(img, cutoff=1, preserve_tone=True)  # a dim night set still reads at phone size
     img = ImageEnhance.Color(img).enhance(1.15)
     img.save(public / "thumb-world.jpg", quality=92)

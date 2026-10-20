@@ -71,3 +71,9 @@ def test_a_diagram_is_no_photograph():
     photo = Image.fromarray(np.random.default_rng(0).integers(0, 255, (100, 100, 3), dtype=np.uint8))
     assert thumbs._drawn(drawing, mask)
     assert not thumbs._drawn(photo, mask)
+
+
+def test_an_empty_frame_has_little_detail():
+    empty = Image.new("RGB", (1080, 1920), (200, 30, 80))
+    busy = Image.fromarray(np.random.default_rng(0).integers(0, 255, (1920, 1080, 3), dtype=np.uint8))
+    assert thumbs._detail(empty) < 2.5 < thumbs._detail(busy)
