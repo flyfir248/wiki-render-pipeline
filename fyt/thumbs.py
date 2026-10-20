@@ -82,27 +82,40 @@ def world_take(props: RenderProps, job_dir: Path, public: Path) -> Media | None:
     return Media(src="thumb-world.jpg", kind="image")
 
 
+def _fits(cfg: Config, subject: Path) -> bool:
+    """Whether a cut-out fills the frame: a wide subject (a plane side-on) shrinks to a strip in a Short."""
+    w, h = Image.open(subject).size
+    return cfg.format != "short" or w <= 1.3 * h
+
+
 def make(cfg: Config, job_dir: Path, public: Path, title: str, photo: Media | None, props: RenderProps | None,
          meant: str, log=print, photos: list[Media] = (), stock=None) -> Path:
     """Render the takes, judge them and copy the chosen one to thumbnail.png. Returns its path.
-    The cut-out is tried on `photo`, then each of `photos`, then the photo `stock()` finds, until one
-    has a clear subject."""
+    Takes in order: a cut-out (from `photo`, then each of `photos`, then the photo `stock()` finds: the first
+    photograph with a clear subject that fills the frame), the 3D world, the plain photo."""
     base = {"format": cfg.format, "title": title, "kicker": "", "theme": cfg.theme.model_dump()}
     takes: list[tuple[str, ThumbnailProps]] = []
-    tried = []
-    for p in [photo, *photos, stock]:
-        try:
-            p = p() if callable(p) else p
-            if p is None or p.kind != "image" or p.src in tried:
-                continue
-            tried.append(p.src)
-            cut = cutout_take(cfg, public, p)
-            if cut:
-                takes.append(("cutout", ThumbnailProps(**base, background=cut[0], subject=cut[1])))
-                break
-        except Exception as e:  # the cut-out model is optional
-            log(f"warning: no cut-out thumbnail: {str(e)[:160]}")
-            break
+
+    def cut_from(candidates) -> ThumbnailProps | None:
+        for p in candidates:
+            try:
+                p = p() if callable(p) else p
+                # photographs only: an article's diagrams and maps are JPEG-less and make poor subjects
+                if p is None or p.kind != "image" or not p.src.lower().endswith((".jpg", ".jpeg")) or p.src in tried:
+                    continue
+                tried.append(p.src)
+                cut = cutout_take(cfg, public, p)
+                if cut and _fits(cfg, public / cut[1].src):
+                    return ThumbnailProps(**base, background=cut[0], subject=cut[1])
+            except Exception as e:  # the cut-out model is optional
+                log(f"warning: no cut-out thumbnail: {str(e)[:160]}")
+                return None
+        return None
+
+    tried: list[str] = []
+    cut = cut_from([photo, *photos, stock])  # the story's own photographs first, then a stock one
+    if cut:
+        takes.append(("cutout", cut))
     if props is not None:
         try:
             frame = world_take(props, job_dir, public)
