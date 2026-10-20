@@ -1,0 +1,1674 @@
+{
+  "core_message": "Sully Sullenberger saved all 155 passengers by ditching his plane into the Hudson River in under four minutes.",
+  "mood": "tense",
+  "title": "155 Lives Saved in 4 Minutes: The Hudson Miracle",
+  "description": "In January 2009, a flock of birds sent an Airbus A320 out of the sky. The pilots had less than four minutes to decide where to land, and they chose the river.\n\nThis is the story of the Miracle on the Hudson, where every single person on board survived a high-speed water landing.\n\nKey points:\n- Bird strike caused dual engine failure\n- 155 passengers and crew survived\n- Entire event took less than 4 minutes\n\nBased on the Wikipedia article \"US Airways Flight 1549\" (https://en.wikipedia.org/wiki/US_Airways_Flight_1549), licensed CC BY-SA 4.0.\n\nImages from Wikimedia Commons:\nA tour of four great rivers; the Hudson, Mohawk, Susquehanna and Delaware in 1769; being the journal of Richard Smith of Burlington, New Jersey; (1906) (14580460149).jpg (Internet Archive Book Images, No restrictions): https://commons.wikimedia.org/wiki/File:A_tour_of_four_great_rivers;_the_Hudson,_Mohawk,_Susquehanna_and_Delaware_in_1769;_being_the_journal_of_Richard_Smith_of_Burlington,_New_Jersey;_(1906)_(14580460149).jpg\n2025 Hudson River plane crash rescue efforts.png (oakpale, CC BY 2.5): https://commons.wikimedia.org/wiki/File:2025_Hudson_River_plane_crash_rescue_efforts.png\nSteamboats on Hudson River at Highlands.jpg (Currier and Ives, Public domain): https://commons.wikimedia.org/wiki/File:Steamboats_on_Hudson_River_at_Highlands.jpg\nA tour of four great rivers; the Hudson, Mohawk, Susquehanna and Delaware in 1769; being the journal of Richard Smith of Burlington, New Jersey; (1906) (14580460149).jpg (Internet Archive Book Images, No restrictions): https://commons.wikimedia.org/wiki/File:A_tour_of_four_great_rivers;_the_Hudson,_Mohawk,_Susquehanna_and_Delaware_in_1769;_being_the_journal_of_Richard_Smith_of_Burlington,_New_Jersey;_(1906)_(14580460149).jpg\nU.S. Coast Guard Rescue Swimmer Demonstration in Hudson River DVIDS1092530.jpg (U.S. Coast Guard Auxiliary photo/Auxiliarist Hope Wright, Public domain): https://commons.wikimedia.org/wiki/File:U.S._Coast_Guard_Rescue_Swimmer_Demonstration_in_Hudson_River_DVIDS1092530.jpg\nRobert Havell, Jr. - Hudson River North to Croton Point, 1851.jpg (Robert Havell, Public domain): https://commons.wikimedia.org/wiki/File:Robert_Havell,_Jr._-_Hudson_River_North_to_Croton_Point,_1851.jpg\nForcing the Hudson River Passage, October 9 1776- 1951 69.jpeg (William Joy / After Dominic Serres, Public domain): https://commons.wikimedia.org/wiki/File:Forcing_the_Hudson_River_Passage,_October_9_1776-_1951_69.jpeg\n\n3D models:\nAirbus A320 by Andre11230 (CC BY 4.0) https://sketchfab.com/3d-models/none-790a19f65d5646539ed975c96fedb313",
+  "tags": [
+    "Miracle on the Hudson",
+    "Sully Sullenberger",
+    "US Airways Flight 1549",
+    "Aviation History",
+    "Plane Crash Story",
+    "Hudson River Landing",
+    "Survival Story",
+    "True Stories",
+    "FacelessYT"
+  ],
+  "thumbnail_text": "NO ENGINES. NO RUNWAY.",
+  "thumbnail_kicker": "Hudson River",
+  "thumbnail_query": "Airbus A320 floating in Hudson River water",
+  "scenes": [
+    {
+      "narration": "4 MINUTES TO LIVE – A flock of geese struck both engines, leaving Sullenberger four minutes to land.",
+      "purpose": "Hook the viewer with the stakes and the tight time limit.",
+      "type": "world",
+      "heading": "4 MINUTES TO LIVE",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": null,
+      "subject_name": "canada-geese",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:canada-geese",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: bird built for Canada geese"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "4 MINUTES TO LIVE – A flock of geese struck both engines, leaving Sullenberger four minutes to land.",
+        "purpose": "Hook the viewer with the stakes and the tight time limit.",
+        "type": "title",
+        "heading": "4 MINUTES TO LIVE",
+        "transition": "flash",
+        "image": 2
+      },
+      "world": {
+        "style": "noir",
+        "seed": 4106,
+        "set": {
+          "place": "laguardia-airport",
+          "kind": "airfield",
+          "time": "day",
+          "ground": "#7a8a5a",
+          "sky": "#a8c8e0",
+          "accent": "#ffffff",
+          "backdrop": "city",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "canada-geese",
+            "verb": "fly",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 5,
+            "build": {
+              "entity": "canada-geese",
+              "archetype": "bird",
+              "size": 1.0,
+              "primary": "#000000",
+              "secondary": "#ffffff",
+              "accent": "#8b4513",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.6,
+                "legs": 0.4,
+                "neck": 0.7,
+                "head": 0.6,
+                "snout": 0.5,
+                "ears": "none",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.5,
+                    0.0
+                  ],
+                  "size": [
+                    0.3,
+                    0.8,
+                    0.3
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#000000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.9,
+                    0.2
+                  ],
+                  "size": [
+                    0.4,
+                    0.2,
+                    0.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.2,
+                    0.0
+                  ],
+                  "size": [
+                    0.2,
+                    0.2,
+                    0.2
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#8b4513",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": ""
+            }
+          }
+        ],
+        "camera": "establish",
+        "on": "canada-geese",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "flash",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "January 15, 2009 – At 3:24 pm, Flight 1549 left LaGuardia aboard an Airbus A320.",
+      "purpose": "Establish the date, location, and aircraft type.",
+      "type": "world",
+      "heading": "January 15, 2009",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "countryside",
+      "backdrop": "LaGuardia Airport, Busy metropolitan airport runway area with urban skyline in background, overcast winter light.",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "rise",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": "Flight 1549 left LaGuardia aboard an Airbus A320",
+      "subject_name": "airbus-a320",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": false,
+      "model": {
+        "id": "airbus-a320",
+        "level": "found",
+        "title": "Airbus A320",
+        "kind": "object",
+        "src": "models/airbus-a320.glb",
+        "params": {},
+        "sources": [],
+        "licence": "by",
+        "notes": "story world: vehicle built for a US Airways Airbus A320"
+      },
+      "label": "RECONSTRUCTION",
+      "fallback": {
+        "narration": "January 15, 2009 – At 3:24 pm, Flight 1549 left LaGuardia aboard an Airbus A320.",
+        "purpose": "Establish the date, location, and aircraft type.",
+        "type": "broll",
+        "heading": "January 15, 2009",
+        "camera": "push_in",
+        "broll_query": "Airbus A320 taking off in morning light"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 4106,
+        "set": {
+          "place": "laguardia-airport",
+          "kind": "airfield",
+          "time": "day",
+          "ground": "#7a8a5a",
+          "sky": "#a8c8e0",
+          "accent": "#ffffff",
+          "backdrop": "city",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "airbus-a320",
+            "verb": "fly",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "airbus-a320",
+              "archetype": "vehicle",
+              "size": 13.08,
+              "primary": "#ffffff",
+              "secondary": "#0033a0",
+              "accent": "#ff0000",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.5,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "none",
+                "tail": "none",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "capsule",
+                  "at": [
+                    0.0,
+                    1.7004000000000001,
+                    0.0
+                  ],
+                  "size": [
+                    1.4388,
+                    12.426,
+                    1.4388
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.39239999999999997,
+                    1.8965999999999998,
+                    0.0
+                  ],
+                  "size": [
+                    9.4176,
+                    0.18312,
+                    1.47804
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    5.6244,
+                    2.0274,
+                    0.0
+                  ],
+                  "size": [
+                    0.654,
+                    0.28775999999999996,
+                    1.1118000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -0.5232,
+                    1.2426,
+                    -3.1391999999999998
+                  ],
+                  "size": [
+                    2.3544,
+                    0.20928,
+                    5.4936
+                  ],
+                  "rot": [
+                    0.0,
+                    28.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -0.5232,
+                    1.2426,
+                    3.1391999999999998
+                  ],
+                  "size": [
+                    2.3544,
+                    0.20928,
+                    5.4936
+                  ],
+                  "rot": [
+                    0.0,
+                    -28.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.654,
+                    0.7847999999999999,
+                    -2.2236000000000002
+                  ],
+                  "size": [
+                    0.8502000000000001,
+                    1.962,
+                    0.8502000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#0033a0",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.654,
+                    0.7847999999999999,
+                    2.2236000000000002
+                  ],
+                  "size": [
+                    0.8502000000000001,
+                    1.962,
+                    0.8502000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#0033a0",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.3628,
+                    3.4008000000000003,
+                    0.0
+                  ],
+                  "size": [
+                    1.962,
+                    2.616,
+                    0.20928
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    -18.0
+                  ],
+                  "color": "#ff0000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.6244,
+                    1.962,
+                    -1.1772
+                  ],
+                  "size": [
+                    1.1772,
+                    0.15696000000000002,
+                    2.2236000000000002
+                  ],
+                  "rot": [
+                    0.0,
+                    25.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.6244,
+                    1.962,
+                    1.1772
+                  ],
+                  "size": [
+                    1.1772,
+                    0.15696000000000002,
+                    2.2236000000000002
+                  ],
+                  "rot": [
+                    0.0,
+                    -25.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "airliner"
+            },
+            "model": {
+              "id": "airbus-a320",
+              "src": "models/airbus-a320.glb",
+              "fit": {
+                "forward": "short"
+              },
+              "clips": [],
+              "licence": "by",
+              "title": "Airbus A320"
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "airbus-a320",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": "push_in",
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The Bird Strike – Seconds later, Canada geese smashed into both engines, silencing the plane.",
+      "purpose": "Show the sudden loss of power caused by the geese.",
+      "type": "world",
+      "heading": "The Bird Strike",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": 50.0,
+      "effect_at": 0.5,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "obstacle": null,
+      "shot": "orbit",
+      "weather": null,
+      "cue": "Canada geese smashed into both engines",
+      "subject_name": "canada-geese",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": false,
+      "model": {
+        "id": "world:canada-geese",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: bird built for Canada geese"
+      },
+      "label": "RECONSTRUCTION · ILLUSTRATIVE",
+      "fallback": {
+        "narration": "The Bird Strike – Seconds later, Canada geese smashed into both engines, silencing the plane.",
+        "purpose": "Show the sudden loss of power caused by the geese.",
+        "type": "story",
+        "heading": "The Bird Strike",
+        "setting": "sky",
+        "backdrop": "Morning sky over New York City skyline",
+        "actors": [
+          {
+            "thing": "airplane",
+            "x": 20.0,
+            "y": 40.0,
+            "size": "l",
+            "enter": "pop",
+            "action": "shake",
+            "at": 0.0,
+            "look": "White Airbus A320 with US Airways livery"
+          },
+          {
+            "thing": "skull",
+            "x": 50.0,
+            "y": 50.0,
+            "size": "s",
+            "enter": "drop",
+            "action": "none",
+            "at": 0.0,
+            "look": "Small Canadian goose skull"
+          }
+        ],
+        "effect": "smoke",
+        "effect_x": 50.0,
+        "effect_y": 50.0,
+        "effect_at": 0.5,
+        "transition": "flash"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 4106,
+        "set": {
+          "place": "laguardia-airport",
+          "kind": "airfield",
+          "time": "day",
+          "ground": "#7a8a5a",
+          "sky": "#a8c8e0",
+          "accent": "#ffffff",
+          "backdrop": "city",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "canada-geese",
+            "verb": "fly",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 5,
+            "build": {
+              "entity": "canada-geese",
+              "archetype": "bird",
+              "size": 1.0,
+              "primary": "#000000",
+              "secondary": "#ffffff",
+              "accent": "#8b4513",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.6,
+                "legs": 0.4,
+                "neck": 0.7,
+                "head": 0.6,
+                "snout": 0.5,
+                "ears": "none",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.5,
+                    0.0
+                  ],
+                  "size": [
+                    0.3,
+                    0.8,
+                    0.3
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#000000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.9,
+                    0.2
+                  ],
+                  "size": [
+                    0.4,
+                    0.2,
+                    0.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.2,
+                    0.0
+                  ],
+                  "size": [
+                    0.2,
+                    0.2,
+                    0.2
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#8b4513",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": ""
+            }
+          },
+          {
+            "entity": "airbus-a320",
+            "verb": "fly",
+            "at": "right",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "airbus-a320",
+              "archetype": "vehicle",
+              "size": 13.08,
+              "primary": "#ffffff",
+              "secondary": "#0033a0",
+              "accent": "#ff0000",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.5,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "none",
+                "tail": "none",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "capsule",
+                  "at": [
+                    0.0,
+                    1.7004000000000001,
+                    0.0
+                  ],
+                  "size": [
+                    1.4388,
+                    12.426,
+                    1.4388
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.39239999999999997,
+                    1.8965999999999998,
+                    0.0
+                  ],
+                  "size": [
+                    9.4176,
+                    0.18312,
+                    1.47804
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    5.6244,
+                    2.0274,
+                    0.0
+                  ],
+                  "size": [
+                    0.654,
+                    0.28775999999999996,
+                    1.1118000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -0.5232,
+                    1.2426,
+                    -3.1391999999999998
+                  ],
+                  "size": [
+                    2.3544,
+                    0.20928,
+                    5.4936
+                  ],
+                  "rot": [
+                    0.0,
+                    28.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -0.5232,
+                    1.2426,
+                    3.1391999999999998
+                  ],
+                  "size": [
+                    2.3544,
+                    0.20928,
+                    5.4936
+                  ],
+                  "rot": [
+                    0.0,
+                    -28.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.654,
+                    0.7847999999999999,
+                    -2.2236000000000002
+                  ],
+                  "size": [
+                    0.8502000000000001,
+                    1.962,
+                    0.8502000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#0033a0",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.654,
+                    0.7847999999999999,
+                    2.2236000000000002
+                  ],
+                  "size": [
+                    0.8502000000000001,
+                    1.962,
+                    0.8502000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#0033a0",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.3628,
+                    3.4008000000000003,
+                    0.0
+                  ],
+                  "size": [
+                    1.962,
+                    2.616,
+                    0.20928
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    -18.0
+                  ],
+                  "color": "#ff0000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.6244,
+                    1.962,
+                    -1.1772
+                  ],
+                  "size": [
+                    1.1772,
+                    0.15696000000000002,
+                    2.2236000000000002
+                  ],
+                  "rot": [
+                    0.0,
+                    25.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.6244,
+                    1.962,
+                    1.1772
+                  ],
+                  "size": [
+                    1.1772,
+                    0.15696000000000002,
+                    2.2236000000000002
+                  ],
+                  "rot": [
+                    0.0,
+                    -25.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "airliner"
+            },
+            "model": {
+              "id": "airbus-a320",
+              "src": "models/airbus-a320.glb",
+              "fit": {
+                "forward": "short"
+              },
+              "clips": [],
+              "licence": "by",
+              "title": "Airbus A320"
+            }
+          }
+        ],
+        "camera": "over_shoulder",
+        "on": "canada-geese",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "flash",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The Impossible Choice – With no thrust, Captain Sullenberger aimed for the nearest safe landing spot: the Hudson River.",
+      "purpose": "Explain the decision to ditch in the river instead of an airport.",
+      "type": "map",
+      "heading": "The Impossible Choice",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "LaGuardia",
+          "lat": 40.779,
+          "lon": -73.874
+        },
+        {
+          "name": "Hudson River",
+          "lat": 40.759,
+          "lon": -74.001
+        }
+      ],
+      "route": true,
+      "vehicle": "plane",
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "slide",
+      "image": 6,
+      "broll_query": null
+    },
+    {
+      "narration": "The Time Limit – From the strike to splashdown, the entire event lasted under four minutes.",
+      "purpose": "Highlight the extreme speed of the event.",
+      "type": "stat",
+      "heading": "The Time Limit",
+      "text": null,
+      "items": null,
+      "value": 4.0,
+      "prefix": null,
+      "suffix": " minutes",
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": "push_in",
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The Rescue – Rescue boats arrived quickly, and every passenger and crew member walked away.",
+      "purpose": "Confirm that all 155 people survived the incident.",
+      "type": "quote",
+      "heading": "The Rescue",
+      "text": "The most successful ditching in aviation history",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": "NTSB Official",
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "fade",
+      "image": 1,
+      "broll_query": null
+    },
+    {
+      "narration": "Why It Worked – His decision relied on experience and the aircraft’s ability to glide without power, though there was no time to test it.",
+      "purpose": "Explain the technical factors that allowed the survival.",
+      "type": "list",
+      "heading": "Why It Worked",
+      "text": null,
+      "items": [
+        "Dual engine failure",
+        "Low altitude",
+        "No time for airport",
+        "Gliding capability"
+      ],
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "thread",
+      "image": 4,
+      "broll_query": null
+    },
+    {
+      "narration": "The Miracle – Remembered as the Miracle on the Hudson, a testament to quick thinking under impossible pressure.",
+      "purpose": "Summarize the event's legacy and name.",
+      "type": "world",
+      "heading": "The Miracle",
+      "text": "155 lives saved",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "sea",
+      "backdrop": "Hudson River, Wide urban river with Manhattan skyline on one side, cold weather, choppy water surface.",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "front",
+      "weather": null,
+      "cue": "Miracle on the Hudson",
+      "subject_name": "airbus-a320",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "airbus-a320",
+        "level": "found",
+        "title": "Airbus A320",
+        "kind": "object",
+        "src": "models/airbus-a320.glb",
+        "params": {},
+        "sources": [],
+        "licence": "by",
+        "notes": "story world: vehicle built for a US Airways Airbus A320"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "The Miracle – Remembered as the Miracle on the Hudson, a testament to quick thinking under impossible pressure.",
+        "purpose": "Summarize the event's legacy and name.",
+        "type": "statement",
+        "heading": "The Miracle",
+        "text": "155 lives saved",
+        "transition": "zoom",
+        "image": 7
+      },
+      "world": {
+        "style": "noir",
+        "seed": 4106,
+        "set": {
+          "place": "hudson-river",
+          "kind": "river",
+          "time": "day",
+          "ground": "#5a8a48",
+          "sky": "#a8cde8",
+          "accent": "#ffe0a0",
+          "backdrop": "city",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "airbus-a320",
+            "verb": "fly",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "airbus-a320",
+              "archetype": "vehicle",
+              "size": 13.08,
+              "primary": "#ffffff",
+              "secondary": "#0033a0",
+              "accent": "#ff0000",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.5,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "none",
+                "tail": "none",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "capsule",
+                  "at": [
+                    0.0,
+                    1.7004000000000001,
+                    0.0
+                  ],
+                  "size": [
+                    1.4388,
+                    12.426,
+                    1.4388
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.39239999999999997,
+                    1.8965999999999998,
+                    0.0
+                  ],
+                  "size": [
+                    9.4176,
+                    0.18312,
+                    1.47804
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    5.6244,
+                    2.0274,
+                    0.0
+                  ],
+                  "size": [
+                    0.654,
+                    0.28775999999999996,
+                    1.1118000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -0.5232,
+                    1.2426,
+                    -3.1391999999999998
+                  ],
+                  "size": [
+                    2.3544,
+                    0.20928,
+                    5.4936
+                  ],
+                  "rot": [
+                    0.0,
+                    28.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -0.5232,
+                    1.2426,
+                    3.1391999999999998
+                  ],
+                  "size": [
+                    2.3544,
+                    0.20928,
+                    5.4936
+                  ],
+                  "rot": [
+                    0.0,
+                    -28.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.654,
+                    0.7847999999999999,
+                    -2.2236000000000002
+                  ],
+                  "size": [
+                    0.8502000000000001,
+                    1.962,
+                    0.8502000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#0033a0",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    0.654,
+                    0.7847999999999999,
+                    2.2236000000000002
+                  ],
+                  "size": [
+                    0.8502000000000001,
+                    1.962,
+                    0.8502000000000001
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    90.0
+                  ],
+                  "color": "#0033a0",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.3628,
+                    3.4008000000000003,
+                    0.0
+                  ],
+                  "size": [
+                    1.962,
+                    2.616,
+                    0.20928
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    -18.0
+                  ],
+                  "color": "#ff0000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.6244,
+                    1.962,
+                    -1.1772
+                  ],
+                  "size": [
+                    1.1772,
+                    0.15696000000000002,
+                    2.2236000000000002
+                  ],
+                  "rot": [
+                    0.0,
+                    25.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -5.6244,
+                    1.962,
+                    1.1772
+                  ],
+                  "size": [
+                    1.1772,
+                    0.15696000000000002,
+                    2.2236000000000002
+                  ],
+                  "rot": [
+                    0.0,
+                    -25.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "airliner"
+            },
+            "model": {
+              "id": "airbus-a320",
+              "src": "models/airbus-a320.glb",
+              "fit": {
+                "forward": "short"
+              },
+              "clips": [],
+              "licence": "by",
+              "title": "Airbus A320"
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "airbus-a320",
+        "marks": [],
+        "callouts": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": "zoom",
+      "image": null,
+      "broll_query": null
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/US_Airways_Flight_1549"
+  ],
+  "comment_question": "Could you have made that decision in 4 minutes?",
+  "chapters": null,
+  "series": "Weird History"
+}
