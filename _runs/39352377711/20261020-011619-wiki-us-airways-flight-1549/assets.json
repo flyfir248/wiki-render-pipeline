@@ -1,0 +1,154 @@
+{
+  "entities": [
+    {
+      "id": "airbus-a320",
+      "name": "a US Airways Airbus A320",
+      "kind": "aircraft",
+      "search": [
+        "airbus a320",
+        "regional jet",
+        "airplane"
+      ],
+      "look": "White fuselage with blue stripes, twin engines under wings, standard commercial jet configuration.",
+      "certain": true,
+      "scenes": [
+        2,
+        3,
+        7,
+        8
+      ],
+      "model": {
+        "ok": true,
+        "key": "airbus-a320",
+        "query": "airbus a320",
+        "source": "objaverse",
+        "uid": "sketchfab:790a19f65d5646539ed975c96fedb313",
+        "title": "Airbus A320",
+        "author": "Andre11230",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-790a19f65d5646539ed975c96fedb313",
+        "checked": "vision",
+        "triangles": 43042,
+        "bytes": 1422496,
+        "size": [
+          35.7389,
+          11.8999,
+          37.6842
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "white fuselage with blue and gray accents, black windows, twin turbofan engines, tail fin with logo",
+        "added": "2026-10-19T16:43:21+00:00",
+        "credit": "Airbus A320 by Andre11230 (CC BY 4.0) https://sketchfab.com/3d-models/none-790a19f65d5646539ed975c96fedb313"
+      }
+    },
+    {
+      "id": "canada-geese",
+      "name": "Canada geese",
+      "kind": "birds",
+      "search": [
+        "canada goose",
+        "wild goose",
+        "bird"
+      ],
+      "look": "Large waterfowl with black heads and white cheek patches, brown-grey bodies, flying in formation.",
+      "certain": true,
+      "scenes": [
+        1,
+        3
+      ],
+      "model": null
+    },
+    {
+      "id": "rescue-boats",
+      "name": "rescue boats",
+      "kind": "boats",
+      "search": [
+        "rescue boat",
+        "fire boat",
+        "vessel"
+      ],
+      "look": "Various small to medium-sized emergency response vessels, primarily white or red, operating on water.",
+      "certain": false,
+      "scenes": [
+        6
+      ],
+      "model": null
+    }
+  ],
+  "places": [
+    {
+      "id": "laguardia-airport",
+      "name": "LaGuardia Airport",
+      "look": "Busy metropolitan airport runway area with urban skyline in background, overcast winter light.",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "id": "hudson-river",
+      "name": "Hudson River",
+      "look": "Wide urban river with Manhattan skyline on one side, cold weather, choppy water surface.",
+      "scenes": [
+        4,
+        6,
+        8
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "canada-geese",
+      "place": "",
+      "action": "flying in formation",
+      "motion": "present",
+      "cue": "",
+      "documented": false,
+      "priority": 2
+    },
+    {
+      "scene": 2,
+      "entity": "airbus-a320",
+      "place": "laguardia-airport",
+      "action": "takeoff from runway",
+      "motion": "rise",
+      "cue": "Flight 1549 left LaGuardia aboard an Airbus A320",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 3,
+      "entity": "canada-geese",
+      "place": "",
+      "action": "smashing into engines",
+      "motion": "move",
+      "cue": "Canada geese smashed into both engines",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 6,
+      "entity": "rescue-boats",
+      "place": "hudson-river",
+      "action": "arriving at scene",
+      "motion": "approach",
+      "cue": "Rescue boats arrived quickly",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 8,
+      "entity": "airbus-a320",
+      "place": "hudson-river",
+      "action": "floating on water",
+      "motion": "present",
+      "cue": "Miracle on the Hudson",
+      "documented": true,
+      "priority": 3
+    }
+  ]
+}
