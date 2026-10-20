@@ -69,6 +69,11 @@ schedule:
   buffer_days: 2                    # Shorts are uploaded up to 2 days before they go live
   long_lead_days: 3
   max_uploads_per_day: 4            # YouTube API quota
+  # The 22:00 Short is kept for what's in the news that day: filled about 9 hours ahead with the
+  # trending Wikipedia article that fits best (growth.bonus_min_fit), else an evergreen topic.
+  # Trending Shorts got about twice the first-week views of evergreen ones (`stats` task).
+  timely_slots: ["22:00"]
+  timely_hold_hours: 10
 
 # Growth: sharper packaging, better topics, series, Shorts cut from long videos,
 # and bonus videos on trending topics. See GrowthConfig in fyt/config.py.

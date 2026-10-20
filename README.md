@@ -381,6 +381,12 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
   playlist of that name (created the first time).
 - *Cuts:* each long video's strongest chapters become Shorts that link to the full video. They take
   the next regular Short slots.
+- *Timely slots* (`schedule.timely_slots`): a Short slot kept for what is in the news that day. It
+  stays empty until `timely_hold_hours` before it goes live, then gets the trending article (most read
+  yesterday, or today's anniversary) that fits the channel best, or the next evergreen topic when none
+  fits. The day's fit scores are kept in state.db, so the slot and the bonus videos score the trending
+  list once a day between them. The `stats` task compares the first-week views of trending and
+  evergreen topics.
 - *Bonus videos:* once the schedule is full, a run with quota left checks Wikipedia's most-read
   articles and today's anniversaries. If one fits the channel well, it makes a bonus Short (at most
   one a day) or, for a very strong fit, a bonus long video (at most one a week), and publishes it

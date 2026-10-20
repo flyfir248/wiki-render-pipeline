@@ -112,8 +112,8 @@ def test_pick_topics_ranks_candidates_and_falls_back_to_random(monkeypatch):
     assert growth.pick_topics(cfg, 1, set()) == ["Random one"]
 
 
-def test_pick_trending_skips_off_niche_and_used(monkeypatch):
-    cfg = Config()
+def test_pick_trending_skips_off_niche_and_used(monkeypatch, tmp_path):
+    cfg = Config(jobs_dir=str(tmp_path))
     monkeypatch.setattr(
         growth, "trending_candidates", lambda cfg, day=None: [("Bruno Mars", 500000), ("Great Emu War", 90000), ("Used", 1)]
     )
@@ -121,8 +121,11 @@ def test_pick_trending_skips_off_niche_and_used(monkeypatch):
     calls = answer(monkeypatch, {"scores": [{"title": "Bruno Mars", "fit": 2}, {"title": "Great Emu War", "fit": 9}]})
     assert growth.pick_trending(cfg, {wiki.topic_for("Used")}, 7, 3000) == "Great Emu War"
     assert "Used" not in calls[0][1]
-    answer(monkeypatch, {"scores": [{"title": "Bruno Mars", "fit": 3}]})
-    assert growth.pick_trending(cfg, set(), 7, 3000) is None
+    calls = answer(monkeypatch, {"scores": [{"title": "Used", "fit": 3}]})
+    assert growth.pick_trending(cfg, set(), 7, 3000) == "Great Emu War"
+    assert len(calls) == 1 and "Bruno Mars" not in calls[0][1]  # the day's scores are kept; only "Used" is new
+    assert growth.pick_trending(cfg, {wiki.topic_for("Great Emu War")}, 7, 3000) is None
+    assert len(calls) == 1
 
 
 def test_cuts_come_from_the_best_chapters_and_link_the_full_video(monkeypatch):
@@ -402,3 +405,38 @@ def test_short_articles_and_most_shorts_stay_single(monkeypatch, tmp_path):
     with pytest.raises(RuntimeError):
         pipeline._make(cfg, job, "wiki:Stub", None, None)
     assert notes == [""] and not job.file("part2.json").exists()
+
+
+def test_a_timely_slot_waits_for_the_days_news_then_takes_a_trending_topic(cfg, monkeypatch):
+    cfg.schedule.short_slots = ["14:00", "22:00"]
+    cfg.schedule.timely_slots = ["22:00"]
+    cfg.growth.bonus_shorts_per_day = 0
+    cfg.growth.bonus_longs_per_week = 0
+    cfg.growth.news_longs_per_week = 0
+    evergreen = iter(f"wiki:Evergreen {i}" for i in range(1, 9))
+    monkeypatch.setattr(pipeline, "next_topic", lambda cfg, topics: (topics.add([next(evergreen)]), topics.next_pending())[1])
+    made, uploaded = fake_channel(monkeypatch, trending=("Great Emu War",))
+    # 13:00 on the 29th: 22:00 that day is within 10 hours, 22:00 on the 30th is not yet
+    slots = schedule.empty_slots(cfg, NOW)
+    assert [(s.at.day, s.at.hour, s.timely) for s in slots] == [(29, 14, False), (29, 22, True), (30, 14, False)]
+    assert len(schedule.upcoming_slots(cfg, NOW, hold=False)) == 4
+    schedule.fill(cfg, now=NOW)
+    assert made == [("short", "wiki:Evergreen 1"), ("short", "wiki:Great Emu War"), ("short", "wiki:Evergreen 2")]
+    assert Uploads(cfg).last("timely-short") is not None
+    assert schedule.empty_slots(cfg, NOW) == []
+    table, soon = schedule.report(cfg, NOW)
+    assert soon == [] and "kept for the day's news" in table
+
+
+def test_a_timely_slot_takes_an_evergreen_topic_when_nothing_trending_fits(cfg, monkeypatch):
+    cfg.schedule.short_slots = ["22:00"]
+    cfg.schedule.timely_slots = ["22:00"]
+    cfg.growth.bonus_shorts_per_day = 0
+    cfg.growth.bonus_longs_per_week = 0
+    cfg.growth.news_longs_per_week = 0
+    evergreen = iter(f"wiki:Evergreen {i}" for i in range(1, 9))
+    monkeypatch.setattr(pipeline, "next_topic", lambda cfg, topics: (topics.add([next(evergreen)]), topics.next_pending())[1])
+    made, _ = fake_channel(monkeypatch, trending=())
+    assert schedule.fill(cfg, now=NOW) == 1
+    assert made == [("short", "wiki:Evergreen 1")]
+    assert Uploads(cfg).last("timely-short") is None

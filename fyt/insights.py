@@ -147,6 +147,7 @@ def scene_lessons(cfg: Config) -> str:
 
 TIMELY_KINDS = {
     "short": "Scheduled Shorts (evergreen pick)",
+    "timely-short": "Timely Short slots (trending pick)",
     "long": "Scheduled long videos (evergreen pick)",
     "bonus-short": "Trending Shorts",
     "bonus-long": "Trending long videos",
@@ -232,7 +233,11 @@ def timeliness_report(cfg: Config, days: int = 7, limit: int = 200) -> str:
     yta = youtube._analytics()
     use_ctr = True
     rows, listing = [], []
+    seen = set()
     for v in youtube.recent_uploads(limit=limit):
+        if v["id"] in seen:  # the uploads playlist can list a video twice
+            continue
+        seen.add(v["id"])
         published = v["publish_at"] or v["uploaded"]
         if not published:
             continue

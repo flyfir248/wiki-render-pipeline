@@ -190,7 +190,7 @@ class Uploads:
         """Queue Shorts uploaded before Instagram posting was on, if they go public after `since`."""
         self.db.execute(
             "insert or ignore into reels(youtube_id, job, run, due) select youtube_id, job, run, publish_at from uploads"
-            " where kind in ('short', 'bonus-short') and job is not null and youtube_id is not null and problem is null"
+            " where kind in ('short', 'timely-short', 'bonus-short') and job is not null and youtube_id is not null and problem is null"
             " and publish_at >= ?",
             (since,),
         )
