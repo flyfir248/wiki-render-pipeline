@@ -61,3 +61,13 @@ def test_a_wide_subject_is_no_cut_out_for_a_short(tmp_path):
     assert not thumbs._fits(Config(format="short"), tmp_path / "wide.png")
     assert thumbs._fits(Config(format="short"), tmp_path / "tall.png")
     assert thumbs._fits(Config(format="long"), tmp_path / "wide.png")
+
+
+def test_a_diagram_is_no_photograph():
+    mask = np.zeros((100, 100), dtype=np.float32)
+    mask[20:80, 20:80] = 1.0
+    drawing = Image.new("RGB", (100, 100), (255, 255, 255))
+    drawing.paste((30, 140, 40), (30, 30, 70, 70))
+    photo = Image.fromarray(np.random.default_rng(0).integers(0, 255, (100, 100, 3), dtype=np.uint8))
+    assert thumbs._drawn(drawing, mask)
+    assert not thumbs._drawn(photo, mask)

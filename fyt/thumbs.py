@@ -40,6 +40,15 @@ def _colour_cutout(img: Image.Image, mask: np.ndarray) -> Image.Image:
     return canvas.crop(box) if box else canvas
 
 
+def _drawn(img: Image.Image, mask: np.ndarray) -> bool:
+    """Whether the subject is a drawing (a diagram's flat fills) rather than a photograph: in a photo
+    almost no neighbouring pixels are exactly equal."""
+    a = np.asarray(img.convert("L"), dtype=np.int16)
+    flat = (np.abs(np.diff(a, axis=1))[:-1, :] + np.abs(np.diff(a, axis=0))[:, :-1]) == 0
+    inside = mask[:-1, :-1] > 0.5
+    return bool(inside.any()) and float(flat[inside].mean()) > 0.45
+
+
 def cutout_take(cfg: Config, public: Path, photo: Media) -> tuple[Media, Media] | None:
     """(background, subject) for the cut-out take, or None when the photo has no clear subject."""
     from fyt import cutout
@@ -47,7 +56,7 @@ def cutout_take(cfg: Config, public: Path, photo: Media) -> tuple[Media, Media] 
     img = ImageOps.exif_transpose(Image.open(public / photo.src)).convert("RGB")
     img.thumbnail((1600, 1600))
     mask = cutout.subject_mask(cfg, img)
-    if not cutout.has_subject(mask):
+    if not cutout.has_subject(mask) or _drawn(img, mask):
         return None
     _colour_cutout(img, mask).save(public / "thumb-subject.png", optimize=True)
     back = img.filter(ImageFilter.GaussianBlur(max(8, img.width // 60)))
