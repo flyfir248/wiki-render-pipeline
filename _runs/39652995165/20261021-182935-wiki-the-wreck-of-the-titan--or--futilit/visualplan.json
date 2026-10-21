@@ -1,0 +1,70 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 14.0,
+  "dropped_for_budget": [],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "title",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 3,
+      "type": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "fall",
+      "setting": "night",
+      "weather": null,
+      "cue": "Titan striking an iceberg and capsizing",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "approach",
+      "setting": "night",
+      "weather": null,
+      "cue": "Rowland rescues a girl while a polar bear attacks the wreckage",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 7,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

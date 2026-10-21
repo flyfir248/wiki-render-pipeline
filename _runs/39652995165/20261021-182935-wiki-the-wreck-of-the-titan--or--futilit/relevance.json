@@ -1,0 +1,11 @@
+{
+  "checked": [
+    4,
+    6
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "4": "frame check: not a large white steel hull, not multiple decks, not towering smokestacks, not early 1900s style.",
+    "6": "frame check: The subject is not clearly shown, the subject is not a deckhand, the subject is not male, the subject is not late 30s, the subject is not wearing a rough coat, the subject is not wearing a sailor hat, the subject is not weathered."
+  }
+}
