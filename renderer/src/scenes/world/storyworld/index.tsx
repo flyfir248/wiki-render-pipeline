@@ -107,8 +107,8 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
   const ground = world.cast.filter((m) => !flies(m));
   const U = Math.max(1.1, ...ground.map((m) => footprint(m.build).w * 0.9), ...(ground.length ? [] : sizes.map((s) => s.w * 0.6)));
   const used = new Map<string, number>();
-  const placed: Placed[] = world.cast.map((m, i) => {
-    const { w, h } = sizes[i];
+  const starts = world.cast.map((m, i) => {
+    const { w } = sizes[i];
     const n = used.get(m.at) ?? 0;
     used.set(m.at, n + 1);
     const [sx, sz] = SPOTS[m.at] ?? SPOTS.center;
@@ -119,8 +119,21 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
       if (sx !== 0 && Math.abs(start.x) < gap) start.x = Math.sign(sx) * gap;
       if (m.at === "back" && start.z > -gap) start.z = -gap;
     }
+    return start;
+  });
+  const placed: Placed[] = world.cast.map((m, i) => {
+    const { w, h } = sizes[i];
+    const start = starts[i].clone();
+    // what a crash runs into, wherever it was told to go: who it faces, else the first other thing on the ground
+    const hit = m.verb === "crash" && !flies(m)
+      ? world.cast.findIndex((c, j) => j !== i && !flies(c) && (m.face ? c.entity === m.face : true)) : -1;
     let end = start.clone();
-    if (m.to && m.to !== m.at) {
+    if (hit >= 0) {
+      // up to it, bows touching: the gap between their centres closed to their two half-lengths
+      const dir = starts[hit].clone().sub(start);
+      const reach = Math.max(0, dir.length() - (w / 2 + sizes[hit].w / 2) * 0.85);
+      end = start.clone().add(dir.normalize().multiplyScalar(reach));
+    } else if (m.to && m.to !== m.at) {
       const [ex, ez] = SPOTS[m.to] ?? SPOTS.center;
       end = new THREE.Vector3(ex * U, 0, ez * U);
     } else if (MOVING.includes(m.verb)) {
