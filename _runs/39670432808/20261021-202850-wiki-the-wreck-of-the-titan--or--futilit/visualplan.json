@@ -1,0 +1,102 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 23.6,
+  "dropped_for_budget": [],
+  "off_story": [
+    {
+      "scene": 7,
+      "subject": "city",
+      "why": "no entity in this scene is that kind of thing"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "Author Morgan Robertson wrote Futility, claiming the Titan was the world\u2019s longest, fastest ship.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "fall",
+      "setting": "night",
+      "weather": null,
+      "cue": "Titan striking an iceberg and capsizing",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "night",
+      "weather": null,
+      "cue": "crew member Rowland rescues a girl while a polar bear attacks the wreckage",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 7,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

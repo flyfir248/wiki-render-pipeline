@@ -1,0 +1,27 @@
+story (given): the Titan, Rowland, deckhand, a polar bear, an iceberg; 2 moments
+planning the visuals
+visual plan (model): 4 3D, 3 2D; 3D: stage present, stage present, stage fall, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: no vision check could be made (first candidate 'Shipped'); the Titan stays painted this time
+assets: no usable model of the Titan (titan ocean liner, early 20th century passenger ship, ship): its scenes stay painted
+building the story world: 4 entities for 4 scenes
+story world (lowpoly): cast model, sets model, direction model; titan as vehicle, rowland as humanoid, polar-bear as quadruped, iceberg as object
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 3 Wikipedia/Commons images, 0 stock, 4 scenes on plain background
+cutaways: 3 extra photos across 3 scenes
+collage: 6 photos styled, 5 with a cut-out subject
+relevance: checking 4 3D scenes by eye
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 7, sentence 1: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 1 planned, 4 in the cast; 0 checked, 0 redrawn, 1 left out
+art direction: archival
+rendering 46s short video
+look: scene 1 at 4.6s looks flat (contrast 13)
+look: scene 2 at 7.4s looks flat (contrast 8)
+look: scene 2 at 10.5s looks flat (contrast 14)
+look: scene 6 at 34.6s looks flat (contrast 8)
+look: scene 6 at 37.2s looks flat (contrast 4)
+rendering thumbnail
+thumbnail: cutout take
+done: approved

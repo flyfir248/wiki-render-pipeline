@@ -1,0 +1,23 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 1 at 4.6s looks flat (contrast 13)",
+    "scene 2 at 7.4s looks flat (contrast 8)",
+    "scene 2 at 10.5s looks flat (contrast 14)",
+    "scene 6 at 34.6s looks flat (contrast 8)",
+    "scene 6 at 37.2s looks flat (contrast 4)"
+  ],
+  "repair": [],
+  "repaired": []
+}
