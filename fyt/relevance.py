@@ -28,7 +28,9 @@ that subject, recognisable as that kind of thing, and nothing about it is broken
 the air when it should stand, not cut off or hidden, not inside-out, black or blank. A simple or
 stylised look is fine, and so is a missing detail: judge only what a picture can show (what kind of
 thing it is and its rough shape), never makes, models, markings, exact colours, numbers, times or
-decisions the narrator mentions. Fail it if it shows something else, or nothing recognisable.
+decisions the narrator mentions. A named subject (a ship, a person, a place with a name) passes when
+the frame shows that kind of thing: no picture can show which ship or which man it is, or its era.
+Fail it if it shows something else, or nothing recognisable.
 Reply with a single JSON object: {"matches": true or false, "problems": "at most 12 words, or empty"}."""
 
 
@@ -39,7 +41,7 @@ def is_3d(scene) -> bool:
 def subject_text(scene, story: Manifest | None) -> str:
     e = manifest.entity(story, scene.subject_name) if story else None
     if e:
-        return f"{e.name} ({e.look})"
+        return f"{e.name}, a {e.kind} ({e.look})"
     return f"{scene.variant or ''} {scene.subject or ''}".strip()
 
 
