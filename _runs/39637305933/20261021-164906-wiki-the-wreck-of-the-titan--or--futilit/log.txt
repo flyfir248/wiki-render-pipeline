@@ -1,0 +1,9 @@
+fetching Wikipedia article
+1 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 52% slower than average, 17 scenes); quote (lost viewers 47% slower than average, 11 scenes); timeline (lost viewers 31% slower than average, 9 scenes); map (lost viewers 26% slower than average, 16 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 67% faster than average, 27 scenes); broll (lost viewers 113% faster than average, 8 scenes). On average 92% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 77 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Titan is introduced without linking it to the real Titanic, causing confusion; Scene 5 lacks quotation marks and context for Robertson’s denial
+checking facts against the source
+fact check found: scene 0: unsupported claim "191‑ft Titan"; scene 4: wrong claim "The fictional route mirrors Titanic’s path from New York to Ireland, crossing icy waters." (source says: The source says the Titan sails between America and Ireland, while the Titanic’s route was Southampton to New York, not New York to Ireland.); scene 5: unsupported claim "After the Titanic sank, Robertson said, “I have no claim to foresight,” denying any prophecy." (source says: The source notes Robertson denied any precognition after the Titanic sinking, but does not provide this exact quotation.)
