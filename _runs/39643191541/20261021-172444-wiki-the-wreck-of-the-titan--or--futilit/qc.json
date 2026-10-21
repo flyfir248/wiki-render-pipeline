@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 6 at 37.2s: the subject is not rowland, the subject is a bear"
+  ],
+  "repair": [],
+  "repaired": []
+}

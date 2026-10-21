@@ -1,0 +1,23 @@
+{
+  "warnings": [
+    "scene 6 at 37.2s: the subject is not rowland, the subject is a bear"
+  ],
+  "frames": [
+    {
+      "scene": 6,
+      "at": 34.61,
+      "contrast": 15.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": "subject is rowland"
+    },
+    {
+      "scene": 6,
+      "at": 37.23,
+      "contrast": 23.0,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "the subject is not rowland, the subject is a bear"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "checked": [
+    1,
+    4,
+    6
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "1": "frame check: the subject is not the Titan",
+    "4": "frame check: The subject in the image is a small white robot, not the Titan."
+  }
+}
