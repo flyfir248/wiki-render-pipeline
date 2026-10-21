@@ -411,3 +411,18 @@ def test_beats_are_timed_on_their_words():
     world = {"cast": [], "beats": [{"cue": "strikes an iceberg", "cast": []}, {"cue": "sinks within minutes", "cast": []}, {"cue": "never said", "cast": []}]}
     timed = timed_world(world, words, 0.0, 8.0)
     assert [b["from"] for b in timed["beats"]] == [0.375, 0.625]
+
+
+def test_a_passenger_liner_is_a_ship_not_a_passenger():
+    liner = Entity(id="titan", name="the Titan", kind="passenger liner", search=["titan ocean liner", "ship"], look="white hull", certain=True, scenes=[1])
+    captain = Entity(id="smith", name="Smith", kind="ship captain", search=[], look="", certain=True, scenes=[1])
+    assert worldgen.archetype_of(liner) == "vehicle"
+    assert worldgen.archetype_of(captain) == "humanoid"
+
+
+def test_a_beat_left_calm_takes_the_action_its_words_tell():
+    builds = {e.id: worldgen.rule_build(e, 1) for e in TITAN_MANIFEST.entities}
+    actors = [worldgen.Actor(entity="titan", verb="move"), worldgen.Actor(entity="iceberg", verb="present")]
+    beats = [worldgen.Beat(cue="strikes an iceberg", actors=[worldgen.BeatActor(entity="titan", verb="present")], camera="follow", on="titan")]
+    out = worldgen.checked_beats(beats, "On an April night the Titan strikes an iceberg and sinks within minutes.", actors, builds)
+    assert out[0].actors[0].verb == "crash"

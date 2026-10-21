@@ -23,7 +23,7 @@
   "calm": ["idle", "present", "look_around", "walk", "sniff", "fly", "swim", "move", "drive", "turn", "sway", "pulse", "spin", "glow", "talk", "work", "sit", "peck"],
   "events": {
     "fall": ["fell", "fall", "collapsed", "tumbled", "dropped", "plunged", "crashed"],
-    "crash": ["crash", "hit", "struck", "strike", "slammed", "collid", "smash", "ditch", "plow"], "sink": ["sank", "sink", "sunk", "went down", "capsiz", "founder", "went under", "submerg", "slipped beneath"],
+    "crash": ["crash", "hit", "struck", "strike", "striking", "slammed", "collid", "smash", "ditch", "plow"], "sink": ["sank", "sink", "sunk", "went down", "capsiz", "founder", "went under", "submerg", "slipped beneath"],
     "collapse": ["collaps", "fell", "crumbl", "gave way", "destroy"],
     "shake": ["shook", "shake", "struck", "hit", "jolt", "tremor", "quake"],
     "panic": ["panic", "fled", "scream", "terrif", "chaos", "frantic"],

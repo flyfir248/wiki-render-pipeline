@@ -208,6 +208,11 @@ class ScriptScene(BaseModel):
     def _plain(cls, v: str | None) -> str | None:
         return plain(v)
 
+    @field_validator("suffix")
+    @classmethod
+    def _spaced(cls, v: str | None) -> str | None:
+        # a word after the number ("13 survivors") is spaced from it; a unit sign ("%", "x", "km") is not
+        return " " + v.strip() if v and len(v.strip()) > 3 and v.strip()[0].isalpha() else v
 
 
 class Chapter(BaseModel):

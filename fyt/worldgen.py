@@ -221,7 +221,7 @@ KIND_WORDS: list[tuple[str, tuple[str, ...]]] = [
                    "hippo", "rhino", "zebra", "donkey", "mule", "llama", "panda", "koala", "dinosaur", "crocodile", "alligator",
                    "lizard", "tortoise", "turtle", "frog", "animal", "mammal", "cub", "puppy", "calf", "beast")),
     ("vehicle", ("airbus", "boeing", "car", "truck", "lorry", "van", "plane", "aircraft", "airplane", "aeroplane", "jet", "airliner", "cessna", "helicopter",
-                 "boat", "ship", "ferry", "yacht", "canoe", "kayak", "train", "locomotive", "bus", "bike", "bicycle", "motorcycle",
+                 "boat", "ship", "liner", "steamer", "steamship", "ferry", "yacht", "canoe", "kayak", "train", "locomotive", "bus", "bike", "bicycle", "motorcycle",
                  "tractor", "submarine", "rocket", "ambulance", "taxi", "jeep", "suv", "tank", "tram", "glider", "balloon", "raft",
                  "vessel", "tug", "trawler", "sled", "carriage", "wagon", "cart", "drone", "spacecraft", "vehicle")),
     ("plant", ("tree", "flower", "plant", "mushroom", "fungus", "cactus", "crop", "bush", "shrub", "vine", "grass", "seaweed", "algae", "moss")),
@@ -254,11 +254,16 @@ BIG = ("large", "huge", "giant", "massive", "enormous", "big", "tall", "grizzly"
 SMALL = ("small", "tiny", "little", "young", "cub", "juvenile", "baby", "miniature", "micro")
 
 
-def _has(text: str, word: str) -> bool:
-    """The word in the text: whole (or plural) for short words, so 'sealed' is no seal and 'containers'
-    no ant; long words and stems ('bacteri') may run on."""
+def _at(text: str, word: str) -> int:
+    """Where the word is in the text (-1 if not): whole (or plural) for short words, so 'sealed' is no
+    seal and 'containers' no ant; long words and stems ('bacteri') may run on."""
     tail = "" if len(word) >= 6 else r"(?:s|es)?(?![a-z])"
-    return re.search(rf"(?<![a-z]){re.escape(word)}{tail}", text) is not None
+    m = re.search(rf"(?<![a-z]){re.escape(word)}{tail}", text)
+    return m.start() if m else -1
+
+
+def _has(text: str, word: str) -> bool:
+    return _at(text, word) >= 0
 
 
 PLACE_KINDS = ("river", "lake", "sea", "ocean", "water body", "waterway", "bay", "harbour", "harbor", "airport", "airfield", "city",
@@ -278,11 +283,13 @@ def archetype_of(e: Entity) -> str:
     """The body plan an entity is built on, from its kind first, then its name and search terms."""
     texts = (e.kind.lower(), f"{e.name} {' '.join(e.search)}".lower(), e.look.lower())
     # A specific word anywhere ("tardigrade") beats a generic one ("microscopic animal").
+    # In the kind, the last word named is the thing itself: a "passenger liner" is a ship, not a passenger.
     for generic in (False, True):
-        for text in texts:
-            for arche, words in KIND_WORDS:
-                if any(_has(text, w) for w in words if (w in GENERIC) == generic):
-                    return arche
+        for i, text in enumerate(texts):
+            found = [(max((_at(text, w) for w in words if (w in GENERIC) == generic), default=-1), -k, arche) for k, (arche, words) in enumerate(KIND_WORDS)]
+            found = [f for f in found if f[0] >= 0]
+            if found:
+                return max(found)[2] if i == 0 else min(found, key=lambda f: -f[1])[2]
     return "object"
 
 
@@ -1033,7 +1040,11 @@ def checked_beats(beats: list[Beat], narration: str, actors: list[Actor], builds
             if eid not in ids or any(x.entity == eid for x in acts):
                 continue
             arche = builds[eid].archetype
-            acts.append(BeatActor(entity=eid, verb=_verb(a.verb, arche, rest, True), to=a.to if a.to in G["places"] else "",
+            verb = _verb(a.verb, arche, rest, True)
+            if verb in G["calm"] and eid == _slug(bt.on or a.entity):
+                # a beat is a change: its subject left calm takes the action its own words tell, if any
+                verb = next((v for v in verbs_for(arche) if v not in G["calm"] and told(v, rest[:80])), verb)
+            acts.append(BeatActor(entity=eid, verb=verb, to=a.to if a.to in G["places"] else "",
                                   state=_state(a.state, rest), face=a.face if a.face in ("camera", "") or _slug(a.face) in ids else ""))
         if not acts:
             continue

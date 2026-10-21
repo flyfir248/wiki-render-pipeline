@@ -15,3 +15,9 @@ def test_a_script_scene_keeps_no_asterisks_and_the_voice_never_hears_one():
     assert scene.narration == "It was exactly the route." and scene.heading == "Titan"
     assert DialogueLine(speaker="Captain", text="*Iceberg* ahead!").text == "Iceberg ahead!"
     assert "*" not in speakable("A *fictional* liner") and "asterisk" not in speakable("A *fictional* liner")
+
+
+def test_a_word_after_a_stat_is_spaced_from_its_number():
+    assert ScriptScene(type="stat", narration="a", value=13, suffix="survivors").suffix == " survivors"
+    assert ScriptScene(type="stat", narration="a", value=40, suffix="%").suffix == "%"
+    assert ScriptScene(type="stat", narration="a", value=5, suffix="km").suffix == "km"
