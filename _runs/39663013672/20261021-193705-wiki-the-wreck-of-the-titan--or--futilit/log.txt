@@ -1,0 +1,29 @@
+story (given): the Titan, Rowland, deckhand, a polar bear, an iceberg; 2 moments
+planning the visuals
+visual plan (model): 3 3D, 4 2D; 3D: stage present, stage fall, stage approach
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: the Titan -> 'Ship' from objaverse (by, 7704 triangles, 0 animations)
+building the story world: 4 entities for 3 scenes
+story world (lowpoly): cast model, sets model, direction model; titan as vehicle, rowland as humanoid, polar-bear as quadruped, iceberg as object
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 4 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+cutaways: 4 extra photos across 4 scenes
+collage: 8 photos styled, 6 with a cut-out subject
+relevance: checking 3 3D scenes by eye
+scene 1: 3D dropped: frame check: The subject shown is a boat, not the Titan.
+scene 4: 3D dropped: frame check: The subject is a modern ship, not the Titanic.
+scene 6: 3D dropped: frame check: no Rowland, no polar bear
+storyboarding: an illustration for each sentence
+scene 2, sentence 2 redrawn: The subject is missing.
+scene 4, sentence 2 redrawn: the subject it must show: the Titan is missing.
+scene 4, sentence 2 redrawn: missing subject, extra details
+scene 6, sentence 1 redrawn: a polar bear is not shown
+scene 6, sentence 1 redrawn: a polar bear is not shown
+scene 7, sentence 1 redrawn: the ship in the picture is not the Titanic, but rather a generic ocean liner
+storyboard: 4 illustrated sentences of 6 planned, 5 in the cast; 10 checked, 4 redrawn, 2 left out
+art direction: archival
+rendering 46s short video
+rendering thumbnail
+thumbnail: cutout take
+done: approved

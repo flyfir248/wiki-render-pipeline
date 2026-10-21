@@ -1,0 +1,130 @@
+{
+  "entities": [
+    {
+      "id": "titan",
+      "name": "the Titan",
+      "kind": "passenger liner",
+      "search": [
+        "titan ocean liner",
+        "early 20th century passenger ship",
+        "ship"
+      ],
+      "look": "large white steel hull, multiple decks, towering smokestacks, early 1900s style",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "model": {
+        "ok": true,
+        "key": "ship",
+        "query": "ship",
+        "source": "objaverse",
+        "uid": "sketchfab:b1167087772d4e81829d5bbe6af987a0",
+        "title": "Ship",
+        "author": "SheeroChana",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-b1167087772d4e81829d5bbe6af987a0",
+        "checked": "vision",
+        "triangles": 7704,
+        "bytes": 4279784,
+        "size": [
+          46.9309,
+          21.5802,
+          32.4964
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "large white steel hull, multiple decks, towering smokestacks, early 1900s style",
+        "added": "2026-10-21T19:39:27+00:00",
+        "credit": "Ship by SheeroChana (CC BY 4.0) https://sketchfab.com/3d-models/none-b1167087772d4e81829d5bbe6af987a0"
+      }
+    },
+    {
+      "id": "rowland",
+      "name": "Rowland, deckhand",
+      "kind": "person",
+      "search": [
+        "deckhand",
+        "early 1900s sailor",
+        "male crew member"
+      ],
+      "look": "male, late 30s, rough coat, sailor hat, weathered face",
+      "certain": false,
+      "scenes": [
+        6
+      ],
+      "model": null
+    },
+    {
+      "id": "polar-bear",
+      "name": "a polar bear",
+      "kind": "animal",
+      "search": [
+        "polar bear",
+        "bear"
+      ],
+      "look": "massive white fur, large paws, black nose, Arctic appearance",
+      "certain": false,
+      "scenes": [
+        6
+      ],
+      "model": null
+    },
+    {
+      "id": "iceberg",
+      "name": "an iceberg",
+      "kind": "object",
+      "search": [
+        "iceberg",
+        "ice block"
+      ],
+      "look": "towering jagged ice formation, pale blue, floating in cold sea",
+      "certain": true,
+      "scenes": [
+        4
+      ],
+      "model": null
+    }
+  ],
+  "places": [
+    {
+      "id": "north-atlantic",
+      "name": "North Atlantic Ocean",
+      "look": "dark cold sea, distant horizon, foggy sky, night illumination",
+      "scenes": [
+        1,
+        4,
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 4,
+      "entity": "titan",
+      "place": "north-atlantic",
+      "action": "capsizes after hitting iceberg",
+      "motion": "fall",
+      "cue": "the Titan striking an iceberg and capsizing",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 6,
+      "entity": "rowland",
+      "place": "north-atlantic",
+      "action": "rescues a girl on iceberg",
+      "motion": "approach",
+      "cue": "Rowland rescues a girl while a polar bear attacks the wreckage",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

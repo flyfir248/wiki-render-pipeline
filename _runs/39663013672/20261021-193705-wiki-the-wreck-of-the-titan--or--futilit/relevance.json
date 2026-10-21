@@ -1,0 +1,13 @@
+{
+  "checked": [
+    1,
+    4,
+    6
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "1": "frame check: The subject shown is a boat, not the Titan.",
+    "4": "frame check: The subject is a modern ship, not the Titanic.",
+    "6": "frame check: no Rowland, no polar bear"
+  }
+}
