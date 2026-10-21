@@ -168,6 +168,21 @@ class Callout(BaseModel):
     text: str = Field(description="1-4 words from the narration or the entity's name.")
 
 
+class BeatActor(BaseModel):
+    entity: str
+    verb: Verb
+    to: Spot | Literal[""] = Field(default="", description="Where it moves to in this beat, or empty to stay.")
+    state: State = "normal"
+    face: str = Field(default="", description="An entity id it turns to, 'camera', or empty.")
+
+
+class Beat(BaseModel):
+    cue: str = Field(description="The exact words of the narration at which this beat starts.")
+    actors: list[BeatActor] = Field(description="1-3 actors whose action changes at the cue; the others carry on.")
+    camera: Move = Field(description="The camera move the shot cuts to for this beat.")
+    on: str = Field(default="", description="The entity the camera frames in this beat; the first actor when empty.")
+
+
 class Shot(BaseModel):
     scene: int
     place: str = Field(default="", description="The place id, or empty.")
@@ -177,6 +192,7 @@ class Shot(BaseModel):
     on: str = Field(default="", description="The entity the camera frames; the first actor when empty.")
     marks: list[Mark] = Field(default_factory=list, description="0-3")
     callouts: list[Callout] = Field(default_factory=list, description="0-2")
+    beats: list[Beat] = Field(default_factory=list, description="0-3 later beats, in the order the narration tells them.")
 
 
 class Direction(BaseModel):
@@ -309,9 +325,17 @@ def _outfit(words: str) -> Outfit:
     return o
 
 
+ICE_WORDS = ("iceberg", "ice floe", "glacier", "ice shelf")
+
+
 def _thing_parts(words: str, size: float, c: list[str]) -> list[Part]:
     """A plain shape for an object no model call described: its outline from what it is called."""
     s, a, b = size, c[0], c[1]
+    if any(_has(words, w) for w in ICE_WORDS):
+        # a jagged white mass: a tall peak, a shoulder and a broad waterline base
+        return [Part(shape="cone", at=[0, s * 0.42, 0], size=[s * 0.7, s * 0.85, s * 0.6], color="#eef4f8"),
+                Part(shape="cone", at=[s * 0.28, s * 0.25, s * 0.1], size=[s * 0.5, s * 0.5, s * 0.45], rot=[0, 30, 8], color="#d4e4ee"),
+                Part(shape="box", at=[0, s * 0.06, 0], size=[s * 1.1, s * 0.16, s * 0.8], rot=[0, 12, 0], color="#bcd6e6")]
     if any(_has(words, w) for w in ("bag", "duffel", "duffle", "sack", "backpack", "suitcase", "pack")):
         return [Part(shape="capsule", at=[0, s * 0.22, 0], size=[s * 0.42, s, s * 0.42], rot=[0, 0, 90], color=a),
                 Part(shape="torus", at=[0, s * 0.46, 0], size=[s * 0.32, s * 0.32, s * 0.06], rot=[0, 90, 0], color=b)]
@@ -488,6 +512,8 @@ def rule_build(e: Entity, seed: int) -> Build:
         # real length, pulled towards a car's so people still read beside a ship or an airliner
         real = next((m for ws, m in VEHICLE_LENGTHS if any(_has(words, w) for w in ws)), size)
         size = round(4.5 * (real / 4.5) ** 0.5, 2)
+    if any(_has(words, w) for w in ICE_WORDS):
+        size = 16.0  # an iceberg stands as tall as a liner is wide, not as a crate
     if any(_has(words, w) for w in BIG):
         size *= 1.35
     if any(_has(words, w) for w in SMALL):
@@ -634,8 +660,8 @@ Set kinds: {sets}
   already adds generic ground cover, so only add what is specific. No people or animals."""
 
 DIRECT_GUIDE = """You direct the 3D scenes of a documentary video. The engine builds each entity from its
-design and performs verbs; you block each scene so it shows exactly what the narration says, as a
-film director would. Return JSON only.
+design and performs verbs; you set each scene and plan its action so it shows exactly what the
+narration says, as it says it, as a film director would. Return JSON only.
 
 Verbs by archetype: {verbs}
 Camera moves: {camera}
@@ -656,7 +682,15 @@ Rules:
 - camera: a move that tells the moment (establish for a new place, follow for travel, push_in for a
   reveal, low_angle for menace, over_shoulder for an encounter, top_down for a route or layout). Vary it.
 - marks: only where they explain something: a beam for a signal or call, a dome for a range, a path
-  for a route, a ring for 'here'. callouts: 1-4 words copied from the narration or an entity's name."""
+  for a route, a ring for 'here'. callouts: 1-4 words copied from the narration or an entity's name.
+- Put on stage everything the narration of that scene names: a ship and the iceberg it hits are both
+  actors, not just the one the scene is about.
+- The opening actors are the scene at its first words. beats: when the narration tells the action in
+  steps (the ship sails on; the iceberg looms; it strikes; it sinks), add a beat for each later step,
+  in order: cue = the exact words where that step starts, the actors whose action changes then (each
+  starts from where it was), and a camera move for it. Use 1-3 beats for a scene that tells a change,
+  none for a scene that only describes something. The same rule holds for verbs and states: only what
+  the narration tells, at the words that tell it."""
 
 
 def _hex(v: str, fallback: str) -> str:
@@ -704,6 +738,8 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
     if (arche in LIVING) != (rules.archetype in LIVING) and (archetype_of(e) != "object" or said_thing):
         arche = rules.archetype
     size = b.size if 0.002 <= b.size <= 400 else rules.size
+    if any(_has(f"{e.name} {e.kind}".lower(), w) for w in ICE_WORDS):
+        size = max(size, rules.size * 0.7)  # never a crate-sized iceberg beside its ship
     parts = [q for q in (_clean_part(p, size) for p in b.parts[:MAX_PARTS]) if q is not None]
     if arche not in LIVING:
         parts = [p.model_copy(update={"bone": "body"}) for p in parts]
@@ -974,7 +1010,37 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
     if not place:
         place = moment.place if moment and moment.place else next((p.id for p in story.places if scene in p.scenes), "")
     on = _slug(sh.on) if sh.on and _slug(sh.on) in ids else actors[0].entity
-    return Shot(scene=scene, place=place, time=sh.time, actors=actors[:5], camera=sh.camera, on=on, marks=marks, callouts=callouts)
+    return Shot(scene=scene, place=place, time=sh.time, actors=actors[:5], camera=sh.camera, on=on, marks=marks, callouts=callouts,
+                beats=checked_beats(sh.beats, narration, actors[:5], builds))
+
+
+def checked_beats(beats: list[Beat], narration: str, actors: list[Actor], builds: dict[str, Build]) -> list[Beat]:
+    """Beats true to the narration: each starts at words the narration says, after the one before, and
+    changes only actors on stage, to verbs and states the narration tells from those words on."""
+    ids = {a.entity for a in actors}
+    low = narration.lower()
+    out: list[Beat] = []
+    pos = 1  # a beat at the very first words is the opening blocking, not a beat
+    for bt in beats[:3]:
+        cue = bt.cue.strip().strip("\"'“”‘’").strip()
+        i = low.find(cue.lower(), pos) if len(cue) >= 3 else -1
+        if i < 0:
+            continue
+        rest = narration[i:]
+        acts: list[BeatActor] = []
+        for a in bt.actors:
+            eid = _slug(a.entity)
+            if eid not in ids or any(x.entity == eid for x in acts):
+                continue
+            arche = builds[eid].archetype
+            acts.append(BeatActor(entity=eid, verb=_verb(a.verb, arche, rest, True), to=a.to if a.to in G["places"] else "",
+                                  state=_state(a.state, rest), face=a.face if a.face in ("camera", "") or _slug(a.face) in ids else ""))
+        if not acts:
+            continue
+        on = _slug(bt.on) if bt.on and _slug(bt.on) in ids else acts[0].entity
+        out.append(Beat(cue=narration[i:i + len(cue)], actors=acts, camera=bt.camera, on=on))
+        pos = i + len(cue)
+    return out
 
 
 def rule_shot(script: Script, story: Manifest, builds: dict[str, Build], scene: int, n: int) -> Shot | None:
@@ -1071,7 +1137,7 @@ def direct(cfg: Config, script: Script, story: Manifest, builds: dict[str, Build
             continue
         # where the model left the moment's lead standing still but its own words tell an action, act it
         lead, rl = out[k].actors[0], r.actors[0]
-        if lead.entity == rl.entity and lead.verb in G["calm"] and rl.verb not in G["calm"]:
+        if lead.entity == rl.entity and lead.verb in G["calm"] and rl.verb not in G["calm"] and not out[k].beats:
             acts = [lead.model_copy(update={"verb": rl.verb, "state": rl.state if lead.state == "normal" else lead.state})] + out[k].actors[1:]
             out[k] = out[k].model_copy(update={"actors": acts})
     # The same camera move twice in a row reads as one long scene: vary the second.
@@ -1108,8 +1174,9 @@ def world_of(style: str, seed: int, shot: Shot, builds: dict[str, Build], settin
         if a.holding and a.holding in builds:
             entry["held"] = builds[a.holding].model_dump()
         cast.append(entry)
+    beats = [{"cue": bt.cue, "cast": [a.model_dump() for a in bt.actors], "camera": bt.camera, "on": bt.on} for bt in shot.beats]
     return {"style": style, "seed": seed, "set": sett, "cast": cast, "camera": shot.camera, "on": shot.on,
-            "marks": [m.model_dump() for m in shot.marks], "callouts": [c.model_dump() for c in shot.callouts]}
+            "marks": [m.model_dump() for m in shot.marks], "callouts": [c.model_dump() for c in shot.callouts], "beats": beats}
 
 
 def record(style: str, builds: dict[str, Build], settings: dict[str, Setting], shots: dict[int, Shot], made: dict, models: dict[str, dict]) -> dict:

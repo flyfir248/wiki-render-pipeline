@@ -353,3 +353,61 @@ def test_cells_with_no_place_are_shown_in_the_bloodstream():
     shot = wg.Shot(scene=1, place="", actors=[wg.Actor(entity="rbc", verb="move")], camera="follow")
     world = wg.world_of("clinical", 1, shot, {"rbc": build}, {"africa": savanna}, {})
     assert world["set"]["kind"] == "micro"
+
+
+TITAN_STORY = script(
+    "In the novel the Titan steams across the Atlantic at full speed.",
+    "On an April night the Titan strikes an iceberg and sinks within minutes.",
+    title="The Wreck of the Titan", mood="tense",
+)
+TITAN_MANIFEST = Manifest(
+    entities=[
+        Entity(id="titan", name="the Titan", kind="ocean liner", search=["ocean liner", "ship"], look="huge four-funnel liner", certain=False, scenes=[1]),
+        Entity(id="iceberg", name="an iceberg", kind="iceberg", search=["iceberg"], look="tall white iceberg", certain=False, scenes=[2]),
+    ],
+    places=[Place(id="atlantic", name="North Atlantic", look="dark open ocean at night", scenes=[1, 2])],
+    moments=[Moment(scene=2, entity="iceberg", place="atlantic", action="the Titan strikes it", motion="present", cue="strikes an iceberg", documented=True)],
+)
+
+
+def test_every_entity_a_scene_names_is_in_it_even_if_the_model_left_it_out():
+    m = manifest.checked(TITAN_MANIFEST, TITAN_STORY)
+    assert {e.id for e in manifest.in_scene(m, 2)} == {"titan", "iceberg"}
+
+
+def test_the_director_plays_a_scene_in_beats_on_the_narration_words(monkeypatch):
+    m = manifest.checked(TITAN_MANIFEST, TITAN_STORY)
+    plan = worldgen.Direction(shots=[worldgen.Shot(
+        scene=2, place="atlantic", camera="establish",
+        actors=[worldgen.Actor(entity="titan", verb="move"), worldgen.Actor(entity="iceberg", verb="present", at="right")],
+        beats=[
+            worldgen.Beat(cue="strikes an iceberg", actors=[worldgen.BeatActor(entity="titan", verb="crash")], camera="low_angle"),
+            worldgen.Beat(cue="sinks within minutes", actors=[worldgen.BeatActor(entity="titan", verb="sink", state="damaged")], camera="reveal"),
+            worldgen.Beat(cue="explodes in flames", actors=[worldgen.BeatActor(entity="titan", verb="fall")], camera="orbit"),  # not said: dropped
+        ])])
+    monkeypatch.setattr(worldgen.llm, "structured", lambda *a, **k: plan)
+    builds = {e.id: worldgen.rule_build(e, 1) for e in m.entities}
+    shots, how = worldgen.direct(Config(), TITAN_STORY, m, builds, [2], log=lambda x: None)
+    sh = shots[2]
+    assert how == "model" and {a.entity for a in sh.actors} == {"titan", "iceberg"}
+    assert [(b.cue, b.actors[0].verb, b.camera) for b in sh.beats] == [("strikes an iceberg", "crash", "low_angle"), ("sinks within minutes", "sink", "reveal")]
+    assert sh.beats[1].actors[0].state == "damaged"
+    world = worldgen.world_of("lowpoly", 1, sh, builds, {}, {})
+    assert world["beats"][1]["cast"][0]["verb"] == "sink"
+
+
+def test_a_beat_cannot_act_out_what_its_words_dont_tell():
+    builds = {e.id: worldgen.rule_build(e, 1) for e in TITAN_MANIFEST.entities}
+    actors = [worldgen.Actor(entity="titan", verb="move")]
+    beats = [worldgen.Beat(cue="steams across", actors=[worldgen.BeatActor(entity="titan", verb="crash")], camera="follow")]
+    out = worldgen.checked_beats(beats, TITAN_STORY.scenes[0].narration, actors, builds)
+    assert out[0].actors[0].verb == "present"
+
+
+def test_beats_are_timed_on_their_words():
+    from fyt.models import Word
+    from fyt.timeline import timed_world
+    words = [Word(word=w, start=i * 0.5, end=i * 0.5 + 0.4) for i, w in enumerate("On an April night the Titan strikes an iceberg and sinks within minutes.".split())]
+    world = {"cast": [], "beats": [{"cue": "strikes an iceberg", "cast": []}, {"cue": "sinks within minutes", "cast": []}, {"cue": "never said", "cast": []}]}
+    timed = timed_world(world, words, 0.0, 8.0)
+    assert [b["from"] for b in timed["beats"]] == [0.375, 0.625]

@@ -57,6 +57,41 @@ export type Blocking = { actors: Placed[]; cam: { pos: THREE.Vector3; look: THRE
 
 const flies = (m: CastMember) => m.verb === "fly" && ["vehicle", "bird", "insect"].includes(m.build.archetype);
 
+// A directed scene plays in beats (fyt/worldgen.py's director). At each beat's cue the actors it names
+// take up a new verb, place or state, starting from where the last beat left them, and the camera cuts
+// to the beat's move. Returns the world as it stands in this frame's beat, with the beat's own frame,
+// length and key moment, so blocking and camera treat each beat as a shot of its own.
+export const segmentOf = (world: World, frame: number, D: number, at: number) => {
+  const beats = (world.beats ?? []).filter((x) => x.from > 0.05 && x.from < 0.95).sort((a, b) => a.from - b.from);
+  if (!beats.length) return { world, frame, D, at, i: 0 };
+  const u = frame / Math.max(1, D - 1);
+  let i = 0;
+  while (i < beats.length && u >= beats[i].from) i++;
+  if (i === 0) {
+    // the opening beat ends at the first cue
+    const end = beats[0].from;
+    return { world, frame, D: Math.max(2, Math.round(end * (D - 1)) + 1), at: at < end ? at / end : 0.5, i };
+  }
+  let cast = world.cast;
+  let camera = world.camera;
+  let on = world.on;
+  for (const bt of beats.slice(0, i)) {
+    cast = cast.map((c) => {
+      const o = bt.cast.find((x) => x.entity === c.entity);
+      const from = (c.to || c.at) as Spot; // where the last beat left it
+      return o ? { ...c, at: from, to: o.to ?? "", verb: o.verb || c.verb, state: o.state || c.state, face: o.face ?? c.face } : { ...c, at: from, to: "" };
+    });
+    camera = bt.camera || camera;
+    on = bt.on && cast.some((c) => c.entity === bt.on) ? bt.on : on;
+  }
+  const from = beats[i - 1].from;
+  const to = i < beats.length ? beats[i].from : 1;
+  const start = Math.round(from * (D - 1));
+  const len = Math.max(2, Math.round(to * (D - 1)) - start + 1);
+  const local = at >= from && at < to ? (at - from) / (to - from) : 0.3;
+  return { world: { ...world, cast, camera, on }, frame: frame - start, D: len, at: local, i };
+};
+
 // Where everyone is and where the camera is at this frame.
 export const block = (w0: World, frame: number, fps: number, D: number, at: number, portrait = false): Blocking => {
   // birds flying with an aircraft are drawn larger than life, or a flock beside an airliner is specks
@@ -310,6 +345,13 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
     case "fall":
       rot = build.archetype === "vehicle" ? [0.25 * ease((k + 1.2) / 1.2), 0, -0.35 * ease((k + 1.2) / 1.2)] : [ease((k + 0.4) / 0.5) * 1.2, 0, ease((k + 0.4) / 0.5) * 0.4];
       break;
+    case "sink": {
+      // bow first and listing, settling until the stern stands out of the water
+      const s = ease((k + 0.6) / 3.2);
+      rot = [0.12 * s, 0, -0.5 * s];
+      off.y = -p.h * 0.7 * s;
+      break;
+    }
     case "crash":
     case "shake": {
       const hit = k > 0 ? Math.exp(-k * 3) : 0;
@@ -657,14 +699,15 @@ const Callouts: React.FC<{ world: World; b: Blocking; portrait: boolean; width: 
 export const StoryWorldScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
   const { width, height, fps, durationInFrames } = useVideoConfig();
-  const world = scene.world as World;
   const short = format === "short";
-  const at = momentOf(scene);
-  const b = block(world, frame, fps, durationInFrames, at, short);
+  const seg = segmentOf(scene.world as World, frame, durationInFrames, momentOf(scene));
+  const world = seg.world;
+  const b = block(world, seg.frame, fps, seg.D, seg.at, short);
   const look = lookOf(world.style);
   const seed = (world.seed ?? 0) ^ [...(world.set.place || world.set.kind)].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7);
   const k = unitOf(format);
-  const keep = React.useMemo(() => keepOutOf(world, fps, durationInFrames, at, short), [world, fps, durationInFrames, at, short]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const keep = React.useMemo(() => keepOutOf(world, fps, seg.D, seg.at, short), [scene.world, seg.i, fps, seg.D, seg.at, short]);
   return (
     <AbsoluteFill style={{ background: theme.background }}>
       <ThreeCanvas width={width} height={height} camera={{ fov: 36, position: [8, 3, 8] }} gl={{ antialias: true }} shadows>
