@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import re
 
+from fyt.models import plain
+
 ONES = (
     "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen "
     "fifteen sixteen seventeen eighteen nineteen"
@@ -377,7 +379,7 @@ def sayable(letters: str) -> bool:
 
 def spoken_tokens(text: str) -> list[tuple[str, str]]:
     """(written token, spoken text) for every whitespace-separated token of `text`."""
-    tokens = text.split()
+    tokens = plain(text).split()  # no markdown: "*never*" isn't "asterisk never asterisk"
     out: list[tuple[str, str]] = []
     for i, tok in enumerate(tokens):
         prev_raw = tokens[i - 1] if i else ""
