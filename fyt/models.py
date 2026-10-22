@@ -289,6 +289,8 @@ class RenderScene(BaseModel):
     landTimes: list[float] | None = None  # stat and proportion figures, trend points: when the narrator says them
     camera: Camera | None = None
     transition: Transition | None = None
+    chapter: str | None = None  # long videos: a chapter starts here; its card shows "Part N" and this title
+    chapterNumber: int | None = None
 
 
 class Music(BaseModel):

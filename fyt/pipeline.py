@@ -704,10 +704,11 @@ def extra_shots(
     used: set[str],
     subject: str = "",
 ) -> dict[int, list[Media]]:
-    """More photos for a Short's longer scenes, so the picture changes every `shot_seconds`: spare
-    article images first, then Wikimedia Commons, then stock photos. Adds their credits."""
-    every = cfg.growth.shot_seconds
-    if cfg.format != "short" or not every or not spans:
+    """More photos for a scene that runs long, so the picture changes every `shot_seconds` in a Short
+    and every `long_shot_seconds` in a long video: spare article images first, then Wikimedia Commons,
+    then stock photos. Adds their credits."""
+    every = cfg.growth.shot_seconds if cfg.format == "short" else cfg.growth.long_shot_seconds
+    if not every or not spans:
         return {}
     (job.public / "media").mkdir(parents=True, exist_ok=True)
     taken = {m.src for m in scene_media.values()}

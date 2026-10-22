@@ -36,6 +36,11 @@ def build_props(
     # The video's first map opens on a globe that dives in; later maps start from the flat map.
     video_seed = zlib.crc32(script.title.encode()) & 0x7FFFFFFF
     first_map = next((i for i, s in enumerate(script.scenes) if s.type == "map"), None)
+    # A long video's chapters after the first open on a card: a beat to breathe, and a sign of progress.
+    # The first chapter is the cold open, which plays without one.
+    chapters = {c.scene: (n, c.title) for n, c in enumerate(script.chapters or [], 1) if n > 1 and c.scene > 0}
+    if cfg.format != "long":
+        chapters = {}
     for i, (scene, (start, _end)) in enumerate(zip(script.scenes, spans)):
         scene = scenes3d.legacy_to_world(scene)
         # A scene stays on screen until the next one starts, so pauses are covered.
@@ -101,6 +106,8 @@ def build_props(
                 landTimes=land_times(scene, clip_words[i], start - vis_start),
                 camera=scene.camera,
                 transition=scene.transition,
+                chapter=chapters[i][1] if i in chapters else None,
+                chapterNumber=chapters[i][0] if i in chapters else None,
             )
         )
         captions.extend(
