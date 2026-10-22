@@ -17,6 +17,7 @@ import { ContactShadow, type Finish, Post, type SkySpec, SkyDome, SkyLight } fro
 import { Environment, INSIDE, type KeepOut, VOID, waterBand } from "./environment";
 import { dimsOf, Flames, humanPose, Humanoid } from "./humanoid";
 import { PartMesh, partsBounds } from "./parts";
+import { KitPerson } from "./kit";
 import { env, lightOf, type Look, lookOf, material } from "./style";
 import type { Build, CastMember, Spot, World } from "./types";
 
@@ -509,8 +510,11 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
 // finished inside the canvas would miss the frame being captured.
 const ready = new Map<string, Loaded>();
 
+const kitSrcs = (world: World) =>
+  world.kit && world.cast.some((c) => c.build.archetype === "humanoid") ? [world.kit.bodies.m, world.kit.bodies.f, ...world.kit.clips].filter((x): x is string => Boolean(x)) : [];
+
 const useCastModels = (world: World) => {
-  const srcs = [...new Set(world.cast.map((c) => c.model?.src).filter((x): x is string => Boolean(x)))].sort();
+  const srcs = [...new Set([...world.cast.map((c) => c.model?.src), ...kitSrcs(world)].filter((x): x is string => Boolean(x)))].sort();
   const key = srcs.join("|");
   const [done, setDone] = React.useState(() => srcs.every((s) => ready.has(s)));
   const [handle] = React.useState(() => (done ? null : delayRender(`loading models ${key}`, { timeoutInMilliseconds: 120000 })));
@@ -592,6 +596,14 @@ const LIVING_ARCH = ["humanoid", "quadruped", "bird", "fish", "insect", "serpent
 // sliding across the ground is worse than the generated, posed body.
 const animatedFor = (m: CastMember) => Boolean(m.model?.src && ready.has(m.model.src)) && clipFor(m.model?.clips ?? [], m.verb) >= 0;
 
+// A person drawn from the character kit, when the kit's body and clips have loaded.
+const kitFor = (world: World, m: CastMember) => {
+  if (!world.kit || m.build.archetype !== "humanoid") return null;
+  const body = ready.get((m.build.sex === "f" ? world.kit.bodies.f ?? world.kit.bodies.m : world.kit.bodies.m ?? world.kit.bodies.f) ?? "");
+  const library = world.kit.clips.flatMap((c) => ready.get(c)?.clips ?? []);
+  return body && library.length ? { body, library } : null;
+};
+
 const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (props) => {
   const { p, look, b } = props;
   const { m } = p;
@@ -599,10 +611,13 @@ const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (p
   const one = (dt: number) => {
     const t = b.t + dt;
     const phase = p.phase + dt * 3.1;
-    if (LIVING_ARCH.includes(m.build.archetype) && animatedFor(m)) return <FoundModel {...props} />;
+    if (LIVING_ARCH.includes(m.build.archetype) && animatedFor(m) && !kitFor(props.world, m)) return <FoundModel {...props} />;
     switch (m.build.archetype) {
-      case "humanoid":
+      case "humanoid": {
+        const kit = kitFor(props.world, m);
+        if (kit) return <KitPerson build={m.build} verb={m.verb} body={kit.body} library={kit.library} t={t + p.phase * 0.4} speed={p.speed} envMap={look.toon ? null : env.map} />;
         return <Humanoid build={m.build} look={look} pose={humanPose(m.verb, t + p.yaw, phase, b.k, dimsOf(m.build), s)} t={t} state={s} held={dt ? undefined : m.held} />;
+      }
       case "quadruped":
         return <Quadruped build={m.build} look={look} pose={quadPose(m.verb, t + p.yaw, phase, b.k, quadDims(m.build), s)} t={t} state={s} />;
       case "bird":

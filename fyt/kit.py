@@ -66,7 +66,13 @@ def _itch_files(user: str, slug: str, want: str = "standard") -> list[tuple[str,
     picked = [u for u in uploads if want in u[1].lower()] or uploads[:1]
     out = []
     for uid, name in picked:
-        j = s.post(f"{page}/file/{uid}", params={"source": "game_download", "key": key}, data={"csrf_token": csrf.group(1)}, timeout=60).json()
+        r = s.post(f"{page}/file/{uid}", params={"source": "game_download", "key": key}, data={"csrf_token": csrf.group(1)}, timeout=60)
+        try:
+            j = r.json()
+        except ValueError:
+            j = {}
+        if not j.get("url"):
+            raise RuntimeError(f"no file link for {name!r} (HTTP {r.status_code}): {r.text[:400]}; uploads seen: {uploads}")
         out.append((name, s.get(j["url"], timeout=900).content))
     return out
 
@@ -156,3 +162,49 @@ def fetch(root: Path) -> dict:
             report[pid] = {"source": src, "licence": licence, "error": f"{type(e).__name__}: {str(e)[:300]}"}
     (root / "inventory.json").write_text(json.dumps(report, indent=1))
     return {k: (v.get("error") or f"{len(v.get('models', {}))} models, {v.get('kept', 0)} files kept") for k, v in report.items()}
+
+
+def _joints(m: dict) -> list[str]:
+    sk = m.get("skins") or [{}]
+    return sk[0].get("names", [])
+
+
+def stage(public: Path, root: Path | None = None) -> dict | None:
+    """Copy the kit into a video's public folder; returns the world's `kit` (bodies, clip libraries) for
+    the renderer, or None when the library has no kit. Everything is on the shared skeleton (pelvis,
+    spine_01, ...); a body pack's own people beat the clip libraries' plain mannequins."""
+    import shutil
+
+    from fyt.assetlib import CACHE
+
+    root = root or CACHE / "_kit"
+    try:
+        inv = json.loads((root / "inventory.json").read_text())
+    except (OSError, ValueError):
+        return None
+    shared = lambda m: "pelvis" in _joints(m)  # noqa: E731
+    bodies: dict[str, tuple[int, str]] = {}
+    clips: list[str] = []
+    copy: dict[str, Path] = {}
+    for rank, pid in enumerate(("bodies", "ual2", "ual1")):
+        for rel, m in (inv.get(pid, {}).get("models") or {}).items():
+            src = root / pid / rel
+            if "error" in m or not shared(m) or not src.exists():
+                continue
+            name = f"kit/{pid}-{Path(rel).stem}.glb".replace(" ", "_")
+            if m.get("clips"):
+                clips.append(name)
+                copy[name] = src
+            if m.get("meshes"):
+                sex = "f" if re.search(r"female|woman|(^|[^a-z])f($|[^a-z])", Path(rel).stem.lower()) else "m"
+                if sex not in bodies or rank < bodies[sex][0]:
+                    bodies[sex] = (rank, name)
+                    copy[name] = src
+    if not bodies or not clips:
+        return None
+    used = {n for _, n in bodies.values()} | set(clips)
+    for name, src in copy.items():
+        if name in used:
+            (public / name).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, public / name)
+    return {"bodies": {k: n for k, (_, n) in bodies.items()}, "clips": clips}

@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
+from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, kit, llm, localize, media, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -464,6 +464,9 @@ def story_models(cfg: Config, job: Job, script: Script, story: "story_manifest.M
                 for e in story_manifest.in_scene(story, k):
                     wanted.setdefault(e.id, "medium")
         wanted = {k: v for k, v in wanted.items() if not worldgen.is_place(story_manifest.entity(story, k))}
+        # people come from the character kit when the library has one: one consistent, animated cast
+        if kit.stage(job.public):
+            wanted = {k: v for k, v in wanted.items() if worldgen.archetype_of(story_manifest.entity(story, k)) != "humanoid"}
         animated = {k for k in wanted if worldgen.archetype_of(story_manifest.entity(story, k)) in worldgen.LIVING}
     if wanted and "image_to_3d" in cfg.visuals.asset_sources:
         log(job, assetlib.generator_status(cfg))
@@ -497,6 +500,9 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
             models[eid] = {"id": a["key"], "src": srcs[eid], "fit": a.get("fit") or assetlib.facing(story_manifest.entity(story, eid)),
                            "clips": a.get("clips", []), "licence": a.get("licence"), "title": a.get("title")}
     seed = sum(map(ord, script.title)) & 0xFFFF
+    people = kit.stage(job.public)
+    if people:
+        log(job, f"character kit: {', '.join(sorted(people['bodies']))} bodies, {len(people['clips'])} clip libraries")
     scenes, back = list(script.scenes), []
     for i, s in enumerate(scenes):
         if s.type != "world" or s.subject != "stage":
@@ -514,7 +520,7 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
                  "notes": f"story world: {builds[lead].archetype} built for {story_manifest.entity(story, lead).name}"}
         lead_e = story_manifest.entity(story, lead)
         label = "ILLUSTRATION" if s.illustrative else "RECONSTRUCTION" if (m and lead_e.certain) else "RECONSTRUCTION · ILLUSTRATIVE"
-        scenes[i] = s.model_copy(update={"subject_name": lead, "world": worldgen.world_of(style, seed, shot, builds, settings, models),
+        scenes[i] = s.model_copy(update={"subject_name": lead, "world": worldgen.world_of(style, seed, shot, builds, settings, models) | ({"kit": people} if people else {}),
                                          "model": model, "label": label})
     job.file("world.json").write_text(json.dumps(worldgen.record(style, builds, settings, shots, made, models), indent=2))
     log(job, f"story world ({style}): cast {made['cast']}, sets {made['sets']}, direction {made['direction']}; "

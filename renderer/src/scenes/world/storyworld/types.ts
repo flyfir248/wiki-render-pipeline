@@ -49,6 +49,7 @@ export type Build = {
   outfit: Outfit | null;
   parts: Part[];
   form?: string; // a detailed model the renderer draws for a vehicle its name places (airliner, boat, car)
+  sex?: string; // a person: which of the character kit's bodies ("m" or "f")
 };
 
 export type Spot = "center" | "left" | "right" | "back" | "front" | "far";
@@ -101,4 +102,6 @@ export type World = {
   marks: Mark[];
   callouts: Callout[];
   beats?: Beat[];
+  // the character kit (fyt/kit.py): ready-made bodies and the clip libraries on their skeleton
+  kit?: { bodies: { m?: string; f?: string }; clips: string[] };
 };
