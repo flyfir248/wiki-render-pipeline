@@ -17,9 +17,9 @@ turns that into a per-video design and per-scene direction, which the renderer's
 
 Both come from one model call each; when a call fails, rules read the same manifest (the entity's
 kind and look words), so every scene still gets a story-specific build. Nothing is cached between
-videos: the next story designs its own cast. Found models (fyt.assetlib) still draw non-living things
-when one genuinely matches; people and animals are always generated, because a found mesh has no rig
-our verbs can drive.
+videos: the next story designs its own cast. Found models (fyt.assetlib) draw what they genuinely
+match: any thing, and a person or an animal when the model brings its own animation (the renderer plays
+its walk or idle clip for the verb, and falls back to the generated body when no clip fits).
 
 The guards keep the world true to the narration: an entity is shown only in scenes the manifest lists
 it in; an actor does something beyond a calm verb (idle, walk, look around...) only when the scene's
@@ -363,6 +363,9 @@ def _thing_parts(words: str, size: float, c: list[str]) -> list[Part]:
             Part(shape="box", at=[0, s * 0.62, 0], size=[s * 0.7, s * 0.06, s * 0.5], color=b)]
 
 
+# An ocean liner of the steam age: the hull, decks, raked funnels and masts of a Titanic or a Lusitania.
+LINER_WORDS = ("liner", "ocean liner", "passenger ship", "passenger liner", "steamship", "steamer", "titanic", "lusitania",
+               "mauretania", "britannic", "olympic", "carpathia", "andrea doria", "transatlantic")
 AIRLINER_WORDS = ("airliner", "airbus", "boeing", "jet", "jumbo", "a320", "a330", "a380", "737", "747", "757", "767", "777", "787", "dc-10")
 
 
@@ -375,7 +378,9 @@ def vehicle_form(words: str) -> str:
         return "plane"
     if any(_has(words, w) for w in ("helicopter",)):
         return "helicopter"
-    if any(_has(words, w) for w in ("boat", "ship", "ferry", "yacht", "vessel", "tug", "trawler", "liner")):
+    if any(_has(words, w) for w in LINER_WORDS):
+        return "liner"
+    if any(_has(words, w) for w in ("boat", "ship", "ferry", "yacht", "vessel", "tug", "trawler")):
         return "boat"
     if any(_has(words, w) for w in ("train", "locomotive", "tram", "canoe", "kayak", "raft", "submarine", "bike", "bicycle", "motorcycle", "drone")):
         return ""
@@ -384,6 +389,11 @@ def vehicle_form(words: str) -> str:
     if any(_has(words, w) for w in ("car", "taxi", "sedan", "police car", "cab", "coupe", "hatchback")):
         return "car"
     return ""
+
+
+def thing_form(words: str) -> str:
+    """The detailed model the renderer draws for an object its name places: an iceberg's fractured ice."""
+    return "iceberg" if any(_has(words, w) for w in ICE_WORDS) else ""
 
 
 def cell_form(words: str) -> str:
@@ -560,7 +570,7 @@ def rule_build(e: Entity, seed: int) -> Build:
     return Build(
         entity=e.id, archetype=arche, size=round(size, 2), primary=c[0], secondary=c[1], accent=c[2],
         skin=_pick(s, SKINS) if arche == "humanoid" else "", hair=_pick(s >> 3, HAIRS) if arche == "humanoid" else "",
-        body=body, outfit=outfit, parts=parts, form=vehicle_form(words) if arche == "vehicle" else cell_form(words) if arche == "cell" else "",
+        body=body, outfit=outfit, parts=parts, form=vehicle_form(words) if arche == "vehicle" else cell_form(words) if arche == "cell" else thing_form(words) if arche in ("object", "structure") else "",
     )
 
 
@@ -761,7 +771,7 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
         parts = _vehicle_parts(f"{e.name} {e.kind} {' '.join(e.search)} {e.look}".lower(), size, [primary, secondary, accent])
     return b.model_copy(update={
         "entity": e.id, "archetype": arche, "size": round(size, 3), "parts": parts, "outfit": outfit,
-        "form": rules.form if arche in ("vehicle", "cell") and rules.archetype == arche else "",
+        "form": rules.form if arche in ("vehicle", "cell", "object", "structure") and rules.archetype == arche else "",
         "primary": primary, "secondary": secondary, "accent": accent,
         "skin": _hex(b.skin, rules.skin or SKINS[2]) if arche == "humanoid" else "",
         "hair": _hex(b.hair, rules.hair or HAIRS[0]) if arche == "humanoid" else "",
@@ -1180,8 +1190,10 @@ def world_of(style: str, seed: int, shot: Shot, builds: dict[str, Build], settin
         b = builds[a.entity]
         entry = a.model_dump() | {"build": b.model_dump()}
         m = models.get(a.entity)
-        if m and b.archetype not in LIVING:
-            entry["model"] = m  # a found model that genuinely matches draws it; the build stays its fallback
+        if m and (b.archetype not in LIVING or m.get("clips")):
+            # a found model that genuinely matches draws it (a living thing's only with its own animation,
+            # and only while it has a clip for what it is doing); the build stays its fallback
+            entry["model"] = m
         if a.holding and a.holding in builds:
             entry["held"] = builds[a.holding].model_dump()
         cast.append(entry)
@@ -1196,7 +1208,7 @@ def record(style: str, builds: dict[str, Build], settings: dict[str, Setting], s
         "style": style,
         "made": made,
         "builds": [b.model_dump() | {
-            "source": "found model" if b.entity in models and b.archetype not in LIVING else
+            "source": "found model" if b.entity in models and (b.archetype not in LIVING or models[b.entity].get("clips")) else
                       ("procedural, designed by the model" if made.get("cast") == "model" and b.entity not in made.get("rules_built", []) else "procedural, from the entity's words"),
             "scenes": sorted(k for k, s in shots.items() if any(a.entity == b.entity for a in s.actors)),
         } for b in builds.values()],

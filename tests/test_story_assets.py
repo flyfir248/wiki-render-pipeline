@@ -357,3 +357,40 @@ def test_a_model_the_render_check_failed_is_forgotten_and_never_taken_again(cach
     assert assetlib.cached(first["key"]) is None
     second = assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)
     assert second["uid"] != first["uid"]
+
+
+def test_without_a_vision_check_only_a_well_liked_full_match_is_used(cache, monkeypatch):
+    # Run 213: no free vision model could look (Groq lists none, Cloudflare's allowance was spent), so
+    # the Titan stayed a stack of boxes. A model naming every word of a specific term, that people liked,
+    # is used; it is searched again (and seen) once a check can be made.
+    liked = fake_candidate("American Black Bear", "cc0") | {"likes": 40}
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: [liked] if term == "american black bear" else []})
+    monkeypatch.setattr(assetlib, "looks_right", lambda cfg, e, term, pic: (None, ""))
+    monkeypatch.setattr(assetlib, "prepare", fake_prepare)
+    cfg = Config(format="short")
+    cfg.visuals.asset_sources = ["sketchfab"]
+    hit = assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)
+    assert hit["checked"] == "text" and assetlib.cached("american-black-bear") is None
+    assert not assetlib.sure_by_name("bear", liked | {"score": 1.0})  # one word could be any bear
+    assert not assetlib.sure_by_name("american black bear", fake_candidate("American Black Bear", "cc0"))  # nobody liked it
+
+
+def test_a_living_thing_takes_only_a_model_that_can_move(cache, monkeypatch):
+    still = fake_candidate("American Black Bear statue pose", "cc0")
+    moving = fake_candidate("American Black Bear walk cycle", "cc0", b"anim") | {"animated": True}
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: [still, moving]})
+
+    def prepare(raw, out, triangles, texture=1024):
+        out.write_bytes(b"prepared")
+        return {"ok": True, "triangles": 6000, "bytes": 8, "size": [1.0, 0.8, 2.0], "clips": ["Walk"] if raw.read_bytes() == b"anim" else []}
+
+    monkeypatch.setattr(assetlib, "prepare", prepare)
+    cfg = Config(format="short")
+    cfg.visuals.asset_sources = ["sketchfab"]
+    assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None, animated=True)["title"] == "American Black Bear walk cycle"
+    # a still model in the cache does for a thing, not for a creature
+    monkeypatch.setattr(assetlib, "SOURCES", {"sketchfab": lambda cfg, term, log: [still]})
+    for term in BEAR.search:
+        (cache / "models" / assetlib.slug(term)).exists() and __import__("shutil").rmtree(cache / "models" / assetlib.slug(term))
+    assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)["title"] == "American Black Bear statue pose"
+    assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None, animated=True) is None

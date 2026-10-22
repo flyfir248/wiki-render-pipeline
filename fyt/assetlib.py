@@ -246,6 +246,7 @@ def sketchfab(cfg: Config, term: str, log) -> list[dict]:
             "author": user.get("displayName") or user.get("username") or "", "licence": licence_code(m.get("license")),
             "url": m.get("viewerUrl") or f"https://sketchfab.com/3d-models/{uid}", "thumb": _thumb((m.get("thumbnails") or {}).get("images")),
             "triangles": m.get("faceCount") or 0, "animated": bool(m.get("animationCount")), "score": relevant(term, m.get("name", ""), tags),
+            "likes": m.get("likeCount") or 0, "staffpicked": bool(m.get("staffpickedAt")),
             "_uid": uid, "_path": path,
         })
         if len(out) >= CANDIDATES:
@@ -466,8 +467,17 @@ def sound(info: dict, max_mb: float) -> str | None:
     return None
 
 
-def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log) -> dict | None:
+def sure_by_name(term: str, c: dict) -> bool:
+    """Whether a candidate can be used without seeing it, when no vision check can be made: its title and
+    tags name every word of a search term of two words or more (not just "ship"), and other people have
+    liked it or Sketchfab's staff picked it."""
+    return c.get("score", 0) >= 0.99 and len(_words(term)) >= 2 and (c.get("likes", 0) >= 5 or bool(c.get("staffpicked")))
+
+
+def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log, animated: bool = False) -> dict | None:
     if c["licence"] not in cfg.visuals.licences and c["source"] != "generated":
+        return None
+    if animated and not c.get("animated"):
         return None
     if c["uid"] in _rejected():
         return None
@@ -486,18 +496,25 @@ def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log) ->
                 return None
             ok, why = looks_right(cfg, entity, term, work / "thumb.jpg")
             if ok is None:
-                raise Unchecked(c["title"])
-            if not ok:
+                if not sure_by_name(term, c):
+                    raise Unchecked(c["title"])
+                c["checked"] = "text"  # used this time; searched again (and seen) once a check can be made
+                log(f"assets: no vision check could be made; {c['title']!r} names every word of {term!r} and is well liked, so it is used")
+            elif not ok:
                 log(f"assets: {c['title']!r} ({c['source']}) is not a {term}: {why}")
                 _note_rejected(c["uid"], f"vision: {why}")
                 return None
-            c["checked"] = "vision"
+            else:
+                c["checked"] = "vision"
         else:
             c["checked"] = "concept"  # its concept picture was checked by eye before it was generated (image_to_3d)
         raw = c["fetch"](work / "raw.glb")
         budget = cfg.visuals.triangles.get(fidelity, 40000)
         info = prepare(raw, work / "model.glb", budget)
         bad = sound(info, cfg.visuals.max_model_mb)
+        if not bad and animated and not info.get("clips"):
+            log(f"assets: {c['title']!r} ({c['source']}) has no animation to move it with; skipped")
+            return None
         if bad:
             log(f"assets: {c['title']!r} ({c['source']}) can't be used: {bad}")
             _note_rejected(c["uid"], bad)
@@ -547,26 +564,28 @@ class Unchecked(Exception):
     """No vision check can be made now (the free allowance is spent, or none is configured)."""
 
 
-def resolve(cfg: Config, entity: Entity, fidelity: str = "medium", log=print, generate: bool = True) -> dict | None:
-    """The model for one entity, best source first (see the module docstring), or None."""
+def resolve(cfg: Config, entity: Entity, fidelity: str = "medium", log=print, generate: bool = True, animated: bool = False) -> dict | None:
+    """The model for one entity, best source first (see the module docstring), or None. `animated`: only
+    a model with its own animation clips will do (a person or an animal, which must move)."""
     try:
-        return _resolve(cfg, entity, fidelity, log, generate)
+        return _resolve(cfg, entity, fidelity, log, generate, animated)
     except Unchecked as e:  # not a miss: the same search is tried again when the check is back
         log(f"assets: no vision check could be made (first candidate {str(e)!r}); {entity.name} stays painted this time")
         return None
 
 
-def _resolve(cfg: Config, entity: Entity, fidelity: str, log, generate: bool = True) -> dict | None:
+def _resolve(cfg: Config, entity: Entity, fidelity: str, log, generate: bool = True, animated: bool = False) -> dict | None:
     found = project_model(entity)
-    if found:
+    if found and (found.get("clips") or not animated):
         return found
     for term in entity.search:
         hit = cached(slug(term))
-        if hit:
+        if hit and (hit.get("clips") or not animated):
             return hit
     # Libraries first, every search term; a model is generated only when none of them has one.
     for term in entity.search:
-        if _missed(term):
+        miss = f"animated {term}" if animated else term
+        if _missed(miss):
             continue
         searched = False
         for name in cfg.visuals.asset_sources:
@@ -580,13 +599,13 @@ def _resolve(cfg: Config, entity: Entity, fidelity: str, log, generate: bool = T
                 continue
             searched = True
             for c in sorted(found_, key=lambda c: -c["score"]):
-                hit = _try(cfg, entity, term, c, fidelity, log)
+                hit = _try(cfg, entity, term, c, fidelity, log, animated)
                 if hit:
                     return hit
         if searched:  # a search that ran and found nothing usable; an outage is tried again next time
-            _note_miss(term)
+            _note_miss(miss)
     term = entity.search[0]
-    if generate and "image_to_3d" in cfg.visuals.asset_sources and not _missed(f"generated-{term}"):
+    if generate and not animated and "image_to_3d" in cfg.visuals.asset_sources and not _missed(f"generated-{term}"):
         for c in image_to_3d(cfg, term, log, entity):
             hit = _try(cfg, entity, term, c, fidelity, log)
             if hit:
@@ -595,8 +614,10 @@ def _resolve(cfg: Config, entity: Entity, fidelity: str, log, generate: bool = T
     return None
 
 
-def resolve_all(cfg: Config, m: "manifest.Manifest", wanted: dict[str, str], log=print, time_limit: float = 600) -> dict[str, dict]:
-    """Models for the entities the plan wants in 3D ({entity id: fidelity}), within a time limit."""
+def resolve_all(cfg: Config, m: "manifest.Manifest", wanted: dict[str, str], log=print, time_limit: float = 600,
+                animated: set[str] = frozenset()) -> dict[str, dict]:
+    """Models for the entities the plan wants in 3D ({entity id: fidelity}), within a time limit; those in
+    `animated` only with animation clips."""
     out: dict[str, dict] = {}
     start = time.monotonic()
     generated = 0
@@ -604,10 +625,12 @@ def resolve_all(cfg: Config, m: "manifest.Manifest", wanted: dict[str, str], log
         e = manifest.entity(m, eid)
         if e is None or time.monotonic() - start > time_limit:
             continue
-        hit = resolve(cfg, e, fidelity, log, generate=generated < cfg.visuals.max_generated)
+        hit = resolve(cfg, e, fidelity, log, generate=generated < cfg.visuals.max_generated, animated=eid in animated)
         generated += bool(hit and hit.get("source") == "generated")
         if hit:
             out[eid] = hit
+        elif eid in animated:
+            log(f"assets: no animated model of {e.name} ({', '.join(e.search)}): it is generated")
         else:
             log(f"assets: no usable model of {e.name} ({', '.join(e.search)}): its scenes stay painted")
     return out

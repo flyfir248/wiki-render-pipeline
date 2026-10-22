@@ -454,14 +454,20 @@ def story_models(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     if story is None:
         return script, {}
     wanted = assetlib.wanted(script, story)
+    animated: set[str] = set()
     if cfg.visuals.story_worlds:
-        # People and animals are always generated in their story world: a found mesh has no rig our verbs can drive.
-        # and a river or an airport is its set, not a model to find
-        wanted = {k: v for k, v in wanted.items() if worldgen.archetype_of(story_manifest.entity(story, k)) not in worldgen.LIVING
-                  and not worldgen.is_place(story_manifest.entity(story, k))}
+        # Everything on a stage scene is looked for, not just its lead (the iceberg beside the ship too); a
+        # river or an airport is its set, not a model to find. A person or an animal needs a model with its
+        # own animation to move; without one it is generated.
+        for k, s in enumerate(script.scenes, 1):
+            if s.type == "world" and s.subject == "stage" and story_manifest.entity(story, s.subject_name):
+                for e in story_manifest.in_scene(story, k):
+                    wanted.setdefault(e.id, "medium")
+        wanted = {k: v for k, v in wanted.items() if not worldgen.is_place(story_manifest.entity(story, k))}
+        animated = {k for k in wanted if worldgen.archetype_of(story_manifest.entity(story, k)) in worldgen.LIVING}
     if wanted and "image_to_3d" in cfg.visuals.asset_sources:
         log(job, assetlib.generator_status(cfg))
-    found = assetlib.resolve_all(cfg, story, wanted, log=lambda m: log(job, m)) if wanted else {}
+    found = assetlib.resolve_all(cfg, story, wanted, log=lambda m: log(job, m), animated=animated) if wanted else {}
     srcs = assetlib.stage(found, job.public)
     if cfg.visuals.story_worlds:
         script, back = story_worlds(cfg, job, script, story, found, srcs)
@@ -475,8 +481,8 @@ def story_models(cfg: Config, job: Job, script: Script, story: "story_manifest.M
 
 def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.Manifest", found: dict, srcs: dict[str, str]) -> tuple[Script, list[int]]:
     """Each stage scene's world generated for this story (fyt/worldgen.py): a build for every entity in
-    it, a setting for its place, and a shot that blocks who does what. Found models draw the non-living
-    things they match; everything else is procedural. The record of how each asset was made goes to
+    it, a setting for its place, and a shot that blocks who does what. Found models draw what they match
+    (people and animals only with their own animation); everything else is procedural. The record of how each asset was made goes to
     world.json. Returns (script, scene indexes put back to 2D)."""
     staged = [i + 1 for i, s in enumerate(script.scenes) if s.type == "world" and s.subject == "stage" and story_manifest.entity(story, s.subject_name)]
     if not staged:
@@ -502,7 +508,7 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
             back.append(i)
             continue
         lead = shot.actors[0].entity
-        m = models.get(lead) if builds[lead].archetype not in worldgen.LIVING else None
+        m = models.get(lead) if builds[lead].archetype not in worldgen.LIVING or models.get(lead, {}).get("clips") else None
         model = {"id": m["id"] if m else f"world:{lead}", "level": "found" if m else "procedural", "title": (m or {}).get("title"),
                  "kind": "object", "src": (m or {}).get("src"), "params": {}, "sources": [], "licence": (m or {}).get("licence"),
                  "notes": f"story world: {builds[lead].archetype} built for {story_manifest.entity(story, lead).name}"}

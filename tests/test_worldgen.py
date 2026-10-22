@@ -426,3 +426,14 @@ def test_a_beat_left_calm_takes_the_action_its_words_tell():
     beats = [worldgen.Beat(cue="strikes an iceberg", actors=[worldgen.BeatActor(entity="titan", verb="present")], camera="follow", on="titan")]
     out = worldgen.checked_beats(beats, "On an April night the Titan strikes an iceberg and sinks within minutes.", actors, builds)
     assert out[0].actors[0].verb == "crash"
+
+
+def test_a_liner_and_an_iceberg_get_their_detailed_models():
+    assert worldgen.vehicle_form("the titan, a four-funnel ocean liner") == "liner"
+    assert worldgen.vehicle_form("rms lusitania") == "liner"
+    assert worldgen.vehicle_form("an airbus a380 airliner") == "airliner"  # not a liner
+    assert worldgen.vehicle_form("a fishing trawler") == "boat"
+    berg = Entity(id="iceberg", name="an iceberg", kind="iceberg", search=["iceberg"], look="tall white iceberg", certain=False, scenes=[2])
+    assert worldgen.rule_build(berg, 1).form == "iceberg"
+    designed = worldgen.Build(entity="iceberg", archetype="object", size=20, primary="#ffffff", secondary="#dde8f0", accent="#bcd6e6", parts=[worldgen.Part(shape="cone", at=[0, 5, 0], size=[10, 10, 10], color="#ffffff")] * 2)
+    assert worldgen.checked_build(designed, berg, 1).form == "iceberg"
