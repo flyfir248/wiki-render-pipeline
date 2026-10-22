@@ -1,0 +1,27 @@
+story (given): the Titan, Rowland, deckhand, a polar bear, an iceberg; 2 moments
+planning the visuals
+visual plan (model): 3 3D, 4 2D; 3D: stage present, stage fall, stage approach
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: no usable model of the Titan (titan ocean liner, early 20th century passenger ship, ship): its scenes stay painted
+assets: no animated model of Rowland, deckhand (deckhand, early 1900s sailor, male crew member): it is generated
+assets: 'Dragon Glass' (objaverse) is not a iceberg: shows a framed display, not a real iceberg
+assets: 'Iceberg Furnace' (objaverse) is not a iceberg: shows a glowing ice sculpture, not a natural iceberg
+assets: no vision check could be made (first candidate 'Iceberg Reconstruction'); an iceberg stays painted this time
+assets: no usable model of an iceberg (iceberg, ice block): its scenes stay painted
+assets: no vision check could be made; 'Polar Bear' names every word of 'polar bear' and is well liked, so it is used
+assets: a polar bear -> 'Polar Bear' from objaverse (by-sa, 39998 triangles, 1 animations)
+building the story world: 4 entities for 3 scenes
+story world (lowpoly): cast model, sets model, direction model; titan as vehicle, rowland as humanoid, polar-bear as quadruped, iceberg as object
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 4 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+cutaways: 4 extra photos across 4 scenes
+collage: 8 photos styled, 6 with a cut-out subject
+relevance: checking 3 3D scenes by eye
+storyboarding: an illustration for each sentence
+storyboard: 3 illustrated sentences of 3 planned, 4 in the cast
+art direction: archival
+rendering 46s short video
+rendering thumbnail
+thumbnail: cutout take
+done: approved

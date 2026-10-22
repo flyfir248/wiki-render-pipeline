@@ -10,11 +10,13 @@
  "sketchfab:70169635dec246a6af4db09f2abf68f6": "render: frame check: The subject is not a red blood cell, it is a greyish cloud of fog.",
  "sketchfab:85f5ec1643244f02af59342f631a75b3": "19 MB after preparation",
  "sketchfab:871e0654cf6d427998f6d6790d050633": "vision: it shows only a part of the bear's tooth",
+ "sketchfab:95157af5f1bf448f96c7dd0aa32f559b": "vision: shows a glowing ice sculpture, not a natural iceberg",
  "sketchfab:a8dd34a73737448f961d226734a3fc59": "render: frame check: The plane is not a Cessna 404 Titan.",
  "sketchfab:b1167087772d4e81829d5bbe6af987a0": "render: frame check: The subject shown is a boat, not the Titan.",
  "sketchfab:c475323dc7f24e26ba2009c08c8e1941": "render: frame check: not a large white steel hull, not multiple decks, not towering smokestacks, not early 1900s style.",
  "sketchfab:e4548772148c45a280f8d8136569c192": "vision: does not match subject, shows different object",
  "sketchfab:f77e98930c084df49b0f970c36ba9ddf": "vision: Shows a cartoon character, not a ship.",
  "sketchfab:f82f40ca04d84a24868a453c4e3a16c2": "46 MB after preparation",
- "sketchfab:fbeafdb305114e4eb331d1b69d5fe094": "vision: no ambulance, shows broken scan"
+ "sketchfab:fbeafdb305114e4eb331d1b69d5fe094": "vision: no ambulance, shows broken scan",
+ "sketchfab:fe00cb0ecaca4e4595874b70de7e116b": "vision: shows a framed display, not a real iceberg"
 }
