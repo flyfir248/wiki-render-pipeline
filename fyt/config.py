@@ -66,11 +66,6 @@ class VisualsConfig(BaseModel):
     # of a found model alone in front of a painted plate. People and animals are always generated (they
     # get a rig the verbs can drive); a found model still draws a non-living thing it genuinely matches.
     story_worlds: bool = True
-    # Painted, directed shots instead of 3D for the story's events (fyt/storyboard.py, fyt/depth.py): every
-    # sentence gets a picture in the video's one style that the camera moves through in depth, which reads
-    # far better than procedural 3D models. 3D stays for what no painting explains: cells, molecules,
-    # machines (the science and technology scenes). Off brings back the story worlds and 3D catalog scenes.
-    painted: bool = True
     # The look every story world is built in: auto lets the design pick per story, or one of the styles
     # in renderer/src/scenes/world/storyworld/grammar.json (lowpoly, voxel, noir, diorama, clinical).
     world_style: str = "auto"
@@ -329,8 +324,6 @@ class Config(BaseModel):
     # An illustration for every later sentence of titles, statements, numbers and quotes, planned by
     # a storyboard pass with a cast sheet (fyt/storyboard.py). Uses the same image keys as story_art.
     storyboard: bool = True
-    # Depth for each storyboard picture (fyt/depth.py), so the camera moves through it like a 3D shot.
-    depth: bool = True
     # Free vision model that checks each storyboard picture before it is used. "auto": the first
     # image-reading model the OpenAI-compatible provider (Groq) lists, else Cloudflare's with the image
     # keys. A model id to pin one; empty to skip the check.

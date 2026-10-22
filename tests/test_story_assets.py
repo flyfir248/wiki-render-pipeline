@@ -116,7 +116,7 @@ def test_plan_with_a_manifest_never_shows_an_unlisted_subject(monkeypatch):
         visualplan.Reconstruction(scene=2, subject="landscape", variant="forest", action="flyover", priority=2)
         if "forest" in scenes3d.VARIANTS else visualplan.Reconstruction(scene=2, subject="landscape", action="flyover", priority=2),
     ])
-    planned, report = visualplan.plan(Config(format="short", visuals={"painted": False}), BEAR_STORY, "", log=lambda m: None, story=bear_manifest())
+    planned, report = visualplan.plan(Config(format="short"), BEAR_STORY, "", log=lambda m: None, story=bear_manifest())
     world = [(i, s.subject, s.subject_name) for i, s in enumerate(planned.scenes, 1) if s.type == "world"]
     assert all(subj != "aircraft" for _, subj, _ in world)
     assert (3, "stage", "bear") in world

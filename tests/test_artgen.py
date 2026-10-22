@@ -38,7 +38,7 @@ def test_provider_needs_keys(monkeypatch):
 def test_story_scenes_get_a_plate_and_cut_out_props(monkeypatch, tmp_path):
     monkeypatch.setenv("TOGETHER_API_KEY", "k")
     prompts = []
-    monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=0, **kw: prompts.append(p) or drawing(p))
+    monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=0: prompts.append(p) or drawing(p))
     s = story_script()
     assert artgen.illustrate(Config(format="short"), s, tmp_path) == 3
     scene = s.scenes[0]
@@ -65,46 +65,3 @@ def test_no_keys_draws_nothing(monkeypatch, tmp_path):
     for k in ("CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN", "TOGETHER_API_KEY"):
         monkeypatch.delenv(k, raising=False)
     assert artgen.illustrate(Config(), story_script(), tmp_path) == 0
-
-
-class _Resp:
-    def __init__(self, status, payload=None, text=""):
-        self.status_code, self._payload, self.text = status, payload, text
-        self.ok = status < 400
-
-    def json(self):
-        return self._payload
-
-
-def _png_b64(size=(4, 7)):
-    import base64
-    import io
-
-    out = io.BytesIO()
-    Image.new("RGB", size).save(out, "PNG")
-    return base64.b64encode(out.getvalue()).decode()
-
-
-def test_cloudflare_draws_a_short_tall_with_references_and_falls_back_to_square(monkeypatch, tmp_path):
-    monkeypatch.setenv("CLOUDFLARE_ACCOUNT_ID", "acc")
-    monkeypatch.setenv("CLOUDFLARE_API_TOKEN", "tok")
-    monkeypatch.setattr(artgen, "_klein_ok", True)
-    ref = tmp_path / "ref.jpg"
-    Image.new("RGB", (900, 1600)).save(ref)
-    sent = []
-
-    def post(url, headers=None, files=None, json=None, timeout=None):
-        sent.append((url, files, json))
-        return _Resp(200, {"result": {"image": _png_b64()}})
-
-    monkeypatch.setattr(artgen.requests, "post", post)
-    artgen.generate("a ship", vertical=True, refs=[ref])
-    url, files, _ = sent[0]
-    assert url.endswith(artgen.KLEIN) and files["width"][1] == "768" and files["height"][1] == "1344"
-    assert files["input_image_0"][2] == "image/jpeg" and max(Image.open(__import__("io").BytesIO(files["input_image_0"][1])).size) <= 448
-
-    sent.clear()
-    replies = iter([_Resp(400, text="bad input"), _Resp(200, {"result": {"image": _png_b64()}})])
-    monkeypatch.setattr(artgen.requests, "post", lambda url, **kw: sent.append(url) or next(replies))
-    artgen.generate("a ship", vertical=True)
-    assert sent[0].endswith(artgen.KLEIN) and sent[1].endswith(artgen.SCHNELL) and artgen._klein_ok is False

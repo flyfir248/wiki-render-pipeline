@@ -35,7 +35,7 @@ def planned(*lines: str, fmt: str = "short", notes: str = "", **kw) -> tuple[Scr
     old = visualplan._llm_plan
     visualplan._llm_plan = offline
     try:
-        return visualplan.plan(Config(format=fmt, visuals={"painted": False}), script(*lines, **kw), notes, log=lambda m: None)
+        return visualplan.plan(Config(format=fmt), script(*lines, **kw), notes, log=lambda m: None)
     finally:
         visualplan._llm_plan = old
 
@@ -161,7 +161,7 @@ def test_the_model_plan_is_applied_and_guarded(monkeypatch):
         ])
 
     monkeypatch.setattr(llm, "structured", fake)
-    s, report = visualplan.plan(Config(format="short", visuals={"painted": False}), script(
+    s, report = visualplan.plan(Config(format="short"), script(
         "Mount Tambora stood over the island of Sumbawa.",
         "In April 1815 the volcano exploded in the largest eruption in recorded history.",
     ), "", log=lambda m: None)
@@ -173,7 +173,7 @@ def test_the_model_plan_is_applied_and_guarded(monkeypatch):
 
 
 def test_budget_keeps_the_highest_ranked_reconstructions():
-    cfg = Config(format="short", visuals={"painted": False})
+    cfg = Config(format="short")
     cfg.visuals.world_seconds_short = 6.0
     line = "The ship struck the iceberg and began to sink quickly into the freezing dark water below."
     calm = "The ship sailed calmly on across the wide open ocean under a clear sky that night."
@@ -232,20 +232,3 @@ def test_every_catalog_subject_has_a_renderer_module_and_guide_entry():
     guide = scenes3d.guide_text()
     assert all(subject in guide for subject in scenes3d.SUBJECTS)
     assert "world" in llm.SCRIPT_GUIDE and "<<WORLD SCENE>>" not in llm.SCRIPT_GUIDE
-
-
-def test_painted_videos_tell_events_in_pictures_and_keep_3d_for_diagrams(monkeypatch):
-    monkeypatch.setattr(visualplan, "_llm_plan", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("offline")))
-    sc = script(
-        "In 1883 the island of Krakatoa sat quietly in the strait.",
-        "Then in August the volcano began to erupt, throwing an ash cloud miles high.",
-        "The liner struck the iceberg at full speed.",
-        types=["statement", "statement", "world"],
-    )
-    sc.scenes[2] = sc.scenes[2].model_copy(update={"subject": "ship", "action": "crash"})
-    s, report = visualplan.plan(Config(format="short"), sc, "", log=lambda m: None)
-    assert world(s) == [] and report["world_seconds"] == 0
-    assert s.scenes[2].type == "statement" and s.scenes[2].narration.startswith("The liner")
-    cell = script("Red blood cells carry oxygen through the body.", types=["world"])
-    cell.scenes[0] = cell.scenes[0].model_copy(update={"subject": "science", "variant": "red blood cell"})
-    assert visualplan.unstaged(cell).scenes[0].type == "world"

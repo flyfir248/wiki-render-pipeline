@@ -18,15 +18,13 @@ import base64
 import os
 import re
 from pathlib import Path
-from typing import get_args
 
 import requests
-from PIL import Image
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
-from fyt import artgen, depth, llm
+from fyt import artgen, llm
 from fyt.config import Config, secret
-from fyt.models import Atmosphere, RenderBeat, Script, ShotMove, Word
+from fyt.models import RenderBeat, Script, Word
 
 # Scenes whose picture can change with the story. A story scene's first sentence keeps its own
 # animated illustration; its later sentences move on to new moments.
@@ -59,27 +57,6 @@ class Beat(BaseModel):
         "where it is, the light and mood, max 35 words. No text or signs in the picture."
     )
     cast: list[str] = Field(default_factory=list, description="Names from the cast sheet that appear in it.")
-    camera: str = Field(
-        default="push_in",
-        json_schema_extra={"enum": list(get_args(ShotMove))},
-        description="How the camera moves through the picture: push_in (tension, a detail that matters), pull_out "
-        "(reveal the scale, aftermath), truck_left / truck_right (travel, a ship or crowd passing), rise (awe, "
-        "height, a tall subject), orbit (a lone object or figure studied from around it).",
-    )
-    effect: str = Field(
-        default="",
-        json_schema_extra={"enum": list(get_args(Atmosphere))},
-        description="Air or weather the picture has, animated over it: rain, snow, fog, smoke, embers (fire, "
-        "sparks), dust; shake for the instant of an impact or blast. Empty when the picture has none.",
-    )
-
-    @field_validator("camera", "effect", mode="before")
-    @classmethod
-    def _known(cls, v, info):
-        # a move or effect the renderer doesn't know is dropped, never the whole storyboard
-        allowed = get_args(ShotMove) if info.field_name == "camera" else get_args(Atmosphere)
-        v = str(v or "").strip().lower().replace(" ", "_").replace("-", "_")
-        return v if v in allowed else ("push_in" if info.field_name == "camera" else "")
 
 
 class Board(BaseModel):
@@ -95,14 +72,8 @@ gets its own illustration, shown full screen while the narrator says it. Plan th
 - The artist cannot draw interactions between several moving things (a wave hitting a car, a crowd
   fleeing a fire, a horse pulling a cart through a flood). Show one of them instead, or the moment
   just before or after: the cracked tank, an empty street under a brown flood, a lone abandoned cart.
-- You are also the director: each picture is a shot the camera moves through in 3D, so compose in
-  depth: something in the foreground, the subject in the middle ground, a distant background. Pick
-  the camera move that tells the line (`camera`) and any weather or air it has (`effect`).
-- Vary the framing from picture to picture like a film editor: a wide establishing view, a close-up
-  of an object, a low angle looking up at the subject, a single figure seen from behind, the
-  aftermath. Never two shots in a row at the same framing. Close-ups and wide views draw best.
-- The first picture is what makes a scrolling viewer stop: the most dramatic, surprising image of the
-  whole story, not an introduction.
+- Vary the framing from picture to picture: a wide establishing view, a close-up of an object, a
+  single figure seen from behind, the aftermath. Close-ups of objects and wide views of places draw best.
 - Follow the story: consecutive pictures should feel like the same world (same era, places, people).
 - First write the cast sheet: each person, object or place that appears in more than one picture,
   described once so every picture draws it the same way. People are described by role, age, clothing
@@ -142,14 +113,13 @@ def parts(text: str) -> list[str]:
     return [half for sentence in sentences(text) for half in _halves(sentence)]
 
 
-def wanted(script: Script, painted: bool = False) -> list[tuple[int, int, str]]:
-    """(scene index, part index, text) for every part of the narration that gets an illustration, 0-based.
-    In a painted video (`visuals.painted`) a story scene is painted from its first sentence too."""
+def wanted(script: Script) -> list[tuple[int, int, str]]:
+    """(scene index, part index, text) for every part of the narration that gets an illustration, 0-based."""
     out = []
     for i, scene in enumerate(script.scenes):
         if scene.type not in BEAT_TYPES:
             continue
-        first = 0 if (scene.type in FROM_FIRST or (painted and scene.type == "story")) and i > 0 else 1
+        first = 0 if scene.type in FROM_FIRST and i > 0 else 1
         out += [(i, k, s) for k, s in enumerate(parts(scene.narration)) if k >= first]
     return out
 
@@ -177,21 +147,6 @@ def sentence_starts(narration: str, words: list[Word], duration: float) -> list[
             starts.append(duration * seen / total)
         seen += n
     return starts
-
-
-def _aspect(path: Path) -> float | None:
-    try:
-        with Image.open(path) as im:
-            return round(im.width / im.height, 4)
-    except OSError:
-        return None
-
-
-def _with_refs(ask: str, beat: Beat, seen: dict[str, Path]) -> str:
-    """The prompt naming which reference picture shows which recurring subject."""
-    order = list(dict.fromkeys(seen[c] for c in beat.cast if c in seen))[:1]
-    named = [f"{c} looks exactly as in image {order.index(seen[c])}" for c in beat.cast if c in seen and seen[c] in order]
-    return f"{ask} Keep the same style; {'; '.join(named)}, in a new shot as described."
 
 
 def prompt(beat: Beat, cast: dict[str, str]) -> str:
@@ -350,7 +305,7 @@ def make(
     `drawn` is how many pictures the video's story scenes already used from its budget; `known` is the
     story's entities and their looks (fyt.manifest), so a bear is drawn as the same bear throughout."""
     budget = BUDGET[cfg.format] - drawn
-    todo = wanted(script, cfg.visuals.painted)[: max(0, budget)]
+    todo = wanted(script)[: max(0, budget)]
     if not todo or not artgen.provider() or artgen.out_of_allowance():
         return {}
     board = plan(cfg, script, todo, known)
@@ -358,7 +313,6 @@ def make(
     by_key = {(b.scene - 1, b.sentence - 1): b for b in board.beats}
     (public / "art").mkdir(parents=True, exist_ok=True)
     beats: dict[int, list[RenderBeat]] = {}
-    seen: dict[str, Path] = {}  # each cast member's first accepted picture: later ones draw it the same way
     drawn_here = checked = redrawn = dropped = 0
     for i, k, text in todo:
         if drawn_here >= budget or artgen.out_of_allowance():
@@ -369,9 +323,7 @@ def make(
         ok = False
         for attempt in range(2 if drawn_here + 1 < budget else 1):
             try:
-                refs = list(dict.fromkeys(seen[c] for c in beat.cast if c in seen))[:1]  # one: more tends to copy their framing
-                artgen.generate(_with_refs(ask, beat, seen) if refs else ask, cfg.format == "short", seed=31 + 7 * i + k + attempt,
-                                refs=refs).save(public / name, quality=90)
+                artgen.generate(ask, cfg.format == "short", seed=31 + 7 * i + k + attempt).save(public / name, quality=90)
                 drawn_here += 1
             except Exception as e:
                 log(f"warning: no illustration for scene {i + 1}, sentence {k + 1}: {e}")
@@ -388,19 +340,10 @@ def make(
         if not ok:
             dropped += 1
             continue
-        for c in beat.cast:
-            seen.setdefault(c, public / name)
         start = 0.0 if i == 0 else spans[i][0]
         at = spans[i][0] + sentence_starts(script.scenes[i].narration, clip_words[i], spans[i][1] - spans[i][0])[k]
         # The first sentence's picture opens the scene; a later one cuts in on its first word.
-        beats.setdefault(i, []).append(RenderBeat(at=0.0 if k == 0 else round(max(0.3, at - start), 3), src=name,
-                                                  camera=beat.camera, effect=beat.effect, aspect=_aspect(public / name)))
-    if cfg.depth:
-        found = depth.add(public, [b.src for v in beats.values() for b in v], log=log)
-        for v in beats.values():
-            for n, b in enumerate(v):
-                if b.src in found:
-                    v[n] = b.model_copy(update=found[b.src])
+        beats.setdefault(i, []).append(RenderBeat(at=0.0 if k == 0 else round(max(0.3, at - start), 3), src=name))
     log(
         f"storyboard: {sum(len(v) for v in beats.values())} illustrated sentences of {len(todo)} planned, "
         f"{len(cast)} in the cast"

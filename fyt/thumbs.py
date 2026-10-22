@@ -99,13 +99,6 @@ def world_take(props: RenderProps, job_dir: Path, public: Path) -> Media | None:
     return Media(src="thumb-world.jpg", kind="image")
 
 
-def art_take(props: RenderProps) -> Media | None:
-    """The storyboard's hook shot: the first painted picture, which the storyboard draws as the most
-    striking image of the story."""
-    beat = next((b for s in props.scenes for b in (s.beats or [])), None)
-    return Media(src=beat.src, kind="image") if beat else None
-
-
 def _fits(cfg: Config, subject: Path) -> bool:
     """Whether a cut-out fills the frame: a wide subject (a plane side-on) shrinks to a strip in a Short."""
     w, h = Image.open(subject).size
@@ -116,8 +109,7 @@ def make(cfg: Config, job_dir: Path, public: Path, title: str, photo: Media | No
          meant: str, log=print, photos: list[Media] = (), stock=None) -> Path:
     """Render the takes, judge them and copy the chosen one to thumbnail.png. Returns its path.
     Takes in order: a cut-out (from `photo`, then each of `photos`, then the photo `stock()` finds: the first
-    photograph with a clear subject that fills the frame), the storyboard's hook picture, the 3D world, the
-    plain photo."""
+    photograph with a clear subject that fills the frame), the 3D world, the plain photo."""
     base = {"format": cfg.format, "title": title, "kicker": "", "theme": cfg.theme.model_dump()}
     takes: list[tuple[str, ThumbnailProps]] = []
 
@@ -141,9 +133,6 @@ def make(cfg: Config, job_dir: Path, public: Path, title: str, photo: Media | No
     cut = cut_from([photo, *photos, stock])  # the story's own photographs first, then a stock one
     if cut:
         takes.append(("cutout", cut))
-    painted = art_take(props) if props is not None else None
-    if painted:
-        takes.append(("painted", ThumbnailProps(**base, background=painted)))
     if props is not None:
         try:
             frame = world_take(props, job_dir, public)

@@ -346,7 +346,7 @@ def concept(entity: Entity, out: Path) -> Path:
     from fyt import artgen
 
     thing = f"{entity.search[0]}, {entity.look}"
-    artgen.cut_out(artgen.generate(f"{artgen.PROP.format(thing=thing)} {artgen.STYLE}", seed=23, shape="square")).save(out)
+    artgen.cut_out(artgen.generate(f"{artgen.PROP.format(thing=thing)} {artgen.STYLE}", seed=23)).save(out)
     return out
 
 

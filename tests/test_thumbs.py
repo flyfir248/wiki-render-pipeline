@@ -26,7 +26,6 @@ def test_the_first_take_that_passes_is_used(tmp_path, monkeypatch):
     monkeypatch.setattr(thumbs, "cutout_take", lambda cfg, public, photo: (Media(src="b.jpg", kind="image"), Media(src="s.png", kind="image")))
     monkeypatch.setattr(thumbs, "_fits", lambda cfg, subject: True)
     monkeypatch.setattr(thumbs, "world_take", lambda props, job, public: Media(src="w.jpg", kind="image"))
-    monkeypatch.setattr(thumbs, "art_take", lambda props: None)
     monkeypatch.setattr(thumbs.render, "render", lambda spec, public, out, still: out.write_bytes(spec.name.encode()))
     verdicts = {"thumbnail-cutout.png": Verdict(matches=False, problems="words cover the face"), "thumbnail-world.png": Verdict(matches=True)}
     monkeypatch.setattr(thumbs.storyboard, "review", lambda cfg, path, meant, rules: verdicts.get(path.name))
@@ -78,12 +77,3 @@ def test_an_empty_frame_has_little_detail():
     empty = Image.new("RGB", (1080, 1920), (200, 30, 80))
     busy = Image.fromarray(np.random.default_rng(0).integers(0, 255, (1920, 1080, 3), dtype=np.uint8))
     assert thumbs._detail(empty) < 2.5 < thumbs._detail(busy)
-
-
-def test_the_storyboards_hook_picture_is_a_thumbnail_take():
-    from fyt.models import RenderBeat
-    from types import SimpleNamespace
-
-    props = SimpleNamespace(scenes=[SimpleNamespace(beats=None), SimpleNamespace(beats=[RenderBeat(at=0, src="art/beat-2-1.jpg")])])
-    assert thumbs.art_take(props).src == "art/beat-2-1.jpg"
-    assert thumbs.art_take(SimpleNamespace(scenes=[])) is None
