@@ -908,11 +908,11 @@
  "bodies": {
   "source": "itch:quaternius/universal-base-characters",
   "licence": "CC0",
-  "error": "KeyError: 'url'"
+  "error": "RuntimeError: no file link for 'Universal Base Characters[Standard].zip' (HTTP 200): {\"errors\":[\"invalid key\"]}; uploads seen: [('15861669', 'Universal Base Characters[Standard].zip')]"
  },
  "animals": {
   "source": "itch:quaternius/lowpoly-animated-animals",
   "licence": "CC0",
-  "error": "KeyError: 'url'"
+  "error": "RuntimeError: no file link for 'Farm Animals Animated  by Quaternius.zip' (HTTP 200): {\"errors\":[\"invalid key\"]}; uploads seen: [('1126158', 'Farm Animals Animated  by Quaternius.zip')]"
  }
 }
