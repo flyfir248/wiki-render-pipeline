@@ -908,11 +908,11 @@
  "bodies": {
   "source": "itch:quaternius/universal-base-characters",
   "licence": "CC0",
-  "error": "RuntimeError: no file link for 'Universal Base Characters[Standard].zip' (HTTP 200): {\"errors\":[\"invalid key\"]}; uploads seen: [('15861669', 'Universal Base Characters[Standard].zip')]"
+  "error": "RuntimeError: no file link for 'Universal Base Characters[Standard].zip' (HTTP 200): {\"errors\":[\"invalid key\"]}; uploads seen: [('15861669', 'Universal Base Characters[Standard].zip')]; download page https://quaternius.itch.io/universal-base-characters/download/eyJleHBpcmVzIjoxNzkyNzAxNzM2LCJpZCI6MzgyMjI1OX0%3D.C"
  },
  "animals": {
   "source": "itch:quaternius/lowpoly-animated-animals",
   "licence": "CC0",
-  "error": "RuntimeError: no file link for 'Farm Animals Animated  by Quaternius.zip' (HTTP 200): {\"errors\":[\"invalid key\"]}; uploads seen: [('1126158', 'Farm Animals Animated  by Quaternius.zip')]"
+  "error": "RuntimeError: no file link for 'Farm Animals Animated  by Quaternius.zip' (HTTP 200): {\"errors\":[\"invalid key\"]}; uploads seen: [('1126158', 'Farm Animals Animated  by Quaternius.zip')]; download page https://quaternius.itch.io/lowpoly-animated-animals/download/eyJleHBpcmVzIjoxNzkyNzAxNzM4LCJpZCI6MzI3NjQ1fQ%3D%3D"
  }
 }
