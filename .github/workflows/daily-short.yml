@@ -42,7 +42,7 @@ on:
 # A test render (short / long with a title) never uploads or touches the schedule, so it runs in a group
 # of its own: a scheduled run can't cancel it while it waits, and it never holds up the schedule.
 concurrency:
-  group: ${{ ((inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long')) || inputs.task == 'bench') && format('test-render-{0}', github.run_id) || 'daily-videos' }}
+  group: ${{ ((inputs.title != '' && (inputs.task == 'short' || inputs.task == 'long')) || inputs.task == 'bench' || inputs.task == 'kit') && format('test-render-{0}', github.run_id) || 'daily-videos' }}
   cancel-in-progress: false
 
 permissions:
