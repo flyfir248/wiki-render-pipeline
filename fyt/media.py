@@ -1,4 +1,4 @@
-"""Stock footage/photos from Pexels and background music from a local folder."""
+"""Stock footage from Pexels, stock photos from Unsplash and Pexels, and background music from a local folder."""
 
 from __future__ import annotations
 
@@ -13,6 +13,8 @@ from fyt.config import ROOT, Config, secret
 from fyt.models import Media
 
 PEXELS = "https://api.pexels.com"
+UNSPLASH = "https://api.unsplash.com"
+UTM = "utm_source=facelessyt&utm_medium=referral"
 
 
 def _get(path: str, params: dict) -> dict | None:
@@ -72,6 +74,45 @@ def fetch_broll(cfg: Config, query: str, public: Path, name: str, used: set[str]
 
 
 def fetch_photo(cfg: Config, query: str, public: Path, name: str, used: set[str]) -> Media | None:
+    """A stock photo for `query`: Unsplash first when UNSPLASH_ACCESS_KEY is set (its search is closer
+    to what is asked for, and its photos are less posed), else Pexels."""
+    try:
+        m = _unsplash_photo(cfg, query, public, name, used)
+    except requests.RequestException as e:  # Unsplash is optional; Pexels is tried next
+        print(f"warning: Unsplash search failed for {query!r}: {str(e)[:120]}")
+        m = None
+    return m or _pexels_photo(cfg, query, public, name, used)
+
+
+def _unsplash_photo(cfg: Config, query: str, public: Path, name: str, used: set[str]) -> Media | None:
+    key = secret("UNSPLASH_ACCESS_KEY")
+    if not key or not query:
+        return None
+    headers = {"Authorization": f"Client-ID {key}", "Accept-Version": "v1"}
+    orientation = "portrait" if cfg.format == "short" else "landscape"
+    r = requests.get(f"{UNSPLASH}/search/photos", params={"query": query, "orientation": orientation, "per_page": 10,
+                     "content_filter": "high"}, headers=headers, timeout=30)
+    r.raise_for_status()
+    for photo in r.json().get("results", []):
+        if f"u{photo['id']}" in used:
+            continue
+        rel = f"media/{name}.jpg"
+        (public / "media").mkdir(parents=True, exist_ok=True)
+        # The 1080 px-wide rendition, sized for the frame (Unsplash's own resize parameters).
+        _download(f"{photo['urls']['raw']}&w={1080 if cfg.format == 'short' else 1920}&q=85&fm=jpg&fit=max", public / rel)
+        used.add(f"u{photo['id']}")
+        # Unsplash's API terms: tell it the photo was used, and credit the photographer.
+        try:
+            requests.get(photo["links"]["download_location"], headers=headers, timeout=15)
+        except requests.RequestException:
+            pass
+        user = photo.get("user", {})
+        credit = f"Photo by {user.get('name', 'unknown')} on Unsplash: {user.get('links', {}).get('html', 'https://unsplash.com')}?{UTM}"
+        return Media(src=rel, kind="image", credit=credit)
+    return None
+
+
+def _pexels_photo(cfg: Config, query: str, public: Path, name: str, used: set[str]) -> Media | None:
     orientation = "portrait" if cfg.format == "short" else "landscape"
     data = _get("/v1/search", {"query": query, "orientation": orientation, "per_page": 10})
     for photo in (data or {}).get("photos", []):

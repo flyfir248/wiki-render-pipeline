@@ -138,7 +138,7 @@ const HookScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
 const StatementScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
-  const words = (scene.text ?? "").split(" ");
+  const words = (scene.text ?? "").split(" ").filter(Boolean);
   const revealEnd = Math.max(10, durationInFrames * 0.6);
   const said = scene.revealTimes?.length === words.length ? scene.revealTimes : null;
   const lean = interpolate(frame, [0, durationInFrames], [1, 1.06]);
@@ -469,7 +469,7 @@ const ComparisonColumn: React.FC<{
 const BrollScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const media = scene.media;
   const p = useEnter(6);
-  const label = scene.heading ?? scene.text;
+  const label = (scene.heading ?? "").trim() || (scene.text ?? "").trim();
   return (
     <AbsoluteFill>
       {media ? <ShotReel media={media} shots={scene.shots} camera={cameraOf(scene)} format={format} /> : null}
@@ -544,7 +544,16 @@ const Backdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; the
 
 // What a scene is drawn as: a kinetic statement stands in for broll without media, a map without
 // places, a story without any art, an evidence board without clues, or a chart without enough data.
-export const shownType = (raw: Scene): Scene["type"] =>
+// A scene with no words of its own to put on screen. Shown as a statement it would be an empty dark
+// panel over its photo, so it shows the photo alone instead.
+const wordless = (raw: Scene) => !(raw.heading ?? "").trim() && !(raw.text ?? "").trim();
+
+export const shownType = (raw: Scene): Scene["type"] => {
+  const type = fallbackType(raw);
+  return (type === "statement" || (type === "title" && raw.id !== "s1")) && raw.media && wordless(raw) ? "broll" : type;
+};
+
+const fallbackType = (raw: Scene): Scene["type"] =>
   (raw.type === "broll" && !raw.media) ||
   (raw.type === "map" && !validPlaces(raw.places).length && !mapRegions(raw).length) ||
   (raw.type === "story" && !(raw.actors ?? []).some((a) => a.src)) ||
@@ -591,7 +600,8 @@ const DimBackdrop: React.FC<{ scene: Scene; media: NonNullable<Scene["media"]>; 
 const SceneBody: React.FC<SceneProps> = (props) => {
   const type = shownType(props.scene);
   const Component = registry[type] ?? StatementScene;
-  const scene = type === "statement" && !props.scene.text ? { ...props.scene, text: props.scene.heading } : props.scene;
+  // A statement without its own line says its heading, big, once (not as a small heading over itself too).
+  const scene = type === "statement" && !(props.scene.text ?? "").trim() ? { ...props.scene, text: props.scene.heading, heading: null } : props.scene;
   const media = props.scene.media;
   if (type === "title" && props.scene.id === "s1") return <HookScene {...props} scene={scene} />;
   const body = FLOATING.includes(type) ? (

@@ -173,6 +173,7 @@ def test_every_scene_gets_a_photo_when_visuals_every_scene(monkeypatch, tmp_path
     from fyt.store import Job
 
     images = [wiki.WikiImage("File:A.jpg", "https://x/A.jpg", "https://c/A", "lamp", "", "CC0")]
+    monkeypatch.setattr(pipeline.storyboard, "review", lambda *a, **k: None)
     monkeypatch.setattr(wiki, "download_image", lambda im, dst: dst.write_bytes(b"jpg"))
     monkeypatch.setattr(media, "fetch_broll", lambda *a: None)
     searches = []
@@ -180,7 +181,7 @@ def test_every_scene_gets_a_photo_when_visuals_every_scene(monkeypatch, tmp_path
     def commons(query):
         searches.append(query)
         if query == "Dreamachine":
-            return [wiki.WikiImage(f"File:C{len(searches)}.jpg", "https://x/C.jpg", "https://c/C", "c", "", "CC BY 4.0")]
+            return [wiki.WikiImage(f"File:Dreamachine C{len(searches)}.jpg", "https://x/C.jpg", "https://c/C", "c", "", "CC BY 4.0")]
         return []
 
     monkeypatch.setattr(wiki, "search_commons", commons)
@@ -204,3 +205,94 @@ def test_every_scene_gets_a_photo_when_visuals_every_scene(monkeypatch, tmp_path
     assert searches[:2] == ["Dreamachine Record speed", "Dreamachine"]
     assert scene_media[2].src.startswith("media/commons3")  # a different Commons photo, not the same one again
     assert len(credits) == 3
+
+
+def _wiki_script(*scenes) -> Script:
+    return Script.model_validate(
+        {"title": "t", "description": "d", "tags": [], "thumbnail_text": "x", "thumbnail_kicker": "y",
+         "thumbnail_query": "z", "sources": [], "scenes": list(scenes)}
+    )
+
+
+def test_filler_photos_must_match_the_scene(monkeypatch, tmp_path):
+    """A spare article image goes behind a scene only when its description shares words with what the
+    scene says; Commons hits must name the subject; stock is searched only with the scene's own query,
+    never its heading; and a photo the vision check rejects is left out."""
+    from fyt import media
+    from fyt.store import Job
+
+    images = [
+        wiki.WikiImage("File:A.jpg", "https://x/A.jpg", "https://c/A", "Titanic leaving Southampton", "", "CC0"),
+        wiki.WikiImage("File:B.jpg", "https://x/B.jpg", "https://c/B", "Morgan Robertson, author of Futility", "", "CC0"),
+        wiki.WikiImage("File:C.jpg", "https://x/C.jpg", "https://c/C", "Lifeboat drill on the Olympic", "", "CC0"),
+    ]
+    monkeypatch.setattr(wiki, "download_image", lambda im, dst: dst.write_bytes(b"jpg"))
+    monkeypatch.setattr(media, "fetch_broll", lambda *a: None)
+    # Commons search is loose: the wrestler comes back for 'futility', and has nothing to do with the Titanic.
+    monkeypatch.setattr(wiki, "search_commons", lambda q: [wiki.WikiImage("File:Luchador mask.jpg", "https://x/L.jpg", "https://c/L", "Masked wrestler, futility of resistance", "", "CC0")])
+    stock = []
+
+    def fetch_photo(cfg, q, public, name, used):
+        stock.append(q)
+        (public / f"media/{name}.jpg").write_bytes(b"jpg")
+        return media.Media(src=f"media/{name}.jpg", kind="image")
+
+    monkeypatch.setattr(media, "fetch_photo", fetch_photo)
+    verdicts = []
+
+    def review(cfg, path, meant, rules=""):
+        verdicts.append(path.name)
+        return pipeline.storyboard.Verdict(matches="p5" not in path.name, problems="a pet, not the ship")
+
+    monkeypatch.setattr(pipeline.storyboard, "review", review)
+    s = _wiki_script(
+        {"narration": "In 1912 the ship sailed.", "type": "title", "heading": "Unsinkable", "image": 1},
+        {"narration": "Fourteen years earlier, Morgan Robertson wrote a novella called Futility.", "type": "stat", "value": 1898},
+        {"narration": "It was eerily close.", "type": "statement", "heading": "Eerily foreshadowed"},
+        {"narration": "Both ships were huge.", "type": "statement", "text": "Huge", "broll_query": "ocean liner 1910"},
+        {"narration": "And both were short of boats.", "type": "statement", "text": "Short", "broll_query": "cat"},
+    )
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+    scene_media, credits, _ = pipeline.scene_visuals(Config(), job, s, images, "wiki:Titanic", "Titanic")
+    assert scene_media[0].src == "media/wiki1.jpg"
+    assert scene_media[1].src == "media/wiki2.jpg"  # the image about Robertson, not the next one in the list
+    assert 2 not in scene_media  # no spare image fits, the wrestler isn't the Titanic, no query: plain background
+    assert scene_media[3].src == "media/p4.jpg"
+    assert 4 not in scene_media and "p5.jpg" in verdicts  # stock photo rejected by eye
+    assert stock == ["ocean liner 1910", "cat", "cat"]  # never "Eerily foreshadowed"
+    assert not any("Luchador" in c for c in credits)
+
+
+def test_unsplash_is_tried_first_and_credited(monkeypatch, tmp_path):
+    from fyt import media
+
+    monkeypatch.setenv("UNSPLASH_ACCESS_KEY", "k")
+    calls = []
+
+    class R:
+        def __init__(self, body):
+            self.body = body
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return self.body
+
+    def get(url, params=None, headers=None, timeout=0):
+        calls.append(url)
+        assert headers["Authorization"] == "Client-ID k"
+        return R({"results": [{"id": "abc", "urls": {"raw": "https://images.unsplash.com/x?ixid=1"},
+                               "links": {"download_location": "https://api.unsplash.com/photos/abc/download"},
+                               "user": {"name": "Ann Lee", "links": {"html": "https://unsplash.com/@ann"}}}]})
+
+    monkeypatch.setattr(media.requests, "get", get)
+    monkeypatch.setattr(media, "_download", lambda url, dst: calls.append(url) or dst.write_bytes(b"jpg"))
+    monkeypatch.setattr(media, "_pexels_photo", lambda *a: (_ for _ in ()).throw(AssertionError("Pexels not needed")))
+    used: set[str] = set()
+    m = media.fetch_photo(Config(format="short"), "ocean liner", tmp_path, "p1", used)
+    assert m.src == "media/p1.jpg" and "u" + "abc" in used
+    assert m.credit.startswith("Photo by Ann Lee on Unsplash: https://unsplash.com/@ann?utm_source=")
+    assert "w=1080" in calls[1] and calls[2].endswith("/photos/abc/download")  # download reported, as the API asks
+    assert "credit" not in m.model_dump()  # never sent to the renderer

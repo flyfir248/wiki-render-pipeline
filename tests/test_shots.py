@@ -15,13 +15,14 @@ def _script(*scenes) -> Script:
 
 
 def test_long_scenes_in_a_short_get_extra_photos(monkeypatch, tmp_path):
-    images = [wiki.WikiImage(f"File:{n}.jpg", f"https://x/{n}.jpg", f"https://c/{n}", "", "", "CC0") for n in "AB"]
+    images = [wiki.WikiImage(f"File:{n}.jpg", f"https://x/{n}.jpg", f"https://c/{n}", d, "", "CC0") for n, d in (("A", "Mayor's portrait"), ("B", "Flooded harbour"))]
     monkeypatch.setattr(wiki, "download_image", lambda im, dst: dst.write_bytes(b"jpg"))
-    monkeypatch.setattr(wiki, "search_commons", lambda q: [wiki.WikiImage("File:C.jpg", "https://x/C.jpg", "https://c/C", "", "", "CC0")])
+    monkeypatch.setattr(wiki, "search_commons", lambda q: [wiki.WikiImage("File:Flood C.jpg", "https://x/C.jpg", "https://c/C", "", "", "CC0")])
     monkeypatch.setattr(media, "fetch_photo", lambda cfg, q, public, name, used: Media(src=f"media/{name}.jpg", kind="image"))
+    monkeypatch.setattr(pipeline.storyboard, "review", lambda *a, **k: None)
     s = _script(
-        {"narration": "a", "type": "title", "heading": "a"},
-        {"narration": "b", "type": "stat", "value": 3, "heading": "h"},
+        {"narration": "The water filled the harbour.", "type": "title", "heading": "a"},
+        {"narration": "b", "type": "stat", "value": 3, "heading": "h", "broll_query": "flood street"},
         {"narration": "c", "type": "map", "places": [{"name": "x", "lat": 1, "lon": 2}]},
     )
     job = Job(tmp_path / "job")
@@ -31,7 +32,7 @@ def test_long_scenes_in_a_short_get_extra_photos(monkeypatch, tmp_path):
     credits = ["1.jpg (CC0): https://c/1"]
     # Scene 1 runs 6s (two cuts at 2.5s), scene 2 runs 9s (capped at two extra), the map draws its own.
     shots = pipeline.extra_shots(cfg, job, s, images, [(0, 6), (6, 15), (15, 20)], scene_media, credits, set(), "Flood")
-    assert [m.src for m in shots[0]] == ["media/shot1-1.jpg"]  # a spare article image first
+    assert [m.src for m in shots[0]] == ["media/shot1-1.jpg"]  # the spare article image about the harbour
     assert [m.src for m in shots[1]] == ["media/shot2-1.jpg", "media/shot2-2.jpg"]  # then Commons, then stock
     assert 2 not in shots
     assert len(credits) == 3  # the article image and the Commons photo are credited; stock needs none
