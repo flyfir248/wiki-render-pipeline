@@ -1,0 +1,16 @@
+story (given): the Titan, Rowland, deckhand, a polar bear, an iceberg; 2 moments
+planning the visuals
+visual plan (model): 1 2.5D, 6 2D
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 7 Wikipedia/Commons images, 0 stock, 0 scenes on plain background
+cutaways: 8 extra photos across 7 scenes
+collage: 15 photos styled, 10 with a cut-out subject
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 2, sentence 1: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 6 planned, 4 in the cast; 0 checked, 0 redrawn, 1 left out
+art direction: archival
+rendering 46s short video
+rendering thumbnail
+thumbnail: cutout take
+done: approved

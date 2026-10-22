@@ -1,0 +1,44 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 0,
+  "dropped_for_budget": [],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "title",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 3,
+      "type": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}
