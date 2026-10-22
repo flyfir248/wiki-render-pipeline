@@ -16,7 +16,7 @@
   ],
   "source": "https://opengameart.org/sites/default/files/universal_animation_librarystandard.zip",
   "licence": "CC0",
-  "kept": 2,
+  "kept": 3,
   "models": {
    "Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb": {
     "bytes": 6671104,
@@ -266,6 +266,267 @@
      },
      {
       "name": "Walk_Loop",
+      "seconds": 1.33
+     }
+    ],
+    "materials": [
+     "M_Main",
+     "M_Joints"
+    ],
+    "images": 0
+   },
+   "Animation Library[Standard]/Unreal Engine/AL_Standard.glb": {
+    "bytes": 2544384,
+    "meshes": [
+     "Mannequin"
+    ],
+    "skins": [
+     {
+      "joints": 65,
+      "names": [
+       "root",
+       "pelvis",
+       "spine_01",
+       "spine_02",
+       "spine_03",
+       "neck_01",
+       "Head",
+       "clavicle_l",
+       "upperarm_l",
+       "lowerarm_l",
+       "hand_l",
+       "index_01_l",
+       "index_02_l",
+       "index_03_l",
+       "index_04_end_l",
+       "middle_01_l",
+       "middle_02_l",
+       "middle_03_l",
+       "middle_04_end_l",
+       "pinky_01_l",
+       "pinky_02_l",
+       "pinky_03_l",
+       "pinky_04_end_l",
+       "ring_01_l",
+       "ring_02_l",
+       "ring_03_l",
+       "ring_04_end_l",
+       "thumb_01_l",
+       "thumb_02_l",
+       "thumb_03_l",
+       "thumb_04_end_l",
+       "clavicle_r",
+       "upperarm_r",
+       "lowerarm_r",
+       "hand_r",
+       "index_01_r",
+       "index_02_r",
+       "index_03_r",
+       "index_04_end_r",
+       "middle_01_r",
+       "middle_02_r",
+       "middle_03_r",
+       "middle_04_end_r",
+       "pinky_01_r",
+       "pinky_02_r",
+       "pinky_03_r",
+       "pinky_04_end_r",
+       "ring_01_r",
+       "ring_02_r",
+       "ring_03_r",
+       "ring_04_end_r",
+       "thumb_01_r",
+       "thumb_02_r",
+       "thumb_03_r",
+       "thumb_04_end_r",
+       "thigh_l",
+       "calf_l",
+       "foot_l",
+       "ball_l",
+       "foot_end_l",
+       "thigh_r",
+       "calf_r",
+       "foot_r",
+       "ball_r",
+       "foot_end_r"
+      ]
+     }
+    ],
+    "clips": [
+     {
+      "name": "Rig|Crouch_Fwd_Loop",
+      "seconds": 2.0
+     },
+     {
+      "name": "Rig|Crouch_Idle_Loop",
+      "seconds": 2.92
+     },
+     {
+      "name": "Rig|Dance_Loop",
+      "seconds": 1.0
+     },
+     {
+      "name": "Rig|Death01",
+      "seconds": 2.38
+     },
+     {
+      "name": "Rig|Driving_Loop",
+      "seconds": 1.67
+     },
+     {
+      "name": "Rig|Fixing_Kneeling",
+      "seconds": 5.17
+     },
+     {
+      "name": "Rig|Hit_Chest",
+      "seconds": 0.33
+     },
+     {
+      "name": "Rig|Hit_Head",
+      "seconds": 0.42
+     },
+     {
+      "name": "Rig|Idle_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Rig|Idle_Talking_Loop",
+      "seconds": 2.92
+     },
+     {
+      "name": "Rig|Idle_Torch_Loop",
+      "seconds": 1.25
+     },
+     {
+      "name": "Rig|Interact",
+      "seconds": 2.0
+     },
+     {
+      "name": "Rig|Jog_Fwd_Loop",
+      "seconds": 0.92
+     },
+     {
+      "name": "Rig|Jump_Land",
+      "seconds": 1.25
+     },
+     {
+      "name": "Rig|Jump_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Rig|Jump_Start",
+      "seconds": 1.33
+     },
+     {
+      "name": "Rig|PickUp_Table",
+      "seconds": 0.83
+     },
+     {
+      "name": "Rig|Pistol_Aim_Down",
+      "seconds": 0.17
+     },
+     {
+      "name": "Rig|Pistol_Aim_Neutral",
+      "seconds": 0.17
+     },
+     {
+      "name": "Rig|Pistol_Aim_Up",
+      "seconds": 0.17
+     },
+     {
+      "name": "Rig|Pistol_Idle_Loop",
+      "seconds": 1.67
+     },
+     {
+      "name": "Rig|Pistol_Reload",
+      "seconds": 1.67
+     },
+     {
+      "name": "Rig|Pistol_Shoot",
+      "seconds": 0.62
+     },
+     {
+      "name": "Rig|Punch_Cross",
+      "seconds": 1.0
+     },
+     {
+      "name": "Rig|Punch_Jab",
+      "seconds": 0.83
+     },
+     {
+      "name": "Rig|Push_Loop",
+      "seconds": 2.67
+     },
+     {
+      "name": "Rig|Roll",
+      "seconds": 1.46
+     },
+     {
+      "name": "Rig|Roll_RM",
+      "seconds": 1.46
+     },
+     {
+      "name": "Rig|Sitting_Enter",
+      "seconds": 1.29
+     },
+     {
+      "name": "Rig|Sitting_Exit",
+      "seconds": 1.0
+     },
+     {
+      "name": "Rig|Sitting_Idle_Loop",
+      "seconds": 1.67
+     },
+     {
+      "name": "Rig|Sitting_Talking_Loop",
+      "seconds": 2.92
+     },
+     {
+      "name": "Rig|Spell_Simple_Enter",
+      "seconds": 0.5
+     },
+     {
+      "name": "Rig|Spell_Simple_Exit",
+      "seconds": 0.42
+     },
+     {
+      "name": "Rig|Spell_Simple_Idle_Loop",
+      "seconds": 2.08
+     },
+     {
+      "name": "Rig|Spell_Simple_Shoot",
+      "seconds": 0.5
+     },
+     {
+      "name": "Rig|Sprint_Loop",
+      "seconds": 0.67
+     },
+     {
+      "name": "Rig|Swim_Fwd_Loop",
+      "seconds": 1.33
+     },
+     {
+      "name": "Rig|Swim_Idle_Loop",
+      "seconds": 3.33
+     },
+     {
+      "name": "Rig|Sword_Attack",
+      "seconds": 1.5
+     },
+     {
+      "name": "Rig|Sword_Attack_RM",
+      "seconds": 1.5
+     },
+     {
+      "name": "Rig|Sword_Idle",
+      "seconds": 1.67
+     },
+     {
+      "name": "Rig|Walk_Formal_Loop",
+      "seconds": 1.33
+     },
+     {
+      "name": "Rig|Walk_Loop",
       "seconds": 1.33
      }
     ],
@@ -647,11 +908,11 @@
  "bodies": {
   "source": "itch:quaternius/universal-base-characters",
   "licence": "CC0",
-  "error": "RuntimeError: no csrf token on the page"
+  "error": "KeyError: 'url'"
  },
  "animals": {
   "source": "itch:quaternius/lowpoly-animated-animals",
   "licence": "CC0",
-  "error": "RuntimeError: no csrf token on the page"
+  "error": "KeyError: 'url'"
  }
 }
