@@ -28,6 +28,18 @@ PACKS = [
     ("animals", "itch:quaternius/lowpoly-animated-animals", "CC0"),
 ]
 KEEP = (".glb", ".gltf", ".bin", ".png", ".jpg", ".jpeg", ".txt", ".md")
+# a pack's Godot glTF may come on another skeleton (UAL1's is Rigify's); its Unreal FBX is on the shared
+# one (pelvis, spine_01, ... as in UAL2 and the base bodies), so that is converted to glTF instead
+FBX2GLTF = "fbx2gltf@0.9.7-p1"
+
+
+def _csrf(html: str):
+    for pat in (r'<meta[^>]*name="csrf_token"[^>]*value="([^"]+)"', r'<meta[^>]*value="([^"]+)"[^>]*name="csrf_token"',
+                r'name="csrf_token"[^>]*content="([^"]+)"', r'"csrf_token"\s*:\s*"([^"]+)"', r'name="csrf_token"\s+value="([^"]+)"'):
+        m = re.search(pat, html)
+        if m:
+            return m
+    return None
 
 
 def _itch_files(user: str, slug: str, want: str = "standard") -> list[tuple[str, bytes]]:
@@ -35,17 +47,18 @@ def _itch_files(user: str, slug: str, want: str = "standard") -> list[tuple[str,
     s = requests.Session()
     s.headers.update(UA)
     page = f"https://{user}.itch.io/{slug}"
-    html = s.get(page, timeout=60).text
-    csrf = re.search(r'name="csrf_token"\s+value="([^"]+)"', html) or re.search(r'csrf_token"\s*content="([^"]+)"', html)
+    r0 = s.get(page, timeout=60)
+    html = r0.text
+    csrf = _csrf(html)
     if not csrf:
-        raise RuntimeError("no csrf token on the page")
+        raise RuntimeError(f"no csrf token on the page (HTTP {r0.status_code}): {re.sub(r'\\s+', ' ', html[:1500])}")
     r = s.post(f"{page}/download_url", data={"csrf_token": csrf.group(1)}, timeout=60).json()
     dl = r.get("url")
     if not dl:
         raise RuntimeError(f"no download page: {r}")
     key = dl.rstrip("/").split("/")[-1]
     html = s.get(dl, timeout=60).text
-    csrf = re.search(r'name="csrf_token"\s+value="([^"]+)"', html) or csrf
+    csrf = _csrf(html) or csrf
     uploads = re.findall(r'data-upload_id="(\d+)".{0,600}?class="upload_name".{0,200}?title="([^"]+)"', html, re.S)
     if not uploads:
         uploads = [(u, u) for u in dict.fromkeys(re.findall(r'data-upload_id="(\d+)"', html))]
@@ -55,6 +68,19 @@ def _itch_files(user: str, slug: str, want: str = "standard") -> list[tuple[str,
         j = s.post(f"{page}/file/{uid}", params={"source": "game_download", "key": key}, data={"csrf_token": csrf.group(1)}, timeout=60).json()
         out.append((name, s.get(j["url"], timeout=900).content))
     return out
+
+
+def _to_glb(fbx: Path) -> None:
+    """An FBX converted to a binary glTF beside it (FBX2glTF's Linux build, from npm)."""
+    import subprocess
+    import tempfile
+
+    tool = Path(tempfile.gettempdir()) / "fbx2gltf"
+    exe = tool / "node_modules" / "fbx2gltf" / "bin" / "Linux" / "FBX2glTF"
+    if not exe.exists():
+        subprocess.run(["npm", "install", "--silent", "--prefix", str(tool), FBX2GLTF], check=True, timeout=600)
+    exe.chmod(0o755)
+    subprocess.run([str(exe), "--binary", "--input", str(fbx), "--output", str(fbx.with_suffix(""))], check=True, timeout=900)
 
 
 def _glb_json(data: bytes) -> dict:
@@ -100,6 +126,12 @@ def fetch(root: Path) -> dict:
                     # glTF only (the packs also carry FBX and engine projects); their buffers and textures with them
                     dirs = {str(Path(n).parent) for n in gl}
                     for n in names:
+                        if n.lower().endswith(".fbx") and "unreal" in n.lower() and not any("unreal" in g.lower() for g in gl):
+                            out = dest / n
+                            out.parent.mkdir(parents=True, exist_ok=True)
+                            out.write_bytes(z.read(n))
+                            kept.append(n)
+                            continue
                         if n.endswith("/") or not n.lower().endswith(KEEP) or (not n.lower().endswith((".glb", ".gltf")) and str(Path(n).parent) not in dirs and not n.lower().endswith((".txt", ".md"))):
                             continue
                         out = dest / n
@@ -108,6 +140,9 @@ def fetch(root: Path) -> dict:
                         kept.append(n)
                     report.setdefault(pid, {})["all_files"] = len(names)
                     report[pid]["sample_names"] = names[:40]
+            for f in sorted(dest.rglob("*.fbx")):
+                _to_glb(f)
+                f.unlink()
             items = {}
             for f in sorted(dest.rglob("*")):
                 if f.suffix.lower() in (".glb", ".gltf"):
