@@ -68,7 +68,10 @@ def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True
         niche=cfg.channel.niche,
         audience=cfg.channel.audience,
         format="YouTube Short (vertical, 45-55 seconds)" if short else "long video",
-        hook_rule="For this Short: one sentence, max 12 words." if short else "Max 2 sentences.",
+        hook_rule="For this Short: one sentence, max 12 words." if short else (
+            "Max 2 sentences, a cold open: put the viewer inside the story's most dramatic moment and stop "
+            "before its outcome."
+        ),
         loop_rule=(
             "Loop line: Shorts replay automatically. If it comes naturally, write a last sentence that follows from "
             "the payoff and leads back into the hook, so the replay feels seamless. It adds no new fact. "

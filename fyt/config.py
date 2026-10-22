@@ -214,6 +214,8 @@ class GrowthConfig(BaseModel):
     # Shorts cut to a new shot about this often (seconds): a scene's photo is followed by more
     # photos of the subject, or re-framed when there are none. 0 keeps one shot per scene.
     shot_seconds: float = 2.5
+    # The same for long videos: a photo that sits still for more than a few seconds is where viewers drift off.
+    long_shot_seconds: float = 5.0
     # The channel asks each video's question as the first comment once the video is public (needs the
     # full YouTube permission; 50 quota units each).
     first_comment: bool = True

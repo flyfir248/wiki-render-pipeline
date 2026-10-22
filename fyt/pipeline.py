@@ -153,7 +153,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         scene_media, shots = collage(cfg, job, scene_media, shots)
     if credits:
         script = script.model_copy(
-            update={"description": script.description.rstrip() + "\n\nImages from Wikimedia Commons:\n" + "\n".join(credits)}
+            update={"description": script.description.rstrip() + "\n\nImage credits:\n" + "\n".join(credits)}
         )
         job.file("script.json").write_text(script.model_dump_json(indent=2))
     model_credits = assetlib.credits(found)
@@ -609,13 +609,72 @@ def narration_words(script: Script) -> int:
     return sum(len(s.narration.split()) for s in script.scenes)
 
 
+# Words too common to tie a photo to a scene ("after", "about"): only the scene's own words count.
+COMMON = {"about", "after", "again", "also", "because", "before", "being", "could", "every", "first", "into", "just",
+          "later", "more", "most", "only", "over", "same", "some", "than", "then", "these", "those", "through", "under",
+          "very", "which", "while", "would", "years", "image", "photo", "photograph", "picture", "file"}
+
+PHOTO_CHECK = """You check a photo before it is shown behind one scene of a documentary video. The narrator's line
+and the video's subject are given. Pass it if the photo shows something the line or the subject is about: the
+person, place, object, event or era, or a close stand-in for it (a ship of the same kind, a street of that city,
+period clothing). A plain or loosely related photo is fine. Fail it only if it shows something unrelated a viewer
+would find confusing or misleading next to that line: a different person, a sport, a modern product, a pet, a
+fashion shoot, a different country or century. Reply with a single JSON object:
+{"matches": true or false, "problems": "at most 12 words, or empty"}."""
+
+
+def _words(text: str) -> set[str]:
+    words = ("".join(c if c.isalnum() else " " for c in (text or "").lower())).split()
+    return {w[:5] for w in words if len(w) >= 4 and w not in COMMON and w[:5] not in COMMON}
+
+
+def _about(scene) -> set[str]:
+    """What a scene is about, as word stems: what is said, its on-screen words and its search query."""
+    return _words(" ".join(x or "" for x in (scene.narration, scene.heading, scene.text, scene.purpose, scene.broll_query)))
+
+
+def _best_fit(scene, images: list["wiki.WikiImage"], free: list[int]) -> int | None:
+    """The spare article image (1-based) whose description shares the most words with the scene, or
+    None when none does: an image the scene doesn't mention is not put behind it."""
+    about = _about(scene)
+    scored = [(len(about & _words(f"{images[n - 1].description} {images[n - 1].title}")), n) for n in free]
+    best = max(scored, default=(0, None), key=lambda t: t[0])
+    return best[1] if best[0] else None
+
+
+def _on_subject(hits: list["wiki.WikiImage"], subject: str) -> list["wiki.WikiImage"]:
+    """Commons search hits that name the video's subject. Commons search matches loosely, so without
+    this a query like 'Futility foreshadowed' can come back with anything that mentions 'futility'."""
+    key = _words(subject)
+    if not key:
+        return hits
+    return [im for im in hits if key & _words(f"{im.description} {im.title}")]
+
+
+def _photo_fits(cfg: Config, job: Job, path: Path, scene, subject: str) -> bool:
+    """A free vision model's word on whether a searched-for photo belongs behind this scene. True when
+    no check can be made (no vision model, a clip rather than a photo)."""
+    if path.suffix.lower() not in (".jpg", ".jpeg", ".png", ".webp") or not path.is_file():
+        return True
+    meant = f"Subject of the video: {subject or 'see the line'}. The narrator says: \"{scene.narration[:220]}\""
+    v = storyboard.review(cfg, path, meant, rules=PHOTO_CHECK)
+    if v is not None and not v.matches:
+        log(job, f"photo {path.name} left out: {v.problems or 'not about this scene'}")
+        path.unlink(missing_ok=True)
+        return False
+    return True
+
+
 def scene_visuals(
     cfg: Config, job: Job, script: Script, images: list["wiki.WikiImage"], topic: str, subject: str = ""
 ) -> tuple[dict[int, Media], list[str], set[str]]:
     """Pick a visual for each scene: the article image the script chose, else stock footage for
     the scene's search query. With `visuals_every_scene`, scenes still without one (charts, numbers,
-    quotes) get a real photo behind them: a spare article image, a Wikimedia Commons photo, or a
-    stock photo. Returns media per scene, image credits, and the stock ids used."""
+    quotes) get a real photo behind them: a spare article image whose description matches what the
+    scene says, a Wikimedia Commons photo of the subject, or a stock photo for the scene's own query.
+    Photos found by searching are checked by eye when a vision model is set up, and a scene with no
+    photo that fits keeps the plain background rather than an unrelated one.
+    Returns media per scene, image credits, and the stock ids used."""
     used: set[str] = set()
     scene_media: dict[int, Media] = {}
     credits: list[str] = []
@@ -645,16 +704,21 @@ def scene_visuals(
         if n is not None and 1 <= n <= len(images) and n not in taken and article_image(i, n):
             continue
         # Data scenes (charts, numbers, lists) get their photo in the second pass, behind the chart.
-        wants_stock = s.type == "broll" or (s.broll_query and s.type in ("title", "statement", "quote"))
+        # Stock is searched only with the scene's own concrete query: a heading ("Eerily foreshadowed")
+        # finds whatever stock photo happens to match the word.
+        wants_stock = s.broll_query and (s.type == "broll" or s.type in ("title", "statement", "quote"))
         if wants_stock:
             try:
-                m = media.fetch_broll(cfg, s.broll_query or s.heading or topic, job.public, f"s{i + 1}", used)
+                m = media.fetch_broll(cfg, s.broll_query, job.public, f"s{i + 1}", used)
             except Exception as e:  # stock footage is optional; fall back to the plain background
                 log(job, f"warning: no stock footage for scene {i + 1}: {e}")
                 m = None
-            if m:
+            if m and _photo_fits(cfg, job, job.public / m.src, s, subject):
                 scene_media[i] = m
-    # Open on the subject: if the title scene has nothing, give it the first unused article image.
+                if m.credit:
+                    credits.append(m.credit)
+    # Open on the subject: if the title scene has nothing, give it the first unused article image
+    # (the article's lead image is its subject).
     if 0 not in scene_media and script.scenes and images:
         n = next((k for k in range(1, len(images) + 1) if k not in taken), None)
         if n is not None:
@@ -669,26 +733,40 @@ def scene_visuals(
             except Exception as e:  # Commons is a nice-to-have
                 log(job, f"warning: Commons search failed for {query!r}: {e}")
                 return []
-            return [im for im in found if im.title not in commons_seen]
+            return [im for im in _on_subject(found, subject) if im.title not in commons_seen]
 
         for i, s in enumerate(script.scenes):
             if i in scene_media or s.type in DRAWN:
                 continue
-            n = next((k for k in range(1, len(images) + 1) if k not in taken), None)
+            n = _best_fit(s, images, [k for k in range(1, len(images) + 1) if k not in taken])
             if n is not None and article_image(i, n):
                 continue
             query = s.broll_query or s.heading or ""
             found = (commons(f"{subject} {query}".strip()) if subject and query else []) or (commons(subject) if subject else [])
-            if found and use_image(i, found[0], f"media/commons{i + 1}.jpg"):
-                commons_seen.add(found[0].title)
+            placed = False
+            for im in found[:3]:
+                commons_seen.add(im.title)
+                if use_image(i, im, f"media/commons{i + 1}.jpg"):
+                    if _photo_fits(cfg, job, job.public / scene_media[i].src, s, subject):
+                        placed = True
+                        break
+                    del scene_media[i]
+                    credits.pop()
+            if placed or not (s.broll_query and cfg.stock_footage):
                 continue
-            try:
-                m = media.fetch_photo(cfg, query or subject or topic, job.public, f"p{i + 1}", used) if cfg.stock_footage else None
-            except Exception as e:
-                log(job, f"warning: no stock photo for scene {i + 1}: {e}")
-                m = None
-            if m:
-                scene_media[i] = m
+            for _ in range(2):
+                try:
+                    m = media.fetch_photo(cfg, s.broll_query, job.public, f"p{i + 1}", used)
+                except Exception as e:
+                    log(job, f"warning: no stock photo for scene {i + 1}: {e}")
+                    m = None
+                if m is None:
+                    break
+                if _photo_fits(cfg, job, job.public / m.src, s, subject):
+                    scene_media[i] = m
+                    if m.credit:
+                        credits.append(m.credit)
+                    break
 
     kinds = [("wiki" in m.src or "commons" in m.src) for m in scene_media.values()]
     log(job, f"visuals: {sum(kinds)} Wikipedia/Commons images, {len(kinds) - sum(kinds)} stock, "
@@ -710,14 +788,16 @@ def extra_shots(
     used: set[str],
     subject: str = "",
 ) -> dict[int, list[Media]]:
-    """More photos for a Short's longer scenes, so the picture changes every `shot_seconds`: spare
-    article images first, then Wikimedia Commons, then stock photos. Adds their credits."""
-    every = cfg.growth.shot_seconds
-    if cfg.format != "short" or not every or not spans:
+    """More photos for a scene that runs long, so the picture changes every `shot_seconds` in a Short
+    and every `long_shot_seconds` in a long video: spare article images whose description matches the
+    scene first, then Wikimedia Commons photos of the subject, then stock photos for the scene's own
+    query, each searched-for one checked by eye when a vision model is set up. Adds their credits."""
+    every = cfg.growth.shot_seconds if cfg.format == "short" else cfg.growth.long_shot_seconds
+    if not every or not spans:
         return {}
     (job.public / "media").mkdir(parents=True, exist_ok=True)
     taken = {m.src for m in scene_media.values()}
-    spare = [(k, im) for k, im in enumerate(images, 1) if not any(src.startswith(f"media/wiki{k}.") for src in taken)]
+    spare = [k for k in range(1, len(images) + 1) if not any(src.startswith(f"media/wiki{k}.") for src in taken)]
     seen = {c.split(" (")[0] for c in credits}
     shots: dict[int, list[Media]] = {}
     commons_cache: dict[str, list["wiki.WikiImage"]] = {}
@@ -725,7 +805,7 @@ def extra_shots(
     def commons(query: str) -> list["wiki.WikiImage"]:
         if query not in commons_cache:
             try:
-                commons_cache[query] = wiki.search_commons(query)
+                commons_cache[query] = _on_subject(wiki.search_commons(query), subject)
             except Exception as e:  # Commons is a nice-to-have
                 log(job, f"warning: Commons search failed for {query!r}: {e}")
                 commons_cache[query] = []
@@ -749,20 +829,31 @@ def extra_shots(
         end = spans[i + 1][0] if i + 1 < len(spans) else spans[i][1]
         want = min(MAX_EXTRA_SHOTS, int((end - start) // every) - 1)
         got: list[Media] = []
-        while len(got) < want:
+        tries = 0
+        while len(got) < want and tries < want + 2:
+            tries += 1
             name = f"media/shot{i + 1}-{len(got) + 1}"
-            if spare:
-                _, im = spare.pop(0)
-                found = download(im, f"{name}.jpg")
+            # A spare article image only when its description matches what this scene says.
+            n = _best_fit(s, images, spare)
+            if n is not None:
+                spare.remove(n)
+                found = download(images[n - 1], f"{name}.jpg")
             else:
                 query = s.broll_query or s.heading or ""
                 hits = (commons(f"{subject} {query}".strip()) if subject and query else []) or (commons(subject) if subject else [])
                 found = download(hits[0], f"{name}.jpg") if hits else None
-                if not found and cfg.stock_footage:
+                if found and not _photo_fits(cfg, job, job.public / found.src, s, subject):
+                    credits.pop()
+                    continue
+                if not found and cfg.stock_footage and s.broll_query:
                     try:
-                        found = media.fetch_photo(cfg, query or subject, job.public, name.removeprefix("media/"), used)
+                        found = media.fetch_photo(cfg, s.broll_query, job.public, name.removeprefix("media/"), used)
                     except Exception as e:
                         log(job, f"warning: no stock photo for scene {i + 1}: {e}")
+                    if found and not _photo_fits(cfg, job, job.public / found.src, s, subject):
+                        continue
+                    if found and found.credit:
+                        credits.append(found.credit)
                 if not found:
                     break
             if found:
