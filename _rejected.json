@@ -1,5 +1,6 @@
 {
  "sketchfab:1061168f9ec345db81cffb81c17f3649": "vision: subject does not match, no flashing lights",
+ "sketchfab:1b121a8965e241ada855288eef2732ba": "vision: Shows a futuristic spacecraft, not a ship.",
  "sketchfab:2856dd3c61f940909dced9a5c0379484": "render: frame check: The subject it must show: ambulance (white and red emergency ambulance, flashing lights).",
  "sketchfab:36b0b9e17f4e413c98af4145ef91b9d6": "render: frame check: The subject is not a tardigrade. It is a rock.",
  "sketchfab:43699fbe9bf4452facbfbab37867eb0d": "render: frame check: not a red blood cell",
@@ -13,6 +14,7 @@
  "sketchfab:b1167087772d4e81829d5bbe6af987a0": "render: frame check: The subject shown is a boat, not the Titan.",
  "sketchfab:c475323dc7f24e26ba2009c08c8e1941": "render: frame check: not a large white steel hull, not multiple decks, not towering smokestacks, not early 1900s style.",
  "sketchfab:e4548772148c45a280f8d8136569c192": "vision: does not match subject, shows different object",
+ "sketchfab:f77e98930c084df49b0f970c36ba9ddf": "vision: Shows a cartoon character, not a ship.",
  "sketchfab:f82f40ca04d84a24868a453c4e3a16c2": "46 MB after preparation",
  "sketchfab:fbeafdb305114e4eb331d1b69d5fe094": "vision: no ambulance, shows broken scan"
 }

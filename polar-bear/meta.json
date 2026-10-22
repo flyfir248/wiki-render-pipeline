@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "key": "polar-bear",
+  "query": "polar bear",
+  "source": "objaverse",
+  "uid": "sketchfab:401e5a7e5ad04f498cbfe1b7054d83ec",
+  "title": "Polar Bear",
+  "author": "cedes",
+  "licence": "by-sa",
+  "url": "https://sketchfab.com/3d-models/none-401e5a7e5ad04f498cbfe1b7054d83ec",
+  "checked": "text",
+  "triangles": 39998,
+  "bytes": 3855328,
+  "size": [
+    179.4082,
+    376.1283,
+    203.0727
+  ],
+  "clips": [
+    "Scene"
+  ],
+  "skinned": true,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "massive white fur, large paws, black nose, Arctic appearance",
+  "added": "2026-10-22T18:03:49+00:00"
+}

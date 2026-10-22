@@ -1,0 +1,527 @@
+{
+  "style": "lowpoly",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "titan",
+      "archetype": "vehicle",
+      "size": 27.16,
+      "primary": "#ffffff",
+      "secondary": "#777777",
+      "accent": "#000000",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "wedge",
+          "at": [
+            0.0,
+            1.6296,
+            0.0
+          ],
+          "size": [
+            27.16,
+            3.2592,
+            7.604800000000001
+          ],
+          "rot": [
+            180.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffffff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -2.1728,
+            4.6172,
+            0.0
+          ],
+          "size": [
+            10.864,
+            2.716,
+            5.9752
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#777777",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -2.716,
+            7.0616,
+            0.0
+          ],
+          "size": [
+            5.432,
+            2.1728,
+            4.8888
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#f2f2ee",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -2.716,
+            7.0616,
+            0.0
+          ],
+          "size": [
+            5.7036,
+            0.8148,
+            5.0246
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -5.432,
+            8.9628,
+            0.0
+          ],
+          "size": [
+            1.358,
+            2.716,
+            1.358
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "liner",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        1,
+        4,
+        6
+      ]
+    },
+    {
+      "entity": "rowland",
+      "archetype": "humanoid",
+      "size": 1.75,
+      "primary": "#ffe0c0",
+      "secondary": "#302000",
+      "accent": "#804000",
+      "skin": "#ffe0c0",
+      "hair": "#603000",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "none",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": {
+        "top": "coat",
+        "bottom": "trousers",
+        "hair": "hat",
+        "beard": false,
+        "glasses": false
+      },
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            1.2,
+            0.0
+          ],
+          "size": [
+            0.3,
+            0.5,
+            0.2
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#804000",
+          "bone": "head",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.9,
+            0.1
+          ],
+          "size": [
+            0.1,
+            0.5,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#603000",
+          "bone": "hand_r",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        6
+      ]
+    },
+    {
+      "entity": "polar-bear",
+      "archetype": "quadruped",
+      "size": 2.5,
+      "primary": "#ffffff",
+      "secondary": "#000000",
+      "accent": "#808080",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.7,
+        "legs": 0.8,
+        "neck": 0.2,
+        "head": 0.6,
+        "snout": 0.5,
+        "ears": "round",
+        "tail": "none",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            1.25,
+            0.0
+          ],
+          "size": [
+            1.2,
+            1.5,
+            0.8
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffffff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.3,
+            0.0
+          ],
+          "size": [
+            0.3,
+            0.6,
+            0.3
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "source": "found model",
+      "scenes": [
+        6
+      ]
+    },
+    {
+      "entity": "iceberg",
+      "archetype": "object",
+      "size": 30.0,
+      "primary": "#a0d8f0",
+      "secondary": "#ffffff",
+      "accent": "#c0e0ff",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            15.0,
+            0.0
+          ],
+          "size": [
+            15.0,
+            30.0,
+            15.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#a0d8f0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "wedge",
+          "at": [
+            0.0,
+            5.0,
+            0.0
+          ],
+          "size": [
+            12.0,
+            10.0,
+            12.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#c0e0ff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "iceberg",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        4
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "north-atlantic",
+      "kind": "sea",
+      "time": "night",
+      "ground": "#001a33",
+      "sky": "#0a0a2a",
+      "accent": "#ffffaa",
+      "backdrop": "none",
+      "dressing": [],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "north-atlantic",
+      "time": "",
+      "actors": [
+        {
+          "entity": "titan",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "titan",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "4": {
+      "scene": 4,
+      "place": "north-atlantic",
+      "time": "",
+      "actors": [
+        {
+          "entity": "titan",
+          "verb": "move",
+          "at": "far",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "iceberg",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "titan",
+      "marks": [
+        {
+          "kind": "arrow",
+          "on": "titan",
+          "to": "iceberg",
+          "color": ""
+        }
+      ],
+      "callouts": [
+        {
+          "on": "iceberg",
+          "text": "Iceberg"
+        }
+      ],
+      "beats": [
+        {
+          "cue": "Titan striking an iceberg",
+          "actors": [
+            {
+              "entity": "titan",
+              "verb": "crash",
+              "to": "",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "low_angle",
+          "on": "titan"
+        }
+      ]
+    },
+    "6": {
+      "scene": 6,
+      "place": "north-atlantic",
+      "time": "",
+      "actors": [
+        {
+          "entity": "rowland",
+          "verb": "idle",
+          "at": "left",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "titan",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "polar-bear",
+          "verb": "roar",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "over_shoulder",
+      "on": "rowland",
+      "marks": [],
+      "callouts": [
+        {
+          "on": "rowland",
+          "text": "Rowland rescues"
+        },
+        {
+          "on": "polar-bear",
+          "text": "Polar bear attacks"
+        }
+      ],
+      "beats": []
+    }
+  }
+}

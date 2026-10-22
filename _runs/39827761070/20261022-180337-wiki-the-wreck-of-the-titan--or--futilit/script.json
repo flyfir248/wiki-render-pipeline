@@ -1,0 +1,1273 @@
+{
+  "core_message": "A 1898 novella eerily predicted the Titanic disaster fourteen years later.",
+  "mood": "curious",
+  "title": "13 survivors from an 1898 ship that predicted Titanic",
+  "description": "Morgan Robertson’s novel *Futility* described a fictional liner, the Titan, that sank after striking an iceberg in 1898. Fourteen years later, the real Titanic met the same fate, sparking speculation of prophetic foresight.\n\nKey points:\n• 1898 novel warned of an iceberg collision and insufficient lifeboats.\n• Only thirteen survivors were reported.\n• The book was reissued after Titanic’s wreck, highlighting uncanny parallels.\n\nBased on the Wikipedia article \"The Wreck of the Titan: Or, Futility\" (https://en.wikipedia.org/wiki/The_Wreck_of_the_Titan:_Or,_Futility), licensed CC BY-SA 4.0.\n\nImages from Wikimedia Commons:\nTitan-crystal bar.JPG (Alchemist-hp ( pse-mendelejew.de ), CC BY-SA 3.0): https://commons.wikimedia.org/wiki/File:Titan-crystal_bar.JPG\nTitan in true color by Kevin M. Gill.jpg (NASA/JPL-Caltech/SSI/Kevin M. Gill, CC BY 2.0): https://commons.wikimedia.org/wiki/File:Titan_in_true_color_by_Kevin_M._Gill.jpg\nVince Zampella.jpg (Dean Takahashi, CC BY-SA 4.0): https://commons.wikimedia.org/wiki/File:Vince_Zampella.jpg\nSaturn during Equinox.jpg (NASA / JPL / Space Science Institute, Public domain): https://commons.wikimedia.org/wiki/File:Saturn_during_Equinox.jpg\nTitan Missile Family.png (Public domain): https://commons.wikimedia.org/wiki/File:Titan_Missile_Family.png\nGustave Doré - Dante Alighieri - Inferno - Plate 65 (Canto XXXI - The Titans).jpg (Gustave Doré (1832 – 1883), Public domain): https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Dante_Alighieri_-_Inferno_-_Plate_65_(Canto_XXXI_-_The_Titans).jpg\nWreck and sinking of the Titanic - the ocean's greatest disaster - a graphic and thrilling account of the sinking of the greatest floating palace ever built, carrying down to watery graves more than (14593187138).jpg (Internet Archive Book Images, No restrictions): https://commons.wikimedia.org/wiki/File:Wreck_and_sinking_of_the_Titanic_-_the_ocean%27s_greatest_disaster_-_a_graphic_and_thrilling_account_of_the_sinking_of_the_greatest_floating_palace_ever_built,_carrying_down_to_watery_graves_more_than_(14593187138).jpg\nTitán (wrestler).jpg (ゾーヒョー, CC BY-SA 4.0): https://commons.wikimedia.org/wiki/File:Tit%C3%A1n_(wrestler).jpg\n\n3D models:\nPolar Bear by cedes (CC BY-SA 4.0) https://sketchfab.com/3d-models/none-401e5a7e5ad04f498cbfe1b7054d83ec",
+  "tags": [
+    "Titan",
+    "Titanic",
+    "Futility",
+    "Morgan Robertson",
+    "Maritime history",
+    "Prophecy",
+    "Novel",
+    "1898"
+  ],
+  "thumbnail_text": "13 SURVIVED",
+  "thumbnail_kicker": "Titan",
+  "thumbnail_query": "Titan ship illustration",
+  "scenes": [
+    {
+      "narration": "Thirteen survivors emerged from the 1898 sinking of the fictional liner Titan.",
+      "purpose": "Introduce the striking hook",
+      "type": "world",
+      "heading": "13 SURVIVED",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": null,
+      "subject_name": "titan",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:titan",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: vehicle built for the Titan"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "Thirteen survivors emerged from the 1898 sinking of the fictional liner Titan.",
+        "purpose": "Introduce the striking hook",
+        "type": "title",
+        "heading": "13 SURVIVED",
+        "image": 1
+      },
+      "world": {
+        "style": "lowpoly",
+        "seed": 4777,
+        "set": {
+          "place": "north-atlantic",
+          "kind": "sea",
+          "time": "night",
+          "ground": "#001a33",
+          "sky": "#0a0a2a",
+          "accent": "#ffffaa",
+          "backdrop": "none",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "titan",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "titan",
+              "archetype": "vehicle",
+              "size": 27.16,
+              "primary": "#ffffff",
+              "secondary": "#777777",
+              "accent": "#000000",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    1.6296,
+                    0.0
+                  ],
+                  "size": [
+                    27.16,
+                    3.2592,
+                    7.604800000000001
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.1728,
+                    4.6172,
+                    0.0
+                  ],
+                  "size": [
+                    10.864,
+                    2.716,
+                    5.9752
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#777777",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.716,
+                    7.0616,
+                    0.0
+                  ],
+                  "size": [
+                    5.432,
+                    2.1728,
+                    4.8888
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.716,
+                    7.0616,
+                    0.0
+                  ],
+                  "size": [
+                    5.7036,
+                    0.8148,
+                    5.0246
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -5.432,
+                    8.9628,
+                    0.0
+                  ],
+                  "size": [
+                    1.358,
+                    2.716,
+                    1.358
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#000000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "liner"
+            }
+          }
+        ],
+        "camera": "establish",
+        "on": "titan",
+        "marks": [],
+        "callouts": [],
+        "beats": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Author Morgan Robertson wrote Futility, claiming the Titan was the world’s longest, fastest ship.",
+      "purpose": "Provide author and ship context",
+      "type": "statement",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "First published in 1898, the novel was reissued in 1912 after the real Titanic disaster.",
+      "purpose": "Show timeline of publication and parallels",
+      "type": "timeline",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": [
+        {
+          "label": "1898",
+          "text": "First edition published."
+        },
+        {
+          "label": "1912",
+          "text": "Reissued as *Futility* after Titanic’s wreck."
+        },
+        {
+          "label": "1912",
+          "text": "Titanic sinks."
+        }
+      ],
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "It describes the Titan striking an iceberg and capsizing, rather than a glancing blow that tears the ship apart, mirroring the Titanic’s fate.",
+      "purpose": "Explain similarity",
+      "type": "world",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "night",
+      "backdrop": "North Atlantic Ocean, dark cold sea, distant horizon, foggy sky, night illumination",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "fall",
+      "obstacle": null,
+      "shot": "orbit",
+      "weather": null,
+      "cue": "striking an iceberg",
+      "subject_name": "titan",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": false,
+      "model": {
+        "id": "world:titan",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: vehicle built for the Titan"
+      },
+      "label": "RECONSTRUCTION · ILLUSTRATIVE",
+      "fallback": {
+        "narration": "It describes the Titan striking an iceberg and capsizing, rather than a glancing blow that tears the ship apart, mirroring the Titanic’s fate.",
+        "purpose": "Explain similarity",
+        "type": "statement"
+      },
+      "world": {
+        "style": "lowpoly",
+        "seed": 4777,
+        "set": {
+          "place": "north-atlantic",
+          "kind": "sea",
+          "time": "night",
+          "ground": "#001a33",
+          "sky": "#0a0a2a",
+          "accent": "#ffffaa",
+          "backdrop": "none",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "titan",
+            "verb": "move",
+            "at": "far",
+            "to": "center",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "titan",
+              "archetype": "vehicle",
+              "size": 27.16,
+              "primary": "#ffffff",
+              "secondary": "#777777",
+              "accent": "#000000",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    1.6296,
+                    0.0
+                  ],
+                  "size": [
+                    27.16,
+                    3.2592,
+                    7.604800000000001
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.1728,
+                    4.6172,
+                    0.0
+                  ],
+                  "size": [
+                    10.864,
+                    2.716,
+                    5.9752
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#777777",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.716,
+                    7.0616,
+                    0.0
+                  ],
+                  "size": [
+                    5.432,
+                    2.1728,
+                    4.8888
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.716,
+                    7.0616,
+                    0.0
+                  ],
+                  "size": [
+                    5.7036,
+                    0.8148,
+                    5.0246
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -5.432,
+                    8.9628,
+                    0.0
+                  ],
+                  "size": [
+                    1.358,
+                    2.716,
+                    1.358
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#000000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "liner"
+            }
+          },
+          {
+            "entity": "iceberg",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "iceberg",
+              "archetype": "object",
+              "size": 30.0,
+              "primary": "#a0d8f0",
+              "secondary": "#ffffff",
+              "accent": "#c0e0ff",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    15.0,
+                    0.0
+                  ],
+                  "size": [
+                    15.0,
+                    30.0,
+                    15.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#a0d8f0",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    5.0,
+                    0.0
+                  ],
+                  "size": [
+                    12.0,
+                    10.0,
+                    12.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#c0e0ff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "iceberg"
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "titan",
+        "marks": [
+          {
+            "kind": "arrow",
+            "on": "titan",
+            "to": "iceberg",
+            "color": ""
+          }
+        ],
+        "callouts": [
+          {
+            "on": "iceberg",
+            "text": "Iceberg"
+          }
+        ],
+        "beats": [
+          {
+            "cue": "Titan striking an iceberg",
+            "cast": [
+              {
+                "entity": "titan",
+                "verb": "crash",
+                "to": "",
+                "state": "normal",
+                "face": ""
+              }
+            ],
+            "camera": "low_angle",
+            "on": "titan"
+          }
+        ]
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Only those thirteen souls survived the Titan’s final plunge, echoing the novel’s title.",
+      "purpose": "Show tragic outcome",
+      "type": "stat",
+      "heading": "Survivors",
+      "text": null,
+      "items": null,
+      "value": 13.0,
+      "prefix": "",
+      "suffix": " survivors",
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "In the story, crew member Rowland rescues a girl while a polar bear attacks the wreckage.",
+      "purpose": "Highlight unusual events",
+      "type": "world",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "night",
+      "backdrop": "North Atlantic Ocean, dark cold sea, distant horizon, foggy sky, night illumination",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "front",
+      "weather": null,
+      "cue": "polar bear attacks",
+      "subject_name": "rowland",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "world:rowland",
+        "level": "procedural",
+        "title": null,
+        "kind": "object",
+        "src": null,
+        "params": {},
+        "sources": [],
+        "licence": null,
+        "notes": "story world: humanoid built for Rowland, deckhand"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "In the story, crew member Rowland rescues a girl while a polar bear attacks the wreckage.",
+        "purpose": "Highlight unusual events",
+        "type": "statement"
+      },
+      "world": {
+        "style": "lowpoly",
+        "seed": 4777,
+        "set": {
+          "place": "north-atlantic",
+          "kind": "sea",
+          "time": "night",
+          "ground": "#001a33",
+          "sky": "#0a0a2a",
+          "accent": "#ffffaa",
+          "backdrop": "none",
+          "dressing": []
+        },
+        "cast": [
+          {
+            "entity": "rowland",
+            "verb": "idle",
+            "at": "left",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "rowland",
+              "archetype": "humanoid",
+              "size": 1.75,
+              "primary": "#ffe0c0",
+              "secondary": "#302000",
+              "accent": "#804000",
+              "skin": "#ffe0c0",
+              "hair": "#603000",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "none",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": {
+                "top": "coat",
+                "bottom": "trousers",
+                "hair": "hat",
+                "beard": false,
+                "glasses": false
+              },
+              "parts": [
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    1.2,
+                    0.0
+                  ],
+                  "size": [
+                    0.3,
+                    0.5,
+                    0.2
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#804000",
+                  "bone": "head",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.9,
+                    0.1
+                  ],
+                  "size": [
+                    0.1,
+                    0.5,
+                    0.1
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#603000",
+                  "bone": "hand_r",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": ""
+            }
+          },
+          {
+            "entity": "titan",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "titan",
+              "archetype": "vehicle",
+              "size": 27.16,
+              "primary": "#ffffff",
+              "secondary": "#777777",
+              "accent": "#000000",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    1.6296,
+                    0.0
+                  ],
+                  "size": [
+                    27.16,
+                    3.2592,
+                    7.604800000000001
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.1728,
+                    4.6172,
+                    0.0
+                  ],
+                  "size": [
+                    10.864,
+                    2.716,
+                    5.9752
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#777777",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.716,
+                    7.0616,
+                    0.0
+                  ],
+                  "size": [
+                    5.432,
+                    2.1728,
+                    4.8888
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -2.716,
+                    7.0616,
+                    0.0
+                  ],
+                  "size": [
+                    5.7036,
+                    0.8148,
+                    5.0246
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -5.432,
+                    8.9628,
+                    0.0
+                  ],
+                  "size": [
+                    1.358,
+                    2.716,
+                    1.358
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#000000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "liner"
+            }
+          },
+          {
+            "entity": "polar-bear",
+            "verb": "roar",
+            "at": "right",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "polar-bear",
+              "archetype": "quadruped",
+              "size": 2.5,
+              "primary": "#ffffff",
+              "secondary": "#000000",
+              "accent": "#808080",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.7,
+                "legs": 0.8,
+                "neck": 0.2,
+                "head": 0.6,
+                "snout": 0.5,
+                "ears": "round",
+                "tail": "none",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    1.25,
+                    0.0
+                  ],
+                  "size": [
+                    1.2,
+                    1.5,
+                    0.8
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.3,
+                    0.0
+                  ],
+                  "size": [
+                    0.3,
+                    0.6,
+                    0.3
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#000000",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": ""
+            },
+            "model": {
+              "id": "polar-bear",
+              "src": "models/polar-bear.glb",
+              "fit": {},
+              "clips": [
+                "Scene"
+              ],
+              "licence": "by-sa",
+              "title": "Polar Bear"
+            }
+          }
+        ],
+        "camera": "over_shoulder",
+        "on": "rowland",
+        "marks": [],
+        "callouts": [
+          {
+            "on": "rowland",
+            "text": "Rowland rescues"
+          },
+          {
+            "on": "polar-bear",
+            "text": "Polar bear attacks"
+          }
+        ],
+        "beats": []
+      },
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Thus, an 1898 novella eerily foreshadowed the 1912 maritime tragedy.",
+      "purpose": "Deliver payoff",
+      "type": "statement",
+      "heading": null,
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/The_Wreck_of_the_Titan:_Or,_Futility"
+  ],
+  "comment_question": "Which ship did the novel name before the Titanic?",
+  "chapters": null,
+  "series": "Weird History"
+}
