@@ -93,6 +93,9 @@ def main(argv: list[str] | None = None) -> None:
     bn = sub.add_parser("bench", help="render the fixed 8-second 3D quality benchmark (contact sheet, timing, look check)")
     bn.add_argument("--out", type=Path, default=Path("jobs/bench"))
 
+    kt = sub.add_parser("kit", help="fetch the CC0 character kit (rigged people, animals, shared clips) into the model library")
+    kt.add_argument("--out", type=Path, default=Path("assets/models/_kit"))
+
     ac = sub.add_parser("assetcheck", help="test story-driven 3D on a fixed panel of things, without making a video")
     ac.add_argument("--out", type=Path, default=Path("jobs/assetcheck"))
 
@@ -115,6 +118,11 @@ def main(argv: list[str] | None = None) -> None:
         from fyt import bench
 
         print(json.dumps(bench.run(cfg, args.out), indent=2))
+        return
+    if args.cmd == "kit":
+        from fyt import kit
+
+        print(json.dumps(kit.fetch(args.out), indent=2))
         return
     if args.cmd == "assetcheck":
         from fyt import assetcheck

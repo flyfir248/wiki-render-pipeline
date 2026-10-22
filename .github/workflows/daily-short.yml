@@ -21,9 +21,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary)"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary). kit: fetch the CC0 character kit into the model library (inventory in the run summary)"
         type: choice
-        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck, bench]
+        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck, bench, kit]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -263,6 +263,8 @@ jobs:
           elif [ "$TASK" = bench ]; then
             python -m fyt bench --out jobs/bench
             { echo "## 3D quality benchmark"; echo '```json'; cat jobs/bench/report.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$TASK" = kit ]; then
+            python -m fyt kit --out assets/models/_kit | tee -a "$GITHUB_STEP_SUMMARY"
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
           elif [ -n "$TITLE" ] && [ -n "$REPLAY" ]; then
