@@ -265,7 +265,8 @@ jobs:
             python -m fyt bench --out jobs/bench
             { echo "## 3D quality benchmark"; echo '```json'; cat jobs/bench/report.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           elif [ "$TASK" = kit ]; then
-            python -m fyt kit --out assets/models/_kit | tee -a "$GITHUB_STEP_SUMMARY"
+            python -m fyt kit --out assets/models/_kit > kit.txt
+            cat kit.txt | tee -a "$GITHUB_STEP_SUMMARY"
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
           elif [ -n "$TITLE" ] && [ -n "$REPLAY" ]; then

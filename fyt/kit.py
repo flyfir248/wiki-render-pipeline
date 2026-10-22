@@ -51,7 +51,8 @@ def _itch_files(user: str, slug: str, want: str = "standard") -> list[tuple[str,
     html = r0.text
     csrf = _csrf(html)
     if not csrf:
-        raise RuntimeError(f"no csrf token on the page (HTTP {r0.status_code}): {re.sub(r'\\s+', ' ', html[:1500])}")
+        head = re.sub(r"\s+", " ", html[:1500])
+        raise RuntimeError(f"no csrf token on the page (HTTP {r0.status_code}): {head}")
     r = s.post(f"{page}/download_url", data={"csrf_token": csrf.group(1)}, timeout=60).json()
     dl = r.get("url")
     if not dl:
