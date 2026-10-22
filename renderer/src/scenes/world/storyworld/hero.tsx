@@ -557,6 +557,8 @@ export const Liner: React.FC<{ build: Build; t: number; moving: boolean; wet: bo
         }),
       )}
       {night > 0.5 ? <pointLight position={[0.05 * L, top + 0.02 * L, B * 1.2]} intensity={L * 0.4} distance={L * 0.6} color="#ffcf80" /> : null}
+      {/* the foredeck's lamps, where anyone aboard stands (index.tsx LINER_FOREDECK) */}
+      {night > 0.5 ? <pointLight position={[0.36 * L, deckY + 0.07 * L, 0]} intensity={L * 0.3} distance={L * 0.3} color="#ffd8a0" /> : null}
       {moving || wet ? <Wake L={L * 0.45} t={t} /> : null}
     </group>
   );

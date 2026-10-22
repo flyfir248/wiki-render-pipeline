@@ -437,3 +437,15 @@ def test_a_liner_and_an_iceberg_get_their_detailed_models():
     assert worldgen.rule_build(berg, 1).form == "iceberg"
     designed = worldgen.Build(entity="iceberg", archetype="object", size=20, primary="#ffffff", secondary="#dde8f0", accent="#bcd6e6", parts=[worldgen.Part(shape="cone", at=[0, 5, 0], size=[10, 10, 10], color="#ffffff")] * 2)
     assert worldgen.checked_build(designed, berg, 1).form == "iceberg"
+
+
+def test_a_person_is_never_dressed_in_their_skin_or_hung_with_floating_slabs():
+    # from the Titanic test render: Rowland's coat was his skin colour (a bare mannequin) and a model's
+    # whole-body box on his head bone floated beside his head
+    e = Entity(id="rowland", name="Rowland, deckhand", kind="person", search=["deckhand"], look="rough coat, sailor hat", certain=False, scenes=[6])
+    b = worldgen.Build(entity="rowland", archetype="humanoid", size=1.75, primary="#ffe0c0", secondary="#302000", accent="#804000", skin="#ffe0c0", hair="#603000",
+                       parts=[worldgen.Part(shape="box", at=[0, 1.2, 0], size=[0.3, 0.5, 0.2], color="#804000", bone="head"),
+                              worldgen.Part(shape="box", at=[0, 0.05, 0.05], size=[0.06, 0.3, 0.06], color="#603000", bone="hand_r")])
+    c = worldgen.checked_build(b, e, 1)
+    assert c.primary != "#ffe0c0" and c.skin == "#ffe0c0"
+    assert [p.bone for p in c.parts] == ["hand_r"]  # the tool in the hand stays

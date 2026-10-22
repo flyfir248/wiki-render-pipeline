@@ -89,7 +89,8 @@ export const segmentOf = (world: World, frame: number, D: number, at: number) =>
   const start = Math.round(from * (D - 1));
   const len = Math.max(2, Math.round(to * (D - 1)) - start + 1);
   const local = at >= from && at < to ? (at - from) / (to - from) : 0.3;
-  return { world: { ...world, cast, camera, on }, frame: frame - start, D: len, at: local, i };
+  // a mark plans the setup; once a beat plays the action itself, it would only cover it
+  return { world: { ...world, cast, camera, on, marks: [] }, frame: frame - start, D: len, at: local, i };
 };
 
 // Where everyone is and where the camera is at this frame.
@@ -204,10 +205,21 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
         p.pos.set(ice.pos.x + lx * c + fz * s, iceLedge(ice.h), ice.pos.z - lx * s + fz * c);
       } else if (deck) {
         const c = Math.cos(deck.yaw), s = Math.sin(deck.yaw);
-        const along = spread * 0.12 * deck.w0, across = (n % 2 ? 1 : -1) * 0.02 * deck.w0;
-        p.pos.set(deck.pos.x + along * c + across * s, deck.pos.y + deck.h * 0.28, deck.pos.z - along * s + across * c);
+        const liner = deck.m.build.form === "liner";
+        // on a liner, the open foredeck ahead of the bridge, clear of the funnels and their smoke
+        const gap = Math.max(...walkers.map((q) => q.w0)) * 0.9 + 0.6;
+        const along = liner ? Math.min(0.44 * deck.w0, LINER_FOREDECK * deck.w0 + spread * gap) : spread * 0.12 * deck.w0;
+        const across = (n % 2 ? 1 : -1) * (liner ? 0.012 : 0.02) * deck.w0;
+        const up = liner ? deck.m.build.size * 0.077 : deck.h * 0.28;
+        p.pos.set(deck.pos.x + along * c + across * s, deck.pos.y + up, deck.pos.z - along * s + across * c);
       } else return;
       p.air = 0;
+    });
+    // aboard or on the floe, those standing their ground face one another, not out to sea
+    walkers.forEach((p) => {
+      if (["walk", "run", "flee", "chase"].includes(p.m.verb) || p.m.face) return;
+      const o = walkers.filter((q) => q !== p).sort((a, b) => a.pos.distanceTo(p.pos) - b.pos.distanceTo(p.pos))[0];
+      if (o) p.yaw = Math.atan2(-(o.pos.z - p.pos.z), o.pos.x - p.pos.x);
     });
   }
   return { actors: placed, cam: direct(world, placed, u, t, U, D, fps, at, portrait), U, t, k, u };
@@ -215,6 +227,8 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
 
 // The height of the flat floe at an iceberg's foot (hero.tsx Iceberg), for an iceberg h tall.
 export const iceLedge = (h: number) => h * 0.06;
+// where along a liner (from its middle, in lengths) its open foredeck is (hero.tsx Liner)
+const LINER_FOREDECK = 0.35;
 
 // Portrait frames pull back a little and widen the lens to keep the subject in a tall frame.
 const PORTRAIT_BACK = 1.0;
@@ -322,7 +336,10 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
       target = look.clone().add(new THREE.Vector3(0, on.h * 0.15, 0));
       break;
     case "over_shoulder": {
-      const other = placed.find((p) => p !== on && Math.abs(p.pos.y - on.pos.y) < U * 3);
+      // over the shoulder of whoever the subject is dealing with: a living one before the ship or set
+      // they are standing on, whose 'shoulder' is a hull's length away
+      const near = placed.filter((p) => p !== on && Math.abs(p.pos.y - on.pos.y) < U * 3);
+      const other = near.find((p) => LIVING_ARCH.includes(p.m.build.archetype)) ?? near.find((p) => Math.max(p.w, p.h) < U * 2);
       if (other) {
         const back = other.pos.clone().sub(on.pos).setY(0).normalize();
         const pos = other.pos.clone().add(back.multiplyScalar(other.w * 0.9 + U * (0.6 - 0.15 * e))).add(new THREE.Vector3(0, other.h * 1.0, 0)).add(new THREE.Vector3(U * 0.3 * e, 0, U * 0.5));
@@ -649,6 +666,9 @@ const Marks: React.FC<{ world: World; b: Blocking; look: Look }> = ({ world, b, 
           case "arrow": {
             const z = find(mk.to);
             if (!z) return null;
+            // between a ship and an iceberg (any hero-built thing) an arrow is a pipe hung in the sky;
+            // the scene's own move shows where it is going
+            if (mk.kind === "arrow" && (a.m.build.form || z.m.build.form)) return null;
             const end = z.pos.clone().add(new THREE.Vector3(0, z.h * (mk.kind === "beam" ? 0.9 : 0.5), 0));
             const from = mk.kind === "arrow" ? a.pos.clone().add(new THREE.Vector3(0, a.h * 0.5, 0)) : top;
             const dir = end.clone().sub(from);
@@ -656,13 +676,16 @@ const Marks: React.FC<{ world: World; b: Blocking; look: Look }> = ({ world, b, 
             const mid = from.clone().add(dir.clone().normalize().multiplyScalar(len / 2));
             const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
             const pulse = from.clone().lerp(end, (b.t * 0.6) % 1);
-            const r = b.U * (mk.kind === "beam" ? 0.035 : 0.05);
+            // as thick as the smaller end can carry: scaled to a liner's scene it was a bar metres across
+            const r = Math.min(b.U * (mk.kind === "beam" ? 0.035 : 0.05), Math.min(a.h, z.h, a.w, z.w) * 0.04 + 0.03);
+            // at night a glowing arrow blooms into a glare that hides the scene, so it is only bright paint
+            const lit = !(mk.kind === "arrow" && world.set.time === "night");
             return (
               <group key={i}>
-                <mesh position={mid} quaternion={q} geometry={unit.cyl} material={material(look, color, { glow: true, opacity: 0.9 })} scale={[r * 2, len, r * 2]} />
+                <mesh position={mid} quaternion={q} geometry={unit.cyl} material={material(look, color, { glow: lit, opacity: 0.9 })} scale={[r * 2, len, r * 2]} />
                 {mk.kind === "beam" && grow >= 1 ? <mesh position={pulse} geometry={unit.sphere} material={material(look, "#ffffff", { glow: true })} scale={r * 5} /> : null}
                 {mk.kind === "arrow" ? (
-                  <mesh position={from.clone().add(dir.clone().normalize().multiplyScalar(len))} quaternion={q} geometry={unit.cone} material={material(look, color, { glow: true })} scale={[r * 5, r * 7, r * 5]} />
+                  <mesh position={from.clone().add(dir.clone().normalize().multiplyScalar(len))} quaternion={q} geometry={unit.cone} material={material(look, color, { glow: lit })} scale={[r * 5, r * 7, r * 5]} />
                 ) : null}
               </group>
             );

@@ -742,6 +742,18 @@ def _clean_part(p: Part, size: float) -> Part | None:
     return p.model_copy(update={"at": at, "size": sz, "rot": rot, "color": _hex(p.color, "#9a9a9a")})
 
 
+def _near(a: str, b: str, within: float = 0.18) -> bool:
+    """Whether two colours read as the same one (RGB distance, 0-1 per channel)."""
+    ra, rb = ([int(c[i:i + 2], 16) / 255 for i in (1, 3, 5)] for c in (a, b))
+    return sum((x - y) ** 2 for x, y in zip(ra, rb)) ** 0.5 < within
+
+
+def _on_body(p: Part, size: float) -> bool:
+    """Whether a part of a living thing sits on its bone (a hat, a satchel, a tool in the hand). A model
+    tends to place them in whole-body coordinates, which on a bone leaves a slab floating by the head."""
+    return max(abs(x) for x in p.at) <= size * 0.25 and max(p.size) <= size * 0.5
+
+
 def checked_build(b: Build, e: Entity, seed: int) -> Build:
     """A model's build made safe to render and true to the entity: the archetype the entity's own words
     point to when the model's disagrees with a living/non-living split (a bear is never built from
@@ -762,8 +774,14 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
         parts = [p.model_copy(update={"bone": "body"}) for p in parts]
         if len(parts) < 2:  # too little to be recognisable: the rules' outline of what it is called
             parts = rules.parts
+    else:
+        parts = [p for p in parts if _on_body(p, size)]
     outfit = (b.outfit or rules.outfit) if arche == "humanoid" else None
     primary, secondary, accent = _hex(b.primary, rules.primary), _hex(b.secondary, rules.secondary), _hex(b.accent, rules.accent)
+    skin = _hex(b.skin, rules.skin or SKINS[2]) if arche == "humanoid" else ""
+    if arche == "humanoid" and _near(primary, skin):
+        # clothes the colour of the skin read as a bare mannequin: the rules' clothes, else a dark coat
+        primary = rules.primary if not _near(rules.primary, skin) else "#2c3a52"
     if arche == "vehicle" and rules.archetype == "vehicle" and rules.parts:
         # a vehicle its name says is an airliner, a ship or a car keeps that outline, at the rules' size,
         # in the model's colours: a model's own boxes for one rarely read as that kind of vehicle
@@ -773,7 +791,7 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
         "entity": e.id, "archetype": arche, "size": round(size, 3), "parts": parts, "outfit": outfit,
         "form": rules.form if arche in ("vehicle", "cell", "object", "structure") and rules.archetype == arche else "",
         "primary": primary, "secondary": secondary, "accent": accent,
-        "skin": _hex(b.skin, rules.skin or SKINS[2]) if arche == "humanoid" else "",
+        "skin": skin,
         "hair": _hex(b.hair, rules.hair or HAIRS[0]) if arche == "humanoid" else "",
     })
 
