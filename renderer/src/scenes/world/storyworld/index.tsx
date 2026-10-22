@@ -208,9 +208,12 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
         const liner = deck.m.build.form === "liner";
         // on a liner, the open foredeck ahead of the bridge, clear of the funnels and their smoke
         const gap = Math.max(...walkers.map((q) => q.w0)) * 0.9 + 0.6;
-        const along = liner ? Math.min(0.44 * deck.w0, LINER_FOREDECK * deck.w0 + spread * gap) : spread * 0.12 * deck.w0;
-        const across = (n % 2 ? 1 : -1) * (liner ? 0.012 : 0.02) * deck.w0;
-        const up = liner ? deck.m.build.size * 0.077 : deck.h * 0.28;
+        // (in the liner's own length: its footprint w0 is wider than the hull, and the bow narrows)
+        const L = deck.m.build.size;
+        const along = liner ? Math.max(0.27 * L, Math.min(0.4 * L, LINER_FOREDECK * L + spread * gap)) : spread * 0.12 * deck.w0;
+        const across = (n % 2 ? 1 : -1) * (liner ? 0.008 * L : 0.02 * deck.w0);
+        // (a hull afloat is drawn settled into the water by h * 0.18, see Scene; its deck with it)
+        const up = (liner ? deck.m.build.size * 0.077 : deck.h * 0.28) - (world.set.kind === "sea" && deck.pos.y <= 0 ? deck.h * 0.18 : 0);
         p.pos.set(deck.pos.x + along * c + across * s, deck.pos.y + up, deck.pos.z - along * s + across * c);
       } else return;
       p.air = 0;
