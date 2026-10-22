@@ -14,7 +14,7 @@
     "fish": {"describe": "a fish, whale, shark or other swimmer", "verbs": ["swim", "idle", "turn", "rise", "fall"]},
     "insect": {"describe": "an insect, spider or other many-legged small creature", "verbs": ["idle", "walk", "run", "fly", "look_around"]},
     "serpent": {"describe": "a snake, worm or eel", "verbs": ["idle", "move", "rear", "swim"]},
-    "vehicle": {"describe": "a car, truck, aircraft, helicopter, boat, train or bicycle", "verbs": ["present", "move", "drive", "fly", "approach", "depart", "turn", "rise", "fall", "crash", "shake"]},
+    "vehicle": {"describe": "a car, truck, aircraft, helicopter, boat, train or bicycle", "verbs": ["present", "move", "drive", "fly", "approach", "depart", "turn", "rise", "fall", "crash", "shake", "sink"]},
     "object": {"describe": "a thing people use or carry: a bag, a tool, a phone, a package, a bottle, a device", "verbs": ["present", "move", "rise", "fall", "turn", "shake", "spin", "open", "split", "glow"]},
     "structure": {"describe": "a building, tower, bridge, tent or other built place", "verbs": ["present", "shake", "collapse", "glow", "turn"]},
     "plant": {"describe": "a tree, flower, crop or fungus", "verbs": ["present", "sway", "grow", "fall"]},
@@ -23,7 +23,7 @@
   "calm": ["idle", "present", "look_around", "walk", "sniff", "fly", "swim", "move", "drive", "turn", "sway", "pulse", "spin", "glow", "talk", "work", "sit", "peck"],
   "events": {
     "fall": ["fell", "fall", "collapsed", "tumbled", "dropped", "plunged", "crashed"],
-    "crash": ["crash", "hit", "struck", "slammed", "collid", "smash", "ditch", "plow"],
+    "crash": ["crash", "hit", "struck", "strike", "striking", "slammed", "collid", "smash", "ditch", "plow"], "sink": ["sank", "sink", "sunk", "went down", "capsiz", "founder", "went under", "submerg", "slipped beneath"],
     "collapse": ["collaps", "fell", "crumbl", "gave way", "destroy"],
     "shake": ["shook", "shake", "struck", "hit", "jolt", "tremor", "quake"],
     "panic": ["panic", "fled", "scream", "terrif", "chaos", "frantic"],
@@ -55,7 +55,7 @@
     "injured": ["injur", "wound", "hurt", "bleed", "broken", "bitten"],
     "dazed": ["daz", "high", "intoxicat", "drunk", "confus", "overdos", "stun", "dizzy"],
     "asleep": ["sleep", "asleep", "unconscious", "coma"],
-    "damaged": ["damag", "wreck", "crash", "broken", "destroy", "burn", "sank", "torn", "ripped", "smashed", "shattered"],
+    "damaged": ["damag", "wreck", "crash", "broken", "destroy", "burn", "sank", "sink", "sunk", "torn", "ripped", "smashed", "shattered"],
     "burning": ["fire", "flame", "burn", "blaze", "ablaze"],
     "wet": ["wet", "water", "river", "flood", "rain", "soaked", "swim", "sea", "lake"]
   },

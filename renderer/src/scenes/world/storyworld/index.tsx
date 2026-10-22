@@ -2,7 +2,7 @@
 // (fyt/worldgen.py). The blocking (where everyone is, which way they face, how far they have walked) and
 // the camera are pure functions of the frame, so the 3D scene and the labels pinned over it agree.
 import React from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, continueRender, delayRender, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
@@ -10,14 +10,14 @@ import { unit as unitOf } from "../../../theme";
 import type { SceneProps } from "../../shared";
 import { HeadingPlate, WeatherOverlay } from "../../world3d";
 import { momentOf } from "../kit";
-import { prepare, useModel } from "../stage";
+import { load as loadModel, type Loaded, prepare } from "../stage";
 import { Bird, Cell, Fish, Insect, Quadruped, quadDims, quadPose, Serpent } from "./creatures";
-import { Airliner, Boat, Car, heroOf, LightPlane } from "./hero";
+import { Airliner, Boat, Car, heroOf, Iceberg, LightPlane, Liner, Spray } from "./hero";
 import { ContactShadow, type Finish, Post, type SkySpec, SkyDome, SkyLight } from "./cinema";
 import { Environment, INSIDE, type KeepOut, VOID, waterBand } from "./environment";
 import { dimsOf, Flames, humanPose, Humanoid } from "./humanoid";
 import { PartMesh, partsBounds } from "./parts";
-import { lightOf, type Look, lookOf, material } from "./style";
+import { env, lightOf, type Look, lookOf, material } from "./style";
 import type { Build, CastMember, Spot, World } from "./types";
 
 const ease = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
@@ -57,6 +57,42 @@ export type Blocking = { actors: Placed[]; cam: { pos: THREE.Vector3; look: THRE
 
 const flies = (m: CastMember) => m.verb === "fly" && ["vehicle", "bird", "insect"].includes(m.build.archetype);
 
+// A directed scene plays in beats (fyt/worldgen.py's director). At each beat's cue the actors it names
+// take up a new verb, place or state, starting from where the last beat left them, and the camera cuts
+// to the beat's move. Returns the world as it stands in this frame's beat, with the beat's own frame,
+// length and key moment, so blocking and camera treat each beat as a shot of its own.
+export const segmentOf = (world: World, frame: number, D: number, at: number) => {
+  const beats = (world.beats ?? []).filter((x) => x.from > 0.05 && x.from < 0.95).sort((a, b) => a.from - b.from);
+  if (!beats.length) return { world, frame, D, at, i: 0 };
+  const u = frame / Math.max(1, D - 1);
+  let i = 0;
+  while (i < beats.length && u >= beats[i].from) i++;
+  if (i === 0) {
+    // the opening beat ends at the first cue
+    const end = beats[0].from;
+    return { world, frame, D: Math.max(2, Math.round(end * (D - 1)) + 1), at: at < end ? at / end : 0.5, i };
+  }
+  let cast = world.cast;
+  let camera = world.camera;
+  let on = world.on;
+  for (const bt of beats.slice(0, i)) {
+    cast = cast.map((c) => {
+      const o = bt.cast.find((x) => x.entity === c.entity);
+      const from = (c.to || c.at) as Spot; // where the last beat left it
+      return o ? { ...c, at: from, to: o.to ?? "", verb: o.verb || c.verb, state: o.state || c.state, face: o.face ?? c.face } : { ...c, at: from, to: "" };
+    });
+    camera = bt.camera || camera;
+    on = bt.on && cast.some((c) => c.entity === bt.on) ? bt.on : on;
+  }
+  const from = beats[i - 1].from;
+  const to = i < beats.length ? beats[i].from : 1;
+  const start = Math.round(from * (D - 1));
+  const len = Math.max(2, Math.round(to * (D - 1)) - start + 1);
+  const local = at >= from && at < to ? (at - from) / (to - from) : 0.3;
+  // a mark plans the setup; once a beat plays the action itself, it would only cover it
+  return { world: { ...world, cast, camera, on, marks: [] }, frame: frame - start, D: len, at: local, i };
+};
+
 // Where everyone is and where the camera is at this frame.
 export const block = (w0: World, frame: number, fps: number, D: number, at: number, portrait = false): Blocking => {
   // birds flying with an aircraft are drawn larger than life, or a flock beside an airliner is specks
@@ -72,8 +108,8 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
   const ground = world.cast.filter((m) => !flies(m));
   const U = Math.max(1.1, ...ground.map((m) => footprint(m.build).w * 0.9), ...(ground.length ? [] : sizes.map((s) => s.w * 0.6)));
   const used = new Map<string, number>();
-  const placed: Placed[] = world.cast.map((m, i) => {
-    const { w, h } = sizes[i];
+  const starts = world.cast.map((m, i) => {
+    const { w } = sizes[i];
     const n = used.get(m.at) ?? 0;
     used.set(m.at, n + 1);
     const [sx, sz] = SPOTS[m.at] ?? SPOTS.center;
@@ -84,8 +120,21 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
       if (sx !== 0 && Math.abs(start.x) < gap) start.x = Math.sign(sx) * gap;
       if (m.at === "back" && start.z > -gap) start.z = -gap;
     }
+    return start;
+  });
+  const placed: Placed[] = world.cast.map((m, i) => {
+    const { w, h } = sizes[i];
+    const start = starts[i].clone();
+    // what a crash runs into, wherever it was told to go: who it faces, else the first other thing on the ground
+    const hit = m.verb === "crash" && !flies(m)
+      ? world.cast.findIndex((c, j) => j !== i && !flies(c) && (m.face ? c.entity === m.face : true)) : -1;
     let end = start.clone();
-    if (m.to && m.to !== m.at) {
+    if (hit >= 0) {
+      // up to it, bows touching: the gap between their centres closed to their two half-lengths
+      const dir = starts[hit].clone().sub(start);
+      const reach = Math.max(0, dir.length() - (w / 2 + sizes[hit].w / 2) * 0.85);
+      end = start.clone().add(dir.normalize().multiplyScalar(reach));
+    } else if (m.to && m.to !== m.at) {
       const [ex, ez] = SPOTS[m.to] ?? SPOTS.center;
       end = new THREE.Vector3(ex * U, 0, ez * U);
     } else if (MOVING.includes(m.verb)) {
@@ -138,19 +187,51 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     const many = Math.max(1, Math.min(9, m.count ?? 1));
     return { m, pos, yaw, phase, speed, h, w: w * (1 + 0.9 * Math.sqrt(many - 1)), w0: w, air };
   });
-  // people beside something afloat (a ditched airliner, a boat) stand on it, not on the water
-  const lead = placed[0];
-  if (lead && waterBand(world.set.kind) && lead.m.build.archetype === "vehicle" && !flies(lead.m) && lead.m.verb !== "drive") {
-    const c = Math.cos(lead.yaw), s = Math.sin(lead.yaw);
-    placed.forEach((p, i) => {
-      if (i === 0 || p.m.build.archetype !== "humanoid") return;
-      const along = (i % 2 ? -0.08 : 0.08) * lead.w0, across = (i % 2 ? 1 : -1) * 0.22 * lead.w0;
-      p.pos.set(lead.pos.x + along * c + across * s, lead.pos.y + lead.h * 0.3, lead.pos.z - along * s + across * c);
+  // on open water, people and animals stand on something afloat, never on the water: the ice floe at an
+  // iceberg's foot, else the deck of a boat or a ditched airliner
+  if (waterBand(world.set.kind) || world.set.kind === "sea") {
+    const ice = placed.find((p) => p.m.build.form === "iceberg");
+    const deck = placed.find((p) => p.m.build.archetype === "vehicle" && !flies(p.m) && p.m.verb !== "drive");
+    const walkers = placed.filter((p) => ["humanoid", "quadruped"].includes(p.m.build.archetype) && !["swim", "fly"].includes(p.m.verb));
+    walkers.forEach((p, n) => {
+      const spread = (n - (walkers.length - 1) / 2);
+      if (ice) {
+        // the floe runs out in front of the berg (its own +z): side by side on it, a few paces apart,
+        // walking along it
+        const gap = Math.max(...walkers.map((q) => q.w0)) * 1.1 + 0.8;
+        const fz = ice.w0 * 0.36, walked = (p.pos.x - starts[placed.indexOf(p)].x) * 0.5;
+        const c = Math.cos(ice.yaw), s = Math.sin(ice.yaw);
+        const lx = spread * gap + walked;
+        p.pos.set(ice.pos.x + lx * c + fz * s, iceLedge(ice.h), ice.pos.z - lx * s + fz * c);
+      } else if (deck) {
+        const c = Math.cos(deck.yaw), s = Math.sin(deck.yaw);
+        const liner = deck.m.build.form === "liner";
+        // on a liner, the open foredeck ahead of the bridge, clear of the funnels and their smoke
+        const gap = Math.max(...walkers.map((q) => q.w0)) * 0.9 + 0.6;
+        // (in the liner's own length: its footprint w0 is wider than the hull, and the bow narrows)
+        const L = deck.m.build.size;
+        const along = liner ? Math.max(0.27 * L, Math.min(0.4 * L, LINER_FOREDECK * L + spread * gap)) : spread * 0.12 * deck.w0;
+        const across = (n % 2 ? 1 : -1) * (liner ? 0.008 * L : 0.02 * deck.w0);
+        // (a hull afloat is drawn settled into the water by h * 0.18, see Scene; its deck with it)
+        const up = (liner ? deck.m.build.size * 0.077 : deck.h * 0.28) - (world.set.kind === "sea" && deck.pos.y <= 0 ? deck.h * 0.18 : 0);
+        p.pos.set(deck.pos.x + along * c + across * s, deck.pos.y + up, deck.pos.z - along * s + across * c);
+      } else return;
       p.air = 0;
+    });
+    // aboard or on the floe, those standing their ground face one another, not out to sea
+    walkers.forEach((p) => {
+      if (["walk", "run", "flee", "chase"].includes(p.m.verb) || p.m.face) return;
+      const o = walkers.filter((q) => q !== p).sort((a, b) => a.pos.distanceTo(p.pos) - b.pos.distanceTo(p.pos))[0];
+      if (o) p.yaw = Math.atan2(-(o.pos.z - p.pos.z), o.pos.x - p.pos.x);
     });
   }
   return { actors: placed, cam: direct(world, placed, u, t, U, D, fps, at, portrait), U, t, k, u };
 };
+
+// The height of the flat floe at an iceberg's foot (hero.tsx Iceberg), for an iceberg h tall.
+export const iceLedge = (h: number) => h * 0.06;
+// where along a liner (from its middle, in lengths) its open foredeck is (hero.tsx Liner)
+const LINER_FOREDECK = 0.35;
 
 // Portrait frames pull back a little and widen the lens to keep the subject in a tall frame.
 const PORTRAIT_BACK = 1.0;
@@ -175,8 +256,10 @@ export const setupsOf = (world: World, D: number, fps: number, at: number) => {
   return [{ move: first, from: 0, to: cut }, { move: COVER[first] ?? "close", from: cut, to: 1 }];
 };
 
-const direct = (world: World, placed: Placed[], u: number, t: number, U: number, D = 150, fps = 30, at = 0.5, portrait = false) => {
+const direct = (world: World, placed: Placed[], u: number, t: number, U0: number, D = 150, fps = 30, at = 0.5, portrait = false) => {
   const on = placed.find((p) => p.m.entity === world.on) ?? placed[0];
+  // the stage's unit is set by its largest thing; a person beside an iceberg is framed at a person's scale
+  const U = Math.min(U0, Math.max(on.w, on.h) * 2.5);
   const look = on.pos.clone().add(new THREE.Vector3(0, on.h * 0.55, 0));
   // fit the subject and whoever shares its frame, across and up, in the frame the viewer will see
   const own = Math.max(on.w, on.h) * 0.62 + U * 0.25;
@@ -191,6 +274,11 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U: number,
   // others share the frame, but never shrink the subject to a speck; a tall frame keeps the subject
   // large and lets the rest run off its sides
   Rw = Math.min(Rw, portrait ? Math.max(on.w * 0.55 + U * 0.2, own * 1.15) : own * 1.7);
+  // a long low subject (a ship, a train) in a tall frame is filmed from off its bow, where it has depth
+  // and fills the frame, not side-on as a thin strip across the middle
+  const long = portrait && on.w > on.h * 2.2 && !["humanoid", "quadruped"].includes(on.m.build.archetype);
+  // (a crash keeps what it runs into in the frame)
+  if (long && on.m.verb !== "crash") Rw = Math.min(Rw, on.w * 0.55 * 0.62 + U * 0.2);
   Rh = Math.min(Rh, own * 1.7);
   const fov = 36;
   const tanV = Math.tan((((portrait ? fov * PORTRAIT_FOV : fov) / 2) * Math.PI) / 180);
@@ -205,13 +293,20 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U: number,
   const e = smooth(lu);
   // which side a scene is filmed from varies with the scene, so consecutive shots of one place differ
   const hand = (hashOf(`${world.on}|${world.camera}|${world.seed ?? 0}|${world.set.place ?? ""}`) & 1 ? 1 : -1) * (k === 1 ? -1 : 1);
-  const side = (a: number, dist: number, y: number) => new THREE.Vector3(Math.sin(a * hand) * dist, y, Math.cos(a * hand) * dist);
+  const fwd = new THREE.Vector3(Math.cos(on.yaw), 0, -Math.sin(on.yaw));
+  const across = new THREE.Vector3(Math.sin(on.yaw), 0, Math.cos(on.yaw));
+  const side = (a: number, dist: number, y: number) => {
+    if (!long) return new THREE.Vector3(Math.sin(a * hand) * dist, y, Math.cos(a * hand) * dist);
+    // in the subject's own frame: a quarter of the way round from its beam towards its bow, and low
+    const b = 0.62 + a * 0.45;
+    return fwd.clone().multiplyScalar(Math.sin(b) * dist).add(across.clone().multiplyScalar(Math.cos(b) * dist * hand)).setY(Math.min(y, on.h * 0.9 + dist * 0.12));
+  };
   let off: THREE.Vector3;
   let target = look.clone();
   let f = fov;
   switch (sh.move) {
     case "establish":
-      off = side(0.55 - 0.25 * e, d * (1.45 - 0.5 * e), d * (0.6 - 0.38 * e) + on.h * 0.3);
+      off = side(0.55 - 0.25 * e, d * (1.45 - 0.5 * e) * (long ? 0.8 : 1), d * (0.6 - 0.38 * e) + on.h * 0.3);
       break;
     case "follow":
       off = side(0.2 + 0.15 * e, d * (1.0 - 0.1 * e), on.h * 0.35 + d * 0.1);
@@ -244,7 +339,10 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U: number,
       target = look.clone().add(new THREE.Vector3(0, on.h * 0.15, 0));
       break;
     case "over_shoulder": {
-      const other = placed.find((p) => p !== on && Math.abs(p.pos.y - on.pos.y) < U * 3);
+      // over the shoulder of whoever the subject is dealing with: a living one before the ship or set
+      // they are standing on, whose 'shoulder' is a hull's length away
+      const near = placed.filter((p) => p !== on && Math.abs(p.pos.y - on.pos.y) < U * 3);
+      const other = near.find((p) => LIVING_ARCH.includes(p.m.build.archetype)) ?? near.find((p) => Math.max(p.w, p.h) < U * 2);
       if (other) {
         const back = other.pos.clone().sub(on.pos).setY(0).normalize();
         const pos = other.pos.clone().add(back.multiplyScalar(other.w * 0.9 + U * (0.6 - 0.15 * e))).add(new THREE.Vector3(0, other.h * 1.0, 0)).add(new THREE.Vector3(U * 0.3 * e, 0, U * 0.5));
@@ -283,13 +381,11 @@ export const finalCamera = (b: Blocking, portrait: boolean, aspect: number) => {
 
 // --- actors -----------------------------------------------------------------------------------------
 
-const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({ p, look, b, world }) => {
-  const { m } = p;
-  const build = m.build;
-  const bb = partsBounds(build.parts);
-  const verb = m.verb;
+// How a rigid thing moves as a whole for its verb: offset, turn and scale (a ship listing as it sinks,
+// a crate dropping, a craft shaking on impact). Shared by the generated builds and found models.
+const rigidPose = (p: Placed, b: Blocking, vehicle: boolean) => {
+  const verb = p.m.verb;
   const { t, k } = b;
-  const spin = (p.phase / Math.PI) * 2 + (verb === "fly" ? t * 40 : 0);
   let rot: [number, number, number] = [0, 0, 0];
   const off = new THREE.Vector3();
   let scale = 1;
@@ -308,8 +404,15 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
       off.y = Math.sin(t * 1.1) * p.h * 0.05;
       break;
     case "fall":
-      rot = build.archetype === "vehicle" ? [0.25 * ease((k + 1.2) / 1.2), 0, -0.35 * ease((k + 1.2) / 1.2)] : [ease((k + 0.4) / 0.5) * 1.2, 0, ease((k + 0.4) / 0.5) * 0.4];
+      rot = vehicle ? [0.25 * ease((k + 1.2) / 1.2), 0, -0.35 * ease((k + 1.2) / 1.2)] : [ease((k + 0.4) / 0.5) * 1.2, 0, ease((k + 0.4) / 0.5) * 0.4];
       break;
+    case "sink": {
+      // bow first and listing, settling until the stern stands out of the water
+      const s = ease((k + 0.6) / 3.2);
+      rot = [0.12 * s, 0, -0.5 * s];
+      off.y = -p.h * 0.7 * s;
+      break;
+    }
     case "crash":
     case "shake": {
       const hit = k > 0 ? Math.exp(-k * 3) : 0;
@@ -327,28 +430,52 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
       scale = 1 + Math.sin(t * 4) * 0.03;
       break;
   }
+  return { rot, off, scale };
+};
+
+const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({ p, look, b, world }) => {
+  const { m } = p;
+  const build = m.build;
+  const bb = partsBounds(build.parts);
+  const verb = m.verb;
+  const { t, k } = b;
+  const spin = (p.phase / Math.PI) * 2 + (verb === "fly" ? t * 40 : 0);
+  const { rot, off, scale } = rigidPose(p, b, build.archetype === "vehicle");
   const opening = verb === "open" ? ease((k + 0.2) / 0.8) : 0;
   const splitting = verb === "split" ? ease((k + 0.2) / 0.9) : 0;
   const collapsing = verb === "collapse" ? ease((k + 0.1) / 1.2) : 0;
   const damaged = m.state === "damaged" ? (c: string) => "#" + new THREE.Color(c).multiplyScalar(0.55).getHexString() : undefined;
   const top = bb.center.y + bb.size.y * 0.25;
   const hero = heroOf(build);
+  const wet = world.set.kind === "sea" || Boolean(waterBand(world.set.kind));
+  const night = world.set.time === "night" ? 1 : world.set.time === "dusk" ? 0.6 : 0;
+  // a hull striking something on the water throws up spray, it doesn't catch fire
+  const impact = verb === "crash" && k > 0 && wet && m.state !== "burning";
   if (hero && !opening && !splitting && !collapsing) {
     const hurt = m.state === "damaged" || m.state === "burning" || verb === "fall" ? 1 : 0;
+    if (hero === "iceberg")
+      return (
+        <group position={off.toArray()} rotation={rot} scale={scale}>
+          <Iceberg w={bb.size.x} h={p.h} d={bb.size.z} seed={(p.phase * 1000) | 0} ledge={iceLedge(p.h)} />
+        </group>
+      );
     return (
       <group position={off.toArray()} rotation={rot} scale={scale}>
+        {impact ? <Spray at={[p.w0 * 0.48, 0, 0]} size={Math.max(p.h, p.w0 * 0.25)} k={k} /> : null}
         <group position={[-bb.center.x, 0, -bb.center.z]}>
+          {hero === "liner" ? <Liner build={build} t={t} moving={MOVING.includes(verb) || verb === "present"} wet={wet} night={night} /> : null}
           {hero === "plane" ? <LightPlane build={build} t={t} spin={verb === "fly" || verb === "fall" ? t * 45 : 0} damaged={hurt} /> : null}
           {hero === "airliner" ? <Airliner build={build} t={t} spin={verb === "fly" && !hurt ? t * 30 : t * 3} damaged={hurt} /> : null}
-          {hero === "boat" ? <Boat build={build} t={t} moving={MOVING.includes(verb) || verb === "present"} wet={Boolean(waterBand(world.set.kind))} /> : null}
+          {hero === "boat" ? <Boat build={build} t={t} moving={MOVING.includes(verb) || verb === "present"} wet={wet} /> : null}
           {hero === "car" || hero === "truck" ? <Car build={build} spin={spin} truck={hero === "truck"} look={look} /> : null}
         </group>
-        {m.state === "burning" || (verb === "crash" && k > 0) ? <Flames size={Math.max(p.h, p.w * 0.4)} t={t} look={look} /> : null}
+        {m.state === "burning" || (verb === "crash" && k > 0 && !impact) ? <Flames size={Math.max(p.h, p.w * 0.4)} t={t} look={look} /> : null}
       </group>
     );
   }
   return (
     <group position={off.toArray()} rotation={rot} scale={scale}>
+      {impact ? <Spray at={[p.w0 * 0.48, 0, 0]} size={Math.max(p.h, p.w0 * 0.25)} k={k} /> : null}
       <group position={[-bb.center.x, 0, -bb.center.z]}>
         {build.parts.map((part, i) => {
           const pa = { ...part };
@@ -373,29 +500,97 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
         })}
         {verb === "glow" ? <pointLight position={[bb.center.x, bb.center.y, bb.center.z]} intensity={6 + Math.sin(t * 4) * 3} distance={p.w * 6} color={build.accent} /> : null}
       </group>
-      {m.state === "burning" || (verb === "crash" && k > 0) ? <Flames size={Math.max(p.h, p.w * 0.4)} t={t} look={look} /> : null}
+      {m.state === "burning" || (verb === "crash" && k > 0 && !impact) ? <Flames size={Math.max(p.h, p.w * 0.4)} t={t} look={look} /> : null}
     </group>
   );
+};
+
+// The scene's found models, loaded before its canvas is drawn (useCastModels): a model whose loading
+// finished inside the canvas would miss the frame being captured.
+const ready = new Map<string, Loaded>();
+
+const useCastModels = (world: World) => {
+  const srcs = [...new Set(world.cast.map((c) => c.model?.src).filter((x): x is string => Boolean(x)))].sort();
+  const key = srcs.join("|");
+  const [done, setDone] = React.useState(() => srcs.every((s) => ready.has(s)));
+  const [handle] = React.useState(() => (done ? null : delayRender(`loading models ${key}`, { timeoutInMilliseconds: 120000 })));
+  React.useEffect(() => {
+    if (done) return;
+    Promise.allSettled(srcs.map((s) => loadModel(s).then((m) => ready.set(s, m)))).then((rs) => {
+      rs.forEach((r, i) => r.status === "rejected" && console.error(`model ${srcs[i]} failed to load: ${r.reason}`));
+      setDone(true);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  React.useEffect(() => {
+    if (done && handle !== null) continueRender(handle);
+  }, [done, handle]);
+  return done;
 };
 
 const FoundModel: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (props) => {
   const { p } = props;
-  const { model } = useModel(p.m.model?.src);
+  const model = p.m.model?.src ? ready.get(p.m.model.src) : undefined;
   if (!model) return <Rigid {...props} />;
   return <Prepared {...props} loaded={model} />;
 };
 
-const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loaded: Parameters<typeof prepare>[0] }> = ({ p, loaded, b }) => {
-  const made = React.useMemo(() => prepare(loaded, p.m.model?.fit?.forward ?? "auto", p.m.model?.fit?.up ?? "+y"), [loaded, p.m.model]);
+// Which of a found model's own clips plays for a verb: the first whose name fits, in order of preference.
+const CLIPS: [RegExp, RegExp[]][] = [
+  [/^(run|charge|chase|flee|gallop)$/, [/run|gallop|sprint|charge/i, /trot|walk|move|locomot/i]],
+  [/^(walk|carry|approach|depart|move|climb|wander|patrol|follow)$/, [/walk|trot|move|locomot/i, /run|gallop/i]],
+  [/^swim$/, [/swim/i, /move|loop/i]],
+  [/^fly$/, [/fly|flap|glide|hover/i]],
+  [/^(attack|fight|bite|strike|pounce|hunt|roar|threaten)$/, [/attack|bite|swipe|hit|roar|punch|strike/i, /run|gallop/i]],
+  [/^(eat|feed|graze|drink)$/, [/eat|graze|drink|feed/i, /idle/i]],
+  [/^(sleep|rest|lie|sit|die|asleep)$/, [/sleep|rest|lie|sit|death|die/i, /idle/i]],
+  [/.*/, [/idle|stand|breath|look|wait|survey|rest/i]],
+];
+export const clipFor = (names: string[], verb: string) => {
+  const ways = (CLIPS.find(([v]) => v.test(verb)) ?? CLIPS[CLIPS.length - 1])[1];
+  for (const w of ways) {
+    const i = names.findIndex((n) => w.test(n));
+    if (i >= 0) return i;
+  }
+  return -1;
+};
+
+const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loaded: Parameters<typeof prepare>[0] }> = ({ p, loaded, b, look, world }) => {
+  const made = React.useMemo(
+    () => prepare(loaded, p.m.model?.fit?.forward ?? "auto", p.m.model?.fit?.up ?? "+y", look.toon ? null : { envMap: env.map, intensity: env.intensity * 1.2 }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [loaded, p.m.model, look.toon],
+  );
+  const living = LIVING_ARCH.includes(p.m.build.archetype);
+  // a living thing plays its own clip for what it is doing, in step with the frame
+  const clip = living ? clipFor(loaded.clips.map((c) => c.name), p.m.verb) : -1;
+  const mixer = React.useMemo(() => {
+    if (clip < 0) return null;
+    const mx = new THREE.AnimationMixer(made.animated);
+    mx.clipAction(loaded.clips[clip]).play();
+    return mx;
+  }, [made, loaded, clip]);
+  if (mixer) mixer.setTime(b.t + p.phase * 0.3);
   // prepare() scales the largest side to 4 units; the design's size says how big it really is.
   const k = Math.max(0.05, p.m.build.size) / 4;
-  const rot = p.m.verb === "fly" ? [Math.sin(b.t * 0.9) * 0.06, 0, 0] : [0, Math.sin(b.t * 0.4) * 0.1, 0];
+  const { rot, off, scale } = living ? { rot: [0, 0, 0] as [number, number, number], off: new THREE.Vector3(), scale: 1 } : rigidPose(p, b, p.m.build.archetype === "vehicle");
+  const wet = world.set.kind === "sea" || Boolean(waterBand(world.set.kind));
+  const impact = p.m.verb === "crash" && b.k > 0 && wet;
   return (
-    <group scale={k} rotation={rot as [number, number, number]}>
-      <primitive object={made.root} />
+    <group position={off.toArray()} rotation={rot} scale={scale}>
+      {impact ? <Spray at={[p.w0 * 0.48, 0, 0]} size={Math.max(p.h, p.w0 * 0.25)} k={b.k} /> : null}
+      <group scale={k}>
+        <primitive object={made.root} />
+      </group>
     </group>
   );
 };
+
+const LIVING_ARCH = ["humanoid", "quadruped", "bird", "fish", "insect", "serpent"];
+
+// A found model draws a living thing only when it has a clip for what that thing is doing; a still mesh
+// sliding across the ground is worse than the generated, posed body.
+const animatedFor = (m: CastMember) => Boolean(m.model?.src && ready.has(m.model.src)) && clipFor(m.model?.clips ?? [], m.verb) >= 0;
 
 const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (props) => {
   const { p, look, b } = props;
@@ -404,6 +599,7 @@ const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (p
   const one = (dt: number) => {
     const t = b.t + dt;
     const phase = p.phase + dt * 3.1;
+    if (LIVING_ARCH.includes(m.build.archetype) && animatedFor(m)) return <FoundModel {...props} />;
     switch (m.build.archetype) {
       case "humanoid":
         return <Humanoid build={m.build} look={look} pose={humanPose(m.verb, t + p.yaw, phase, b.k, dimsOf(m.build), s)} t={t} state={s} held={dt ? undefined : m.held} />;
@@ -473,6 +669,9 @@ const Marks: React.FC<{ world: World; b: Blocking; look: Look }> = ({ world, b, 
           case "arrow": {
             const z = find(mk.to);
             if (!z) return null;
+            // between a ship and an iceberg (any hero-built thing) an arrow is a pipe hung in the sky;
+            // the scene's own move shows where it is going
+            if (mk.kind === "arrow" && (a.m.build.form || z.m.build.form)) return null;
             const end = z.pos.clone().add(new THREE.Vector3(0, z.h * (mk.kind === "beam" ? 0.9 : 0.5), 0));
             const from = mk.kind === "arrow" ? a.pos.clone().add(new THREE.Vector3(0, a.h * 0.5, 0)) : top;
             const dir = end.clone().sub(from);
@@ -480,13 +679,16 @@ const Marks: React.FC<{ world: World; b: Blocking; look: Look }> = ({ world, b, 
             const mid = from.clone().add(dir.clone().normalize().multiplyScalar(len / 2));
             const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
             const pulse = from.clone().lerp(end, (b.t * 0.6) % 1);
-            const r = b.U * (mk.kind === "beam" ? 0.035 : 0.05);
+            // as thick as the smaller end can carry: scaled to a liner's scene it was a bar metres across
+            const r = Math.min(b.U * (mk.kind === "beam" ? 0.035 : 0.05), Math.min(a.h, z.h, a.w, z.w) * 0.04 + 0.03);
+            // at night a glowing arrow blooms into a glare that hides the scene, so it is only bright paint
+            const lit = !(mk.kind === "arrow" && world.set.time === "night");
             return (
               <group key={i}>
-                <mesh position={mid} quaternion={q} geometry={unit.cyl} material={material(look, color, { glow: true, opacity: 0.9 })} scale={[r * 2, len, r * 2]} />
+                <mesh position={mid} quaternion={q} geometry={unit.cyl} material={material(look, color, { glow: lit, opacity: 0.9 })} scale={[r * 2, len, r * 2]} />
                 {mk.kind === "beam" && grow >= 1 ? <mesh position={pulse} geometry={unit.sphere} material={material(look, "#ffffff", { glow: true })} scale={r * 5} /> : null}
                 {mk.kind === "arrow" ? (
-                  <mesh position={from.clone().add(dir.clone().normalize().multiplyScalar(len))} quaternion={q} geometry={unit.cone} material={material(look, color, { glow: true })} scale={[r * 5, r * 7, r * 5]} />
+                  <mesh position={from.clone().add(dir.clone().normalize().multiplyScalar(len))} quaternion={q} geometry={unit.cone} material={material(look, color, { glow: lit })} scale={[r * 5, r * 7, r * 5]} />
                 ) : null}
               </group>
             );
@@ -612,7 +814,7 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
         </group>
       )}
       {b.actors.map((a, i) => (
-        <group key={i} position={[0, water && !flies(a.m) ? -a.h * 0.18 : 0, 0]}>
+        <group key={i} position={[0, water && !flies(a.m) && a.pos.y <= 0 && a.m.build.form !== "iceberg" ? -a.h * 0.18 : 0, 0]}>
           {off("actors") ? null : <Actor p={a} look={look} b={b} world={world} />}
           {grounded && a.air === 0 && a.pos.y >= 0 && !waterBand(world.set.kind)?.length ? (
             <group position={[a.pos.x, 0, a.pos.z]} rotation={[0, a.yaw, 0]}>
@@ -657,19 +859,21 @@ const Callouts: React.FC<{ world: World; b: Blocking; portrait: boolean; width: 
 export const StoryWorldScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
   const { width, height, fps, durationInFrames } = useVideoConfig();
-  const world = scene.world as World;
   const short = format === "short";
-  const at = momentOf(scene);
-  const b = block(world, frame, fps, durationInFrames, at, short);
+  const seg = segmentOf(scene.world as World, frame, durationInFrames, momentOf(scene));
+  const world = seg.world;
+  const b = block(world, seg.frame, fps, seg.D, seg.at, short);
   const look = lookOf(world.style);
   const seed = (world.seed ?? 0) ^ [...(world.set.place || world.set.kind)].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7);
   const k = unitOf(format);
-  const keep = React.useMemo(() => keepOutOf(world, fps, durationInFrames, at, short), [world, fps, durationInFrames, at, short]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const keep = React.useMemo(() => keepOutOf(world, fps, seg.D, seg.at, short), [scene.world, seg.i, fps, seg.D, seg.at, short]);
+  const loaded = useCastModels(scene.world as World);
   return (
     <AbsoluteFill style={{ background: theme.background }}>
-      <ThreeCanvas width={width} height={height} camera={{ fov: 36, position: [8, 3, 8] }} gl={{ antialias: true }} shadows>
+      {loaded ? <ThreeCanvas width={width} height={height} camera={{ fov: 36, position: [8, 3, 8] }} gl={{ antialias: true }} shadows>
         <World3D world={world} b={b} portrait={short} seed={seed} keep={keep} frame={frame} />
-      </ThreeCanvas>
+      </ThreeCanvas> : null}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: `radial-gradient(ellipse 75% 65% at 50% 48%, transparent 55%, rgba(0,0,0,${lightOf(look, world.set, b.U).vignette}))` }} />
       <Callouts world={world} b={b} portrait={short} width={width} height={height} scale={k} font={theme.font} />
       <WeatherOverlay weather={scene.weather} seed={world.seed} night={world.set.time === "night"} />

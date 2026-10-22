@@ -86,6 +86,11 @@ export type Callout = { on: string; text: string };
 
 export type StyleName = "lowpoly" | "voxel" | "noir" | "diorama" | "clinical";
 
+// A beat of a directed scene: from its cue on, these actors take up a new verb, go somewhere or change
+// state, starting where the last beat left them, and the camera cuts to the beat's move.
+export type BeatActor = { entity: string; verb?: string; to?: Spot | ""; state?: State; face?: string };
+export type Beat = { from: number; cue?: string; cast: BeatActor[]; camera?: string; on?: string };
+
 export type World = {
   style: StyleName;
   seed: number;
@@ -95,4 +100,5 @@ export type World = {
   on: string;
   marks: Mark[];
   callouts: Callout[];
+  beats?: Beat[];
 };

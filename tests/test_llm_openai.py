@@ -134,7 +134,8 @@ def test_long_script_is_written_chapter_by_chapter(monkeypatch):
     cfg = Config(format="long", target_minutes=4, long_min_minutes=0, llm=LLMConfig(provider="openai"))
     n = llm.chapter_count(cfg)
     outline = {k: v for k, v in SCRIPT.items() if k != "scenes"}
-    outline["chapters"] = [{"heading": f"Part {i}", "angle": "why"} for i in range(1, n + 1)]
+    outline["cold_open"] = "The ice gave way under the sledge."
+    outline["chapters"] = [{"heading": f"Part {i}", "angle": "why", "turn": f"twist {i}", "cliffhanger": f"question {i}?"} for i in range(1, n + 1)]
     answers = [reply(json.dumps(outline))] + [
         reply(json.dumps({"scenes": [{"narration": f"Chapter {i} line.", "type": "statement", "image": i}]}))
         for i in range(1, n + 1)
@@ -156,6 +157,10 @@ def test_long_script_is_written_chapter_by_chapter(monkeypatch):
     assert [s.narration for s in script.scenes] == [f"Chapter {i} line." for i in range(1, n + 1)]
     assert [(c.title, c.scene) for c in script.chapters] == [(f"Part {i}", i - 1) for i in range(1, n + 1)]
     assert "Chapter 1 line." in prompts[2]  # the next chapter continues from the last one
+    # The outline's cold open, turns and cliffhangers reach every chapter, so the open loops line up.
+    assert all("Cold open: The ice gave way" in p and "Ends on: question 1?" in p for p in prompts[1:])
+    assert "end on the open question: question 1?" in prompts[1] and "twist 2" in prompts[2]
+    assert "return to the cold open" in prompts[-1] and "end on the open question" not in prompts[-1]
     assert "Images already used (don't reuse): 1" in prompts[2]
     assert "fact 0 " in prompts[1] and "fact 0 " not in prompts[-1]  # each chapter gets its own part of the notes
     assert "fact 140" in prompts[-1] and "fact 140" not in prompts[1]
@@ -197,6 +202,7 @@ def test_short_scripts_are_built_around_one_message(cfg, monkeypatch):
 
 def test_long_scripts_keep_the_subscribe_close():
     assert "inviting viewers to subscribe" in llm.LONG_STRUCTURE and "Short" not in llm.LONG_STRUCTURE
+    assert "Cold open" in llm.LONG_STRUCTURE and "Midpoint turn" in llm.LONG_STRUCTURE
 
 
 def test_long_videos_aim_past_the_mid_roll_minimum():

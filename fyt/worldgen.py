@@ -17,9 +17,9 @@ turns that into a per-video design and per-scene direction, which the renderer's
 
 Both come from one model call each; when a call fails, rules read the same manifest (the entity's
 kind and look words), so every scene still gets a story-specific build. Nothing is cached between
-videos: the next story designs its own cast. Found models (fyt.assetlib) still draw non-living things
-when one genuinely matches; people and animals are always generated, because a found mesh has no rig
-our verbs can drive.
+videos: the next story designs its own cast. Found models (fyt.assetlib) draw what they genuinely
+match: any thing, and a person or an animal when the model brings its own animation (the renderer plays
+its walk or idle clip for the verb, and falls back to the generated body when no clip fits).
 
 The guards keep the world true to the narration: an entity is shown only in scenes the manifest lists
 it in; an actor does something beyond a calm verb (idle, walk, look around...) only when the scene's
@@ -168,6 +168,21 @@ class Callout(BaseModel):
     text: str = Field(description="1-4 words from the narration or the entity's name.")
 
 
+class BeatActor(BaseModel):
+    entity: str
+    verb: Verb
+    to: Spot | Literal[""] = Field(default="", description="Where it moves to in this beat, or empty to stay.")
+    state: State = "normal"
+    face: str = Field(default="", description="An entity id it turns to, 'camera', or empty.")
+
+
+class Beat(BaseModel):
+    cue: str = Field(description="The exact words of the narration at which this beat starts.")
+    actors: list[BeatActor] = Field(description="1-3 actors whose action changes at the cue; the others carry on.")
+    camera: Move = Field(description="The camera move the shot cuts to for this beat.")
+    on: str = Field(default="", description="The entity the camera frames in this beat; the first actor when empty.")
+
+
 class Shot(BaseModel):
     scene: int
     place: str = Field(default="", description="The place id, or empty.")
@@ -177,6 +192,7 @@ class Shot(BaseModel):
     on: str = Field(default="", description="The entity the camera frames; the first actor when empty.")
     marks: list[Mark] = Field(default_factory=list, description="0-3")
     callouts: list[Callout] = Field(default_factory=list, description="0-2")
+    beats: list[Beat] = Field(default_factory=list, description="0-3 later beats, in the order the narration tells them.")
 
 
 class Direction(BaseModel):
@@ -205,7 +221,7 @@ KIND_WORDS: list[tuple[str, tuple[str, ...]]] = [
                    "hippo", "rhino", "zebra", "donkey", "mule", "llama", "panda", "koala", "dinosaur", "crocodile", "alligator",
                    "lizard", "tortoise", "turtle", "frog", "animal", "mammal", "cub", "puppy", "calf", "beast")),
     ("vehicle", ("airbus", "boeing", "car", "truck", "lorry", "van", "plane", "aircraft", "airplane", "aeroplane", "jet", "airliner", "cessna", "helicopter",
-                 "boat", "ship", "ferry", "yacht", "canoe", "kayak", "train", "locomotive", "bus", "bike", "bicycle", "motorcycle",
+                 "boat", "ship", "liner", "steamer", "steamship", "ferry", "yacht", "canoe", "kayak", "train", "locomotive", "bus", "bike", "bicycle", "motorcycle",
                  "tractor", "submarine", "rocket", "ambulance", "taxi", "jeep", "suv", "tank", "tram", "glider", "balloon", "raft",
                  "vessel", "tug", "trawler", "sled", "carriage", "wagon", "cart", "drone", "spacecraft", "vehicle")),
     ("plant", ("tree", "flower", "plant", "mushroom", "fungus", "cactus", "crop", "bush", "shrub", "vine", "grass", "seaweed", "algae", "moss")),
@@ -238,11 +254,16 @@ BIG = ("large", "huge", "giant", "massive", "enormous", "big", "tall", "grizzly"
 SMALL = ("small", "tiny", "little", "young", "cub", "juvenile", "baby", "miniature", "micro")
 
 
-def _has(text: str, word: str) -> bool:
-    """The word in the text: whole (or plural) for short words, so 'sealed' is no seal and 'containers'
-    no ant; long words and stems ('bacteri') may run on."""
+def _at(text: str, word: str) -> int:
+    """Where the word is in the text (-1 if not): whole (or plural) for short words, so 'sealed' is no
+    seal and 'containers' no ant; long words and stems ('bacteri') may run on."""
     tail = "" if len(word) >= 6 else r"(?:s|es)?(?![a-z])"
-    return re.search(rf"(?<![a-z]){re.escape(word)}{tail}", text) is not None
+    m = re.search(rf"(?<![a-z]){re.escape(word)}{tail}", text)
+    return m.start() if m else -1
+
+
+def _has(text: str, word: str) -> bool:
+    return _at(text, word) >= 0
 
 
 PLACE_KINDS = ("river", "lake", "sea", "ocean", "water body", "waterway", "bay", "harbour", "harbor", "airport", "airfield", "city",
@@ -262,11 +283,13 @@ def archetype_of(e: Entity) -> str:
     """The body plan an entity is built on, from its kind first, then its name and search terms."""
     texts = (e.kind.lower(), f"{e.name} {' '.join(e.search)}".lower(), e.look.lower())
     # A specific word anywhere ("tardigrade") beats a generic one ("microscopic animal").
+    # In the kind, the last word named is the thing itself: a "passenger liner" is a ship, not a passenger.
     for generic in (False, True):
-        for text in texts:
-            for arche, words in KIND_WORDS:
-                if any(_has(text, w) for w in words if (w in GENERIC) == generic):
-                    return arche
+        for i, text in enumerate(texts):
+            found = [(max((_at(text, w) for w in words if (w in GENERIC) == generic), default=-1), -k, arche) for k, (arche, words) in enumerate(KIND_WORDS)]
+            found = [f for f in found if f[0] >= 0]
+            if found:
+                return max(found)[2] if i == 0 else min(found, key=lambda f: -f[1])[2]
     return "object"
 
 
@@ -309,9 +332,17 @@ def _outfit(words: str) -> Outfit:
     return o
 
 
+ICE_WORDS = ("iceberg", "ice floe", "glacier", "ice shelf")
+
+
 def _thing_parts(words: str, size: float, c: list[str]) -> list[Part]:
     """A plain shape for an object no model call described: its outline from what it is called."""
     s, a, b = size, c[0], c[1]
+    if any(_has(words, w) for w in ICE_WORDS):
+        # a jagged white mass: a tall peak, a shoulder and a broad waterline base
+        return [Part(shape="cone", at=[0, s * 0.42, 0], size=[s * 0.7, s * 0.85, s * 0.6], color="#eef4f8"),
+                Part(shape="cone", at=[s * 0.28, s * 0.25, s * 0.1], size=[s * 0.5, s * 0.5, s * 0.45], rot=[0, 30, 8], color="#d4e4ee"),
+                Part(shape="box", at=[0, s * 0.06, 0], size=[s * 1.1, s * 0.16, s * 0.8], rot=[0, 12, 0], color="#bcd6e6")]
     if any(_has(words, w) for w in ("bag", "duffel", "duffle", "sack", "backpack", "suitcase", "pack")):
         return [Part(shape="capsule", at=[0, s * 0.22, 0], size=[s * 0.42, s, s * 0.42], rot=[0, 0, 90], color=a),
                 Part(shape="torus", at=[0, s * 0.46, 0], size=[s * 0.32, s * 0.32, s * 0.06], rot=[0, 90, 0], color=b)]
@@ -332,6 +363,9 @@ def _thing_parts(words: str, size: float, c: list[str]) -> list[Part]:
             Part(shape="box", at=[0, s * 0.62, 0], size=[s * 0.7, s * 0.06, s * 0.5], color=b)]
 
 
+# An ocean liner of the steam age: the hull, decks, raked funnels and masts of a Titanic or a Lusitania.
+LINER_WORDS = ("liner", "ocean liner", "passenger ship", "passenger liner", "steamship", "steamer", "titanic", "lusitania",
+               "mauretania", "britannic", "olympic", "carpathia", "andrea doria", "transatlantic")
 AIRLINER_WORDS = ("airliner", "airbus", "boeing", "jet", "jumbo", "a320", "a330", "a380", "737", "747", "757", "767", "777", "787", "dc-10")
 
 
@@ -344,7 +378,9 @@ def vehicle_form(words: str) -> str:
         return "plane"
     if any(_has(words, w) for w in ("helicopter",)):
         return "helicopter"
-    if any(_has(words, w) for w in ("boat", "ship", "ferry", "yacht", "vessel", "tug", "trawler", "liner")):
+    if any(_has(words, w) for w in LINER_WORDS):
+        return "liner"
+    if any(_has(words, w) for w in ("boat", "ship", "ferry", "yacht", "vessel", "tug", "trawler")):
         return "boat"
     if any(_has(words, w) for w in ("train", "locomotive", "tram", "canoe", "kayak", "raft", "submarine", "bike", "bicycle", "motorcycle", "drone")):
         return ""
@@ -353,6 +389,11 @@ def vehicle_form(words: str) -> str:
     if any(_has(words, w) for w in ("car", "taxi", "sedan", "police car", "cab", "coupe", "hatchback")):
         return "car"
     return ""
+
+
+def thing_form(words: str) -> str:
+    """The detailed model the renderer draws for an object its name places: an iceberg's fractured ice."""
+    return "iceberg" if any(_has(words, w) for w in ICE_WORDS) else ""
 
 
 def cell_form(words: str) -> str:
@@ -488,6 +529,8 @@ def rule_build(e: Entity, seed: int) -> Build:
         # real length, pulled towards a car's so people still read beside a ship or an airliner
         real = next((m for ws, m in VEHICLE_LENGTHS if any(_has(words, w) for w in ws)), size)
         size = round(4.5 * (real / 4.5) ** 0.5, 2)
+    if any(_has(words, w) for w in ICE_WORDS):
+        size = 16.0  # an iceberg stands as tall as a liner is wide, not as a crate
     if any(_has(words, w) for w in BIG):
         size *= 1.35
     if any(_has(words, w) for w in SMALL):
@@ -527,7 +570,7 @@ def rule_build(e: Entity, seed: int) -> Build:
     return Build(
         entity=e.id, archetype=arche, size=round(size, 2), primary=c[0], secondary=c[1], accent=c[2],
         skin=_pick(s, SKINS) if arche == "humanoid" else "", hair=_pick(s >> 3, HAIRS) if arche == "humanoid" else "",
-        body=body, outfit=outfit, parts=parts, form=vehicle_form(words) if arche == "vehicle" else cell_form(words) if arche == "cell" else "",
+        body=body, outfit=outfit, parts=parts, form=vehicle_form(words) if arche == "vehicle" else cell_form(words) if arche == "cell" else thing_form(words) if arche in ("object", "structure") else "",
     )
 
 
@@ -634,8 +677,8 @@ Set kinds: {sets}
   already adds generic ground cover, so only add what is specific. No people or animals."""
 
 DIRECT_GUIDE = """You direct the 3D scenes of a documentary video. The engine builds each entity from its
-design and performs verbs; you block each scene so it shows exactly what the narration says, as a
-film director would. Return JSON only.
+design and performs verbs; you set each scene and plan its action so it shows exactly what the
+narration says, as it says it, as a film director would. Return JSON only.
 
 Verbs by archetype: {verbs}
 Camera moves: {camera}
@@ -656,7 +699,15 @@ Rules:
 - camera: a move that tells the moment (establish for a new place, follow for travel, push_in for a
   reveal, low_angle for menace, over_shoulder for an encounter, top_down for a route or layout). Vary it.
 - marks: only where they explain something: a beam for a signal or call, a dome for a range, a path
-  for a route, a ring for 'here'. callouts: 1-4 words copied from the narration or an entity's name."""
+  for a route, a ring for 'here'. callouts: 1-4 words copied from the narration or an entity's name.
+- Put on stage everything the narration of that scene names: a ship and the iceberg it hits are both
+  actors, not just the one the scene is about.
+- The opening actors are the scene at its first words. beats: when the narration tells the action in
+  steps (the ship sails on; the iceberg looms; it strikes; it sinks), add a beat for each later step,
+  in order: cue = the exact words where that step starts, the actors whose action changes then (each
+  starts from where it was), and a camera move for it. Use 1-3 beats for a scene that tells a change,
+  none for a scene that only describes something. The same rule holds for verbs and states: only what
+  the narration tells, at the words that tell it."""
 
 
 def _hex(v: str, fallback: str) -> str:
@@ -691,6 +742,18 @@ def _clean_part(p: Part, size: float) -> Part | None:
     return p.model_copy(update={"at": at, "size": sz, "rot": rot, "color": _hex(p.color, "#9a9a9a")})
 
 
+def _near(a: str, b: str, within: float = 0.18) -> bool:
+    """Whether two colours read as the same one (RGB distance, 0-1 per channel)."""
+    ra, rb = ([int(c[i:i + 2], 16) / 255 for i in (1, 3, 5)] for c in (a, b))
+    return sum((x - y) ** 2 for x, y in zip(ra, rb)) ** 0.5 < within
+
+
+def _on_body(p: Part, size: float) -> bool:
+    """Whether a part of a living thing sits on its bone (a hat, a satchel, a tool in the hand). A model
+    tends to place them in whole-body coordinates, which on a bone leaves a slab floating by the head."""
+    return max(abs(x) for x in p.at) <= size * 0.25 and max(p.size) <= size * 0.5
+
+
 def checked_build(b: Build, e: Entity, seed: int) -> Build:
     """A model's build made safe to render and true to the entity: the archetype the entity's own words
     point to when the model's disagrees with a living/non-living split (a bear is never built from
@@ -704,13 +767,21 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
     if (arche in LIVING) != (rules.archetype in LIVING) and (archetype_of(e) != "object" or said_thing):
         arche = rules.archetype
     size = b.size if 0.002 <= b.size <= 400 else rules.size
+    if any(_has(f"{e.name} {e.kind}".lower(), w) for w in ICE_WORDS):
+        size = max(size, rules.size * 0.7)  # never a crate-sized iceberg beside its ship
     parts = [q for q in (_clean_part(p, size) for p in b.parts[:MAX_PARTS]) if q is not None]
     if arche not in LIVING:
         parts = [p.model_copy(update={"bone": "body"}) for p in parts]
         if len(parts) < 2:  # too little to be recognisable: the rules' outline of what it is called
             parts = rules.parts
+    else:
+        parts = [p for p in parts if _on_body(p, size)]
     outfit = (b.outfit or rules.outfit) if arche == "humanoid" else None
     primary, secondary, accent = _hex(b.primary, rules.primary), _hex(b.secondary, rules.secondary), _hex(b.accent, rules.accent)
+    skin = _hex(b.skin, rules.skin or SKINS[2]) if arche == "humanoid" else ""
+    if arche == "humanoid" and _near(primary, skin):
+        # clothes the colour of the skin read as a bare mannequin: the rules' clothes, else a dark coat
+        primary = rules.primary if not _near(rules.primary, skin) else "#2c3a52"
     if arche == "vehicle" and rules.archetype == "vehicle" and rules.parts:
         # a vehicle its name says is an airliner, a ship or a car keeps that outline, at the rules' size,
         # in the model's colours: a model's own boxes for one rarely read as that kind of vehicle
@@ -718,9 +789,9 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
         parts = _vehicle_parts(f"{e.name} {e.kind} {' '.join(e.search)} {e.look}".lower(), size, [primary, secondary, accent])
     return b.model_copy(update={
         "entity": e.id, "archetype": arche, "size": round(size, 3), "parts": parts, "outfit": outfit,
-        "form": rules.form if arche in ("vehicle", "cell") and rules.archetype == arche else "",
+        "form": rules.form if arche in ("vehicle", "cell", "object", "structure") and rules.archetype == arche else "",
         "primary": primary, "secondary": secondary, "accent": accent,
-        "skin": _hex(b.skin, rules.skin or SKINS[2]) if arche == "humanoid" else "",
+        "skin": skin,
         "hair": _hex(b.hair, rules.hair or HAIRS[0]) if arche == "humanoid" else "",
     })
 
@@ -974,7 +1045,41 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
     if not place:
         place = moment.place if moment and moment.place else next((p.id for p in story.places if scene in p.scenes), "")
     on = _slug(sh.on) if sh.on and _slug(sh.on) in ids else actors[0].entity
-    return Shot(scene=scene, place=place, time=sh.time, actors=actors[:5], camera=sh.camera, on=on, marks=marks, callouts=callouts)
+    return Shot(scene=scene, place=place, time=sh.time, actors=actors[:5], camera=sh.camera, on=on, marks=marks, callouts=callouts,
+                beats=checked_beats(sh.beats, narration, actors[:5], builds))
+
+
+def checked_beats(beats: list[Beat], narration: str, actors: list[Actor], builds: dict[str, Build]) -> list[Beat]:
+    """Beats true to the narration: each starts at words the narration says, after the one before, and
+    changes only actors on stage, to verbs and states the narration tells from those words on."""
+    ids = {a.entity for a in actors}
+    low = narration.lower()
+    out: list[Beat] = []
+    pos = 1  # a beat at the very first words is the opening blocking, not a beat
+    for bt in beats[:3]:
+        cue = bt.cue.strip().strip("\"'“”‘’").strip()
+        i = low.find(cue.lower(), pos) if len(cue) >= 3 else -1
+        if i < 0:
+            continue
+        rest = narration[i:]
+        acts: list[BeatActor] = []
+        for a in bt.actors:
+            eid = _slug(a.entity)
+            if eid not in ids or any(x.entity == eid for x in acts):
+                continue
+            arche = builds[eid].archetype
+            verb = _verb(a.verb, arche, rest, True)
+            if verb in G["calm"] and eid == _slug(bt.on or a.entity):
+                # a beat is a change: its subject left calm takes the action its own words tell, if any
+                verb = next((v for v in verbs_for(arche) if v not in G["calm"] and told(v, rest[:80])), verb)
+            acts.append(BeatActor(entity=eid, verb=verb, to=a.to if a.to in G["places"] else "",
+                                  state=_state(a.state, rest), face=a.face if a.face in ("camera", "") or _slug(a.face) in ids else ""))
+        if not acts:
+            continue
+        on = _slug(bt.on) if bt.on and _slug(bt.on) in ids else acts[0].entity
+        out.append(Beat(cue=narration[i:i + len(cue)], actors=acts, camera=bt.camera, on=on))
+        pos = i + len(cue)
+    return out
 
 
 def rule_shot(script: Script, story: Manifest, builds: dict[str, Build], scene: int, n: int) -> Shot | None:
@@ -1071,7 +1176,7 @@ def direct(cfg: Config, script: Script, story: Manifest, builds: dict[str, Build
             continue
         # where the model left the moment's lead standing still but its own words tell an action, act it
         lead, rl = out[k].actors[0], r.actors[0]
-        if lead.entity == rl.entity and lead.verb in G["calm"] and rl.verb not in G["calm"]:
+        if lead.entity == rl.entity and lead.verb in G["calm"] and rl.verb not in G["calm"] and not out[k].beats:
             acts = [lead.model_copy(update={"verb": rl.verb, "state": rl.state if lead.state == "normal" else lead.state})] + out[k].actors[1:]
             out[k] = out[k].model_copy(update={"actors": acts})
     # The same camera move twice in a row reads as one long scene: vary the second.
@@ -1103,13 +1208,16 @@ def world_of(style: str, seed: int, shot: Shot, builds: dict[str, Build], settin
         b = builds[a.entity]
         entry = a.model_dump() | {"build": b.model_dump()}
         m = models.get(a.entity)
-        if m and b.archetype not in LIVING:
-            entry["model"] = m  # a found model that genuinely matches draws it; the build stays its fallback
+        if m and (b.archetype not in LIVING or m.get("clips")):
+            # a found model that genuinely matches draws it (a living thing's only with its own animation,
+            # and only while it has a clip for what it is doing); the build stays its fallback
+            entry["model"] = m
         if a.holding and a.holding in builds:
             entry["held"] = builds[a.holding].model_dump()
         cast.append(entry)
+    beats = [{"cue": bt.cue, "cast": [a.model_dump() for a in bt.actors], "camera": bt.camera, "on": bt.on} for bt in shot.beats]
     return {"style": style, "seed": seed, "set": sett, "cast": cast, "camera": shot.camera, "on": shot.on,
-            "marks": [m.model_dump() for m in shot.marks], "callouts": [c.model_dump() for c in shot.callouts]}
+            "marks": [m.model_dump() for m in shot.marks], "callouts": [c.model_dump() for c in shot.callouts], "beats": beats}
 
 
 def record(style: str, builds: dict[str, Build], settings: dict[str, Setting], shots: dict[int, Shot], made: dict, models: dict[str, dict]) -> dict:
@@ -1118,7 +1226,7 @@ def record(style: str, builds: dict[str, Build], settings: dict[str, Setting], s
         "style": style,
         "made": made,
         "builds": [b.model_dump() | {
-            "source": "found model" if b.entity in models and b.archetype not in LIVING else
+            "source": "found model" if b.entity in models and (b.archetype not in LIVING or models[b.entity].get("clips")) else
                       ("procedural, designed by the model" if made.get("cast") == "model" and b.entity not in made.get("rules_built", []) else "procedural, from the entity's words"),
             "scenes": sorted(k for k, s in shots.items() if any(a.entity == b.entity for a in s.actors)),
         } for b in builds.values()],

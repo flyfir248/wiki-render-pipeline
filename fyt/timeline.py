@@ -36,6 +36,11 @@ def build_props(
     # The video's first map opens on a globe that dives in; later maps start from the flat map.
     video_seed = zlib.crc32(script.title.encode()) & 0x7FFFFFFF
     first_map = next((i for i, s in enumerate(script.scenes) if s.type == "map"), None)
+    # A long video's chapters after the first open on a card: a beat to breathe, and a sign of progress.
+    # The first chapter is the cold open, which plays without one.
+    chapters = {c.scene: (n, c.title) for n, c in enumerate(script.chapters or [], 1) if n > 1 and c.scene > 0}
+    if cfg.format != "long":
+        chapters = {}
     for i, (scene, (start, _end)) in enumerate(zip(script.scenes, spans)):
         scene = scenes3d.legacy_to_world(scene)
         # A scene stays on screen until the next one starts, so pauses are covered.
@@ -74,7 +79,7 @@ def build_props(
                 lines=scene.lines,
                 setting=scene.setting,
                 backdropSrc=scene.backdrop_src,
-                world=scene.world,
+                world=timed_world(scene.world, clip_words[i], start - vis_start, vis_end - vis_start),
                 actors=[a for a in scene.actors or [] if a.src] or None,
                 effect=scene.effect,
                 effectX=scene.effect_x,
@@ -101,6 +106,8 @@ def build_props(
                 landTimes=land_times(scene, clip_words[i], start - vis_start),
                 camera=scene.camera,
                 transition=scene.transition,
+                chapter=chapters[i][1] if i in chapters else None,
+                chapterNumber=chapters[i][0] if i in chapters else None,
             )
         )
         captions.extend(
@@ -328,6 +335,23 @@ def cue_time(cue: str | None, words: list[Word], offset: float) -> float | None:
     stem = want[0][:5]
     hit = next((j for j, w in enumerate(said) if w.startswith(stem)), None)
     return None if hit is None else round(words[hit].start + offset, 3)
+
+
+def timed_world(world: dict | None, words: list[Word], offset: float, length: float) -> dict | None:
+    """A story world with each director's beat placed on its cue (0-1 through the scene, as the narrator
+    says the words); a beat whose words can't be found, or that would last under a second, is dropped."""
+    if not world or not world.get("beats") or length <= 0:
+        return world
+    timed, last = [], 0.0
+    for bt in world["beats"]:
+        t = cue_time(bt.get("cue"), words, offset)
+        if t is None:
+            continue
+        u = round(t / length, 3)
+        if 0.08 <= u <= 0.92 and u - last >= 1.0 / length:
+            timed.append(bt | {"from": u})
+            last = u
+    return world | {"beats": timed}
 
 
 def key_moment(scene: ScriptScene, words: list[Word], offset: float, length: float) -> float | None:

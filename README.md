@@ -435,7 +435,17 @@ the videos still go out; captions are burned into the video anyway.
 Long videos pick an article with at least `wikipedia.long_min_chars` of text. On Groq's free tier the
 script is planned first and then written one chapter at a time, each from its own part of the article,
 because a whole 8 minute script doesn't fit in one request. The chapters become timestamps in the
-description. A long video takes about an hour to render on the free runner.
+description.
+
+Long videos are told like a thriller, not a summary (`LONG_STRUCTURE` in `fyt/llm.py`): a cold open
+drops the viewer into the story's most dramatic moment and cuts away before the outcome, says what is
+at stake, then rewinds; the story follows one person with a goal, linked scene to scene by "but" and
+"so"; something changes every minute or so, a twist lands around the middle, and the end returns to
+the cold open and finishes it. The outline plans this before any scene is written: the cold open, and
+for every chapter a turn and the open question it ends on, which every chapter's request sees, so the
+loops one chapter opens are the ones a later chapter closes. Scenes are short beats of 15-25 words,
+photo scenes cut to a new shot every 5 seconds (`growth.long_shot_seconds`), and each chapter after
+the first opens with a "Part N" card and a hit. A long video takes about an hour to render on the free runner.
 
 Change the times in the workflow's `cron` lines, and the niche in `channel.yaml`
 (`wikipedia.list_pages`, `categories` or `articles`). Try one article locally with

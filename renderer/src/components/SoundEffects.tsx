@@ -31,7 +31,8 @@ export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
     // thread the zip of string pulled through fingers.
     const enter = transition === "flash" ? "thud" : transition === "thread" ? "zip" : "whoosh";
     if (scene.id !== "s1" && transition !== "fade") cues.push({ at: from - (transition === "thread" ? 1 : 4), name: enter, gain: 0.6 });
-    // The hook opens on a hit, so the first frame lands with weight.
+    // The hook opens on a hit, so the first frame lands with weight, and so does each chapter card.
+    if (scene.chapter) cues.push({ at: from + 2, name: "hit", gain: 0.55 });
     if (scene.id === "s1") cues.push({ at: 0, name: "hit", gain: 0.7 });
     motionCues(scene, len, fps).forEach((c) => cues.push({ ...c, at: from + c.at }));
     const type = shownType(scene); // no pops or booms for art or pins that never appear

@@ -353,3 +353,99 @@ def test_cells_with_no_place_are_shown_in_the_bloodstream():
     shot = wg.Shot(scene=1, place="", actors=[wg.Actor(entity="rbc", verb="move")], camera="follow")
     world = wg.world_of("clinical", 1, shot, {"rbc": build}, {"africa": savanna}, {})
     assert world["set"]["kind"] == "micro"
+
+
+TITAN_STORY = script(
+    "In the novel the Titan steams across the Atlantic at full speed.",
+    "On an April night the Titan strikes an iceberg and sinks within minutes.",
+    title="The Wreck of the Titan", mood="tense",
+)
+TITAN_MANIFEST = Manifest(
+    entities=[
+        Entity(id="titan", name="the Titan", kind="ocean liner", search=["ocean liner", "ship"], look="huge four-funnel liner", certain=False, scenes=[1]),
+        Entity(id="iceberg", name="an iceberg", kind="iceberg", search=["iceberg"], look="tall white iceberg", certain=False, scenes=[2]),
+    ],
+    places=[Place(id="atlantic", name="North Atlantic", look="dark open ocean at night", scenes=[1, 2])],
+    moments=[Moment(scene=2, entity="iceberg", place="atlantic", action="the Titan strikes it", motion="present", cue="strikes an iceberg", documented=True)],
+)
+
+
+def test_every_entity_a_scene_names_is_in_it_even_if_the_model_left_it_out():
+    m = manifest.checked(TITAN_MANIFEST, TITAN_STORY)
+    assert {e.id for e in manifest.in_scene(m, 2)} == {"titan", "iceberg"}
+
+
+def test_the_director_plays_a_scene_in_beats_on_the_narration_words(monkeypatch):
+    m = manifest.checked(TITAN_MANIFEST, TITAN_STORY)
+    plan = worldgen.Direction(shots=[worldgen.Shot(
+        scene=2, place="atlantic", camera="establish",
+        actors=[worldgen.Actor(entity="titan", verb="move"), worldgen.Actor(entity="iceberg", verb="present", at="right")],
+        beats=[
+            worldgen.Beat(cue="strikes an iceberg", actors=[worldgen.BeatActor(entity="titan", verb="crash")], camera="low_angle"),
+            worldgen.Beat(cue="sinks within minutes", actors=[worldgen.BeatActor(entity="titan", verb="sink", state="damaged")], camera="reveal"),
+            worldgen.Beat(cue="explodes in flames", actors=[worldgen.BeatActor(entity="titan", verb="fall")], camera="orbit"),  # not said: dropped
+        ])])
+    monkeypatch.setattr(worldgen.llm, "structured", lambda *a, **k: plan)
+    builds = {e.id: worldgen.rule_build(e, 1) for e in m.entities}
+    shots, how = worldgen.direct(Config(), TITAN_STORY, m, builds, [2], log=lambda x: None)
+    sh = shots[2]
+    assert how == "model" and {a.entity for a in sh.actors} == {"titan", "iceberg"}
+    assert [(b.cue, b.actors[0].verb, b.camera) for b in sh.beats] == [("strikes an iceberg", "crash", "low_angle"), ("sinks within minutes", "sink", "reveal")]
+    assert sh.beats[1].actors[0].state == "damaged"
+    world = worldgen.world_of("lowpoly", 1, sh, builds, {}, {})
+    assert world["beats"][1]["cast"][0]["verb"] == "sink"
+
+
+def test_a_beat_cannot_act_out_what_its_words_dont_tell():
+    builds = {e.id: worldgen.rule_build(e, 1) for e in TITAN_MANIFEST.entities}
+    actors = [worldgen.Actor(entity="titan", verb="move")]
+    beats = [worldgen.Beat(cue="steams across", actors=[worldgen.BeatActor(entity="titan", verb="crash")], camera="follow")]
+    out = worldgen.checked_beats(beats, TITAN_STORY.scenes[0].narration, actors, builds)
+    assert out[0].actors[0].verb == "present"
+
+
+def test_beats_are_timed_on_their_words():
+    from fyt.models import Word
+    from fyt.timeline import timed_world
+    words = [Word(word=w, start=i * 0.5, end=i * 0.5 + 0.4) for i, w in enumerate("On an April night the Titan strikes an iceberg and sinks within minutes.".split())]
+    world = {"cast": [], "beats": [{"cue": "strikes an iceberg", "cast": []}, {"cue": "sinks within minutes", "cast": []}, {"cue": "never said", "cast": []}]}
+    timed = timed_world(world, words, 0.0, 8.0)
+    assert [b["from"] for b in timed["beats"]] == [0.375, 0.625]
+
+
+def test_a_passenger_liner_is_a_ship_not_a_passenger():
+    liner = Entity(id="titan", name="the Titan", kind="passenger liner", search=["titan ocean liner", "ship"], look="white hull", certain=True, scenes=[1])
+    captain = Entity(id="smith", name="Smith", kind="ship captain", search=[], look="", certain=True, scenes=[1])
+    assert worldgen.archetype_of(liner) == "vehicle"
+    assert worldgen.archetype_of(captain) == "humanoid"
+
+
+def test_a_beat_left_calm_takes_the_action_its_words_tell():
+    builds = {e.id: worldgen.rule_build(e, 1) for e in TITAN_MANIFEST.entities}
+    actors = [worldgen.Actor(entity="titan", verb="move"), worldgen.Actor(entity="iceberg", verb="present")]
+    beats = [worldgen.Beat(cue="strikes an iceberg", actors=[worldgen.BeatActor(entity="titan", verb="present")], camera="follow", on="titan")]
+    out = worldgen.checked_beats(beats, "On an April night the Titan strikes an iceberg and sinks within minutes.", actors, builds)
+    assert out[0].actors[0].verb == "crash"
+
+
+def test_a_liner_and_an_iceberg_get_their_detailed_models():
+    assert worldgen.vehicle_form("the titan, a four-funnel ocean liner") == "liner"
+    assert worldgen.vehicle_form("rms lusitania") == "liner"
+    assert worldgen.vehicle_form("an airbus a380 airliner") == "airliner"  # not a liner
+    assert worldgen.vehicle_form("a fishing trawler") == "boat"
+    berg = Entity(id="iceberg", name="an iceberg", kind="iceberg", search=["iceberg"], look="tall white iceberg", certain=False, scenes=[2])
+    assert worldgen.rule_build(berg, 1).form == "iceberg"
+    designed = worldgen.Build(entity="iceberg", archetype="object", size=20, primary="#ffffff", secondary="#dde8f0", accent="#bcd6e6", parts=[worldgen.Part(shape="cone", at=[0, 5, 0], size=[10, 10, 10], color="#ffffff")] * 2)
+    assert worldgen.checked_build(designed, berg, 1).form == "iceberg"
+
+
+def test_a_person_is_never_dressed_in_their_skin_or_hung_with_floating_slabs():
+    # from the Titanic test render: Rowland's coat was his skin colour (a bare mannequin) and a model's
+    # whole-body box on his head bone floated beside his head
+    e = Entity(id="rowland", name="Rowland, deckhand", kind="person", search=["deckhand"], look="rough coat, sailor hat", certain=False, scenes=[6])
+    b = worldgen.Build(entity="rowland", archetype="humanoid", size=1.75, primary="#ffe0c0", secondary="#302000", accent="#804000", skin="#ffe0c0", hair="#603000",
+                       parts=[worldgen.Part(shape="box", at=[0, 1.2, 0], size=[0.3, 0.5, 0.2], color="#804000", bone="head"),
+                              worldgen.Part(shape="box", at=[0, 0.05, 0.05], size=[0.06, 0.3, 0.06], color="#603000", bone="hand_r")])
+    c = worldgen.checked_build(b, e, 1)
+    assert c.primary != "#ffe0c0" and c.skin == "#ffe0c0"
+    assert [p.bone for p in c.parts] == ["hand_r"]  # the tool in the hand stays

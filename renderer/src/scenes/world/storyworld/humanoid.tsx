@@ -247,7 +247,10 @@ export const Humanoid: React.FC<BodyProps> = ({ build, look, pose, t, state, hel
   const dim = (c: string) => (wet < 1 ? tone(c, wet) : c);
   const skin = dim(build.skin || "#e0ac84");
   const hairC = dim(build.body.age === "elder" && !build.hair ? "#b8b8b8" : build.hair || "#3a2a1c");
-  const top = dim(o.top === "labcoat" ? "#f2f4f4" : o.top === "spacesuit" ? "#eef0f2" : build.primary);
+  // clothes the colour of the skin read as a bare mannequin
+  const sk = new THREE.Color(build.skin || "#e0ac84").toArray();
+  const bare = new THREE.Color(build.primary).toArray().reduce((a, x, i) => a + (x - sk[i]) ** 2, 0) < 0.03;
+  const top = dim(o.top === "labcoat" ? "#f2f4f4" : o.top === "spacesuit" ? "#eef0f2" : bare && o.top !== "vest" ? "#2c3a52" : build.primary);
   const bottom = dim(o.top === "spacesuit" ? "#e2e4e8" : build.secondary);
   const shoe = "#26262a";
   const blocky = look.blocky;

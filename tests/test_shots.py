@@ -39,7 +39,20 @@ def test_long_scenes_in_a_short_get_extra_photos(monkeypatch, tmp_path):
 
     cfg.growth.shot_seconds = 0
     assert pipeline.extra_shots(cfg, job, s, images, [(0, 6), (6, 15), (15, 20)], scene_media, [], set()) == {}
-    assert pipeline.extra_shots(Config(format="long"), job, s, images, [(0, 6), (6, 15), (15, 20)], scene_media, [], set()) == {}
+    # A long video cuts every 5 seconds: the 6-second scene keeps its one photo, the 15-second one gets two more.
+    long = pipeline.extra_shots(Config(format="long"), job, s, images, [(0, 6), (6, 21), (21, 30)], scene_media, [], set(), "Flood")
+    assert list(long) == [1] and len(long[1]) == 2
+
+
+def test_long_video_chapters_open_on_a_card():
+    from fyt.models import Chapter
+
+    s = _script(*[{"narration": "a", "type": "statement", "text": "a"} for _ in range(4)])
+    s = s.model_copy(update={"chapters": [Chapter(title="Cold open", scene=0), Chapter(title="The storm", scene=2)]})
+    spans = [(0.0, 5.0), (5.0, 10.0), (10.0, 15.0), (15.0, 20.0)]
+    props = build_props(Config(format="long"), s, spans, [[]] * 4, {}, None, None)
+    assert [(sc.chapterNumber, sc.chapter) for sc in props.scenes] == [(None, None), (None, None), (2, "The storm"), (None, None)]
+    assert all(sc.chapter is None for sc in build_props(Config(format="short"), s, spans, [[]] * 4, {}, None, None).scenes)
 
 
 def test_shots_reach_the_renderer():
