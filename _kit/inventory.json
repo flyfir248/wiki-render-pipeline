@@ -1,0 +1,657 @@
+{
+ "ual1": {
+  "all_files": 11,
+  "sample_names": [
+   "Animation Library[Standard]/",
+   "Animation Library[Standard]/Godot/",
+   "Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb",
+   "Animation Library[Standard]/License.txt",
+   "Animation Library[Standard]/Preview.png",
+   "Animation Library[Standard]/Unity/",
+   "Animation Library[Standard]/Unity/AnimationLibrary_Unity_Standard.fbx",
+   "Animation Library[Standard]/Unity_Setup.png",
+   "Animation Library[Standard]/Unreal Engine/",
+   "Animation Library[Standard]/Unreal Engine/AL_Standard.fbx",
+   "Animation Library[Standard]/UnrealEngine_Setup.png"
+  ],
+  "source": "https://opengameart.org/sites/default/files/universal_animation_librarystandard.zip",
+  "licence": "CC0",
+  "kept": 2,
+  "models": {
+   "Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb": {
+    "bytes": 6671104,
+    "meshes": [
+     "Mannequin"
+    ],
+    "skins": [
+     {
+      "joints": 53,
+      "names": [
+       "root",
+       "DEF-hips",
+       "DEF-spine.001",
+       "DEF-spine.002",
+       "DEF-spine.003",
+       "DEF-neck",
+       "DEF-head",
+       "DEF-shoulder.L",
+       "DEF-upper_arm.L",
+       "DEF-forearm.L",
+       "DEF-hand.L",
+       "DEF-f_index.01.L",
+       "DEF-f_index.02.L",
+       "DEF-f_index.03.L",
+       "DEF-f_middle.01.L",
+       "DEF-f_middle.02.L",
+       "DEF-f_middle.03.L",
+       "DEF-f_pinky.01.L",
+       "DEF-f_pinky.02.L",
+       "DEF-f_pinky.03.L",
+       "DEF-f_ring.01.L",
+       "DEF-f_ring.02.L",
+       "DEF-f_ring.03.L",
+       "DEF-thumb.01.L",
+       "DEF-thumb.02.L",
+       "DEF-thumb.03.L",
+       "DEF-shoulder.R",
+       "DEF-upper_arm.R",
+       "DEF-forearm.R",
+       "DEF-hand.R",
+       "DEF-f_index.01.R",
+       "DEF-f_index.02.R",
+       "DEF-f_index.03.R",
+       "DEF-f_middle.01.R",
+       "DEF-f_middle.02.R",
+       "DEF-f_middle.03.R",
+       "DEF-f_pinky.01.R",
+       "DEF-f_pinky.02.R",
+       "DEF-f_pinky.03.R",
+       "DEF-f_ring.01.R",
+       "DEF-f_ring.02.R",
+       "DEF-f_ring.03.R",
+       "DEF-thumb.01.R",
+       "DEF-thumb.02.R",
+       "DEF-thumb.03.R",
+       "DEF-thigh.L",
+       "DEF-shin.L",
+       "DEF-foot.L",
+       "DEF-toe.L",
+       "DEF-thigh.R",
+       "DEF-shin.R",
+       "DEF-foot.R",
+       "DEF-toe.R"
+      ]
+     }
+    ],
+    "clips": [
+     {
+      "name": "A_TPose",
+      "seconds": 0.17
+     },
+     {
+      "name": "Crouch_Fwd_Loop",
+      "seconds": 2
+     },
+     {
+      "name": "Crouch_Idle_Loop",
+      "seconds": 2.93
+     },
+     {
+      "name": "Dance_Loop",
+      "seconds": 1
+     },
+     {
+      "name": "Death01",
+      "seconds": 2.4
+     },
+     {
+      "name": "Driving_Loop",
+      "seconds": 1.67
+     },
+     {
+      "name": "Fixing_Kneeling",
+      "seconds": 5.2
+     },
+     {
+      "name": "Hit_Chest",
+      "seconds": 0.33
+     },
+     {
+      "name": "Hit_Head",
+      "seconds": 0.43
+     },
+     {
+      "name": "Idle_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Idle_Talking_Loop",
+      "seconds": 2.93
+     },
+     {
+      "name": "Idle_Torch_Loop",
+      "seconds": 1.27
+     },
+     {
+      "name": "Interact",
+      "seconds": 2
+     },
+     {
+      "name": "Jog_Fwd_Loop",
+      "seconds": 0.93
+     },
+     {
+      "name": "Jump_Land",
+      "seconds": 1.27
+     },
+     {
+      "name": "Jump_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Jump_Start",
+      "seconds": 1.33
+     },
+     {
+      "name": "PickUp_Table",
+      "seconds": 0.83
+     },
+     {
+      "name": "Pistol_Aim_Down",
+      "seconds": 0.17
+     },
+     {
+      "name": "Pistol_Aim_Neutral",
+      "seconds": 0.17
+     },
+     {
+      "name": "Pistol_Aim_Up",
+      "seconds": 0.17
+     },
+     {
+      "name": "Pistol_Idle_Loop",
+      "seconds": 1.67
+     },
+     {
+      "name": "Pistol_Reload",
+      "seconds": 1.67
+     },
+     {
+      "name": "Pistol_Shoot",
+      "seconds": 0.63
+     },
+     {
+      "name": "Punch_Cross",
+      "seconds": 1
+     },
+     {
+      "name": "Punch_Enter",
+      "seconds": 0.87
+     },
+     {
+      "name": "Punch_Jab",
+      "seconds": 0.87
+     },
+     {
+      "name": "Push_Loop",
+      "seconds": 2.67
+     },
+     {
+      "name": "Roll",
+      "seconds": 1.47
+     },
+     {
+      "name": "Roll_RM",
+      "seconds": 1.47
+     },
+     {
+      "name": "Sitting_Enter",
+      "seconds": 1.3
+     },
+     {
+      "name": "Sitting_Exit",
+      "seconds": 1.03
+     },
+     {
+      "name": "Sitting_Idle_Loop",
+      "seconds": 1.67
+     },
+     {
+      "name": "Sitting_Talking_Loop",
+      "seconds": 2.93
+     },
+     {
+      "name": "Spell_Simple_Enter",
+      "seconds": 0.53
+     },
+     {
+      "name": "Spell_Simple_Exit",
+      "seconds": 0.43
+     },
+     {
+      "name": "Spell_Simple_Idle_Loop",
+      "seconds": 2.1
+     },
+     {
+      "name": "Spell_Simple_Shoot",
+      "seconds": 0.5
+     },
+     {
+      "name": "Sprint_Loop",
+      "seconds": 0.67
+     },
+     {
+      "name": "Swim_Fwd_Loop",
+      "seconds": 1.33
+     },
+     {
+      "name": "Swim_Idle_Loop",
+      "seconds": 3.33
+     },
+     {
+      "name": "Sword_Attack",
+      "seconds": 1.53
+     },
+     {
+      "name": "Sword_Attack_RM",
+      "seconds": 1.53
+     },
+     {
+      "name": "Sword_Idle",
+      "seconds": 1.67
+     },
+     {
+      "name": "Walk_Formal_Loop",
+      "seconds": 1.33
+     },
+     {
+      "name": "Walk_Loop",
+      "seconds": 1.33
+     }
+    ],
+    "materials": [
+     "M_Main",
+     "M_Joints"
+    ],
+    "images": 0
+   }
+  }
+ },
+ "ual2": {
+  "all_files": 16,
+  "sample_names": [
+   "Universal Animation Library 2 [Standard]/",
+   "Universal Animation Library 2 [Standard]/Female Mannequin/",
+   "Universal Animation Library 2 [Standard]/Female Mannequin/Mannequin_F.blend",
+   "Universal Animation Library 2 [Standard]/Female Mannequin/README.txt",
+   "Universal Animation Library 2 [Standard]/Female Mannequin/Unity/",
+   "Universal Animation Library 2 [Standard]/Female Mannequin/Unity/Mannequin_F.fbx",
+   "Universal Animation Library 2 [Standard]/Female Mannequin/Unreal-Godot/",
+   "Universal Animation Library 2 [Standard]/Female Mannequin/Unreal-Godot/Mannequin_F.glb",
+   "Universal Animation Library 2 [Standard]/Godot_Setup.png",
+   "Universal Animation Library 2 [Standard]/License.txt",
+   "Universal Animation Library 2 [Standard]/Unity/",
+   "Universal Animation Library 2 [Standard]/Unity/UAL2_Standard.fbx",
+   "Universal Animation Library 2 [Standard]/Unity_Setup.png",
+   "Universal Animation Library 2 [Standard]/Unreal-Godot/",
+   "Universal Animation Library 2 [Standard]/Unreal-Godot/UAL2_Standard.glb",
+   "Universal Animation Library 2 [Standard]/Unreal_Setup.png"
+  ],
+  "source": "https://opengameart.org/sites/default/files/universal_animation_library_2standard.zip",
+  "licence": "CC0",
+  "kept": 4,
+  "models": {
+   "Universal Animation Library 2 [Standard]/Female Mannequin/Unreal-Godot/Mannequin_F.glb": {
+    "bytes": 1442824,
+    "meshes": [
+     "Mannequin"
+    ],
+    "skins": [
+     {
+      "joints": 65,
+      "names": [
+       "root",
+       "pelvis",
+       "spine_01",
+       "spine_02",
+       "spine_03",
+       "neck_01",
+       "Head",
+       "clavicle_l",
+       "upperarm_l",
+       "lowerarm_l",
+       "hand_l",
+       "index_01_l",
+       "index_02_l",
+       "index_03_l",
+       "index_04_leaf_l",
+       "middle_01_l",
+       "middle_02_l",
+       "middle_03_l",
+       "middle_04_leaf_l",
+       "pinky_01_l",
+       "pinky_02_l",
+       "pinky_03_l",
+       "pinky_04_leaf_l",
+       "ring_01_l",
+       "ring_02_l",
+       "ring_03_l",
+       "ring_04_leaf_l",
+       "thumb_01_l",
+       "thumb_02_l",
+       "thumb_03_l",
+       "thumb_04_leaf_l",
+       "clavicle_r",
+       "upperarm_r",
+       "lowerarm_r",
+       "hand_r",
+       "index_01_r",
+       "index_02_r",
+       "index_03_r",
+       "index_04_leaf_r",
+       "middle_01_r",
+       "middle_02_r",
+       "middle_03_r",
+       "middle_04_leaf_r",
+       "pinky_01_r",
+       "pinky_02_r",
+       "pinky_03_r",
+       "pinky_04_leaf_r",
+       "ring_01_r",
+       "ring_02_r",
+       "ring_03_r",
+       "ring_04_leaf_r",
+       "thumb_01_r",
+       "thumb_02_r",
+       "thumb_03_r",
+       "thumb_04_leaf_r",
+       "thigh_l",
+       "calf_l",
+       "foot_l",
+       "ball_l",
+       "ball_leaf_l",
+       "thigh_r",
+       "calf_r",
+       "foot_r",
+       "ball_r",
+       "ball_leaf_r"
+      ]
+     }
+    ],
+    "clips": [],
+    "materials": [
+     "M_Main",
+     "M_Joints"
+    ],
+    "images": 0
+   },
+   "Universal Animation Library 2 [Standard]/Unreal-Godot/UAL2_Standard.glb": {
+    "bytes": 8061600,
+    "meshes": [
+     "Mannequin"
+    ],
+    "skins": [
+     {
+      "joints": 65,
+      "names": [
+       "root",
+       "pelvis",
+       "spine_01",
+       "spine_02",
+       "spine_03",
+       "neck_01",
+       "Head",
+       "clavicle_l",
+       "upperarm_l",
+       "lowerarm_l",
+       "hand_l",
+       "index_01_l",
+       "index_02_l",
+       "index_03_l",
+       "index_04_leaf_l",
+       "middle_01_l",
+       "middle_02_l",
+       "middle_03_l",
+       "middle_04_leaf_l",
+       "pinky_01_l",
+       "pinky_02_l",
+       "pinky_03_l",
+       "pinky_04_leaf_l",
+       "ring_01_l",
+       "ring_02_l",
+       "ring_03_l",
+       "ring_04_leaf_l",
+       "thumb_01_l",
+       "thumb_02_l",
+       "thumb_03_l",
+       "thumb_04_leaf_l",
+       "clavicle_r",
+       "upperarm_r",
+       "lowerarm_r",
+       "hand_r",
+       "index_01_r",
+       "index_02_r",
+       "index_03_r",
+       "index_04_leaf_r",
+       "middle_01_r",
+       "middle_02_r",
+       "middle_03_r",
+       "middle_04_leaf_r",
+       "pinky_01_r",
+       "pinky_02_r",
+       "pinky_03_r",
+       "pinky_04_leaf_r",
+       "ring_01_r",
+       "ring_02_r",
+       "ring_03_r",
+       "ring_04_leaf_r",
+       "thumb_01_r",
+       "thumb_02_r",
+       "thumb_03_r",
+       "thumb_04_leaf_r",
+       "thigh_l",
+       "calf_l",
+       "foot_l",
+       "ball_l",
+       "ball_leaf_l",
+       "thigh_r",
+       "calf_r",
+       "foot_r",
+       "ball_r",
+       "ball_leaf_r"
+      ]
+     }
+    ],
+    "clips": [
+     {
+      "name": "A_TPose",
+      "seconds": 2.5
+     },
+     {
+      "name": "Chest_Open",
+      "seconds": 1.37
+     },
+     {
+      "name": "ClimbUp_1m_RM",
+      "seconds": 0.67
+     },
+     {
+      "name": "Consume",
+      "seconds": 1.33
+     },
+     {
+      "name": "Farm_Harvest",
+      "seconds": 2.5
+     },
+     {
+      "name": "Farm_PlantSeed",
+      "seconds": 2.77
+     },
+     {
+      "name": "Farm_Watering",
+      "seconds": 3.8
+     },
+     {
+      "name": "Hit_Knockback",
+      "seconds": 0.83
+     },
+     {
+      "name": "Hit_Knockback_RM",
+      "seconds": 0.83
+     },
+     {
+      "name": "Idle_FoldArms_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Idle_Lantern_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Idle_No_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Idle_Rail_Call",
+      "seconds": 2.5
+     },
+     {
+      "name": "Idle_Rail_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Idle_Shield_Break",
+      "seconds": 1.07
+     },
+     {
+      "name": "Idle_Shield_Loop",
+      "seconds": 2.5
+     },
+     {
+      "name": "Idle_TalkingPhone_Loop",
+      "seconds": 2.93
+     },
+     {
+      "name": "LayToIdle",
+      "seconds": 1.53
+     },
+     {
+      "name": "Melee_Hook",
+      "seconds": 0.47
+     },
+     {
+      "name": "Melee_Hook_Rec",
+      "seconds": 0.6
+     },
+     {
+      "name": "NinjaJump_Idle_Loop",
+      "seconds": 2
+     },
+     {
+      "name": "NinjaJump_Land",
+      "seconds": 1.27
+     },
+     {
+      "name": "NinjaJump_Start",
+      "seconds": 0.97
+     },
+     {
+      "name": "OverhandThrow",
+      "seconds": 1.33
+     },
+     {
+      "name": "Shield_Dash_RM",
+      "seconds": 1.1
+     },
+     {
+      "name": "Shield_OneShot",
+      "seconds": 0.83
+     },
+     {
+      "name": "Slide_Exit",
+      "seconds": 0.5
+     },
+     {
+      "name": "Slide_Loop",
+      "seconds": 2
+     },
+     {
+      "name": "Slide_Start",
+      "seconds": 0.83
+     },
+     {
+      "name": "Sword_Block",
+      "seconds": 1.23
+     },
+     {
+      "name": "Sword_Dash_RM",
+      "seconds": 1.57
+     },
+     {
+      "name": "Sword_Regular_A",
+      "seconds": 0.43
+     },
+     {
+      "name": "Sword_Regular_A_Rec",
+      "seconds": 0.97
+     },
+     {
+      "name": "Sword_Regular_B",
+      "seconds": 0.53
+     },
+     {
+      "name": "Sword_Regular_B_Rec",
+      "seconds": 1.03
+     },
+     {
+      "name": "Sword_Regular_C",
+      "seconds": 2
+     },
+     {
+      "name": "Sword_Regular_Combo",
+      "seconds": 3
+     },
+     {
+      "name": "TreeChopping_Loop",
+      "seconds": 0.97
+     },
+     {
+      "name": "Walk_Carry_Loop",
+      "seconds": 2
+     },
+     {
+      "name": "Yes",
+      "seconds": 2.5
+     },
+     {
+      "name": "Zombie_Idle_Loop",
+      "seconds": 1.33
+     },
+     {
+      "name": "Zombie_Scratch",
+      "seconds": 1.8
+     },
+     {
+      "name": "Zombie_Walk_Fwd_Loop",
+      "seconds": 1.33
+     }
+    ],
+    "materials": [
+     "M_Main",
+     "M_Joints"
+    ],
+    "images": 0
+   }
+  }
+ },
+ "bodies": {
+  "source": "itch:quaternius/universal-base-characters",
+  "licence": "CC0",
+  "error": "RuntimeError: no csrf token on the page"
+ },
+ "animals": {
+  "source": "itch:quaternius/lowpoly-animated-animals",
+  "licence": "CC0",
+  "error": "RuntimeError: no csrf token on the page"
+ }
+}
