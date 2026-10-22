@@ -397,5 +397,271 @@ export const Car: React.FC<{ build: Build; spin: number; truck: boolean; look: L
   );
 };
 
+// --- ocean liners -----------------------------------------------------------------------------------
+
+// A deck plan (x along the length, bow at +x, z across): a fine bow, parallel sides and a rounded stern.
+const linerPlan = (L: number, B: number, inset = 0) => {
+  const s = new THREE.Shape();
+  const h = B / 2 - inset;
+  const bow = 0.5 * L - inset * 2;
+  s.moveTo(-0.47 * L + inset, -h * 0.82);
+  s.lineTo(0.18 * L, -h);
+  s.bezierCurveTo(0.36 * L, -h, 0.47 * L, -h * 0.45, bow, 0);
+  s.bezierCurveTo(0.47 * L, h * 0.45, 0.36 * L, h, 0.18 * L, h);
+  s.lineTo(-0.47 * L + inset, h * 0.82);
+  s.bezierCurveTo(-0.5 * L + inset, h * 0.6, -0.5 * L + inset, -h * 0.6, -0.47 * L + inset, -h * 0.82);
+  return s;
+};
+
+// A plan extruded from y0 to y1, with the deck line lifted towards bow and stern (the sheer).
+const linerSlab = (shape: THREE.Shape, y0: number, y1: number, L: number, sheer: number) => {
+  const g = new THREE.ExtrudeGeometry(shape, { depth: y1 - y0, bevelEnabled: false, curveSegments: 18, steps: 1 });
+  g.rotateX(-Math.PI / 2);
+  g.translate(0, y0, 0);
+  const pos = g.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i) / (0.5 * L);
+    const lift = sheer * (x > 0 ? x * x * 1.3 : x * x * 0.6);
+    pos.setY(i, pos.getY(i) + lift * ((pos.getY(i) - y0) / Math.max(1e-6, y1 - y0)));
+  }
+  g.computeVertexNormals();
+  return g;
+};
+
+// Rows of small lit openings along both sides: portholes on the hull, windows on the decks.
+const Openings: React.FC<{ rows: { y: number; x0: number; x1: number; z: number; n: number; s: number }[]; lit: number }> = ({ rows, lit }) => {
+  const geo = useMemo(() => new THREE.PlaneGeometry(1, 1), []);
+  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: new THREE.Color("#ffd998").multiplyScalar(0.6 + 1.8 * lit), toneMapped: true }), [lit]);
+  const mesh = useMemo(() => {
+    const total = rows.reduce((a, r) => a + r.n * 2, 0);
+    const m = new THREE.InstancedMesh(geo, mat, total);
+    const o = new THREE.Object3D();
+    const r0 = rng(23);
+    let i = 0;
+    for (const r of rows) {
+      for (let k = 0; k < r.n; k++) {
+        const x = r.x0 + ((r.x1 - r.x0) * (k + 0.5)) / r.n;
+        for (const side of [-1, 1]) {
+          o.position.set(x, r.y, side * r.z);
+          o.rotation.set(0, side > 0 ? 0 : Math.PI, 0);
+          const dark = r0() < 0.18 ? 0.001 : 1; // some cabins are dark
+          o.scale.set(r.s * dark, r.s * dark, 1);
+          o.updateMatrix();
+          m.setMatrixAt(i++, o.matrix);
+        }
+      }
+    }
+    m.instanceMatrix.needsUpdate = true;
+    return m;
+  }, [rows, geo, mat]);
+  return <primitive object={mesh} />;
+};
+
+// An ocean liner of the steam age: a black hull over red boot-topping, white decks, raked buff funnels
+// with black tops, two masts with the wire between them, lifeboats along the boat deck and lit
+// portholes. Bow along +x; the hull draws down below the waterline (y = 0).
+export const Liner: React.FC<{ build: Build; t: number; moving: boolean; wet: boolean; night: number; funnels?: number }> = ({ build, t, moving, wet, night, funnels = 4 }) => {
+  const L = Math.max(0.5, build.size);
+  const B = 0.11 * L;
+  const H = 0.075 * L; // waterline to the top of the hull
+  const sheer = 0.012 * L;
+  const g = useMemo(() => {
+    const hull = linerPlan(L, B);
+    return {
+      boot: linerSlab(linerPlan(L, B * 0.97), -0.035 * L, 0.004 * L, L, 0),
+      hull: linerSlab(hull, 0.004 * L, H, L, sheer),
+      band: linerSlab(linerPlan(L, B * 1.004), H - 0.006 * L, H - 0.0035 * L, L, sheer),
+      deck: linerSlab(linerPlan(L, B * 0.985, 0.002 * L), H, H + 0.002 * L, L, sheer),
+    };
+  }, [L, B, H, sheer]);
+  const deckY = H + 0.002 * L;
+  const tiers = [
+    { x0: -0.33, x1: 0.26, w: 0.86, h: 0.026 },
+    { x0: -0.27, x1: 0.21, w: 0.74, h: 0.021 },
+    { x0: 0.14, x1: 0.21, w: 0.5, h: 0.016 }, // the bridge house
+  ];
+  let y = deckY;
+  const houses = tiers.slice(0, 2).map((tr) => {
+    const at = y;
+    y += tr.h * L;
+    return { ...tr, y: at };
+  });
+  const top = y;
+  const bridge = { ...tiers[2], y: top };
+  const rows = useMemo(() => [
+    { y: H * 0.45, x0: -0.42 * L, x1: 0.36 * L, z: B * 0.5 + 0.0006 * L, n: 70, s: 0.0035 * L },
+    { y: H * 0.7, x0: -0.4 * L, x1: 0.33 * L, z: B * 0.5 + 0.0006 * L, n: 64, s: 0.0035 * L },
+    { y: H * 0.9, x0: -0.36 * L, x1: 0.3 * L, z: B * 0.5 + 0.0006 * L, n: 52, s: 0.004 * L },
+    { y: houses[0].y + houses[0].h * L * 0.55, x0: -0.32 * L, x1: 0.25 * L, z: (B * houses[0].w) / 2 + 0.0006 * L, n: 46, s: 0.006 * L },
+    { y: houses[1].y + houses[1].h * L * 0.55, x0: -0.26 * L, x1: 0.2 * L, z: (B * houses[1].w) / 2 + 0.0006 * L, n: 34, s: 0.006 * L },
+  ], [L, B, H, houses]);
+  const n = Math.max(1, Math.min(5, funnels));
+  const fx = Array.from({ length: n }, (_, i) => (n === 1 ? 0 : 0.17 - (0.33 * i) / (n - 1)) * L);
+  const fr = 0.017 * L, fh = 0.085 * L, rake = 0.13;
+  const mastTop = top + 0.13 * L;
+  const masts = [0.37 * L, -0.4 * L];
+  const wire = useMemo(() => {
+    const a = new THREE.Vector3(masts[0], mastTop, 0), b = new THREE.Vector3(masts[1], mastTop - 0.01 * L, 0);
+    return { mid: a.clone().add(b).multiplyScalar(0.5), len: a.distanceTo(b), ang: Math.atan2(b.y - a.y, b.x - a.x) };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [L, mastTop]);
+  const hullC = "#16171b", boot = "#7a1f1a", white = "#efede6", buff = "#d39a45";
+  return (
+    <group>
+      <mesh geometry={g.boot} material={paint(boot, { gloss: 0.3 })} />
+      <mesh geometry={g.hull} material={paint(hullC, { gloss: 0.75, metal: 0.15 })} castShadow receiveShadow />
+      <mesh geometry={g.band} material={paint("#d8c27a", { gloss: 0.6 })} />
+      <mesh geometry={g.deck} material={paint("#9c8a6a", { gloss: 0.15 })} receiveShadow />
+      {houses.map((h, i) => (
+        <mesh key={i} position={[((h.x0 + h.x1) / 2) * L, h.y + (h.h * L) / 2, 0]} material={paint(white, { gloss: 0.55 })} castShadow receiveShadow>
+          <boxGeometry args={[(h.x1 - h.x0) * L, h.h * L, B * h.w]} />
+        </mesh>
+      ))}
+      <mesh position={[((bridge.x0 + bridge.x1) / 2) * L, bridge.y + (bridge.h * L) / 2, 0]} material={paint(white, { gloss: 0.55 })} castShadow>
+        <boxGeometry args={[(bridge.x1 - bridge.x0) * L, bridge.h * L, B * 0.9]} />
+      </mesh>
+      <mesh position={[(bridge.x1 - 0.004) * L, bridge.y + bridge.h * L * 0.6, 0]} material={paint("#ffe2a8", { emissive: night > 0.5 ? "#ffcf80" : undefined })}>
+        <boxGeometry args={[0.002 * L, bridge.h * L * 0.35, B * 0.8]} />
+      </mesh>
+      <Openings rows={rows} lit={night} />
+      {fx.map((x, i) => (
+        <group key={i} position={[x, top, 0]} rotation={[0, 0, rake]}>
+          <mesh position={[0, fh * 0.42, 0]} scale={[1, 1, 0.8]} material={paint(buff, { gloss: 0.5 })} castShadow>
+            <cylinderGeometry args={[fr, fr * 1.04, fh * 0.84, 28]} />
+          </mesh>
+          <mesh position={[0, fh * 0.92, 0]} scale={[1, 1, 0.8]} material={paint("#121214", { gloss: 0.3 })} castShadow>
+            <cylinderGeometry args={[fr * 1.01, fr, fh * 0.16, 28]} />
+          </mesh>
+          <mesh position={[0, fh * 0.6, 0]} scale={[1, 1, 0.8]} material={paint("#121214", { gloss: 0.3 })}>
+            <cylinderGeometry args={[fr * 1.02, fr * 1.02, fh * 0.015, 28]} />
+          </mesh>
+        </group>
+      ))}
+      {moving ? fx.slice(0, Math.max(1, n - 1)).map((x, i) => <FunnelSmoke key={i} at={[x - Math.sin(rake) * fh, top + fh, 0]} r={fr} t={t + i * 1.7} night={night} />) : null}
+      {masts.map((x, i) => (
+        <mesh key={i} position={[x, (deckY + mastTop) / 2, 0]} rotation={[0, 0, 0.08]} material={paint("#3a2c20", { gloss: 0.3 })} castShadow>
+          <cylinderGeometry args={[0.0012 * L, 0.0028 * L, mastTop - deckY, 8]} />
+        </mesh>
+      ))}
+      <mesh position={wire.mid.toArray()} rotation={[0, 0, wire.ang]} material={paint("#222222")}>
+        <boxGeometry args={[wire.len, 0.0007 * L, 0.0007 * L]} />
+      </mesh>
+      {[-1, 1].map((side) =>
+        Array.from({ length: 8 }, (_, i) => {
+          const x = (-0.24 + (i < 4 ? i * 0.035 : 0.09 + i * 0.035)) * L;
+          return (
+            <mesh key={`${side}${i}`} position={[x, houses[1].y + houses[1].h * L + 0.006 * L, side * B * 0.42]} rotation={[0, 0, Math.PI / 2]} scale={[1, 1, 0.75]} material={paint(white, { gloss: 0.4 })}>
+              <capsuleGeometry args={[0.0045 * L, 0.018 * L, 4, 8]} />
+            </mesh>
+          );
+        }),
+      )}
+      {night > 0.5 ? <pointLight position={[0.05 * L, top + 0.02 * L, B * 1.2]} intensity={L * 0.4} distance={L * 0.6} color="#ffcf80" /> : null}
+      {/* the foredeck's lamps, where anyone aboard stands (index.tsx LINER_FOREDECK) */}
+      {night > 0.5 ? <pointLight position={[0.33 * L, deckY + 0.12 * L, 0]} intensity={L * 0.12} distance={L * 0.35} color="#ffd8a0" /> : null}
+      {moving || wet ? <Wake L={L * 0.45} t={t} /> : null}
+    </group>
+  );
+};
+
+// Coal smoke streaming back from a funnel.
+const FunnelSmoke: React.FC<{ at: [number, number, number]; r: number; t: number; night: number }> = ({ at, r, t, night }) => {
+  const mats = useMemo(() => Array.from({ length: 4 }, (_, i) => new THREE.MeshStandardMaterial({ color: night > 0.5 ? "#3a3d44" : "#6a665e", roughness: 1, transparent: true, opacity: 0.32 - i * 0.07, depthWrite: false })), [night]);
+  return (
+    <group position={at}>
+      {Array.from({ length: 16 }, (_, i) => {
+        const age = (i / 16 + t * 0.12) % 1;
+        const s = r * (0.7 + age * 2.2);
+        return <mesh key={i} position={[-age * r * 22, age * r * 4.5 + Math.sin(i * 1.3) * r * 0.3, Math.sin(i * 2.1) * age * r * 1.5]} scale={s} material={mats[Math.min(3, Math.floor(age * 4))]}>
+          <icosahedronGeometry args={[1, 2]} />
+        </mesh>;
+      })}
+    </group>
+  );
+};
+
+// --- icebergs ---------------------------------------------------------------------------------------
+
+// A jagged mass of ice filling a w x h x d box: an icosphere pushed out by layered noise into a tall
+// peak and broken shoulders, flat-shaded so it reads as fractured faces, sitting on the waterline.
+export const Iceberg: React.FC<{ w: number; h: number; d: number; seed: number; ledge: number }> = ({ w, h, d, seed, ledge }) => {
+  const geo = useMemo(() => {
+    const g = new THREE.IcosahedronGeometry(1, 5);
+    const r = rng(seed);
+    const peaks = Array.from({ length: 5 }, () => ({ x: r() * 1.4 - 0.7, z: r() * 1.2 - 0.6, k: 0.45 + r() * 0.9 }));
+    peaks[0] = { x: 0.15, z: 0, k: 1.5 };
+    const pos = g.attributes.position;
+    const v = new THREE.Vector3();
+    for (let i = 0; i < pos.count; i++) {
+      v.fromBufferAttribute(pos, i);
+      const n = Math.sin(v.x * 5.1 + seed) * Math.sin(v.y * 4.3 + 1.3) * Math.sin(v.z * 6.7 + 2.1) * 0.22
+        + Math.sin(v.x * 11.3 + 2) * Math.sin(v.z * 9.1 + seed) * 0.08;
+      let lift = 0;
+      for (const p of peaks) lift = Math.max(lift, p.k * Math.exp(-((v.x - p.x) ** 2 + (v.z - p.z) ** 2) * 3.2));
+      const y = v.y > 0 ? v.y * (0.35 + lift) : v.y * 0.6;
+      v.set(v.x * (1 + n), y + n * 0.3, v.z * (1 + n * 0.8));
+      pos.setXYZ(i, v.x, v.y, v.z);
+    }
+    g.computeBoundingBox();
+    const bb = g.boundingBox!;
+    const sx = w / (bb.max.x - bb.min.x), sy = h / Math.max(1e-3, bb.max.y), sz = d / (bb.max.z - bb.min.z);
+    g.scale(sx, sy, sz);
+    g.translate(0, -h * 0.1, 0); // a tenth of what shows rides below the waterline
+    g.computeVertexNormals();
+    return g;
+  }, [w, h, d, seed]);
+  // the floe at its foot, running out in front (+z): flat on top, broken at the edge
+  const floe = useMemo(() => {
+    const s = new THREE.Shape();
+    const r = rng(seed + 5);
+    const n = 22;
+    for (let i = 0; i <= n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const k = 0.75 + r() * 0.35;
+      const x = Math.cos(a) * w * 0.55 * k, z = Math.sin(a) * d * 0.42 * k + d * 0.38;
+      if (i === 0) s.moveTo(x, z);
+      else s.lineTo(x, z);
+    }
+    const g = new THREE.ExtrudeGeometry(s, { depth: ledge + h * 0.05, bevelEnabled: true, bevelThickness: h * 0.01, bevelSize: h * 0.02, bevelSegments: 1 });
+    g.rotateX(Math.PI / 2);
+    g.translate(0, ledge, 0);
+    g.computeVertexNormals();
+    return g;
+  }, [w, d, h, ledge, seed]);
+  const mat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#eef6fb", roughness: 0.38, metalness: 0, flatShading: true, emissive: new THREE.Color("#4d7fa8"), emissiveIntensity: 0.14 }), []);
+  mat.envMap = env.map;
+  mat.envMapIntensity = env.intensity * 1.4;
+  return (
+    <group>
+      <mesh geometry={geo} material={mat} castShadow receiveShadow />
+      <mesh geometry={floe} material={mat} receiveShadow />
+    </group>
+  );
+};
+
+// White water thrown up where a hull strikes something: a burst of spray at the bow and foam spreading
+// on the water, for `k` seconds after the impact.
+export const Spray: React.FC<{ at: [number, number, number]; size: number; k: number }> = ({ at, size, k }) => {
+  const mat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#f2f7fa", roughness: 0.5, transparent: true, depthWrite: false }), []);
+  const drops = useMemo(() => {
+    const r = rng(41);
+    return Array.from({ length: 140 }, () => ({ a: r() * Math.PI * 2, up: 0.5 + r() * 1.2, out: 0.2 + r() * 1.0, s: 0.3 + r() * 0.9, d: r() * 0.35 }));
+  }, []);
+  if (k <= 0 || k > 3.5) return null;
+  mat.opacity = Math.max(0, 0.9 * (1 - k / 3.5));
+  return (
+    <group position={at}>
+      {drops.map((p, i) => {
+        const tt = Math.max(0, k - p.d);
+        const y = size * (p.up * tt * 1.6 - 1.6 * tt * tt);
+        if (y < -size * 0.05) return null;
+        const r = size * p.out * tt * 0.9;
+        return <mesh key={i} position={[Math.cos(p.a) * r * 0.6, y, Math.sin(p.a) * r]} scale={size * 0.018 * p.s * (1 + tt * 1.5)} material={mat}><icosahedronGeometry args={[1, 1]} /></mesh>;
+      })}
+      <mesh position={[0, size * 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={size * (0.3 + k * 0.5)} material={mat}><ringGeometry args={[0.6, 1, 32]} /></mesh>
+    </group>
+  );
+};
+
 // The detailed model for a build's form, or null when it has none.
-export const heroOf = (build: Build) => (["airliner", "plane", "boat", "car", "truck"].includes(build.form ?? "") ? build.form : null);
+export const heroOf = (build: Build) => (["airliner", "plane", "boat", "liner", "car", "truck", "iceberg"].includes(build.form ?? "") ? build.form : null);

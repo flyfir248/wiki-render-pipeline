@@ -91,19 +91,19 @@ def _words(text: str) -> set[str]:
     return {w for w in re.findall(r"[a-z0-9]+", text.lower()) if len(w) > 2}
 
 
-def named_in(entity: Entity, text: str) -> bool:
+def named_in(entity: Entity, text: str, kind: bool = True) -> bool:
     """The text refers to the entity: a word of its name, a search term, or its kind (stemmed loosely, so
     'bears' names a bear and 'the plane' names a 'light plane')."""
     said = {w.rstrip("s") for w in _words(text)}
-    own = _words(entity.name) | set().union(*(_words(s) for s in entity.search)) | _words(entity.kind)
+    own = _words(entity.name) | set().union(*(_words(s) for s in entity.search)) | (_words(entity.kind) if kind else set())
     own = {w.rstrip("s") for w in own} - {"the", "and", "with", "from", "one"}
     return bool(own & said)
 
 
 def checked(m: Manifest, script: Script) -> Manifest:
     """The manifest made true to the script: scene numbers in range, an entity kept in a scene only when
-    that scene (or the one before, which goes on about it) names it, a moment documented only when its
-    cue is in the scene's narration, at most one moment per scene."""
+    that scene (or the one before, which goes on about it) names it, and in every scene that names it,
+    a moment documented only when its cue is in the scene's narration, at most one moment per scene."""
     n = len(script.scenes)
     told = [" ".join(x for x in (s.narration, s.heading or "") if x) for s in script.scenes]
     ids: set[str] = set()
@@ -112,7 +112,10 @@ def checked(m: Manifest, script: Script) -> Manifest:
         e = e.model_copy(update={"id": _slug(e.id or e.name), "search": [s.strip().lower() for s in e.search if s.strip()][:3] or [e.kind.lower()]})
         if e.id in ids:
             continue
-        scenes = sorted({k for k in e.scenes if 1 <= k <= n and (named_in(e, told[k - 1]) or (k > 1 and named_in(e, told[k - 2])))})
+        scenes = sorted({k for k in e.scenes if 1 <= k <= n and (named_in(e, told[k - 1]) or (k > 1 and named_in(e, told[k - 2])))}
+                        # and every scene that names it, which the model may not have listed (the ship in the
+                        # scene about the iceberg it hits)
+                        | {k for k in range(1, n + 1) if named_in(e, told[k - 1], kind=False)})
         if not scenes and not named_in(e, " ".join(told)):
             continue  # nothing in the script refers to it
         ids.add(e.id)

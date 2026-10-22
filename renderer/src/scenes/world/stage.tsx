@@ -20,7 +20,7 @@ import { aim, Atmosphere, Billow, Hills, shake, useWorld } from "./kit";
 const SIZE = 4; // world units the model's largest side is scaled to
 export type Loaded = { scene: THREE.Object3D; clips: THREE.AnimationClip[] };
 const loads = new Map<string, Promise<Loaded>>();
-const load = (src: string) => {
+export const load = (src: string) => {
   let p = loads.get(src);
   if (!p) {
     p = new GLTFLoader().loadAsync(staticFile(src)).then((g) => ({ scene: g.scene, clips: g.animations ?? [] }));
@@ -64,9 +64,26 @@ export const clipFor = (names: string[], motion: string): number => {
 
 const YAW: Record<string, number> = { "+x": 0, "-x": Math.PI, "+z": Math.PI / 2, "-z": -Math.PI / 2 };
 
+// World matrices and skeletons brought up to date, and skinned bounds forgotten, so a bounding box of a
+// rigged model is measured in its rest pose and not from bones that were never posed (a box hundreds of
+// times too big shrinks the model to a speck).
+const settle = (root: THREE.Object3D) => {
+  root.updateMatrixWorld(true);
+  root.traverse((n) => {
+    const sk = n as THREE.SkinnedMesh;
+    if (sk.isSkinnedMesh) {
+      sk.skeleton.update();
+      (sk as unknown as { boundingBox: THREE.Box3 | null }).boundingBox = null;
+      (sk as unknown as { boundingSphere: THREE.Sphere | null }).boundingSphere = null;
+    }
+  });
+};
+
 // The model cel-shaded, turned to face +x (by its record's `forward`, else its long side; see below),
 // scaled so its largest side is SIZE and stood on y = 0.
-export const prepare = (m: Loaded, forward: string, up: string) => {
+// `own`: keep the model's own (physically based) materials, lit by the scene's sky (`envMap`), as a
+// story world in a realistic look does; otherwise they go cel-shaded with an ink outline.
+export const prepare = (m: Loaded, forward: string, up: string, own: { envMap: THREE.Texture | null; intensity: number } | null = null) => {
   const o = SkeletonUtils.clone(m.scene);
   const ink = outlineMaterial(0.012);
   const meshes: THREE.Mesh[] = [];
@@ -76,7 +93,20 @@ export const prepare = (m: Loaded, forward: string, up: string) => {
   // Collected first: the outlines added below are meshes too, and must not be visited again.
   meshes.forEach((mesh) => {
     mesh.castShadow = true;
+    mesh.receiveShadow = Boolean(own);
     mesh.frustumCulled = false; // skinned bounds lag the pose
+    if (own) {
+      const lit = (old: THREE.Material) => {
+        const c = old.clone() as THREE.MeshStandardMaterial;
+        if ("envMap" in c) {
+          c.envMap = own.envMap;
+          c.envMapIntensity = own.intensity;
+        }
+        return c;
+      };
+      mesh.material = Array.isArray(mesh.material) ? mesh.material.map(lit) : lit(mesh.material);
+      return;
+    }
     const colours = Boolean(mesh.geometry.attributes.color);
     const toon = (old: THREE.Material) => {
       const s = old as THREE.MeshStandardMaterial;
@@ -97,7 +127,7 @@ export const prepare = (m: Loaded, forward: string, up: string) => {
     // No record of which way it faces: a ship or an animal is longest from front to back, so its long
     // horizontal side is taken as its length ("auto"); a winged thing is wider than it is long ("short").
     // Seen side-on, never head-on; which end is the front is a guess.
-    turn.updateMatrixWorld(true);
+    settle(turn);
     const raw = new THREE.Box3().setFromObject(turn).getSize(new THREE.Vector3());
     const alongX = forward === "auto" ? raw.x > raw.z * 1.15 : raw.x * 1.15 < raw.z;
     forward = alongX ? "+x" : "+z";
@@ -105,7 +135,7 @@ export const prepare = (m: Loaded, forward: string, up: string) => {
   turn.rotation.y = YAW[forward] ?? YAW["+z"];
   const outer = new THREE.Group();
   outer.add(turn);
-  outer.updateMatrixWorld(true);
+  settle(outer);
   const box = new THREE.Box3().setFromObject(outer);
   const size = box.getSize(new THREE.Vector3());
   const k = SIZE / Math.max(1e-6, size.x, size.y, size.z);

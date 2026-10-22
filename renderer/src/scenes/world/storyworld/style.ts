@@ -85,8 +85,10 @@ export const lightOf = (look: Look, set: SetSpec, unit: number): Light => {
   let l: Light;
   switch (set.time) {
     case "night":
-      l = { ...base, top: "#040915", horizon: mix(sky, "#24365a", 0.8), below: "#0b111c", sun: "#a9c4ff", sunI: 1.3, amb: "#5a73a6", ambI: 0.42, ground: shade(set.ground, 0.55),
-        sunDir: [0.45, 0.55, -0.55], rim: "#9fc0ff", rimI: 1.6, night: 1, clouds: 0.25, envI: 0.45, exposure: 1.15, bloom: 0.7, threshold: 0.8, lift: "#03050b", gain: "#eef3ff", vignette: 0.42 };
+      l = { ...base, top: "#040915", horizon: mix(sky, "#24365a", 0.8), below: "#0b111c", sun: "#a9c4ff", sunI: 1.7, amb: "#5a73a6", ambI: 0.5, ground: shade(set.ground, 0.55),
+        // the moonlight that models things comes from the camera's side; the moon itself hangs in the sky
+        // behind them (cinema.tsx), and its light edges them from there (the rim)
+        sunDir: [0.55, 0.5, 0.65], rim: "#b4ccff", rimI: 2.0, night: 1, clouds: 0.25, envI: 0.45, exposure: 1.15, bloom: 0.7, threshold: 0.8, lift: "#03050b", gain: "#eef3ff", vignette: 0.42 };
       break;
     case "dusk":
       l = { ...base, top: mix(sky, "#26325f", 0.6), horizon: mix(sky, "#f5a066", 0.65), below: "#3a2e34", sun: "#ffad66", sunI: 3.4, amb: "#b8a2c4", ambI: 0.5, ground: set.ground,

@@ -34,7 +34,17 @@ void main(){
   // below the horizon the sky holds the horizon (fog) colour a while, so a fogged ground meets it without a seam
   col = mix(col, below, smoothstep(-0.1, -0.45, h));
   float s = max(dot(d, normalize(sunDir)), 0.0);
-  col += sunCol * (pow(s, 900.0) * 6.0 * (1.0 - night * 0.6) + pow(s, 24.0) * 0.45 + pow(s, 4.0) * 0.16);
+  col += sunCol * (pow(s, 900.0) * 6.0 * (1.0 - night) + (pow(s, 24.0) * 0.45 + pow(s, 4.0) * 0.16) * (1.0 - night * 0.7));
+  if (night > 0.5) {
+    // the moon, high behind the stage: a pale disc with darker seas and a wide soft halo
+    vec3 md = normalize(vec3(-0.32, 0.36, -0.88));
+    float m = dot(d, md);
+    float disc = smoothstep(0.99955, 0.99965, m);
+    vec2 mu = (d - md * m).xy * 900.0;
+    float seas = 0.82 + 0.18 * noise(mu * 0.35 + 3.0);
+    col = mix(col, vec3(1.0, 0.98, 0.92) * 1.6 * seas, disc);
+    col += vec3(0.55, 0.65, 0.85) * (pow(max(m, 0.0), 400.0) * 0.5 + pow(max(m, 0.0), 30.0) * 0.12) * (1.0 - disc);
+  }
   // a haze band at the horizon
   col = mix(col, horizon * 1.08, exp(-abs(h) * 14.0) * 0.5);
   if (h > 0.0 && clouds > 0.0) {

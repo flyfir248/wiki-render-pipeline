@@ -4,10 +4,27 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+import re
+
+from pydantic import BaseModel, Field, field_validator
 from pydantic.json_schema import SkipJsonSchema
 
 from fyt import scenes3d
+
+_EMPHASIS = re.compile(r"(\*{1,3}|_{1,3})(?=\S)(.+?)(?<=\S)\1(?!\w)")
+
+
+def plain(text: str) -> str:
+    """Text as said, without the markdown a model sometimes adds: *emphasis*, **bold**, _italics_,
+    `code` and heading marks, which a voice reads out as "asterisk"."""
+    if not text:
+        return text
+    text = _EMPHASIS.sub(r"\2", text)
+    text = re.sub(r"(?m)^\s*(#{1,6}|[-*•]\s)\s*", "", text)
+    text = re.sub(r"(?<=\d)\s*\*\s*(?=\d)", " times ", text)
+    text = text.replace("`", "").replace("*", "")
+    return re.sub(r"[ \t]{2,}", " ", text).strip()
+
 
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
@@ -65,6 +82,11 @@ class Place(BaseModel):
 class DialogueLine(BaseModel):
     speaker: str = Field(description="Who said it, e.g. 'Captain' or 'Control tower'.")
     text: str = Field(description="Their exact recorded words, short.")
+
+    @field_validator("text")
+    @classmethod
+    def _plain(cls, v: str) -> str:
+        return plain(v)
 
 
 Setting = Literal["sky", "night", "space", "sea", "city", "countryside", "desert", "snow", "room", "road"]
@@ -180,6 +202,17 @@ class ScriptScene(BaseModel):
         description="2-4 word stock-footage search query for what is being said, concrete and visual "
         "(e.g. 'molasses tank', 'harbor 1919'). Used when no article image fits.",
     )
+
+    @field_validator("narration", "heading", "text")
+    @classmethod
+    def _plain(cls, v: str | None) -> str | None:
+        return plain(v)
+
+    @field_validator("suffix")
+    @classmethod
+    def _spaced(cls, v: str | None) -> str | None:
+        # a word after the number ("13 survivors") is spaced from it; a unit sign ("%", "x", "km") is not
+        return " " + v.strip() if v and len(v.strip()) > 3 and v.strip()[0].isalpha() else v
 
 
 class Chapter(BaseModel):

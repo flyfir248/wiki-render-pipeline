@@ -108,3 +108,25 @@ def test_story_scene_pictures_count_against_the_budget_and_an_empty_allowance_st
     assert len(calls) == 1 and sum(len(v) for v in beats.values()) == 1
     monkeypatch.setattr(artgen, "_spent", True)
     assert storyboard.make(Config(format="short"), s, spans, [[]] * 4, tmp_path, log=lambda m: None) == {}
+
+
+def test_a_picture_check_moves_on_to_the_next_free_vision_model(monkeypatch, tmp_path):
+    # Groq listed no image model and Cloudflare's allowance was spent: the next checker is asked, and one
+    # that turned an image away is not asked again this run.
+    Image.new("RGB", (8, 8)).save(tmp_path / "p.png")
+    asked = []
+
+    def refuses(img, meant, rules):
+        asked.append("cf")
+        raise RuntimeError("429 Client Error: daily free allocation used")
+
+    def answers(img, meant, rules):
+        asked.append("hf")
+        return storyboard.Verdict(matches=True)
+
+    monkeypatch.setattr(storyboard, "_found", {})
+    monkeypatch.setattr(storyboard, "_checkers", lambda cfg: [("cf", refuses), ("hf", answers)])
+    cfg = Config(format="short")
+    assert storyboard.review(cfg, tmp_path / "p.png", "a ship").matches
+    assert storyboard.review(cfg, tmp_path / "p.png", "a ship").matches
+    assert asked == ["cf", "hf", "hf"]

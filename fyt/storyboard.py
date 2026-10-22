@@ -18,6 +18,7 @@ import base64
 import os
 import re
 from pathlib import Path
+from typing import Callable
 
 import requests
 from pydantic import BaseModel, Field
@@ -173,27 +174,34 @@ GORE = re.compile(r"blood|gore|wound|injur|dead|corpse|bod(y|ies)|lying on the g
 CALM = "Shown through its aftermath and scale only: no blood, no injured or fallen people."
 
 
-VISION_HINTS = ("scout", "maverick", "vision", "llava")  # Groq model ids that can read images
+VISION_HINTS = ("scout", "maverick", "vision", "llava", "-vl")  # model ids that can read images
+# Ids that may read images too (newer Qwen and Gemma models are natively multimodal): tried after the
+# hinted ones, and dropped for the run the first time one turns an image away.
+MAYBE_VISION = ("qwen3.5", "qwen3.6", "qwen3.7", "qwen3.8", "qwen3.9", "gemma-3", "gemma-4", "llama-4", "kimi-k2.5")
 CLOUDFLARE_VISION = "@cf/meta/llama-3.2-11b-vision-instruct"
+# On Hugging Face's inference router (HF_TOKEN), when neither of the above can check a picture.
+HF_VISION = ("Qwen/Qwen2.5-VL-7B-Instruct", "google/gemma-3-27b-it", "Qwen/Qwen2.5-VL-32B-Instruct")
 _found: dict[str, str | None] = {}
 
 
-def _groq_vision_model(cfg: Config, key: str) -> str | None:
-    """The configured review model, or with "auto" the first image-reading model Groq lists."""
+def _groq_vision_models(cfg: Config, key: str) -> list[str]:
+    """The configured review model, or with "auto" the provider's models that can (or may) read images."""
     if cfg.review_model != "auto":
-        return cfg.review_model
-    if "model" not in _found:
+        return [cfg.review_model]
+    if "models" not in _found:
         try:
             r = requests.get(f"{cfg.llm.base_url.rstrip('/')}/models", headers={"Authorization": f"Bearer {key}"}, timeout=30)
             r.raise_for_status()
             ids = sorted(m["id"] for m in r.json().get("data", []))
-            _found["model"] = next((m for hint in VISION_HINTS for m in ids if hint in m.lower()), None)
-            if _found["model"] is None:
+            sure = [m for hint in VISION_HINTS for m in ids if hint in m.lower()]
+            maybe = [m for hint in MAYBE_VISION for m in ids if hint in m.lower() and m not in sure]
+            _found["models"] = "\n".join(dict.fromkeys(sure + maybe))
+            if not sure + maybe:
                 print(f"no image-reading model among the provider's: {', '.join(ids)[:400]}")
         except Exception as e:
             print(f"warning: could not list the provider's models: {str(e)[:200]}")
-            _found["model"] = None
-    return _found["model"]
+            _found["models"] = ""
+    return [m for m in (_found["models"] or "").split("\n") if m]
 
 
 def _verdict(text: str | dict) -> Verdict:
@@ -215,7 +223,7 @@ def _small_jpeg(path: Path) -> bytes:
     return out.getvalue()
 
 
-def _ask_groq(cfg: Config, key: str, model: str, image: bytes, meant: str, rules: str = REVIEW) -> Verdict:
+def _ask_openai(base_url: str, key: str, model: str, image: bytes, meant: str, rules: str = REVIEW) -> Verdict:
     data = base64.b64encode(image).decode()
     body = {
         "model": model,
@@ -232,9 +240,7 @@ def _ask_groq(cfg: Config, key: str, model: str, image: bytes, meant: str, rules
             },
         ],
     }
-    r = requests.post(
-        f"{cfg.llm.base_url.rstrip('/')}/chat/completions", headers={"Authorization": f"Bearer {key}"}, json=body, timeout=90
-    )
+    r = requests.post(f"{base_url.rstrip('/')}/chat/completions", headers={"Authorization": f"Bearer {key}"}, json=body, timeout=90)
     r.raise_for_status()
     return _verdict(r.json()["choices"][0]["message"]["content"])
 
@@ -262,29 +268,49 @@ def _say_once(message: str) -> None:
         print(message)
 
 
+def _checkers(cfg: Config) -> list[tuple[str, Callable[[bytes, str, str], Verdict]]]:
+    """The free vision models that can check a picture, best first: the writing provider's (Groq), then
+    Cloudflare's with the image keys, then Hugging Face's inference router with HF_TOKEN."""
+    out = []
+    key = os.environ.get(cfg.llm.api_key_env)
+    if key and cfg.llm.provider == "openai":
+        for m in _groq_vision_models(cfg, key):
+            out.append((m, lambda img, meant, rules, m=m: _ask_openai(cfg.llm.base_url, key, m, img, meant, rules)))
+    if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN"):
+        out.append((CLOUDFLARE_VISION, _ask_cloudflare))
+    hf = secret("HF_TOKEN")
+    if hf:
+        for m in HF_VISION:
+            out.append((m, lambda img, meant, rules, m=m: _ask_openai("https://router.huggingface.co/v1", hf, m, img, meant, rules)))
+    return out
+
+
 def review(cfg: Config, path: Path, meant: str, rules: str = REVIEW) -> Verdict | None:
-    """A free vision model's verdict on one picture, or None when no check could be made: a Groq model
-    that reads images when the channel writes with Groq, else Cloudflare's, with the image key.
+    """A free vision model's verdict on one picture, or None when no check could be made. Each checker in
+    turn (_checkers); one that is out of allowance or turns images away is not asked again this run.
     `rules` is the checker's brief (an illustration by default; fyt.assetlib passes its own for 3D)."""
     if not cfg.review_model:
         return None
-    model = None
     try:
         image = _small_jpeg(path)
-        key = os.environ.get(cfg.llm.api_key_env)
-        model = _groq_vision_model(cfg, key) if key and cfg.llm.provider == "openai" else None
-        if model:
-            _say_once(f"pictures checked by {model}")
-            return _ask_groq(cfg, key, model, image, meant, rules)
-        if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN") and not _found.get("cloudflare_out"):
-            _say_once(f"pictures checked by {CLOUDFLARE_VISION}")
-            return _ask_cloudflare(image, meant, rules)
-    except Exception as e:  # the check is a safeguard; without it the picture is used as drawn
-        if "429" in str(e) and not model:  # Cloudflare's free daily allowance is spent: no use asking again today
-            _found["cloudflare_out"] = "yes"
-            print("warning: the free vision check's daily allowance is used up; pictures are not checked for the rest of this run")
-        else:
-            print(f"warning: could not check {path.name}: {str(e)[:200]}")
+    except Exception as e:
+        print(f"warning: could not read {path.name}: {str(e)[:200]}")
+        return None
+    for name, ask in _checkers(cfg):
+        if _found.get(f"out:{name}"):
+            continue
+        try:
+            verdict = ask(image, meant, rules)
+            _say_once(f"pictures checked by {name}")
+            return verdict
+        except Exception as e:
+            text = str(e)
+            # spent for the day, or a model that doesn't read images: skip it for the rest of the run
+            if re.search(r"\b(400|401|403|404|413|422|429)\b", text) or "daily" in text.lower():
+                _found[f"out:{name}"] = "yes"
+                print(f"warning: {name} can't check pictures this run ({text[:160]})")
+            else:
+                print(f"warning: could not check {path.name} with {name}: {text[:200]}")
     return None
 
 
