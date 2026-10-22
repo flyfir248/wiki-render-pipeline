@@ -128,6 +128,8 @@ export type Scene = {
   revealTimes?: number[] | null; // when each evidence clue, document [hidden] word, scale item or cycle step is said, seconds from the scene's start
   camera?: Camera | null; // picked per scene when not set
   transition?: Transition | null; // picked per scene when not set
+  chapter?: string | null; // long videos: a chapter starts here, and a card names it
+  chapterNumber?: number | null;
 };
 
 // Which model a world scene draws (fyt/assets.py): a library glTF (`src`, fitted by `fit`), a spec whose

@@ -400,14 +400,30 @@ Introduce every person, place and object before relying on it, and never jump to
 (an unexplained "flight", a different discovery, a later career) without saying how it connects.
 Read it back as a stranger would: if any sentence would make them ask "wait, what?", fix it."""
 
-LONG_STRUCTURE = """Structure (always the same shape, so every video feels like the same show):
-1. Hook: the single strangest fact or question, in the first 2 sentences, and a promise of what the
-   viewer will understand by the end. No "welcome back", no "in this video we will", no "did you know".
-2. Setup: who, where and when, in plain terms.
-3. The story: what happened, in order, each scene adding one new fact. End each chapter on an open
-   question the next chapter answers, so there is always a reason to keep watching.
-4. The payoff: the detail that makes it worth telling, stated as the core message.
-5. Close: one line on why it still matters, then one natural line inviting viewers to subscribe."""
+LONG_STRUCTURE = """Structure of a long video (a documentary told like a thriller; viewers leave the moment
+nothing is at stake, so there is always an unanswered question on the table):
+1. Cold open (first 20 seconds): drop the viewer into the most dramatic moment of the story, in the
+   present tense of that moment, and cut away before the outcome. No "welcome back", no "in this video
+   we will", no "did you know".
+2. Stakes and promise (next 10-15 seconds): why this moment matters, the central question the video
+   will answer, and a hint that the answer is stranger than it looks. Then rewind: "To understand how it
+   came to this, we have to go back to ...".
+3. Setup: one person (or group) at the centre, what they wanted, and what stood in their way. A viewer
+   follows a person with a goal, not a list of facts.
+4. Escalation: the story in order, each scene linked to the last by "but" or "so", never "and then".
+   Every 60-90 seconds something must change: a reveal, a setback, a new number, a jump in place or
+   time. Plant a question early and answer it later ("that detail will matter"), and keep at least one
+   question open at every moment.
+5. Midpoint turn (around the middle): the twist that changes how the story so far looks, or the moment
+   everything goes wrong.
+6. Climax and payoff: return to the cold open's moment, now with everything the viewer needs, and
+   finish it. Answer every question the video raised; then state the core message.
+7. Close fast: one line on why it still matters, then one natural line inviting viewers to subscribe.
+   No recap of the story."""
+
+# Long videos cut to a new picture often enough that the screen never sits still: each scene is a
+# 5-10 second beat, and long photo scenes get cutaways (fyt.pipeline.extra_shots).
+LONG_SCENE_WORDS = (15, 25)
 
 SCRIPT_GUIDE = """Write the complete script for a faceless YouTube video. The narration is read by a
 text-to-speech voice and each scene is rendered as an animated motion-graphics template.
@@ -510,7 +526,7 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
 - No lists or headings inside the narration; the on-screen templates carry those.
 
 Rules:
-- Each scene's narration is 1-4 sentences (1-2 in a Short) and matches what is on screen at that moment.
+- Each scene's narration is 1-3 sentences, 15-25 words (1-2 in a Short), matching what is on screen.
 - Show, don't just tell: real photos of the subject (they get the channel's cut-out collage look), maps,
   and the animated templates carry most of the video. Save story scenes, which act a moment out in
   drawings, for the one or two moments a photo can't show (a journey, an accident, a chase) -- at most
@@ -686,12 +702,23 @@ most intriguing thread in the article, not a section-by-section summary.
 
 
 class ChapterPlan(BaseModel):
-    heading: str = Field(description="Chapter title for the description's chapter list, max ~6 words.")
+    heading: str = Field(description="Chapter title for the description's chapter list and the on-screen chapter card, max ~6 words.")
     angle: str = Field(description="One sentence: what this chapter tells, and why the viewer keeps watching.")
+    turn: str = Field(default="", description="The reveal, setback or twist this chapter delivers, from the notes, max 20 words.")
+    cliffhanger: str = Field(
+        default="",
+        description="The open question this chapter ends on, which a later chapter answers, max 15 words. "
+        "Empty for the last chapter.",
+    )
 
 
 class Outline(BaseModel):
     core_message: str = Field(default="", description="Write this first: the one sentence the viewer should remember, max 20 words.")
+    cold_open: str = Field(
+        default="",
+        description="The most dramatic moment of the story, which the video opens on and stops just before "
+        "its outcome, max 25 words. The last chapter returns to it.",
+    )
     mood: Mood = Field(default="curious", description=MOOD_HELP)
     title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
@@ -760,8 +787,9 @@ def write_long_script(
 
     plan_note = (
         f"\n\nFirst, plan the video as exactly {n} chapters. The notes below are excerpts in article order; "
-        "chapter k should draw mainly on part k. Return the metadata and the chapter plan only: the scenes "
-        "are written chapter by chapter afterwards."
+        "chapter k should draw mainly on part k. Pick the cold open first, then give every chapter a turn "
+        "(something changes) and, except the last, a cliffhanger a later chapter answers. Return the metadata "
+        "and the chapter plan only: the scenes are written chapter by chapter afterwards."
     )
     user = f"Topic: {topic}\n\n<research_notes>\n{overview or '(no research notes)'}\n</research_notes>"
     outline = _openai_structured(cfg, guide + plan_note, user, Outline, max_tokens=3000)
@@ -771,30 +799,44 @@ def write_long_script(
         chunks = split_notes(notes, n, limit)
 
     words = int(long_words(cfg) / n)
-    plan_text = "\n".join(f"{i}. {c.heading}: {c.angle}" for i, c in enumerate(plans, 1))
+    plan_text = "\n".join(
+        f"{i}. {c.heading}: {c.angle}" + (f" Turn: {c.turn}" if c.turn else "") + (f" Ends on: {c.cliffhanger}" if c.cliffhanger else "")
+        for i, c in enumerate(plans, 1)
+    )
+    cold_open = f"Cold open: {outline.cold_open}\n" if outline.cold_open else ""
     scenes: list[ScriptScene] = []
     chapters: list[Chapter] = []
     used_images: set[int] = set()
     for i, plan in enumerate(plans, 1):
         if i == 1:
-            position = "This chapter opens the video: start with a title scene, and make the first two sentences the hook."
+            position = (
+                "This chapter opens the video: start with a title scene and the cold open, cut away before its "
+                "outcome, say what is at stake, then rewind to where the story begins."
+            )
         else:
             last = scenes[-1].narration if scenes else ""
             position = f"Continue straight on from the previous chapter, which ended: \"{last}\" Don't re-introduce the topic."
+        if plan.turn:
+            position += f" Build to this chapter's turn: {plan.turn}"
         if i == n:
-            position += " This is the last chapter: end with a satisfying conclusion and one natural line inviting viewers to subscribe."
+            position += (
+                " This is the last chapter: return to the cold open's moment and finish it, answer every open "
+                "question, then close fast with one natural line inviting viewers to subscribe."
+            )
         else:
-            position += " Don't wrap up or invite viewers to subscribe yet."
+            ending = f": {plan.cliffhanger}" if plan.cliffhanger else ", a question the next chapters answer"
+            position += f" Don't wrap up or invite viewers to subscribe yet; end on the open question{ending}"
         taken = f"\nImages already used (don't reuse): {', '.join(map(str, sorted(used_images)))}" if used_images else ""
         system = guide + (
             f"\n\nYou are writing one chapter of this video at a time. Return only this chapter's scenes: "
-            f"{words} words of narration in total (about {max(3, words // 30)} scenes of 25-35 words each). "
+            f"{words} words of narration in total (about {max(4, words // 20)} scenes of {LONG_SCENE_WORDS[0]}-"
+            f"{LONG_SCENE_WORDS[1]} words each, so the picture changes every few seconds). "
             "Don't write less: the video needs this length."
         )
         chunk = chunks[i - 1]
         for attempt in range(3):
             user = (
-                f"Video title: {outline.title}\nCore message: {outline.core_message}\nChapter plan:\n{plan_text}\n\n"
+                f"Video title: {outline.title}\nCore message: {outline.core_message}\n{cold_open}Chapter plan:\n{plan_text}\n\n"
                 f"Write chapter {i}: {plan.heading}. {position}{taken}\n\n"
                 f"<research_notes>\n{chunk or '(no research notes)'}\n</research_notes>{image_tail}"
             )

@@ -126,8 +126,8 @@ export const CameraMedia: React.FC<{ media: Media; camera: Camera; flat?: boolea
   );
 };
 
-// Shorts cut to a new shot about this often; long videos keep one shot per scene.
-const SHOT_SECONDS: Record<Format, number> = { short: 2.5, long: 0 };
+// A new shot about this often (growth.shot_seconds and long_shot_seconds in fyt/config.py).
+const SHOT_SECONDS: Record<Format, number> = { short: 2.5, long: 5 };
 const MOVES: Camera[] = ["push_in", "pan_left", "pull_out", "pan_right"];
 // Where the camera looks when it cuts back to a photo already shown: a tighter crop elsewhere in it.
 const CROPS = ["50% 30%", "30% 55%", "70% 45%", "50% 70%"];

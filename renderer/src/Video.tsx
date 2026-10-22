@@ -3,6 +3,7 @@ import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useVideoConfig 
 import { Background } from "./components/Background";
 import { Brand } from "./components/Brand";
 import { Captions } from "./components/Captions";
+import { ChapterCard } from "./components/ChapterCard";
 import { Atmosphere, Grain } from "./components/Grain";
 import { SoundEffects } from "./components/SoundEffects";
 import { Visualizer, energyOf, useVoiceSpectrum } from "./components/Visualizer";
@@ -44,6 +45,7 @@ export const Video: React.FC<RenderProps> = (props) => {
             <SceneFrame transition={transitionOf(scene)} instant={i === 0} tail={tail} exit={exit}>
               <SceneView scene={scene} theme={props.theme} format={props.format} />
             </SceneFrame>
+            {scene.chapter && scene.chapterNumber ? <ChapterCard number={scene.chapterNumber} title={scene.chapter} theme={props.theme} /> : null}
           </Sequence>
         );
       })}
