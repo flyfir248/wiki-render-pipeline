@@ -57,7 +57,10 @@ def _itch_files(user: str, slug: str, want: str = "standard") -> list[tuple[str,
     dl = r.get("url")
     if not dl:
         raise RuntimeError(f"no download page: {r}")
-    key = dl.rstrip("/").split("/")[-1]
+    # the download page's last path part is its key, url-quoted (requests would quote it again)
+    from urllib.parse import unquote, urlparse
+
+    key = unquote(urlparse(dl).path.rstrip("/").split("/")[-1])
     html = s.get(dl, timeout=60).text
     csrf = _csrf(html) or csrf
     uploads = re.findall(r'data-upload_id="(\d+)".{0,600}?class="upload_name".{0,200}?title="([^"]+)"', html, re.S)
@@ -72,7 +75,7 @@ def _itch_files(user: str, slug: str, want: str = "standard") -> list[tuple[str,
         except ValueError:
             j = {}
         if not j.get("url"):
-            raise RuntimeError(f"no file link for {name!r} (HTTP {r.status_code}): {r.text[:400]}; uploads seen: {uploads}")
+            raise RuntimeError(f"no file link for {name!r} (HTTP {r.status_code}): {r.text[:400]}; uploads seen: {uploads}; download page {dl}")
         out.append((name, s.get(j["url"], timeout=900).content))
     return out
 
