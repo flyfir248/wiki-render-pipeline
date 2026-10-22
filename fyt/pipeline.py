@@ -153,7 +153,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         scene_media, shots = collage(cfg, job, scene_media, shots)
     if credits:
         script = script.model_copy(
-            update={"description": script.description.rstrip() + "\n\nImages from Wikimedia Commons:\n" + "\n".join(credits)}
+            update={"description": script.description.rstrip() + "\n\nImage credits:\n" + "\n".join(credits)}
         )
         job.file("script.json").write_text(script.model_dump_json(indent=2))
     model_credits = assetlib.credits(found)
@@ -709,6 +709,8 @@ def scene_visuals(
                 m = None
             if m and _photo_fits(cfg, job, job.public / m.src, s, subject):
                 scene_media[i] = m
+                if m.credit:
+                    credits.append(m.credit)
     # Open on the subject: if the title scene has nothing, give it the first unused article image
     # (the article's lead image is its subject).
     if 0 not in scene_media and script.scenes and images:
@@ -756,6 +758,8 @@ def scene_visuals(
                     break
                 if _photo_fits(cfg, job, job.public / m.src, s, subject):
                     scene_media[i] = m
+                    if m.credit:
+                        credits.append(m.credit)
                     break
 
     kinds = [("wiki" in m.src or "commons" in m.src) for m in scene_media.values()]
@@ -842,6 +846,8 @@ def extra_shots(
                         log(job, f"warning: no stock photo for scene {i + 1}: {e}")
                     if found and not _photo_fits(cfg, job, job.public / found.src, s, subject):
                         continue
+                    if found and found.credit:
+                        credits.append(found.credit)
                 if not found:
                     break
             if found:

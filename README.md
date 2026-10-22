@@ -351,6 +351,8 @@ workflow** (task `short` or `long`, choose how many videos), and download the ru
    - `GROQ_API_KEY` (or `ANTHROPIC_API_KEY` if `llm.provider` is `anthropic`)
    - `YOUTUBE_TOKEN_JSON`: the full contents of `secrets/token.json`
    - `PEXELS_API_KEY` (optional, for stock footage)
+   - `UNSPLASH_ACCESS_KEY` (optional): the Access Key of an app at unsplash.com/developers; stock photos
+     come from Unsplash first, then Pexels, and each is credited in the description
    - `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` (optional, for illustrated story scenes):
      sign up free at dash.cloudflare.com; the account ID is on the Workers AI page, and the token
      comes from **My Profile → API Tokens → Create Token → Workers AI** template. Or `TOGETHER_API_KEY`.

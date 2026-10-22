@@ -262,3 +262,37 @@ def test_filler_photos_must_match_the_scene(monkeypatch, tmp_path):
     assert 4 not in scene_media and "p5.jpg" in verdicts  # stock photo rejected by eye
     assert stock == ["ocean liner 1910", "cat", "cat"]  # never "Eerily foreshadowed"
     assert not any("Luchador" in c for c in credits)
+
+
+def test_unsplash_is_tried_first_and_credited(monkeypatch, tmp_path):
+    from fyt import media
+
+    monkeypatch.setenv("UNSPLASH_ACCESS_KEY", "k")
+    calls = []
+
+    class R:
+        def __init__(self, body):
+            self.body = body
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return self.body
+
+    def get(url, params=None, headers=None, timeout=0):
+        calls.append(url)
+        assert headers["Authorization"] == "Client-ID k"
+        return R({"results": [{"id": "abc", "urls": {"raw": "https://images.unsplash.com/x?ixid=1"},
+                               "links": {"download_location": "https://api.unsplash.com/photos/abc/download"},
+                               "user": {"name": "Ann Lee", "links": {"html": "https://unsplash.com/@ann"}}}]})
+
+    monkeypatch.setattr(media.requests, "get", get)
+    monkeypatch.setattr(media, "_download", lambda url, dst: calls.append(url) or dst.write_bytes(b"jpg"))
+    monkeypatch.setattr(media, "_pexels_photo", lambda *a: (_ for _ in ()).throw(AssertionError("Pexels not needed")))
+    used: set[str] = set()
+    m = media.fetch_photo(Config(format="short"), "ocean liner", tmp_path, "p1", used)
+    assert m.src == "media/p1.jpg" and "u" + "abc" in used
+    assert m.credit.startswith("Photo by Ann Lee on Unsplash: https://unsplash.com/@ann?utm_source=")
+    assert "w=1080" in calls[1] and calls[2].endswith("/photos/abc/download")  # download reported, as the API asks
+    assert "credit" not in m.model_dump()  # never sent to the renderer
