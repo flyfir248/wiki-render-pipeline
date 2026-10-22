@@ -138,8 +138,10 @@ def revealed(scene: ScriptScene) -> list[str] | None:
     words a document scene starts with blacked out."""
     if scene.type in ("evidence", "cycle"):
         return scene.items
-    if scene.type == "statement" and scene.text:
-        return scene.text.split(" ")
+    if scene.type == "statement" and (scene.text or "").strip():
+        return scene.text.split()
+    if scene.type == "statement" and (scene.heading or "").strip():  # the renderer says the heading instead
+        return scene.heading.split()
     if scene.type == "scale":
         return [d.label for d in sorted((d for d in scene.data or [] if d.value > 0), key=lambda d: d.value)][:5] or None
     if scene.type == "document":
