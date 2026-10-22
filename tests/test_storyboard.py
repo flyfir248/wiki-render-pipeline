@@ -54,7 +54,7 @@ def test_make_draws_checks_and_times_each_beat(monkeypatch, tmp_path):
     s = _script()
     monkeypatch.setattr(artgen, "provider", lambda: "cloudflare")
     prompts = []
-    monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=7: prompts.append(p) or Image.new("RGB", (8, 8)))
+    monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=7, **kw: prompts.append(p) or Image.new("RGB", (8, 8)))
     board = storyboard.Board(
         cast=[storyboard.CastMember(name="the tank", look="a riveted steel tank, rust streaks")],
         beats=[
@@ -102,9 +102,39 @@ def test_story_scene_pictures_count_against_the_budget_and_an_empty_allowance_st
     monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo, known=None: storyboard.Board())
     monkeypatch.setattr(storyboard, "review", lambda cfg, path, meant: None)
     calls = []
-    monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=7: calls.append(p) or Image.new("RGB", (8, 8)))
+    monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=7, **kw: calls.append(p) or Image.new("RGB", (8, 8)))
     spans = [(0.0, 4.0), (4.1, 6.0), (6.1, 9.0), (9.1, 12.0)]
     beats = storyboard.make(Config(format="short"), s, spans, [[]] * 4, tmp_path, log=lambda m: None, drawn=artgen.ART_PER_SHORT - 1)
     assert len(calls) == 1 and sum(len(v) for v in beats.values()) == 1
     monkeypatch.setattr(artgen, "_spent", True)
     assert storyboard.make(Config(format="short"), s, spans, [[]] * 4, tmp_path, log=lambda m: None) == {}
+
+
+def test_a_recurring_subject_is_drawn_from_its_first_picture_and_each_shot_keeps_its_direction(monkeypatch, tmp_path):
+    s = _script()
+    monkeypatch.setattr(artgen, "provider", lambda: "cloudflare")
+    calls = []
+    monkeypatch.setattr(artgen, "generate", lambda p, vertical=False, seed=7, refs=None, **kw: calls.append((p, refs)) or Image.new("RGB", (9, 16)))
+    board = storyboard.Board(
+        cast=[storyboard.CastMember(name="the tank", look="a riveted steel tank")],
+        beats=[
+            storyboard.Beat(scene=1, sentence=2, picture="The tank towering over a street", cast=["the tank"], camera="rise"),
+            storyboard.Beat(scene=4, sentence=1, picture="The burst tank at dawn", cast=["the tank"], camera="pull_out", effect="fog"),
+            storyboard.Beat(scene=4, sentence=2, picture="A hot street"),
+        ],
+    )
+    monkeypatch.setattr(storyboard, "plan", lambda cfg, script, todo, known=None: board)
+    monkeypatch.setattr(storyboard, "review", lambda cfg, path, m: None)
+    words = [[Word(word=w, start=0.3 * n, end=0.3 * n + 0.2) for n, w in enumerate(sc.narration.split())] for sc in s.scenes]
+    beats = storyboard.make(Config(format="short"), s, [(0.0, 4.0), (4.1, 6.0), (6.1, 9.0), (9.1, 12.0)], words, tmp_path, log=lambda m: None)
+    assert calls[0][1] == [] and calls[2][1] == []
+    assert calls[1][1] == [tmp_path / "art/beat-1-2.jpg"] and "the tank looks exactly as in image 0" in calls[1][0]
+    assert (beats[0][0].camera, beats[3][0].camera, beats[3][0].effect) == ("rise", "pull_out", "fog")
+    assert beats[0][0].aspect == round(9 / 16, 4)
+
+
+def test_a_painted_video_paints_story_scenes_from_their_first_sentence():
+    s = _script()
+    s.scenes[3] = s.scenes[3].model_copy(update={"type": "story"})
+    assert (3, 0) not in [(i, k) for i, k, _ in storyboard.wanted(s)]
+    assert (3, 0) in [(i, k) for i, k, _ in storyboard.wanted(s, painted=True)]

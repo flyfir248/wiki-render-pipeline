@@ -180,7 +180,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
 
     drawn = 0
     if any(s.type == "story" for s in script.scenes):
-        if cfg.story_art and artgen.provider():
+        if cfg.story_art and artgen.provider() and not (cfg.visuals.painted and cfg.storyboard):  # else the storyboard paints them
             try:
                 log(job, f"drawing story scenes ({artgen.provider()})")
                 drawn = artgen.illustrate(cfg, script, job.public, log=lambda m: log(job, m))

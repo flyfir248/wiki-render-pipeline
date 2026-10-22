@@ -422,13 +422,17 @@ def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None
         planner, recon = "rules", rule_plan(script, notes)
     off_story: list[dict] = []
     recon = [r for r in recon if r.subject != "stage"]  # stage scenes come from the manifest only
-    if story is not None:
+    if cfg.visuals.painted:
+        recon = [r for r in recon if r.subject in DIAGRAMS]
+    elif story is not None:
         recon, off_story = story_fit(script, story, recon)
         if cfg.visuals.story_worlds:
             # every entity is drawn by its story world's generators, not a catalog module
             recon = [as_stage(script, story, r, n) if manifest.entity(story, r.subject_name) else r for n, r in enumerate(recon)]
         recon += stage_plan(script, story, {r.scene for r in recon}, modules=not cfg.visuals.story_worlds)
     planned, ranked = apply(script, recon, notes)
+    if cfg.visuals.painted:
+        planned = unstaged(planned)
     planned, dropped = within_budget(cfg, script, planned, ranked)
     planned = assets.resolve(planned)
     report = {
@@ -458,6 +462,20 @@ def summary(report: dict) -> str:
 
 def dumps(report: dict) -> str:
     return json.dumps(report, indent=2)
+
+
+DIAGRAMS = ("science", "technology")  # 3D that explains what a painting can't: cells, molecules, machines
+
+
+def unstaged(script: Script) -> Script:
+    """The scriptwriter's own 3D scenes of things a painting shows better (a ship, a crash, a bear) made
+    into narrated scenes, which the storyboard then paints shot by shot."""
+    scenes = list(script.scenes)
+    for i, s in enumerate(scenes):
+        if s.type in ("world", "aircraft", "ship") and s.subject not in DIAGRAMS:
+            scenes[i] = (ScriptScene.model_validate(s.fallback) if s.fallback else
+                         ScriptScene(narration=s.narration, purpose=s.purpose, type="statement", heading=s.heading))
+    return script.model_copy(update={"scenes": scenes})
 
 
 def painted(script: Script) -> tuple[Script, list[int]]:

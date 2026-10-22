@@ -23,3 +23,13 @@ def plan_without_a_model(request, monkeypatch):
         raise RuntimeError("no model in tests")
 
     monkeypatch.setattr(visualplan, "_llm_plan", offline)
+
+
+@pytest.fixture(autouse=True)
+def no_depth_model(request, monkeypatch):
+    """Tests never download the depth model; test_depth fakes one."""
+    if request.module.__name__.endswith("test_depth"):
+        return
+    from fyt import depth
+
+    monkeypatch.setattr(depth, "session", lambda log=print: None)

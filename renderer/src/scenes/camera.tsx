@@ -1,7 +1,8 @@
 // Camera moves over photos and clips, and the transitions scenes enter with.
 import React from "react";
 import { AbsoluteFill, Easing, Img, OffthreadVideo, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import type { Beat, Camera, Format, Media, Scene, Transition } from "../types";
+import type { Beat, Camera, Format, Media, Scene, ShotMove, Transition } from "../types";
+import { Air, DepthShot } from "./depthshot";
 import { pick } from "./shared";
 
 const CAMERAS: Camera[] = ["push_in", "parallax", "pan_left", "pull_out", "pan_right"];
@@ -190,22 +191,37 @@ export const ShotReel: React.FC<{ media: Media; shots?: Media[] | null; camera: 
   );
 };
 
-// One storyboard illustration, full screen for its sentence. The art is square: in a Short it is shown
-// sharp across the middle over a blurred, darkened copy of itself rather than blown up; in 16:9 it
-// fills the frame. It drifts slowly, alternating direction from beat to beat, and dissolves in.
-const ArtShot: React.FC<{ src: string; k: number; format: Format; instant?: boolean }> = ({ src, k, format, instant }) => {
+// One storyboard illustration, full screen for its sentence. A picture drawn at the video's shape fills
+// the frame; with a depth map the camera moves through it in 3D (./depthshot), else it drifts. A square
+// picture in a Short is shown sharp across the middle over a blurred, darkened copy of itself rather
+// than blown up. `cut` is the tighter second shot of a long-held picture, framed on its subject.
+const ArtShot: React.FC<{ beat: Beat; k: number; format: Format; instant?: boolean; cut?: boolean }> = ({ beat, k, format, instant, cut }) => {
   const frame = useCurrentFrame();
   const { width, height, durationInFrames } = useVideoConfig();
+  const src = beat.src;
+  const move: ShotMove = cut ? NEXT_MOVE[beat.camera ?? "push_in"] : beat.camera ?? SHOT_MOVES[k % SHOT_MOVES.length];
+  const at = (beat.focus?.length === 2 ? beat.focus : [0.5, 0.45]) as [number, number];
+  const fits = beat.aspect ? Math.abs(Math.log(beat.aspect / (width / height))) < 0.35 : width >= height || format === "long";
+  if (fits && beat.depth) {
+    return (
+      <DepthShot src={src} depth={beat.depth} move={move} aspect={beat.aspect ?? width / height} effect={cut ? "" : beat.effect ?? ""}
+        crop={cut ? { zoom: 1.32, at } : null} kick={!instant} />
+    );
+  }
   const t = interpolate(frame, [0, durationInFrames], [0, 1], { extrapolateRight: "clamp" });
-  const enter = instant ? 1 : interpolate(frame, [0, 7], [0, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
+  const enter = instant || cut ? 1 : interpolate(frame, [0, 7], [0, 1], { extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
   const dir = k % 2 ? -1 : 1;
-  const move = `scale(${1.04 + 0.07 * t}) translateX(${dir * (t - 0.5) * 2.4}%)`;
+  const zoom = cut ? 1.3 : 1;
+  const flat = `scale(${(1.04 + 0.07 * t) * zoom}) translateX(${dir * (t - 0.5) * 2.4}%)`;
+  const origin = cut ? `${at[0] * 100}% ${at[1] * 100}%` : "50% 50%";
   const img = { width: "100%", height: "100%", objectFit: "cover" as const };
   const vignette = "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%)";
-  if (width >= height || format === "long") {
+  const air = !cut && beat.effect && beat.effect !== "shake" ? <Air kind={beat.effect} /> : null;
+  if (fits) {
     return (
       <AbsoluteFill style={{ overflow: "hidden", opacity: enter }}>
-        <Img src={staticFile(src)} style={{ ...img, transform: move }} />
+        <Img src={staticFile(src)} style={{ ...img, transform: flat, transformOrigin: origin }} />
+        {air}
         <AbsoluteFill style={{ background: vignette }} />
       </AbsoluteFill>
     );
@@ -217,8 +233,9 @@ const ArtShot: React.FC<{ src: string; k: number; format: Format; instant?: bool
     <AbsoluteFill style={{ overflow: "hidden", opacity: enter }}>
       <Img src={staticFile(src)} style={{ ...img, filter: "blur(30px) brightness(0.5) saturate(1.1)", transform: "scale(1.2)" }} />
       <div style={{ position: "absolute", left: 0, top, width: side, height: side, overflow: "hidden", WebkitMaskImage: fade, maskImage: fade }}>
-        <Img src={staticFile(src)} style={{ ...img, transform: move }} />
+        <Img src={staticFile(src)} style={{ ...img, transform: flat, transformOrigin: origin }} />
       </div>
+      {air}
       <AbsoluteFill style={{ background: vignette }} />
     </AbsoluteFill>
   );
@@ -226,7 +243,13 @@ const ArtShot: React.FC<{ src: string; k: number; format: Format; instant?: bool
 
 // A scene with storyboard beats: its own graphic plays until the first beat, then each sentence cuts
 // to its illustration on the word it starts with. A beat at 0 opens the scene with the scene's own
-// transition, so the scene's graphic is not shown at all.
+// transition, so the scene's graphic is not shown at all. In a Short, a shot held longer than
+// CUT_IN seconds cuts in halfway to a tighter frame on its subject, so the picture changes every
+// two seconds or so, the pace Shorts are watched at.
+const CUT_IN = 3.6;
+const SHOT_MOVES: ShotMove[] = ["push_in", "truck_left", "rise", "pull_out", "truck_right", "orbit"];
+const NEXT_MOVE: Record<ShotMove, ShotMove> = { push_in: "truck_right", pull_out: "push_in", truck_left: "push_in", truck_right: "push_in", rise: "push_in", orbit: "push_in" };
+
 export const BeatCuts: React.FC<{ beats: Beat[]; format: Format; children: React.ReactNode }> = ({ beats, format, children }) => {
   const { fps, durationInFrames } = useVideoConfig();
   const marks = beats
@@ -234,17 +257,22 @@ export const BeatCuts: React.FC<{ beats: Beat[]; format: Format; children: React
     .filter((b) => b.from >= 0 && b.from < durationInFrames - 8)
     .sort((a, b) => a.from - b.from);
   if (!marks.length) return <>{children}</>;
+  const shots: { b: (typeof marks)[number]; k: number; from: number; to: number; cut: boolean }[] = [];
+  marks.forEach((b, k) => {
+    const to = k + 1 < marks.length ? marks[k + 1].from : durationInFrames;
+    const half = Math.round((b.from + to) / 2);
+    if (format === "short" && to - b.from > CUT_IN * fps) {
+      shots.push({ b, k, from: b.from, to: half, cut: false }, { b, k, from: half, to, cut: true });
+    } else shots.push({ b, k, from: b.from, to, cut: false });
+  });
   return (
     <AbsoluteFill>
       {marks[0].from > 0 && <Sequence durationInFrames={marks[0].from}>{children}</Sequence>}
-      {marks.map((b, k) => {
-        const to = k + 1 < marks.length ? marks[k + 1].from : durationInFrames;
-        return (
-          <Sequence key={k} from={b.from} durationInFrames={Math.max(1, to - b.from)}>
-            <ArtShot src={b.src} k={k} format={format} instant={b.from === 0} />
-          </Sequence>
-        );
-      })}
+      {shots.map(({ b, k, from, to, cut }, n) => (
+        <Sequence key={n} from={from} durationInFrames={Math.max(1, to - from)}>
+          <ArtShot beat={b} k={k} format={format} instant={from === 0} cut={cut} />
+        </Sequence>
+      ))}
     </AbsoluteFill>
   );
 };

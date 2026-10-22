@@ -144,7 +144,12 @@ export type ModelRef = {
 };
 
 // An illustration that takes over the scene when the sentence it shows begins (fyt/storyboard.py).
-export type Beat = { at: number; src: string }; // seconds from the scene's start
+export type ShotMove = "push_in" | "pull_out" | "truck_left" | "truck_right" | "rise" | "orbit";
+export type Atmosphere = "" | "rain" | "snow" | "fog" | "smoke" | "embers" | "dust" | "shake";
+// at: seconds from the scene's start. depth: its depth map (fyt/depth.py); focus: its nearest subject (x, y as
+// fractions); camera and effect: the director's move and the air over it; aspect: width / height.
+export type Beat = { at: number; src: string; depth?: string | null; focus?: number[] | null; camera?: ShotMove | null;
+  effect?: Atmosphere | null; aspect?: number | null };
 
 export type Word = { word: string; start: number; end: number };
 

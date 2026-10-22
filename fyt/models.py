@@ -258,9 +258,18 @@ class Media(BaseModel):
     aspect: float | None = None  # images with a print: width / height
 
 
+ShotMove = Literal["push_in", "pull_out", "truck_left", "truck_right", "rise", "orbit"]
+Atmosphere = Literal["", "rain", "snow", "fog", "smoke", "embers", "dust", "shake"]
+
+
 class RenderBeat(BaseModel):
     at: float  # seconds from the scene's start: when the sentence it illustrates begins
     src: str  # illustration in the job's public dir
+    depth: str | None = None  # its depth map (fyt.depth): the camera moves through it in 3D
+    focus: list[float] | None = None  # where its nearest subject is (x, y as fractions): what a cut-in frames
+    camera: ShotMove | None = None  # the director's move for this shot
+    effect: Atmosphere = ""  # weather or air over the picture; "shake" jolts the camera as it cuts in
+    aspect: float | None = None  # the picture's width / height
 
 
 class RenderScene(BaseModel):

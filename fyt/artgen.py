@@ -6,7 +6,10 @@ The style is deliberately flat and non-photographic, with faceless people: nobod
 depicted, and clearly stylised art falls outside YouTube's synthetic-content disclosure.
 
 Providers (the first with keys set is used):
-- Cloudflare Workers AI, FLUX.1 schnell: CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN (free daily allowance)
+- Cloudflare Workers AI: CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN (free daily allowance). FLUX.2 [klein]
+  draws at the video's own shape (a Short's pictures are tall, not squares in a band) and can take earlier
+  pictures as references, so a recurring ship or person keeps its look; FLUX.1 schnell, square only, is
+  the fallback when it refuses
 - Together AI, FLUX.1 schnell Free: TOGETHER_API_KEY
 Without keys, story scenes use the bundled emoji-style props (fyt.illustrate).
 """
@@ -41,7 +44,8 @@ SAFE = (
 STYLE = f"Drawn as a {LOOK} for an animated documentary. {SAFE}"
 SCENE_STYLE = (
     f"A full-frame {LOOK}, cinematic lighting with strong shadows, composed like a film still with the main "
-    f"subject large in the centre. {SAFE}"
+    f"subject large in the centre, layered in depth: something in the foreground, the subject in the middle "
+    f"ground, a distant background. {SAFE}"
 )
 PROP = (
     "A single {thing}, shown whole and centred in a three-quarter view with a clear, readable silhouette, "
@@ -53,9 +57,15 @@ PLATE = (
     "and there are no people or vehicles in the scene."
 )
 STEPS = 8  # the most Cloudflare allows for FLUX.1 schnell: noticeably sharper than 4
-# Cloudflare's free allowance is 10,000 neurons a day, about 30 pictures at 8 steps. Two Shorts a
-# day plus a few test renders fit when a Short draws at most this many (story scenes and storyboard).
-ART_PER_SHORT = 12
+KLEIN = "@cf/black-forest-labs/flux-2-klein-4b"
+SCHNELL = "@cf/black-forest-labs/flux-1-schnell"
+# The picture's shape by use: a Short's full-screen picture is tall, a long video's wide, a prop square.
+SIZES = {"tall": (768, 1344), "wide": (1344, 768), "square": (1024, 1024)}
+REF_SIDE = 448  # reference pictures must be under 512 px a side
+# Cloudflare's free allowance is 10,000 neurons a day: about 60 tall FLUX.2 [klein] pictures (6 tiles
+# at 26 neurons each), or 30 square FLUX.1 schnell ones at 8 steps. Three Shorts a day plus a few test
+# renders fit when a Short draws at most this many (story scenes and storyboard).
+ART_PER_SHORT = 14
 # A long video is made on a day that also makes two Shorts, so it gets a modest share too; once the
 # allowance runs out, everything still renders, with photos and graphics instead of pictures.
 ART_PER_LONG = 16
@@ -91,28 +101,54 @@ def _check(r: requests.Response) -> None:
     raise requests.HTTPError(f"{r.status_code}: {detail}")
 
 
-def generate(prompt: str, vertical: bool = False, seed: int = 7) -> Image.Image:
-    """One image from the configured provider."""
+def _jpeg(path: Path) -> bytes:
+    im = Image.open(path).convert("RGB")
+    im.thumbnail((REF_SIDE, REF_SIDE))
+    out = io.BytesIO()
+    im.save(out, "JPEG", quality=88)
+    return out.getvalue()
+
+
+_klein_ok = True  # FLUX.2 [klein] answered (or hasn't been asked yet) in this run
+
+
+def _cloudflare(prompt: str, shape: str, seed: int, refs: list[Path]) -> bytes:
+    global _klein_ok
+    base = f"https://api.cloudflare.com/client/v4/accounts/{secret('CLOUDFLARE_ACCOUNT_ID')}/ai/run/"
+    auth = {"Authorization": f"Bearer {secret('CLOUDFLARE_API_TOKEN')}"}
+    if _klein_ok:
+        w, h = SIZES[shape]
+        fields = {"prompt": (None, prompt), "width": (None, str(w)), "height": (None, str(h)), "seed": (None, str(seed))}
+        for n, ref in enumerate(refs[:4]):
+            fields[f"input_image_{n}"] = (f"ref{n}.jpg", _jpeg(ref), "image/jpeg")
+        r = requests.post(base + KLEIN, headers=auth, files=fields, timeout=120)
+        try:
+            _check(r)
+            return base64.b64decode(r.json()["result"]["image"])
+        except (Rejected, KeyError, TypeError, ValueError) as e:
+            if _spent:
+                raise
+            _klein_ok = False  # refused outright (not the allowance): the older model for the rest of the run
+            print(f"FLUX.2 [klein] refused ({e}); drawing with FLUX.1 schnell, square")
+    r = requests.post(base + SCHNELL, headers=auth, json={"prompt": prompt, "steps": STEPS}, timeout=120)  # takes only these two
+    _check(r)
+    return base64.b64decode(r.json()["result"]["image"])
+
+
+def generate(prompt: str, vertical: bool = False, seed: int = 7, shape: str | None = None, refs: list[Path] | None = None) -> Image.Image:
+    """One image from the configured provider: tall for a Short's full-screen picture (`vertical`), wide
+    for a long video's, square for a prop (`shape="square"`). `refs` are earlier pictures whose subjects
+    it should draw the same way (FLUX.2 [klein] only; others ignore them)."""
     which = provider()
+    shape = shape or ("tall" if vertical else "wide")
     if which == "cloudflare" and _spent:
         raise RuntimeError("image generation failed: the free daily image allowance is used up")
     for attempt in range(3):
         try:
             if which == "cloudflare":
-                url = (
-                    f"https://api.cloudflare.com/client/v4/accounts/{secret('CLOUDFLARE_ACCOUNT_ID')}"
-                    "/ai/run/@cf/black-forest-labs/flux-1-schnell"
-                )
-                r = requests.post(
-                    url,
-                    headers={"Authorization": f"Bearer {secret('CLOUDFLARE_API_TOKEN')}"},
-                    json={"prompt": prompt, "steps": STEPS},  # the model takes only these two
-                    timeout=120,
-                )
-                _check(r)
-                data = base64.b64decode(r.json()["result"]["image"])
+                data = _cloudflare(prompt, shape, seed, [r for r in refs or [] if Path(r).is_file()])
             elif which == "together":
-                w, h = (768, 1344) if vertical else (1344, 768)
+                w, h = SIZES[shape]
                 r = requests.post(
                     "https://api.together.xyz/v1/images/generations",
                     headers={"Authorization": f"Bearer {secret('TOGETHER_API_KEY')}"},
@@ -190,7 +226,7 @@ def illustrate(cfg: Config, script: Script, public: Path, log=print) -> int:
             name = f"art/prop-{_key(thing)}.png"
             try:
                 if not (public / name).exists():
-                    cut_out(generate(f"{PROP.format(thing=re.sub(r'^(a|an|the|one) ', '', thing.strip(), flags=re.I))} {STYLE}", seed=23)).save(public / name)
+                    cut_out(generate(f"{PROP.format(thing=re.sub(r'^(a|an|the|one) ', '', thing.strip(), flags=re.I))} {STYLE}", seed=23, shape="square")).save(public / name)
                     made += 1
                 actor.src = name
             except Exception as e:
