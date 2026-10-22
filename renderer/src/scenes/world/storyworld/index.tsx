@@ -17,7 +17,7 @@ import { ContactShadow, type Finish, Post, type SkySpec, SkyDome, SkyLight } fro
 import { Environment, INSIDE, type KeepOut, VOID, waterBand } from "./environment";
 import { dimsOf, Flames, humanPose, Humanoid } from "./humanoid";
 import { PartMesh, partsBounds } from "./parts";
-import { KitPerson } from "./kit";
+import { clipsFor, KitPerson } from "./kit";
 import { env, lightOf, type Look, lookOf, material } from "./style";
 import type { Build, CastMember, Spot, World } from "./types";
 
@@ -194,6 +194,7 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     const ice = placed.find((p) => p.m.build.form === "iceberg");
     const deck = placed.find((p) => p.m.build.archetype === "vehicle" && !flies(p.m) && p.m.verb !== "drive");
     const walkers = placed.filter((p) => ["humanoid", "quadruped"].includes(p.m.build.archetype) && !["swim", "fly"].includes(p.m.verb));
+    const going = new Set<Placed>();
     walkers.forEach((p, n) => {
       const spread = (n - (walkers.length - 1) / 2);
       if (ice) {
@@ -211,7 +212,13 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
         const gap = Math.max(...walkers.map((q) => q.w0)) * 0.9 + 0.6;
         // (in the liner's own length: its footprint w0 is wider than the hull, and the bow narrows)
         const L = deck.m.build.size;
-        const along = liner ? Math.max(0.27 * L, Math.min(0.4 * L, LINER_FOREDECK * L + spread * gap)) : spread * 0.12 * deck.w0;
+        // one walking goes along the deck (forward, as far as the deck runs), not on the spot
+        const walked = Math.abs(p.pos.x - starts[placed.indexOf(p)].x) * 0.5;
+        const along = liner ? Math.max(0.2 * L, Math.min(0.43 * L, LINER_FOREDECK * L + spread * gap - Math.min(walked, 0.12 * L) + (walked > 0 ? 0.06 * L : 0))) : spread * 0.12 * deck.w0 + walked;
+        if (walked > 0) {
+          p.yaw = deck.yaw + (liner ? Math.PI : 0);
+          going.add(p);
+        }
         const across = (n % 2 ? 1 : -1) * (liner ? 0.008 * L : 0.02 * deck.w0);
         // (a hull afloat is drawn settled into the water by h * 0.18, see Scene; its deck with it)
         const up = (liner ? deck.m.build.size * 0.077 : deck.h * 0.28) - (world.set.kind === "sea" && deck.pos.y <= 0 ? deck.h * 0.18 : 0);
@@ -221,7 +228,7 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     });
     // aboard or on the floe, those standing their ground face one another, not out to sea
     walkers.forEach((p) => {
-      if (["walk", "run", "flee", "chase"].includes(p.m.verb) || p.m.face) return;
+      if (going.has(p) || ["walk", "run", "flee", "chase"].includes(p.m.verb) || p.m.face) return;
       const o = walkers.filter((q) => q !== p).sort((a, b) => a.pos.distanceTo(p.pos) - b.pos.distanceTo(p.pos))[0];
       if (o) p.yaw = Math.atan2(-(o.pos.z - p.pos.z), o.pos.x - p.pos.x);
     });
@@ -600,7 +607,7 @@ const animatedFor = (m: CastMember) => Boolean(m.model?.src && ready.has(m.model
 const kitFor = (world: World, m: CastMember) => {
   if (!world.kit || m.build.archetype !== "humanoid") return null;
   const body = ready.get((m.build.sex === "f" ? world.kit.bodies.f ?? world.kit.bodies.m : world.kit.bodies.m ?? world.kit.bodies.f) ?? "");
-  const library = world.kit.clips.flatMap((c) => ready.get(c)?.clips ?? []);
+  const library = body ? world.kit.clips.flatMap((c) => (ready.get(c) ? clipsFor(ready.get(c) as Loaded, body) : [])) : [];
   return body && library.length ? { body, library } : null;
 };
 

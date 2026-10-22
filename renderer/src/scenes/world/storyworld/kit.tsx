@@ -125,9 +125,9 @@ const headwear = (build: Build, head: THREE.Object3D, root: THREE.Object3D, skul
   if (o?.hair === "hat") {
     const felt = new THREE.MeshStandardMaterial({ color: build.accent && build.accent !== build.skin ? build.accent : "#2b2420", roughness: 0.85 });
     const crown = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.95, r * 1.02, top * 0.75, 24), felt);
-    crown.position.y = top * 0.72;
+    crown.position.y = top * 0.6;
     const brim = new THREE.Mesh(new THREE.CylinderGeometry(r * 1.65, r * 1.65, top * 0.07, 32), felt);
-    brim.position.y = top * 0.36;
+    brim.position.y = top * 0.24;
     g.add(crown, brim);
   } else if (o?.hair !== "bald") {
     const long = o?.hair === "long";
@@ -173,7 +173,12 @@ export const KitPerson: React.FC<{ build: Build; verb: string; body: Loaded; lib
   envMap,
 }) => {
   const made = React.useMemo(() => dress(body, build, envMap), [body, build, envMap]);
-  const clip = React.useMemo(() => kitClip(library, verb), [library, verb]);
+  // a walk with nowhere to go would tread on the spot: standing, it idles instead
+  const still = speed < 0.05;
+  const clip = React.useMemo(() => {
+    const c = kitClip(library, verb);
+    return c && still && LOCOMOTION.test(c.name) && verb !== "swim" ? kitClip(library, "idle") : c;
+  }, [library, verb, still]);
   const mixer = React.useMemo(() => {
     const mx = new THREE.AnimationMixer(made.root);
     if (clip) {
@@ -196,4 +201,37 @@ export const KitPerson: React.FC<{ build: Build; verb: string; body: Loaded; lib
       <primitive object={made.root} />
     </group>
   );
+};
+
+// A clip library's clips made to play on a kit body: only the hips move the body through space (other
+// bones keep the body's own proportions), scaled from the library's units to the body's (UAL1's Unreal
+// export is in centimetres); scale keys dropped.
+const tuned = new WeakMap<THREE.AnimationClip[], Map<Loaded, THREE.AnimationClip[]>>();
+const pelvisRest = (o: THREE.Object3D) => {
+  let p: THREE.Object3D | undefined;
+  o.traverse((n) => {
+    if (!p && n.name === "pelvis") p = n;
+  });
+  return p ? p.position.length() : 0;
+};
+export const clipsFor = (lib: Loaded, body: Loaded) => {
+  let byBody = tuned.get(lib.clips);
+  if (!byBody) tuned.set(lib.clips, (byBody = new Map()));
+  const hit = byBody.get(body);
+  if (hit) return hit;
+  const a = pelvisRest(lib.scene), b = pelvisRest(body.scene);
+  const k = a > 0 && b > 0 ? b / a : 1;
+  const out = lib.clips.map((c) => {
+    const tracks = c.tracks
+      .filter((t) => !t.name.endsWith(".scale") && (!t.name.endsWith(".position") || t.name.startsWith("pelvis.")) && !t.name.startsWith("root."))
+      .map((t) => {
+        if (!t.name.endsWith(".position") || Math.abs(k - 1) < 0.01) return t;
+        const u = t.clone();
+        u.values = u.values.map((v) => v * k);
+        return u;
+      });
+    return new THREE.AnimationClip(c.name.replace(/^.*\|/, ""), c.duration, tracks);
+  });
+  byBody.set(body, out);
+  return out;
 };
