@@ -607,7 +607,10 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
   if (mixer) mixer.setTime(b.t + p.phase * 0.3);
   // prepare() scales the largest side to 4 units; the design's size says how big it really is.
   const k = Math.max(0.05, p.m.build.size) / 4;
-  const { rot, off, scale } = living ? { rot: [0, 0, 0] as [number, number, number], off: new THREE.Vector3(), scale: 1 } : rigidPose(p, b, p.m.build.archetype === "vehicle");
+  const posed = living && clip < 0 && Boolean(p.m.model?.posed);
+  const { rot, off, scale } = posed
+    ? stillPose(p, b, made.size.y * k, made.size.z * k)
+    : living ? { rot: [0, 0, 0] as [number, number, number], off: new THREE.Vector3(), scale: 1 } : rigidPose(p, b, p.m.build.archetype === "vehicle");
   const wet = world.set.kind === "sea" || Boolean(waterBand(world.set.kind));
   const impact = p.m.verb === "crash" && b.k > 0 && wet;
   return (
@@ -621,6 +624,47 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
 };
 
 const LIVING_ARCH = ["humanoid", "quadruped", "bird", "fish", "insect", "serpent"];
+
+// A still library animal (one mesh, no rig) moved as a whole for what it does: the rise and fall and
+// rock of a gait as it travels, a flier's bob and bank, a swimmer's sway, a slow breath and a look round
+// while it stands, and lying on its side when it falls, dies or sleeps. (h: its height, d: its depth
+// across its body, in the stage's units.)
+const STRIDES = /walk|run|move|approach|depart|climb|carry|panic|rear|crash/;
+const stillPose = (p: Placed, b: Blocking, h: number, d: number) => {
+  const verb = p.m.verb;
+  const arche = p.m.build.archetype;
+  const t = b.t + p.phase;
+  const rot: [number, number, number] = [0, 0, 0];
+  const off = new THREE.Vector3();
+  let scale = 1;
+  if (/fall|collapse|lie|sleep/.test(verb) || p.m.state === "asleep") {
+    // over onto its side, settling where it stood
+    const s = verb === "lie" || verb === "sleep" || p.m.state === "asleep" ? 1 : ease((b.k + 0.4) / 0.6);
+    rot[0] = s * Math.PI * 0.5;
+    off.y = s * d * 0.5;
+    scale = 1 + Math.sin(t * 1.1) * 0.006 * s;
+  } else if (arche === "bird" || arche === "insect" ? verb === "fly" || verb === "flap" || STRIDES.test(verb) : false) {
+    off.y = Math.sin(t * (arche === "insect" ? 9 : 2.2)) * h * (arche === "insect" ? 0.12 : 0.18);
+    rot[0] = Math.sin(t * 1.3) * 0.12;
+    rot[2] = Math.sin(t * 2.2 + 1) * 0.06;
+  } else if (arche === "fish" || arche === "serpent" || verb === "swim") {
+    rot[1] = Math.sin(t * 3.2) * 0.14;
+    off.y = Math.sin(t * 1.6) * h * 0.04;
+  } else if (STRIDES.test(verb)) {
+    // a step: up over each stride and a rock from front to back, faster at a run
+    const step = t * (verb === "run" || verb === "panic" ? 11 : 6.5);
+    off.y = Math.abs(Math.sin(step)) * h * (verb === "run" ? 0.07 : 0.035);
+    rot[2] = Math.sin(step * 2) * 0.035;
+    rot[0] = Math.sin(step) * 0.02;
+  } else {
+    // standing: breathing, and a slow look round (a head down to eat or sniff)
+    scale = 1 + Math.sin(t * 1.7) * 0.01;
+    rot[1] = Math.sin(t * 0.35) * 0.14;
+    if (/eat|sniff|peck/.test(verb)) rot[2] = -0.06 - Math.max(0, Math.sin(t * 1.2)) * 0.05;
+    if (verb === "roar" || verb === "shake") rot[2] = Math.sin(t * 9) * 0.03 + 0.05;
+  }
+  return { rot, off, scale };
+};
 const ONCE = /death|die|dead|hit|reci?eve|interact|punch|kick|jump/i;
 
 // A library person in the build's own skin and hair colours (their outfit keeps its own).
@@ -637,7 +681,8 @@ const tone = (root: THREE.Object3D, build: Build) => {
 
 // A found model draws a living thing only when it has a clip for what that thing is doing; a still mesh
 // sliding across the ground is worse than the generated, posed body.
-const animatedFor = (m: CastMember) => Boolean(m.model?.src && ready.has(m.model.src)) && clipFor(m.model?.clips ?? [], m.verb) >= 0;
+// (a still library animal is posed instead: see stillPose)
+const animatedFor = (m: CastMember) => Boolean(m.model?.src && ready.has(m.model.src)) && (clipFor(m.model?.clips ?? [], m.verb) >= 0 || Boolean(m.model?.posed));
 
 // A person drawn from the character kit, when the kit's body and clips have loaded.
 const kitFor = (world: World, m: CastMember) => {

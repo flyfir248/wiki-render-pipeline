@@ -1218,6 +1218,12 @@ def vary_cameras(out: dict[int, Shot]) -> dict[int, Shot]:
 # --- the scene's world, for the renderer -----------------------------------------------------------
 
 
+def shows(b: Build, m: dict | None) -> bool:
+    """Whether a found model draws its entity: a living thing's only with its own animation, or when it
+    is a library animal the renderer poses (a gait, a breath, a turn of the head)."""
+    return bool(m) and (b.archetype not in LIVING or bool(m.get("clips")) or bool(m.get("posed")))
+
+
 def world_of(style: str, seed: int, shot: Shot, builds: dict[str, Build], settings: dict[str, Setting], models: dict[str, dict]) -> dict:
     """What the renderer's StoryWorld needs for one scene: the style, the set and every actor with its
     build (or its found model), verb, blocking and state, the camera, the marks and the labels."""
@@ -1236,7 +1242,7 @@ def world_of(style: str, seed: int, shot: Shot, builds: dict[str, Build], settin
         b = builds[a.entity]
         entry = a.model_dump() | {"build": b.model_dump()}
         m = models.get(a.entity)
-        if m and (b.archetype not in LIVING or m.get("clips")):
+        if shows(b, m):
             # a found model that genuinely matches draws it (a living thing's only with its own animation,
             # and only while it has a clip for what it is doing); the build stays its fallback
             entry["model"] = m
@@ -1254,7 +1260,7 @@ def record(style: str, builds: dict[str, Build], settings: dict[str, Setting], s
         "style": style,
         "made": made,
         "builds": [b.model_dump() | {
-            "source": "found model" if b.entity in models and (b.archetype not in LIVING or models[b.entity].get("clips")) else
+            "source": "found model" if shows(b, models.get(b.entity)) else
                       ("procedural, designed by the model" if made.get("cast") == "model" and b.entity not in made.get("rules_built", []) else "procedural, from the entity's words"),
             "scenes": sorted(k for k, s in shots.items() if any(a.entity == b.entity for a in s.actors)),
         } for b in builds.values()],

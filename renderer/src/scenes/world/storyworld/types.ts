@@ -66,7 +66,8 @@ export type CastMember = {
   count?: number;
   build: Build;
   held?: Build;
-  model?: { id: string; src: string; fit?: { forward?: string; up?: string }; clips?: string[] };
+  // posed: a still library animal the renderer moves as a whole (a gait, a breath, a turn)
+  model?: { id: string; src: string; fit?: { forward?: string; up?: string }; clips?: string[]; posed?: boolean };
 };
 
 export type Dressing = { name: string; build: Build; count: number; spread: number };

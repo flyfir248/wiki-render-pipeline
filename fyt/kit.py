@@ -38,9 +38,9 @@ ANIMALS = {
     "Cow": ["=cow", "=cows", "=cattle", "=bull", "=bulls", "=ox", "=oxen", "=calf", "=heifer"],
     "Zebra": ["=zebra", "=zebras"],
     "Sheep": ["=sheep", "=lamb", "=lambs", "=ram", "=ewe", "=ewes"],
-    "Pig": ["=pig", "=pigs", "=hog", "=hogs", "=boar", "=piglet", "=swine", "=sow"],
-    "Llama": ["=llama", "=llamas", "=alpaca", "=alpacas"],
-    "Pug": ["=pug", "=dog", "=dogs", "=puppy", "=pup", "=hound"],
+    "Pig": ["=pig", "=pigs", "=hog", "=hogs", "=piglet", "=swine", "=sow"],
+    "Llama": ["=llama", "=llamas"],
+    "Pug": ["=pug", "=pugs"],
 }
 KEEP = (".glb", ".gltf", ".bin", ".png", ".jpg", ".jpeg", ".txt", ".md")
 # a pack's Godot glTF may come on another skeleton (UAL1's is Rigify's); its Unreal FBX is on the shared
