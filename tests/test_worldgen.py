@@ -197,7 +197,12 @@ def test_story_worlds_turn_stage_scenes_into_generated_worlds(tmp_path, offline)
     assert out.scenes[1].model["level"] == "procedural" and out.scenes[1].label.startswith("RECONSTRUCTION")
     record = json.loads(job.file("world.json").read_text())
     assert {b["entity"] for b in record["builds"]} == {"bear", "bags", "hunter", "plane"}
-    assert all(b["source"] == "procedural, from the entity's words" for b in record["builds"])
+    # the hunter wears a library outfit; the rest are built from their words
+    assert {b["entity"]: b["source"] for b in record["builds"]} == {
+        "hunter": "found model", "bear": "procedural, from the entity's words",
+        "bags": "procedural, from the entity's words", "plane": "procedural, from the entity's words"}
+    assert any(a["entity"] == "hunter" for w in worlds for a in w["cast"])
+    assert (job.public / "models" / "kit-person-m-worker.glb").is_file()
     assert record["shots"]["2"]["actors"][0]["verb"] == "eat"
 
 

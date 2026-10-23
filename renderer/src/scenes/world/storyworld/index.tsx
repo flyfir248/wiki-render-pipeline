@@ -555,6 +555,8 @@ const CLIPS: [RegExp, RegExp[]][] = [
   [/^(attack|fight|bite|strike|pounce|hunt|roar|threaten)$/, [/attack|bite|swipe|hit|roar|punch|strike/i, /run|gallop/i]],
   [/^(eat|feed|graze|drink)$/, [/eat|graze|drink|feed/i, /idle/i]],
   [/^(sleep|rest|lie|sit|die|asleep)$/, [/sleep|rest|lie|sit|death|die/i, /idle/i]],
+  [/^(wave|point|signal|call|shout|warn|cheer|greet)$/, [/wave|greet|cheer/i, /idle|stand/i]],
+  [/^(work|fix|repair|build|pick_up|open|use)$/, [/interact|work|use/i, /idle|stand/i]],
   [/.*/, [/idle|stand|breath|look|wait|survey|rest/i]],
 ];
 export const clipFor = (names: string[], verb: string) => {
@@ -568,7 +570,11 @@ export const clipFor = (names: string[], verb: string) => {
 
 const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loaded: Parameters<typeof prepare>[0] }> = ({ p, loaded, b, look, world }) => {
   const made = React.useMemo(
-    () => prepare(loaded, p.m.model?.fit?.forward ?? "auto", p.m.model?.fit?.up ?? "+y", look.toon ? null : { envMap: env.map, intensity: env.intensity * 1.2 }),
+    () => {
+      const it = prepare(loaded, p.m.model?.fit?.forward ?? "auto", p.m.model?.fit?.up ?? "+y", look.toon ? null : { envMap: env.map, intensity: env.intensity * 1.2 });
+      if (p.m.build.archetype === "humanoid") tone(it.root, p.m.build);
+      return it;
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [loaded, p.m.model, look.toon],
   );
@@ -578,7 +584,13 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
   const mixer = React.useMemo(() => {
     if (clip < 0) return null;
     const mx = new THREE.AnimationMixer(made.animated);
-    mx.clipAction(loaded.clips[clip]).play();
+    const a = mx.clipAction(loaded.clips[clip]);
+    // a fall, a blow or a gesture happens once and holds, rather than repeating
+    if (ONCE.test(loaded.clips[clip].name)) {
+      a.setLoop(THREE.LoopOnce, 1);
+      a.clampWhenFinished = true;
+    }
+    a.play();
     return mx;
   }, [made, loaded, clip]);
   if (mixer) mixer.setTime(b.t + p.phase * 0.3);
@@ -598,6 +610,19 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
 };
 
 const LIVING_ARCH = ["humanoid", "quadruped", "bird", "fish", "insect", "serpent"];
+const ONCE = /death|die|dead|hit|reci?eve|interact|punch|kick|jump/i;
+
+// A library person in the build's own skin and hair colours (their outfit keeps its own).
+const tone = (root: THREE.Object3D, build: Build) => {
+  root.traverse((n) => {
+    const mesh = n as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    for (const m of (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as THREE.MeshStandardMaterial[]) {
+      if (build.skin && /^skin/i.test(m.name)) m.color = new THREE.Color(build.skin);
+      else if (build.hair && /hair|eyebrow|beard/i.test(m.name)) m.color = new THREE.Color(build.hair);
+    }
+  });
+};
 
 // A found model draws a living thing only when it has a clip for what that thing is doing; a still mesh
 // sliding across the ground is worse than the generated, posed body.

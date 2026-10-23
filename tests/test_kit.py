@@ -34,3 +34,29 @@ def test_the_bundled_bodies_and_their_hair_are_staged_with_the_fetched_clips(tmp
     assert got["clips"] == ["kit/ual2-clips.glb"]
     assert {"long", "buns", "parted", "beard"} <= set(got["hair"])
     assert all((tmp_path / "public" / n).is_file() for n in [*got["bodies"].values(), *got["hair"].values()])
+
+
+def test_a_person_wears_the_outfit_their_role_names_or_their_top_suggests():
+    from fyt import people
+
+    assert people.outfit_for("Captain Edward Smith, the ship's captain", "m") == "kit-person-m-suit"
+    assert people.outfit_for("a coal miner", "m") == "kit-person-m-worker"
+    assert people.outfit_for("an astronaut", "m") == "kit-person-m-spacesuit"
+    assert people.outfit_for("a police officer", "f") == "kit-person-f-soldier"
+    assert people.outfit_for("Margaret, a passenger", "f", top="labcoat") == "kit-person-f-formal"
+    assert people.outfit_for("a passenger", "m") == "kit-person-m-casual-2"
+
+
+def test_library_people_and_models_carry_their_licence_and_file():
+    from fyt import assets, people
+
+    assert len(people.outfits()) == 21 and {e["sex"] for e in people.outfits().values()} == {"f", "m"}
+    picked = [e for k, e in assets.registry().items() if k.startswith("kit-")]
+    assert picked and all(assets.library_ready(e) and e["licence"] == "CC0" for e in picked)
+
+
+def test_a_story_vehicle_or_sea_creature_comes_from_the_library():
+    assert assetlib.project_model(animal("the fire engine", "fire engine"))["key"] == "kit-fire-truck"
+    assert assetlib.project_model(animal("a humpback whale", "humpback whale", "whale"))["key"] == "kit-whale"
+    assert assetlib.project_model(animal("the steam locomotive", "steam locomotive"))["key"] == "kit-steam-locomotive"
+    assert assetlib.project_model(animal("a ballpoint pen", "pen")) is None

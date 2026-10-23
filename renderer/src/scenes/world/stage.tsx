@@ -111,6 +111,7 @@ export const prepare = (m: Loaded, forward: string, up: string, own: { envMap: T
     const toon = (old: THREE.Material) => {
       const s = old as THREE.MeshStandardMaterial;
       return new THREE.MeshToonMaterial({
+        name: s?.name ?? "",
         color: s?.color ?? new THREE.Color(colours ? "#ffffff" : "#d9dde3"), map: s?.map ?? null, gradientMap: toonRamp, vertexColors: colours,
         transparent: s?.transparent, opacity: s?.opacity ?? 1, alphaTest: s?.alphaTest ?? 0, side: s?.side ?? THREE.FrontSide,
       });

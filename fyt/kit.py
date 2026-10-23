@@ -190,7 +190,14 @@ def pack(src: Path, dst: Path, texture: int = 1024) -> None:
     from PIL import Image
 
     g = json.loads(src.read_text())
-    blobs = [(src.parent / b["uri"]).read_bytes() for b in g.get("buffers", [])]
+    def read(uri: str) -> bytes:  # a file beside the glTF, or embedded in it as a data URI
+        if uri.startswith("data:"):
+            import base64
+
+            return base64.b64decode(uri.split(",", 1)[1])
+        return (src.parent / uri).read_bytes()
+
+    blobs = [read(b["uri"]) for b in g.get("buffers", [])]
     for m in g.get("meshes", []):
         for p in m.get("primitives", []):
             p["attributes"] = {k: v for k, v in p["attributes"].items() if not re.match(r"COLOR_|TEXCOORD_[1-9]", k)}
@@ -231,6 +238,16 @@ def pack(src: Path, dst: Path, texture: int = 1024) -> None:
     images = []
     for t in used_tex:
         img = g["images"][g["textures"][t]["source"]]
+        if "bufferView" in img or img.get("uri", "").startswith("data:"):
+            bv = g["bufferViews"][img["bufferView"]] if "bufferView" in img else None
+            data = blobs[bv.get("buffer", 0)][bv.get("byteOffset", 0):bv.get("byteOffset", 0) + bv["byteLength"]] if bv else read(img["uri"])
+            im = Image.open(io.BytesIO(data)).convert("RGB")
+            im.thumbnail((texture, texture))
+            buf = io.BytesIO()
+            im.save(buf, "JPEG", quality=88)
+            tex_map[t] = len(images)
+            images.append({"bufferView": put(buf.getvalue()), "mimeType": "image/jpeg"})
+            continue
         f = src.parent / img["uri"]
         if not f.exists():  # a few files are named differently from the glTF's reference ("x_png.png" for "x.png")
             alts = [src.parent / img["uri"].replace("_png.png", ".png"), src.parent / img["uri"].replace(".png", "_png.png")]
@@ -305,33 +322,68 @@ def add(archive: Path) -> dict:
         fbx = {f.stem: f for f in files if f.suffix.lower() == ".fbx" and f.stem in ANIMALS}
         if not fbx:
             raise ValueError(f"{archive.name}: neither the base characters nor the farm animals")
-        from fyt import assets
-        from fyt.assetlib import RENDERER_DIR
-
-        reg_path = assets.WORLD / "assets.json"
-        text = reg_path.read_text()
-        have = json.loads(text)["assets"]
         added = {}
+        entries = {}
         for name, f in fbx.items():
-            glb = f.with_suffix(".glb")
-            _to_glb(f)
             key = f"kit-{name.lower()}"
-            out = assets.MODELS_DIR / f"{key}.glb"
-            out.parent.mkdir(parents=True, exist_ok=True)
-            r = subprocess.run(["node", "prepare-model.mjs", str(glb), str(out), "--triangles", "40000", "--texture", "1024"],
-                               cwd=RENDERER_DIR, capture_output=True, text=True, timeout=300, check=True)
-            info = json.loads(r.stdout.strip().splitlines()[-1])
             entry = {"kind": "library", "subject": "animal", "variant": name.lower(), "names": ANIMALS[name],
-                                  "title": f"{name} (Quaternius Farm Animals)", "src": out.name, "source": ANIMALS_PAGE,
-                                  "licence": "CC0", "author": "Quaternius", "clips": info["clips"]}
-            added[key] = info["clips"]
-            if key not in have:  # appended in the file's own hand-written layout, an entry per line
-                text = text.rstrip()
-                assert text.endswith("}\n  }\n}")
-                text = text[: -len("\n  }\n}")] + f",\n    {json.dumps(key)}: {json.dumps(entry)}\n  }}\n}}\n"
-        reg_path.write_text(text)
+                     "title": f"{name} (Quaternius Farm Animals)", "source": ANIMALS_PAGE, "licence": "CC0", "author": "Quaternius"}
+            entries[key] = entry | library_model(f, key)
+            added[key] = entries[key]["clips"]
+        register(entries)
         shutil.rmtree(work / "x", ignore_errors=True)
         return added
+
+
+def library_model(f: Path, key: str, clips: list[str] | None = None) -> dict:
+    """A model file (glTF, GLB or FBX) made into a project library model (renderer/public/models/KEY.glb,
+    through the renderer's own preparation), keeping only the named `clips` of a glTF (and none of its
+weapons) when given;
+    returns its file name and clips for the registry."""
+    import subprocess
+
+    from fyt import assets
+    from fyt.assetlib import RENDERER_DIR
+
+    if f.suffix.lower() == ".fbx":
+        _to_glb(f)
+        f = f.with_suffix(".glb")
+    if clips and f.suffix.lower() == ".gltf":
+        g = json.loads(f.read_text())
+        g["animations"] = [a for a in g.get("animations", []) if a.get("name") in clips]
+        # a person's pistol or sword is a game's, not the story's: the node stays (for the rig), its mesh goes
+        for n in g.get("nodes", []):
+            if re.fullmatch(r"(?i)pistol|sword|gun|rifle|knife|axe|shield", n.get("name", "")):
+                n.pop("mesh", None)
+                n.pop("skin", None)
+        f = f.with_name(f"{f.stem}.kept.gltf")  # beside it, for its buffers and images
+        f.write_text(json.dumps(g))
+    out = assets.MODELS_DIR / f"{key}.glb"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    r = subprocess.run(["node", "prepare-model.mjs", str(f), str(out), "--triangles", "40000", "--texture", "1024"],
+                       cwd=RENDERER_DIR, capture_output=True, text=True, timeout=300, check=True)
+    info = json.loads(r.stdout.strip().splitlines()[-1])
+    return {"src": out.name, "clips": info["clips"]}
+
+
+def register(entries: dict[str, dict]) -> None:
+    """Library entries written into the registry (renderer/src/scenes/world/assets.json): a new one appended
+    in the file's own hand-written layout, an entry per line; one already there replaced in place."""
+    from fyt import assets
+
+    path = assets.WORLD / "assets.json"
+    text = path.read_text()
+    have = json.loads(text)["assets"]
+    for key, entry in entries.items():
+        line = f"    {json.dumps(key)}: {json.dumps(entry)}"
+        if key in have:
+            text = re.sub(rf"(?m)^    {re.escape(json.dumps(key))}: \{{.*\}}(?=,?$)", lambda _: line, text, count=1)
+            continue
+        text = text.rstrip()
+        assert text.endswith("}\n  }\n}")
+        text = text[: -len("\n  }\n}")] + f",\n{line}\n  }}\n}}\n"
+    path.write_text(text)
+    assets.registry.cache_clear()
 
 
 def _joints(m: dict) -> list[str]:
