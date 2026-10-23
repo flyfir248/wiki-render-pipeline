@@ -116,6 +116,7 @@ class Build(BaseModel):
     outfit: Outfit | None = Field(default=None, description="Humans only.")
     parts: list[Part] = Field(default_factory=list, description=f"0-{MAX_PARTS} primitives: accessories on living things, the whole shape of anything else.")
     form: str = Field(default="", description="Leave empty: filled from the entity's name.")
+    sex: str = Field(default="", description="Leave empty: filled from the entity's words.")
 
 
 class Dressing(BaseModel):
@@ -512,6 +513,16 @@ def _cell_parts(words: str, size: float, c: list[str]) -> list[Part]:
     return []
 
 
+FEMALE = ("woman", "women", "girl", "she", "her", "lady", "mother", "wife", "daughter", "sister", "queen", "princess",
+          "actress", "waitress", "stewardess", "grandma", "grandmother", "aunt", "niece", "female", "widow", "nun", "duchess")
+
+
+def sex_of(e: Entity) -> str:
+    """Which of the character kit's bodies a person is drawn with: 'f' when their words say a woman or girl."""
+    words = f"{e.name} {e.kind} {' '.join(e.search)} {e.look}".lower()
+    return "f" if any(_has(words, w) for w in FEMALE) else "m"
+
+
 def rule_build(e: Entity, seed: int) -> Build:
     """A build from the entity's own words: its body plan, colours and size from its kind and look, and
     the outline of a thing from what it is called. Used when the design call fails."""
@@ -571,6 +582,7 @@ def rule_build(e: Entity, seed: int) -> Build:
         entity=e.id, archetype=arche, size=round(size, 2), primary=c[0], secondary=c[1], accent=c[2],
         skin=_pick(s, SKINS) if arche == "humanoid" else "", hair=_pick(s >> 3, HAIRS) if arche == "humanoid" else "",
         body=body, outfit=outfit, parts=parts, form=vehicle_form(words) if arche == "vehicle" else cell_form(words) if arche == "cell" else thing_form(words) if arche in ("object", "structure") else "",
+        sex=sex_of(e) if arche == "humanoid" else "",
     )
 
 
@@ -790,6 +802,7 @@ def checked_build(b: Build, e: Entity, seed: int) -> Build:
     return b.model_copy(update={
         "entity": e.id, "archetype": arche, "size": round(size, 3), "parts": parts, "outfit": outfit,
         "form": rules.form if arche in ("vehicle", "cell", "object", "structure") and rules.archetype == arche else "",
+        "sex": sex_of(e) if arche == "humanoid" else "",
         "primary": primary, "secondary": secondary, "accent": accent,
         "skin": skin,
         "hair": _hex(b.hair, rules.hair or HAIRS[0]) if arche == "humanoid" else "",

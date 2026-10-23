@@ -93,6 +93,11 @@ def main(argv: list[str] | None = None) -> None:
     bn = sub.add_parser("bench", help="render the fixed 8-second 3D quality benchmark (contact sheet, timing, look check)")
     bn.add_argument("--out", type=Path, default=Path("jobs/bench"))
 
+    kt = sub.add_parser("kit", help="fetch the CC0 character kit (rigged people, animals, shared clips) into the model library")
+    kt.add_argument("--out", type=Path, default=Path("assets/models/_kit"))
+    kt.add_argument("--add", type=Path, help="import a hand-downloaded pack (the base characters or farm animals zip) instead")
+    kt.add_argument("--picks", type=Path, nargs="+", help="import the models assets/library-picks.json picks from the pack zips in these folders instead")
+
     ac = sub.add_parser("assetcheck", help="test story-driven 3D on a fixed panel of things, without making a video")
     ac.add_argument("--out", type=Path, default=Path("jobs/assetcheck"))
 
@@ -115,6 +120,16 @@ def main(argv: list[str] | None = None) -> None:
         from fyt import bench
 
         print(json.dumps(bench.run(cfg, args.out), indent=2))
+        return
+    if args.cmd == "kit":
+        from fyt import kit
+
+        if args.picks:
+            from fyt import packs
+
+            print(json.dumps(packs.import_picks(args.picks), indent=2))
+            return
+        print(json.dumps(kit.add(args.add) if args.add else kit.fetch(args.out), indent=2))
         return
     if args.cmd == "assetcheck":
         from fyt import assetcheck

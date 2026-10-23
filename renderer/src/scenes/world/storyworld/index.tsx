@@ -17,6 +17,7 @@ import { ContactShadow, type Finish, Post, type SkySpec, SkyDome, SkyLight } fro
 import { Environment, INSIDE, type KeepOut, VOID, waterBand } from "./environment";
 import { dimsOf, Flames, humanPose, Humanoid } from "./humanoid";
 import { PartMesh, partsBounds } from "./parts";
+import { clipsFor, KitPerson } from "./kit";
 import { env, lightOf, type Look, lookOf, material } from "./style";
 import type { Build, CastMember, Spot, World } from "./types";
 
@@ -193,6 +194,7 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     const ice = placed.find((p) => p.m.build.form === "iceberg");
     const deck = placed.find((p) => p.m.build.archetype === "vehicle" && !flies(p.m) && p.m.verb !== "drive");
     const walkers = placed.filter((p) => ["humanoid", "quadruped"].includes(p.m.build.archetype) && !["swim", "fly"].includes(p.m.verb));
+    const going = new Set<Placed>();
     walkers.forEach((p, n) => {
       const spread = (n - (walkers.length - 1) / 2);
       if (ice) {
@@ -210,7 +212,13 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
         const gap = Math.max(...walkers.map((q) => q.w0)) * 0.9 + 0.6;
         // (in the liner's own length: its footprint w0 is wider than the hull, and the bow narrows)
         const L = deck.m.build.size;
-        const along = liner ? Math.max(0.27 * L, Math.min(0.4 * L, LINER_FOREDECK * L + spread * gap)) : spread * 0.12 * deck.w0;
+        // one walking goes along the deck (forward, as far as the deck runs), not on the spot
+        const walked = Math.abs(p.pos.x - starts[placed.indexOf(p)].x) * 0.5;
+        const along = liner ? Math.max(0.2 * L, Math.min(0.43 * L, LINER_FOREDECK * L + spread * gap - Math.min(walked, 0.12 * L) + (walked > 0 ? 0.06 * L : 0))) : spread * 0.12 * deck.w0 + walked;
+        if (walked > 0) {
+          p.yaw = deck.yaw + (liner ? Math.PI : 0);
+          going.add(p);
+        }
         const across = (n % 2 ? 1 : -1) * (liner ? 0.008 * L : 0.02 * deck.w0);
         // (a hull afloat is drawn settled into the water by h * 0.18, see Scene; its deck with it)
         const up = (liner ? deck.m.build.size * 0.077 : deck.h * 0.28) - (world.set.kind === "sea" && deck.pos.y <= 0 ? deck.h * 0.18 : 0);
@@ -220,7 +228,7 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     });
     // aboard or on the floe, those standing their ground face one another, not out to sea
     walkers.forEach((p) => {
-      if (["walk", "run", "flee", "chase"].includes(p.m.verb) || p.m.face) return;
+      if (going.has(p) || ["walk", "run", "flee", "chase"].includes(p.m.verb) || p.m.face) return;
       const o = walkers.filter((q) => q !== p).sort((a, b) => a.pos.distanceTo(p.pos) - b.pos.distanceTo(p.pos))[0];
       if (o) p.yaw = Math.atan2(-(o.pos.z - p.pos.z), o.pos.x - p.pos.x);
     });
@@ -509,8 +517,11 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
 // finished inside the canvas would miss the frame being captured.
 const ready = new Map<string, Loaded>();
 
+const kitSrcs = (world: World) =>
+  world.kit && world.cast.some((c) => c.build.archetype === "humanoid") ? [world.kit.bodies.m, world.kit.bodies.f, ...world.kit.clips, ...Object.values(world.kit.hair ?? {})].filter((x): x is string => Boolean(x)) : [];
+
 const useCastModels = (world: World) => {
-  const srcs = [...new Set(world.cast.map((c) => c.model?.src).filter((x): x is string => Boolean(x)))].sort();
+  const srcs = [...new Set([...world.cast.map((c) => c.model?.src), ...kitSrcs(world)].filter((x): x is string => Boolean(x)))].sort();
   const key = srcs.join("|");
   const [done, setDone] = React.useState(() => srcs.every((s) => ready.has(s)));
   const [handle] = React.useState(() => (done ? null : delayRender(`loading models ${key}`, { timeoutInMilliseconds: 120000 })));
@@ -544,6 +555,8 @@ const CLIPS: [RegExp, RegExp[]][] = [
   [/^(attack|fight|bite|strike|pounce|hunt|roar|threaten)$/, [/attack|bite|swipe|hit|roar|punch|strike/i, /run|gallop/i]],
   [/^(eat|feed|graze|drink)$/, [/eat|graze|drink|feed/i, /idle/i]],
   [/^(sleep|rest|lie|sit|die|asleep)$/, [/sleep|rest|lie|sit|death|die/i, /idle/i]],
+  [/^(wave|point|signal|call|shout|warn|cheer|greet)$/, [/wave|greet|cheer/i, /idle|stand/i]],
+  [/^(work|fix|repair|build|pick_up|open|use)$/, [/interact|work|use/i, /idle|stand/i]],
   [/.*/, [/idle|stand|breath|look|wait|survey|rest/i]],
 ];
 export const clipFor = (names: string[], verb: string) => {
@@ -557,7 +570,11 @@ export const clipFor = (names: string[], verb: string) => {
 
 const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loaded: Parameters<typeof prepare>[0] }> = ({ p, loaded, b, look, world }) => {
   const made = React.useMemo(
-    () => prepare(loaded, p.m.model?.fit?.forward ?? "auto", p.m.model?.fit?.up ?? "+y", look.toon ? null : { envMap: env.map, intensity: env.intensity * 1.2 }),
+    () => {
+      const it = prepare(loaded, p.m.model?.fit?.forward ?? "auto", p.m.model?.fit?.up ?? "+y", look.toon ? null : { envMap: env.map, intensity: env.intensity * 1.2 });
+      if (p.m.build.archetype === "humanoid") tone(it.root, p.m.build);
+      return it;
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [loaded, p.m.model, look.toon],
   );
@@ -567,7 +584,13 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
   const mixer = React.useMemo(() => {
     if (clip < 0) return null;
     const mx = new THREE.AnimationMixer(made.animated);
-    mx.clipAction(loaded.clips[clip]).play();
+    const a = mx.clipAction(loaded.clips[clip]);
+    // a fall, a blow or a gesture happens once and holds, rather than repeating
+    if (ONCE.test(loaded.clips[clip].name)) {
+      a.setLoop(THREE.LoopOnce, 1);
+      a.clampWhenFinished = true;
+    }
+    a.play();
     return mx;
   }, [made, loaded, clip]);
   if (mixer) mixer.setTime(b.t + p.phase * 0.3);
@@ -587,10 +610,32 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
 };
 
 const LIVING_ARCH = ["humanoid", "quadruped", "bird", "fish", "insect", "serpent"];
+const ONCE = /death|die|dead|hit|reci?eve|interact|punch|kick|jump/i;
+
+// A library person in the build's own skin and hair colours (their outfit keeps its own).
+const tone = (root: THREE.Object3D, build: Build) => {
+  root.traverse((n) => {
+    const mesh = n as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    for (const m of (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as THREE.MeshStandardMaterial[]) {
+      if (build.skin && /^skin/i.test(m.name)) m.color = new THREE.Color(build.skin);
+      else if (build.hair && /hair|eyebrow|beard/i.test(m.name)) m.color = new THREE.Color(build.hair);
+    }
+  });
+};
 
 // A found model draws a living thing only when it has a clip for what that thing is doing; a still mesh
 // sliding across the ground is worse than the generated, posed body.
 const animatedFor = (m: CastMember) => Boolean(m.model?.src && ready.has(m.model.src)) && clipFor(m.model?.clips ?? [], m.verb) >= 0;
+
+// A person drawn from the character kit, when the kit's body and clips have loaded.
+const kitFor = (world: World, m: CastMember) => {
+  if (!world.kit || m.build.archetype !== "humanoid") return null;
+  const body = ready.get((m.build.sex === "f" ? world.kit.bodies.f ?? world.kit.bodies.m : world.kit.bodies.m ?? world.kit.bodies.f) ?? "");
+  const library = body ? world.kit.clips.flatMap((c) => (ready.get(c) ? clipsFor(ready.get(c) as Loaded, body) : [])) : [];
+  const hair = Object.fromEntries(Object.entries(world.kit.hair ?? {}).flatMap(([k, src]) => (ready.has(src) ? [[k, ready.get(src) as Loaded]] : [])));
+  return body && library.length ? { body, library, hair } : null;
+};
 
 const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (props) => {
   const { p, look, b } = props;
@@ -599,10 +644,13 @@ const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (p
   const one = (dt: number) => {
     const t = b.t + dt;
     const phase = p.phase + dt * 3.1;
-    if (LIVING_ARCH.includes(m.build.archetype) && animatedFor(m)) return <FoundModel {...props} />;
+    if (LIVING_ARCH.includes(m.build.archetype) && animatedFor(m) && !kitFor(props.world, m)) return <FoundModel {...props} />;
     switch (m.build.archetype) {
-      case "humanoid":
+      case "humanoid": {
+        const kit = kitFor(props.world, m);
+        if (kit) return <KitPerson build={m.build} verb={m.verb} body={kit.body} hair={kit.hair} library={kit.library} t={t + p.phase * 0.4} speed={p.speed} envMap={look.toon ? null : env.map} />;
         return <Humanoid build={m.build} look={look} pose={humanPose(m.verb, t + p.yaw, phase, b.k, dimsOf(m.build), s)} t={t} state={s} held={dt ? undefined : m.held} />;
+      }
       case "quadruped":
         return <Quadruped build={m.build} look={look} pose={quadPose(m.verb, t + p.yaw, phase, b.k, quadDims(m.build), s)} t={t} state={s} />;
       case "bird":
