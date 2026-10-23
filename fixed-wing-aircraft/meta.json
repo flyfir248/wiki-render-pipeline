@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "fixed-wing-aircraft",
+  "query": "fixed\u2011wing aircraft",
+  "source": "objaverse",
+  "uid": "sketchfab:8b8327355b5e426db4f621fa91c9cdde",
+  "title": "Airplane- Low-Poly",
+  "author": "samsco",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-8b8327355b5e426db4f621fa91c9cdde",
+  "checked": "vision",
+  "triangles": 5968,
+  "bytes": 566644,
+  "size": [
+    10.674,
+    3.7609,
+    13.0542
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "a 1906 monoplane with wooden frame, fabric covering, gull\u2011wing, open cockpit, tailplane, tail fin, tail rotor? (assumed)",
+  "added": "2026-10-23T13:05:56+00:00"
+}
