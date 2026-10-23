@@ -103,5 +103,5 @@ export type World = {
   callouts: Callout[];
   beats?: Beat[];
   // the character kit (fyt/kit.py): ready-made bodies and the clip libraries on their skeleton
-  kit?: { bodies: { m?: string; f?: string }; clips: string[] };
+  kit?: { bodies: { m?: string; f?: string }; clips: string[]; hair?: Record<string, string> };
 };

@@ -518,7 +518,7 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
 const ready = new Map<string, Loaded>();
 
 const kitSrcs = (world: World) =>
-  world.kit && world.cast.some((c) => c.build.archetype === "humanoid") ? [world.kit.bodies.m, world.kit.bodies.f, ...world.kit.clips].filter((x): x is string => Boolean(x)) : [];
+  world.kit && world.cast.some((c) => c.build.archetype === "humanoid") ? [world.kit.bodies.m, world.kit.bodies.f, ...world.kit.clips, ...Object.values(world.kit.hair ?? {})].filter((x): x is string => Boolean(x)) : [];
 
 const useCastModels = (world: World) => {
   const srcs = [...new Set([...world.cast.map((c) => c.model?.src), ...kitSrcs(world)].filter((x): x is string => Boolean(x)))].sort();
@@ -608,7 +608,8 @@ const kitFor = (world: World, m: CastMember) => {
   if (!world.kit || m.build.archetype !== "humanoid") return null;
   const body = ready.get((m.build.sex === "f" ? world.kit.bodies.f ?? world.kit.bodies.m : world.kit.bodies.m ?? world.kit.bodies.f) ?? "");
   const library = body ? world.kit.clips.flatMap((c) => (ready.get(c) ? clipsFor(ready.get(c) as Loaded, body) : [])) : [];
-  return body && library.length ? { body, library } : null;
+  const hair = Object.fromEntries(Object.entries(world.kit.hair ?? {}).flatMap(([k, src]) => (ready.has(src) ? [[k, ready.get(src) as Loaded]] : [])));
+  return body && library.length ? { body, library, hair } : null;
 };
 
 const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (props) => {
@@ -622,7 +623,7 @@ const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (p
     switch (m.build.archetype) {
       case "humanoid": {
         const kit = kitFor(props.world, m);
-        if (kit) return <KitPerson build={m.build} verb={m.verb} body={kit.body} library={kit.library} t={t + p.phase * 0.4} speed={p.speed} envMap={look.toon ? null : env.map} />;
+        if (kit) return <KitPerson build={m.build} verb={m.verb} body={kit.body} hair={kit.hair} library={kit.library} t={t + p.phase * 0.4} speed={p.speed} envMap={look.toon ? null : env.map} />;
         return <Humanoid build={m.build} look={look} pose={humanPose(m.verb, t + p.yaw, phase, b.k, dimsOf(m.build), s)} t={t} state={s} held={dt ? undefined : m.held} />;
       }
       case "quadruped":

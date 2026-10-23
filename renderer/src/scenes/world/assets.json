@@ -5,121 +5,406 @@
       "kind": "spec",
       "subject": "ship",
       "variant": "liner",
-      "names": ["titanic"],
+      "names": [
+        "titanic"
+      ],
       "title": "RMS Titanic",
-      "params": { "funnels": 4, "funnel": "#d9a24a", "funnelTop": "#15161b", "hull": "#17181d", "band": "#d8b04a", "superstructure": "#f4f1e8", "masts": 2 },
-      "sources": ["https://en.wikipedia.org/wiki/Titanic"],
+      "params": {
+        "funnels": 4,
+        "funnel": "#d9a24a",
+        "funnelTop": "#15161b",
+        "hull": "#17181d",
+        "band": "#d8b04a",
+        "superstructure": "#f4f1e8",
+        "masts": 2
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Titanic"
+      ],
       "notes": "Four buff funnels with black tops (the fourth a dummy), black hull over red boot topping, white superstructure, two masts. Proportions simplified."
     },
     "olympic": {
       "kind": "spec",
       "subject": "ship",
       "variant": "liner",
-      "names": ["rms olympic", "the olympic"],
+      "names": [
+        "rms olympic",
+        "the olympic"
+      ],
       "title": "RMS Olympic",
-      "params": { "funnels": 4, "funnel": "#d9a24a", "funnelTop": "#15161b", "hull": "#17181d", "superstructure": "#f4f1e8", "masts": 2 },
-      "sources": ["https://en.wikipedia.org/wiki/RMS_Olympic"],
+      "params": {
+        "funnels": 4,
+        "funnel": "#d9a24a",
+        "funnelTop": "#15161b",
+        "hull": "#17181d",
+        "superstructure": "#f4f1e8",
+        "masts": 2
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/RMS_Olympic"
+      ],
       "notes": "Titanic's near-identical sister: four buff funnels with black tops, black hull, two masts. Proportions simplified."
     },
     "lusitania": {
       "kind": "spec",
       "subject": "ship",
       "variant": "liner",
-      "names": ["lusitania"],
+      "names": [
+        "lusitania"
+      ],
       "title": "RMS Lusitania",
-      "params": { "funnels": 4, "funnel": "#c8452d", "funnelTop": "#15161b", "hull": "#17181d", "superstructure": "#f4f1e8", "masts": 2 },
-      "sources": ["https://en.wikipedia.org/wiki/RMS_Lusitania"],
+      "params": {
+        "funnels": 4,
+        "funnel": "#c8452d",
+        "funnelTop": "#15161b",
+        "hull": "#17181d",
+        "superstructure": "#f4f1e8",
+        "masts": 2
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/RMS_Lusitania"
+      ],
       "notes": "Four red funnels with black tops, black hull, white superstructure, two masts. Proportions simplified."
     },
     "queen-mary": {
       "kind": "spec",
       "subject": "ship",
       "variant": "liner",
-      "names": ["queen mary"],
+      "names": [
+        "queen mary"
+      ],
       "title": "RMS Queen Mary",
-      "params": { "funnels": 3, "funnel": "#c8452d", "funnelTop": "#15161b", "hull": "#17181d", "superstructure": "#f4f1e8", "masts": 2 },
-      "sources": ["https://en.wikipedia.org/wiki/RMS_Queen_Mary"],
+      "params": {
+        "funnels": 3,
+        "funnel": "#c8452d",
+        "funnelTop": "#15161b",
+        "hull": "#17181d",
+        "superstructure": "#f4f1e8",
+        "masts": 2
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/RMS_Queen_Mary"
+      ],
       "notes": "Three red funnels with black tops, black hull, white superstructure, two masts. Proportions simplified."
     },
     "boeing-747": {
       "kind": "spec",
       "subject": "aircraft",
       "variant": "airliner",
-      "names": ["747", "jumbo jet"],
+      "names": [
+        "747",
+        "jumbo jet"
+      ],
       "title": "Boeing 747",
-      "params": { "engines": 4, "hump": true, "stretch": 1.15 },
-      "sources": ["https://en.wikipedia.org/wiki/Boeing_747"],
+      "params": {
+        "engines": 4,
+        "hump": true,
+        "stretch": 1.15
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Boeing_747"
+      ],
       "notes": "Four underwing engines and the upper-deck hump over the forward fuselage. Length shortened to frame."
     },
     "airbus-a380": {
       "kind": "spec",
       "subject": "aircraft",
       "variant": "airliner",
-      "names": ["a380"],
+      "names": [
+        "a380"
+      ],
       "title": "Airbus A380",
-      "params": { "engines": 4, "doubleDeck": true, "stretch": 1.15 },
-      "sources": ["https://en.wikipedia.org/wiki/Airbus_A380"],
+      "params": {
+        "engines": 4,
+        "doubleDeck": true,
+        "stretch": 1.15
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Airbus_A380"
+      ],
       "notes": "Four underwing engines and a full-length double-deck fuselage. Length shortened to frame."
     },
     "boeing-737": {
       "kind": "spec",
       "subject": "aircraft",
       "variant": "airliner",
-      "names": ["737"],
+      "names": [
+        "737"
+      ],
       "title": "Boeing 737",
-      "params": { "engines": 2, "stretch": 0.92 },
-      "sources": ["https://en.wikipedia.org/wiki/Boeing_737"],
+      "params": {
+        "engines": 2,
+        "stretch": 0.92
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Boeing_737"
+      ],
       "notes": "A narrow-body twinjet with two underwing engines. Proportions simplified."
     },
     "airbus-a320": {
       "kind": "spec",
       "subject": "aircraft",
       "variant": "airliner",
-      "names": ["a320", "airbus a320"],
+      "names": [
+        "a320",
+        "airbus a320"
+      ],
       "title": "Airbus A320",
-      "params": { "engines": 2, "stretch": 0.95 },
-      "sources": ["https://en.wikipedia.org/wiki/Airbus_A320_family"],
+      "params": {
+        "engines": 2,
+        "stretch": 0.95
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Airbus_A320_family"
+      ],
       "notes": "A narrow-body twinjet with two underwing engines. Proportions simplified."
     },
     "boeing-777": {
       "kind": "spec",
       "subject": "aircraft",
       "variant": "airliner",
-      "names": ["777"],
+      "names": [
+        "777"
+      ],
       "title": "Boeing 777",
-      "params": { "engines": 2, "stretch": 1.1, "bigEngines": true },
-      "sources": ["https://en.wikipedia.org/wiki/Boeing_777"],
+      "params": {
+        "engines": 2,
+        "stretch": 1.1,
+        "bigEngines": true
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Boeing_777"
+      ],
       "notes": "A wide-body twinjet with two very large underwing engines. Length shortened to frame."
     },
     "saturn-v": {
       "kind": "spec",
       "subject": "rocket",
       "variant": "rocket",
-      "names": ["saturn v", "saturn 5", "apollo 11", "apollo 8", "apollo 13"],
+      "names": [
+        "saturn v",
+        "saturn 5",
+        "apollo 11",
+        "apollo 8",
+        "apollo 13"
+      ],
       "title": "Saturn V",
-      "params": { "stages": 3, "rollPattern": true, "tower": true, "fins": true, "band": "#16171c" },
-      "sources": ["https://en.wikipedia.org/wiki/Saturn_V"],
+      "params": {
+        "stages": 3,
+        "rollPattern": true,
+        "tower": true,
+        "fins": true,
+        "band": "#16171c"
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Saturn_V"
+      ],
       "notes": "Three stages, white with the black roll pattern on the first stage, four fins, and the launch escape tower on top. Proportions simplified."
     },
     "falcon-9": {
       "kind": "spec",
       "subject": "rocket",
       "variant": "rocket",
-      "names": ["falcon 9"],
+      "names": [
+        "falcon 9"
+      ],
       "title": "Falcon 9",
-      "params": { "stages": 2, "fins": false, "band": "#16171c" },
-      "sources": ["https://en.wikipedia.org/wiki/Falcon_9"],
+      "params": {
+        "stages": 2,
+        "fins": false,
+        "band": "#16171c"
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Falcon_9"
+      ],
       "notes": "Two stages, white, with a black interstage and no fins. Proportions simplified."
     },
     "space-shuttle": {
       "kind": "spec",
       "subject": "rocket",
       "variant": "shuttle",
-      "names": ["challenger", "columbia", "atlantis", "endeavour", "space shuttle"],
+      "names": [
+        "challenger",
+        "columbia",
+        "atlantis",
+        "endeavour",
+        "space shuttle"
+      ],
       "title": "Space Shuttle",
-      "params": { "tank": "#d9772f" },
-      "sources": ["https://en.wikipedia.org/wiki/Space_Shuttle"],
+      "params": {
+        "tank": "#d9772f"
+      },
+      "sources": [
+        "https://en.wikipedia.org/wiki/Space_Shuttle"
+      ],
       "notes": "Orbiter, orange external tank and two white boosters. Proportions simplified."
+    },
+    "kit-cow": {
+      "kind": "library",
+      "subject": "animal",
+      "variant": "cow",
+      "names": [
+        "=cow",
+        "=cows",
+        "=cattle",
+        "=bull",
+        "=bulls",
+        "=ox",
+        "=oxen",
+        "=calf",
+        "=heifer"
+      ],
+      "title": "Cow (Quaternius Farm Animals)",
+      "src": "kit-cow.glb",
+      "source": "https://quaternius.itch.io/lowpoly-animated-animals",
+      "licence": "CC0",
+      "author": "Quaternius",
+      "clips": [
+        "Armature|Death",
+        "Armature|Idle",
+        "Armature|Jump",
+        "Armature|Run",
+        "Armature|Walk",
+        "Armature|WalkSlow"
+      ]
+    },
+    "kit-horse": {
+      "kind": "library",
+      "subject": "animal",
+      "variant": "horse",
+      "names": [
+        "=horse",
+        "=horses",
+        "=pony",
+        "=ponies",
+        "=stallion",
+        "=mare",
+        "=foal",
+        "=steed"
+      ],
+      "title": "Horse (Quaternius Farm Animals)",
+      "src": "kit-horse.glb",
+      "source": "https://quaternius.itch.io/lowpoly-animated-animals",
+      "licence": "CC0",
+      "author": "Quaternius",
+      "clips": [
+        "Armature|Death",
+        "Armature|Idle",
+        "Armature|Jump",
+        "Armature|Run",
+        "Armature|Walk",
+        "Armature|WalkSlow"
+      ]
+    },
+    "kit-llama": {
+      "kind": "library",
+      "subject": "animal",
+      "variant": "llama",
+      "names": [
+        "=llama",
+        "=llamas",
+        "=alpaca",
+        "=alpacas"
+      ],
+      "title": "Llama (Quaternius Farm Animals)",
+      "src": "kit-llama.glb",
+      "source": "https://quaternius.itch.io/lowpoly-animated-animals",
+      "licence": "CC0",
+      "author": "Quaternius",
+      "clips": [
+        "Armature|Idle",
+        "Armature|Jump"
+      ]
+    },
+    "kit-pig": {
+      "kind": "library",
+      "subject": "animal",
+      "variant": "pig",
+      "names": [
+        "=pig",
+        "=pigs",
+        "=hog",
+        "=hogs",
+        "=boar",
+        "=piglet",
+        "=swine",
+        "=sow"
+      ],
+      "title": "Pig (Quaternius Farm Animals)",
+      "src": "kit-pig.glb",
+      "source": "https://quaternius.itch.io/lowpoly-animated-animals",
+      "licence": "CC0",
+      "author": "Quaternius",
+      "clips": [
+        "Armature|Idle",
+        "Armature|Jump"
+      ]
+    },
+    "kit-pug": {
+      "kind": "library",
+      "subject": "animal",
+      "variant": "pug",
+      "names": [
+        "=pug",
+        "=dog",
+        "=dogs",
+        "=puppy",
+        "=pup",
+        "=hound"
+      ],
+      "title": "Pug (Quaternius Farm Animals)",
+      "src": "kit-pug.glb",
+      "source": "https://quaternius.itch.io/lowpoly-animated-animals",
+      "licence": "CC0",
+      "author": "Quaternius",
+      "clips": [
+        "Armature|Idle",
+        "Armature|Jump"
+      ]
+    },
+    "kit-sheep": {
+      "kind": "library",
+      "subject": "animal",
+      "variant": "sheep",
+      "names": [
+        "=sheep",
+        "=lamb",
+        "=lambs",
+        "=ram",
+        "=ewe",
+        "=ewes"
+      ],
+      "title": "Sheep (Quaternius Farm Animals)",
+      "src": "kit-sheep.glb",
+      "source": "https://quaternius.itch.io/lowpoly-animated-animals",
+      "licence": "CC0",
+      "author": "Quaternius",
+      "clips": [
+        "Armature|Idle",
+        "Armature|Jump"
+      ]
+    },
+    "kit-zebra": {
+      "kind": "library",
+      "subject": "animal",
+      "variant": "zebra",
+      "names": [
+        "=zebra",
+        "=zebras"
+      ],
+      "title": "Zebra (Quaternius Farm Animals)",
+      "src": "kit-zebra.glb",
+      "source": "https://quaternius.itch.io/lowpoly-animated-animals",
+      "licence": "CC0",
+      "author": "Quaternius",
+      "clips": [
+        "Armature|Death",
+        "Armature|Idle",
+        "Armature|Jump",
+        "Armature|Run",
+        "Armature|Walk",
+        "Armature|WalkSlow"
+      ]
     }
   }
 }
