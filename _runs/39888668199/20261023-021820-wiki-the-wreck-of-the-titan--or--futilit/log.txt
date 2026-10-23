@@ -1,0 +1,36 @@
+story (given): the Titan, Rowland, deckhand, a polar bear, an iceberg; 2 moments
+planning the visuals
+visual plan (model): 3 3D, 1 2.5D, 3 2D; 3D: stage present, stage fall, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: no usable model of the Titan (titan ocean liner, early 20th century passenger ship, ship): its scenes stay painted
+assets: 'Iceberg Reconstruction' (objaverse) is not a iceberg: shows only a fragment, not a whole iceberg
+assets: 'Recent iceberg in Magdalenefjorden, Svalbard' (objaverse) is not a iceberg: shows a flat fragment, not a whole iceberg
+assets: '《冰山美人》Iceberg Beauty' (objaverse) can't be used: 17 MB after preparation
+assets: 'Iceberg - Low poly' (objaverse) can't be used: only 142 triangles
+assets: an iceberg -> 'Ice Block' from objaverse (by, 498 triangles, 0 animations)
+assets: a polar bear -> 'Polar Bear' from objaverse (by-sa, 39998 triangles, 1 animations)
+building the story world: 4 entities for 3 scenes
+character kit: f, m bodies, 2 clip libraries
+story world (lowpoly): cast model, sets model, direction model; titan as vehicle, rowland as humanoid, polar-bear as quadruped, iceberg as object
+voicing 7 scenes with kokoro
+fetching visuals
+photo commons3.jpg left out: The photo does not show a ship of the same kind or a street of that city, period clothing.
+photo commons3.jpg left out: The image does not match the subject of the video.
+photo commons3.jpg left out: The photo shows a man, possibly a prisoner, in a crouched position.
+visuals: 2 Wikipedia/Commons images, 0 stock, 5 scenes on plain background
+photo shot1-1.jpg left out: The photo shows a planet, not a ship.
+cutaways: 2 extra photos across 2 scenes
+collage: 4 photos styled, 3 with a cut-out subject
+relevance: checking 3 3D scenes by eye
+scene 6: 3D dropped: frame check: The subject is not a person, but a mannequin with a rough coat and no hat, and the narrator mentions a polar bear attack, but the frame shows a mannequin on a platform.
+storyboarding: an illustration for each sentence
+scene 6, sentence 1 redrawn: The subject is missing, the illustration shows a polar bear thrashing the wreckage of the Titanic.
+scene 7, sentence 1 redrawn: The subject is missing, the man is standing on a ship's deck reading a book, but the ship is the RMS Titanic, not a weathered deckhand.
+scene 7, sentence 1 redrawn: The subject is a man standing on a ship's deck, reading a book, but he does not appear to be a weathered deckhand, and there are no additional problems with the illustration.
+storyboard: 1 illustrated sentences of 2 planned, 4 in the cast; 4 checked, 2 redrawn, 1 left out
+art direction: archival
+rendering 46s short video
+look: scene 4 at 21.5s: background is empty, subject is not clear, no visible light and shadow
+rendering thumbnail
+thumbnail: cutout take
+done: approved

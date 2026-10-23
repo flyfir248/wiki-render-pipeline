@@ -1,0 +1,11 @@
+{
+  "checked": [
+    2,
+    4,
+    6
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "6": "frame check: The subject is not a person, but a mannequin with a rough coat and no hat, and the narrator mentions a polar bear attack, but the frame shows a mannequin on a platform."
+  }
+}

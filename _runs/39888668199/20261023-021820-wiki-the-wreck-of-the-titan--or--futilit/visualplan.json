@@ -1,0 +1,83 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 19.2,
+  "dropped_for_budget": [],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "title",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "world\u2019s longest, fastest ship",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "fall",
+      "setting": "night",
+      "weather": null,
+      "cue": "Titan striking an iceberg",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "night",
+      "weather": null,
+      "cue": "polar bear attacks the wreckage",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 7,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

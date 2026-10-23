@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "ice-block",
+  "query": "ice block",
+  "source": "objaverse",
+  "uid": "sketchfab:66efdeab7d214907b32bbcb47d9b55ad",
+  "title": "Ice Block",
+  "author": "bilgehan.korkmaz",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-66efdeab7d214907b32bbcb47d9b55ad",
+  "checked": "vision",
+  "triangles": 498,
+  "bytes": 1153336,
+  "size": [
+    1.0681,
+    0.7724,
+    2
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "towering jagged ice formation, pale blue, floating in cold sea",
+  "added": "2026-10-23T02:18:37+00:00"
+}

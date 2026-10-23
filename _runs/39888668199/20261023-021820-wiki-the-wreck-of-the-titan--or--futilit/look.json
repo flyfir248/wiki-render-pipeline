@@ -1,0 +1,33 @@
+{
+  "warnings": [
+    "scene 4 at 21.5s: background is empty, subject is not clear, no visible light and shadow"
+  ],
+  "frames": [
+    {
+      "scene": 2,
+      "at": 7.41,
+      "contrast": 33.2,
+      "burnt": 0.0
+    },
+    {
+      "scene": 2,
+      "at": 10.47,
+      "contrast": 15.4,
+      "burnt": 0.0
+    },
+    {
+      "scene": 4,
+      "at": 21.5,
+      "contrast": 52.2,
+      "burnt": 0.02,
+      "polished": false,
+      "problems": "background is empty, subject is not clear, no visible light and shadow"
+    },
+    {
+      "scene": 4,
+      "at": 25.99,
+      "contrast": 45.5,
+      "burnt": 0.01
+    }
+  ]
+}
