@@ -8,6 +8,7 @@ import { rng } from "../../world3d";
 import { ReflectiveWater } from "./cinema";
 import { rbcGeometry } from "./creatures";
 import { Block, PartMesh, partsBounds } from "./parts";
+import { Binned, type Bins, deal } from "./pieces";
 import { Background, type Light, type Look, material } from "./style";
 import type { Dressing, SetSpec } from "./types";
 
@@ -16,7 +17,7 @@ const tone = (c: string, k: number) => "#" + new THREE.Color(c).multiplyScalar(k
 const mix = (a: string, b: string, t: number) => "#" + new THREE.Color(a).lerp(new THREE.Color(b), t).getHexString();
 
 export const WATER = ["sea", "lake", "river", "beach", "swamp"];
-export const INSIDE = ["room", "hall", "lab", "hospital", "cave"];
+export const INSIDE = ["room", "hall", "lab", "hospital", "cave", "factory"];
 export const VOID = ["space", "micro", "sky"];
 
 // The open water of a set as [near z, far z] in units: it begins just behind the centre spot, so
@@ -386,22 +387,52 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [kind, U, keep],
   );
-  const items = useMemo(() => {
+  // the pack pieces this place has by role (none in the voxel look, whose world is all boxes)
+  const P: Record<string, string[]> = look.blocky ? {} : set.pieces ?? {};
+  const [items, bins] = useMemo(() => {
     const rr = rng(seed ^ 0x77);
     const out: React.ReactNode[] = [];
+    const bins: Bins = new Map();
     const add = (n: number, spread: number, make: (s: { x: number; z: number; s: number; a: number }, i: number) => React.ReactNode, front = 0.3, near = clear) =>
       scatter(rr, n, near, spread, front, dry, U * 1.2, U * 3).forEach((s, i) => out.push(<group key={`${out.length}`} position={[s.x, 0, s.z]} rotation={[0, s.a, 0]}>{make(s, i)}</group>));
+    // a role's pieces scattered at a height, else the drawn stand-in
+    // (only the trees near the action cast shadows: on a CPU the shadow pass of a whole forest costs as
+    // much as drawing it)
+    const put = (role: string, n: number, spread: number, h: number, make: Parameters<typeof add>[2], front = 0.3, near = clear) => {
+      if (!P[role]?.length) return add(n, spread, make, front, near);
+      const spots = scatter(rr, n, near, spread, front, dry, U * 1.2, U * 3).map((s) => ({ x: s.x, z: s.z, a: s.a, s: h * s.s }));
+      const close = (s: { x: number; z: number }) => role === "tree" && Math.hypot(s.x, s.z) < U * 12;
+      deal(bins, P[role], spots.filter(close), rr, role === "tree" ? "h" : "m", true);
+      deal(bins, P[role], spots.filter((s) => !close(s)), rr, role === "tree" ? "h" : "m", false);
+    };
+    // the ground cover a camera sees from close (grass, flowers), and the land beyond the set that an
+    // aerial shot looks down on: more of the place's own trees, out to the fog
+    const cover = (n: number) => P.grass?.length && deal(bins, P.grass, scatter(rr, n, U * 1.6, U * 16, 0.6, dry).map((s) => ({ x: s.x, z: s.z, a: s.a, s: U * 0.4 * s.s })), rr, "m", false);
+    // (far off, the lightest of the place's trees will do: pines where it has them)
+    const far = P.tree?.filter((x) => x.includes("pine")).length ? P.tree.filter((x) => x.includes("pine")).slice(0, 2) : P.tree?.slice(0, 2);
+    const beyond = (n: number) => far?.length && deal(bins, far, scatter(rr, n, U * 30, U * 60, 0.9, dry).map((s) => ({ x: s.x, z: s.z, a: s.a, s: U * 3.8 * s.s })), rr, "h", false);
+    // a road or a railway in tiles along x at depth z, each tile `w` across (a road tile runs along x as
+    // it comes, a rail tile along z)
+    const lay = (role: string, z: number, w: number) => {
+      if (!P[role]?.length) return;
+      deal(bins, [P[role][0]], Array.from({ length: Math.ceil((U * 120) / w) }, (_, i) => ({ x: -U * 60 + (i + 0.5) * w, z, a: role === "rail" ? Math.PI / 2 : 0, s: w })), rr, "w", false);
+    };
     switch (kind) {
       case "forest":
-        add(110, U * 26, (s, i) => (i % 3 ? <Pine look={look} h={U * 3.4 * s.s} color={leaf} /> : <Broadleaf look={look} h={U * 3 * s.s} color={mix(leaf, "#b5872a", set.time === "dusk" ? 0.25 : 0.1)} r={s.s} />));
-        add(26, U * 10, (s) => <Bush look={look} s={U * 0.45 * s.s} color={tone(leaf, 1.1)} />, 0.5, U * 2.2);
-        add(10, U * 9, (s) => <Rock look={look} s={U * 0.35 * s.s} color="#7a7a72" />, 0.5, U * 2);
+        put("tree", 80, U * 26, U * 3.8, (s, i) => (i % 3 ? <Pine look={look} h={U * 3.4 * s.s} color={leaf} /> : <Broadleaf look={look} h={U * 3 * s.s} color={mix(leaf, "#b5872a", set.time === "dusk" ? 0.25 : 0.1)} r={s.s} />));
+        put("bush", 30, U * 10, U * 0.8, (s) => <Bush look={look} s={U * 0.45 * s.s} color={tone(leaf, 1.1)} />, 0.5, U * 2.2);
+        put("rock", 10, U * 9, U * 0.5, (s) => <Rock look={look} s={U * 0.35 * s.s} color="#7a7a72" />, 0.5, U * 2);
+        cover(170);
+        beyond(110);
         break;
       case "grassland":
       case "farm":
-        add(9, U * 24, (s) => <Broadleaf look={look} h={U * 2.6 * s.s} color={leaf} r={s.s} />, 0.2, U * 6);
-        add(18, U * 12, (s) => <Bush look={look} s={U * 0.4 * s.s} color={tone(leaf, 1.15)} />, 0.4, U * 2.5);
-        add(8, U * 12, (s) => <Rock look={look} s={U * 0.3 * s.s} color="#8a867a" />, 0.4, U * 2.5);
+        put("tree", 9, U * 24, U * 3.4, (s) => <Broadleaf look={look} h={U * 2.6 * s.s} color={leaf} r={s.s} />, 0.2, U * 6);
+        put("bush", 18, U * 12, U * 0.7, (s) => <Bush look={look} s={U * 0.4 * s.s} color={tone(leaf, 1.15)} />, 0.4, U * 2.5);
+        put("rock", 8, U * 12, U * 0.45, (s) => <Rock look={look} s={U * 0.3 * s.s} color="#8a867a" />, 0.4, U * 2.5);
+        cover(200);
+        beyond(40);
+        if (P.prop?.length) deal(bins, P.prop, scatter(rr, 6, U * 5, U * 8, 0.2, dry, U, U).map((s) => ({ x: s.x, z: s.z, a: s.a, s: U * 0.9 })), rr);
         if (kind === "farm") {
           for (let i = 0; i < 14; i++) out.push(<Block key={`f${i}`} look={look} color="#7a5a3a" size={[U * 0.08, U * 0.6, U * 0.08]} at={[-U * 9 + i * U * 1.4, U * 0.3, -U * 3.5]} />);
           out.push(<Block key="rail" look={look} color="#8a6a4a" size={[U * 18.5, U * 0.06, U * 0.05]} at={[0, U * 0.45, -U * 3.5]} />);
@@ -409,32 +440,60 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         }
         break;
       case "mountain":
-        add(24, U * 20, (s) => <Pine look={look} h={U * 3 * s.s} color={leaf} />, 0.25, U * 4);
-        add(16, U * 12, (s) => <Rock look={look} s={U * 0.7 * s.s} color="#7f8078" />, 0.4, U * 2.5);
+        put("tree", 30, U * 20, U * 3.6, (s) => <Pine look={look} h={U * 3 * s.s} color={leaf} />, 0.25, U * 4);
+        put("rock", 16, U * 12, U * 1.1, (s) => <Rock look={look} s={U * 0.7 * s.s} color="#7f8078" />, 0.4, U * 2.5);
+        cover(100);
+        beyond(80);
         break;
       case "snow":
-        add(26, U * 20, (s) => <Pine look={look} h={U * 3 * s.s} color="#3c5e4a" snow />, 0.25, U * 4);
-        add(8, U * 10, (s) => <Rock look={look} s={U * 0.4 * s.s} color="#c9d4dc" />, 0.4, U * 2.5);
+        put("tree", 30, U * 20, U * 3.4, (s) => <Pine look={look} h={U * 3 * s.s} color="#3c5e4a" snow />, 0.25, U * 4);
+        put("rock", 8, U * 10, U * 0.6, (s) => <Rock look={look} s={U * 0.4 * s.s} color="#c9d4dc" />, 0.4, U * 2.5);
+        cover(30);
+        beyond(120);
         break;
       case "desert":
         add(10, U * 18, (s) => <Cactus look={look} h={U * 1.4 * s.s} />, 0.3, U * 3);
-        add(14, U * 16, (s) => <Rock look={look} s={U * 0.6 * s.s} color="#b07a4a" />, 0.4, U * 2.5);
+        put("rock", 18, U * 16, U * 0.9, (s) => <Rock look={look} s={U * 0.6 * s.s} color="#b07a4a" />, 0.4, U * 2.5);
+        put("tree", 4, U * 16, U * 2.4, () => null, 0.3, U * 5);
         break;
       case "beach":
-        add(8, U * 10, (s) => <Palm look={look} h={U * 3 * s.s} color={leaf} />, 0.2, U * 3.5);
+        put("tree", 10, U * 10, U * 3.4, (s) => <Palm look={look} h={U * 3 * s.s} color={leaf} />, 0.2, U * 3.5);
+        put("rock", 8, U * 9, U * 0.6, () => null, 0.4, U * 2.5);
+        cover(40);
+        // a jetty out into the water and a rowing boat drawn up on the sand, off to one side
+        if (P.prop?.length && band) {
+          const dock = P.prop.find((x) => x.includes("dock")), boat = P.prop.find((x) => x.includes("boat"));
+          const side = rr() > 0.5 ? 1 : -1;
+          if (dock) deal(bins, [dock], [0, 1, 2, 3].map((i) => ({ x: side * U * 7, z: (band[0] - 0.4 - i * 1.6) * U, a: 0, s: U * 1.7 })), rr, "w");
+          if (boat) deal(bins, [boat], [{ x: -side * U * 6, z: (band[0] + 0.6) * U, a: 0.6, s: U * 1.8 }], rr, "w");
+        }
         break;
       case "swamp":
-        add(16, U * 16, (s) => <DeadTree look={look} h={U * 2.8 * s.s} />, 0.3, U * 3);
-        add(40, U * 10, (s) => <Block look={look} color="#5a7a3a" size={[U * 0.04, U * 0.8 * s.s, U * 0.04]} at={[0, U * 0.4 * s.s, 0]} rot={[0.1 * s.s, 0, 0.15]} />, 0.6, U * 1.5);
+        put("tree", 18, U * 16, U * 3.2, (s) => <DeadTree look={look} h={U * 2.8 * s.s} />, 0.3, U * 3);
+        if (P.grass?.length) cover(200);
+        else add(40, U * 10, (s) => <Block look={look} color="#5a7a3a" size={[U * 0.04, U * 0.8 * s.s, U * 0.04]} at={[0, U * 0.4 * s.s, 0]} rot={[0.1 * s.s, 0, 0.15]} />, 0.6, U * 1.5);
+        put("bush", 12, U * 8, U * 0.7, () => null, 0.5, U * 2);
         break;
       case "river":
       case "lake":
-        add(kind === "river" ? 60 : 30, U * 28, (s, i) => (i % 2 ? <Pine look={look} h={U * 3 * s.s} color={leaf} /> : <Broadleaf look={look} h={U * 2.6 * s.s} color={leaf} r={s.s} />), 0.15, U * 5);
-        add(14, U * 8, (s) => <Rock look={look} s={U * 0.3 * s.s} color="#7f7d74" />, 0.5, U * 1.6);
+        put("tree", kind === "river" ? 60 : 34, U * 28, U * 3.6, (s, i) => (i % 2 ? <Pine look={look} h={U * 3 * s.s} color={leaf} /> : <Broadleaf look={look} h={U * 2.6 * s.s} color={leaf} r={s.s} />), 0.15, U * 5);
+        put("rock", 14, U * 8, U * 0.45, (s) => <Rock look={look} s={U * 0.3 * s.s} color="#7f7d74" />, 0.5, U * 1.6);
+        put("bush", 14, U * 8, U * 0.7, () => null, 0.5, U * 2);
+        cover(130);
+        beyond(90);
         break;
       case "road":
+      case "railway":
       case "airfield":
-        if (kind === "road") {
+        // the road or the line laid in tiles across the set, under the action, with poles along the far side
+        lay("street", 0, U * 3.2);
+        lay("rail", 0, U * 2.4);
+        if (kind !== "airfield" && P.prop?.length) {
+          const pole = P.prop.find((x) => x.includes("pole")) ?? P.prop[0];
+          deal(bins, [pole], Array.from({ length: 17 }, (_, i) => ({ x: (i - 8) * U * 6, z: -U * 2.6, a: Math.PI, s: U * 3 })).filter((s) => !(keep && keep(s.x, s.z, U * 0.3, U * 3))), rr);
+          const signs = P.prop.filter((x) => x !== pole);
+          if (signs.length) deal(bins, signs, [{ x: U * 9, z: U * 2.2, a: 0, s: U * 1.6 }, { x: -U * 14, z: -U * 2.4, a: Math.PI, s: U * 1.8 }].filter((s) => !(keep && keep(s.x, s.z, U * 0.5, U * 2))), rr);
+        } else if (kind !== "airfield") {
           for (let i = -8; i <= 8; i++) out.push(<Block key={`p${i}`} look={look} color="#6a5a4a" size={[U * 0.1, U * 2.4, U * 0.1]} at={[i * U * 3, U * 1.2, -U * 3]} />);
         } else {
           // runway edge lights, and a low hangar well back from the runway
@@ -442,7 +501,9 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
           out.push(<Block key="hangar" look={look} color="#9aa3ad" size={[U * 5, U * 1.6, U * 3.4]} at={[-U * 9, U * 0.8, -U * 15]} />);
           out.push(<Block key="hangar-roof" look={look} color="#7d8691" size={[U * 5.2, U * 0.25, U * 3.6]} at={[-U * 9, U * 1.7, -U * 15]} />);
         }
-        add(14, U * 20, (s) => <Broadleaf look={look} h={U * 2.4 * s.s} color={leaf} r={s.s} />, 0.1, U * 6);
+        put("tree", 14, U * 20, U * 3.2, (s) => <Broadleaf look={look} h={U * 2.4 * s.s} color={leaf} r={s.s} />, 0.1, U * 6);
+        cover(140);
+        beyond(80);
         break;
       case "town":
       case "city": {
@@ -451,12 +512,16 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         const lit = set.time === "night" || set.time === "dusk" ? 0.55 : 0.2;
         // blocks of buildings in rows going back, and down both sides, so the street is a canyon
         const rows: [number, number, number][] = tall ? [[-5.5, 6, 1], [-12, 9, 1.5], [-19, 12, 2]] : [[-5.5, 2, 1], [-11, 2.6, 1.2]];
+        // the pack's own houses and towers, facing the street, when the place has them
+        const own = (ri: number) => (tall && ri > 0 && P.tall?.length ? P.tall : P.building);
         rows.forEach(([z, hBase, hk], ri) => {
           for (let i = -7; i <= 7; i++) {
             const h = U * (hBase + rr() * (tall ? 10 : 1.8) * hk);
             const w = U * (2.6 + rr() * 1.2);
             if (keep && keep(i * U * 3.6, z * U - U * 1.5, w / 2, h)) continue;
-            out.push(<group key={`b${ri}${i}`} position={[i * U * 3.6 + (ri % 2) * U * 1.8, 0, z * U - rr() * U]}><Building w={w} h={h} d={U * 3} color={cols[(i + ri * 3 + 12) % cols.length]} seed={seed + i + ri * 17} lit={lit} roof={!tall && rr() > 0.4} unit={U} glow={lit > 0.3} /></group>);
+            const x = i * U * 3.6 + (ri % 2) * U * 1.8, bz = z * U - rr() * U;
+            if (own(ri)?.length) deal(bins, own(ri)!, [{ x, z: bz, a: 0, s: w * (tall ? 1 : 0.9) }], rr, "w");
+            else out.push(<group key={`b${ri}${i}`} position={[x, 0, bz]}><Building w={w} h={h} d={U * 3} color={cols[(i + ri * 3 + 12) % cols.length]} seed={seed + i + ri * 17} lit={lit} roof={!tall && rr() > 0.4} unit={U} glow={lit > 0.3} /></group>);
           }
         });
         for (const sx of [-1, 1])
@@ -464,35 +529,56 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
             const h = U * (tall ? 5 + rr() * 9 : 2 + rr() * 1.4);
             const x = sx * U * (9 + rr() * 2), z = -U * 2 + j * U * 4;
             if (keep && keep(x, z, U * 1.5, h)) continue;
-            out.push(<group key={`s${sx}${j}`} position={[x, 0, z]}><Building w={U * 3} h={h} d={U * 3.4} color={cols[(j * 2 + (sx > 0 ? 1 : 0)) % cols.length]} seed={seed + j * 5 + sx} lit={lit} roof={!tall && rr() > 0.5} unit={U} glow={lit > 0.3} /></group>);
+            if (P.building?.length) deal(bins, P.building, [{ x, z, a: -sx * Math.PI / 2, s: U * 3.2 }], rr, "w");
+            else out.push(<group key={`s${sx}${j}`} position={[x, 0, z]}><Building w={U * 3} h={h} d={U * 3.4} color={cols[(j * 2 + (sx > 0 ? 1 : 0)) % cols.length]} seed={seed + j * 5 + sx} lit={lit} roof={!tall && rr() > 0.5} unit={U} glow={lit > 0.3} /></group>);
           }
-        for (let i = -3; i <= 3; i++) out.push(<Block key={`lamp${i}`} look={look} color="#3a3d44" size={[U * 0.07, U * 1.8, U * 0.07]} at={[i * U * 5, U * 0.9, -U * 2.6]} />,
-          <Block key={`lt${i}`} look={look} color="#ffe2a0" glow={set.time !== "day"} size={[U * 0.25, U * 0.12, U * 0.25]} at={[i * U * 5, U * 1.82, -U * 2.6]} />);
+        lay("street", U * 1.6, U * 3.2);
+        if (P.tree?.length) deal(bins, P.tree, [-3, -1, 1, 3].map((i) => ({ x: i * U * 4.5 + U * 1.2, z: -U * 2.9, a: rr() * 6, s: U * 2.4 })).filter((s) => !(keep && keep(s.x, s.z, U * 0.6, U * 2.4))), rr);
+        const lamp = P.prop?.find((x) => x.includes("light-")) ?? P.prop?.find((x) => x.includes("light"));
+        if (lamp) deal(bins, [lamp], [-3, -2, -1, 0, 1, 2, 3].map((i) => ({ x: i * U * 5, z: -U * 2.6, a: Math.PI, s: U * 2.2 })).filter((s) => !(keep && keep(s.x, s.z, U * 0.3, U * 2.2))), rr);
+        else
+          for (let i = -3; i <= 3; i++) out.push(<Block key={`lamp${i}`} look={look} color="#3a3d44" size={[U * 0.07, U * 1.8, U * 0.07]} at={[i * U * 5, U * 0.9, -U * 2.6]} />,
+            <Block key={`lt${i}`} look={look} color="#ffe2a0" glow={set.time !== "day"} size={[U * 0.25, U * 0.12, U * 0.25]} at={[i * U * 5, U * 1.82, -U * 2.6]} />);
+        const extra = P.prop?.filter((x) => x !== lamp) ?? [];
+        if (extra.length) deal(bins, extra, [{ x: U * 7.5, z: -U * 2.5, a: Math.PI, s: U * 1.2 }, { x: -U * 11, z: U * 4.6, a: 0, s: U * 1.1 }].filter((s) => !(keep && keep(s.x, s.z, U * 0.5, U * 2))), rr, "m");
         break;
       }
       case "room":
       case "hall":
       case "lab":
-      case "hospital": {
-        const W = U * (kind === "hall" ? 9 : 4.2);
-        const H = U * (kind === "hall" ? 5 : 2.2);
-        const wall = kind === "lab" || kind === "hospital" ? "#e3e8ea" : mix(set.sky, "#e8dccb", 0.5);
+      case "hospital":
+      case "factory": {
+        const big = kind === "hall" || kind === "factory";
+        const W = U * (big ? 9 : 4.2);
+        const H = U * (big ? 5 : 2.2);
+        const wall = kind === "lab" || kind === "hospital" ? "#e3e8ea" : kind === "factory" ? "#8e9296" : mix(set.sky, "#e8dccb", 0.5);
+        // the place's own furniture or machines along the back and sides, clear of the action
+        if (P.prop?.length) {
+          const n = big ? 9 : 5;
+          deal(bins, P.prop, Array.from({ length: n }, (_, i) => {
+            const f = (i + 0.5) / n;
+            const x = (f * 2 - 1) * W * 0.8, z = -W * (0.45 + 0.15 * Math.abs(f * 2 - 1)) + (i % 2) * U * 0.6;
+            return { x, z, a: (rr() - 0.5) * 0.4, s: U * (big ? 2.4 : 1.1) * (0.85 + rr() * 0.3) };
+          }).filter((s) => !(keep && keep(s.x, s.z, U * 0.8, U * 2))), rr, "w");
+        }
         out.push(<Block key="back" look={look} color={wall} size={[W * 2, H, U * 0.2]} at={[0, H / 2, -W * 0.75]} />);
         out.push(<Block key="l" look={look} color={tone(wall, 0.92)} size={[U * 0.2, H, W * 1.6]} at={[-W, H / 2, 0]} />);
         out.push(<Block key="r" look={look} color={tone(wall, 0.92)} size={[U * 0.2, H, W * 1.6]} at={[W, H / 2, 0]} />);
         out.push(<Block key="win" look={look} color={set.time === "night" ? "#1a2a4a" : mix(set.sky, "#ffffff", 0.3)} glow size={[W * 0.5, H * 0.4, U * 0.05]} at={[W * 0.35, H * 0.58, -W * 0.74]} />);
         if (kind === "hall") for (let i = -3; i <= 3; i++) out.push(<Block key={`c${i}`} look={look} shape="cylinder" color="#d8d0c0" size={[U * 0.5, H, U * 0.5]} at={[i * U * 2.4, H / 2, -W * 0.5]} />);
-        if (kind === "room") {
+        if (kind === "factory")
+          for (let i = -2; i <= 2; i++) out.push(<Block key={`fl${i}`} look={look} color="#fff2c8" glow size={[U * 2.4, U * 0.08, U * 0.3]} at={[i * U * 3.4, H * 0.97, -W * 0.2]} />);
+        if (kind === "room" && !P.prop?.length) {
           out.push(<group key="table" position={[-W * 0.45, 0, -W * 0.35]}><Block look={look} color="#8a5a3a" size={[U * 1.4, U * 0.08, U * 0.8]} at={[0, U * 0.75, 0]} /><Block look={look} color="#6a4a30" size={[U * 0.1, U * 0.75, U * 0.1]} at={[0, U * 0.37, 0]} /></group>);
           out.push(<group key="shelf" position={[W * 0.7, 0, -W * 0.66]}><Block look={look} color="#7a5a3a" size={[U * 1.2, U * 1.8, U * 0.4]} at={[0, U * 0.9, 0]} /></group>);
         }
-        if (kind === "lab")
+        if (kind === "lab" && !P.prop?.length)
           for (let i = -1; i <= 1; i++) {
             out.push(<Block key={`bench${i}`} look={look} color="#cfd6da" size={[U * 2.2, U * 0.9, U * 0.8]} at={[i * U * 2.8, U * 0.45, -W * 0.5]} />);
             for (let j = 0; j < 3; j++) out.push(<Block key={`gl${i}${j}`} look={look} shape="cylinder" color={set.accent} glow size={[U * 0.15, U * 0.35, U * 0.15]} at={[i * U * 2.8 + (j - 1) * U * 0.5, U * 1.08, -W * 0.5]} />);
             out.push(<Block key={`scr${i}`} look={look} color={set.accent} glow size={[U * 0.8, U * 0.5, U * 0.04]} at={[i * U * 2.8, U * 1.6, -W * 0.7]} />);
           }
-        if (kind === "hospital") {
+        if (kind === "hospital" && !P.prop?.length) {
           out.push(<group key="bed" position={[W * 0.45, 0, -W * 0.3]}><Block look={look} color="#f2f4f4" size={[U * 2, U * 0.25, U * 0.9]} at={[0, U * 0.6, 0]} /><Block look={look} color="#9aa3ad" size={[U * 2, U * 0.5, U * 0.9]} at={[0, U * 0.25, 0]} /></group>);
           out.push(<Block key="mon" look={look} color="#40ff9a" glow size={[U * 0.5, U * 0.35, U * 0.04]} at={[W * 0.9, U * 1.5, -W * 0.45]} />);
           out.push(<Block key="lamp" look={look} shape="cylinder" color="#fffbe8" glow size={[U * 1.0, U * 0.1, U * 1.0]} at={[0, H * 0.95, -W * 0.1]} />);
@@ -508,9 +594,9 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
       default:
         break;
     }
-    return out;
+    return [out, bins] as const;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kind, U, seed, look.name, set.time, leaf, dry]);
+  }, [kind, U, seed, look.name, set.time, leaf, dry, JSON.stringify(P)]);
 
   const groundSize = U * 120;
   const bump = kind === "mountain" ? U * 2.2 : ["forest", "grassland", "snow", "desert"].includes(kind) ? U * 0.6 : kind === "underwater" ? U * 0.4 : 0;
@@ -542,7 +628,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
       ) : null}
       {band && backdrop === "city" ? <Quay U={U} z={band[0] * U} look={look} night={set.time === "night" || set.time === "dusk"} keep={keep} /> : null}
       {kind === "swamp" ? <Water size={U * 40} color={tone(water, 0.6)} t={t} amp={U * 0.005} at={[0, U * 0.03, -U * 6]} /> : null}
-      {kind === "road" || kind === "airfield" || kind === "town" || kind === "city" ? (
+      {(kind === "road" || kind === "airfield" || kind === "town" || kind === "city") && !P.street?.length ? (
         <group>
           <Block look={look} color={kind === "airfield" ? "#5a5e64" : "#3e4148"} size={[U * 120, U * 0.02, U * (kind === "airfield" ? 5 : 3.2)]} at={[0, U * 0.01, kind === "town" || kind === "city" ? U * 1.6 : 0]} />
           {Array.from({ length: 24 }, (_, i) => (
@@ -561,6 +647,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
           height={backdrop === "mountains" ? 16 : kind === "sea" || kind === "beach" ? 3 : 8} />
       ) : null}
       {fx.includes("items") ? null : items}
+      {fx.includes("items") ? null : <Binned bins={bins} look={look} />}
       {set.dressing.map((d, i) => (
         <Dressed key={i} d={d} look={look} seed={seed + i * 101} clear={clear * 0.8} keep={dry} />
       ))}

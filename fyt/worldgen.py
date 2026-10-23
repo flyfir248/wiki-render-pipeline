@@ -597,6 +597,8 @@ SET_WORDS: list[tuple[str, tuple[str, ...]]] = [
     ("room", ("room", "kitchen", "bedroom", "office", "apartment", "living room", "cockpit", "cabin interior", "basement", "garage")),
     ("hall", ("hall", "courtroom", "church interior", "museum", "palace", "station concourse")),
     ("cave", ("cave", "mine shaft", "tunnel", "cavern")),
+    ("factory", ("factory", "assembly line", "warehouse", "foundry", "workshop", "refinery", "plant floor", "industrial", "mill floor", "production line")),
+    ("railway", ("railway", "railroad", "rail line", "train track", "level crossing", "freight yard", "rail yard", "tracks")),
     ("city", ("city", "downtown", "skyscraper", "manhattan")),
     ("town", ("town", "village", "street", "main street", "neighbourhood", "neighborhood")),
     ("road", ("road", "highway", "motorway", "parking lot", "interstate")),
@@ -604,7 +606,7 @@ SET_WORDS: list[tuple[str, tuple[str, ...]]] = [
     ("swamp", ("swamp", "marsh", "bayou", "bog")),
     ("river", ("river", "creek", "stream", "hudson", "canal")),
     ("lake", ("lake", "pond", "reservoir")),
-    ("beach", ("beach", "shore", "coast", "island")),
+    ("beach", ("beach", "shore", "coast", "island", "harbour", "harbor", "port", "dock", "pier", "quay", "wharf")),
     ("sea", ("sea", "ocean", "bay", "gulf", "atlantic", "pacific")),
     ("snow", ("snow", "arctic", "antarctic", "glacier", "tundra", "ice")),
     ("desert", ("desert", "dune", "sahara", "arid", "canyon")),
@@ -618,6 +620,7 @@ SET_COLOURS = {
     "river": ("#5a8a48", "#a8cde8", "#ffe0a0"), "lake": ("#5f8f4a", "#a8cde8", "#ffe0a0"), "sea": ("#2e5f7a", "#9fc8e4", "#ffffff"),
     "swamp": ("#4a5a3a", "#8a9a8a", "#c8e0a0"), "farm": ("#8aa04a", "#a8cde8", "#ffe0a0"), "town": ("#8a8478", "#a8c8e0", "#ffd98a"),
     "city": ("#6a6c72", "#a0b8d0", "#ffd98a"), "road": ("#7a8a5a", "#a8c8e0", "#ffe0a0"), "airfield": ("#7a8a5a", "#a8c8e0", "#ffffff"),
+    "factory": ("#6e6e6a", "#c8c6c0", "#ffd27a"), "railway": ("#7a8a5a", "#a8c8e0", "#ffe0a0"),
     "room": ("#8a6a4a", "#e8dccb", "#ffe2b0"), "hall": ("#9a9080", "#d8d0c0", "#ffe8c0"), "lab": ("#c8ccd0", "#eef2f4", "#7fe0ff"),
     "hospital": ("#cdd6d8", "#eef4f4", "#a0f0e0"), "cave": ("#4a4038", "#2a2420", "#ffb060"), "underwater": ("#c8b890", "#1e5a7a", "#9fe8ff"),
     "sky": ("#6a8a5a", "#8fc0ec", "#ffffff"), "space": ("#5a5a66", "#03040c", "#ffffff"), "micro": ("#6a1c2c", "#3a0c18", "#ff9fb0"),
@@ -708,8 +711,9 @@ Rules:
 - state: injured, dazed, asleep, damaged, burning or wet only when the narration says so.
 - holding: the id of an object entity a person or animal holds or carries in that scene.
 - count: 2-9 when the entity is a flock, crowd, herd or fleet (Canada geese, passengers), else 1.
-- camera: a move that tells the moment (establish for a new place, follow for travel, push_in for a
-  reveal, low_angle for menace, over_shoulder for an encounter, top_down for a route or layout). Vary it.
+- camera: a move that tells the moment (aerial for the first sight of a new outdoor place or the
+  scale of a journey, establish for a new place, follow for travel, push_in for a reveal, low_angle for
+  menace, over_shoulder for an encounter, top_down for a route or layout). Vary it.
 - marks: only where they explain something: a beam for a signal or call, a dome for a range, a path
   for a route, a ring for 'here'. callouts: 1-4 words copied from the narration or an entity's name.
 - Put on stage everything the narration of that scene names: a ship and the iceberg it hits are both
@@ -740,7 +744,7 @@ def _capped(c: str, most: float) -> str:
 # burn out under the lights, so the inside of a body stays deep and a room stays a soft mid-tone.
 # Too bright for a deep set, the rules' own colours are used, so the inside of a body stays red.
 SET_LIGHT = {"micro": (0.12, 0.22), "underwater": (0.2, 0.75), "space": (0.05, 0.3),
-             "room": (0.72, 0.6), "hall": (0.72, 0.6), "lab": (0.72, 0.6), "hospital": (0.72, 0.6)}
+             "room": (0.72, 0.6), "hall": (0.72, 0.6), "factory": (0.72, 0.6), "lab": (0.72, 0.6), "hospital": (0.72, 0.6)}
 DEEP_SETS = ("micro", "underwater", "space")
 
 
@@ -1192,12 +1196,23 @@ def direct(cfg: Config, script: Script, story: Manifest, builds: dict[str, Build
         if lead.entity == rl.entity and lead.verb in G["calm"] and rl.verb not in G["calm"] and not out[k].beats:
             acts = [lead.model_copy(update={"verb": rl.verb, "state": rl.state if lead.state == "normal" else lead.state})] + out[k].actors[1:]
             out[k] = out[k].model_copy(update={"actors": acts})
-    # The same camera move twice in a row reads as one long scene: vary the second.
+    return vary_cameras(out), how
+
+
+def vary_cameras(out: dict[int, Shot]) -> dict[int, Shot]:
+    """The first sight of each new place opens from the air (the renderer films an interior's as an
+    establish), and no move comes twice in a row."""
     ordered = sorted(out)
+    seen = ""
+    for k in ordered:
+        if out[k].place and out[k].place != seen and out[k].camera == "establish":
+            out[k] = out[k].model_copy(update={"camera": "aerial"})
+        seen = out[k].place or seen
+    # The same camera move twice in a row reads as one long scene: vary the second.
     for a, b in zip(ordered, ordered[1:]):
         if out[a].camera == out[b].camera:
             out[b] = out[b].model_copy(update={"camera": MOVE_CYCLE[(MOVE_CYCLE.index(out[b].camera) + 1) % len(MOVE_CYCLE)] if out[b].camera in MOVE_CYCLE else "orbit"})
-    return out, how
+    return out
 
 
 # --- the scene's world, for the renderer -----------------------------------------------------------

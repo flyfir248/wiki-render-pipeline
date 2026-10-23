@@ -97,6 +97,7 @@ def main(argv: list[str] | None = None) -> None:
     kt.add_argument("--out", type=Path, default=Path("assets/models/_kit"))
     kt.add_argument("--add", type=Path, help="import a hand-downloaded pack (the base characters or farm animals zip) instead")
     kt.add_argument("--picks", type=Path, nargs="+", help="import the models assets/library-picks.json picks from the pack zips in these folders instead")
+    kt.add_argument("--sets", type=Path, nargs="+", help="import the set pieces assets/set-picks.json picks from the pack zips in these folders instead")
 
     ac = sub.add_parser("assetcheck", help="test story-driven 3D on a fixed panel of things, without making a video")
     ac.add_argument("--out", type=Path, default=Path("jobs/assetcheck"))
@@ -124,6 +125,11 @@ def main(argv: list[str] | None = None) -> None:
     if args.cmd == "kit":
         from fyt import kit
 
+        if args.sets:
+            from fyt import sets
+
+            print(json.dumps(sets.import_sets(args.sets), indent=2))
+            return
         if args.picks:
             from fyt import packs
 

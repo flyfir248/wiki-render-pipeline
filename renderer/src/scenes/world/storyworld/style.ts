@@ -122,4 +122,4 @@ export const lightOf = (look: Look, set: SetSpec, unit: number): Light => {
   return l;
 };
 
-const INSIDE_KINDS = ["room", "hall", "lab", "hospital", "cave"];
+const INSIDE_KINDS = ["room", "hall", "lab", "hospital", "cave", "factory"];

@@ -335,7 +335,7 @@ def add(archive: Path) -> dict:
         return added
 
 
-def library_model(f: Path, key: str, clips: list[str] | None = None) -> dict:
+def library_model(f: Path, key: str, clips: list[str] | None = None, out: Path | None = None, triangles: int = 40000, texture: int = 1024, plain: bool = False) -> dict:
     """A model file (glTF, GLB or FBX) made into a project library model (renderer/public/models/KEY.glb,
     through the renderer's own preparation), keeping only the named `clips` of a glTF (and none of its
 weapons) when given;
@@ -358,9 +358,9 @@ weapons) when given;
                 n.pop("skin", None)
         f = f.with_name(f"{f.stem}.kept.gltf")  # beside it, for its buffers and images
         f.write_text(json.dumps(g))
-    out = assets.MODELS_DIR / f"{key}.glb"
+    out = out or assets.MODELS_DIR / f"{key}.glb"
     out.parent.mkdir(parents=True, exist_ok=True)
-    r = subprocess.run(["node", "prepare-model.mjs", str(f), str(out), "--triangles", "40000", "--texture", "1024"],
+    r = subprocess.run(["node", "prepare-model.mjs", str(f), str(out), "--triangles", str(triangles), "--texture", str(texture), *(["--plain"] if plain else [])],
                        cwd=RENDERER_DIR, capture_output=True, text=True, timeout=300, check=True)
     info = json.loads(r.stdout.strip().splitlines()[-1])
     return {"src": out.name, "clips": info["clips"]}

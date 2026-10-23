@@ -204,6 +204,9 @@ def test_story_worlds_turn_stage_scenes_into_generated_worlds(tmp_path, offline)
     assert any(a["entity"] == "hunter" for w in worlds for a in w["cast"])
     assert (job.public / "models" / "kit-person-m-worker.glb").is_file()
     assert record["shots"]["2"]["actors"][0]["verb"] == "eat"
+    # the forest is built from the packs' trees
+    assert worlds[0]["set"]["pieces"]["tree"]
+    assert all((job.public / f).is_file() for f in worlds[0]["set"]["pieces"]["tree"])
 
 
 def test_world_scenes_are_not_swapped_for_paintings():

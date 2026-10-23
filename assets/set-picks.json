@@ -1,0 +1,116 @@
+{
+  "about": "Set pieces: the trees, rocks, plants, buildings, road and rail tiles and props a story world's place is built from, picked from free (CC0) Kenney and Quaternius packs and imported by `python -m fyt kit --sets DIR` (fyt/sets.py) into renderer/public/sets. `packs` finds each pack's zip as in library-picks.json; `pieces` is [pack, model file name without extension]; `sets` gives, for each kind of place (grammar.json sets), the pieces of each role the renderer places (storyworld/environment.tsx): tree, bush, rock and grass are scattered, building and tall line the streets, street and rail are tiles laid under the action, prop stands round the edges.",
+  "packs": {
+    "nature": {"has": "CommonTree_1.gltf", "source": "https://quaternius.com/packs/stylizednaturemegakit.html", "author": "Quaternius"},
+    "pirate": {"zip": "kenney_pirate-kit.zip", "source": "https://kenney.nl/assets/pirate-kit", "author": "Kenney"},
+    "survival": {"zip": "kenney_survival-kit.zip", "source": "https://kenney.nl/assets/survival-kit", "author": "Kenney"},
+    "holiday": {"zip": "kenney_holiday-kit.zip", "source": "https://kenney.nl/assets/holiday-kit", "author": "Kenney"},
+    "suburban": {"zip": "kenney_city-kit-suburban_20.zip", "source": "https://kenney.nl/assets/city-kit-suburban", "author": "Kenney"},
+    "commercial": {"zip": "kenney_city-kit-commercial_2.1.zip", "source": "https://kenney.nl/assets/city-kit-commercial", "author": "Kenney"},
+    "roads": {"zip": "kenney_city-kit-roads.zip", "source": "https://kenney.nl/assets/city-kit-roads", "author": "Kenney"},
+    "train": {"zip": "kenney_train-kit.zip", "source": "https://kenney.nl/assets/train-kit", "author": "Kenney"},
+    "factory": {"zip": "kenney_factory-kit_3.0.zip", "source": "https://kenney.nl/assets/factory-kit", "author": "Kenney"},
+    "station": {"zip": "kenney_space-station-kit.zip", "source": "https://kenney.nl/assets/space-station-kit", "author": "Kenney"},
+    "town": {"zip": "kenney_fantasy-town-kit_2.0.zip", "source": "https://kenney.nl/assets/fantasy-town-kit", "author": "Kenney"},
+    "graveyard": {"zip": "kenney_graveyard-kit_5.0.zip", "source": "https://kenney.nl/assets/graveyard-kit", "author": "Kenney"}
+  },
+  "sets": {
+    "forest": {
+      "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_2"], ["nature", "CommonTree_3"], ["nature", "Pine_1"], ["nature", "Pine_2"], ["nature", "Pine_3"], ["nature", "Pine_4"], ["nature", "CommonTree_4"]],
+      "bush": [["nature", "Bush_Common"], ["nature", "Fern_1"], ["nature", "Plant_1_Big"], ["nature", "Plant_7_Big"]],
+      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_2"], ["nature", "Rock_Medium_3"]],
+      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Tall"], ["nature", "Mushroom_Common"], ["nature", "Fern_1"]]
+    },
+    "grassland": {
+      "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_2"], ["nature", "CommonTree_5"], ["nature", "Pine_2"]],
+      "bush": [["nature", "Bush_Common"]],
+      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_2"]],
+      "grass": [["nature", "Grass_Common_Short"], ["nature", "Grass_Wispy_Tall"], ["nature", "Flower_3_Group"], ["nature", "Flower_4_Group"], ["nature", "Grass_Common_Tall"]]
+    },
+    "farm": {
+      "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_5"]],
+      "bush": [["nature", "Bush_Common"]],
+      "rock": [["nature", "Rock_Medium_2"]],
+      "grass": [["nature", "Grass_Common_Short"], ["nature", "Flower_3_Group"], ["nature", "Grass_Wispy_Short"]],
+      "prop": [["town", "cart"], ["town", "fence"]]
+    },
+    "mountain": {
+      "tree": [["nature", "Pine_1"], ["nature", "Pine_2"], ["nature", "Pine_3"], ["nature", "Pine_5"]],
+      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_2"], ["nature", "Rock_Medium_3"]],
+      "grass": [["nature", "Grass_Wispy_Short"], ["nature", "Grass_Wispy_Tall"]]
+    },
+    "snow": {
+      "tree": [["holiday", "tree-snow-a"], ["holiday", "tree-snow-b"], ["holiday", "tree-snow-c"]],
+      "rock": [["holiday", "rocks-large"], ["holiday", "rocks-medium"]],
+      "grass": [["holiday", "snow-pile"]]
+    },
+    "river": {
+      "tree": [["nature", "CommonTree_2"], ["nature", "CommonTree_3"], ["nature", "Pine_2"], ["nature", "Pine_4"], ["nature", "CommonTree_4"]],
+      "bush": [["nature", "Bush_Common"], ["nature", "Fern_1"], ["nature", "Plant_7_Big"]],
+      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_3"]],
+      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Tall"], ["nature", "Flower_4_Group"]]
+    },
+    "lake": {
+      "tree": [["nature", "Pine_1"], ["nature", "Pine_3"], ["nature", "CommonTree_1"], ["nature", "CommonTree_3"]],
+      "bush": [["nature", "Bush_Common"], ["nature", "Plant_1_Big"]],
+      "rock": [["nature", "Rock_Medium_2"], ["nature", "Rock_Medium_3"]],
+      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Short"]]
+    },
+    "swamp": {
+      "tree": [["nature", "DeadTree_1"], ["nature", "DeadTree_2"], ["nature", "DeadTree_3"], ["nature", "DeadTree_4"], ["nature", "DeadTree_5"]],
+      "bush": [["nature", "Fern_1"], ["nature", "Plant_7_Big"]],
+      "grass": [["nature", "Grass_Wispy_Tall"], ["nature", "Grass_Common_Tall"], ["nature", "Mushroom_Laetiporus"]]
+    },
+    "desert": {
+      "tree": [["nature", "DeadTree_4"], ["nature", "DeadTree_5"]],
+      "rock": [["survival", "rock-sand-a"], ["survival", "rock-sand-b"], ["survival", "rock-sand-c"], ["pirate", "rocks-sand-a"], ["pirate", "rocks-sand-b"]]
+    },
+    "beach": {
+      "tree": [["pirate", "palm-detailed-bend"], ["pirate", "palm-detailed-straight"], ["pirate", "palm-bend"], ["pirate", "palm-straight"]],
+      "rock": [["pirate", "rocks-sand-a"], ["pirate", "rocks-sand-b"], ["pirate", "rocks-sand-c"]],
+      "grass": [["pirate", "grass-plant"]],
+      "prop": [["pirate", "structure-platform-dock"], ["pirate", "boat-row-small"], ["pirate", "barrel"]]
+    },
+    "town": {
+      "building": [["suburban", "building-type-a"], ["suburban", "building-type-b"], ["suburban", "building-type-c"], ["suburban", "building-type-d"], ["suburban", "building-type-e"], ["suburban", "building-type-f"], ["suburban", "building-type-g"], ["suburban", "building-type-h"], ["suburban", "building-type-k"], ["suburban", "building-type-m"], ["suburban", "building-type-p"], ["suburban", "building-type-s"]],
+      "tree": [["suburban", "tree-large"], ["suburban", "tree-small"]],
+      "street": [["roads", "road-straight"]],
+      "prop": [["roads", "light-curved"], ["suburban", "planter"], ["roads", "road-sign-street"]]
+    },
+    "city": {
+      "building": [["commercial", "building-a"], ["commercial", "building-b"], ["commercial", "building-c"], ["commercial", "building-d"], ["commercial", "building-e"], ["commercial", "building-f"], ["commercial", "building-g"], ["commercial", "building-h"], ["commercial", "building-i"], ["commercial", "building-j"], ["commercial", "building-k"], ["commercial", "building-l"]],
+      "tall": [["commercial", "building-skyscraper-a"], ["commercial", "building-skyscraper-b"], ["commercial", "building-skyscraper-c"], ["commercial", "building-skyscraper-d"], ["commercial", "building-skyscraper-e"]],
+      "street": [["roads", "road-straight"]],
+      "prop": [["roads", "light-square"], ["roads", "traffic-light"], ["roads", "dumpster"]]
+    },
+    "road": {
+      "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_5"], ["nature", "Pine_2"]],
+      "grass": [["nature", "Grass_Common_Short"], ["nature", "Grass_Wispy_Short"]],
+      "street": [["roads", "road-straight"]],
+      "prop": [["roads", "electricity-pole"], ["roads", "sign-highway"], ["roads", "road-sign-warning"]]
+    },
+    "railway": {
+      "tree": [["nature", "CommonTree_2"], ["nature", "Pine_1"], ["nature", "CommonTree_5"]],
+      "grass": [["nature", "Grass_Common_Short"], ["nature", "Grass_Wispy_Tall"]],
+      "rail": [["train", "railroad-straight"]],
+      "prop": [["roads", "electricity-pole-single"]]
+    },
+    "airfield": {
+      "tree": [["nature", "CommonTree_5"]],
+      "grass": [["nature", "Grass_Common_Short"]],
+      "prop": [["roads", "construction-cone"], ["survival", "barrel"]]
+    },
+    "factory": {
+      "prop": [["factory", "machine"], ["factory", "machine-fortified"], ["factory", "conveyor-long"], ["factory", "hopper-round"], ["factory", "crane"], ["factory", "box-large"], ["factory", "machine-window"], ["factory", "hopper-high-square"]]
+    },
+    "lab": {
+      "prop": [["station", "computer"], ["station", "computer-system"], ["station", "table-display"], ["station", "container-tall"], ["station", "computer-wide"]]
+    },
+    "hospital": {
+      "prop": [["station", "bed-single-cover"], ["station", "computer-screen"], ["station", "table"]]
+    },
+    "room": {
+      "prop": [["station", "table-large"], ["station", "chair-cushion"], ["station", "container"]]
+    }
+  }
+}

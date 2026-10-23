@@ -10,7 +10,7 @@ import { unit as unitOf } from "../../../theme";
 import type { SceneProps } from "../../shared";
 import { HeadingPlate, WeatherOverlay } from "../../world3d";
 import { momentOf } from "../kit";
-import { load as loadModel, type Loaded, prepare } from "../stage";
+import { load as loadModel, type Loaded, prepare, ready } from "../stage";
 import { Bird, Cell, Fish, Insect, Quadruped, quadDims, quadPose, Serpent } from "./creatures";
 import { Airliner, Boat, Car, heroOf, Iceberg, LightPlane, Liner, Spray } from "./hero";
 import { ContactShadow, type Finish, Post, type SkySpec, SkyDome, SkyLight } from "./cinema";
@@ -362,6 +362,17 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
     case "top_down":
       off = new THREE.Vector3(d * 0.05, d * (1.55 - 0.25 * e), d * 0.35);
       break;
+    case "aerial": {
+      if (inside) {
+        off = side(0.55 - 0.25 * e, d * (1.45 - 0.5 * e), d * (0.6 - 0.38 * e) + on.h * 0.3);
+        break;
+      }
+      // a drone high over the whole place, a quarter turn round it as it sinks towards the subject
+      const far = Math.max(d * 3.4, U * 26) * (1 - 0.45 * e);
+      off = side(-0.5 + 0.9 * e, far, far * (0.62 - 0.12 * e));
+      f = fov + 6 * (1 - e);
+      break;
+    }
     case "reveal":
       off = side(-0.2 + 0.5 * e, d * (0.6 + 0.7 * e), on.h * (0.25 + 0.9 * e) + d * 0.25 * e);
       break;
@@ -515,13 +526,13 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
 
 // The scene's found models, loaded before its canvas is drawn (useCastModels): a model whose loading
 // finished inside the canvas would miss the frame being captured.
-const ready = new Map<string, Loaded>();
 
 const kitSrcs = (world: World) =>
   world.kit && world.cast.some((c) => c.build.archetype === "humanoid") ? [world.kit.bodies.m, world.kit.bodies.f, ...world.kit.clips, ...Object.values(world.kit.hair ?? {})].filter((x): x is string => Boolean(x)) : [];
 
 const useCastModels = (world: World) => {
-  const srcs = [...new Set([...world.cast.map((c) => c.model?.src), ...kitSrcs(world)].filter((x): x is string => Boolean(x)))].sort();
+  const pieces = lookOf(world.style).blocky ? [] : Object.values(world.set.pieces ?? {}).flat();
+  const srcs = [...new Set([...world.cast.map((c) => c.model?.src), ...kitSrcs(world), ...pieces].filter((x): x is string => Boolean(x)))].sort();
   const key = srcs.join("|");
   const [done, setDone] = React.useState(() => srcs.every((s) => ready.has(s)));
   const [handle] = React.useState(() => (done ? null : delayRender(`loading models ${key}`, { timeoutInMilliseconds: 120000 })));

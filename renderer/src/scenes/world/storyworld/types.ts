@@ -80,6 +80,8 @@ export type SetSpec = {
   accent: string;
   backdrop?: "hills" | "mountains" | "city" | "vessel" | "none";
   dressing: Dressing[];
+  // the place's set pieces by role (fyt/sets.py): tree, bush, rock, grass, building, tall, street, rail, prop
+  pieces?: Record<string, string[]>;
 };
 
 export type Mark = { kind: "beam" | "arrow" | "path" | "ring" | "dome" | "glow"; on: string; to: string; color: string };

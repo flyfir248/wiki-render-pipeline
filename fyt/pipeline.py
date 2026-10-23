@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
+from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -533,8 +533,11 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
                  "notes": f"story world: {builds[lead].archetype} built for {story_manifest.entity(story, lead).name}"}
         lead_e = story_manifest.entity(story, lead)
         label = "ILLUSTRATION" if s.illustrative else "RECONSTRUCTION" if (m and lead_e.certain) else "RECONSTRUCTION · ILLUSTRATIVE"
-        scenes[i] = s.model_copy(update={"subject_name": lead, "world": worldgen.world_of(style, seed, shot, builds, settings, models) | ({"kit": cast_kit} if cast_kit else {}),
-                                         "model": model, "label": label})
+        world = worldgen.world_of(style, seed, shot, builds, settings, models) | ({"kit": cast_kit} if cast_kit else {})
+        # the place built from the packs' trees, rocks, houses, roads and machines for its kind
+        if style != "voxel" and (pieces := sets.stage(world["set"]["kind"], job.public)):
+            world["set"]["pieces"] = pieces
+        scenes[i] = s.model_copy(update={"subject_name": lead, "world": world, "model": model, "label": label})
     job.file("world.json").write_text(json.dumps(worldgen.record(style, builds, settings, shots, made, models), indent=2))
     log(job, f"story world ({style}): cast {made['cast']}, sets {made['sets']}, direction {made['direction']}; "
              + ", ".join(f"{b.entity} as {b.archetype}" for b in builds.values()))
