@@ -309,7 +309,8 @@ def add(archive: Path) -> dict:
         from fyt.assetlib import RENDERER_DIR
 
         reg_path = assets.WORLD / "assets.json"
-        reg = json.loads(reg_path.read_text())
+        text = reg_path.read_text()
+        have = json.loads(text)["assets"]
         added = {}
         for name, f in fbx.items():
             glb = f.with_suffix(".glb")
@@ -320,11 +321,15 @@ def add(archive: Path) -> dict:
             r = subprocess.run(["node", "prepare-model.mjs", str(glb), str(out), "--triangles", "40000", "--texture", "1024"],
                                cwd=RENDERER_DIR, capture_output=True, text=True, timeout=300, check=True)
             info = json.loads(r.stdout.strip().splitlines()[-1])
-            reg["assets"][key] = {"kind": "library", "subject": "animal", "variant": name.lower(), "names": ANIMALS[name],
+            entry = {"kind": "library", "subject": "animal", "variant": name.lower(), "names": ANIMALS[name],
                                   "title": f"{name} (Quaternius Farm Animals)", "src": out.name, "source": ANIMALS_PAGE,
                                   "licence": "CC0", "author": "Quaternius", "clips": info["clips"]}
             added[key] = info["clips"]
-        reg_path.write_text(json.dumps(reg, indent=2) + "\n")
+            if key not in have:  # appended in the file's own hand-written layout, an entry per line
+                text = text.rstrip()
+                assert text.endswith("}\n  }\n}")
+                text = text[: -len("\n  }\n}")] + f",\n    {json.dumps(key)}: {json.dumps(entry)}\n  }}\n}}\n"
+        reg_path.write_text(text)
         shutil.rmtree(work / "x", ignore_errors=True)
         return added
 
