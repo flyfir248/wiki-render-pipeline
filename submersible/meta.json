@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "submersible",
+  "query": "submersible",
+  "source": "objaverse",
+  "uid": "sketchfab:bd5909dd06e74a9ab5ba87c8c3f6216e",
+  "title": "Submersible blender",
+  "author": "VNeman",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-bd5909dd06e74a9ab5ba87c8c3f6216e",
+  "checked": "vision",
+  "triangles": 82403,
+  "bytes": 3908816,
+  "size": [
+    18.8622,
+    9.1181,
+    4.7835
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "small black and white autonomous underwater vehicle, 6\u2011meter length, with sensor array dome",
+  "added": "2026-10-22T22:59:53+00:00"
+}
