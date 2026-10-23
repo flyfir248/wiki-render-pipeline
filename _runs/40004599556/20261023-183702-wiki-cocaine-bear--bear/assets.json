@@ -1,0 +1,230 @@
+{
+  "entities": [
+    {
+      "id": "bear",
+      "name": "the bear",
+      "kind": "animal",
+      "search": [
+        "american black bear",
+        "black bear",
+        "bear"
+      ],
+      "look": "175\u2011pound female American black bear, black fur",
+      "certain": true,
+      "scenes": [
+        1,
+        4,
+        5,
+        6,
+        7
+      ],
+      "model": {
+        "ok": true,
+        "key": "kit-bear",
+        "query": "american black bear",
+        "source": "project",
+        "title": "BlackBear (everything-animals)",
+        "author": "David OReilly",
+        "licence": "by",
+        "url": "https://davidoreilly.itch.io/everything-library-animals",
+        "checked": "vetted",
+        "clips": [],
+        "fit": {},
+        "posed": true,
+        "credit": "BlackBear (everything-animals) by David OReilly (CC BY 4.0) https://davidoreilly.itch.io/everything-library-animals"
+      }
+    },
+    {
+      "id": "plane",
+      "name": "the plane",
+      "kind": "light aircraft",
+      "search": [
+        "cessna 404 titan",
+        "cessna 404",
+        "light aircraft"
+      ],
+      "look": "Cessna 404 Titan, black, 1970s era",
+      "certain": true,
+      "scenes": [
+        2,
+        3
+      ],
+      "model": {
+        "ok": true,
+        "key": "light-aircraft",
+        "query": "light aircraft",
+        "source": "objaverse",
+        "uid": "sketchfab:4b1c90cce7f14fa3bcbade0bb8c3d855",
+        "title": "TECNAM P.92",
+        "author": "helijah",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-4b1c90cce7f14fa3bcbade0bb8c3d855",
+        "checked": "vision",
+        "triangles": 40618,
+        "bytes": 3213188,
+        "size": [
+          6.6473,
+          2.4952,
+          9.627
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "Cessna 404 Titan, black, 1970s era",
+        "added": "2026-10-23T20:41:32+00:00",
+        "credit": "TECNAM P.92 by helijah (CC BY 4.0) https://sketchfab.com/3d-models/none-4b1c90cce7f14fa3bcbade0bb8c3d855"
+      }
+    },
+    {
+      "id": "container",
+      "name": "the cocaine containers",
+      "kind": "object",
+      "search": [
+        "plastic container",
+        "container",
+        "bottle"
+      ],
+      "look": "small white plastic containers of cocaine",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "model": {
+        "ok": true,
+        "key": "plastic-container",
+        "query": "plastic container",
+        "source": "objaverse",
+        "uid": "sketchfab:40073fa4ac1d474d90f0dbaf1fe9944a",
+        "title": "Plastic Storage Container",
+        "author": "HippoStance",
+        "licence": "by",
+        "url": "https://sketchfab.com/3d-models/none-40073fa4ac1d474d90f0dbaf1fe9944a",
+        "checked": "text",
+        "triangles": 2188,
+        "bytes": 1401436,
+        "size": [
+          0.4717,
+          0.3415,
+          0.8049
+        ],
+        "clips": [],
+        "skinned": false,
+        "morphs": false,
+        "fidelity": "medium",
+        "illustrative": false,
+        "look": "small white plastic containers of cocaine",
+        "added": "2026-10-23T20:41:24+00:00",
+        "credit": "Plastic Storage Container by HippoStance (CC BY 4.0) https://sketchfab.com/3d-models/none-40073fa4ac1d474d90f0dbaf1fe9944a"
+      }
+    }
+  ],
+  "places": [
+    {
+      "id": "tennessee-wilderness",
+      "name": "Tennessee wilderness",
+      "look": "forested terrain, sparse trees, open fields",
+      "scenes": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "kentucky-mall",
+      "name": "Kentucky mall",
+      "look": "modern indoor mall, fluorescent lighting, display cases",
+      "scenes": [
+        7
+      ]
+    },
+    {
+      "id": "pawn-shop",
+      "name": "pawn shop",
+      "look": "small brick storefront, dusty shelves, dim lighting",
+      "scenes": [
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "bear",
+      "place": "",
+      "action": "dead",
+      "motion": "present",
+      "cue": "In 1985, a 175\u2011pound female black bear fatally overdosed on cocaine.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "plane",
+      "place": "tennessee-wilderness",
+      "action": "flying over Tennessee",
+      "motion": "move",
+      "cue": "smugglers dumped forty cocaine containers from a plane over Tennessee's border.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 3,
+      "entity": "container",
+      "place": "tennessee-wilderness",
+      "action": "falling from plane",
+      "motion": "fall",
+      "cue": "the overloaded plane jettisoned the cargo; the boxes fell into the wilderness in Tennessee.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "bear",
+      "place": "tennessee-wilderness",
+      "action": "eating containers",
+      "motion": "move",
+      "cue": "A curious bear found the containers, ate a few grams",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 5,
+      "entity": "bear",
+      "place": "tennessee-wilderness",
+      "action": "overdosed",
+      "motion": "present",
+      "cue": "killed her after absorbing 3\u20134\u202fgrams",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 6,
+      "entity": "bear",
+      "place": "pawn-shop",
+      "action": "taxidermied",
+      "motion": "present",
+      "cue": "Officials taxidermied the bear, it later disappeared",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 7,
+      "entity": "bear",
+      "place": "kentucky-mall",
+      "action": "displayed",
+      "motion": "present",
+      "cue": "Now displayed in a Kentucky mall, the bear is a quirky attraction",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

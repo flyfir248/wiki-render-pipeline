@@ -1,0 +1,12 @@
+{
+  "checked": [
+    1,
+    3,
+    7
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "1": "frame check: The frame shows a forest scene with a tree and a bear, but it does not clearly show a 175\u2011pound female black bear, black fur.",
+    "3": "frame check: The subject is not shown."
+  }
+}

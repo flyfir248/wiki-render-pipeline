@@ -1,0 +1,19 @@
+{
+  "warnings": [],
+  "frames": [
+    {
+      "scene": 7,
+      "at": 35.65,
+      "contrast": 34.8,
+      "burnt": 0.0
+    },
+    {
+      "scene": 7,
+      "at": 38.4,
+      "contrast": 57.5,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": "none"
+    }
+  ]
+}

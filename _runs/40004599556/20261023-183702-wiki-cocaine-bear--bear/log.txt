@@ -1,0 +1,40 @@
+fetching Wikipedia article
+1 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 52% slower than average, 17 scenes); quote (lost viewers 47% slower than average, 11 scenes); timeline (lost viewers 31% slower than average, 9 scenes); map (lost viewers 28% slower than average, 17 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 67% faster than average, 28 scenes); broll (lost viewers 97% faster than average, 9 scenes). On average 92% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 60 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene2 mentions Tennessee but never connects to Kentucky where the bear ends up; Scene3 doesn’t explain how the dropped cargo reached the wilderness where the bear finds it; Scene6 says the taxidermied bear vanished then appeared in a pawn shop without linking to the mall; Scene7 claims the bear officiates weddings without explaining why it’s used for that purpose
+checking facts against the source
+fact check found: scene 1: unsupported claim "In 1985, a 175‑pound female black bear died after swallowing a tiny drop of cocaine." (source says: The source states the bear fatally overdosed on cocaine, but does not describe it as a tiny drop.); scene 3: wrong claim "The overloaded plane jettisoned the cargo; the boxes fell into the nearby Kentucky wilderness." (source says: The containers were dropped into the wilderness in Tennessee, not Kentucky.); scene 5: unsupported claim "The cocaine, worth $20 million, killed her after only a microscopic dose." (source says: The source notes the bear absorbed 3–4 grams of cocaine; it does not describe the dose as microscopic.); scene 6: unsupported claim "1985 – Found and taxidermied; 1986 – Disappears from official custody; 1987 – Found in a pawn shop" (source says: The source reports the bear was found dead December 23 1985 and later disappeared, but does not provide specific years for the disappearance or pawn shop appearance.); scene 7: unsupported claim "Now displayed in a Kentucky mall, the bear officiates legal weddings as a quirky attraction." (source says: The source mentions an allegation that the bear could officiate weddings, but this is not confirmed.)
+facts check out
+reading the story: what it shows
+story: the bear, the plane, the cocaine containers; 7 moments
+planning the visuals
+visual plan (model): 3 3D, 1 2.5D, 3 2D; 3D: stage present, stage fall, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: 'Plastic container' (objaverse) is not a plastic container: Shows a large blue detergent bottle, not small white containers.
+assets: 'Plastic Container' (objaverse) is not a plastic container: The image shows a small white plastic container that could be used for storing or transporting small items, but it does not appear to be specifically designed for holding cocaine.
+assets: no vision check could be made; 'Plastic Storage Container' names every word of 'plastic container' and is well liked, so it is used
+assets: the cocaine containers -> 'Plastic Storage Container' from objaverse (by, 2188 triangles, 0 animations)
+assets: 'Piper Pa 28 "Cadet"' (objaverse) is not a light aircraft: It is not a Cessna 404 Titan.
+assets: the plane -> 'TECNAM P.92' from objaverse (by, 40618 triangles, 0 animations)
+building the story world: 3 entities for 3 scenes
+story world (lowpoly): cast model, sets model, direction model; bear as quadruped, plane as vehicle, container as object
+voicing 7 scenes with kokoro
+fetching visuals
+visuals: 4 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+cutaways: 2 extra photos across 2 scenes
+collage: 6 photos styled, 2 with a cut-out subject
+relevance: checking 3 3D scenes by eye
+scene 1: 3D dropped: frame check: The frame shows a forest scene with a tree and a bear, but it does not clearly show a 175‑pound female black bear, black fur.
+scene 3: 3D dropped: frame check: The subject is not shown.
+storyboarding: an illustration for each sentence
+scene 3, sentence 2 redrawn: subject is missing or clearly wrong
+scene 3, sentence 2 redrawn: The subject of the image is not cocaine containers landing in forest.
+storyboard: 0 illustrated sentences of 1 planned, 3 in the cast; 2 checked, 1 redrawn, 1 left out
+art direction: signature
+rendering 39s short video
+rendering thumbnail
+thumbnail: world take
+done: approved

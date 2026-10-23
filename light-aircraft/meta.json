@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "light-aircraft",
+  "query": "light aircraft",
+  "source": "objaverse",
+  "uid": "sketchfab:4b1c90cce7f14fa3bcbade0bb8c3d855",
+  "title": "TECNAM P.92",
+  "author": "helijah",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-4b1c90cce7f14fa3bcbade0bb8c3d855",
+  "checked": "vision",
+  "triangles": 40618,
+  "bytes": 3213188,
+  "size": [
+    6.6473,
+    2.4952,
+    9.627
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "Cessna 404 Titan, black, 1970s era",
+  "added": "2026-10-23T20:41:32+00:00"
+}
