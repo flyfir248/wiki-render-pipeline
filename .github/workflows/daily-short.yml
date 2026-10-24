@@ -283,6 +283,13 @@ jobs:
             python -m fyt --format "$TASK" run --count "$COUNT"
           fi
 
+      - name: 3D coverage in the run summary
+        if: always()
+        run: |
+          for f in jobs/*/coverage.md; do
+            if [ -f "$f" ]; then { echo "### $(basename "$(dirname "$f")")"; cat "$f"; } >> "$GITHUB_STEP_SUMMARY"; fi
+          done
+
       # New models go back to the library branch. A test render (a title given) also leaves its contact
       # sheet, manifest, model registry and relevance verdicts there under _runs/, to review the result.
       - name: Save new 3D models
@@ -297,7 +304,7 @@ jobs:
             for job in ../../jobs/*/; do
               out="_runs/$RUN/$(basename "$job")"
               mkdir -p "$out"
-              for f in contact.png manifest.json written.json assets.json relevance.json visualplan.json world.json script.json qc.json look.json log.txt; do
+              for f in contact.png manifest.json written.json assets.json relevance.json visualplan.json world.json script.json qc.json look.json coverage.json coverage.md log.txt; do
                 if [ -f "$job/$f" ]; then cp "$job/$f" "$out/"; fi
               done
               cp "$job"/gate/*.png "$out/" 2>/dev/null || true
@@ -380,6 +387,7 @@ jobs:
             jobs/*/assets.json
             jobs/*/relevance.json
             jobs/*/look.json
+            jobs/*/coverage.json
             jobs/bench/bench.mp4
             jobs/bench/report.json
           retention-days: 7

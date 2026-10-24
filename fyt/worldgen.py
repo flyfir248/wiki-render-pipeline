@@ -1126,7 +1126,7 @@ def rule_shot(script: Script, story: Manifest, builds: dict[str, Build], scene: 
     if verb not in verbs_for(arche):
         verb = calm_verb(arche)
     verb = _verb(verb, arche, narration, bool(moment and moment.documented))
-    if moment and moment.documented and moment.cue and arche in LIVING:  # a verb the moment names outright beats the motion's
+    if moment and moment.documented and moment.cue and (arche in LIVING or arche == "vehicle"):  # a verb the moment names outright beats the motion's
         drastic = ("fall", "crash", "collapse") if motion not in ("fall", "shake") else ()
         def named(text: str) -> str | None:  # the told verb whose words come first in the text
             hits = [(min((m.start() for w in G["events"].get(v, [v]) for m in re.finditer(rf"(?<![a-z]){re.escape(w)}", text.lower())), default=10**6), v)
@@ -1196,7 +1196,51 @@ def direct(cfg: Config, script: Script, story: Manifest, builds: dict[str, Build
         if lead.entity == rl.entity and lead.verb in G["calm"] and rl.verb not in G["calm"] and not out[k].beats:
             acts = [lead.model_copy(update={"verb": rl.verb, "state": rl.state if lead.state == "normal" else lead.state})] + out[k].actors[1:]
             out[k] = out[k].model_copy(update={"actors": acts})
-    return vary_cameras(out), how
+    return vary_cameras(livelier(out, script, builds)), how
+
+
+# Words that say a living thing is not moving: dead, stuffed, asleep, on show. Its shot keeps it still.
+STILL = ("dead", "died", "death", "dies", "killed", "body", "carcass", "corpse", "remains", "stuffed", "taxiderm", "mounted",
+         "display", "exhibit", "statue", "museum", "asleep", "sleeping", "lying", "unconscious", "frozen", "buried", "overdos")
+# Words that say a vehicle isn't going anywhere, and a bird or insect is on the ground.
+STOPPED = ("parked", "abandoned", "crash", "stuck", "aground", "sinking", "sunk", "plunge", "capsiz", "wreck", "derelict", "scrapped", "museum")
+GROUNDED = ("ground", "nest", "landed", "field", "grass", "perched", "standing", "walked", "pond", "beach", "shore")
+# A second calm action for a lead that walked in the scene before, so the same creature doesn't do the same thing twice running.
+OTHER_CALM = {"humanoid": "look_around", "quadruped": "sniff", "bird": "peck", "insect": "look_around"}
+
+
+def livelier(out: dict[int, Shot], script: Script, builds: dict[str, Build]) -> dict[int, Shot]:
+    """A shot whose lead just stands there gets a calm action of its own when nothing in its narration
+    says it is still (dead, stuffed, asleep, on show): a living lead walks across the set, or does its
+    other calm action if it walked in the scene before; a car or a ship the story hasn't stopped moves
+    on. Calm verbs show nothing the narration doesn't allow, so a scene's subject acts rather than
+    posing in front of a moving camera."""
+    last: dict[str, str] = {}
+    for k in sorted(out):
+        sh = out[k]
+        lead = sh.actors[0] if sh.actors else None
+        if lead is None or lead.entity not in builds or sh.beats:
+            continue
+        arche = builds[lead.entity].archetype
+        text = script.scenes[k - 1].narration
+        still = scenes3d.find(text, list(STILL)) or lead.state != "normal"
+        verb = lead.verb
+        if lead.verb in ("idle", "present") and not still:
+            if arche in ("bird", "insect") and not scenes3d.find(text, list(GROUNDED)):
+                verb = "fly"
+            elif arche in ("humanoid", "quadruped", "bird", "insect"):
+                verb = OTHER_CALM[arche] if last.get(lead.entity) == "walk" else "walk"
+            elif arche == "serpent":
+                verb = "move"
+            elif arche == "vehicle" and not scenes3d.find(text, list(LANDED) + list(STOPPED)):
+                form = builds[lead.entity].form
+                verb = "fly" if form in ("plane", "airliner", "helicopter") else "drive" if form in ("car", "truck") else "move"
+        if verb != lead.verb:
+            moving = verb in ("walk", "move", "drive")
+            acts = [lead.model_copy(update={"verb": verb, "at": "left" if moving else lead.at, "to": "right" if moving else lead.to})] + sh.actors[1:]
+            out[k] = sh.model_copy(update={"actors": acts, "camera": "follow" if moving and sh.camera in ("orbit", "push_in") else sh.camera})
+        last[lead.entity] = verb
+    return out
 
 
 def vary_cameras(out: dict[int, Shot]) -> dict[int, Shot]:

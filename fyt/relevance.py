@@ -7,7 +7,9 @@ storyboard then paints:
 1. text: it shows an entity the story's manifest lists in that scene (fyt.manifest), the same entity
    its other scenes show; an event it acts out rests on words in its narration (fyt.scenes3d.guard);
 2. picture: a frame at its key moment is rendered and a free vision model is asked whether it shows
-   that entity, recognisably, in a believable state (not floating, broken, cut off or blank).
+   that entity, recognisably, in a believable state (not floating, broken, cut off or blank). A
+   story-world scene that fails is filmed once more, closer on its subject, and checked again before
+   it goes back to 2D.
 
 The verdicts are written to the job's relevance.json.
 """
@@ -62,20 +64,21 @@ def text_gate(script: Script, story: Manifest | None) -> dict[int, str]:
     return bad
 
 
-def key_frames(props, script: Script) -> dict[int, int]:
-    """{scene index: frame} at each 3D scene's key moment."""
+def key_frames(props, script: Script, only: set[int] | None = None) -> dict[int, int]:
+    """{scene index: frame} at each 3D scene's key moment (of the given scenes only, when given)."""
     out = {}
     for i, (s, r) in enumerate(zip(script.scenes, props.scenes)):
-        if is_3d(s):
+        if is_3d(s) and (only is None or i in only):
             at = r.effectAt if r.effectAt is not None else 0.45
             out[i] = int(round((r.start + max(0.15, min(0.85, at)) * (r.end - r.start)) * props.fps))
     return out
 
 
-def picture_gate(cfg: Config, script: Script, story: Manifest | None, props, props_json: Path, public: Path, work: Path, log=print) -> dict[int, str]:
+def picture_gate(cfg: Config, script: Script, story: Manifest | None, props, props_json: Path, public: Path, work: Path, log=print,
+                 only: set[int] | None = None) -> dict[int, str]:
     """{scene index: why} for 3D scenes whose key frame doesn't show their subject. Scenes are passed
     when no check can be made (no vision model, a render error), with a log line saying so."""
-    frames = key_frames(props, script)
+    frames = key_frames(props, script, only)
     if not frames:
         return {}
     try:
@@ -93,6 +96,19 @@ def picture_gate(cfg: Config, script: Script, story: Manifest | None, props, pro
         if not v.matches:
             bad[i] = f"frame check: {v.problems or 'does not show the subject'}"
     return bad
+
+
+def retake(scene):
+    """A story-world scene whose frame failed, filmed again closer on the subject it is meant to show
+    (the frame check had seen the plane, not the boxes falling from it; a bear too small to make out):
+    the camera pushes in on that entity, with the scene's beats left to play. None when there is no
+    closer take to try."""
+    w = scene.world
+    if not w or not any(a.get("entity") == scene.subject_name for a in w.get("cast", [])):
+        return None
+    if w.get("camera") == "push_in" and w.get("on") == scene.subject_name:
+        return None
+    return scene.model_copy(update={"world": w | {"camera": "push_in", "on": scene.subject_name}})
 
 
 def apply(script: Script, bad: dict[int, str]) -> Script:

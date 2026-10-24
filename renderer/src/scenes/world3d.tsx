@@ -6,6 +6,7 @@ import React, { useMemo } from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import * as THREE from "three";
 import type { Scene, Setting, Theme } from "../types";
+import { formatCount } from "./shared";
 
 export const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 export const ease = Easing.inOut(Easing.cubic);
@@ -490,10 +491,12 @@ export const Stars: React.FC<{ seed: number }> = ({ seed }) => {
 
 // ---------- the heading plate ----------
 
-// The scene's heading and line under it, sliding in at the top left.
+// The scene's heading and line under it, sliding in at the top left. A stat, proportion, list or timeline
+// scene acted out in 3D (scene.overlay) keeps its figures here instead.
 export const HeadingPlate: React.FC<{ scene: Scene; theme: Theme; short: boolean }> = ({ scene, theme, short }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  if (scene.overlay) return <DataPlate scene={scene} theme={theme} short={short} />;
   if (!scene.heading) return null;
   const p = spring({ frame: frame - 6, fps, config: { damping: 16 } });
   const k = short ? 1.35 : 1;
@@ -502,7 +505,7 @@ export const HeadingPlate: React.FC<{ scene: Scene; theme: Theme; short: boolean
       style={{
         position: "absolute",
         left: short ? 70 : 90,
-        top: short ? 200 : 70,
+        top: short ? 270 : 120,
         maxWidth: short ? undefined : 1100,
         padding: `${14 * k}px ${26 * k}px`,
         background: `${theme.background}d9`,
@@ -518,6 +521,72 @@ export const HeadingPlate: React.FC<{ scene: Scene; theme: Theme; short: boolean
     >
       {scene.heading}
       {scene.text ? <div style={{ fontSize: 26 * k, fontWeight: 600, color: theme.muted, marginTop: 4 }}>{scene.text}</div> : null}
+    </div>
+  );
+};
+
+// ---------- the data plate ----------
+
+// A data scene's figures over its 3D scene: a count-up landing on the word the narrator says it (a
+// stat), a share with its bar (a proportion), or items and dated events appearing as they are said (a
+// list, a timeline). Kept to one corner and narrower than the heading plate, so the action stays clear.
+const DataPlate: React.FC<{ scene: Scene; theme: Theme; short: boolean }> = ({ scene, theme, short }) => {
+  const frame = useCurrentFrame();
+  const { fps, durationInFrames: D } = useVideoConfig();
+  const k = short ? 1.35 : 1;
+  const enter = spring({ frame: frame - 6, fps, config: { damping: 16 } });
+  const kind = scene.overlay;
+  const value = scene.value ?? 0;
+  // the figure lands as it is said, else a third of the way in
+  const land = scene.landTimes?.length ? Math.round(scene.landTimes[0] * fps) : Math.round(D * 0.35);
+  const count = interpolate(frame, [8, Math.max(9, land)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
+  const pop = spring({ frame: frame - land, fps, config: { damping: 9, mass: 0.6 } });
+  const rows: { head?: string; body: string }[] =
+    kind === "list" ? (scene.items ?? []).map((t) => ({ body: t })) : kind === "timeline" ? (scene.events ?? []).map((e) => ({ head: e.label, body: e.text })) : [];
+  // each row appears as it is said, else spread over the first two thirds of the scene
+  const at = (i: number) => Math.round((scene.revealTimes?.[i] ?? ((i + 0.5) / Math.max(1, rows.length)) * (D / fps) * 0.66) * fps);
+  const figure = (v: number) => `${scene.prefix ?? ""}${formatCount(v, value)}${kind === "proportion" ? "%" : scene.suffix ?? ""}`;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: short ? 70 : 90,
+        top: short ? 270 : 120,
+        maxWidth: short ? 940 : 760,
+        padding: `${18 * k}px ${28 * k}px`,
+        background: `${theme.background}e0`,
+        borderLeft: `${8 * k}px solid ${theme.accent}`,
+        borderRadius: 12,
+        fontFamily: theme.font,
+        color: theme.text,
+        opacity: enter,
+        transform: `translateX(${interpolate(enter, [0, 1], [-60, 0])}px)`,
+        boxShadow: "0 18px 50px rgba(0,0,0,0.35)",
+      }}
+    >
+      {scene.heading ? <div style={{ fontSize: 30 * k, fontWeight: 800, color: theme.muted, marginBottom: 6 }}>{scene.heading}</div> : null}
+      {kind === "stat" || kind === "proportion" ? (
+        <div style={{ fontSize: 96 * k, fontWeight: 900, lineHeight: 1.05, color: theme.accent, transform: `scale(${1 + 0.06 * pop * (1 - pop)})`, transformOrigin: "left center" }}>
+          {figure(value * count)}
+        </div>
+      ) : null}
+      {kind === "proportion" ? (
+        <div style={{ height: 16 * k, width: 520 * k, maxWidth: "100%", background: `${theme.text}26`, borderRadius: 8, marginTop: 10, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${Math.max(0, Math.min(100, value * count))}%`, background: theme.accent, borderRadius: 8 }} />
+        </div>
+      ) : null}
+      {rows.map((r, i) => {
+        // a row takes its place on the plate as it appears, so the plate grows with what has been said
+        if (frame < at(i)) return null;
+        const p = spring({ frame: frame - at(i), fps, config: { damping: 15 } });
+        return (
+          <div key={i} style={{ display: "flex", gap: 14 * k, alignItems: "baseline", marginTop: 10 * k, opacity: p, transform: `translateY(${interpolate(p, [0, 1], [14, 0])}px)` }}>
+            <span style={{ fontSize: 28 * k, fontWeight: 900, color: theme.accent, minWidth: r.head ? undefined : 18 * k }}>{r.head ?? "•"}</span>
+            <span style={{ fontSize: 28 * k, fontWeight: 650 }}>{r.body}</span>
+          </div>
+        );
+      })}
+      {scene.text && (kind === "stat" || kind === "proportion") ? <div style={{ fontSize: 26 * k, fontWeight: 600, color: theme.muted, marginTop: 6 }}>{scene.text}</div> : null}
     </div>
   );
 };

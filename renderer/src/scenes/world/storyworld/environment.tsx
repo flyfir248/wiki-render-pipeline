@@ -646,6 +646,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
           far={mix(kind === "desert" ? "#b89070" : "#6f7f8a", light.horizon, 0.55)} snow={kind === "snow" || backdrop === "mountains"}
           height={backdrop === "mountains" ? 16 : kind === "sea" || kind === "beach" ? 3 : 8} />
       ) : null}
+      {!INSIDE.includes(kind) && !VOID.includes(kind) && kind !== "underwater" && set.time !== "night" ? <Birds U={U} seed={seed} t={t} color={tone(light.horizon, 0.35)} /> : null}
       {fx.includes("items") ? null : items}
       {fx.includes("items") ? null : <Binned bins={bins} look={look} />}
       {set.dressing.map((d, i) => (
@@ -653,6 +654,40 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
       ))}
     </group>
     </Background.Provider>
+  );
+};
+
+// Life in the sky over an outdoor place: a loose flock crossing far off, wings beating, so the place
+// itself moves while the story happens in front of it (seeded, so the same in every render of a frame).
+const Birds: React.FC<{ U: number; seed: number; t: number; color: string }> = ({ U, seed, t, color }) => {
+  const flock = useMemo(() => {
+    const r = rng(seed ^ 0xb12d);
+    const dir = r() < 0.5 ? 1 : -1;
+    const n = 4 + Math.floor(r() * 4);
+    return { dir, x0: (r() - 0.5) * U * 60, y: U * (9 + r() * 5), z: -U * (24 + r() * 14), speed: U * (1.6 + r() * 0.8),
+      birds: Array.from({ length: n }, (_, i) => ({ dx: -i * U * 1.4 * (0.7 + r() * 0.6), dy: (r() - 0.5) * U * 1.6, dz: (r() - 0.5) * U * 3, ph: r() * 6.28, s: 0.8 + r() * 0.4 })) };
+  }, [U, seed]);
+  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, fog: true }), [color]);
+  const wing = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, -0.12, 0, 0, 0.12, 1, 0, 0.05], 3));
+    return g;
+  }, []);
+  const span = U * 120;
+  return (
+    <group>
+      {flock.birds.map((b, i) => {
+        const x = ((((flock.x0 + flock.dir * flock.speed * t + b.dx * flock.dir + span / 2) % span) + span) % span) - span / 2;
+        const flap = Math.sin(t * 7 + b.ph) * 0.7;
+        const k = U * 0.55 * b.s;
+        return (
+          <group key={i} position={[x, flock.y + b.dy + Math.sin(t * 0.9 + b.ph) * U * 0.25, flock.z + b.dz]} rotation={[0, flock.dir > 0 ? 0 : Math.PI, 0]} scale={[k, k, k]}>
+            <mesh geometry={wing} material={mat} rotation={[flap, Math.PI / 2, 0]} />
+            <mesh geometry={wing} material={mat} rotation={[-flap, -Math.PI / 2, 0]} />
+          </group>
+        );
+      })}
+    </group>
   );
 };
 

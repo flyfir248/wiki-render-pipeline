@@ -50,12 +50,18 @@ class VisualsConfig(BaseModel):
 
     plan: bool = True
     # Seconds of 3D a video may carry, set by render time: measured at concurrency 2, a second of 3D
-    # costs about 13 s to render against about 4 s for a 2D scene, so 180 s of 3D adds roughly half an
-    # hour to a long video on the free runner, inside the scheduled run's 120-minute fill window.
+    # costs about 13 s to render against about 4 s for a 2D scene, so 360 s of 3D adds roughly an hour
+    # to a long video on the free runner (the weekly long has 170 minutes).
     # The planner keeps the reconstructions it ranks highest within it. Not a share: a story told in
     # maps and charts may use none, an incident told moment by moment may use all of a Short.
     world_seconds_short: float = 60.0
-    world_seconds_long: float = 180.0
+    world_seconds_long: float = 360.0
+    # 3D first: the share of a video's runtime the planner fills with 3D scenes of the story's own cast
+    # and places, once the moments it reconstructs on their own are in. Stat, proportion, list and
+    # timeline scenes may become 3D scenes with their figures drawn over them; maps, charts, quotes,
+    # documents and real photos stay as they are. A story with too few entities to show stays below it.
+    world_share_short: float = 0.8
+    world_share_long: float = 0.75
     # Each video's own look (fyt/artdirect.py): palette and 3D grade from its subject, era and mood.
     art_direction: bool = True
     # Story-driven 3D (fyt/manifest.py, fyt/assetlib.py): the story's own entities get 3D scenes from
@@ -87,6 +93,9 @@ class VisualsConfig(BaseModel):
 
     def world_seconds(self, fmt: str) -> float:
         return self.world_seconds_short if fmt == "short" else self.world_seconds_long
+
+    def world_share(self, fmt: str) -> float:
+        return self.world_share_short if fmt == "short" else self.world_share_long
 
 
 class ChannelInfo(BaseModel):
