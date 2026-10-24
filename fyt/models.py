@@ -187,6 +187,9 @@ class ScriptScene(BaseModel):
     label: SkipJsonSchema[str | None] = None  # set by fyt.assets.resolve: RECONSTRUCTION, ILLUSTRATION...
     fallback: SkipJsonSchema[dict | None] = None  # set by fyt.visualplan: the scene before it became 3D
     world: SkipJsonSchema[dict | None] = None  # set by fyt.worldgen: a stage scene's generated cast, set and direction
+    # set by fyt.visualplan: a stat, proportion, list or timeline scene acted out in 3D keeps its figures,
+    # drawn over the 3D scene as this template's plate
+    overlay: SkipJsonSchema[str | None] = None
     # Written by scripts from before the world scene; fyt.scenes3d turns them into world scenes.
     maneuver: SkipJsonSchema[Maneuver | None] = None
     vessel: SkipJsonSchema[Vessel | None] = None
@@ -297,6 +300,7 @@ class RenderScene(BaseModel):
     setting: Setting | None = None
     backdropSrc: str | None = None
     world: dict | None = None  # a stage scene's generated story world (fyt/worldgen.py)
+    overlay: str | None = None  # world scenes: the 2D template whose figures are drawn over the 3D scene
     actors: list[Actor] | None = None
     effect: Effect | None = None
     effectX: float | None = None

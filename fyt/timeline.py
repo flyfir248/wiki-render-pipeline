@@ -79,6 +79,7 @@ def build_props(
                 lines=scene.lines,
                 setting=scene.setting,
                 backdropSrc=scene.backdrop_src,
+                overlay=scene.overlay,
                 world=timed_world(scene.world, clip_words[i], start - vis_start, vis_end - vis_start),
                 actors=[a for a in scene.actors or [] if a.src] or None,
                 effect=scene.effect,
@@ -143,8 +144,10 @@ def revealed(scene: ScriptScene) -> list[str] | None:
     """What a scene shows one piece at a time as it is said: an evidence board's clues, a cycle's
     steps, a statement's words, a scale scene's things (smallest first, the order they are drawn in), or the [bracketed]
     words a document scene starts with blacked out."""
-    if scene.type in ("evidence", "cycle"):
+    if scene.type in ("evidence", "cycle") or scene.overlay == "list":
         return scene.items
+    if scene.overlay == "timeline":
+        return [e.label for e in scene.events or []] or None
     if scene.type == "statement" and (scene.text or "").strip():
         return scene.text.split()
     if scene.type == "statement" and (scene.heading or "").strip():  # the renderer says the heading instead
@@ -279,10 +282,11 @@ def land_times(scene: ScriptScene, words: list[Word], offset: float) -> list[flo
     number, a proportion's share, an aircraft's altitude readout, and each point of a trend line (its year or its value, whichever
     the narration says first). Seconds from the scene's start; None leaves the renderer's pacing."""
     aircraft = scene.type == "aircraft" or (scene.type == "world" and scene.subject == "aircraft")
-    if not words or not (scene.type in ("stat", "proportion", "trend") or aircraft):
+    figure = scene.type in ("stat", "proportion") or scene.overlay in ("stat", "proportion")
+    if not words or not (figure or scene.type == "trend" or aircraft):
         return None
     said = spoken_numbers(words)
-    if scene.type in ("stat", "proportion") or aircraft:
+    if figure or aircraft:
         target = scene.altitude_to if aircraft else scene.value
         if target is None:
             return None

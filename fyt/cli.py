@@ -100,6 +100,10 @@ def main(argv: list[str] | None = None) -> None:
     kt.add_argument("--only", default="", help="with --picks: import only this pack's picks")
     kt.add_argument("--sets", type=Path, nargs="+", help="import the set pieces assets/set-picks.json picks from the pack zips in these folders instead")
 
+    ct = sub.add_parser("catalog", help="inspect every library model and set piece, record what each can do (assets/catalog.json) and print a coverage report")
+    ct.add_argument("--rig", action="store_true", help="first rig the still library animals that have no skeleton yet")
+    ct.add_argument("--report", type=Path, help="also write the report here")
+
     ac = sub.add_parser("assetcheck", help="test story-driven 3D on a fixed panel of things, without making a video")
     ac.add_argument("--out", type=Path, default=Path("jobs/assetcheck"))
 
@@ -137,6 +141,17 @@ def main(argv: list[str] | None = None) -> None:
             print(json.dumps(packs.import_picks(args.picks, only=args.only), indent=2))
             return
         print(json.dumps(kit.add(args.add) if args.add else kit.fetch(args.out), indent=2))
+        return
+    if args.cmd == "catalog":
+        from fyt import catalog, rigging
+
+        if args.rig:
+            print(json.dumps(rigging.rig_library(), indent=2))
+        text = catalog.report(catalog.build())
+        if args.report:
+            args.report.parent.mkdir(parents=True, exist_ok=True)
+            args.report.write_text(text)
+        print(text)
         return
     if args.cmd == "assetcheck":
         from fyt import assetcheck

@@ -1,0 +1,10189 @@
+{
+ "models": {
+  "kit-aardvark": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-aardvark.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.24 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1220,
+   "bytes": 35408,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=aardvark"
+   ]
+  },
+  "kit-alien": {
+   "pack": "kenney-space-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-alien.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 292,
+   "bytes": 24440,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=alien",
+    "=aliens",
+    "=extraterrestrial",
+    "=martian"
+   ]
+  },
+  "kit-alligator": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-alligator.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1012,
+   "bytes": 51804,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=alligator",
+    "=alligators",
+    "=gator",
+    "=caiman"
+   ]
+  },
+  "kit-alpaca": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-alpaca.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1252,
+   "bytes": 57220,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=alpaca",
+    "=alpacas"
+   ]
+  },
+  "kit-ambulance": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-ambulance.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1948,
+   "bytes": 102436,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "=ambulance",
+    "=ambulances",
+    "=paramedic"
+   ]
+  },
+  "kit-ant": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-ant.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.108 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1382,
+   "bytes": 56224,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=ant",
+    "=ants"
+   ]
+  },
+  "kit-anteater": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-anteater.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1168,
+   "bytes": 54928,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=anteater"
+   ]
+  },
+  "kit-arctic-fox": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-arctic-fox.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1248,
+   "bytes": 56080,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "arctic fox"
+   ]
+  },
+  "kit-arctic-hare": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-arctic-hare.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 898,
+   "bytes": 48536,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "arctic hare",
+    "snowshoe hare"
+   ]
+  },
+  "kit-arctic-wolf": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-arctic-wolf.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1248,
+   "bytes": 56124,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "arctic wolf",
+    "white wolf"
+   ]
+  },
+  "kit-armadillo": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-armadillo.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1256,
+   "bytes": 41356,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=armadillo",
+    "=pangolin"
+   ]
+  },
+  "kit-axe": {
+   "pack": "kenney-survival-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-axe.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 84,
+   "bytes": 17048,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=axe",
+    "=hatchet"
+   ]
+  },
+  "kit-barn": {
+   "pack": "quaternius-farm",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-barn.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 2910,
+   "bytes": 147412,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=barn",
+    "=barns",
+    "=farmhouse",
+    "=stable"
+   ]
+  },
+  "kit-barrel": {
+   "pack": "kenney-pirate-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-barrel.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 148,
+   "bytes": 21600,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=barrel",
+    "=barrels",
+    "=keg",
+    "=cask"
+   ]
+  },
+  "kit-bat": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-bat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 726,
+   "bytes": 26760,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=bat",
+    "=bats",
+    "vampire bat"
+   ]
+  },
+  "kit-battering-ram": {
+   "pack": "kenney-castle-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-battering-ram.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1112,
+   "bytes": 71568,
+   "wheels": 6,
+   "spinners": 0,
+   "names": [
+    "battering ram"
+   ]
+  },
+  "kit-bear": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-bear.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 968,
+   "bytes": 50244,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=bear",
+    "=bears",
+    "black bear",
+    "=cub"
+   ]
+  },
+  "kit-bee": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-bee.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1280,
+   "bytes": 63676,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=bee",
+    "=bees",
+    "=honeybee",
+    "=bumblebee"
+   ]
+  },
+  "kit-beetle": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-beetle.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 868,
+   "bytes": 46740,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=beetle",
+    "=beetles"
+   ]
+  },
+  "kit-bighorn": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-bighorn.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1354,
+   "bytes": 61296,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "bighorn",
+    "mountain sheep"
+   ]
+  },
+  "kit-bison": {
+   "pack": "kenney-prototype",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-bison.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "walk",
+    "run",
+    "down",
+    "up"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee"
+   ],
+   "triangles": 264,
+   "bytes": 37208,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=bison",
+    "=buffalo"
+   ]
+  },
+  "kit-black-widow": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-black-widow.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.685 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 716,
+   "bytes": 21484,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "black widow"
+   ]
+  },
+  "kit-boar": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-boar.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1010,
+   "bytes": 52492,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=boar",
+    "wild boar",
+    "=warthog"
+   ]
+  },
+  "kit-bobcat": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-bobcat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1250,
+   "bytes": 55852,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=bobcat",
+    "=lynx",
+    "wild cat",
+    "=wildcat"
+   ]
+  },
+  "kit-bullet-train": {
+   "pack": "kenney-train-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-bullet-train.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 945,
+   "bytes": 61952,
+   "wheels": 2,
+   "spinners": 0,
+   "names": [
+    "bullet train",
+    "=shinkansen",
+    "high-speed train",
+    "high speed train"
+   ]
+  },
+  "kit-buoy": {
+   "pack": "kenney-watercraft",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-buoy.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 118,
+   "bytes": 20664,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=buoy",
+    "=buoys"
+   ]
+  },
+  "kit-butterfly": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-butterfly.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 916,
+   "bytes": 40528,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=butterfly",
+    "=butterflies",
+    "=monarch"
+   ]
+  },
+  "kit-camel": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-camel.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1316,
+   "bytes": 54144,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=camel",
+    "=camels",
+    "=dromedary"
+   ]
+  },
+  "kit-campfire": {
+   "pack": "kenney-survival-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-campfire.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 305,
+   "bytes": 29588,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=campfire",
+    "=bonfire",
+    "camp fire"
+   ]
+  },
+  "kit-cannon": {
+   "pack": "kenney-pirate-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-cannon.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 232,
+   "bytes": 26208,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=cannon",
+    "=cannons",
+    "=artillery"
+   ]
+  },
+  "kit-car": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-car.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1368,
+   "bytes": 71528,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "=car",
+    "=cars",
+    "=sedan",
+    "=automobile"
+   ]
+  },
+  "kit-cargo-ship": {
+   "pack": "kenney-watercraft",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-cargo-ship.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 1060,
+   "bytes": 64716,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "cargo ship",
+    "container ship",
+    "=freighter",
+    "=tanker"
+   ]
+  },
+  "kit-caribou": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-caribou.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1584,
+   "bytes": 63372,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=caribou",
+    "=reindeer"
+   ]
+  },
+  "kit-castle-tower": {
+   "pack": "kenney-castle-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-castle-tower.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 176,
+   "bytes": 22764,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=castle",
+    "castle tower",
+    "=fortress",
+    "=watchtower"
+   ]
+  },
+  "kit-cat": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-cat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1210,
+   "bytes": 54420,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=cat",
+    "=cats",
+    "=kitten",
+    "=kittens"
+   ]
+  },
+  "kit-catapult": {
+   "pack": "kenney-castle-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-catapult.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 928,
+   "bytes": 60256,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "=catapult",
+    "=catapults"
+   ]
+  },
+  "kit-caterpillar": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-caterpillar.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1232,
+   "bytes": 53416,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=caterpillar"
+   ]
+  },
+  "kit-centipede": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-centipede.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 3662,
+   "bytes": 126036,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=centipede",
+    "=millipede"
+   ]
+  },
+  "kit-chameleon": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-chameleon.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1152,
+   "bytes": 53884,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=chameleon"
+   ]
+  },
+  "kit-cheetah": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-cheetah.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1204,
+   "bytes": 56188,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=cheetah",
+    "=cheetahs"
+   ]
+  },
+  "kit-chicken": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-chicken.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.07 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1082,
+   "bytes": 32596,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=chicken",
+    "=chickens",
+    "=hen",
+    "=hens"
+   ]
+  },
+  "kit-chimpanzee": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-chimpanzee.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1264,
+   "bytes": 56000,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=chimpanzee",
+    "=chimp",
+    "=chimps",
+    "=bonobo"
+   ]
+  },
+  "kit-cockroach": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-cockroach.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.326 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1000,
+   "bytes": 43644,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=cockroach",
+    "=cockroaches",
+    "=roach"
+   ]
+  },
+  "kit-coffin": {
+   "pack": "kenney-graveyard-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-coffin.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 256,
+   "bytes": 28704,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=coffin",
+    "=coffins",
+    "=casket",
+    "=sarcophagus"
+   ]
+  },
+  "kit-condor": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-condor.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1440,
+   "bytes": 41236,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=condor",
+    "=vulture",
+    "=vultures"
+   ]
+  },
+  "kit-cougar": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-cougar.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1298,
+   "bytes": 57264,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=cougar",
+    "=puma",
+    "mountain lion"
+   ]
+  },
+  "kit-cow": {
+   "pack": "Quaternius Farm Animals",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-cow.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Death",
+    "Armature|Idle",
+    "Armature|Jump",
+    "Armature|Run",
+    "Armature|Walk",
+    "Armature|WalkSlow"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "idle",
+    "look_around",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry"
+   ],
+   "triangles": 796,
+   "bytes": 308552,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=cow",
+    "=cows",
+    "=cattle",
+    "=bull"
+   ]
+  },
+  "kit-coyote": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-coyote.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1248,
+   "bytes": 55632,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=coyote",
+    "=coyotes",
+    "=jackal",
+    "=dingo"
+   ]
+  },
+  "kit-crane-bird": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-crane-bird.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.10 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 792,
+   "bytes": 24780,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=heron",
+    "=egret",
+    "=stork",
+    "=flamingo"
+   ]
+  },
+  "kit-crocodile": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-crocodile.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1048,
+   "bytes": 36780,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=crocodile",
+    "=crocodiles",
+    "=croc"
+   ]
+  },
+  "kit-crow": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-crow.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1430,
+   "bytes": 39156,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=crow",
+    "=crows",
+    "=raven",
+    "=ravens"
+   ]
+  },
+  "kit-crypt": {
+   "pack": "kenney-graveyard-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-crypt.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 252,
+   "bytes": 28820,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=crypt",
+    "=tomb",
+    "=mausoleum"
+   ]
+  },
+  "kit-deer": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-deer.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1480,
+   "bytes": 57940,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=deer",
+    "=stag",
+    "=doe",
+    "=fawn"
+   ]
+  },
+  "kit-delivery-van": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-delivery-van.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1620,
+   "bytes": 86508,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "delivery van",
+    "delivery truck",
+    "=van",
+    "=vans"
+   ]
+  },
+  "kit-dinosaur": {
+   "pack": "quaternius-monsters",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-dinosaur.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "Duck",
+    "HitReact",
+    "Idle",
+    "Jump",
+    "Jump_Idle",
+    "Jump_Land",
+    "No",
+    "Punch",
+    "Run",
+    "Walk",
+    "Wave",
+    "Weapon",
+    "Yes"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 5414,
+   "bytes": 513572,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=dinosaur",
+    "=dinosaurs",
+    "=t-rex",
+    "=tyrannosaurus"
+   ]
+  },
+  "kit-doberman": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-doberman.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1030,
+   "bytes": 51360,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "doberman",
+    "dobermann",
+    "guard dog",
+    "police dog"
+   ]
+  },
+  "kit-dog": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-dog.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1030,
+   "bytes": 51360,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=dog",
+    "=dogs",
+    "=hound",
+    "=hounds"
+   ]
+  },
+  "kit-dolphin": {
+   "pack": "quaternius-fish",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-dolphin.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Swim"
+   ],
+   "actions": [
+    "swim"
+   ],
+   "triangles": 440,
+   "bytes": 56708,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=dolphin",
+    "=dolphins",
+    "=porpoise"
+   ]
+  },
+  "kit-donkey": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-donkey.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1256,
+   "bytes": 57656,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=donkey",
+    "=donkeys",
+    "=mule",
+    "=burro"
+   ]
+  },
+  "kit-dove": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-dove.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1406,
+   "bytes": 39716,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=dove",
+    "=doves"
+   ]
+  },
+  "kit-dragon": {
+   "pack": "quaternius-monsters",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-dragon.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "Fast_Flying",
+    "Flying_Idle",
+    "Headbutt",
+    "HitReact",
+    "No",
+    "Punch",
+    "Yes"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "fly",
+    "idle",
+    "look_around",
+    "attack",
+    "fight",
+    "hunt",
+    "roar"
+   ],
+   "triangles": 4562,
+   "bytes": 242736,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=dragon",
+    "=dragons"
+   ]
+  },
+  "kit-dragonfly": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-dragonfly.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 692,
+   "bytes": 29720,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=dragonfly",
+    "=dragonflies"
+   ]
+  },
+  "kit-duck": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-duck.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1448,
+   "bytes": 41648,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=duck",
+    "=ducks",
+    "=mallard",
+    "=duckling"
+   ]
+  },
+  "kit-eagle": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-eagle.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1488,
+   "bytes": 43172,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=eagle",
+    "=eagles",
+    "bald eagle",
+    "golden eagle"
+   ]
+  },
+  "kit-elephant": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-elephant.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1076,
+   "bytes": 51932,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=elephant",
+    "=elephants"
+   ]
+  },
+  "kit-elk": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-elk.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1598,
+   "bytes": 59920,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=elk",
+    "=wapiti"
+   ]
+  },
+  "kit-falcon": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-falcon.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1482,
+   "bytes": 42748,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=falcon",
+    "=hawk",
+    "=hawks",
+    "=kestrel"
+   ]
+  },
+  "kit-fire-ant": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-fire-ant.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.143 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1382,
+   "bytes": 56212,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "fire ant",
+    "fire ants"
+   ]
+  },
+  "kit-fire-truck": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-fire-truck.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1911,
+   "bytes": 102372,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "fire truck",
+    "fire engine",
+    "=firetruck",
+    "fire brigade"
+   ]
+  },
+  "kit-fish": {
+   "pack": "quaternius-fish",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-fish.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Swim"
+   ],
+   "actions": [
+    "swim"
+   ],
+   "triangles": 544,
+   "bytes": 67116,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=fish",
+    "=fishes",
+    "=salmon",
+    "=trout"
+   ]
+  },
+  "kit-fishing-boat": {
+   "pack": "kenney-watercraft",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-fishing-boat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 237,
+   "bytes": 25720,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "fishing boat",
+    "=trawler",
+    "fishing vessel"
+   ]
+  },
+  "kit-fly": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-fly.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 652,
+   "bytes": 24500,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=fly",
+    "=flies",
+    "=housefly",
+    "=bluebottle"
+   ]
+  },
+  "kit-fox": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-fox.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1248,
+   "bytes": 56180,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=fox",
+    "=foxes",
+    "red fox"
+   ]
+  },
+  "kit-frog": {
+   "pack": "quaternius-creatures",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-frog.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "FrogArmature|Frog_Attack",
+    "FrogArmature|Frog_Death",
+    "FrogArmature|Frog_Idle",
+    "FrogArmature|Frog_Jump"
+   ],
+   "actions": [
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "idle",
+    "look_around"
+   ],
+   "triangles": 4920,
+   "bytes": 572260,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=frog",
+    "=frogs",
+    "=toad",
+    "=toads"
+   ]
+  },
+  "kit-garbage-truck": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-garbage-truck.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 2268,
+   "bytes": 118564,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "garbage truck",
+    "rubbish truck",
+    "bin lorry",
+    "dump truck"
+   ]
+  },
+  "kit-gazelle": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-gazelle.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1580,
+   "bytes": 63040,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=gazelle",
+    "=gazelles",
+    "=impala",
+    "=antelope"
+   ]
+  },
+  "kit-gecko": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-gecko.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1136,
+   "bytes": 53968,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=gecko",
+    "=geckos"
+   ]
+  },
+  "kit-ghost": {
+   "pack": "quaternius-monsters",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-ghost.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "Fast_Flying",
+    "Flying_Idle",
+    "Headbutt",
+    "HitReact",
+    "No",
+    "Punch",
+    "Yes"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "fly",
+    "idle",
+    "look_around",
+    "attack",
+    "fight",
+    "hunt",
+    "roar"
+   ],
+   "triangles": 3192,
+   "bytes": 262736,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=ghost",
+    "=ghosts",
+    "=spirit",
+    "=phantom"
+   ]
+  },
+  "kit-giraffe": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-giraffe.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1182,
+   "bytes": 53028,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=giraffe",
+    "=giraffes"
+   ]
+  },
+  "kit-goat": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-goat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1112,
+   "bytes": 50632,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=goat",
+    "=goats",
+    "=kid goat"
+   ]
+  },
+  "kit-goose": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-goose.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1480,
+   "bytes": 42704,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=goose",
+    "=geese",
+    "canada goose"
+   ]
+  },
+  "kit-gorilla": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-gorilla.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1306,
+   "bytes": 56556,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=gorilla",
+    "=gorillas",
+    "silverback"
+   ]
+  },
+  "kit-grasshopper": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-grasshopper.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.141 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 826,
+   "bytes": 40436,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=grasshopper",
+    "=locust",
+    "=locusts",
+    "=cricket"
+   ]
+  },
+  "kit-gravestone": {
+   "pack": "kenney-graveyard-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-gravestone.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 178,
+   "bytes": 24856,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=gravestone",
+    "=headstone",
+    "=tombstone",
+    "=grave"
+   ]
+  },
+  "kit-greyhound": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-greyhound.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1184,
+   "bytes": 56884,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=greyhound",
+    "=whippet",
+    "racing dog"
+   ]
+  },
+  "kit-grizzly": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-grizzly.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 968,
+   "bytes": 50248,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=grizzly",
+    "grizzly bear",
+    "brown bear",
+    "=grizzlies"
+   ]
+  },
+  "kit-gull": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-gull.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1512,
+   "bytes": 47916,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=gull",
+    "=gulls",
+    "=seagull",
+    "=seagulls"
+   ]
+  },
+  "kit-hare": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-hare.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 898,
+   "bytes": 48760,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=hare",
+    "=hares",
+    "=jackrabbit"
+   ]
+  },
+  "kit-hedgehog": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-hedgehog.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.103 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1026,
+   "bytes": 29488,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=hedgehog",
+    "=porcupine"
+   ]
+  },
+  "kit-hippo": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-hippo.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1106,
+   "bytes": 53360,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=hippo",
+    "=hippopotamus",
+    "=hippos"
+   ]
+  },
+  "kit-horse": {
+   "pack": "Quaternius Farm Animals",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-horse.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Death",
+    "Armature|Idle",
+    "Armature|Jump",
+    "Armature|Run",
+    "Armature|Walk",
+    "Armature|WalkSlow"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "idle",
+    "look_around",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry"
+   ],
+   "triangles": 690,
+   "bytes": 272656,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=horse",
+    "=horses",
+    "=pony",
+    "=ponies"
+   ]
+  },
+  "kit-house": {
+   "pack": "kenney-suburban",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-house.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 1174,
+   "bytes": 66476,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=house",
+    "=houses",
+    "=cottage",
+    "=bungalow"
+   ]
+  },
+  "kit-hummingbird": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-hummingbird.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.09 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 780,
+   "bytes": 27332,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=hummingbird"
+   ]
+  },
+  "kit-hyena": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-hyena.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1212,
+   "bytes": 54884,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=hyena",
+    "=hyenas"
+   ]
+  },
+  "kit-ibex": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-ibex.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1608,
+   "bytes": 65504,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=ibex",
+    "mountain goat"
+   ]
+  },
+  "kit-iguana": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-iguana.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1096,
+   "bytes": 38672,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=iguana",
+    "=lizard",
+    "=lizards"
+   ]
+  },
+  "kit-kit-fox": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-kit-fox.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1248,
+   "bytes": 55572,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "kit fox",
+    "fennec"
+   ]
+  },
+  "kit-koala": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-koala.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1374,
+   "bytes": 58480,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=koala",
+    "=koalas"
+   ]
+  },
+  "kit-komodo": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-komodo.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1092,
+   "bytes": 40356,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "komodo",
+    "monitor lizard"
+   ]
+  },
+  "kit-ladybird": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-ladybird.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.125 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1122,
+   "bytes": 43468,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=ladybug",
+    "=ladybird"
+   ]
+  },
+  "kit-lantern": {
+   "pack": "kenney-graveyard-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-lantern.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 186,
+   "bytes": 25948,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=lantern",
+    "=lanterns"
+   ]
+  },
+  "kit-lion": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-lion.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1264,
+   "bytes": 56920,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=lion",
+    "=lions",
+    "=lioness"
+   ]
+  },
+  "kit-llama": {
+   "pack": "Quaternius Farm Animals",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-llama.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Idle",
+    "Armature|Jump"
+   ],
+   "actions": [
+    "idle",
+    "look_around"
+   ],
+   "triangles": 661,
+   "bytes": 154728,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=llama",
+    "=llamas"
+   ]
+  },
+  "kit-mammoth": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-mammoth.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1184,
+   "bytes": 56528,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=mammoth",
+    "woolly mammoth",
+    "wooly mammoth"
+   ]
+  },
+  "kit-mandrill": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-mandrill.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1306,
+   "bytes": 57284,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=mandrill",
+    "=baboon",
+    "=baboons"
+   ]
+  },
+  "kit-manta-ray": {
+   "pack": "quaternius-fish",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-manta-ray.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Swim"
+   ],
+   "actions": [
+    "swim"
+   ],
+   "triangles": 696,
+   "bytes": 97884,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "manta ray",
+    "=manta",
+    "=stingray"
+   ]
+  },
+  "kit-mantis": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-mantis.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 875,
+   "bytes": 50260,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=mantis",
+    "praying mantis"
+   ]
+  },
+  "kit-marmot": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-marmot.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1232,
+   "bytes": 41424,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=marmot",
+    "=groundhog",
+    "=woodchuck",
+    "=gopher"
+   ]
+  },
+  "kit-megaloceros": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-megaloceros.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1666,
+   "bytes": 65068,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "megaloceros",
+    "irish elk",
+    "giant deer"
+   ]
+  },
+  "kit-meteor": {
+   "pack": "kenney-space-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-meteor.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 196,
+   "bytes": 9996,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=meteor",
+    "=meteorite",
+    "=asteroid",
+    "=asteroids"
+   ]
+  },
+  "kit-moose": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-moose.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1134,
+   "bytes": 51324,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=moose"
+   ]
+  },
+  "kit-mosquito": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-mosquito.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.17 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 746,
+   "bytes": 29756,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=mosquito",
+    "=mosquitoes",
+    "=gnat"
+   ]
+  },
+  "kit-moth": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-moth.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: no right front foot; serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 894,
+   "bytes": 40208,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=moth",
+    "=moths"
+   ]
+  },
+  "kit-mouse": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-mouse.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1052,
+   "bytes": 36504,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=mouse",
+    "=mice",
+    "=hamster",
+    "=gerbil"
+   ]
+  },
+  "kit-muskox": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-muskox.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1324,
+   "bytes": 56976,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "musk ox",
+    "=muskox",
+    "=yak"
+   ]
+  },
+  "kit-okapi": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-okapi.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1338,
+   "bytes": 63576,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=okapi"
+   ]
+  },
+  "kit-opossum": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-opossum.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1054,
+   "bytes": 36292,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=opossum",
+    "=possum"
+   ]
+  },
+  "kit-orangutan": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-orangutan.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1264,
+   "bytes": 55780,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=orangutan",
+    "=orangutans"
+   ]
+  },
+  "kit-oryx": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-oryx.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1598,
+   "bytes": 62532,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=oryx",
+    "=gemsbok"
+   ]
+  },
+  "kit-ostrich": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-ostrich.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.12 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1044,
+   "bytes": 40232,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=ostrich",
+    "=emu"
+   ]
+  },
+  "kit-otter": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-otter.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 926,
+   "bytes": 49284,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=otter",
+    "=otters",
+    "=beaver"
+   ]
+  },
+  "kit-panda": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-panda.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1198,
+   "bytes": 55576,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=panda",
+    "=pandas",
+    "giant panda"
+   ]
+  },
+  "kit-panther": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-panther.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1292,
+   "bytes": 58020,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=panther",
+    "=jaguar",
+    "black panther",
+    "=leopard"
+   ]
+  },
+  "kit-peacock": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-peacock.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 2608,
+   "bytes": 92108,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=peacock",
+    "=peafowl"
+   ]
+  },
+  "kit-penguin": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-penguin.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 776,
+   "bytes": 28012,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=penguin",
+    "=penguins"
+   ]
+  },
+  "kit-person-f-adventurer": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-adventurer.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6812,
+   "bytes": 961020,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-casual": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-casual.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6424,
+   "bytes": 919536,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-formal": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-formal.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6108,
+   "bytes": 887324,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-medieval": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-medieval.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6404,
+   "bytes": 920836,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-punk": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-punk.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 5956,
+   "bytes": 874212,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-scifi": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-scifi.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6998,
+   "bytes": 978356,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-soldier": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-soldier.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 7900,
+   "bytes": 1057116,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-suit": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-suit.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6482,
+   "bytes": 925540,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-witch": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-witch.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6872,
+   "bytes": 965288,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-f-worker": {
+   "pack": "quaternius-women",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-f-worker.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6112,
+   "bytes": 893868,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-adventurer": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-adventurer.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 10202,
+   "bytes": 1278500,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-beach": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-beach.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6578,
+   "bytes": 933772,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-casual-2": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-casual-2.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 5776,
+   "bytes": 867760,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-casual-hoodie": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-casual-hoodie.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6206,
+   "bytes": 895648,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-farmer": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-farmer.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 5476,
+   "bytes": 826412,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-king": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-king.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 11110,
+   "bytes": 1329804,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-punk": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-punk.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 5500,
+   "bytes": 828968,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-spacesuit": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-spacesuit.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 10558,
+   "bytes": 1284128,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-suit": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-suit.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6634,
+   "bytes": 946368,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-swat": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-swat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 7754,
+   "bytes": 980148,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-person-m-worker": {
+   "pack": "quaternius-men",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-person-m-worker.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "HitRecieve",
+    "Idle",
+    "Idle_Neutral",
+    "Interact",
+    "Punch_Right",
+    "Run",
+    "Walk",
+    "Wave"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "work",
+    "use",
+    "pick_up",
+    "open",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 5240,
+   "bytes": 805536,
+   "wheels": 0,
+   "spinners": 0,
+   "names": []
+  },
+  "kit-pickaxe": {
+   "pack": "kenney-survival-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-pickaxe.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 74,
+   "bytes": 16740,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=pickaxe"
+   ]
+  },
+  "kit-pig": {
+   "pack": "Quaternius Farm Animals",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-pig.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Idle",
+    "Armature|Jump"
+   ],
+   "actions": [
+    "idle",
+    "look_around"
+   ],
+   "triangles": 562,
+   "bytes": 150020,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=pig",
+    "=pigs",
+    "=hog",
+    "=hogs"
+   ]
+  },
+  "kit-pigeon": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-pigeon.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1406,
+   "bytes": 39408,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=pigeon",
+    "=pigeons",
+    "carrier pigeon",
+    "homing pigeon"
+   ]
+  },
+  "kit-pirate-ship": {
+   "pack": "kenney-pirate-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-pirate-ship.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 1766,
+   "bytes": 98644,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "pirate ship",
+    "=galleon",
+    "=frigate",
+    "sailing ship"
+   ]
+  },
+  "kit-polar-bear": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-polar-bear.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 996,
+   "bytes": 52616,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "polar bear",
+    "polar bears"
+   ]
+  },
+  "kit-police-car": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-police-car.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1640,
+   "bytes": 85648,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "police car",
+    "patrol car",
+    "squad car",
+    "police cruiser"
+   ]
+  },
+  "kit-poodle": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-poodle.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1310,
+   "bytes": 57736,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=poodle"
+   ]
+  },
+  "kit-pronghorn": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-pronghorn.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1112,
+   "bytes": 50624,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=pronghorn"
+   ]
+  },
+  "kit-pug": {
+   "pack": "Quaternius Farm Animals",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-pug.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Idle",
+    "Armature|Jump"
+   ],
+   "actions": [
+    "idle",
+    "look_around"
+   ],
+   "triangles": 644,
+   "bytes": 137900,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=pug",
+    "=pugs"
+   ]
+  },
+  "kit-puppy": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-puppy.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1104,
+   "bytes": 53452,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=puppy",
+    "=puppies",
+    "=pup"
+   ]
+  },
+  "kit-rabbit": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-rabbit.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 870,
+   "bytes": 47916,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=rabbit",
+    "=rabbits",
+    "=bunny",
+    "=bunnies"
+   ]
+  },
+  "kit-raccoon": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-raccoon.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1134,
+   "bytes": 55616,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=raccoon",
+    "=racoon",
+    "=raccoons"
+   ]
+  },
+  "kit-race-car": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-race-car.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1288,
+   "bytes": 68348,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "race car",
+    "racing car",
+    "racecar",
+    "formula one"
+   ]
+  },
+  "kit-rat": {
+   "pack": "quaternius-creatures",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-rat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "RatArmature|Rat_Attack",
+    "RatArmature|Rat_Death",
+    "RatArmature|Rat_Idle",
+    "RatArmature|Rat_Jump",
+    "RatArmature|Rat_Run",
+    "RatArmature|Rat_Walk"
+   ],
+   "actions": [
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "idle",
+    "look_around",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry"
+   ],
+   "triangles": 4004,
+   "bytes": 528652,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=rat",
+    "=rats",
+    "=rodent"
+   ]
+  },
+  "kit-red-panda": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-red-panda.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1336,
+   "bytes": 57336,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "red panda"
+   ]
+  },
+  "kit-rhino": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-rhino.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1006,
+   "bytes": 51756,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=rhino",
+    "=rhinoceros",
+    "=rhinos"
+   ]
+  },
+  "kit-rover": {
+   "pack": "kenney-space-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-rover.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 172,
+   "bytes": 10796,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=rover",
+    "mars rover",
+    "lunar rover",
+    "moon buggy"
+   ]
+  },
+  "kit-rowboat": {
+   "pack": "kenney-watercraft",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-rowboat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 168,
+   "bytes": 23076,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=rowboat",
+    "rowing boat",
+    "=lifeboat",
+    "=lifeboats"
+   ]
+  },
+  "kit-sailboat": {
+   "pack": "kenney-watercraft",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-sailboat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 386,
+   "bytes": 33248,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=sailboat",
+    "=yacht",
+    "=sloop",
+    "sailing boat"
+   ]
+  },
+  "kit-satellite-dish": {
+   "pack": "kenney-space-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-satellite-dish.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 186,
+   "bytes": 10840,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "satellite dish",
+    "radio telescope",
+    "=antenna"
+   ]
+  },
+  "kit-scorpion": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-scorpion.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.305 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1158,
+   "bytes": 38920,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=scorpion",
+    "=scorpions"
+   ]
+  },
+  "kit-seal": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-seal.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1028,
+   "bytes": 36380,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=seal",
+    "=seals",
+    "sea lion",
+    "=sealion"
+   ]
+  },
+  "kit-seal-pup": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-seal-pup.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its left and right feet are not apart; serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 924,
+   "bytes": 26832,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "seal pup",
+    "baby seal"
+   ]
+  },
+  "kit-shark": {
+   "pack": "quaternius-fish",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-shark.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Swim"
+   ],
+   "actions": [
+    "swim"
+   ],
+   "triangles": 644,
+   "bytes": 74548,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=shark",
+    "=sharks",
+    "great white"
+   ]
+  },
+  "kit-sheep": {
+   "pack": "Quaternius Farm Animals",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-sheep.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Idle",
+    "Armature|Jump"
+   ],
+   "actions": [
+    "idle",
+    "look_around"
+   ],
+   "triangles": 610,
+   "bytes": 147456,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=sheep",
+    "=lamb",
+    "=lambs",
+    "=ram"
+   ]
+  },
+  "kit-shipwreck": {
+   "pack": "kenney-pirate-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-shipwreck.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 1622,
+   "bytes": 95808,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=shipwreck",
+    "=wreck",
+    "sunken ship"
+   ]
+  },
+  "kit-shop": {
+   "pack": "kenney-commercial",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-shop.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 1252,
+   "bytes": 74272,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=shop",
+    "=store",
+    "=building",
+    "=storefront"
+   ]
+  },
+  "kit-shovel": {
+   "pack": "kenney-survival-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-shovel.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 124,
+   "bytes": 18320,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=shovel",
+    "=spade"
+   ]
+  },
+  "kit-siege-tower": {
+   "pack": "kenney-castle-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-siege-tower.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1598,
+   "bytes": 99164,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "siege tower"
+   ]
+  },
+  "kit-silo": {
+   "pack": "quaternius-farm",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-silo.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 1592,
+   "bytes": 85832,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=silo",
+    "=silos",
+    "grain silo"
+   ]
+  },
+  "kit-skunk": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-skunk.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1004,
+   "bytes": 53160,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=skunk"
+   ]
+  },
+  "kit-skyscraper": {
+   "pack": "kenney-commercial",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-skyscraper.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 1292,
+   "bytes": 82636,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=skyscraper",
+    "=skyscrapers",
+    "office tower",
+    "high-rise"
+   ]
+  },
+  "kit-sloth": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-sloth.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.121 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1328,
+   "bytes": 37696,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=sloth",
+    "=sloths"
+   ]
+  },
+  "kit-snail": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-snail.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its belly touches the ground (0.00 of its height); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 421,
+   "bytes": 14452,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=snail",
+    "=slug"
+   ]
+  },
+  "kit-snake": {
+   "pack": "quaternius-creatures",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-snake.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "SnakeArmature|Snake_Attack",
+    "SnakeArmature|Snake_Idle",
+    "SnakeArmature|Snake_Jump",
+    "SnakeArmature|Snake_Walk"
+   ],
+   "actions": [
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry"
+   ],
+   "triangles": 1618,
+   "bytes": 206788,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=snake",
+    "=snakes",
+    "=serpent",
+    "=python"
+   ]
+  },
+  "kit-snow-leopard": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-snow-leopard.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.201 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1312,
+   "bytes": 39804,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "snow leopard"
+   ]
+  },
+  "kit-speedboat": {
+   "pack": "kenney-watercraft",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-speedboat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 156,
+   "bytes": 22412,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=speedboat",
+    "=motorboat",
+    "power boat",
+    "=powerboat"
+   ]
+  },
+  "kit-spider": {
+   "pack": "quaternius-creatures",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-spider.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "SpiderArmature|Spider_Attack",
+    "SpiderArmature|Spider_Death",
+    "SpiderArmature|Spider_Idle",
+    "SpiderArmature|Spider_Jump",
+    "SpiderArmature|Spider_Walk"
+   ],
+   "actions": [
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "idle",
+    "look_around",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry"
+   ],
+   "triangles": 2712,
+   "bytes": 424476,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=spider",
+    "=spiders",
+    "=tarantula"
+   ]
+  },
+  "kit-sports-car": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-sports-car.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1424,
+   "bytes": 74852,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "sports car",
+    "=sportscar",
+    "=coupe",
+    "=convertible"
+   ]
+  },
+  "kit-squirrel": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-squirrel.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 990,
+   "bytes": 47400,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=squirrel",
+    "=squirrels",
+    "=chipmunk"
+   ]
+  },
+  "kit-steam-locomotive": {
+   "pack": "kenney-train-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-steam-locomotive.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1666,
+   "bytes": 97456,
+   "wheels": 5,
+   "spinners": 0,
+   "names": [
+    "steam locomotive",
+    "steam train",
+    "steam engine",
+    "=locomotive"
+   ]
+  },
+  "kit-subway-train": {
+   "pack": "kenney-train-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-subway-train.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1228,
+   "bytes": 74856,
+   "wheels": 2,
+   "spinners": 0,
+   "names": [
+    "subway train",
+    "=subway",
+    "metro train",
+    "underground train"
+   ]
+  },
+  "kit-suv": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-suv.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1422,
+   "bytes": 74212,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "=suv",
+    "=suvs",
+    "=jeep",
+    "sport utility"
+   ]
+  },
+  "kit-swallow": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-swallow.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.08 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 414,
+   "bytes": 17772,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=swallow",
+    "=swallows",
+    "=sparrow",
+    "=sparrows"
+   ]
+  },
+  "kit-swan": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-swan.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.02 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1084,
+   "bytes": 34144,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=swan",
+    "=swans"
+   ]
+  },
+  "kit-tarantula": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-tarantula.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.748 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1298,
+   "bytes": 48672,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=tarantula"
+   ]
+  },
+  "kit-taxi": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-taxi.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1408,
+   "bytes": 73860,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "=taxi",
+    "=taxis",
+    "=cab",
+    "=taxicab"
+   ]
+  },
+  "kit-tent": {
+   "pack": "kenney-survival-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-tent.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 124,
+   "bytes": 20108,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=tent",
+    "=tents",
+    "=campsite"
+   ]
+  },
+  "kit-tern": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-tern.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "bird",
+   "rig_note": "",
+   "clips": [
+    "Fly",
+    "Idle"
+   ],
+   "actions": [
+    "fly",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 494,
+   "bytes": 20888,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=tern",
+    "=terns"
+   ]
+  },
+  "kit-tiger": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-tiger.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1290,
+   "bytes": 57756,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=tiger",
+    "=tigers",
+    "=tigress"
+   ]
+  },
+  "kit-tortoise": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-tortoise.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 652,
+   "bytes": 49164,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=tortoise",
+    "=turtle",
+    "=turtles",
+    "=terrapin"
+   ]
+  },
+  "kit-tractor": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-tractor.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 2044,
+   "bytes": 97184,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "=tractor",
+    "=tractors"
+   ]
+  },
+  "kit-train": {
+   "pack": "kenney-train-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-train.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1426,
+   "bytes": 84280,
+   "wheels": 2,
+   "spinners": 0,
+   "names": [
+    "=train",
+    "=trains",
+    "freight train",
+    "diesel train"
+   ]
+  },
+  "kit-tram": {
+   "pack": "kenney-train-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-tram.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1332,
+   "bytes": 81732,
+   "wheels": 2,
+   "spinners": 0,
+   "names": [
+    "=tram",
+    "=trams",
+    "=streetcar",
+    "=trolley"
+   ]
+  },
+  "kit-treasure-chest": {
+   "pack": "kenney-pirate-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-treasure-chest.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "open",
+    "close",
+    "open-close"
+   ],
+   "actions": [
+    "present"
+   ],
+   "triangles": 232,
+   "bytes": 30988,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "treasure chest",
+    "=treasure"
+   ]
+  },
+  "kit-trebuchet": {
+   "pack": "kenney-castle-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-trebuchet.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1326,
+   "bytes": 79492,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "=trebuchet",
+    "=trebuchets"
+   ]
+  },
+  "kit-tree-frog": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-tree-frog.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "its feet leave the ground as it walks (0.303 of its leg)",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1570,
+   "bytes": 47176,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "tree frog"
+   ]
+  },
+  "kit-truck": {
+   "pack": "kenney-car-kit",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-truck.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 1418,
+   "bytes": 73784,
+   "wheels": 4,
+   "spinners": 0,
+   "names": [
+    "=truck",
+    "=trucks",
+    "=lorry",
+    "=lorries"
+   ]
+  },
+  "kit-tugboat": {
+   "pack": "kenney-watercraft",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-tugboat.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 471,
+   "bytes": 34788,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=tugboat",
+    "=tug",
+    "tug boat"
+   ]
+  },
+  "kit-turkey": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-turkey.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its feet are not apart along its body (0.08 of its length); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1122,
+   "bytes": 33344,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=turkey",
+    "=turkeys"
+   ]
+  },
+  "kit-unicorn": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-unicorn.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1302,
+   "bytes": 62708,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=unicorn",
+    "=unicorns"
+   ]
+  },
+  "kit-walrus": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-walrus.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "quadruped: its belly touches the ground (0.01 of its height); serpent: it is not long and low; bird: its wings are not spread",
+   "clips": [],
+   "actions": [
+    "idle",
+    "look_around",
+    "walk",
+    "run",
+    "eat",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 1126,
+   "bytes": 32284,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=walrus",
+    "=walruses"
+   ]
+  },
+  "kit-wasp": {
+   "pack": "quaternius-creatures",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-wasp.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "WaspArmature|Wasp_Attack",
+    "WaspArmature|Wasp_Death",
+    "WaspArmature|Wasp_Flying"
+   ],
+   "actions": [
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "fly"
+   ],
+   "triangles": 3734,
+   "bytes": 428736,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=wasp",
+    "=wasps",
+    "=hornet"
+   ]
+  },
+  "kit-water-tower": {
+   "pack": "quaternius-farm",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-water-tower.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 2507,
+   "bytes": 125444,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "water tower"
+   ]
+  },
+  "kit-well": {
+   "pack": "quaternius-farm",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-well.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "present"
+   ],
+   "triangles": 2878,
+   "bytes": 157364,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "wishing well",
+    "water well"
+   ]
+  },
+  "kit-whale": {
+   "pack": "quaternius-fish",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-whale.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Swim"
+   ],
+   "actions": [
+    "swim"
+   ],
+   "triangles": 447,
+   "bytes": 65040,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=whale",
+    "=whales",
+    "humpback",
+    "blue whale"
+   ]
+  },
+  "kit-wheelchair": {
+   "pack": "kenney-prototype",
+   "licence": "CC0",
+   "author": "Kenney",
+   "file": "kit-wheelchair.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "drive",
+    "race",
+    "approach",
+    "depart",
+    "crash"
+   ],
+   "triangles": 296,
+   "bytes": 29380,
+   "wheels": 3,
+   "spinners": 0,
+   "names": [
+    "=wheelchair"
+   ]
+  },
+  "kit-white-tiger": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-white-tiger.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1292,
+   "bytes": 57740,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "white tiger"
+   ]
+  },
+  "kit-wild-horse": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-wild-horse.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1224,
+   "bytes": 53696,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "wild horse",
+    "=mustang",
+    "przewalski"
+   ]
+  },
+  "kit-wildebeest": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-wildebeest.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1602,
+   "bytes": 64448,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=wildebeest",
+    "=gnu"
+   ]
+  },
+  "kit-windmill": {
+   "pack": "quaternius-farm",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-windmill.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "none",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [],
+   "actions": [
+    "fly",
+    "move"
+   ],
+   "triangles": 1440,
+   "bytes": 79364,
+   "wheels": 0,
+   "spinners": 1,
+   "names": [
+    "=windmill",
+    "=windmills"
+   ]
+  },
+  "kit-wolf": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-wolf.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "quadruped",
+   "rig_note": "",
+   "clips": [
+    "Walk",
+    "Run",
+    "Idle",
+    "Eat",
+    "Attack",
+    "Sleep"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "idle",
+    "look_around",
+    "eat",
+    "graze",
+    "drink",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "sleep",
+    "lie",
+    "die",
+    "fall"
+   ],
+   "triangles": 1248,
+   "bytes": 56376,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=wolf",
+    "=wolves",
+    "grey wolf",
+    "gray wolf"
+   ]
+  },
+  "kit-worm": {
+   "pack": "everything-animals",
+   "licence": "by",
+   "author": "David OReilly",
+   "file": "kit-worm.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "auto",
+   "rig_type": "serpent",
+   "rig_note": "",
+   "clips": [
+    "Move",
+    "Swim",
+    "Idle"
+   ],
+   "actions": [
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "swim",
+    "idle",
+    "look_around",
+    "fall",
+    "lie",
+    "sleep",
+    "die"
+   ],
+   "triangles": 608,
+   "bytes": 27308,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=earthworm",
+    "=worm",
+    "=worms"
+   ]
+  },
+  "kit-yeti": {
+   "pack": "quaternius-monsters",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-yeti.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Death",
+    "Duck",
+    "HitReact",
+    "Idle",
+    "Jump",
+    "Jump_Idle",
+    "Jump_Land",
+    "No",
+    "Punch",
+    "Run",
+    "Walk",
+    "Wave",
+    "Weapon",
+    "Yes"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "attack",
+    "fight",
+    "hunt",
+    "roar",
+    "idle",
+    "look_around",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry",
+    "wave",
+    "greet",
+    "cheer"
+   ],
+   "triangles": 6094,
+   "bytes": 525988,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=yeti",
+    "=bigfoot",
+    "=sasquatch"
+   ]
+  },
+  "kit-zebra": {
+   "pack": "Quaternius Farm Animals",
+   "licence": "CC0",
+   "author": "Quaternius",
+   "file": "kit-zebra.glb",
+   "ok": true,
+   "reason": "",
+   "rig": "native",
+   "rig_type": "",
+   "rig_note": "",
+   "clips": [
+    "Armature|Death",
+    "Armature|Idle",
+    "Armature|Jump",
+    "Armature|Run",
+    "Armature|Walk",
+    "Armature|WalkSlow"
+   ],
+   "actions": [
+    "eat",
+    "graze",
+    "drink",
+    "sleep",
+    "lie",
+    "die",
+    "idle",
+    "look_around",
+    "run",
+    "charge",
+    "chase",
+    "flee",
+    "walk",
+    "approach",
+    "depart",
+    "wander",
+    "follow",
+    "carry"
+   ],
+   "triangles": 1354,
+   "bytes": 362388,
+   "wheels": 0,
+   "spinners": 0,
+   "names": [
+    "=zebra",
+    "=zebras"
+   ]
+  }
+ },
+ "pieces": {
+  "commercial-building-a.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1252,
+   "bytes": 43888,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-b.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1276,
+   "bytes": 44056,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-c.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1195,
+   "bytes": 40448,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-d.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1100,
+   "bytes": 38160,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-e.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1509,
+   "bytes": 53628,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-f.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1794,
+   "bytes": 59360,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-g.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 2006,
+   "bytes": 67592,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-h.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1512,
+   "bytes": 51028,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-i.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 2544,
+   "bytes": 86904,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-j.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 5246,
+   "bytes": 162856,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-k.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 2960,
+   "bytes": 97600,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-l.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 3512,
+   "bytes": 111536,
+   "places": [
+    "city:building"
+   ]
+  },
+  "commercial-building-skyscraper-a.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1292,
+   "bytes": 49204,
+   "places": [
+    "city:tall"
+   ]
+  },
+  "commercial-building-skyscraper-b.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1592,
+   "bytes": 60296,
+   "places": [
+    "city:tall"
+   ]
+  },
+  "commercial-building-skyscraper-c.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1704,
+   "bytes": 61276,
+   "places": [
+    "city:tall"
+   ]
+  },
+  "commercial-building-skyscraper-d.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1892,
+   "bytes": 69516,
+   "places": [
+    "city:tall"
+   ]
+  },
+  "commercial-building-skyscraper-e.glb": {
+   "pack": "commercial",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1156,
+   "bytes": 45140,
+   "places": [
+    "city:tall"
+   ]
+  },
+  "factory-box-large.glb": {
+   "pack": "factory",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 70,
+   "bytes": 7876,
+   "places": [
+    "factory:prop"
+   ]
+  },
+  "factory-conveyor-long.glb": {
+   "pack": "factory",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 196,
+   "bytes": 10420,
+   "places": [
+    "factory:prop"
+   ]
+  },
+  "factory-crane.glb": {
+   "pack": "factory",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 564,
+   "bytes": 23400,
+   "places": [
+    "factory:prop"
+   ]
+  },
+  "factory-hopper-high-square.glb": {
+   "pack": "factory",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 120,
+   "bytes": 9832,
+   "places": [
+    "factory:prop"
+   ]
+  },
+  "factory-hopper-round.glb": {
+   "pack": "factory",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 144,
+   "bytes": 9196,
+   "places": [
+    "factory:prop"
+   ]
+  },
+  "factory-machine-fortified.glb": {
+   "pack": "factory",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 320,
+   "bytes": 16124,
+   "places": [
+    "factory:prop"
+   ]
+  },
+  "factory-machine-window.glb": {
+   "pack": "factory",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 428,
+   "bytes": 19208,
+   "places": [
+    "factory:prop"
+   ]
+  },
+  "factory-machine.glb": {
+   "pack": "factory",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 268,
+   "bytes": 14384,
+   "places": [
+    "factory:prop"
+   ]
+  },
+  "holiday-rocks-large.glb": {
+   "pack": "holiday",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 696,
+   "bytes": 20700,
+   "places": [
+    "snow:rock"
+   ]
+  },
+  "holiday-rocks-medium.glb": {
+   "pack": "holiday",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 330,
+   "bytes": 13072,
+   "places": [
+    "snow:rock"
+   ]
+  },
+  "holiday-snow-pile.glb": {
+   "pack": "holiday",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 132,
+   "bytes": 8744,
+   "places": [
+    "snow:grass"
+   ]
+  },
+  "holiday-tree-snow-a.glb": {
+   "pack": "holiday",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 378,
+   "bytes": 15520,
+   "places": [
+    "snow:tree"
+   ]
+  },
+  "holiday-tree-snow-b.glb": {
+   "pack": "holiday",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 374,
+   "bytes": 14204,
+   "places": [
+    "snow:tree"
+   ]
+  },
+  "holiday-tree-snow-c.glb": {
+   "pack": "holiday",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 234,
+   "bytes": 11772,
+   "places": [
+    "snow:tree"
+   ]
+  },
+  "nature-bush-common.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 900,
+   "bytes": 95804,
+   "places": [
+    "farm:bush",
+    "forest:bush",
+    "grassland:bush",
+    "lake:bush",
+    "river:bush"
+   ]
+  },
+  "nature-commontree-1.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 5829,
+   "bytes": 360856,
+   "places": [
+    "farm:tree",
+    "forest:tree",
+    "grassland:tree",
+    "lake:tree",
+    "road:tree"
+   ]
+  },
+  "nature-commontree-2.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 5159,
+   "bytes": 322444,
+   "places": [
+    "forest:tree",
+    "grassland:tree",
+    "railway:tree",
+    "river:tree"
+   ]
+  },
+  "nature-commontree-3.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 3070,
+   "bytes": 237476,
+   "places": [
+    "forest:tree",
+    "lake:tree",
+    "river:tree"
+   ]
+  },
+  "nature-commontree-4.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 3792,
+   "bytes": 262892,
+   "places": [
+    "forest:tree",
+    "river:tree"
+   ]
+  },
+  "nature-commontree-5.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 2924,
+   "bytes": 235172,
+   "places": [
+    "airfield:tree",
+    "farm:tree",
+    "grassland:tree",
+    "railway:tree",
+    "road:tree"
+   ]
+  },
+  "nature-deadtree-1.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 5565,
+   "bytes": 266216,
+   "places": [
+    "swamp:tree"
+   ]
+  },
+  "nature-deadtree-2.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 5977,
+   "bytes": 285600,
+   "places": [
+    "swamp:tree"
+   ]
+  },
+  "nature-deadtree-3.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 5349,
+   "bytes": 266040,
+   "places": [
+    "swamp:tree"
+   ]
+  },
+  "nature-deadtree-4.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 5189,
+   "bytes": 255672,
+   "places": [
+    "desert:tree",
+    "swamp:tree"
+   ]
+  },
+  "nature-deadtree-5.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 5109,
+   "bytes": 250128,
+   "places": [
+    "desert:tree",
+    "swamp:tree"
+   ]
+  },
+  "nature-fern-1.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 288,
+   "bytes": 300436,
+   "places": [
+    "forest:bush",
+    "forest:grass",
+    "river:bush",
+    "swamp:bush"
+   ]
+  },
+  "nature-flower-3-group.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 755,
+   "bytes": 512852,
+   "places": [
+    "farm:grass",
+    "grassland:grass"
+   ]
+  },
+  "nature-flower-4-group.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1499,
+   "bytes": 535008,
+   "places": [
+    "grassland:grass",
+    "river:grass"
+   ]
+  },
+  "nature-grass-common-short.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 155,
+   "bytes": 10656,
+   "places": [
+    "airfield:grass",
+    "farm:grass",
+    "grassland:grass",
+    "railway:grass",
+    "road:grass"
+   ]
+  },
+  "nature-grass-common-tall.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 326,
+   "bytes": 15284,
+   "places": [
+    "forest:grass",
+    "grassland:grass",
+    "lake:grass",
+    "river:grass",
+    "swamp:grass"
+   ]
+  },
+  "nature-grass-wispy-short.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 494,
+   "bytes": 22432,
+   "places": [
+    "farm:grass",
+    "lake:grass",
+    "mountain:grass",
+    "road:grass"
+   ]
+  },
+  "nature-grass-wispy-tall.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 622,
+   "bytes": 25244,
+   "places": [
+    "forest:grass",
+    "grassland:grass",
+    "mountain:grass",
+    "railway:grass",
+    "river:grass",
+    "swamp:grass"
+   ]
+  },
+  "nature-mushroom-common.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 880,
+   "bytes": 59572,
+   "places": [
+    "forest:grass"
+   ]
+  },
+  "nature-mushroom-laetiporus.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1500,
+   "bytes": 70760,
+   "places": [
+    "swamp:grass"
+   ]
+  },
+  "nature-pine-1.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 3403,
+   "bytes": 193652,
+   "places": [
+    "forest:tree",
+    "lake:tree",
+    "mountain:tree",
+    "railway:tree"
+   ]
+  },
+  "nature-pine-2.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 3149,
+   "bytes": 183524,
+   "places": [
+    "forest:tree",
+    "grassland:tree",
+    "mountain:tree",
+    "river:tree",
+    "road:tree"
+   ]
+  },
+  "nature-pine-3.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 4379,
+   "bytes": 236924,
+   "places": [
+    "forest:tree",
+    "lake:tree",
+    "mountain:tree"
+   ]
+  },
+  "nature-pine-4.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 2847,
+   "bytes": 177888,
+   "places": [
+    "forest:tree",
+    "river:tree"
+   ]
+  },
+  "nature-pine-5.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1499,
+   "bytes": 107936,
+   "places": [
+    "mountain:tree"
+   ]
+  },
+  "nature-plant-1-big.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 360,
+   "bytes": 303688,
+   "places": [
+    "forest:bush",
+    "lake:bush"
+   ]
+  },
+  "nature-plant-7-big.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 112,
+   "bytes": 295964,
+   "places": [
+    "forest:bush",
+    "river:bush",
+    "swamp:bush"
+   ]
+  },
+  "nature-rock-medium-1.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 342,
+   "bytes": 46640,
+   "places": [
+    "forest:rock",
+    "grassland:rock",
+    "mountain:rock",
+    "river:rock"
+   ]
+  },
+  "nature-rock-medium-2.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 244,
+   "bytes": 44008,
+   "places": [
+    "farm:rock",
+    "forest:rock",
+    "grassland:rock",
+    "lake:rock",
+    "mountain:rock"
+   ]
+  },
+  "nature-rock-medium-3.glb": {
+   "pack": "nature",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 522,
+   "bytes": 51320,
+   "places": [
+    "forest:rock",
+    "lake:rock",
+    "mountain:rock",
+    "river:rock"
+   ]
+  },
+  "pirate-barrel.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 148,
+   "bytes": 9316,
+   "places": [
+    "beach:prop"
+   ]
+  },
+  "pirate-boat-row-small.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 168,
+   "bytes": 11260,
+   "places": [
+    "beach:prop"
+   ]
+  },
+  "pirate-grass-plant.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 144,
+   "bytes": 9824,
+   "places": [
+    "beach:grass"
+   ]
+  },
+  "pirate-palm-bend.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 338,
+   "bytes": 13864,
+   "places": [
+    "beach:tree"
+   ]
+  },
+  "pirate-palm-detailed-bend.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 482,
+   "bytes": 18596,
+   "places": [
+    "beach:tree"
+   ]
+  },
+  "pirate-palm-detailed-straight.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 482,
+   "bytes": 18564,
+   "places": [
+    "beach:tree"
+   ]
+  },
+  "pirate-palm-straight.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 338,
+   "bytes": 13852,
+   "places": [
+    "beach:tree"
+   ]
+  },
+  "pirate-rocks-sand-a.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 552,
+   "bytes": 21080,
+   "places": [
+    "beach:rock",
+    "desert:rock"
+   ]
+  },
+  "pirate-rocks-sand-b.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 516,
+   "bytes": 20220,
+   "places": [
+    "beach:rock",
+    "desert:rock"
+   ]
+  },
+  "pirate-rocks-sand-c.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 448,
+   "bytes": 18136,
+   "places": [
+    "beach:rock"
+   ]
+  },
+  "pirate-structure-platform-dock.glb": {
+   "pack": "pirate",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 324,
+   "bytes": 17468,
+   "places": [
+    "beach:prop"
+   ]
+  },
+  "roads-construction-cone.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 66,
+   "bytes": 7384,
+   "places": [
+    "airfield:prop"
+   ]
+  },
+  "roads-dumpster.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 234,
+   "bytes": 13696,
+   "places": [
+    "city:prop"
+   ]
+  },
+  "roads-electricity-pole-single.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 176,
+   "bytes": 9844,
+   "places": [
+    "railway:prop"
+   ]
+  },
+  "roads-electricity-pole.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 416,
+   "bytes": 15224,
+   "places": [
+    "road:prop"
+   ]
+  },
+  "roads-light-curved.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 92,
+   "bytes": 8540,
+   "places": [
+    "town:prop"
+   ]
+  },
+  "roads-light-square.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 60,
+   "bytes": 7632,
+   "places": [
+    "city:prop"
+   ]
+  },
+  "roads-road-sign-street.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 154,
+   "bytes": 10312,
+   "places": [
+    "town:prop"
+   ]
+  },
+  "roads-road-sign-warning.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 104,
+   "bytes": 8868,
+   "places": [
+    "road:prop"
+   ]
+  },
+  "roads-road-straight.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 44,
+   "bytes": 7228,
+   "places": [
+    "city:street",
+    "road:street",
+    "town:street"
+   ]
+  },
+  "roads-sign-highway.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 180,
+   "bytes": 11316,
+   "places": [
+    "road:prop"
+   ]
+  },
+  "roads-traffic-light.glb": {
+   "pack": "roads",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 212,
+   "bytes": 12144,
+   "places": [
+    "city:prop"
+   ]
+  },
+  "station-bed-single-cover.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 44,
+   "bytes": 6656,
+   "places": [
+    "hospital:prop"
+   ]
+  },
+  "station-chair-cushion.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 74,
+   "bytes": 7448,
+   "places": [
+    "room:prop"
+   ]
+  },
+  "station-computer-screen.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 198,
+   "bytes": 11752,
+   "places": [
+    "hospital:prop"
+   ]
+  },
+  "station-computer-system.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 176,
+   "bytes": 10792,
+   "places": [
+    "lab:prop"
+   ]
+  },
+  "station-computer-wide.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 174,
+   "bytes": 10960,
+   "places": [
+    "lab:prop"
+   ]
+  },
+  "station-computer.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 140,
+   "bytes": 9552,
+   "places": [
+    "lab:prop"
+   ]
+  },
+  "station-container-tall.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 116,
+   "bytes": 9308,
+   "places": [
+    "lab:prop"
+   ]
+  },
+  "station-container.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 88,
+   "bytes": 7700,
+   "places": [
+    "room:prop"
+   ]
+  },
+  "station-table-display.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 240,
+   "bytes": 14288,
+   "places": [
+    "lab:prop"
+   ]
+  },
+  "station-table-large.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 104,
+   "bytes": 8120,
+   "places": [
+    "room:prop"
+   ]
+  },
+  "station-table.glb": {
+   "pack": "station",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 104,
+   "bytes": 8104,
+   "places": [
+    "hospital:prop"
+   ]
+  },
+  "suburban-building-type-a.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1174,
+   "bytes": 38464,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-b.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1748,
+   "bytes": 54912,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-c.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1196,
+   "bytes": 40056,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-d.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1757,
+   "bytes": 56088,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-e.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1731,
+   "bytes": 54552,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-f.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1616,
+   "bytes": 53396,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-g.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1067,
+   "bytes": 34844,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-h.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 770,
+   "bytes": 28436,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-k.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1024,
+   "bytes": 35244,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-m.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1112,
+   "bytes": 37796,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-p.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1282,
+   "bytes": 43172,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-building-type-s.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 1212,
+   "bytes": 42072,
+   "places": [
+    "town:building"
+   ]
+  },
+  "suburban-planter.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 204,
+   "bytes": 10496,
+   "places": [
+    "town:prop"
+   ]
+  },
+  "suburban-tree-large.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 42,
+   "bytes": 7028,
+   "places": [
+    "town:tree"
+   ]
+  },
+  "suburban-tree-small.glb": {
+   "pack": "suburban",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 42,
+   "bytes": 7028,
+   "places": [
+    "town:tree"
+   ]
+  },
+  "survival-barrel.glb": {
+   "pack": "survival",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 412,
+   "bytes": 16040,
+   "places": [
+    "airfield:prop"
+   ]
+  },
+  "survival-rock-sand-a.glb": {
+   "pack": "survival",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 92,
+   "bytes": 8932,
+   "places": [
+    "desert:rock"
+   ]
+  },
+  "survival-rock-sand-b.glb": {
+   "pack": "survival",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 180,
+   "bytes": 12460,
+   "places": [
+    "desert:rock"
+   ]
+  },
+  "survival-rock-sand-c.glb": {
+   "pack": "survival",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 144,
+   "bytes": 11084,
+   "places": [
+    "desert:rock"
+   ]
+  },
+  "town-cart.glb": {
+   "pack": "town",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 416,
+   "bytes": 20160,
+   "places": [
+    "farm:prop"
+   ]
+  },
+  "town-fence.glb": {
+   "pack": "town",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 84,
+   "bytes": 8480,
+   "places": [
+    "farm:prop"
+   ]
+  },
+  "train-railroad-straight.glb": {
+   "pack": "train",
+   "licence": "CC0",
+   "ok": true,
+   "triangles": 376,
+   "bytes": 18200,
+   "places": [
+    "railway:rail"
+   ]
+  }
+ },
+ "unnamed": [],
+ "missing": [],
+ "duplicates": [
+  [
+   "kit-doberman.glb",
+   "kit-dog.glb"
+  ]
+ ]
+}

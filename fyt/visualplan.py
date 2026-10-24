@@ -32,6 +32,10 @@ CONVERTIBLE = ("statement", "title", "broll", "story", "world", "aircraft", "shi
 # A process scene's steps are only worth giving up for a 3D scene that acts the process out (the helix
 # unzipping); the keyword planner leaves it alone otherwise.
 ACTED_ONLY = ("process",)
+# Scenes whose figures can ride over a 3D scene of the story (a count-up, a share, a list, dated events
+# on a plate): 3D first fills with them once the narrative scenes are in. Maps, charts, quotes,
+# documents and real photos carry what a 3D scene can't, and stay.
+OVERLAYS = ("stat", "proportion", "list", "timeline")
 WORDS_PER_SECOND = {"short": 2.9, "long": 2.6}
 # The setting a scene's own words point to, checked in this order (night first: it changes the look most).
 SETTING_WORDS = {
@@ -63,6 +67,7 @@ class Reconstruction(BaseModel):
     subject_name: str | None = Field(default=None, description="A short name for the thing shown; the same name in every scene that shows it.")
     priority: int = Field(default=2, description="1 = the story needs this moment seen, 3 = nice to have.")
     backdrop: SkipJsonSchema[str | None] = None  # a stage scene: the place it happens, painted behind it
+    overlay: SkipJsonSchema[str | None] = None  # a data scene acted out in 3D: its template, drawn over it
     # Shows a manifest entity in a scene the manifest checked it is in (fyt.manifest.checked): that, not
     # the catalog's keywords in the scene's own words, is what grounds it ("its sails half-raised").
     in_story: SkipJsonSchema[bool] = False
@@ -228,7 +233,7 @@ def apply(script: Script, plan: list[Reconstruction], notes: str = "") -> tuple[
     story = " ".join([script.title] + [s.narration for s in script.scenes])
     for r in sorted(plan, key=lambda r: r.scene):
         k = r.scene - 1
-        if not (0 <= k < len(scenes)) or not convertible(scenes[k]) or k in ranked:
+        if not (0 <= k < len(scenes)) or k in ranked or not (convertible(scenes[k]) or (r.overlay and scenes[k].type == r.overlay)):
             continue
         old = scenes[k]
         if old.type not in ("world", "aircraft", "ship") and r.subject in scenes3d.subjects() and r.subject != "stage":
@@ -253,7 +258,7 @@ def apply(script: Script, plan: list[Reconstruction], notes: str = "") -> tuple[
             "shot": r.shot, "setting": r.setting, "weather": r.weather, "effect": r.effect, "effect_x": r.effect_x,
             "cue": r.cue, "subject_name": r.subject_name, "image": None, "broll_query": None, "actors": None,
             "backdrop": r.backdrop, "maneuver": None, "vessel": None, "ship_action": None,
-            "fallback": old.model_dump(exclude_none=True),
+            "fallback": old.model_dump(exclude_none=True), "overlay": r.overlay,
             "heading": old.heading or (old.text if old.type == "title" else None),
         })
         ranked[k] = max(1, min(3, r.priority))
@@ -410,6 +415,74 @@ def stage_plan(script: Script, story: Manifest, taken: set[int], modules: bool =
     return out
 
 
+def fill(cfg: Config, script: Script, story: Manifest, recon: list[Reconstruction]) -> list[Reconstruction]:
+    """3D first: stage scenes of the story's own cast for scenes the plan left in 2D, until 3D carries
+    `visuals.world_share` of the runtime. Narrative scenes go first, then stat, proportion, list and
+    timeline scenes, which keep their figures drawn over the 3D scene; a scene goes only when the
+    manifest lists an entity in it to show (never a stock stand-in), its moment's motion when it has one.
+    Ranked below the story's own moments, so the render budget drops these first."""
+    from fyt import worldgen
+
+    scenes = script.scenes
+    total = sum(seconds(cfg, s) for s in scenes) or 1.0
+    taken = {r.scene for r in recon} | {i for i, s in enumerate(scenes, 1) if s.type in ("world", "aircraft", "ship")}
+    have = sum(seconds(cfg, scenes[k - 1]) for k in taken if 1 <= k <= len(scenes))
+    settings = scenes3d.subjects()["stage"]["settings"]
+    picks = []
+    for i, s in enumerate(scenes, 1):
+        data = s.type in OVERLAYS
+        if i in taken or not (convertible(s) or data):
+            continue
+        moment = next((m for m in story.moments if m.scene == i and manifest.entity(story, m.entity)), None)
+        ents = [e for e in manifest.in_scene(story, i) if not worldgen.is_place(e)]
+        # the moment's entity, else the first entity in the scene that can move in it
+        lead = next((e.id for e in ([manifest.entity(story, moment.entity)] if moment else []) + ents if _moves(s, e, moment, story, i)), None)
+        if lead is None:
+            continue  # a 3D scene where nothing would move is a still picture: the 2D scene says more
+        picks.append(((1 if data else 0, 0 if moment and moment.documented else 1, i), i, s, moment, lead))
+    out: list[Reconstruction] = []
+    for _, i, s, moment, lead in sorted(picks):
+        if have / total >= cfg.visuals.world_share(cfg.format):
+            break
+        p = manifest.place(story, moment.place) if moment and moment.place else next((x for x in story.places if i in x.scenes), None)
+        where = f"{p.name}, {p.look}" if p else ""
+        out.append(Reconstruction(
+            scene=i, subject="stage", variant="model", action=moment.motion if moment else "present",
+            shot=STAGE_SHOTS[(len(recon) + len(out)) % len(STAGE_SHOTS)],
+            setting=_setting(f"{s.narration} {where}", settings) or ("countryside" if p else "room"),
+            cue=(moment.cue if moment else None) or None, subject_name=lead, backdrop=where or None, priority=3,
+            overlay=s.type if s.type in OVERLAYS else None, in_story=True,
+        ))
+        have += seconds(cfg, s)
+    return out
+
+
+WATER = ("river", "lake", "sea", "ocean", "water", "harbour", "harbor", "bay", "beach", "coast", "swamp", "waterfall")
+
+
+def _moves(s: ScriptScene, e: manifest.Entity, moment: manifest.Moment | None, story: Manifest, scene: int) -> bool:
+    """Whether a 3D scene of this entity would show something moving: its moment's motion, a living thing
+    or a vehicle the narration doesn't say is dead, stuffed, on show or stopped, or water around it."""
+    from fyt import worldgen
+
+    if moment and moment.entity == e.id and moment.motion not in ("present", ""):
+        return True
+    still = scenes3d.find(s.narration, list(worldgen.STILL))
+    arche = worldgen.archetype_of(e)
+    if not still and arche in worldgen.LIVING:
+        return True
+    if not still and arche == "vehicle" and not scenes3d.find(s.narration, list(worldgen.LANDED) + ["parked", "abandoned", "crash"]):
+        return True
+    p = manifest.place(story, moment.place) if moment and moment.place else next((x for x in story.places if scene in x.scenes), None)
+    return bool(p) and scenes3d.find(f"{p.name} {p.look}", list(WATER))
+
+
+def share(cfg: Config, script: Script) -> float:
+    """The share of a script's runtime drawn in 3D."""
+    total = sum(seconds(cfg, s) for s in script.scenes) or 1.0
+    return sum(seconds(cfg, s) for s in script.scenes if kind(s) == "3D") / total
+
+
 def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None] = print,
          story: Manifest | None = None) -> tuple[Script, dict]:
     """Give the script its visual plan. Returns the planned script and a report of what was decided.
@@ -421,6 +494,7 @@ def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None
         log(f"visual planner unavailable ({e}); planning from the catalog's keywords")
         planner, recon = "rules", rule_plan(script, notes)
     off_story: list[dict] = []
+    filled: list[Reconstruction] = []
     recon = [r for r in recon if r.subject != "stage"]  # stage scenes come from the manifest only
     if story is not None:
         recon, off_story = story_fit(script, story, recon)
@@ -428,6 +502,9 @@ def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None
             # every entity is drawn by its story world's generators, not a catalog module
             recon = [as_stage(script, story, r, n) if manifest.entity(story, r.subject_name) else r for n, r in enumerate(recon)]
         recon += stage_plan(script, story, {r.scene for r in recon}, modules=not cfg.visuals.story_worlds)
+        if cfg.visuals.story_worlds:
+            filled = fill(cfg, script, story, recon)
+            recon += filled
     planned, ranked = apply(script, recon, notes)
     planned, dropped = within_budget(cfg, script, planned, ranked)
     planned = assets.resolve(planned)
@@ -436,9 +513,12 @@ def plan(cfg: Config, script: Script, notes: str = "", log: Callable[[str], None
         "budget_seconds": cfg.visuals.world_seconds(cfg.format),
         "world_seconds": round(sum(seconds(cfg, s) for s in planned.scenes if s.type == "world"), 1),
         "dropped_for_budget": [k + 1 for k in dropped],
+        "target_share": cfg.visuals.world_share(cfg.format),
+        "world_share": round(share(cfg, planned), 3),
+        "filled": sorted(r.scene for r in filled if planned.scenes[r.scene - 1].type == "world"),
         "off_story": off_story,
         "scenes": [
-            {"scene": i, "type": s.type, "kind": kind(s)}
+            {"scene": i, "type": s.type, "kind": kind(s)} | ({"overlay": s.overlay} if s.overlay else {})
             | ({"subject": s.subject, "variant": s.variant, "action": s.action, "setting": s.setting, "weather": s.weather,
                 "cue": s.cue, "illustrative": s.illustrative, "label": s.label,
                 "model": {k: (s.model or {}).get(k) for k in ("id", "level", "title")}} if s.type == "world" else {})
@@ -453,7 +533,8 @@ def summary(report: dict) -> str:
     world = [s for s in report["scenes"] if s["type"] == "world"]
     parts = [f"{kinds.count(k)} {k}" for k in ("3D", "2.5D", "2D") if kinds.count(k)]
     acts = ", ".join(f"{s['subject']} {s['action']}" for s in world[:6]) + ("..." if len(world) > 6 else "")
-    return f"visual plan ({report['planner']}): " + ", ".join(parts) + (f"; 3D: {acts}" if world else "")
+    cover = f" ({report['world_share']:.0%} of the runtime in 3D, aiming for {report['target_share']:.0%})" if "world_share" in report else ""
+    return f"visual plan ({report['planner']}): " + ", ".join(parts) + cover + (f"; 3D: {acts}" if world else "")
 
 
 def dumps(report: dict) -> str:

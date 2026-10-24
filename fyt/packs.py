@@ -12,7 +12,7 @@ import tempfile
 import zipfile
 from pathlib import Path
 
-from fyt import kit
+from fyt import assets, kit, rigging
 
 PICKS = kit.BUNDLED.parent / "library-picks.json"
 ORDER = (".glb", ".gltf", ".fbx")
@@ -48,7 +48,7 @@ def _model(root: Path, stem: str, within: str = "") -> Path | None:
     return found[0] if found else None
 
 
-def _from_scene(pack_dir: Path, scene: str, node: str, child: int, srgb: bool = False) -> Path | None:
+def _from_scene(pack_dir: Path, scene: str, node: str, child: int | str, srgb: bool = False) -> Path | None:
     """One model out of a pack that is a single scene of many (renderer/split-model.mjs): the scene
     converted once, then just the named node (or one of its variants) written beside it."""
     import subprocess
@@ -101,6 +101,10 @@ def import_picks(folders: list[Path], picks: Path = PICKS, only: str = "") -> di
             except Exception as e:  # noqa: BLE001 - one model failing leaves the rest
                 out[key] = f"failed: {str(e)[:160]}"
                 continue
+            if extra.get("posed") and not made["clips"]:
+                # a still animal is rigged from its shape so it can walk, eat and lie down (fyt/rigging.py)
+                got = rigging.rig(assets.MODELS_DIR / made["src"], kind=extra.get("rig_as", "auto"))
+                made |= {"clips": got["clips"], "rig": "auto", "rig_type": got["type"]} if got.get("ok") else {"rig": "none", "rig_note": got.get("reason", "")[:200]}
             entries[key] = {"kind": "library", "subject": "library", "variant": stem.lower(), "names": names,
                             "title": f"{stem} ({pid})", "source": pack["source"], "licence": pack.get("licence", "CC0"), "author": pack["author"]} | extra | made
             out[key] = f"{len(made['clips'])} clips" if made["clips"] else "still"

@@ -101,6 +101,7 @@ export type Scene = {
   lines?: DialogueLine[] | null; // dialogue scenes
   setting?: Setting | null; // story scenes
   backdropSrc?: string | null; // story scenes: an illustrated plate, drawn over the setting
+  overlay?: "stat" | "proportion" | "list" | "timeline" | null; // world scenes: that template's figures drawn over the 3D scene
   world?: World | null; // stage scenes: the story world generated for this story (fyt/worldgen.py)
   actors?: Actor[] | null;
   effect?: Effect | null;
