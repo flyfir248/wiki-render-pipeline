@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "marsh",
+  "query": "marsh",
+  "source": "objaverse",
+  "uid": "sketchfab:34299f4a63d44fca8427bbad0d66ed6f",
+  "title": "Marsh marigold flowers low-poly",
+  "author": "Elena FF",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-34299f4a63d44fca8427bbad0d66ed6f",
+  "checked": "vision",
+  "triangles": 3006,
+  "bytes": 2996912,
+  "size": [
+    0.7796,
+    0.6172,
+    0.6401
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "flat wetland, reeds, shallow water, overcast sky",
+  "added": "2026-10-24T22:58:41+00:00"
+}
