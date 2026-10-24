@@ -1,0 +1,11 @@
+{
+  "checked": [
+    4,
+    7
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "4": "frame check: The scene does not show a female American black bear, but a forest with trees, rocks, and animals, including a wolf and a deer.",
+    "7": "frame check: The frame shows a bear walking, not taxidermied and behind glass."
+  }
+}

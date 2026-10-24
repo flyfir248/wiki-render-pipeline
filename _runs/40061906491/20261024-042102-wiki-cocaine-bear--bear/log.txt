@@ -1,0 +1,35 @@
+fetching Wikipedia article
+1 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 52% slower than average, 17 scenes); quote (lost viewers 47% slower than average, 11 scenes); timeline (lost viewers 31% slower than average, 9 scenes); map (lost viewers 28% slower than average, 17 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 67% faster than average, 28 scenes); broll (lost viewers 97% faster than average, 9 scenes). On average 92% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene 2 and 3 needed clearer link between drop location and bear death.
+checking facts against the source
+facts check out
+reading the story: what it shows
+story: cocaine powder, the female American black bear, the taxidermied bear; 4 moments
+planning the visuals
+visual plan (model): 2 3D, 2 2.5D, 4 2D; 3D: stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: 'Vintage Cocaine Bottle FREE Low Poly' (objaverse) is not a cocaine: Shows a bottle, not the powder itself.
+assets: 'FREE DRUGS' (objaverse) is not a cocaine: Shows a small object, not white crystalline powder.
+assets: generating cocaine powder in 3D with microsoft/TRELLIS.2
+assets: cocaine powder -> 'cocaine (generated)' from generated (generated, 118408 triangles, 0 animations)
+building the story world: 3 entities for 2 scenes
+story world (lowpoly): cast model, sets model, direction model; cocaine as object, bear as quadruped, taxidermied-bear as quadruped
+voicing 8 scenes with kokoro
+fetching visuals
+visuals: 5 Wikipedia/Commons images, 0 stock, 3 scenes on plain background
+photo shot2-1.jpg left out: The photo does not show a bear, a bear's corpse, or a related scene.
+cutaways: 2 extra photos across 2 scenes
+collage: 7 photos styled, 3 with a cut-out subject
+relevance: checking 2 3D scenes by eye
+scene 4: 3D dropped: frame check: The scene does not show a female American black bear, but a forest with trees, rocks, and animals, including a wolf and a deer.
+scene 7: 3D dropped: frame check: The frame shows a bear walking, not taxidermied and behind glass.
+storyboarding: an illustration for each sentence
+storyboard: 3 illustrated sentences of 3 planned, 3 in the cast; 2 checked, 0 redrawn, 0 left out
+art direction: signature
+rendering 54s short video
+rendering thumbnail
+thumbnail: photo take
+done: approved

@@ -1,0 +1,96 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 11.6,
+  "dropped_for_budget": [],
+  "off_story": [
+    {
+      "scene": 1,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 4,
+      "subject": "science",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 7,
+      "subject": "city",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 8,
+      "subject": "city",
+      "why": "no entity in this scene is that kind of thing"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "title",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "type": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 3,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "Investigators found the bear\u2019s stomach literally packed with roughly seventy\u2011five pounds of the drug.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "The bear was taxidermied and now sits behind glass in a Lexington shopping mall.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 8,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "cocaine",
+  "query": "cocaine",
+  "source": "generated",
+  "uid": "generated:cocaine",
+  "title": "cocaine (generated)",
+  "author": "generated with microsoft/TRELLIS.2",
+  "licence": "generated",
+  "url": "https://huggingface.co/spaces/microsoft/TRELLIS.2",
+  "checked": "concept",
+  "triangles": 118408,
+  "bytes": 6929408,
+  "size": [
+    0.9811,
+    0.5427,
+    0.9976
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": true,
+  "look": "fine white crystalline powder, shimmering in light",
+  "added": "2026-10-24T04:27:17+00:00"
+}

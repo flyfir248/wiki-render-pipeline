@@ -1,0 +1,584 @@
+{
+  "style": "lowpoly",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "cocaine",
+      "archetype": "object",
+      "size": 0.3,
+      "primary": "#ffffff",
+      "secondary": "#e0e0e0",
+      "accent": "#c0c0c0",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.18,
+            0.0
+          ],
+          "size": [
+            0.6,
+            0.36,
+            0.42
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ece8e0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.372,
+            0.0
+          ],
+          "size": [
+            0.42,
+            0.036,
+            0.3
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#8a6a48",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        4
+      ]
+    },
+    {
+      "entity": "bear",
+      "archetype": "quadruped",
+      "size": 1.7,
+      "primary": "#000000",
+      "secondary": "#654321",
+      "accent": "#ffffff",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.4,
+        "legs": 0.6,
+        "neck": 0.2,
+        "head": 0.5,
+        "snout": 0.3,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        4,
+        7
+      ]
+    },
+    {
+      "entity": "taxidermied-bear",
+      "archetype": "quadruped",
+      "size": 1.7,
+      "primary": "#000000",
+      "secondary": "#654321",
+      "accent": "#aaaaaa",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.4,
+        "legs": 0.6,
+        "neck": 0.2,
+        "head": 0.5,
+        "snout": 0.3,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        4,
+        7
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "appalachian-woods",
+      "kind": "forest",
+      "time": "dawn",
+      "ground": "#654321",
+      "sky": "#a0c4ff",
+      "accent": "#c0d8ff",
+      "backdrop": "hills",
+      "dressing": [
+        {
+          "name": "oak tree",
+          "build": {
+            "entity": "appalachian-woods:oak-tree",
+            "archetype": "plant",
+            "size": 12.0,
+            "primary": "#8b5a2b",
+            "secondary": "#4e342e",
+            "accent": "#c0d8ff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  0.832,
+                  4.16,
+                  0.832
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#8b5a2b",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  4.16,
+                  0.0
+                ],
+                "size": [
+                  2.08,
+                  2.496,
+                  2.08
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#4e342e",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 8,
+          "spread": 20.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "knoxville",
+      "kind": "forest",
+      "time": "day",
+      "ground": "#7b5a2b",
+      "sky": "#87ceeb",
+      "accent": "#ffd700",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "maple tree",
+          "build": {
+            "entity": "knoxville:maple-tree",
+            "archetype": "plant",
+            "size": 10.0,
+            "primary": "#a0522d",
+            "secondary": "#6b8e23",
+            "accent": "#ffd700",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  0.694,
+                  3.703,
+                  0.694
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#a0522d",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  3.703,
+                  0.0
+                ],
+                "size": [
+                  1.852,
+                  2.315,
+                  1.852
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#6b8e23",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 6,
+          "spread": 15.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "northern-georgia",
+      "kind": "mountain",
+      "time": "day",
+      "ground": "#8b6c42",
+      "sky": "#a1c4fd",
+      "accent": "#ffdead",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "pine tree",
+          "build": {
+            "entity": "northern-georgia:pine-tree",
+            "archetype": "plant",
+            "size": 14.0,
+            "primary": "#2e8b57",
+            "secondary": "#228b22",
+            "accent": "#ffdead",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  0.457,
+                  4.572,
+                  0.457
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#2e8b57",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  4.572,
+                  0.0
+                ],
+                "size": [
+                  1.905,
+                  2.667,
+                  1.905
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#228b22",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 10,
+          "spread": 25.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "lexington-mall",
+      "kind": "room",
+      "time": "day",
+      "ground": "#999999",
+      "sky": "#b8b8b8",
+      "accent": "#ff9900",
+      "backdrop": "none",
+      "dressing": [
+        {
+          "name": "glass display case",
+          "build": {
+            "entity": "lexington-mall:glass-display-case",
+            "archetype": "object",
+            "size": 3.0,
+            "primary": "#e6e6fa",
+            "secondary": "#808080",
+            "accent": "#ff9900",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.75,
+                  0.0
+                ],
+                "size": [
+                  2.0,
+                  1.5,
+                  1.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#e6e6fa",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.04,
+                  0.0
+                ],
+                "size": [
+                  2.0,
+                  0.08,
+                  1.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#808080",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 1,
+          "spread": 2.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "4": {
+      "scene": 4,
+      "place": "northern-georgia",
+      "time": "",
+      "actors": [
+        {
+          "entity": "bear",
+          "verb": "lie",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "cocaine",
+          "verb": "present",
+          "at": "front",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "taxidermied-bear",
+          "verb": "idle",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "aerial",
+      "on": "bear",
+      "marks": [
+        {
+          "kind": "glow",
+          "on": "cocaine",
+          "to": "",
+          "color": ""
+        }
+      ],
+      "callouts": [],
+      "beats": []
+    },
+    "7": {
+      "scene": 7,
+      "place": "lexington-mall",
+      "time": "",
+      "actors": [
+        {
+          "entity": "taxidermied-bear",
+          "verb": "sit",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "bear",
+          "verb": "idle",
+          "at": "left",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "taxidermied-bear",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    }
+  }
+}
