@@ -1,0 +1,137 @@
+{
+  "entities": [
+    {
+      "id": "bear",
+      "name": "the 175\u2011lb black bear",
+      "kind": "animal",
+      "search": [
+        "american black bear",
+        "black bear",
+        "bear"
+      ],
+      "look": "female American black bear, 175\u202flb, brown fur, large paws",
+      "certain": true,
+      "scenes": [
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "plane",
+      "name": "Cessna 404 Titan",
+      "kind": "light aircraft",
+      "search": [
+        "cessna 404 titan",
+        "cessna 404",
+        "cessna"
+      ],
+      "look": "single\u2011engine Cessna 404 Titan, white fuselage, metal tail",
+      "certain": true,
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "id": "cocaine-containers",
+      "name": "plastic cocaine containers",
+      "kind": "object",
+      "search": [
+        "plastic container",
+        "container",
+        "object"
+      ],
+      "look": "small clear plastic containers, each holding ~1\u202flb of cocaine, blue labeling",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "mall",
+      "name": "Kentucky mall",
+      "kind": "building",
+      "search": [
+        "shopping mall",
+        "mall",
+        "building"
+      ],
+      "look": "modern indoor mall, glass storefronts, parking lot",
+      "certain": true,
+      "scenes": [
+        4
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "tn",
+      "name": "Tennessee wilderness",
+      "look": "mountainous forest, pine trees, rocky terrain, dusk light",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "id": "ga",
+      "name": "Georgia forest",
+      "look": "dense hardwood forest, sunlight filtering through leaves",
+      "scenes": [
+        3
+      ]
+    },
+    {
+      "id": "ky",
+      "name": "Kentucky mall",
+      "look": "indoor mall interior, white walls, display cases",
+      "scenes": [
+        4
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "bear",
+      "place": "",
+      "action": "overdoses on cocaine",
+      "motion": "present",
+      "cue": "a 175\u2011lb black bear died after eating a massive cocaine stash",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "plane",
+      "place": "tn",
+      "action": "drops cocaine containers",
+      "motion": "depart",
+      "cue": "dropped from a Cessna over Tennessee",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 3,
+      "entity": "bear",
+      "place": "ga",
+      "action": "found dead with cocaine in bloodstream",
+      "motion": "present",
+      "cue": "had 3\u20114 grams of cocaine in its bloodstream",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "bear",
+      "place": "ky",
+      "action": "taxidermied and displayed",
+      "motion": "present",
+      "cue": "shipped to a Kentucky mall",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

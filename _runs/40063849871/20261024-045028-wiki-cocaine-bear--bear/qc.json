@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 3 at 18.6s: Subject is a bear, but it is not clear enough to read on a phone.",
+    "3D covers 38% of the runtime, under the 80% target",
+    "only 0% of the runtime is 3D that moves on its own (of 38% in 3D)",
+    "3D scenes [3, 4] stand still (only the camera moves)"
+  ],
+  "repair": [],
+  "repaired": []
+}

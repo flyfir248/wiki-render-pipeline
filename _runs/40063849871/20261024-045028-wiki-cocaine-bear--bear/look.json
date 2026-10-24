@@ -1,0 +1,39 @@
+{
+  "warnings": [
+    "scene 3 at 18.6s: Subject is a bear, but it is not clear enough to read on a phone."
+  ],
+  "frames": [
+    {
+      "scene": 3,
+      "at": 15.59,
+      "contrast": 29.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": "The subject is a 3D shot of a bear lying on the ground, with a dark green background and trees in the distance. The bear is the main focus of the image, and it is clear enough to read on a phone. The lighting is good, with visible light and shadow on the bear's fur. The background has depth, with trees and other objects visible in the distance. There are no broken objects or clipping issues. The overall composition is good, with the bear being the main subject and the background adding context."
+    },
+    {
+      "scene": 3,
+      "at": 18.64,
+      "contrast": 41.0,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is a bear, but it is not clear enough to read on a phone."
+    },
+    {
+      "scene": 4,
+      "at": 21.7,
+      "contrast": 49.9,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 4,
+      "at": 25.18,
+      "contrast": 41.9,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": "at most 12 words, or empty"
+    }
+  ]
+}

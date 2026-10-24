@@ -1,0 +1,13 @@
+{
+  "checked": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "1": "frame check: The subject shown is not a 175\u2011lb black bear, but a brown bear lying on its side, floating in a murky brown liquid.",
+    "2": "frame check: The subject is not a Cessna 404 Titan, but a small white aircraft with a metal tail."
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 23.6,
+  "dropped_for_budget": [],
+  "target_share": 0.8,
+  "world_share": 0.822,
+  "filled": [],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "a 175\u2011lb black bear died after eating a massive cocaine stash",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "depart",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "dropped from a Cessna over Tennessee",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "had 3\u20114 grams of cocaine in its bloodstream",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "shipped to a Kentucky mall",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+fetching Wikipedia article
+1 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 52% slower than average, 17 scenes); quote (lost viewers 47% slower than average, 11 scenes); timeline (lost viewers 31% slower than average, 9 scenes); map (lost viewers 28% slower than average, 17 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 67% faster than average, 28 scenes); broll (lost viewers 97% faster than average, 9 scenes). On average 92% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+script is only 100 words; asking for a fuller one
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: The cocaine drop is mentioned before being explained; Bear found in Georgia after drop in Tennessee creates location jump; Legal loophole for wedding officiant is never explained
+checking facts against the source
+fact check found: scene 0: unsupported claim "175‑lb Bear Ate $1 Million of Cocaine" (source says: The cocaine was valued at about $20 million (equivalent to $60 million in 2025), not $1 million.)
+facts check out
+reading the story: what it shows
+story: the 175‑lb black bear, Cessna 404 Titan, plastic cocaine containers, Kentucky mall; 4 moments
+planning the visuals
+visual plan (model): 4 3D, 1 2D (82% of the runtime in 3D, aiming for 80%); 3D: stage present, stage depart, stage present, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: '1ltr Plastic Container' (objaverse) is not a plastic container: Shows a large grey jug, not a small clear container.
+assets: 'Pallets and plastic barrels' (objaverse) is not a plastic container: Shows multiple barrels and pallets, not one container.
+assets: 'Plastic water bottle' (objaverse) is not a plastic container: The subject shows a small clear plastic bottle with a blue cap and a white label, but it does not appear to be a container for cocaine.
+assets: '1998.121 Sutra Container' (objaverse) is not a container: container: small clear plastic containers, each holding ~1 lb of cocaine, blue labeling
+assets: 'Container' (objaverse) is not a container: does not show correct subject
+assets: no vision check could be made (first candidate 'Container'); plastic cocaine containers stays painted this time
+assets: no usable model of plastic cocaine containers (plastic container, container, object): its scenes stay painted
+building the story world: 4 entities for 4 scenes
+story world (lowpoly): cast model, sets model, direction model; bear as quadruped, plane as vehicle, cocaine-containers as object, mall as structure
+voicing 5 scenes with kokoro
+fetching visuals
+visuals: 1 Wikipedia/Commons images, 1 stock, 3 scenes on plain background
+collage: 1 photos styled, 0 with a cut-out subject
+relevance: checking 4 3D scenes by eye
+relevance: filming scenes [1, 2, 4] again, closer on their subject
+scene 4: the closer take shows its subject; 3D kept
+scene 1: 3D dropped: frame check: The subject shown is not a 175‑lb black bear, but a brown bear lying on its side, floating in a murky brown liquid.
+scene 2: 3D dropped: frame check: The subject is not a Cessna 404 Titan, but a small white aircraft with a metal tail.
+storyboarding: an illustration for each sentence
+scene 2, sentence 1 redrawn: Missing subject, and wrong subject
+scene 5, sentence 1 redrawn: A giant bear is shown, but it's not taxidermied and not at a mall, it's at a shopping mall with chairs and people around it.
+scene 5, sentence 1 redrawn: subject is missing or clearly wrong
+storyboard: 1 illustrated sentences of 2 planned, 4 in the cast; 3 checked, 2 redrawn, 1 left out
+art direction: signature
+rendering 33s short video
+look: scene 3 at 18.6s: Subject is a bear, but it is not clear enough to read on a phone.
+3D coverage: 38% of the runtime in 3D (target 80%), 0% moving on its own, 2 3D shots
+quality: 3D covers 38% of the runtime, under the 80% target
+quality: only 0% of the runtime is 3D that moves on its own (of 38% in 3D)
+quality: 3D scenes [3, 4] stand still (only the camera moves)
+rendering thumbnail
+thumbnail: cutout take
+done: approved

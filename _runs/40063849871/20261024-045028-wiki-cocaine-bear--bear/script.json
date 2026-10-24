@@ -1,0 +1,1066 @@
+{
+  "core_message": "A dead bear became a taxidermied celebrity after eating a million‑dollar dose of cocaine.",
+  "mood": "curious",
+  "title": "175‑lb Bear Overdosed on $20 Million Worth of Cocaine",
+  "description": "A 175‑pound black bear met a fatal fate after consuming a jettisoned cargo of cocaine dropped by smugglers in 1985. The body was taxidermied and now hangs in a Kentucky mall, where it even officiates weddings. \n\nKey points: 40 containers, 75 pounds of cocaine, 3–4 grams absorbed, taxidermy, legal loophole.\n\nBased on the Wikipedia article \"Cocaine Bear (bear)\" (https://en.wikipedia.org/wiki/Cocaine_Bear_(bear)), licensed CC BY-SA 4.0.\n\nImage credits:\nCocaine Bear, Kentucky for Kentucky Fun Mall (cropped).jpg (Ferrett333, CC BY-SA 4.0): https://commons.wikimedia.org/wiki/File:Cocaine_Bear,_Kentucky_for_Kentucky_Fun_Mall_(cropped).jpg\n\n3D models:\nBlackBear (everything-animals) by David OReilly (CC BY 4.0) https://davidoreilly.itch.io/everything-library-animals\nCessna-172 by Sousinho (CC BY 4.0) https://sketchfab.com/3d-models/none-8e8d0a8eefe544eea7c5169c1de2d7c9",
+  "tags": [
+    "Cocaine Bear",
+    "black bear",
+    "drug smuggler",
+    "taxidermy",
+    "Kentucky",
+    "wildlife",
+    "history",
+    "true story"
+  ],
+  "thumbnail_text": "Cocaine Bear Fact",
+  "thumbnail_kicker": "Wildlife",
+  "thumbnail_query": "black bear in forest",
+  "scenes": [
+    {
+      "narration": "In 1985, a 175‑lb black bear died after eating a massive cocaine stash.",
+      "purpose": "Hook",
+      "type": "title",
+      "heading": "Cocaine Bear",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": 1,
+      "broll_query": null
+    },
+    {
+      "narration": "That stash came from 40 plastic cocaine containers dropped from a Cessna over Tennessee on September 11.",
+      "purpose": "Context",
+      "type": "statement",
+      "heading": "Smugglers Drop 75 Pounds of Cocaine",
+      "text": "",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": "smugglers dropping containers from a small plane"
+    },
+    {
+      "narration": "The bear, later found dead in nearby Georgia, had 3‑4 grams of cocaine in its bloodstream.",
+      "purpose": "Build",
+      "type": "world",
+      "heading": "Bear’s Overdose",
+      "text": "",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "countryside",
+      "backdrop": "Georgia forest, dense hardwood forest, sunlight filtering through leaves",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "front",
+      "weather": null,
+      "cue": "had 3‑4 grams of cocaine in its bloodstream",
+      "subject_name": "bear",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-bear",
+        "level": "found",
+        "title": "BlackBear (everything-animals)",
+        "kind": "object",
+        "src": "models/kit-bear.glb",
+        "params": {},
+        "sources": [],
+        "licence": "by",
+        "notes": "story world: quadruped built for the 175‑lb black bear"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "The bear, later found dead in nearby Georgia, had 3‑4 grams of cocaine in its bloodstream.",
+        "purpose": "Build",
+        "type": "statement",
+        "heading": "Bear’s Overdose",
+        "text": "",
+        "broll_query": "black bear in forest"
+      },
+      "world": {
+        "style": "lowpoly",
+        "seed": 20866,
+        "set": {
+          "place": "ga",
+          "kind": "forest",
+          "time": "day",
+          "ground": "#2d4a22",
+          "sky": "#87ceeb",
+          "accent": "#fff59d",
+          "backdrop": "hills",
+          "dressing": [
+            {
+              "name": "hardwood stump",
+              "build": {
+                "entity": "ga:hardwood-stump",
+                "archetype": "object",
+                "size": 0.8,
+                "primary": "#5d4037",
+                "secondary": "#3e2723",
+                "accent": "#2d1a11",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      0.3,
+                      0.0
+                    ],
+                    "size": [
+                      0.6,
+                      0.6,
+                      0.6
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#5d4037",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "cylinder",
+                    "at": [
+                      0.0,
+                      0.61,
+                      0.0
+                    ],
+                    "size": [
+                      0.62,
+                      0.02,
+                      0.62
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#3e2723",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 5,
+              "spread": 15.0
+            },
+            {
+              "name": "sunbeam shaft",
+              "build": {
+                "entity": "ga:sunbeam-shaft",
+                "archetype": "object",
+                "size": 1.0,
+                "primary": "#fff59d",
+                "secondary": "#fff59d",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "cone",
+                    "at": [
+                      0.0,
+                      1.875,
+                      0.0
+                    ],
+                    "size": [
+                      0.375,
+                      2.25,
+                      0.375
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#fff59d",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": true
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 12.0
+            }
+          ],
+          "pieces": {
+            "tree": [
+              "sets/nature-commontree-1.glb",
+              "sets/nature-commontree-2.glb",
+              "sets/nature-commontree-3.glb",
+              "sets/nature-pine-1.glb",
+              "sets/nature-pine-2.glb",
+              "sets/nature-pine-3.glb",
+              "sets/nature-pine-4.glb",
+              "sets/nature-commontree-4.glb"
+            ],
+            "bush": [
+              "sets/nature-bush-common.glb",
+              "sets/nature-fern-1.glb",
+              "sets/nature-plant-1-big.glb",
+              "sets/nature-plant-7-big.glb"
+            ],
+            "rock": [
+              "sets/nature-rock-medium-1.glb",
+              "sets/nature-rock-medium-2.glb",
+              "sets/nature-rock-medium-3.glb"
+            ],
+            "grass": [
+              "sets/nature-grass-common-tall.glb",
+              "sets/nature-grass-wispy-tall.glb",
+              "sets/nature-mushroom-common.glb",
+              "sets/nature-fern-1.glb"
+            ]
+          }
+        },
+        "cast": [
+          {
+            "entity": "bear",
+            "verb": "lie",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "bear",
+              "archetype": "quadruped",
+              "size": 1.5,
+              "primary": "#8B4513",
+              "secondary": "#654321",
+              "accent": "#000000",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [],
+              "form": "",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-bear",
+              "src": "models/kit-bear.glb",
+              "fit": {},
+              "clips": [
+                "Walk",
+                "Run",
+                "Idle",
+                "Eat",
+                "Attack",
+                "Sleep"
+              ],
+              "licence": "by",
+              "title": "BlackBear (everything-animals)",
+              "posed": true
+            }
+          },
+          {
+            "entity": "cocaine-containers",
+            "verb": "present",
+            "at": "right",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 4,
+            "build": {
+              "entity": "cocaine-containers",
+              "archetype": "object",
+              "size": 0.2,
+              "primary": "#E0F7FF",
+              "secondary": "#0000FF",
+              "accent": "#FFFFFF",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    0.1,
+                    0.0
+                  ],
+                  "size": [
+                    0.2,
+                    0.15,
+                    0.1
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#E0F7FF",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.25,
+                    0.1,
+                    0.0
+                  ],
+                  "size": [
+                    0.2,
+                    0.15,
+                    0.1
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#E0F7FF",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -0.25,
+                    0.1,
+                    0.0
+                  ],
+                  "size": [
+                    0.2,
+                    0.15,
+                    0.1
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#E0F7FF",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "",
+              "sex": ""
+            }
+          }
+        ],
+        "camera": "orbit",
+        "on": "bear",
+        "marks": [],
+        "callouts": [],
+        "beats": []
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Its body was taxidermied, shipped to a Kentucky mall, and now officiates weddings thanks to a quirky local law.",
+      "purpose": "Build",
+      "type": "world",
+      "heading": "Taxidermy and a Wedding Loophole",
+      "text": "",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "countryside",
+      "backdrop": "Kentucky mall, indoor mall interior, white walls, display cases",
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "wide",
+      "weather": null,
+      "cue": "shipped to a Kentucky mall",
+      "subject_name": "bear",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-bear",
+        "level": "found",
+        "title": "BlackBear (everything-animals)",
+        "kind": "object",
+        "src": "models/kit-bear.glb",
+        "params": {},
+        "sources": [],
+        "licence": "by",
+        "notes": "story world: quadruped built for the 175‑lb black bear"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "Its body was taxidermied, shipped to a Kentucky mall, and now officiates weddings thanks to a quirky local law.",
+        "purpose": "Build",
+        "type": "statement",
+        "heading": "Taxidermy and a Wedding Loophole",
+        "text": "",
+        "broll_query": "mall interior"
+      },
+      "world": {
+        "style": "lowpoly",
+        "seed": 20866,
+        "set": {
+          "place": "ky",
+          "kind": "hall",
+          "time": "day",
+          "ground": "#999999",
+          "sky": "#b8b8b8",
+          "accent": "#4fc3f7",
+          "backdrop": "none",
+          "dressing": [
+            {
+              "name": "retail display case",
+              "build": {
+                "entity": "ky:retail-display-case",
+                "archetype": "object",
+                "size": 1.8,
+                "primary": "#e0e0e0",
+                "secondary": "#b0bec5",
+                "accent": "#80deea",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.45,
+                      0.0
+                    ],
+                    "size": [
+                      1.5,
+                      0.9,
+                      0.6
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#e0e0e0",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      1.5,
+                      0.08,
+                      0.6
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b0bec5",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.31
+                    ],
+                    "size": [
+                      1.4,
+                      0.08,
+                      0.02
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#80deea",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": true
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 6,
+              "spread": 18.0
+            },
+            {
+              "name": "mall planter",
+              "build": {
+                "entity": "ky:mall-planter",
+                "archetype": "object",
+                "size": 1.0,
+                "primary": "#9e9e9e",
+                "secondary": "#4caf50",
+                "accent": "#2e7d32",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.3,
+                      0.0
+                    ],
+                    "size": [
+                      0.8,
+                      0.6,
+                      0.8
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#9e9e9e",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.0,
+                      0.7,
+                      0.0
+                    ],
+                    "size": [
+                      0.6,
+                      0.4,
+                      0.6
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#4caf50",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "sphere",
+                    "at": [
+                      0.1,
+                      0.8,
+                      0.1
+                    ],
+                    "size": [
+                      0.4,
+                      0.3,
+                      0.4
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2e7d32",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 4,
+              "spread": 15.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "bear",
+            "verb": "idle",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "bear",
+              "archetype": "quadruped",
+              "size": 1.5,
+              "primary": "#8B4513",
+              "secondary": "#654321",
+              "accent": "#000000",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [],
+              "form": "",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-bear",
+              "src": "models/kit-bear.glb",
+              "fit": {},
+              "clips": [
+                "Walk",
+                "Run",
+                "Idle",
+                "Eat",
+                "Attack",
+                "Sleep"
+              ],
+              "licence": "by",
+              "title": "BlackBear (everything-animals)",
+              "posed": true
+            }
+          },
+          {
+            "entity": "mall",
+            "verb": "present",
+            "at": "right",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "build": {
+              "entity": "mall",
+              "archetype": "structure",
+              "size": 10.0,
+              "primary": "#A0C8F0",
+              "secondary": "#777777",
+              "accent": "#FFCC00",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    5.0,
+                    0.0
+                  ],
+                  "size": [
+                    30.0,
+                    10.0,
+                    20.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#A0C8F0",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    9.5,
+                    0.0
+                  ],
+                  "size": [
+                    30.0,
+                    1.0,
+                    20.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#777777",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    0.0,
+                    8.0,
+                    10.0
+                  ],
+                  "size": [
+                    30.0,
+                    2.0,
+                    1.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#FFCC00",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-shop",
+              "src": "models/kit-shop.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "building-a (kenney-commercial)"
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "bear",
+        "marks": [],
+        "callouts": [],
+        "beats": []
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Thus, a smuggler’s lost cargo turned a tragic bear into a famous legal oddity.",
+      "purpose": "Payoff",
+      "type": "statement",
+      "heading": "From Death to Display",
+      "text": "",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": "taxidermy exhibit"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Cocaine_Bear_(bear)"
+  ],
+  "comment_question": "What do you think about a bear officiating weddings?",
+  "chapters": null,
+  "series": "Weird History"
+}

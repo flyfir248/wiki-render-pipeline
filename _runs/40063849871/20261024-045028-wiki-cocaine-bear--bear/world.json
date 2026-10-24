@@ -1,0 +1,1113 @@
+{
+  "style": "lowpoly",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "bear",
+      "archetype": "quadruped",
+      "size": 1.5,
+      "primary": "#8B4513",
+      "secondary": "#654321",
+      "accent": "#000000",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        3,
+        4
+      ]
+    },
+    {
+      "entity": "plane",
+      "archetype": "vehicle",
+      "size": 7.35,
+      "primary": "#FFFFFF",
+      "secondary": "#CCCCCC",
+      "accent": "#FF0000",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            0.8819999999999999,
+            0.0
+          ],
+          "size": [
+            0.9555,
+            7.35,
+            0.9555
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#FFFFFF",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.147,
+            1.0290000000000001,
+            0.0
+          ],
+          "size": [
+            1.323,
+            0.147,
+            7.7175
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#FFFFFF",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -3.234,
+            1.47,
+            0.0
+          ],
+          "size": [
+            0.735,
+            1.176,
+            0.147
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#CCCCCC",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -3.234,
+            0.9555,
+            0.0
+          ],
+          "size": [
+            0.588,
+            0.147,
+            2.352
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#CCCCCC",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            2.2049999999999996,
+            1.2495,
+            0.0
+          ],
+          "size": [
+            0.735,
+            0.3675,
+            0.8819999999999999
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            3.7485,
+            0.8819999999999999,
+            0.0
+          ],
+          "size": [
+            0.0735,
+            1.617,
+            0.22049999999999997
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "x",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.3675,
+            0.8819999999999999,
+            -1.5434999999999999
+          ],
+          "size": [
+            0.8819999999999999,
+            0.44099999999999995,
+            0.44099999999999995
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#FF0000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.3675,
+            0.8819999999999999,
+            1.5434999999999999
+          ],
+          "size": [
+            0.8819999999999999,
+            0.44099999999999995,
+            0.44099999999999995
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#FF0000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "plane",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "entity": "cocaine-containers",
+      "archetype": "object",
+      "size": 0.2,
+      "primary": "#E0F7FF",
+      "secondary": "#0000FF",
+      "accent": "#FFFFFF",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.1,
+            0.0
+          ],
+          "size": [
+            0.2,
+            0.15,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#E0F7FF",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.25,
+            0.1,
+            0.0
+          ],
+          "size": [
+            0.2,
+            0.15,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#E0F7FF",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -0.25,
+            0.1,
+            0.0
+          ],
+          "size": [
+            0.2,
+            0.15,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#E0F7FF",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "entity": "mall",
+      "archetype": "structure",
+      "size": 10.0,
+      "primary": "#A0C8F0",
+      "secondary": "#777777",
+      "accent": "#FFCC00",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            5.0,
+            0.0
+          ],
+          "size": [
+            30.0,
+            10.0,
+            20.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#A0C8F0",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            9.5,
+            0.0
+          ],
+          "size": [
+            30.0,
+            1.0,
+            20.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#777777",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            8.0,
+            10.0
+          ],
+          "size": [
+            30.0,
+            2.0,
+            1.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#FFCC00",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        4
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "tn",
+      "kind": "mountain",
+      "time": "dusk",
+      "ground": "#3d4a33",
+      "sky": "#2c3540",
+      "accent": "#ff9d00",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "rocky outcropping",
+          "build": {
+            "entity": "tn:rocky-outcropping",
+            "archetype": "object",
+            "size": 3.0,
+            "primary": "#7a7a7a",
+            "secondary": "#5c5c5c",
+            "accent": "#404040",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "size": [
+                  3.0,
+                  2.0,
+                  2.5
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#7a7a7a",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.5,
+                  2.0,
+                  0.2
+                ],
+                "size": [
+                  1.5,
+                  0.5,
+                  1.2
+                ],
+                "rot": [
+                  10.0,
+                  0.0,
+                  5.0
+                ],
+                "color": "#5c5c5c",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  -0.3,
+                  0.5,
+                  -0.5
+                ],
+                "size": [
+                  1.0,
+                  0.8,
+                  1.0
+                ],
+                "rot": [
+                  0.0,
+                  15.0,
+                  0.0
+                ],
+                "color": "#404040",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 4,
+          "spread": 12.0
+        },
+        {
+          "name": "fallen pine log",
+          "build": {
+            "entity": "tn:fallen-pine-log",
+            "archetype": "object",
+            "size": 6.0,
+            "primary": "#4a3b2c",
+            "secondary": "#2e2318",
+            "accent": "#1a140d",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.208,
+                  0.0
+                ],
+                "size": [
+                  0.416,
+                  4.992,
+                  0.416
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  90.0
+                ],
+                "color": "#4a3b2c",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.832,
+                  0.291,
+                  0.083
+                ],
+                "size": [
+                  0.25,
+                  0.832,
+                  0.25
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  60.0
+                ],
+                "color": "#2e2318",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 2,
+          "spread": 10.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "ga",
+      "kind": "forest",
+      "time": "day",
+      "ground": "#2d4a22",
+      "sky": "#87ceeb",
+      "accent": "#fff59d",
+      "backdrop": "hills",
+      "dressing": [
+        {
+          "name": "hardwood stump",
+          "build": {
+            "entity": "ga:hardwood-stump",
+            "archetype": "object",
+            "size": 0.8,
+            "primary": "#5d4037",
+            "secondary": "#3e2723",
+            "accent": "#2d1a11",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.3,
+                  0.0
+                ],
+                "size": [
+                  0.6,
+                  0.6,
+                  0.6
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#5d4037",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.61,
+                  0.0
+                ],
+                "size": [
+                  0.62,
+                  0.02,
+                  0.62
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#3e2723",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 5,
+          "spread": 15.0
+        },
+        {
+          "name": "sunbeam shaft",
+          "build": {
+            "entity": "ga:sunbeam-shaft",
+            "archetype": "object",
+            "size": 1.0,
+            "primary": "#fff59d",
+            "secondary": "#fff59d",
+            "accent": "#ffffff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  1.875,
+                  0.0
+                ],
+                "size": [
+                  0.375,
+                  2.25,
+                  0.375
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#fff59d",
+                "bone": "body",
+                "spin": "",
+                "glow": true
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 3,
+          "spread": 12.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    },
+    {
+      "place": "ky",
+      "kind": "hall",
+      "time": "day",
+      "ground": "#999999",
+      "sky": "#b8b8b8",
+      "accent": "#4fc3f7",
+      "backdrop": "none",
+      "dressing": [
+        {
+          "name": "retail display case",
+          "build": {
+            "entity": "ky:retail-display-case",
+            "archetype": "object",
+            "size": 1.8,
+            "primary": "#e0e0e0",
+            "secondary": "#b0bec5",
+            "accent": "#80deea",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.45,
+                  0.0
+                ],
+                "size": [
+                  1.5,
+                  0.9,
+                  0.6
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#e0e0e0",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.04,
+                  0.0
+                ],
+                "size": [
+                  1.5,
+                  0.08,
+                  0.6
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#b0bec5",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.04,
+                  0.31
+                ],
+                "size": [
+                  1.4,
+                  0.08,
+                  0.02
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#80deea",
+                "bone": "body",
+                "spin": "",
+                "glow": true
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 6,
+          "spread": 18.0
+        },
+        {
+          "name": "mall planter",
+          "build": {
+            "entity": "ky:mall-planter",
+            "archetype": "object",
+            "size": 1.0,
+            "primary": "#9e9e9e",
+            "secondary": "#4caf50",
+            "accent": "#2e7d32",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  0.3,
+                  0.0
+                ],
+                "size": [
+                  0.8,
+                  0.6,
+                  0.8
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#9e9e9e",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  0.0,
+                  0.7,
+                  0.0
+                ],
+                "size": [
+                  0.6,
+                  0.4,
+                  0.6
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#4caf50",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  0.1,
+                  0.8,
+                  0.1
+                ],
+                "size": [
+                  0.4,
+                  0.3,
+                  0.4
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#2e7d32",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 4,
+          "spread": 15.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "",
+      "time": "",
+      "actors": [
+        {
+          "entity": "bear",
+          "verb": "lie",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "cocaine-containers",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 4
+        }
+      ],
+      "camera": "establish",
+      "on": "bear",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "2": {
+      "scene": 2,
+      "place": "tn",
+      "time": "",
+      "actors": [
+        {
+          "entity": "plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "cocaine-containers",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 4
+        }
+      ],
+      "camera": "aerial",
+      "on": "plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "3": {
+      "scene": 3,
+      "place": "ga",
+      "time": "",
+      "actors": [
+        {
+          "entity": "bear",
+          "verb": "lie",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "cocaine-containers",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 4
+        }
+      ],
+      "camera": "orbit",
+      "on": "bear",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "4": {
+      "scene": 4,
+      "place": "ky",
+      "time": "",
+      "actors": [
+        {
+          "entity": "bear",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "mall",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "reveal",
+      "on": "bear",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    }
+  }
+}
