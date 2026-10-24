@@ -152,6 +152,32 @@ export const ContactShadow: React.FC<{ w: number; d?: number; strength?: number;
   );
 };
 
+let poolTex: THREE.Texture | null = null;
+const poolTexture = () => {
+  if (poolTex) return poolTex;
+  const c = document.createElement("canvas");
+  c.width = c.height = 128;
+  const g = c.getContext("2d")!;
+  const gr = g.createRadialGradient(64, 64, 2, 64, 64, 62);
+  gr.addColorStop(0, "rgba(255,255,255,1)");
+  gr.addColorStop(0.4, "rgba(255,255,255,0.45)");
+  gr.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = gr;
+  g.fillRect(0, 0, 128, 128);
+  poolTex = new THREE.CanvasTexture(c);
+  return poolTex;
+};
+
+// A soft pool of coloured light on the ground round something, fading out at its edge.
+export const GroundGlow: React.FC<{ w: number; color: string; strength?: number; at: [number, number, number] }> = ({ w, color, strength = 0.6, at }) => {
+  const mat = useMemo(() => new THREE.MeshBasicMaterial({ map: poolTexture(), color, transparent: true, depthWrite: false, opacity: strength, blending: THREE.AdditiveBlending, toneMapped: false }), [color, strength]);
+  return (
+    <mesh position={at} rotation={[-Math.PI / 2, 0, 0]} scale={[w, w, 1]} material={mat} renderOrder={1}>
+      <planeGeometry args={[1, 1]} />
+    </mesh>
+  );
+};
+
 // --- water ------------------------------------------------------------------------------------------
 
 let normals: THREE.DataTexture | null = null;

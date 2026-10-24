@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
+from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -498,7 +498,7 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     for eid, a in found.items():
         if eid in srcs:
             models[eid] = {"id": a["key"], "src": srcs[eid], "fit": a.get("fit") or assetlib.facing(story_manifest.entity(story, eid)),
-                           "clips": a.get("clips", []), "licence": a.get("licence"), "title": a.get("title")}
+                           "clips": a.get("clips", []), "licence": a.get("licence"), "title": a.get("title")} | ({"posed": True} if a.get("posed") else {})
     seed = sum(map(ord, script.title)) & 0xFFFF
     # a person wears the library outfit for their role; the character kit is only for a library without them
     cast_kit = None
@@ -527,14 +527,17 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
             back.append(i)
             continue
         lead = shot.actors[0].entity
-        m = models.get(lead) if builds[lead].archetype not in worldgen.LIVING or models.get(lead, {}).get("clips") else None
+        m = models.get(lead) if worldgen.shows(builds[lead], models.get(lead)) else None
         model = {"id": m["id"] if m else f"world:{lead}", "level": "found" if m else "procedural", "title": (m or {}).get("title"),
                  "kind": "object", "src": (m or {}).get("src"), "params": {}, "sources": [], "licence": (m or {}).get("licence"),
                  "notes": f"story world: {builds[lead].archetype} built for {story_manifest.entity(story, lead).name}"}
         lead_e = story_manifest.entity(story, lead)
         label = "ILLUSTRATION" if s.illustrative else "RECONSTRUCTION" if (m and lead_e.certain) else "RECONSTRUCTION · ILLUSTRATIVE"
-        scenes[i] = s.model_copy(update={"subject_name": lead, "world": worldgen.world_of(style, seed, shot, builds, settings, models) | ({"kit": cast_kit} if cast_kit else {}),
-                                         "model": model, "label": label})
+        world = worldgen.world_of(style, seed, shot, builds, settings, models) | ({"kit": cast_kit} if cast_kit else {})
+        # the place built from the packs' trees, rocks, houses, roads and machines for its kind
+        if style != "voxel" and (pieces := sets.stage(world["set"]["kind"], job.public)):
+            world["set"]["pieces"] = pieces
+        scenes[i] = s.model_copy(update={"subject_name": lead, "world": world, "model": model, "label": label})
     job.file("world.json").write_text(json.dumps(worldgen.record(style, builds, settings, shots, made, models), indent=2))
     log(job, f"story world ({style}): cast {made['cast']}, sets {made['sets']}, direction {made['direction']}; "
              + ", ".join(f"{b.entity} as {b.archetype}" for b in builds.values()))

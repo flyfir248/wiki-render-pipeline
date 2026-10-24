@@ -10,10 +10,10 @@ import { unit as unitOf } from "../../../theme";
 import type { SceneProps } from "../../shared";
 import { HeadingPlate, WeatherOverlay } from "../../world3d";
 import { momentOf } from "../kit";
-import { load as loadModel, type Loaded, prepare } from "../stage";
+import { load as loadModel, type Loaded, prepare, ready } from "../stage";
 import { Bird, Cell, Fish, Insect, Quadruped, quadDims, quadPose, Serpent } from "./creatures";
 import { Airliner, Boat, Car, heroOf, Iceberg, LightPlane, Liner, Spray } from "./hero";
-import { ContactShadow, type Finish, Post, type SkySpec, SkyDome, SkyLight } from "./cinema";
+import { ContactShadow, type Finish, GroundGlow, Post, type SkySpec, SkyDome, SkyLight } from "./cinema";
 import { Environment, INSIDE, type KeepOut, VOID, waterBand } from "./environment";
 import { dimsOf, Flames, humanPose, Humanoid } from "./humanoid";
 import { PartMesh, partsBounds } from "./parts";
@@ -362,6 +362,17 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
     case "top_down":
       off = new THREE.Vector3(d * 0.05, d * (1.55 - 0.25 * e), d * 0.35);
       break;
+    case "aerial": {
+      if (inside) {
+        off = side(0.55 - 0.25 * e, d * (1.45 - 0.5 * e), d * (0.6 - 0.38 * e) + on.h * 0.3);
+        break;
+      }
+      // a drone high over the whole place, a quarter turn round it as it sinks towards the subject
+      const far = Math.max(d * 3.4, U * 26) * (1 - 0.45 * e);
+      off = side(-0.5 + 0.9 * e, far, far * (0.62 - 0.12 * e));
+      f = fov + 6 * (1 - e);
+      break;
+    }
     case "reveal":
       off = side(-0.2 + 0.5 * e, d * (0.6 + 0.7 * e), on.h * (0.25 + 0.9 * e) + d * 0.25 * e);
       break;
@@ -515,13 +526,13 @@ const Rigid: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = ({
 
 // The scene's found models, loaded before its canvas is drawn (useCastModels): a model whose loading
 // finished inside the canvas would miss the frame being captured.
-const ready = new Map<string, Loaded>();
 
 const kitSrcs = (world: World) =>
   world.kit && world.cast.some((c) => c.build.archetype === "humanoid") ? [world.kit.bodies.m, world.kit.bodies.f, ...world.kit.clips, ...Object.values(world.kit.hair ?? {})].filter((x): x is string => Boolean(x)) : [];
 
 const useCastModels = (world: World) => {
-  const srcs = [...new Set([...world.cast.map((c) => c.model?.src), ...kitSrcs(world)].filter((x): x is string => Boolean(x)))].sort();
+  const pieces = lookOf(world.style).blocky ? [] : Object.values(world.set.pieces ?? {}).flat();
+  const srcs = [...new Set([...world.cast.map((c) => c.model?.src), ...kitSrcs(world), ...pieces].filter((x): x is string => Boolean(x)))].sort();
   const key = srcs.join("|");
   const [done, setDone] = React.useState(() => srcs.every((s) => ready.has(s)));
   const [handle] = React.useState(() => (done ? null : delayRender(`loading models ${key}`, { timeoutInMilliseconds: 120000 })));
@@ -596,7 +607,10 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
   if (mixer) mixer.setTime(b.t + p.phase * 0.3);
   // prepare() scales the largest side to 4 units; the design's size says how big it really is.
   const k = Math.max(0.05, p.m.build.size) / 4;
-  const { rot, off, scale } = living ? { rot: [0, 0, 0] as [number, number, number], off: new THREE.Vector3(), scale: 1 } : rigidPose(p, b, p.m.build.archetype === "vehicle");
+  const posed = living && clip < 0 && Boolean(p.m.model?.posed);
+  const { rot, off, scale } = posed
+    ? stillPose(p, b, made.size.y * k, made.size.z * k)
+    : living ? { rot: [0, 0, 0] as [number, number, number], off: new THREE.Vector3(), scale: 1 } : rigidPose(p, b, p.m.build.archetype === "vehicle");
   const wet = world.set.kind === "sea" || Boolean(waterBand(world.set.kind));
   const impact = p.m.verb === "crash" && b.k > 0 && wet;
   return (
@@ -610,6 +624,47 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
 };
 
 const LIVING_ARCH = ["humanoid", "quadruped", "bird", "fish", "insect", "serpent"];
+
+// A still library animal (one mesh, no rig) moved as a whole for what it does: the rise and fall and
+// rock of a gait as it travels, a flier's bob and bank, a swimmer's sway, a slow breath and a look round
+// while it stands, and lying on its side when it falls, dies or sleeps. (h: its height, d: its depth
+// across its body, in the stage's units.)
+const STRIDES = /walk|run|move|approach|depart|climb|carry|panic|rear|crash/;
+const stillPose = (p: Placed, b: Blocking, h: number, d: number) => {
+  const verb = p.m.verb;
+  const arche = p.m.build.archetype;
+  const t = b.t + p.phase;
+  const rot: [number, number, number] = [0, 0, 0];
+  const off = new THREE.Vector3();
+  let scale = 1;
+  if (/fall|collapse|lie|sleep/.test(verb) || p.m.state === "asleep") {
+    // over onto its side, settling where it stood
+    const s = verb === "lie" || verb === "sleep" || p.m.state === "asleep" ? 1 : ease((b.k + 0.4) / 0.6);
+    rot[0] = s * Math.PI * 0.5;
+    off.y = s * d * 0.5;
+    scale = 1 + Math.sin(t * 1.1) * 0.006 * s;
+  } else if (arche === "bird" || arche === "insect" ? verb === "fly" || verb === "flap" || STRIDES.test(verb) : false) {
+    off.y = Math.sin(t * (arche === "insect" ? 9 : 2.2)) * h * (arche === "insect" ? 0.12 : 0.18);
+    rot[0] = Math.sin(t * 1.3) * 0.12;
+    rot[2] = Math.sin(t * 2.2 + 1) * 0.06;
+  } else if (arche === "fish" || arche === "serpent" || verb === "swim") {
+    rot[1] = Math.sin(t * 3.2) * 0.14;
+    off.y = Math.sin(t * 1.6) * h * 0.04;
+  } else if (STRIDES.test(verb)) {
+    // a step: up over each stride and a rock from front to back, faster at a run
+    const step = t * (verb === "run" || verb === "panic" ? 11 : 6.5);
+    off.y = Math.abs(Math.sin(step)) * h * (verb === "run" ? 0.07 : 0.035);
+    rot[2] = Math.sin(step * 2) * 0.035;
+    rot[0] = Math.sin(step) * 0.02;
+  } else {
+    // standing: breathing, and a slow look round (a head down to eat or sniff)
+    scale = 1 + Math.sin(t * 1.7) * 0.01;
+    rot[1] = Math.sin(t * 0.35) * 0.14;
+    if (/eat|sniff|peck/.test(verb)) rot[2] = -0.06 - Math.max(0, Math.sin(t * 1.2)) * 0.05;
+    if (verb === "roar" || verb === "shake") rot[2] = Math.sin(t * 9) * 0.03 + 0.05;
+  }
+  return { rot, off, scale };
+};
 const ONCE = /death|die|dead|hit|reci?eve|interact|punch|kick|jump/i;
 
 // A library person in the build's own skin and hair colours (their outfit keeps its own).
@@ -626,7 +681,8 @@ const tone = (root: THREE.Object3D, build: Build) => {
 
 // A found model draws a living thing only when it has a clip for what that thing is doing; a still mesh
 // sliding across the ground is worse than the generated, posed body.
-const animatedFor = (m: CastMember) => Boolean(m.model?.src && ready.has(m.model.src)) && clipFor(m.model?.clips ?? [], m.verb) >= 0;
+// (a still library animal is posed instead: see stillPose)
+const animatedFor = (m: CastMember) => Boolean(m.model?.src && ready.has(m.model.src)) && (clipFor(m.model?.clips ?? [], m.verb) >= 0 || Boolean(m.model?.posed));
 
 // A person drawn from the character kit, when the kit's body and clips have loaded.
 const kitFor = (world: World, m: CastMember) => {
@@ -762,10 +818,12 @@ const Marks: React.FC<{ world: World; b: Blocking; look: Look }> = ({ world, b, 
           case "dome":
             return <mesh key={i} position={[a.pos.x, 0, a.pos.z]} geometry={unit.dome} material={material(look, color, { glow: true, wire: true, opacity: 0.55 })} scale={b.U * 3.2 * ease((b.u - 0.25) / 0.45)} />;
           case "glow":
+            // a light on the subject and a pool of it on the ground: a bubble round it hid a lying animal
+            // behind a pale ball the size of its body
             return (
-              <group key={i} position={top.toArray()}>
-                <pointLight intensity={8 * grow} distance={a.h * 4 + b.U * 2} color={color} />
-                <mesh geometry={unit.sphere} material={material(look, color, { glow: true, opacity: 0.18 })} scale={Math.max(a.w, a.h) * 1.3} />
+              <group key={i}>
+                <pointLight position={top.toArray()} intensity={8 * grow} distance={a.h * 4 + b.U * 2} color={color} />
+                <GroundGlow at={[a.pos.x, 0.03, a.pos.z]} w={Math.max(a.w, b.U) * 2.4} color={color} strength={0.5 * grow} />
               </group>
             );
           default:
@@ -839,7 +897,9 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
   const water = ["sea"].includes(world.set.kind);
   const sky: SkySpec = { top: light.top, horizon: light.horizon, below: light.below, sun: light.sun, sunDir, night: light.night, clouds: light.clouds, seed };
   const close = b.cam.setup === 1 || ["close", "low_angle", "over_shoulder", "push_in"].includes(world.camera);
-  const finish: Finish = { samples: 0, bloom: light.bloom, threshold: light.threshold, focus: dist, aperture: 0,
+  // by day only what glows on purpose (marks, lamps: twice white and more) blooms, not a sunlit white
+  // patch on a model (an animal's pale eye ring flared into a halo)
+  const finish: Finish = { samples: 0, bloom: light.bloom, threshold: world.set.time === "day" ? Math.max(light.threshold, 1.4) : light.threshold, focus: dist, aperture: 0,
     vignette: light.vignette, lift: light.lift, gain: light.gain, frame };
   const grounded = !VOID.includes(world.set.kind) && world.set.kind !== "underwater";
   // bloom only where something gives off light: night, lit windows, glowing marks, a glowing cell

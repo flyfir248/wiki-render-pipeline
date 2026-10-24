@@ -556,7 +556,7 @@ def project_model(entity: Entity) -> dict | None:
             file = assets.MODELS_DIR / Path(e["src"]).name
             return {"ok": True, "key": key, "query": entity.search[0], "source": "project", "title": e.get("title", key),
                     "author": e.get("author", ""), "licence": e.get("licence", ""), "url": e.get("source", ""),
-                    "checked": "vetted", "clips": e.get("clips", []), "file": str(file), "fit": e.get("fit", {})}
+                    "checked": "vetted", "clips": e.get("clips", []), "file": str(file), "fit": e.get("fit", {}), "posed": bool(e.get("posed"))}
     return None
 
 
@@ -576,7 +576,8 @@ def resolve(cfg: Config, entity: Entity, fidelity: str = "medium", log=print, ge
 
 def _resolve(cfg: Config, entity: Entity, fidelity: str, log, generate: bool = True, animated: bool = False) -> dict | None:
     found = project_model(entity)
-    if found and (found.get("clips") or not animated):
+    # (a library animal with no clips of its own is posed for its gait by the renderer)
+    if found and (found.get("clips") or found.get("posed") or not animated):
         return found
     for term in entity.search:
         hit = cached(slug(term))

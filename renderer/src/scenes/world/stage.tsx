@@ -20,6 +20,8 @@ import { aim, Atmosphere, Billow, Hills, shake, useWorld } from "./kit";
 const SIZE = 4; // world units the model's largest side is scaled to
 export type Loaded = { scene: THREE.Object3D; clips: THREE.AnimationClip[] };
 const loads = new Map<string, Promise<Loaded>>();
+// models already loaded, for a scene that loads its models before it mounts its canvas
+export const ready = new Map<string, Loaded>();
 export const load = (src: string) => {
   let p = loads.get(src);
   if (!p) {

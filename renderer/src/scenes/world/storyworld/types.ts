@@ -66,7 +66,8 @@ export type CastMember = {
   count?: number;
   build: Build;
   held?: Build;
-  model?: { id: string; src: string; fit?: { forward?: string; up?: string }; clips?: string[] };
+  // posed: a still library animal the renderer moves as a whole (a gait, a breath, a turn)
+  model?: { id: string; src: string; fit?: { forward?: string; up?: string }; clips?: string[]; posed?: boolean };
 };
 
 export type Dressing = { name: string; build: Build; count: number; spread: number };
@@ -80,6 +81,8 @@ export type SetSpec = {
   accent: string;
   backdrop?: "hills" | "mountains" | "city" | "vessel" | "none";
   dressing: Dressing[];
+  // the place's set pieces by role (fyt/sets.py): tree, bush, rock, grass, building, tall, street, rail, prop
+  pieces?: Record<string, string[]>;
 };
 
 export type Mark = { kind: "beam" | "arrow" | "path" | "ring" | "dome" | "glow"; on: string; to: string; color: string };

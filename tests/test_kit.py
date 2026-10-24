@@ -52,7 +52,9 @@ def test_library_people_and_models_carry_their_licence_and_file():
 
     assert len(people.outfits()) == 21 and {e["sex"] for e in people.outfits().values()} == {"f", "m"}
     picked = [e for k, e in assets.registry().items() if k.startswith("kit-")]
-    assert picked and all(assets.library_ready(e) and e["licence"] == "CC0" for e in picked)
+    assert picked and all(assets.library_ready(e) and e["licence"] in ("CC0", "by") for e in picked)
+    # the CC BY animals name who made them, for the video's credits
+    assert all(e["author"] and e["source"].startswith("https://") for e in picked if e["licence"] == "by")
 
 
 def test_a_story_vehicle_or_sea_creature_comes_from_the_library():
@@ -60,3 +62,29 @@ def test_a_story_vehicle_or_sea_creature_comes_from_the_library():
     assert assetlib.project_model(animal("a humpback whale", "humpback whale", "whale"))["key"] == "kit-whale"
     assert assetlib.project_model(animal("the steam locomotive", "steam locomotive"))["key"] == "kit-steam-locomotive"
     assert assetlib.project_model(animal("a ballpoint pen", "pen")) is None
+
+
+def test_a_story_animal_is_that_animal_not_its_nearest_cousin():
+    def key(name, *search):
+        return assetlib.project_model(animal(name, *search))["key"]
+    assert key("a grizzly bear", "grizzly bear") == "kit-grizzly"
+    assert key("the black bear", "black bear") == "kit-bear"
+    assert key("a polar bear", "polar bear") == "kit-polar-bear"
+    assert key("a German shepherd", "german shepherd", "dog") == "kit-doberman"
+    assert key("the dog", "dog") == "kit-dog"
+    assert key("a pug", "pug") == "kit-pug"
+    assert key("a wild boar", "wild boar") == "kit-boar"
+    assert key("a field mouse", "mouse") == "kit-mouse"
+    assert key("Canada geese", "canada goose") == "kit-goose"
+    # the horse keeps its own animated walk
+    assert key("the horse", "horse") == "kit-horse"
+
+
+def test_a_still_library_animal_is_posed_and_credited():
+    from fyt import worldgen
+
+    hit = assetlib.project_model(animal("the elephant", "elephant"))
+    assert hit["posed"] and not hit["clips"] and hit["licence"] == "by"
+    build = worldgen.rule_build(animal("the elephant", "elephant"), 1)
+    assert worldgen.shows(build, {"posed": True}) and not worldgen.shows(build, {"clips": []})
+    assert any("David OReilly" in line for line in assetlib.credits({"e": hit}))

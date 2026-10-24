@@ -1,0 +1,407 @@
+{
+ "about": "Written by fyt/sets.py from assets/set-picks.json: each kind of place's pieces by role.",
+ "sources": {
+  "nature": {
+   "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+   "author": "Quaternius",
+   "licence": "CC0"
+  },
+  "pirate": {
+   "source": "https://kenney.nl/assets/pirate-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "survival": {
+   "source": "https://kenney.nl/assets/survival-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "holiday": {
+   "source": "https://kenney.nl/assets/holiday-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "suburban": {
+   "source": "https://kenney.nl/assets/city-kit-suburban",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "commercial": {
+   "source": "https://kenney.nl/assets/city-kit-commercial",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "roads": {
+   "source": "https://kenney.nl/assets/city-kit-roads",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "train": {
+   "source": "https://kenney.nl/assets/train-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "factory": {
+   "source": "https://kenney.nl/assets/factory-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "station": {
+   "source": "https://kenney.nl/assets/space-station-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "town": {
+   "source": "https://kenney.nl/assets/fantasy-town-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "graveyard": {
+   "source": "https://kenney.nl/assets/graveyard-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  }
+ },
+ "sets": {
+  "forest": {
+   "tree": [
+    "sets/nature-commontree-1.glb",
+    "sets/nature-commontree-2.glb",
+    "sets/nature-commontree-3.glb",
+    "sets/nature-pine-1.glb",
+    "sets/nature-pine-2.glb",
+    "sets/nature-pine-3.glb",
+    "sets/nature-pine-4.glb",
+    "sets/nature-commontree-4.glb"
+   ],
+   "bush": [
+    "sets/nature-bush-common.glb",
+    "sets/nature-fern-1.glb",
+    "sets/nature-plant-1-big.glb",
+    "sets/nature-plant-7-big.glb"
+   ],
+   "rock": [
+    "sets/nature-rock-medium-1.glb",
+    "sets/nature-rock-medium-2.glb",
+    "sets/nature-rock-medium-3.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-common-tall.glb",
+    "sets/nature-grass-wispy-tall.glb",
+    "sets/nature-mushroom-common.glb",
+    "sets/nature-fern-1.glb"
+   ]
+  },
+  "grassland": {
+   "tree": [
+    "sets/nature-commontree-1.glb",
+    "sets/nature-commontree-2.glb",
+    "sets/nature-commontree-5.glb",
+    "sets/nature-pine-2.glb"
+   ],
+   "bush": [
+    "sets/nature-bush-common.glb"
+   ],
+   "rock": [
+    "sets/nature-rock-medium-1.glb",
+    "sets/nature-rock-medium-2.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-common-short.glb",
+    "sets/nature-grass-wispy-tall.glb",
+    "sets/nature-flower-3-group.glb",
+    "sets/nature-flower-4-group.glb",
+    "sets/nature-grass-common-tall.glb"
+   ]
+  },
+  "farm": {
+   "tree": [
+    "sets/nature-commontree-1.glb",
+    "sets/nature-commontree-5.glb"
+   ],
+   "bush": [
+    "sets/nature-bush-common.glb"
+   ],
+   "rock": [
+    "sets/nature-rock-medium-2.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-common-short.glb",
+    "sets/nature-flower-3-group.glb",
+    "sets/nature-grass-wispy-short.glb"
+   ],
+   "prop": [
+    "sets/town-cart.glb",
+    "sets/town-fence.glb"
+   ]
+  },
+  "mountain": {
+   "tree": [
+    "sets/nature-pine-1.glb",
+    "sets/nature-pine-2.glb",
+    "sets/nature-pine-3.glb",
+    "sets/nature-pine-5.glb"
+   ],
+   "rock": [
+    "sets/nature-rock-medium-1.glb",
+    "sets/nature-rock-medium-2.glb",
+    "sets/nature-rock-medium-3.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-wispy-short.glb",
+    "sets/nature-grass-wispy-tall.glb"
+   ]
+  },
+  "snow": {
+   "tree": [
+    "sets/holiday-tree-snow-a.glb",
+    "sets/holiday-tree-snow-b.glb",
+    "sets/holiday-tree-snow-c.glb"
+   ],
+   "rock": [
+    "sets/holiday-rocks-large.glb",
+    "sets/holiday-rocks-medium.glb"
+   ],
+   "grass": [
+    "sets/holiday-snow-pile.glb"
+   ]
+  },
+  "river": {
+   "tree": [
+    "sets/nature-commontree-2.glb",
+    "sets/nature-commontree-3.glb",
+    "sets/nature-pine-2.glb",
+    "sets/nature-pine-4.glb",
+    "sets/nature-commontree-4.glb"
+   ],
+   "bush": [
+    "sets/nature-bush-common.glb",
+    "sets/nature-fern-1.glb",
+    "sets/nature-plant-7-big.glb"
+   ],
+   "rock": [
+    "sets/nature-rock-medium-1.glb",
+    "sets/nature-rock-medium-3.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-common-tall.glb",
+    "sets/nature-grass-wispy-tall.glb",
+    "sets/nature-flower-4-group.glb"
+   ]
+  },
+  "lake": {
+   "tree": [
+    "sets/nature-pine-1.glb",
+    "sets/nature-pine-3.glb",
+    "sets/nature-commontree-1.glb",
+    "sets/nature-commontree-3.glb"
+   ],
+   "bush": [
+    "sets/nature-bush-common.glb",
+    "sets/nature-plant-1-big.glb"
+   ],
+   "rock": [
+    "sets/nature-rock-medium-2.glb",
+    "sets/nature-rock-medium-3.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-common-tall.glb",
+    "sets/nature-grass-wispy-short.glb"
+   ]
+  },
+  "swamp": {
+   "tree": [
+    "sets/nature-deadtree-1.glb",
+    "sets/nature-deadtree-2.glb",
+    "sets/nature-deadtree-3.glb",
+    "sets/nature-deadtree-4.glb",
+    "sets/nature-deadtree-5.glb"
+   ],
+   "bush": [
+    "sets/nature-fern-1.glb",
+    "sets/nature-plant-7-big.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-wispy-tall.glb",
+    "sets/nature-grass-common-tall.glb",
+    "sets/nature-mushroom-laetiporus.glb"
+   ]
+  },
+  "desert": {
+   "tree": [
+    "sets/nature-deadtree-4.glb",
+    "sets/nature-deadtree-5.glb"
+   ],
+   "rock": [
+    "sets/survival-rock-sand-a.glb",
+    "sets/survival-rock-sand-b.glb",
+    "sets/survival-rock-sand-c.glb",
+    "sets/pirate-rocks-sand-a.glb",
+    "sets/pirate-rocks-sand-b.glb"
+   ]
+  },
+  "beach": {
+   "tree": [
+    "sets/pirate-palm-detailed-bend.glb",
+    "sets/pirate-palm-detailed-straight.glb",
+    "sets/pirate-palm-bend.glb",
+    "sets/pirate-palm-straight.glb"
+   ],
+   "rock": [
+    "sets/pirate-rocks-sand-a.glb",
+    "sets/pirate-rocks-sand-b.glb",
+    "sets/pirate-rocks-sand-c.glb"
+   ],
+   "grass": [
+    "sets/pirate-grass-plant.glb"
+   ],
+   "prop": [
+    "sets/pirate-structure-platform-dock.glb",
+    "sets/pirate-boat-row-small.glb",
+    "sets/pirate-barrel.glb"
+   ]
+  },
+  "town": {
+   "building": [
+    "sets/suburban-building-type-a.glb",
+    "sets/suburban-building-type-b.glb",
+    "sets/suburban-building-type-c.glb",
+    "sets/suburban-building-type-d.glb",
+    "sets/suburban-building-type-e.glb",
+    "sets/suburban-building-type-f.glb",
+    "sets/suburban-building-type-g.glb",
+    "sets/suburban-building-type-h.glb",
+    "sets/suburban-building-type-k.glb",
+    "sets/suburban-building-type-m.glb",
+    "sets/suburban-building-type-p.glb",
+    "sets/suburban-building-type-s.glb"
+   ],
+   "tree": [
+    "sets/suburban-tree-large.glb",
+    "sets/suburban-tree-small.glb"
+   ],
+   "street": [
+    "sets/roads-road-straight.glb"
+   ],
+   "prop": [
+    "sets/roads-light-curved.glb",
+    "sets/suburban-planter.glb",
+    "sets/roads-road-sign-street.glb"
+   ]
+  },
+  "city": {
+   "building": [
+    "sets/commercial-building-a.glb",
+    "sets/commercial-building-b.glb",
+    "sets/commercial-building-c.glb",
+    "sets/commercial-building-d.glb",
+    "sets/commercial-building-e.glb",
+    "sets/commercial-building-f.glb",
+    "sets/commercial-building-g.glb",
+    "sets/commercial-building-h.glb",
+    "sets/commercial-building-i.glb",
+    "sets/commercial-building-j.glb",
+    "sets/commercial-building-k.glb",
+    "sets/commercial-building-l.glb"
+   ],
+   "tall": [
+    "sets/commercial-building-skyscraper-a.glb",
+    "sets/commercial-building-skyscraper-b.glb",
+    "sets/commercial-building-skyscraper-c.glb",
+    "sets/commercial-building-skyscraper-d.glb",
+    "sets/commercial-building-skyscraper-e.glb"
+   ],
+   "street": [
+    "sets/roads-road-straight.glb"
+   ],
+   "prop": [
+    "sets/roads-light-square.glb",
+    "sets/roads-traffic-light.glb",
+    "sets/roads-dumpster.glb"
+   ]
+  },
+  "road": {
+   "tree": [
+    "sets/nature-commontree-1.glb",
+    "sets/nature-commontree-5.glb",
+    "sets/nature-pine-2.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-common-short.glb",
+    "sets/nature-grass-wispy-short.glb"
+   ],
+   "street": [
+    "sets/roads-road-straight.glb"
+   ],
+   "prop": [
+    "sets/roads-electricity-pole.glb",
+    "sets/roads-sign-highway.glb",
+    "sets/roads-road-sign-warning.glb"
+   ]
+  },
+  "railway": {
+   "tree": [
+    "sets/nature-commontree-2.glb",
+    "sets/nature-pine-1.glb",
+    "sets/nature-commontree-5.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-common-short.glb",
+    "sets/nature-grass-wispy-tall.glb"
+   ],
+   "rail": [
+    "sets/train-railroad-straight.glb"
+   ],
+   "prop": [
+    "sets/roads-electricity-pole-single.glb"
+   ]
+  },
+  "airfield": {
+   "tree": [
+    "sets/nature-commontree-5.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-common-short.glb"
+   ],
+   "prop": [
+    "sets/roads-construction-cone.glb",
+    "sets/survival-barrel.glb"
+   ]
+  },
+  "factory": {
+   "prop": [
+    "sets/factory-machine.glb",
+    "sets/factory-machine-fortified.glb",
+    "sets/factory-conveyor-long.glb",
+    "sets/factory-hopper-round.glb",
+    "sets/factory-crane.glb",
+    "sets/factory-box-large.glb",
+    "sets/factory-machine-window.glb",
+    "sets/factory-hopper-high-square.glb"
+   ]
+  },
+  "lab": {
+   "prop": [
+    "sets/station-computer.glb",
+    "sets/station-computer-system.glb",
+    "sets/station-table-display.glb",
+    "sets/station-container-tall.glb",
+    "sets/station-computer-wide.glb"
+   ]
+  },
+  "hospital": {
+   "prop": [
+    "sets/station-bed-single-cover.glb",
+    "sets/station-computer-screen.glb",
+    "sets/station-table.glb"
+   ]
+  },
+  "room": {
+   "prop": [
+    "sets/station-table-large.glb",
+    "sets/station-chair-cushion.glb",
+    "sets/station-container.glb"
+   ]
+  }
+ }
+}
