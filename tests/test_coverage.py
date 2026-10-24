@@ -131,3 +131,12 @@ def test_a_failed_frame_gets_a_closer_take_once():
     assert t.world["camera"] == "push_in" and t.world["on"] == "container"
     assert relevance.retake(t) is None
     assert relevance.retake(ScriptScene(narration="n", type="world", subject_name="x", world={"cast": [{"entity": "y"}]})) is None
+
+
+def test_the_frame_check_asks_for_the_kind_of_thing_not_its_make():
+    m = Manifest(entities=[
+        Entity(id="bear", name="black bear", kind="animal", search=["american black bear", "black bear", "bear"], look="175 lb, black fur", certain=True, scenes=[1]),
+        Entity(id="plane", name="the plane", kind="light aircraft", search=["cessna 404 titan", "cessna 404", "cessna"], look="white", certain=True, scenes=[1]),
+        Entity(id="box", name="containers", kind="object", search=["plastic container", "container", "object"], look="", certain=True, scenes=[1])])
+    ask = lambda e: relevance.subject_text(ScriptScene(narration="n", type="world", subject_name=e), m)  # noqa: E731
+    assert (ask("bear"), ask("plane"), ask("box")) == ("a bear", "a cessna, a light aircraft", "a container")

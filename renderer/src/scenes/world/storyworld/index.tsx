@@ -268,7 +268,9 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
   const on = placed.find((p) => p.m.entity === world.on) ?? placed[0];
   // the stage's unit is set by its largest thing; a person beside an iceberg is framed at a person's scale
   const U = Math.min(U0, Math.max(on.w, on.h) * 2.5);
-  const look = on.pos.clone().add(new THREE.Vector3(0, on.h * 0.55, 0));
+  // a subject lying down (asleep, fallen, dead) is low: aim at it there, not at where its head was standing
+  const lying = LIES.test(on.m.verb ?? "") && on.m.build.archetype !== "vehicle";
+  const look = on.pos.clone().add(new THREE.Vector3(0, on.h * (lying ? 0.22 : 0.55), 0));
   // fit the subject and whoever shares its frame, across and up, in the frame the viewer will see
   const own = Math.max(on.w, on.h) * 0.62 + U * 0.25;
   let Rw = on.w * 0.55 + U * 0.2;

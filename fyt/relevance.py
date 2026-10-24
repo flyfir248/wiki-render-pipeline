@@ -29,11 +29,15 @@ the subject below while the narrator says the line given. Pass it only if the fr
 that subject, recognisable as that kind of thing, and nothing about it is broken: not floating in
 the air when it should stand, not cut off or hidden, not inside-out, black or blank. A simple or
 stylised look is fine, and so is a missing detail: judge only what a picture can show (what kind of
-thing it is and its rough shape), never makes, models, markings, exact colours, numbers, times or
-decisions the narrator mentions. A named subject (a ship, a person, a place with a name) passes when
-the frame shows that kind of thing: no picture can show which ship or which man it is, or its era.
+thing it is and its rough shape), never makes, models, markings, exact colours (the light of a dusk
+or night sky tints everything), sizes, numbers, times or decisions the narrator mentions. A named
+subject (a ship, a person, a place with a name) passes when the frame shows that kind of thing: no picture can show which ship or which man it is, or its era.
 Fail it if it shows something else, or nothing recognisable.
 Reply with a single JSON object: {"matches": true or false, "problems": "at most 12 words, or empty"}."""
+
+
+# search terms too general to say what a thing is
+GENERIC = {"object", "thing", "item", "animal", "vehicle", "building", "structure", "machine", "person", "people"}
 
 
 def is_3d(scene) -> bool:
@@ -41,9 +45,15 @@ def is_3d(scene) -> bool:
 
 
 def subject_text(scene, story: Manifest | None) -> str:
+    """What the frame must show, as the kind of thing it is ("a bear", "a cessna"): the general noun the
+    manifest ends its search terms with. A make, a weight or a coat colour is nothing a frame can prove,
+    and asked with them a vision model failed a Cessna for not being a Cessna 404 and a black bear lit
+    by a dusk sky for being brown."""
     e = manifest.entity(story, scene.subject_name) if story else None
     if e:
-        return f"{e.name}, a {e.kind} ({e.look})"
+        nouns = [x for x in e.search if x.lower() not in GENERIC] or [e.kind]
+        kind = e.kind.lower()
+        return f"a {nouns[-1]}" + (f", a {kind}" if kind and kind not in GENERIC and kind not in nouns[-1].lower() else "")
     return f"{scene.variant or ''} {scene.subject or ''}".strip()
 
 
