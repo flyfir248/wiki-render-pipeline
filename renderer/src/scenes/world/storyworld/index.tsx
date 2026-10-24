@@ -13,7 +13,7 @@ import { momentOf } from "../kit";
 import { load as loadModel, type Loaded, prepare, ready } from "../stage";
 import { Bird, Cell, Fish, Insect, Quadruped, quadDims, quadPose, Serpent } from "./creatures";
 import { Airliner, Boat, Car, heroOf, Iceberg, LightPlane, Liner, Spray } from "./hero";
-import { ContactShadow, type Finish, Post, type SkySpec, SkyDome, SkyLight } from "./cinema";
+import { ContactShadow, type Finish, GroundGlow, Post, type SkySpec, SkyDome, SkyLight } from "./cinema";
 import { Environment, INSIDE, type KeepOut, VOID, waterBand } from "./environment";
 import { dimsOf, Flames, humanPose, Humanoid } from "./humanoid";
 import { PartMesh, partsBounds } from "./parts";
@@ -818,10 +818,12 @@ const Marks: React.FC<{ world: World; b: Blocking; look: Look }> = ({ world, b, 
           case "dome":
             return <mesh key={i} position={[a.pos.x, 0, a.pos.z]} geometry={unit.dome} material={material(look, color, { glow: true, wire: true, opacity: 0.55 })} scale={b.U * 3.2 * ease((b.u - 0.25) / 0.45)} />;
           case "glow":
+            // a light on the subject and a pool of it on the ground: a bubble round it hid a lying animal
+            // behind a pale ball the size of its body
             return (
-              <group key={i} position={top.toArray()}>
-                <pointLight intensity={8 * grow} distance={a.h * 4 + b.U * 2} color={color} />
-                <mesh geometry={unit.sphere} material={material(look, color, { glow: true, opacity: 0.18 })} scale={Math.max(a.w, a.h) * 1.3} />
+              <group key={i}>
+                <pointLight position={top.toArray()} intensity={8 * grow} distance={a.h * 4 + b.U * 2} color={color} />
+                <GroundGlow at={[a.pos.x, 0.03, a.pos.z]} w={Math.max(a.w, b.U) * 2.4} color={color} strength={0.5 * grow} />
               </group>
             );
           default:
@@ -895,7 +897,9 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
   const water = ["sea"].includes(world.set.kind);
   const sky: SkySpec = { top: light.top, horizon: light.horizon, below: light.below, sun: light.sun, sunDir, night: light.night, clouds: light.clouds, seed };
   const close = b.cam.setup === 1 || ["close", "low_angle", "over_shoulder", "push_in"].includes(world.camera);
-  const finish: Finish = { samples: 0, bloom: light.bloom, threshold: light.threshold, focus: dist, aperture: 0,
+  // by day only what glows on purpose (marks, lamps: twice white and more) blooms, not a sunlit white
+  // patch on a model (an animal's pale eye ring flared into a halo)
+  const finish: Finish = { samples: 0, bloom: light.bloom, threshold: world.set.time === "day" ? Math.max(light.threshold, 1.4) : light.threshold, focus: dist, aperture: 0,
     vignette: light.vignette, lift: light.lift, gain: light.gain, frame };
   const grounded = !VOID.includes(world.set.kind) && world.set.kind !== "underwater";
   // bloom only where something gives off light: night, lit windows, glowing marks, a glowing cell
