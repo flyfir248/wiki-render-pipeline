@@ -80,11 +80,12 @@ def test_a_story_animal_is_that_animal_not_its_nearest_cousin():
     assert key("the horse", "horse") == "kit-horse"
 
 
-def test_a_still_library_animal_is_posed_and_credited():
+def test_a_library_animal_rigged_here_keeps_its_posing_and_credit():
     from fyt import worldgen
 
     hit = assetlib.project_model(animal("the elephant", "elephant"))
-    assert hit["posed"] and not hit["clips"] and hit["licence"] == "by"
+    # rigged from its shape (fyt/rigging.py): its own clips, and still laid on its side to sleep
+    assert hit["posed"] and "Walk" in hit["clips"] and hit["licence"] == "by"
     build = worldgen.rule_build(animal("the elephant", "elephant"), 1)
     assert worldgen.shows(build, {"posed": True}) and not worldgen.shows(build, {"clips": []})
     assert any("David OReilly" in line for line in assetlib.credits({"e": hit}))

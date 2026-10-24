@@ -2,7 +2,7 @@
 // only the named node, or one of its children when it holds variants of the same thing (a bear
 // standing and on all fours), and drop the rest.
 //
-//   node split-model.mjs pack.glb out.glb NodeName [--child N] [--srgb-colors]
+//   node split-model.mjs pack.glb out.glb NodeName [--child N|all] [--srgb-colors]
 import { NodeIO } from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { prune } from "@gltf-transform/functions";
@@ -18,7 +18,8 @@ if (!node) {
 }
 const at = rest.indexOf("--child");
 const kids = node.listChildren();
-const keep = at >= 0 && kids.length > 1 ? kids[Math.min(kids.length - 1, Number(rest[at + 1]))] : node;
+// (--child all: the children are parts of one thing, a body and its see-through wings, kept together)
+const keep = at >= 0 && kids.length > 1 && rest[at + 1] !== "all" ? kids[Math.min(kids.length - 1, Number(rest[at + 1]))] : node;
 // the kept node's world transform, so it stands as it did in the pack's scene
 const world = keep.getWorldMatrix();
 for (const p of [...keep.listParents()]) if (p.propertyType === "Node") p.removeChild(keep);

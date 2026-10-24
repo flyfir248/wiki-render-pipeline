@@ -590,6 +590,7 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
     [loaded, p.m.model, look.toon],
   );
   const living = LIVING_ARCH.includes(p.m.build.archetype);
+  const spinners = React.useMemo(() => (living ? [] : spinningParts(made.root)), [made, living]);
   // a living thing plays its own clip for what it is doing, in step with the frame
   const clip = living ? clipFor(loaded.clips.map((c) => c.name), p.m.verb) : -1;
   const mixer = React.useMemo(() => {
@@ -604,13 +605,27 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
     a.play();
     return mx;
   }, [made, loaded, clip]);
-  if (mixer) mixer.setTime(b.t + p.phase * 0.3);
+  // a rigged library animal (rig-model.mjs) records how much ground each of its gaits covers, as a share
+  // of its largest side: its walk is played at the pace it actually moves, so its feet don't slide
+  const gait = (loaded.scene.userData?.gait ?? {}) as Record<string, number>;
+  const natural = clip >= 0 ? (gait[loaded.clips[clip].name] ?? 0) * Math.max(0.05, p.m.build.size) : 0;
+  const pace = natural > 0 && p.speed > 0.05 ? Math.min(2, Math.max(0.5, p.speed / natural)) : 1;
+  if (mixer) mixer.setTime((b.t + p.phase * 0.3) * pace);
   // prepare() scales the largest side to 4 units; the design's size says how big it really is.
   const k = Math.max(0.05, p.m.build.size) / 4;
-  const posed = living && clip < 0 && Boolean(p.m.model?.posed);
+  // a still library animal is moved as a whole when it has no clip for the verb, and laid on its side
+  // when it falls or sleeps (a rigged one breathing in its sleep clip as it lies there)
+  const posed = living && Boolean(p.m.model?.posed) && (clip < 0 || LIES.test(p.m.verb) || p.m.state === "asleep");
   const { rot, off, scale } = posed
     ? stillPose(p, b, made.size.y * k, made.size.z * k)
     : living ? { rot: [0, 0, 0] as [number, number, number], off: new THREE.Vector3(), scale: 1 } : rigidPose(p, b, p.m.build.archetype === "vehicle");
+  // wheels roll as far as the vehicle travels; propellers and rotors turn while it flies or moves
+  const going = p.speed > 0.05 || /fly|drive|move|race|approach|depart|chase|flee/.test(p.m.verb);
+  for (const sp of spinners) {
+    // (a windmill's sails turn slowly while it just stands there)
+    const angle = sp.wheel ? (p.speed * (b.t + p.phase)) / Math.max(1e-3, sp.radius * k) : (b.t + p.phase) * (going ? 38 : 1.6);
+    sp.node.quaternion.copy(sp.base).multiply(new THREE.Quaternion().setFromAxisAngle(sp.axis, angle));
+  }
   const wet = world.set.kind === "sea" || Boolean(waterBand(world.set.kind));
   const impact = p.m.verb === "crash" && b.k > 0 && wet;
   return (
@@ -625,11 +640,52 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
 
 const LIVING_ARCH = ["humanoid", "quadruped", "bird", "fish", "insect", "serpent"];
 
+// A model's parts that turn on their own, found by name (a pack's "wheel-front-left", "propeller"): each
+// turns about its own thinnest side, the axle of a wheel or the shaft of a propeller. (radius: a
+// wheel's, in the prepared model's units before the design's size is applied)
+const WHEEL = /wheel|tire|tyre/i;
+const SPINNER = /propel|rotor|(^|[^a-z])prop([^a-z]|$)|blade|fan/i;
+type Spinner = { node: THREE.Object3D; base: THREE.Quaternion; axis: THREE.Vector3; radius: number; wheel: boolean };
+const spinningParts = (root: THREE.Object3D): Spinner[] => {
+  root.updateMatrixWorld(true);
+  const out: Spinner[] = [];
+  root.traverse((n) => {
+    const wheel = WHEEL.test(n.name);
+    if (!wheel && !SPINNER.test(n.name)) return;
+    // nested parts (a wheel's hub and tyre) turn with the outermost one
+    for (let up = n.parent; up; up = up.parent) if (WHEEL.test(up.name) || SPINNER.test(up.name)) return;
+    const box = new THREE.Box3();
+    n.traverse((c) => {
+      const g = (c as THREE.Mesh).geometry;
+      if (!g) return;
+      g.computeBoundingBox();
+      const m = new THREE.Matrix4().copy(n.matrixWorld).invert().multiply(c.matrixWorld);
+      box.union(g.boundingBox!.clone().applyMatrix4(m));
+    });
+    if (box.isEmpty()) return;
+    const size = box.getSize(new THREE.Vector3());
+    const thin = size.x <= size.y && size.x <= size.z ? 0 : size.y <= size.z ? 1 : 2;
+    // a wheel is round across its axle; a set of them (a train's bogie) is not, and stays put
+    const across = [size.x, size.y, size.z].filter((_, i) => i !== thin);
+    if (wheel && Math.max(...across) > Math.min(...across) * 1.3) return;
+    const axis = new THREE.Vector3().setComponent(thin, 1);
+    // the pivot is the node's own origin; a part modelled off its origin would swing round it, not spin
+    const centre = box.getCenter(new THREE.Vector3());
+    if (centre.length() > Math.max(size.x, size.y, size.z) * 0.25) return;
+    const scale = new THREE.Vector3();
+    n.matrixWorld.decompose(new THREE.Vector3(), new THREE.Quaternion(), scale);
+    const radius = (Math.max(size.x, size.y, size.z) / 2) * Math.max(scale.x, scale.y, scale.z);
+    out.push({ node: n, base: n.quaternion.clone(), axis, radius, wheel });
+  });
+  return out;
+};
+
 // A still library animal (one mesh, no rig) moved as a whole for what it does: the rise and fall and
 // rock of a gait as it travels, a flier's bob and bank, a swimmer's sway, a slow breath and a look round
 // while it stands, and lying on its side when it falls, dies or sleeps. (h: its height, d: its depth
 // across its body, in the stage's units.)
 const STRIDES = /walk|run|move|approach|depart|climb|carry|panic|rear|crash/;
+const LIES = /fall|collapse|lie|sleep/;
 const stillPose = (p: Placed, b: Blocking, h: number, d: number) => {
   const verb = p.m.verb;
   const arche = p.m.build.archetype;
@@ -637,7 +693,7 @@ const stillPose = (p: Placed, b: Blocking, h: number, d: number) => {
   const rot: [number, number, number] = [0, 0, 0];
   const off = new THREE.Vector3();
   let scale = 1;
-  if (/fall|collapse|lie|sleep/.test(verb) || p.m.state === "asleep") {
+  if (LIES.test(verb) || p.m.state === "asleep") {
     // over onto its side, settling where it stood
     const s = verb === "lie" || verb === "sleep" || p.m.state === "asleep" ? 1 : ease((b.k + 0.4) / 0.6);
     rot[0] = s * Math.PI * 0.5;
