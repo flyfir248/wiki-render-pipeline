@@ -88,7 +88,7 @@ def test_search_goes_past_commons_only_when_it_has_too_few_of_the_subject(monkey
 
 def test_a_topic_with_no_article_images_gets_searched_photos_to_script_with(monkeypatch, tmp_path):
     found = [wiki.WikiImage(f"Man in a white suit {n}", f"https://x/{n}.jpg", f"https://p/{n}", f"White suit {n}", "", "CC BY 2.0", "openverse") for n in range(4)]
-    monkeypatch.setattr(freeimages, "search", lambda cfg, q, limit=6, keep=None, log=print: keep(found)[:limit])
+    monkeypatch.setattr(freeimages, "search", lambda cfg, q, limit=6, keep=None, log=print, broaden=False: keep(found)[:limit])
     job = Job(tmp_path / "job")
     job.public.mkdir(parents=True)
     menu = pipeline._more_images(Config(), job, [], "White suit mystery")
@@ -123,3 +123,19 @@ def test_a_searched_photo_the_script_picked_is_still_checked_by_eye(monkeypatch,
     assert scene_media[0].src == "media/wiki1.jpg"  # the article's own image is not second-guessed
     assert 1 not in scene_media and seen == ["wiki2.jpg"]
     assert len(credits) == 1
+
+
+def test_a_subject_no_archive_has_by_name_is_searched_more_broadly(monkeypatch):
+    assert freeimages.broader("Solway Firth Spaceman") == ["Solway Firth Spaceman", "Solway Firth"]
+    assert freeimages.broader("Möbius strip") == ["Möbius strip"]
+    asked = []
+
+    def commons(q, n):
+        asked.append(q)
+        return [wiki.WikiImage("File:Solway Firth marshes.jpg", "https://x/s.jpg", "p", "Solway Firth marshes", "", "CC BY-SA 4.0", "commons")] if q == "Solway Firth" else []
+
+    monkeypatch.setitem(freeimages.SOURCES, "commons", commons)
+    assert freeimages.search(Config(), "Solway Firth Spaceman", keep=None) == []  # a scene's own query stays exact
+    found = freeimages.search(Config(), "Solway Firth Spaceman", broaden=True)
+    assert [im.title for im in found] == ["File:Solway Firth marshes.jpg"]
+    assert asked == ["Solway Firth Spaceman", "Solway Firth"]  # the exact query was asked once, then remembered

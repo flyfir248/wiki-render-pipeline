@@ -703,7 +703,8 @@ def _more_images(cfg: Config, job: Job, images: list["wiki.WikiImage"], subject:
     if want <= 0 or not subject.strip():
         return images
     have = {im.title for im in images}
-    found = freeimages.search(cfg, subject, limit=want + 2, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m))
+    found = freeimages.search(cfg, subject, limit=want + 2, keep=lambda hits: _on_subject(hits, subject),
+                              log=lambda m: log(job, m), broaden=True)
     extra = [im for im in found if im.title not in have][:want]
     if extra:
         log(job, f"{len(extra)} more freely licensed photos of the subject: "
@@ -793,7 +794,8 @@ def scene_visuals(
         commons_seen: set[str] = set()
 
         def commons(query: str) -> list["wiki.WikiImage"]:
-            found = freeimages.search(cfg, query, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m))
+            found = freeimages.search(cfg, query, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m),
+                                      broaden=query == subject)
             return [im for im in found if im.title not in commons_seen]
 
         for i, s in enumerate(script.scenes):
@@ -866,7 +868,8 @@ def extra_shots(
     def commons(query: str) -> list["wiki.WikiImage"]:
         if query not in commons_cache:
             commons_cache[query] = freeimages.search(
-                cfg, query, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m)
+                cfg, query, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m),
+                broaden=query == subject,
             )
         return [im for im in commons_cache[query] if im.title.removeprefix("File:") not in seen]
 

@@ -161,24 +161,42 @@ SOURCES: dict[str, Callable[[str, int], list[WikiImage]]] = {
 }
 
 
-def search(cfg: Config, query: str, limit: int = 6, keep: Keep | None = None, log: Callable[[str], None] = print) -> list[WikiImage]:
+def broader(query: str, most: int = 3) -> list[str]:
+    """The query, then shorter ones with its last words dropped, down to two words. Archives match every
+    word, so 'Solway Firth Spaceman Templeton's Letter' finds nothing where 'Solway Firth' finds the place."""
+    words = query.split()
+    out = [" ".join(words[:n]) for n in range(len(words), min(2, len(words)) - 1, -1)]
+    return out[:most] if len(out) <= most else [*out[: most - 1], out[-1]]
+
+
+_cache: dict[tuple[str, str], list[WikiImage]] = {}  # a run asks the same archive the same thing often
+
+
+def search(
+    cfg: Config, query: str, limit: int = 6, keep: Keep | None = None, log: Callable[[str], None] = print,
+    broaden: bool = False,
+) -> list[WikiImage]:
     """Photos for `query` from each source in `growth.image_sources` in turn, best match first, until
-    `limit` pass `keep` (the caller's subject filter). A source that fails is skipped."""
+    `limit` pass `keep` (the caller's subject filter); with `broaden` (a subject's name), then the same
+    for broader forms of it. A source that fails is skipped."""
     found: list[WikiImage] = []
     seen: set[str] = set()
-    for name in cfg.growth.image_sources:
-        fn = SOURCES.get(name)
-        if fn is None:
-            continue
-        try:
-            hits = fn(query, limit)
-        except Exception as e:  # any one source is a nice-to-have
-            log(f"warning: {name} image search failed for {query!r}: {e}")
-            continue
-        hits = [im for im in (keep(hits) if keep else hits) if im.url not in seen and im.title not in seen]
-        seen.update(im.url for im in hits)
-        seen.update(im.title for im in hits)
-        found += hits
-        if len(found) >= limit:
-            break
-    return found[:limit]
+    for q in broader(query) if broaden else [query]:
+        for name in cfg.growth.image_sources:
+            fn = SOURCES.get(name)
+            if fn is None:
+                continue
+            if (name, q) not in _cache:
+                try:
+                    _cache[name, q] = fn(q, limit)
+                except Exception as e:  # any one source is a nice-to-have
+                    log(f"warning: {name} image search failed for {q!r}: {e}")
+                    continue
+            hits = _cache[name, q]
+            hits = [im for im in (keep(hits) if keep else hits) if im.url not in seen and im.title not in seen]
+            seen.update(im.url for im in hits)
+            seen.update(im.title for im in hits)
+            found += hits
+            if len(found) >= limit:
+                return found[:limit]
+    return found

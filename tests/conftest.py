@@ -29,9 +29,11 @@ def plan_without_a_model(request, monkeypatch):
 def only_commons_is_searched(request, monkeypatch):
     """Pipeline tests fake Commons search; the other free image sources stay offline (test_freeimages
     tests them)."""
+    from fyt import freeimages
+
+    monkeypatch.setattr(freeimages, "_cache", {})
     if request.module.__name__.endswith("test_freeimages"):
         return
-    from fyt import freeimages
 
     for name in ("openverse", "loc", "nasa"):
         monkeypatch.setitem(freeimages.SOURCES, name, lambda q, n: [])
