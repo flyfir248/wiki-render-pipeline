@@ -149,6 +149,39 @@ def _upload(
     return True
 
 
+def replace(cfg: Config, job: Job, now: datetime | None = None) -> str:
+    """Upload a reviewed re-render (a test render's job folder) in place of the same article's video
+    still waiting on YouTube to go public: the new one takes its publish time and slot, and the old one
+    is made private and taken off the schedule (it stays on the channel, so it can be brought back).
+    Returns the new video's id."""
+    now = now or utcnow()
+    slug = job.id.split("-", 2)[-1]  # 20261025-114127-wiki-solway-firth-spaceman -> wiki-solway-firth-spaceman
+    uploads = Uploads(cfg)
+    earliest = now + timedelta(minutes=youtube.MIN_PUBLISH_LEAD_MINUTES + 15)
+    found = uploads.scheduled_for(slug, earliest.isoformat())
+    topic = job.meta.get("topic", "")
+    if not found and topic.startswith("wiki:"):
+        # recorded from the channel itself (no job): find it by the article its description credits
+        for v in youtube.recent_uploads(50):
+            m = ARTICLE.search(v["description"])
+            if m and m.group(1) == topic.removeprefix("wiki:") and (v["publish_at"] or "") > earliest.isoformat():
+                found = uploads.upload_row(v["id"]) or (None, v["id"], None, job.meta.get("format", "short"), v["publish_at"])
+                break
+    if not found:
+        raise SystemExit(f"no upload of {slug} is waiting to go public after {earliest:%a %d %b %H:%M} UTC")
+    row, old_id, slot, kind, publish_at = found
+    at = datetime.fromisoformat(publish_at.replace("Z", "+00:00"))
+    print(f"replacing https://youtu.be/{old_id} ({kind}, goes public {at:%a %d %b %H:%M} UTC) with {job.id}")
+    job.update(status="approved", youtube_id=None, reupload_of=old_id)
+    new_id = pipeline.upload_job(cfg, job, publish_at=at)
+    youtube.unschedule(old_id)  # only once the new one is up, so the slot is never left empty
+    if row is not None:
+        uploads.retire(row, old_id)
+    uploads.record(kind, job.id, new_id, at.isoformat(), slot, at=now.isoformat(timespec="seconds"))
+    print(f"scheduled https://youtu.be/{new_id} for {at:%a %d %b %H:%M} UTC; https://youtu.be/{old_id} is now private")
+    return new_id
+
+
 ARTICLE = re.compile(r'Based on the Wikipedia article "(.+?)" \(')
 SLOT_SLACK_MINUTES = 60  # a publish time can land past the jitter window when a render ran long
 

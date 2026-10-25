@@ -61,6 +61,8 @@ def main(argv: list[str] | None = None) -> None:
     u = sub.add_parser("upload", help="upload an approved job")
     u.add_argument("job")
     u.add_argument("--force", action="store_true", help="upload even if not approved")
+    rp = sub.add_parser("replace", help="upload a reviewed re-render in place of the same article's scheduled video (the old one goes private)")
+    rp.add_argument("job")
     sub.add_parser("auth", help="authorise YouTube uploads (opens a browser)")
     sub.add_parser("stats", help="show views for uploaded videos")
     w = sub.add_parser("watchdog", help="find uploads YouTube never processed and queue them to upload again")
@@ -261,6 +263,10 @@ def main(argv: list[str] | None = None) -> None:
             pipeline.upload_job(cfg, job)
     elif args.cmd == "upload":
         pipeline.upload_job(cfg, find_job(cfg, args.job), force=args.force)
+    elif args.cmd == "replace":
+        from fyt import schedule
+
+        schedule.replace(cfg, find_job(cfg, args.job))
     elif args.cmd == "auth":
         from fyt import youtube
 

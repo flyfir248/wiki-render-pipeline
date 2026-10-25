@@ -593,12 +593,15 @@ The research notes are a Wikipedia article. Turn it into an original video:
 - Write every sentence in your own words. Never copy or lightly reword sentences from the article.
 - Don't say "according to Wikipedia" in the narration.
 - Only state facts the article supports.
+"""
 
-Visuals: the message ends with a numbered list of "Available images" from the article. For each scene,
-set `image` to the number of the image that best shows what the narration is talking about at that
-moment (the real person, place or object), or leave it null if none fits. Use each image at most once.
-For scenes without an image, set `broll_query` to a concrete stock-footage search for what is being
-said. The title scene should show the subject itself whenever an image of it exists.
+IMAGES_GUIDE = """
+Visuals: the message ends with a numbered list of "Available images": the article's own, then freely
+licensed photos found for the subject. For each scene, set `image` to the number of the image that best
+shows what the narration is talking about at that moment (the real person, place or object), or leave it
+null if none fits. Use each image at most once. For scenes without an image, set `broll_query` to a
+concrete stock-footage search for what is being said. The title scene should show the subject itself
+whenever an image of it exists.
 """
 
 
@@ -657,6 +660,8 @@ def write_script(
         words=words,
         structure=SHORT_STRUCTURE if cfg.format == "short" else LONG_STRUCTURE,
     )
+    if images:
+        guide += IMAGES_GUIDE
     if news:
         guide += NEWS_GUIDE.format(today=datetime.now(timezone.utc).strftime("%d %B %Y"))
     if lessons:

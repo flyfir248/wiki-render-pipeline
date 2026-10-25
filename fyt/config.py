@@ -223,6 +223,14 @@ class GrowthConfig(BaseModel):
     # Every scene gets a real photo: a spare article image, a Wikimedia Commons photo, or a stock photo.
     # Charts and numbers sit on top of it, darkened. Off: data scenes keep the plain background.
     visuals_every_scene: bool = True
+    # Where searched-for photos come from, in order, each tried only while the ones before it have too
+    # few of the subject (fyt/freeimages.py): commons, openverse (CC0 / CC BY / CC BY-SA from Flickr,
+    # museums and archives), loc (Library of Congress, no known restrictions), nasa (public domain).
+    # Never a web image search: those results are mostly copyrighted.
+    image_sources: list[str] = ["commons", "openverse", "loc", "nasa"]
+    # Before the script is written, a topic whose article has fewer images than this (or no article at
+    # all) gets searched photos of its subject added to the scriptwriter's image menu. 0 turns it off.
+    menu_images: int = 6
     # Shorts cut to a new shot about this often (seconds): a scene's photo is followed by more
     # photos of the subject, or re-framed when there are none. 0 keeps one shot per scene.
     shot_seconds: float = 2.5

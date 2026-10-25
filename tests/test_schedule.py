@@ -236,3 +236,27 @@ def test_the_long_video_is_made_before_shorts_that_can_wait():
     order = [(s.at.day, s.at.hour, s.kind) for s in schedule.by_urgency(slots, now)]
     # the Short due today comes first, then the long video, then the Shorts that can wait for the next run
     assert order == [(28, 14, "short"), (31, 16, "long"), (28, 22, "short"), (29, 14, "short")]
+
+
+def test_a_reviewed_test_render_replaces_the_scheduled_video_of_its_article(cfg, monkeypatch, tmp_path):
+    u = Uploads(cfg)
+    u.record("short", "20261024-061200-wiki-solway-firth-spaceman", "old1", "2026-09-29T14:07:00+00:00", "2026-09-29T14:00:00+00:00")
+    u.queue_comment("old1", "Ever seen one?", "2026-09-29T14:07:00+00:00")
+    job = Job(tmp_path / "test" / "20261025-114127-wiki-solway-firth-spaceman")
+    job.path.mkdir(parents=True)
+    job.update(topic="wiki:Solway Firth Spaceman", status="rendered", format="short")
+    steps = []
+    monkeypatch.setattr(pipeline, "upload_job", lambda cfg, j, publish_at=None: steps.append(("upload", j.meta["status"], publish_at)) or "new1")
+    monkeypatch.setattr(youtube, "unschedule", lambda vid: steps.append(("private", vid)))
+    assert schedule.replace(cfg, job) == "new1"
+    at = datetime(2026, 9, 29, 14, 7, tzinfo=timezone.utc)
+    assert steps == [("upload", "approved", at), ("private", "old1")]  # the new one is up before the old one goes
+    assert u.filled()["2026-09-29T14:00:00+00:00"][0] == "new1"  # it holds the old one's slot
+    assert schedule.post_comments(cfg, datetime(2026, 9, 30, tzinfo=timezone.utc)) == 0  # the old one's comment is dropped
+
+    other = Job(tmp_path / "test" / "20261025-120000-wiki-dyatlov-pass")
+    other.path.mkdir(parents=True)
+    other.update(topic="wiki:Dyatlov Pass", status="rendered")
+    monkeypatch.setattr(youtube, "recent_uploads", lambda n=100: [])
+    with pytest.raises(SystemExit):  # nothing of that article is waiting to go public
+        schedule.replace(cfg, other)

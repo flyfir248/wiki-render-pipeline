@@ -181,7 +181,7 @@ def test_every_scene_gets_a_photo_when_visuals_every_scene(monkeypatch, tmp_path
     def commons(query):
         searches.append(query)
         if query == "Dreamachine":
-            return [wiki.WikiImage(f"File:Dreamachine C{len(searches)}.jpg", "https://x/C.jpg", "https://c/C", "c", "", "CC BY 4.0")]
+            return [wiki.WikiImage(f"File:Dreamachine C{n}.jpg", f"https://x/C{n}.jpg", "https://c/C", "c", "", "CC BY 4.0") for n in (2, 3)]
         return []
 
     monkeypatch.setattr(wiki, "search_commons", commons)
