@@ -1,4 +1,4 @@
-"""Shorts cross-posted to the Facebook Page and to Threads, next to the Instagram Reels.
+"""Shorts cross-posted to the Facebook Page, Threads and X, next to the Instagram Reels.
 
 Both go out from the same queue as the Reels (fyt/instagram.py): a Short is posted once it is public
 on YouTube, with its video file fetched from the run that made it. Unlike Instagram captions, links
@@ -7,7 +7,12 @@ can be tapped on both, so each post links straight to the Short on YouTube.
 Facebook posts a Reel to the Page linked to the Instagram account, with the INSTAGRAM_TOKEN secret
 (it needs pages_manage_posts as well). Threads has its own API and token: THREADS_TOKEN, a long-lived
 token that lasts 60 days. With THREADS_APP_SECRET set too, the token is renewed every week and kept,
-encrypted with the app secret, in state.db, so it never runs out. Setup: see the README.
+encrypted with the app secret, in state.db, so it never runs out.
+
+X takes the video straight from disk (its v2 chunked media upload) and signs every call with OAuth 1.0a,
+from the four X_* secrets made in the X developer console; they don't expire. X charges per call: a post
+costs $0.015, or $0.20 with a link in it, so a post names the YouTube channel unless `x.link` is on.
+Setup: see the README.
 """
 
 from __future__ import annotations
@@ -28,6 +33,9 @@ from fyt.models import Script
 from fyt.store import Uploads
 
 THREADS = "https://graph.threads.net"
+X_API = "https://api.x.com/2"
+X_MAX = 280
+X_SEGMENT = 4 * 1024 * 1024  # X takes upload segments of up to 5 MB
 THREADS_MAX = 500
 FB_UPLOAD = "https://rupload.facebook.com/video-upload"
 RENEW_AFTER = timedelta(days=7)
@@ -257,10 +265,128 @@ def check_threads(cfg: Config, session=requests) -> str:
     return f"Threads works: can post as @{name}"
 
 
+# X
+
+
+def _x_weight(text: str) -> int:
+    """Length as X counts it: a link is 23, an emoji or other wide character 2."""
+    import re
+
+    text = re.sub(r"https?://\S+", "x" * 23, text)
+    return sum(2 if ord(c) > 0x10FF else 1 for c in text)
+
+
+def x_text(cfg: Config, folder: Path, youtube_id: str) -> str:
+    """The hook, where to watch (a link only with x.link, as X charges more for those), the question and tags."""
+    script = _script(folder)
+    title = script.title.strip() if script else instagram.caption_for(cfg, folder).split("\n\n")[0]
+    if cfg.x.link:
+        watch = f"▶️ Full story: https://youtu.be/{youtube_id}"
+    else:
+        name = cfg.instagram.youtube_handle.strip().lstrip("@")  # an @ would tag whoever has that name on X
+        watch = f"▶️ Full story on YouTube: {name}" if name else "▶️ Full story on our YouTube channel"
+    question = f"💬 {script.comment_question.strip()}" if script and script.comment_question.strip() else ""
+    tags = " ".join(f"#{h}" for h in instagram.hashtags(cfg, script)[: cfg.x.max_hashtags]) if script else ""
+    for parts in ((title, watch, question, tags), (title, watch, question), (title, watch)):
+        text = "\n\n".join(p for p in parts if p)
+        if _x_weight(text) <= X_MAX:
+            return text
+    room = X_MAX - _x_weight(watch) - 2
+    while _x_weight(title) > room:
+        title = title[:-4].rstrip() + "..."
+    return f"{title}\n\n{watch}"
+
+
+def x_secrets() -> tuple[str, str, str, str] | None:
+    keys = tuple(secret(k) for k in ("X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_SECRET"))
+    return keys if all(keys) else None
+
+
+def _x_session(session=None):
+    """A requests session that signs each call with OAuth 1.0a as the account the access token belongs to."""
+    if session is not None:
+        return session
+    from requests_oauthlib import OAuth1Session
+
+    key, key_secret, token, token_secret = x_secrets()
+    return OAuth1Session(key, client_secret=key_secret, resource_owner_key=token, resource_owner_secret=token_secret)
+
+
+def _x_json(r: requests.Response) -> dict:
+    try:
+        data = r.json()
+    except ValueError:
+        data = {}
+    if r.status_code >= 400 or (data.get("errors") and not data.get("data")):
+        err = (data.get("errors") or [{}])[0]
+        msg = data.get("detail") or err.get("detail") or err.get("message") or data.get("title") or r.text[:300]
+        raise RuntimeError(f"X API {r.status_code}: {msg}")
+    return data
+
+
+def for_x(video: Path, out: Path) -> Path:
+    """A 720x1280 copy: X refuses videos taller than 1900 pixels, and a Short is 1920. Falls back to the Reel copy."""
+    import subprocess
+
+    import imageio_ffmpeg
+
+    cmd = [
+        imageio_ffmpeg.get_ffmpeg_exe(), "-loglevel", "error", "-y", "-i", str(video),
+        "-map", "0:v:0", "-map", "0:a:0?", "-map_metadata", "-1", "-vf", "scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-profile:v", "high", "-pix_fmt", "yuv420p", "-r", "30",
+        "-c:a", "aac", "-b:a", "128k", "-ar", "44100", "-ac", "2", "-movflags", "+faststart", str(out),
+    ]
+    try:
+        subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=600)
+        return out
+    except (OSError, subprocess.SubprocessError) as e:
+        print(f"::warning::could not make the 720p copy for X, sending the Reel copy: {getattr(e, 'stderr', e)}")
+        return instagram.for_instagram(video, out.with_name("reel.mp4"))
+
+
+def post_x(cfg: Config, video: Path, text: str, session=None, sleep=time.sleep) -> str:
+    """Upload the video in segments, wait for X to process it, then post it. Returns the post id."""
+    s = _x_session(session)
+    with tempfile.TemporaryDirectory() as tmp:
+        upload = for_x(video, Path(tmp) / "x.mp4")
+        size = upload.stat().st_size
+        init = _x_json(s.post(f"{X_API}/media/upload/initialize", json={"media_type": "video/mp4", "total_bytes": size, "media_category": "tweet_video"}, timeout=60))
+        media_id = init["data"]["id"]
+        with upload.open("rb") as f:
+            for i, chunk in enumerate(iter(lambda: f.read(X_SEGMENT), b"")):
+                _x_json(s.post(f"{X_API}/media/upload/{media_id}/append", data={"segment_index": str(i)}, files={"media": ("x.mp4", chunk, "video/mp4")}, timeout=300))
+    info = (_x_json(s.post(f"{X_API}/media/upload/{media_id}/finalize", timeout=60)).get("data") or {}).get("processing_info")
+    for _ in range(instagram.MAX_CHECKS):
+        if not info or info.get("state") == "succeeded":
+            break
+        if info.get("state") == "failed":
+            raise RuntimeError(f"X could not process the video: {(info.get('error') or {}).get('message') or info}")
+        sleep(min(int(info.get("check_after_secs") or instagram.CHECK_EVERY), 60))
+        info = (_x_json(s.get(f"{X_API}/media/upload", params={"command": "STATUS", "media_id": media_id}, timeout=60)).get("data") or {}).get("processing_info")
+    else:
+        raise RuntimeError(f"X was still processing the video after {instagram.MAX_CHECKS} checks")
+    post = _x_json(s.post(f"{X_API}/tweets", json={"text": text, "media": {"media_ids": [media_id]}}, timeout=60))["data"]["id"]
+    print(f"posted to X: https://x.com/i/status/{post}")
+    return post
+
+
+def check_x(cfg: Config, session=None) -> str:
+    try:
+        name = _x_json(_x_session(session).get(f"{X_API}/users/me", timeout=30))["data"].get("username")
+    except (RuntimeError, KeyError) as e:
+        return f"::warning::can't post to X yet: {e}"
+    return f"X works: can post as @{name}"
+
+
 PLATFORMS = {
     "facebook": (lambda cfg: cfg.facebook, lambda: bool(instagram.credentials()), check_facebook, facebook_text, post_facebook),
     "threads": (lambda cfg: cfg.threads, lambda: bool(secret("THREADS_TOKEN")), check_threads, threads_text, post_threads),
+    "x": (lambda cfg: cfg.x, lambda: bool(x_secrets()), check_x, x_text, post_x),
 }
+
+
+def _name(platform: str) -> str:
+    return {"x": "X"}.get(platform, platform.title())
 
 
 def post_due(cfg: Config, platform: str, now: datetime | None = None, tmp: Path | None = None) -> int:
@@ -270,28 +396,32 @@ def post_due(cfg: Config, platform: str, now: datetime | None = None, tmp: Path 
     if not conf.publish:
         return 0
     if not has_secrets():
-        print(f"::warning::{platform}.publish is on but its secrets aren't set; nothing posted to {platform.title()}")
-        return 0
-    works = check(cfg)
-    if works.startswith("::warning::"):  # don't use up the Shorts' tries on a setup problem
-        print(works)
+        print(f"::warning::{platform}.publish is on but its secrets aren't set; nothing posted to {_name(platform)}")
         return 0
     now = now or datetime.now(timezone.utc)
     uploads = Uploads(cfg)
     since = (now - timedelta(hours=cfg.instagram.max_age_hours)).isoformat(timespec="seconds")
     uploads.queue_recent_shorts(since)
+    due = uploads.due_crossposts(platform, now.isoformat(timespec="seconds"), since)[: conf.max_per_run]
+    if not due:  # X charges for the check too
+        return 0
+    works = check(cfg)
+    if works.startswith("::warning::"):  # don't use up the Shorts' tries on a setup problem
+        print(works)
+        return 0
+    print(works)
     posted = 0
     with tempfile.TemporaryDirectory() as own:
-        for youtube_id, job_id, run in uploads.due_crossposts(platform, now.isoformat(timespec="seconds"), since)[: conf.max_per_run]:
+        for youtube_id, job_id, run in due:
             folder = instagram.find_files(cfg, job_id, run, tmp or Path(own)) if job_id else None
             if folder is None:
-                print(f"::warning::no video file for https://youtu.be/{youtube_id}; not posted to {platform.title()}")
+                print(f"::warning::no video file for https://youtu.be/{youtube_id}; not posted to {_name(platform)}")
                 uploads.crosspost_done(youtube_id, platform, None)
                 continue
             try:
                 post_id = post(cfg, folder / "video.mp4", text_for(cfg, folder, youtube_id))
             except Exception as e:
-                print(f"::warning::https://youtu.be/{youtube_id} not posted to {platform.title()}: {e}")
+                print(f"::warning::https://youtu.be/{youtube_id} not posted to {_name(platform)}: {e}")
                 uploads.crosspost_done(youtube_id, platform, None)
                 continue
             uploads.crosspost_done(youtube_id, platform, post_id)

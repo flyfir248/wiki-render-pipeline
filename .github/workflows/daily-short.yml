@@ -16,12 +16,12 @@ on:
     # Four chances a day to top up the schedule. A run with nothing to do takes about a minute.
     - cron: "17 1,7,13,19 * * *"
     # Right after the Shorts go public (14:00 and 22:00 UTC, up to 90 minutes later with the
-    # jitter): post them to Instagram, Facebook and Threads, so they come out with the Short.
+    # jitter): post them to Instagram, Facebook, Threads and X, so they come out with the Short.
     - cron: "40 15,23 * * *"
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary). kit: fetch the CC0 character kit into the model library (inventory in the run summary)"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook, Threads and X now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary). kit: fetch the CC0 character kit into the model library (inventory in the run summary)"
         type: choice
         options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck, bench, kit]
         default: fill
@@ -89,10 +89,10 @@ jobs:
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
         run: python -m fyt comments
 
-      # Shorts that have gone public on YouTube go up as Instagram Reels, Facebook Reels and Threads posts,
+      # Shorts that have gone public on YouTube go up as Instagram Reels, Facebook Reels, Threads posts and X posts,
       # with their files fetched from the run that made them. Only for the platforms with publish: true in
       # channel.yaml and their secrets set.
-      - name: Post Shorts to Instagram, Facebook and Threads
+      - name: Post Shorts to Instagram, Facebook, Threads and X
         if: env.TASK == 'fill' || env.TASK == 'reels'
         continue-on-error: true
         env:
@@ -100,6 +100,10 @@ jobs:
           INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
           THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
           THREADS_APP_SECRET: ${{ secrets.THREADS_APP_SECRET }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
           GH_TOKEN: ${{ github.token }}
           COUNT: ${{ inputs.count || '1' }}
         # task reels with count N catches up on the last N days (the runs keep their videos for a week)
@@ -130,6 +134,10 @@ jobs:
           INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
           INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
           THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
           GH_TOKEN: ${{ github.token }}
         run: python -m fyt cleanruns
 

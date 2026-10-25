@@ -130,6 +130,12 @@ threads:
   publish: true
   topic: "Weird History"    # Threads takes one topic tag per post
 
+# The same Shorts on X. Needs the X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN and X_ACCESS_SECRET secrets and
+# credits in the X developer console; see "X (Twitter)" in the README. Off until they are set.
+x:
+  publish: false
+  link: false               # true links each post to the Short ($0.20 a post instead of $0.015)
+
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is
 # set; without the secret it only makes the video.

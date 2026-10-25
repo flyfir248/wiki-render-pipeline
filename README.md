@@ -511,6 +511,28 @@ a warning in the run, without using up the Shorts' retries.
   60 days; with the app secret the run renews it every week and keeps it in `state.db`, encrypted with the
   app secret. Threads only takes videos from a link, so it always uses the temporary host.
 
+## X (Twitter)
+
+The same Shorts can go up on X (`fyt/crosspost.py`, `x` in `channel.yaml`), from the same queue and in the
+same step as the Reels. The video is sent as a 720x1280 copy (X refuses videos taller than 1900 pixels).
+
+X's API has no free tier for new apps: it charges per call from credits bought in the developer console.
+A post costs $0.015, or $0.20 if it has a link, so by default a post names the YouTube channel instead of
+linking the Short (`x.link: true` to link it). The run also reads the account's name once before posting
+($0.01). Two Shorts a day come to about $1.50 a month; the $20 X gives when you first save a card covers
+over a year. Set a spending cap in the console.
+
+Setup:
+
+1. Sign in to console.x.com with the channel's X account and create a project and an app.
+2. Under the app's **User authentication settings**, set app permissions to **Read and write** (type: web
+   app or automated app; any https callback and website address will do). Save.
+3. Under **Keys and tokens**, copy the **API Key and Secret**, then generate the **Access Token and Secret**
+   (after step 2, so the token can post). Add them as `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN` and
+   `X_ACCESS_SECRET`. They don't expire.
+4. Save a payment card under **Billing** and buy a few dollars of credits; set a monthly cap.
+5. Set `x.publish: true`.
+
 ## Monetization: read this before going hands-off
 
 - **YouTube Partner Program:** 1,000 subscribers plus 4,000 public watch hours in 12 months,

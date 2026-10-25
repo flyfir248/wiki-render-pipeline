@@ -179,3 +179,71 @@ def test_a_facebook_reel_whose_status_cant_be_read_counts_as_posted(tmp_path, mo
             return super().get(url, params, headers, timeout)
 
     assert crosspost.post_facebook(_cfg(tmp_path), video, "hi", session=S(), sleep=lambda _: None) == "V1"
+
+
+def test_x_text_fits_280_and_names_the_channel_unless_links_are_on(tmp_path):
+    cfg = _cfg(tmp_path)
+    job = _folder(cfg)
+    job.file("script.json").write_text(_script(title="word " * 80).model_dump_json())
+    text = crosspost.x_text(cfg, job.path, "yt1")
+    assert crosspost._x_weight(text) <= crosspost.X_MAX and "YouTube: FacelessYT" in text and "@" not in text
+    job.file("script.json").write_text(_script().model_dump_json())
+    cfg.x.link = True
+    text = crosspost.x_text(cfg, job.path, "yt1")
+    assert "https://youtu.be/yt1" in text and text.startswith("The town that banned dying")
+    assert text.splitlines()[-1] == "#truestory #weirdhistory"
+
+
+class _X:
+    def __init__(self, states=("in_progress", "succeeded")):
+        self.calls, self.states = [], list(states)
+
+    def get(self, url, params=None, timeout=None):
+        self.calls.append(("get", url, params))
+        if url.endswith("/users/me"):
+            return _Resp({"data": {"id": "1", "username": "weirdbuttrue"}})
+        return _Resp({"data": {"processing_info": {"state": self.states.pop(0), "check_after_secs": 1}}})
+
+    def post(self, url, json=None, data=None, files=None, timeout=None):
+        self.calls.append(("post", url, json or data, files))
+        if url.endswith("/initialize"):
+            return _Resp({"data": {"id": "M1", "media_key": "7_M1"}})
+        if url.endswith("/finalize"):
+            return _Resp({"data": {"processing_info": {"state": "pending", "check_after_secs": 1}}})
+        if url.endswith("/tweets"):
+            return _Resp({"data": {"id": "P1", "text": json["text"]}})
+        return _Resp({})
+
+
+def test_x_uploads_in_segments_waits_for_processing_then_posts(tmp_path, monkeypatch):
+    video = tmp_path / "video.mp4"
+    video.write_bytes(b"x" * (crosspost.X_SEGMENT * 2 + 10))
+    monkeypatch.setattr(crosspost, "for_x", lambda v, out: v)
+    s = _X()
+    assert crosspost.post_x(_cfg(tmp_path), video, "hi", session=s, sleep=lambda _: None) == "P1"
+    init = next(c for c in s.calls if c[1].endswith("/initialize"))
+    assert init[2] == {"media_type": "video/mp4", "total_bytes": video.stat().st_size, "media_category": "tweet_video"}
+    assert [c[2]["segment_index"] for c in s.calls if c[1].endswith("/append")] == ["0", "1", "2"]
+    assert sum(1 for c in s.calls if c[0] == "get") == 2
+    assert s.calls[-1][2] == {"text": "hi", "media": {"media_ids": ["M1"]}}
+    assert crosspost.check_x(_cfg(tmp_path), s) == "X works: can post as @weirdbuttrue"
+
+
+def test_x_stops_when_processing_fails(tmp_path, monkeypatch):
+    video = tmp_path / "video.mp4"
+    video.write_bytes(b"x")
+    monkeypatch.setattr(crosspost, "for_x", lambda v, out: v)
+    s = _X(states=["failed"])
+    try:
+        crosspost.post_x(_cfg(tmp_path), video, "hi", session=s, sleep=lambda _: None)
+        raise AssertionError("posted")
+    except RuntimeError as e:
+        assert "could not process" in str(e)
+    assert not any(c[1].endswith("/tweets") for c in s.calls)
+
+
+def test_nothing_due_costs_no_check(tmp_path, monkeypatch):
+    cfg = _cfg(tmp_path, x={"publish": True})
+    checks = []
+    monkeypatch.setitem(crosspost.PLATFORMS, "x", (lambda c: c.x, lambda: True, lambda c: checks.append(1) or "X works", crosspost.x_text, None))
+    assert crosspost.post_due(cfg, "x") == 0 and not checks

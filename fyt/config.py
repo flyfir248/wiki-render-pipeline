@@ -307,6 +307,18 @@ class ThreadsConfig(BaseModel):
     max_per_run: int = 3
 
 
+class XConfig(BaseModel):
+    """Shorts cross-posted to X (fyt/crosspost.py). Needs the X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN and
+    X_ACCESS_SECRET secrets, and credits in the X developer console: X charges per call."""
+
+    publish: bool = False
+    # Link each post to the Short on YouTube. X charges $0.20 for a post with a link and $0.015 without,
+    # so by default a post names the YouTube channel (instagram.youtube_handle) instead.
+    link: bool = False
+    max_hashtags: int = 2  # posts are 280 characters; the hook comes first
+    max_per_run: int = 3
+
+
 class Config(BaseModel):
     channel: ChannelInfo = Field(default_factory=ChannelInfo)
     format: Literal["long", "short"] = "long"
@@ -352,6 +364,7 @@ class Config(BaseModel):
     instagram: InstagramConfig = Field(default_factory=InstagramConfig)
     facebook: FacebookConfig = Field(default_factory=FacebookConfig)
     threads: ThreadsConfig = Field(default_factory=ThreadsConfig)
+    x: XConfig = Field(default_factory=XConfig)
     # Upload only after `fyt approve <job>`; strongly recommended (see README).
     require_review: bool = True
     jobs_dir: str = "jobs"
