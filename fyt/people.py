@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 import shutil
+import zlib
 from pathlib import Path
 
 from fyt import assets
@@ -32,9 +33,13 @@ def outfit_for(words: str, sex: str, top: str = "") -> str | None:
     if not mine:
         return None
     w = _words(words)
-    for k, e in mine:
-        if w & set(e.get("roles", [])):
-            return k
+    fits = [k for k, e in mine if w & set(e.get("roles", []))]
+    if fits:
+        # the outfits first named share their roles with others like them: one of those, the same for
+        # the same words
+        first = set(outfits()[fits[0]].get("roles", [])) & w
+        same = [k for k in fits if first & set(outfits()[k].get("roles", []))]
+        return same[zlib.crc32(" ".join(sorted(w)).encode()) % len(same)]
     t = _words(TOPS.get(top, ""))
     for k, e in mine:
         if t & set(e.get("roles", [])):

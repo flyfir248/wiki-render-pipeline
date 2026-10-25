@@ -64,7 +64,7 @@ class Moment(BaseModel):
 class Manifest(BaseModel):
     entities: list[Entity] = Field(default_factory=list, description="0-8 things the viewer will see.")
     places: list[Place] = Field(default_factory=list, description="0-4.")
-    moments: list[Moment] = Field(default_factory=list, description="At most 12, one per scene at most: the moments most worth seeing.")
+    moments: list[Moment] = Field(default_factory=list, description="One per scene at most: what an entity does in each scene that shows it.")
 
 
 GUIDE = """You read the script of a documentary video, before any picture is chosen, and list what the
@@ -78,7 +78,8 @@ viewer will see. Return JSON only.
   general noun ('cessna 404', 'light aircraft', 'airplane').
 - look: what to draw, from the script and notes; say 'assumed' details plainly (certain = false).
 - places: where it happens, as a backdrop with no people or animals in it.
-- moments: for scenes where seeing the thing helps, what it does in that scene. documented = true only
+- moments: one for every scene that shows one of the entities (the channel tells its stories in 3D),
+  saying what it does in that scene. documented = true only
   if the narration says it happened, and then cue = the exact words saying so. Never invent an action
   the story doesn't tell: if the bear is only mentioned, motion = present and documented = false."""
 

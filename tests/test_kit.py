@@ -43,16 +43,20 @@ def test_a_person_wears_the_outfit_their_role_names_or_their_top_suggests():
     assert people.outfit_for("a coal miner", "m") == "kit-person-m-worker"
     assert people.outfit_for("an astronaut", "m") == "kit-person-m-spacesuit"
     assert people.outfit_for("a police officer", "f") == "kit-person-f-soldier"
-    assert people.outfit_for("Margaret, a passenger", "f", top="labcoat") == "kit-person-f-formal"
-    assert people.outfit_for("a passenger", "m") == "kit-person-m-casual-2"
+    assert people.outfit_for("Margaret, a guest", "f", top="labcoat") == "kit-person-f-formal"
+    assert people.outfit_for("a passenger", "m") in ("kit-person-m-male-longsleeve", "kit-person-m-smooth-male-longsleeve")
+    assert people.outfit_for("a man", "m") in ("kit-person-m-male-casual", "kit-person-m-smooth-male-casual")
+    assert people.outfit_for("someone", "m") == "kit-person-m-casual-2"
 
 
 def test_library_people_and_models_carry_their_licence_and_file():
     from fyt import assets, people
 
-    assert len(people.outfits()) == 21 and {e["sex"] for e in people.outfits().values()} == {"f", "m"}
+    assert len(people.outfits()) == 39 and {e["sex"] for e in people.outfits().values()} == {"f", "m"}
     picked = [e for k, e in assets.registry().items() if k.startswith("kit-")]
-    assert picked and all(assets.library_ready(e) and e["licence"] in ("CC0", "by") for e in picked)
+    assert picked and all(assets.library_ready(e) and e["licence"] in ("CC0", "by", "supplied") for e in picked)
+    # (packs the channel's owner supplied without a licence file are marked so)
+    assert all(e["source"].startswith("supplied by") for e in picked if e["licence"] == "supplied")
     # the CC BY animals name who made them, for the video's credits
     assert all(e["author"] and e["source"].startswith("https://") for e in picked if e["licence"] == "by")
 
@@ -80,11 +84,12 @@ def test_a_story_animal_is_that_animal_not_its_nearest_cousin():
     assert key("the horse", "horse") == "kit-horse"
 
 
-def test_a_still_library_animal_is_posed_and_credited():
+def test_a_library_animal_rigged_here_keeps_its_posing_and_credit():
     from fyt import worldgen
 
     hit = assetlib.project_model(animal("the elephant", "elephant"))
-    assert hit["posed"] and not hit["clips"] and hit["licence"] == "by"
+    # rigged from its shape (fyt/rigging.py): its own clips, and still laid on its side to sleep
+    assert hit["posed"] and "Walk" in hit["clips"] and hit["licence"] == "by"
     build = worldgen.rule_build(animal("the elephant", "elephant"), 1)
     assert worldgen.shows(build, {"posed": True}) and not worldgen.shows(build, {"clips": []})
     assert any("David OReilly" in line for line in assetlib.credits({"e": hit}))

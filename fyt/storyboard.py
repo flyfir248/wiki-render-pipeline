@@ -17,6 +17,7 @@ from __future__ import annotations
 import base64
 import os
 import re
+import time
 from pathlib import Path
 from typing import Callable
 
@@ -240,7 +241,13 @@ def _ask_openai(base_url: str, key: str, model: str, image: bytes, meant: str, r
             },
         ],
     }
-    r = requests.post(f"{base_url.rstrip('/')}/chat/completions", headers={"Authorization": f"Bearer {key}"}, json=body, timeout=90)
+    url, headers = f"{base_url.rstrip('/')}/chat/completions", {"Authorization": f"Bearer {key}"}
+    r = requests.post(url, headers=headers, json=body, timeout=90)
+    if r.status_code == 429 and "per day" not in r.text.lower():
+        # a per-minute limit passes in seconds: wait it out once rather than lose the checker for the run
+        # (the 3D frame check fell to a weaker model that failed a plain bear for being "a 3D cartoon bear")
+        time.sleep(min(30.0, float(r.headers.get("retry-after") or 12)))
+        r = requests.post(url, headers=headers, json=body, timeout=90)
     r.raise_for_status()
     return _verdict(r.json()["choices"][0]["message"]["content"])
 
@@ -285,10 +292,11 @@ def _checkers(cfg: Config) -> list[tuple[str, Callable[[bytes, str, str], Verdic
     return out
 
 
-def review(cfg: Config, path: Path, meant: str, rules: str = REVIEW) -> Verdict | None:
+def review(cfg: Config, path: Path, meant: str, rules: str = REVIEW, skip: tuple[str, ...] = ()) -> Verdict | None:
     """A free vision model's verdict on one picture, or None when no check could be made. Each checker in
     turn (_checkers); one that is out of allowance or turns images away is not asked again this run.
-    `rules` is the checker's brief (an illustration by default; fyt.assetlib passes its own for 3D)."""
+    `rules` is the checker's brief (an illustration by default; fyt.assetlib passes its own for 3D);
+    checkers named in `skip` are never asked."""
     if not cfg.review_model:
         return None
     try:
@@ -297,7 +305,7 @@ def review(cfg: Config, path: Path, meant: str, rules: str = REVIEW) -> Verdict 
         print(f"warning: could not read {path.name}: {str(e)[:200]}")
         return None
     for name, ask in _checkers(cfg):
-        if _found.get(f"out:{name}"):
+        if _found.get(f"out:{name}") or name in skip:
             continue
         try:
             verdict = ask(image, meant, rules)

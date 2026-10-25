@@ -17,7 +17,7 @@ const tone = (c: string, k: number) => "#" + new THREE.Color(c).multiplyScalar(k
 const mix = (a: string, b: string, t: number) => "#" + new THREE.Color(a).lerp(new THREE.Color(b), t).getHexString();
 
 export const WATER = ["sea", "lake", "river", "beach", "swamp"];
-export const INSIDE = ["room", "hall", "lab", "hospital", "cave", "factory"];
+export const INSIDE = ["room", "hall", "lab", "hospital", "cave", "factory", "shop", "station"];
 export const VOID = ["space", "micro", "sky"];
 
 // The open water of a set as [near z, far z] in units: it begins just behind the centre spot, so
@@ -506,7 +506,10 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         beyond(80);
         break;
       case "town":
+      case "village":
+      case "castle":
       case "city": {
+        // (a village's cottages and a castle's walls and towers line the street as a town's houses do)
         const tall = kind === "city";
         const cols = ["#c98e6b", "#e1d3b8", "#9fa7b5", "#b9705a", "#d8c08f", "#8e9bb0"];
         const lit = set.time === "night" || set.time === "dusk" ? 0.55 : 0.2;
@@ -536,7 +539,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         if (P.tree?.length) deal(bins, P.tree, [-3, -1, 1, 3].map((i) => ({ x: i * U * 4.5 + U * 1.2, z: -U * 2.9, a: rr() * 6, s: U * 2.4 })).filter((s) => !(keep && keep(s.x, s.z, U * 0.6, U * 2.4))), rr);
         const lamp = P.prop?.find((x) => x.includes("light-")) ?? P.prop?.find((x) => x.includes("light"));
         if (lamp) deal(bins, [lamp], [-3, -2, -1, 0, 1, 2, 3].map((i) => ({ x: i * U * 5, z: -U * 2.6, a: Math.PI, s: U * 2.2 })).filter((s) => !(keep && keep(s.x, s.z, U * 0.3, U * 2.2))), rr);
-        else
+        else if (kind === "town" || kind === "city")
           for (let i = -3; i <= 3; i++) out.push(<Block key={`lamp${i}`} look={look} color="#3a3d44" size={[U * 0.07, U * 1.8, U * 0.07]} at={[i * U * 5, U * 0.9, -U * 2.6]} />,
             <Block key={`lt${i}`} look={look} color="#ffe2a0" glow={set.time !== "day"} size={[U * 0.25, U * 0.12, U * 0.25]} at={[i * U * 5, U * 1.82, -U * 2.6]} />);
         const extra = P.prop?.filter((x) => x !== lamp) ?? [];
@@ -544,14 +547,16 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         break;
       }
       case "room":
+      case "shop":
+      case "station":
       case "hall":
       case "lab":
       case "hospital":
       case "factory": {
-        const big = kind === "hall" || kind === "factory";
+        const big = kind === "hall" || kind === "factory" || kind === "station";
         const W = U * (big ? 9 : 4.2);
         const H = U * (big ? 5 : 2.2);
-        const wall = kind === "lab" || kind === "hospital" ? "#e3e8ea" : kind === "factory" ? "#8e9296" : mix(set.sky, "#e8dccb", 0.5);
+        const wall = kind === "lab" || kind === "hospital" || kind === "shop" ? "#e3e8ea" : kind === "factory" || kind === "station" ? "#8e9296" : mix(set.sky, "#e8dccb", 0.5);
         // the place's own furniture or machines along the back and sides, clear of the action
         if (P.prop?.length) {
           const n = big ? 9 : 5;
@@ -646,6 +651,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
           far={mix(kind === "desert" ? "#b89070" : "#6f7f8a", light.horizon, 0.55)} snow={kind === "snow" || backdrop === "mountains"}
           height={backdrop === "mountains" ? 16 : kind === "sea" || kind === "beach" ? 3 : 8} />
       ) : null}
+      {!INSIDE.includes(kind) && !VOID.includes(kind) && kind !== "underwater" && set.time !== "night" ? <Birds U={U} seed={seed} t={t} color={tone(light.horizon, 0.35)} /> : null}
       {fx.includes("items") ? null : items}
       {fx.includes("items") ? null : <Binned bins={bins} look={look} />}
       {set.dressing.map((d, i) => (
@@ -653,6 +659,40 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
       ))}
     </group>
     </Background.Provider>
+  );
+};
+
+// Life in the sky over an outdoor place: a loose flock crossing far off, wings beating, so the place
+// itself moves while the story happens in front of it (seeded, so the same in every render of a frame).
+const Birds: React.FC<{ U: number; seed: number; t: number; color: string }> = ({ U, seed, t, color }) => {
+  const flock = useMemo(() => {
+    const r = rng(seed ^ 0xb12d);
+    const dir = r() < 0.5 ? 1 : -1;
+    const n = 4 + Math.floor(r() * 4);
+    return { dir, x0: (r() - 0.5) * U * 60, y: U * (9 + r() * 5), z: -U * (24 + r() * 14), speed: U * (1.6 + r() * 0.8),
+      birds: Array.from({ length: n }, (_, i) => ({ dx: -i * U * 1.4 * (0.7 + r() * 0.6), dy: (r() - 0.5) * U * 1.6, dz: (r() - 0.5) * U * 3, ph: r() * 6.28, s: 0.8 + r() * 0.4 })) };
+  }, [U, seed]);
+  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, fog: true }), [color]);
+  const wing = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, -0.12, 0, 0, 0.12, 1, 0, 0.05], 3));
+    return g;
+  }, []);
+  const span = U * 120;
+  return (
+    <group>
+      {flock.birds.map((b, i) => {
+        const x = ((((flock.x0 + flock.dir * flock.speed * t + b.dx * flock.dir + span / 2) % span) + span) % span) - span / 2;
+        const flap = Math.sin(t * 7 + b.ph) * 0.7;
+        const k = U * 0.55 * b.s;
+        return (
+          <group key={i} position={[x, flock.y + b.dy + Math.sin(t * 0.9 + b.ph) * U * 0.25, flock.z + b.dz]} rotation={[0, flock.dir > 0 ? 0 : Math.PI, 0]} scale={[k, k, k]}>
+            <mesh geometry={wing} material={mat} rotation={[flap, Math.PI / 2, 0]} />
+            <mesh geometry={wing} material={mat} rotation={[-flap, -Math.PI / 2, 0]} />
+          </group>
+        );
+      })}
+    </group>
   );
 };
 

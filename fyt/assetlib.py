@@ -31,6 +31,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+import zlib
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable
@@ -551,8 +552,15 @@ def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log, an
 def project_model(entity: Entity) -> dict | None:
     """A vetted model in the project library that names the entity."""
     text = " ".join([entity.name] + entity.search)
-    for key, e in assets.registry().items():
+    reg = assets.registry()
+    for key, e in reg.items():
         if assets.library_ready(e) and scenes3d.find(text, e.get("names", [])):
+            if e.get("group"):
+                # variants of one thing (a pack's cars in five colours): each story's entity gets one of
+                # them, the same one every time it is named, so a pack's every model is used
+                pool = [k for k, x in reg.items() if x.get("group") == e["group"] and assets.library_ready(x)]
+                key = pool[zlib.crc32(entity.name.lower().encode()) % len(pool)]
+                e = reg[key]
             file = assets.MODELS_DIR / Path(e["src"]).name
             return {"ok": True, "key": key, "query": entity.search[0], "source": "project", "title": e.get("title", key),
                     "author": e.get("author", ""), "licence": e.get("licence", ""), "url": e.get("source", ""),

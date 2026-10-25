@@ -590,6 +590,10 @@ SET_WORDS: list[tuple[str, tuple[str, ...]]] = [
     ("micro", ("bloodstream", "inside the body", "microscop", "cell", "tissue", "vein", "artery", "under the skin", "wound", "intestin", "stomach")),
     ("hospital", ("hospital", "clinic", "operating", "ward", "surgery", "emergency room", "doctor's")),
     ("lab", ("laborator", "lab ")),
+    ("station", ("space station", "spacecraft", "spaceship", "starship", "inside the shuttle", "aboard the iss", "international space station")),
+    ("shop", ("supermarket", "grocery", "convenience store", "department store", "shopping", "mall", "boutique", "shop ")),
+    ("castle", ("castle", "fortress", "citadel", "stronghold", "ramparts", "battlements", "siege")),
+    ("village", ("medieval", "middle ages", "viking", "tudor", "hamlet", "feudal", "market square")),
     ("space", ("space", "orbit", "lunar", "moon's surface", "mars")),
     ("underwater", ("underwater", "seabed", "sea floor", "ocean floor", "beneath the waves", "reef")),
     ("sky", ("in the air", "over the clouds", "sky", "mid-air", "airborne")),
@@ -623,6 +627,8 @@ SET_COLOURS = {
     "factory": ("#6e6e6a", "#c8c6c0", "#ffd27a"), "railway": ("#7a8a5a", "#a8c8e0", "#ffe0a0"),
     "room": ("#8a6a4a", "#e8dccb", "#ffe2b0"), "hall": ("#9a9080", "#d8d0c0", "#ffe8c0"), "lab": ("#c8ccd0", "#eef2f4", "#7fe0ff"),
     "hospital": ("#cdd6d8", "#eef4f4", "#a0f0e0"), "cave": ("#4a4038", "#2a2420", "#ffb060"), "underwater": ("#c8b890", "#1e5a7a", "#9fe8ff"),
+    "village": ("#7a8a50", "#a8c8e0", "#ffd98a"), "castle": ("#7a7a68", "#a8c0d8", "#ffd98a"),
+    "shop": ("#c8c4bc", "#eeeae2", "#ffd27a"), "station": ("#8a929c", "#d0d6dc", "#7fe0ff"),
     "sky": ("#6a8a5a", "#8fc0ec", "#ffffff"), "space": ("#5a5a66", "#03040c", "#ffffff"), "micro": ("#6a1c2c", "#3a0c18", "#ff9fb0"),
 }
 
@@ -744,7 +750,8 @@ def _capped(c: str, most: float) -> str:
 # burn out under the lights, so the inside of a body stays deep and a room stays a soft mid-tone.
 # Too bright for a deep set, the rules' own colours are used, so the inside of a body stays red.
 SET_LIGHT = {"micro": (0.12, 0.22), "underwater": (0.2, 0.75), "space": (0.05, 0.3),
-             "room": (0.72, 0.6), "hall": (0.72, 0.6), "factory": (0.72, 0.6), "lab": (0.72, 0.6), "hospital": (0.72, 0.6)}
+             "room": (0.72, 0.6), "hall": (0.72, 0.6), "factory": (0.72, 0.6), "lab": (0.72, 0.6), "hospital": (0.72, 0.6),
+             "shop": (0.72, 0.6), "station": (0.72, 0.6)}
 DEEP_SETS = ("micro", "underwater", "space")
 
 
@@ -1041,6 +1048,10 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
         # an aircraft the story hasn't brought down is in the air, and birds beside it fly with it
         actors = [a.model_copy(update={"verb": "fly"}) if (a.entity in aloft and a.verb in G["calm"])
                   or (builds[a.entity].archetype in ("bird", "insect") and a.verb in G["calm"]) else a for a in actors]
+    if DROPPED_FROM.search(narration):
+        # what was dropped from a craft falls; the craft does not
+        actors = [a.model_copy(update={"verb": "fly" if a.entity in aloft else "move"}) if builds[a.entity].archetype == "vehicle" and a.verb in FALLS
+                  else a for a in actors]
     if any(a.verb == "fly" and builds[a.entity].archetype == "vehicle" for a in actors):
         # people are aboard an aircraft in flight, not standing on the ground beneath it
         actors = [a for a in actors if builds[a.entity].archetype != "humanoid"] or actors
@@ -1064,6 +1075,23 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
     on = _slug(sh.on) if sh.on and _slug(sh.on) in ids else actors[0].entity
     return Shot(scene=scene, place=place, time=sh.time, actors=actors[:5], camera=sh.camera, on=on, marks=marks, callouts=callouts,
                 beats=checked_beats(sh.beats, narration, actors[:5], builds))
+
+
+# "dropped from a Cessna", "fell out of the plane": what falls is the load, never the craft it fell from
+DROPPED_FROM = re.compile(r"\b(dropped|drops|fell|falls|fallen|thrown|tossed|jettisoned|released|dumped|tumbled)\s+(out\s+)?(of|from)\b", re.I)
+FALLS = {"fall", "crash", "sink"}
+
+
+def _dropped(acts: list[BeatActor], actors: list[Actor], builds: dict[str, Build]) -> list[BeatActor]:
+    """A beat whose words drop something from a vehicle: the vehicle carries on as it was (a plane the
+    model sent down for "containers dropped from a Cessna" flies on), and the objects on stage fall."""
+    was = {a.entity: a.verb for a in actors}
+    out = [a.model_copy(update={"verb": was.get(a.entity) if was.get(a.entity) not in FALLS | {None} else "move"})
+           if builds[a.entity].archetype == "vehicle" and a.verb in FALLS else a for a in acts]
+    loads = [a.entity for a in actors if builds[a.entity].archetype == "object"]
+    out = [a.model_copy(update={"verb": "fall"}) if a.entity in loads and a.verb in G["calm"] else a for a in out]
+    out += [BeatActor(entity=e, verb="fall") for e in loads if all(a.entity != e for a in out)]
+    return out
 
 
 def checked_beats(beats: list[Beat], narration: str, actors: list[Actor], builds: dict[str, Build]) -> list[Beat]:
@@ -1093,6 +1121,8 @@ def checked_beats(beats: list[Beat], narration: str, actors: list[Actor], builds
                                   state=_state(a.state, rest), face=a.face if a.face in ("camera", "") or _slug(a.face) in ids else ""))
         if not acts:
             continue
+        if DROPPED_FROM.search(rest[:80]):
+            acts = _dropped(acts, actors, builds)
         on = _slug(bt.on) if bt.on and _slug(bt.on) in ids else acts[0].entity
         out.append(Beat(cue=narration[i:i + len(cue)], actors=acts, camera=bt.camera, on=on))
         pos = i + len(cue)
@@ -1126,7 +1156,7 @@ def rule_shot(script: Script, story: Manifest, builds: dict[str, Build], scene: 
     if verb not in verbs_for(arche):
         verb = calm_verb(arche)
     verb = _verb(verb, arche, narration, bool(moment and moment.documented))
-    if moment and moment.documented and moment.cue and arche in LIVING:  # a verb the moment names outright beats the motion's
+    if moment and moment.documented and moment.cue and (arche in LIVING or arche == "vehicle"):  # a verb the moment names outright beats the motion's
         drastic = ("fall", "crash", "collapse") if motion not in ("fall", "shake") else ()
         def named(text: str) -> str | None:  # the told verb whose words come first in the text
             hits = [(min((m.start() for w in G["events"].get(v, [v]) for m in re.finditer(rf"(?<![a-z]){re.escape(w)}", text.lower())), default=10**6), v)
@@ -1196,7 +1226,51 @@ def direct(cfg: Config, script: Script, story: Manifest, builds: dict[str, Build
         if lead.entity == rl.entity and lead.verb in G["calm"] and rl.verb not in G["calm"] and not out[k].beats:
             acts = [lead.model_copy(update={"verb": rl.verb, "state": rl.state if lead.state == "normal" else lead.state})] + out[k].actors[1:]
             out[k] = out[k].model_copy(update={"actors": acts})
-    return vary_cameras(out), how
+    return vary_cameras(livelier(out, script, builds)), how
+
+
+# Words that say a living thing is not moving: dead, stuffed, asleep, on show. Its shot keeps it still.
+STILL = ("dead", "died", "death", "dies", "killed", "body", "carcass", "corpse", "remains", "stuffed", "taxiderm", "mounted",
+         "display", "exhibit", "statue", "museum", "asleep", "sleeping", "lying", "unconscious", "frozen", "buried", "overdos")
+# Words that say a vehicle isn't going anywhere, and a bird or insect is on the ground.
+STOPPED = ("parked", "abandoned", "crash", "stuck", "aground", "sinking", "sunk", "plunge", "capsiz", "wreck", "derelict", "scrapped", "museum")
+GROUNDED = ("ground", "nest", "landed", "field", "grass", "perched", "standing", "walked", "pond", "beach", "shore")
+# A second calm action for a lead that walked in the scene before, so the same creature doesn't do the same thing twice running.
+OTHER_CALM = {"humanoid": "look_around", "quadruped": "sniff", "bird": "peck", "insect": "look_around"}
+
+
+def livelier(out: dict[int, Shot], script: Script, builds: dict[str, Build]) -> dict[int, Shot]:
+    """A shot whose lead just stands there gets a calm action of its own when nothing in its narration
+    says it is still (dead, stuffed, asleep, on show): a living lead walks across the set, or does its
+    other calm action if it walked in the scene before; a car or a ship the story hasn't stopped moves
+    on. Calm verbs show nothing the narration doesn't allow, so a scene's subject acts rather than
+    posing in front of a moving camera."""
+    last: dict[str, str] = {}
+    for k in sorted(out):
+        sh = out[k]
+        lead = sh.actors[0] if sh.actors else None
+        if lead is None or lead.entity not in builds or sh.beats:
+            continue
+        arche = builds[lead.entity].archetype
+        text = script.scenes[k - 1].narration
+        still = scenes3d.find(text, list(STILL)) or lead.state != "normal"
+        verb = lead.verb
+        if lead.verb in ("idle", "present") and not still:
+            if arche in ("bird", "insect") and not scenes3d.find(text, list(GROUNDED)):
+                verb = "fly"
+            elif arche in ("humanoid", "quadruped", "bird", "insect"):
+                verb = OTHER_CALM[arche] if last.get(lead.entity) == "walk" else "walk"
+            elif arche == "serpent":
+                verb = "move"
+            elif arche == "vehicle" and not scenes3d.find(text, list(LANDED) + list(STOPPED)):
+                form = builds[lead.entity].form
+                verb = "fly" if form in ("plane", "airliner", "helicopter") else "drive" if form in ("car", "truck") else "move"
+        if verb != lead.verb:
+            moving = verb in ("walk", "move", "drive")
+            acts = [lead.model_copy(update={"verb": verb, "at": "left" if moving else lead.at, "to": "right" if moving else lead.to})] + sh.actors[1:]
+            out[k] = sh.model_copy(update={"actors": acts, "camera": "follow" if moving and sh.camera in ("orbit", "push_in") else sh.camera})
+        last[lead.entity] = verb
+    return out
 
 
 def vary_cameras(out: dict[int, Shot]) -> dict[int, Shot]:

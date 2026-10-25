@@ -15,7 +15,7 @@ from pathlib import Path
 
 from fyt import kit
 from fyt.assetlib import RENDERER_DIR
-from fyt.packs import _find, _model
+from fyt.packs import _find, _from_scene, _model
 
 PICKS = kit.BUNDLED.parent / "set-picks.json"
 DIR = RENDERER_DIR / "public" / "sets"
@@ -28,7 +28,7 @@ BUDGET = {"nature": 1500}
 
 
 def _name(pack: str, stem: str) -> str:
-    return f"{pack}-{stem}".lower().replace("_", "-") + ".glb"
+    return f"{pack}-{stem}".lower().replace("_", "-").replace(".", "-").replace(" ", "-") + ".glb"
 
 
 def import_sets(folders: list[Path], picks: Path = PICKS) -> dict:
@@ -55,7 +55,8 @@ def import_sets(folders: list[Path], picks: Path = PICKS) -> dict:
             if unpacked[pid] is None:
                 out[name] = f"no zip for {pid}"
                 continue
-            f = _model(unpacked[pid], stem)
+            pack = spec["packs"][pid]
+            f = _from_scene(unpacked[pid], pack["scene"], stem, 0) if "scene" in pack else _model(unpacked[pid], stem)
             if f is None:
                 out[name] = f"no {stem} in {pid}"
                 continue
@@ -67,7 +68,7 @@ def import_sets(folders: list[Path], picks: Path = PICKS) -> dict:
     index = {kind: {role: [f"sets/{_name(p, s)}" for p, s in ps if (DIR / _name(p, s)).is_file()] for role, ps in roles.items()}
              for kind, roles in spec["sets"].items()}
     INDEX.write_text(json.dumps({"about": "Written by fyt/sets.py from assets/set-picks.json: each kind of place's pieces by role.",
-                                 "sources": {k: {"source": v["source"], "author": v["author"], "licence": "CC0"} for k, v in spec["packs"].items()},
+                                 "sources": {k: {"source": v["source"], "author": v["author"], "licence": v.get("licence", "CC0")} for k, v in spec["packs"].items()},
                                  "sets": {k: {r: v for r, v in roles.items() if v} for k, roles in index.items()}}, indent=1) + "\n")
     pieces.cache_clear()
     return out
@@ -95,3 +96,16 @@ def stage(kind: str, public: Path) -> dict[str, list[str]]:
             to.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(RENDERER_DIR / "public" / src, to)
     return got
+
+
+def credits(script) -> list[str]:
+    """Description lines for the set pieces a video shows from packs that ask for credit (CC BY)."""
+    if not INDEX.is_file():
+        return []
+    sources = json.loads(INDEX.read_text()).get("sources", {})
+    shown = {f for s in script.scenes for fs in ((s.world or {}).get("set", {}).get("pieces") or {}).values() for f in fs}
+    out = []
+    for pid, src in sources.items():
+        if src.get("licence") == "by" and any(f.startswith(f"sets/{pid}-") for f in shown):
+            out.append(f"Set pieces from {pid.replace('-', ' ')} by {src['author']} (CC BY 4.0) {src['source']}")
+    return out

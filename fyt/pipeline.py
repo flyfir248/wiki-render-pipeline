@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, cutout, factcheck, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
+from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, factcheck, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -156,7 +156,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             update={"description": script.description.rstrip() + "\n\nImage credits:\n" + "\n".join(credits)}
         )
         job.file("script.json").write_text(script.model_dump_json(indent=2))
-    model_credits = assetlib.credits(found)
+    model_credits = assetlib.credits(found) + sets.credits(script)
     if model_credits:
         script = script.model_copy(
             update={"description": script.description.rstrip() + "\n\n3D models:\n" + "\n".join(model_credits)}
@@ -273,6 +273,13 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         qc["warnings"] += look.warnings
     except Exception as e:
         log(job, f"warning: could not check the 3D look: {str(e)[:160]}")
+    try:  # how much of the video tells its story in 3D, and how much of that moves (fyt/coverage.py)
+        cov = coverage.write(cfg, job, script, props, video, log=lambda m: log(job, m))
+        for w in coverage.warnings(cov):
+            log(job, f"quality: {w}")
+            qc["warnings"].append(w)
+    except Exception as e:
+        log(job, f"warning: could not measure the 3D coverage: {str(e)[:160]}")
 
     log(job, "rendering thumbnail")
     # The subject's own photo makes a better thumbnail than a stock one.
@@ -582,6 +589,20 @@ def relevance_gate(cfg: Config, job: Job, script: Script, story, spans, words, s
         job.file("gate-props.json").write_text(props.model_dump_json())
         log(job, f"relevance: checking {len(checked)} 3D scenes by eye")
         picture = relevance.picture_gate(cfg, script, story, props, job.file("gate-props.json"), job.public, job.file("gate"), log=lambda m: log(job, m))
+        retakes = {i: t for i in picture if (t := relevance.retake(script.scenes[i])) is not None}
+        if retakes:
+            # 3D first: a scene whose frame missed its subject gets a closer take before it goes to 2D
+            log(job, f"relevance: filming scenes {[i + 1 for i in retakes]} again, closer on their subject")
+            trial = script.model_copy(update={"scenes": [retakes.get(i, s) for i, s in enumerate(script.scenes)]})
+            props = build_props(cfg, trial, spans, words, scene_media, None, None, None, shots, {})
+            job.file("gate-props.json").write_text(props.model_dump_json())
+            again = relevance.picture_gate(cfg, trial, story, props, job.file("gate-props.json"), job.public, job.file("gate-retake"),
+                                           log=lambda m: log(job, m), only=set(retakes))
+            kept = {i: t for i, t in retakes.items() if i not in again}
+            for i in kept:
+                log(job, f"scene {i + 1}: the closer take shows its subject; 3D kept")
+                picture.pop(i)
+            script = script.model_copy(update={"scenes": [kept.get(i, s) for i, s in enumerate(script.scenes)]})
         for i, why in picture.items():
             log(job, f"scene {i + 1}: 3D dropped: {why}")
             m = script.scenes[i].model or {}

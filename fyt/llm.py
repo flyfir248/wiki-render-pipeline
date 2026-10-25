@@ -527,17 +527,16 @@ Write for the ear -- the narration is spoken by a text-to-speech voice:
 
 Rules:
 - Each scene's narration is 1-3 sentences, 15-25 words (1-2 in a Short), matching what is on screen.
-- Show, don't just tell: real photos of the subject (they get the channel's cut-out collage look), maps,
-  and the animated templates carry most of the video. Save story scenes, which act a moment out in
-  drawings, for the one or two moments a photo can't show (a journey, an accident, a chase) -- at most
-  one scene in five. Viewers stay for seeing the story, not reading it. Act the moments a viewer should
-  see happen out in world scenes instead (a launch, a voyage, a collision, an eruption, a fire): they are
-  3D and make the video look like a produced explainer. Use as many as the story needs; a visual planner
-  reviews the finished script and adds or adjusts them.
-- Vary the templates; don't use the same template more than twice in a row. Use data-driven templates
-  (stat, bars, trend, proportion, scale, timeline, comparison, map, process, cycle, evidence) wherever the
-  research supports them -- they
-  are what makes this channel different from generic stock-footage channels.
+- Show, don't just tell: this channel tells its stories in 3D. In about four scenes in five the viewer
+  should see the story happen: someone or something the story names doing what the narration says, in
+  its place (a launch, a voyage, a chase, a bear in the woods, a ship in the ice). Write those as
+  statement scenes with a short heading; the visual director makes each one a 3D world scene
+  from the story's own cast and places. Name the thing in the scene that shows it, so it can be shown.
+- When a figure, a share, a short list or a few dates matter, use a stat, proportion, list or timeline
+  scene: its figures are drawn over a 3D scene of the story. Keep maps, charts (bars, trend, scale,
+  comparison), quotes, documents, evidence boards and photos for what only they can carry (a route, a
+  trend, someone's exact words, the real face or object), at most one scene in five between them.
+- Vary the templates; don't use the same template more than twice in a row.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.
 - Title max 70 characters; no false clickbait. Description must be accurate.
