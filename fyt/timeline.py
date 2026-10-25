@@ -341,9 +341,34 @@ def cue_time(cue: str | None, words: list[Word], offset: float) -> float | None:
     return None if hit is None else round(words[hit].start + offset, 3)
 
 
+def timed_direction(d: dict, words: list[Word], offset: float, length: float) -> dict:
+    """The scene director's shots and acts on their cue words (0-1 through the scene). A shot whose words
+    can't be found, or that would hold for under 1.6 seconds, is dropped; an act whose words can't be
+    found starts with the scene."""
+    shots, last = [], 0.0
+    for n, sh in enumerate(d.get("shots") or []):
+        if n == 0:
+            shots.append(sh | {"from": 0.0})
+            continue
+        t = cue_time(sh.get("cue"), words, offset) if sh.get("cue") else (sh["at"] * length if "at" in sh else None)
+        if t is None:
+            continue
+        u = round(t / length, 3)
+        if 0.1 <= u <= 0.9 and (u - last) * length >= 1.6 and (1 - u) * length >= 1.6:
+            shots.append(sh | {"from": u})
+            last = u
+    acts = {}
+    for e, a in (d.get("acts") or {}).items():
+        t = cue_time(a.get("cue"), words, offset) if a.get("cue") else None
+        acts[e] = a | {"from": round(min(0.9, max(0.0, t / length)), 3) if t is not None else 0.0}
+    return d | {"shots": shots, "acts": acts}
+
+
 def timed_world(world: dict | None, words: list[Word], offset: float, length: float) -> dict | None:
     """A story world with each director's beat placed on its cue (0-1 through the scene, as the narrator
     says the words); a beat whose words can't be found, or that would last under a second, is dropped."""
+    if world and world.get("direction") and length > 0:
+        world = world | {"direction": timed_direction(world["direction"], words, offset, length)}
     if not world or not world.get("beats") or length <= 0:
         return world
     timed, last = [], 0.0

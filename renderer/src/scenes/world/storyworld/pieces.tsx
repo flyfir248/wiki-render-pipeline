@@ -7,6 +7,7 @@ import React, { useMemo } from "react";
 import * as THREE from "three";
 import { toonRamp } from "../../world3d";
 import { ready } from "../stage";
+import { art, artRamp, artToon } from "./artstyle";
 import type { Look } from "./style";
 
 export type Spot = { x: number; z: number; a: number; s: number; y?: number };
@@ -20,6 +21,7 @@ const dressed = (old: THREE.Material, look: Look) => {
   const color = tone(s.color ?? new THREE.Color("#ffffff"), 1 - look.dark * 0.45);
   const cut = s.alphaTest > 0 || (s.transparent && Boolean(s.map));
   const opts = { name: s.name, color, map: s.map ?? null, vertexColors: Boolean(s.vertexColors), alphaTest: cut ? Math.max(0.4, s.alphaTest) : 0, side: cut ? THREE.DoubleSide : s.side };
+  if (artToon()) return new THREE.MeshToonMaterial({ ...opts, gradientMap: artRamp() });
   return look.toon ? new THREE.MeshToonMaterial({ ...opts, gradientMap: toonRamp }) : new THREE.MeshLambertMaterial(opts);
 };
 
@@ -56,7 +58,8 @@ export const Pieces: React.FC<{ src: string; spots: Spot[]; look: Look; fit?: Fi
       inst.computeBoundingSphere();
       return inst;
     });
-  }, [model, spots, look, fit, shadows]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [model, spots, look, fit, shadows, art.profile.name]);
   return (
     <group>
       {meshes.map((o, i) => (

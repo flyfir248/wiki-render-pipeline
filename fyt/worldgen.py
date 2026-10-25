@@ -280,8 +280,19 @@ NOT_ALIVE = ("object", "item", "container", "package", "box", "bag", "tool", "de
 GENERIC = {"animal", "mammal", "beast", "vehicle", "human", "people", "person", "plant", "building"}
 
 
+PERSON_KINDS = ("person", "people", "human", "man", "woman", "men", "women", "boy", "girl", "child", "children")
+
+
+def is_person(e: Entity) -> bool:
+    """The manifest's kind says it is a person: a name can't make them anything else (Jim Templeton is
+    not a temple)."""
+    return any(_has(e.kind.lower(), w) for w in PERSON_KINDS)
+
+
 def archetype_of(e: Entity) -> str:
     """The body plan an entity is built on, from its kind first, then its name and search terms."""
+    if is_person(e):
+        return "humanoid"
     texts = (e.kind.lower(), f"{e.name} {' '.join(e.search)}".lower(), e.look.lower())
     # A specific word anywhere ("tardigrade") beats a generic one ("microscopic animal").
     # In the kind, the last word named is the thing itself: a "passenger liner" is a ship, not a passenger.
@@ -607,7 +618,8 @@ SET_WORDS: list[tuple[str, tuple[str, ...]]] = [
     ("town", ("town", "village", "street", "main street", "neighbourhood", "neighborhood")),
     ("road", ("road", "highway", "motorway", "parking lot", "interstate")),
     ("farm", ("farm", "field", "barn", "ranch", "pasture")),
-    ("swamp", ("swamp", "marsh", "bayou", "bog")),
+    ("marsh", ("salt marsh", "marsh", "wetland", "estuary", "firth", "mudflat", "mud flat", "fen", "saltings", "tidal flat")),
+    ("swamp", ("swamp", "bayou", "bog", "mangrove")),
     ("river", ("river", "creek", "stream", "hudson", "canal")),
     ("lake", ("lake", "pond", "reservoir")),
     ("beach", ("beach", "shore", "coast", "island", "harbour", "harbor", "port", "dock", "pier", "quay", "wharf")),
@@ -622,7 +634,7 @@ SET_COLOURS = {
     "forest": ("#3f6a3a", "#9fc0d8", "#ffd9a0"), "grassland": ("#6f9a4a", "#a8cde8", "#ffe0a0"), "mountain": ("#6a7060", "#a9c3dc", "#ffe6c0"),
     "desert": ("#d6b07a", "#e8cfa8", "#ffd080"), "snow": ("#e8eef2", "#c2d4e4", "#ffffff"), "beach": ("#e6d2a0", "#9fd0ec", "#ffe8b0"),
     "river": ("#5a8a48", "#a8cde8", "#ffe0a0"), "lake": ("#5f8f4a", "#a8cde8", "#ffe0a0"), "sea": ("#2e5f7a", "#9fc8e4", "#ffffff"),
-    "swamp": ("#4a5a3a", "#8a9a8a", "#c8e0a0"), "farm": ("#8aa04a", "#a8cde8", "#ffe0a0"), "town": ("#8a8478", "#a8c8e0", "#ffd98a"),
+    "swamp": ("#4a5a3a", "#8a9a8a", "#c8e0a0"), "marsh": ("#7d7a52", "#b4bcc0", "#f0e0b0"), "farm": ("#8aa04a", "#a8cde8", "#ffe0a0"), "town": ("#8a8478", "#a8c8e0", "#ffd98a"),
     "city": ("#6a6c72", "#a0b8d0", "#ffd98a"), "road": ("#7a8a5a", "#a8c8e0", "#ffe0a0"), "airfield": ("#7a8a5a", "#a8c8e0", "#ffffff"),
     "factory": ("#6e6e6a", "#c8c6c0", "#ffd27a"), "railway": ("#7a8a5a", "#a8c8e0", "#ffe0a0"),
     "room": ("#8a6a4a", "#e8dccb", "#ffe2b0"), "hall": ("#9a9080", "#d8d0c0", "#ffe8c0"), "lab": ("#c8ccd0", "#eef2f4", "#7fe0ff"),

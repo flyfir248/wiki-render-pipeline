@@ -95,7 +95,20 @@ export type StyleName = "lowpoly" | "voxel" | "noir" | "diorama" | "clinical";
 export type BeatActor = { entity: string; verb?: string; to?: Spot | ""; state?: State; face?: string };
 export type Beat = { from: number; cue?: string; cast: BeatActor[]; camera?: string; on?: string };
 
+// The scene director's plan (fyt/director.py): one art profile for the video, the place's layers, the
+// light, each actor's acts beyond its verb and the camera's shots, each timed on the narrator's words
+// (fyt/timeline.py timed_direction: `from` is 0-1 through the scene).
+export type ArtProfile = "cinematic" | "ink" | "stencil";
+export type Art = { profile: ArtProfile; strength: number; detail: number; atmosphere: "natural" | "dramatic" | "dreamlike" | "graphic"; palette?: string[] };
+export type Recipe = { fore: string[]; mid: string[]; far: string[]; mist: number; wind: number; particles: string; life: string[]; wet: number; density: number; shafts?: boolean };
+export type LightSetup = { rig: "overcast" | "golden" | "hard_sun" | "moonlit" | "interior"; key: number; fill: number; rim: number; contrast: number };
+export type Act = { gesture?: "aim" | "point" | "talk" | "look" | "wave" | "hold"; look?: string; prop?: string; cue?: string; from?: number;
+  secondary?: "idle_shift" | "react"; child?: boolean; revealed?: boolean; paint?: string };
+export type DirectedShot = { move: string; on: string; from?: number; cue?: string; at?: number; from_?: string; prop?: string };
+export type Direction = { art?: Art; recipe?: Recipe; light?: LightSetup; acts?: Record<string, Act>; shots?: DirectedShot[] };
+
 export type World = {
+  direction?: Direction;
   style: StyleName;
   seed: number;
   set: SetSpec;

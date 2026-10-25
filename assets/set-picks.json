@@ -63,6 +63,7 @@
       "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Short"]],
       "prop": [["mega-pack", "Cube.287"], ["mega-pack", "Cube.288"], ["mega-pack", "Plane.009"], ["mega-pack", "Cube.001"], ["mega-pack", "Cube.012"], ["mega-pack", "Cube.013"], ["mega-pack", "Cube.014"], ["mega-pack", "Cylinder.002"], ["mega-pack", "Cube.026"], ["mega-pack", "Cube.027"], ["mega-pack", "Cube.028"], ["mega-pack", "Cube.002"], ["mega-pack", "Cube.044"], ["mega-pack", "Cube.045"], ["mega-pack", "Cube.060"], ["mega-pack", "Cube.170"], ["mega-pack", "Cube.260"]]
     },
+    "marsh": {"tree": [["nature", "Bush_Common"], ["quaternius-nature-lite", "Bush2"]], "bush": [["nature", "Plant_7_Big"], ["nature", "Fern_1"], ["quaternius-nature-lite", "Bush1"]], "rock": [["nature", "Rock_Medium_1"], ["quaternius-nature-lite", "Rock1"]], "grass": [["nature", "Grass_Wispy_Tall"], ["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Short"], ["quaternius-nature-lite", "Grass2"]]},
     "swamp": {
       "tree": [["nature", "DeadTree_1"], ["nature", "DeadTree_2"], ["nature", "DeadTree_3"], ["nature", "DeadTree_4"], ["nature", "DeadTree_5"], ["mega-pack", "Cube.139"], ["mega-pack", "Cube.144"], ["mega-pack", "Cube.145"], ["mega-pack", "Cube.146"]],
       "bush": [["nature", "Fern_1"], ["nature", "Plant_7_Big"]],

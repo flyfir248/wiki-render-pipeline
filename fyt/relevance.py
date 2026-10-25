@@ -17,6 +17,7 @@ The verdicts are written to the job's relevance.json.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from fyt import assetlib, manifest, render, storyboard
@@ -110,11 +111,34 @@ def picture_gate(cfg: Config, script: Script, story: Manifest | None, props, pro
         if v is None:
             unchecked.append(i + 1)
             continue
-        if not v.matches:
+        if not v.matches and contradicts(v.problems or "", subject_text(s, story)):
+            log(f"relevance: scene {i + 1} kept: the check failed it while saying it shows its subject ({(v.problems or '')[:90]})")
+        elif not v.matches:
             bad[i] = f"frame check: {v.problems or 'does not show the subject'}"
     if unchecked:
         log(f"relevance: no vision model able to judge 3D was free for scenes {unchecked}; they keep their 3D unchecked")
     return bad
+
+
+# the same kind of thing in the words a vision model uses for it
+SAME = {"aircraft": ("plane", "airplane", "aeroplane"), "plane": ("aircraft", "airplane"), "airliner": ("plane", "aircraft", "jet"),
+        "ship": ("boat", "vessel"), "boat": ("ship", "vessel"), "car": ("vehicle",), "photographer": ("man", "person"),
+        "woman": ("person", "figure"), "man": ("person", "figure")}
+
+
+def contradicts(problems: str, subject: str) -> bool:
+    """A failing verdict that says the frame shows its subject after all ("does not show a bear, it shows
+    a 3D cartoon bear"; "not a Cessna, but a small plane"): the subject's own noun named again after the
+    turn of the sentence, or the frame faulted only for its style."""
+    low = problems.lower()
+    nouns = {w for w in re.findall(r"[a-z]{3,}", subject.lower()) if w not in GENERIC and w not in ("the",)}
+    nouns |= {x for n in nouns for x in SAME.get(n, ())}
+    turn = re.search(r"\b(but|instead|it shows|shows a|rather)\b", low)
+    # (what follows the turn, without what it says the frame is not: "it shows a dog, not a bear")
+    after = re.sub(r"\b(not|no)\s+(an?\s+|the\s+)?[a-z0-9-]+(\s+[a-z]+)?", " ", low[turn.end():]) if turn else ""
+    if turn and any(re.search(rf"\b{re.escape(n)}s?\b", after) for n in nouns):
+        return True
+    return bool(re.search(r"\b(cartoon|stylised|stylized|3d|low-poly|animated)\b", low)) and any(re.search(rf"\b{re.escape(n)}s?\b", low) for n in nouns)
 
 
 def retake(scene):
@@ -127,7 +151,10 @@ def retake(scene):
         return None
     if w.get("camera") == "push_in" and w.get("on") == scene.subject_name:
         return None
-    return scene.model_copy(update={"world": w | {"camera": "push_in", "on": scene.subject_name}})
+    # (the scene director's shot list would override the camera: the retake is one push-in on the subject)
+    d = w.get("direction")
+    closer = {"camera": "push_in", "on": scene.subject_name} | ({"direction": d | {"shots": [{"move": "push_in", "on": scene.subject_name}]}} if d else {})
+    return scene.model_copy(update={"world": w | closer})
 
 
 def apply(script: Script, bad: dict[int, str]) -> Script:
