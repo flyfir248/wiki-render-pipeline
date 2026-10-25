@@ -76,6 +76,17 @@ def upcoming_slots(cfg: Config, now: datetime, hold: bool = True) -> list[Slot]:
     return sorted(slots, key=lambda s: s.at)
 
 
+URGENT_HOURS = 12
+
+
+def by_urgency(slots: list[Slot], now: datetime) -> list[Slot]:
+    """The order a run makes videos in: Shorts going live within URGENT_HOURS, then the week's long video,
+    then the other Shorts. A long video takes most of a run, and with the buffer's Shorts always ahead of
+    it the long was left for "the next run" until its slot passed empty."""
+    soon = now + timedelta(hours=URGENT_HOURS)
+    return sorted(slots, key=lambda s: (0 if s.kind == "short" and s.at <= soon else 1 if s.kind == "long" else 2, s.at))
+
+
 def empty_slots(cfg: Config, now: datetime) -> list[Slot]:
     filled = Uploads(cfg).filled()
     return [s for s in upcoming_slots(cfg, now) if s.key not in filled]
@@ -267,7 +278,7 @@ def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = N
 
     topics = Topics(cfg)
     failures = 0
-    for slot in list(free):
+    for slot in by_urgency(free, now):
         if budget <= 0:
             print("daily upload quota used up; the next run continues")
             break

@@ -73,7 +73,7 @@ schedule:
   long_weekday: 5                   # Saturday (Monday = 0)
   long_slot: "16:00"                # UTC
   buffer_days: 2                    # Shorts are uploaded up to 2 days before they go live
-  long_lead_days: 3
+  long_lead_days: 5                 # made from Monday, so several runs get a chance at it
   max_uploads_per_day: 4            # YouTube API quota
   # The 22:00 Short is kept for what's in the news that day: filled about 9 hours ahead with the
   # trending Wikipedia article that fits best (growth.bonus_min_fit), else an evergreen topic.
