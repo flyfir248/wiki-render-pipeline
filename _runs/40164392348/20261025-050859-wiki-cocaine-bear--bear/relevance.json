@@ -1,0 +1,15 @@
+{
+  "checked": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "1": "frame check: The frame does not show a bear, it shows a 3D cartoon bear standing in a forest.",
+    "2": "frame check: The subject is not a Cessna, but a small plane, and there is no mention of Tennessee or September 11.",
+    "3": "frame check: The frame does not show a bear, but instead a bear's shadow",
+    "4": "frame check: The subject it must show: a bear."
+  }
+}
