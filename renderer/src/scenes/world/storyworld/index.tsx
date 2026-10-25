@@ -4,7 +4,7 @@
 import React from "react";
 import { AbsoluteFill, continueRender, delayRender, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { unit as unitOf } from "../../../theme";
 import type { SceneProps } from "../../shared";
@@ -18,8 +18,11 @@ import { Environment, INSIDE, type KeepOut, VOID, waterBand } from "./environmen
 import { dimsOf, Flames, humanPose, Humanoid } from "./humanoid";
 import { PartMesh, partsBounds } from "./parts";
 import { clipsFor, KitPerson } from "./kit";
-import { env, lightOf, type Look, lookOf, material } from "./style";
-import type { Build, CastMember, Spot, World } from "./types";
+import { env, lightOf, type Look, lookOf, material, rigged } from "./style";
+import type { Act, Build, CastMember, Spot, World } from "./types";
+import { art, artToon, useArt } from "./artstyle";
+import { HeldProp, perform, resetRig, rigOf, paint, type ActState } from "./actions";
+import type { ShotCam } from "./layers";
 
 const ease = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 const MOVING = ["walk", "run", "carry", "drive", "fly", "swim", "move", "approach", "depart", "climb", "crash"];
@@ -54,7 +57,10 @@ export const footprint = (b: Build) => {
 const SPOTS: Record<Spot, [number, number]> = { center: [0, 0], left: [-1.7, 0.25], right: [1.7, 0.25], back: [0.2, -2.4], front: [-0.2, 1.3], far: [0.4, -7] };
 
 type Placed = { m: CastMember; pos: THREE.Vector3; yaw: number; phase: number; speed: number; h: number; w: number; w0: number; air: number };
-export type Blocking = { actors: Placed[]; cam: { pos: THREE.Vector3; look: THREE.Vector3; fov: number; setup: number }; U: number; t: number; k: number; u: number };
+// (gu, gt, gs: how far through the whole scene, in 0-1 and seconds, and its length: the director's shots
+// and acts are timed on the scene, not on a beat)
+export type Blocking = { actors: Placed[]; cam: { pos: THREE.Vector3; look: THREE.Vector3; fov: number; setup: number; roll: number }; U: number; t: number; k: number; u: number;
+  gu: number; gt: number; gs: number };
 
 const flies = (m: CastMember) => m.verb === "fly" && ["vehicle", "bird", "insect"].includes(m.build.archetype);
 
@@ -95,7 +101,7 @@ export const segmentOf = (world: World, frame: number, D: number, at: number) =>
 };
 
 // Where everyone is and where the camera is at this frame.
-export const block = (w0: World, frame: number, fps: number, D: number, at: number, portrait = false): Blocking => {
+export const block = (w0: World, frame: number, fps: number, D: number, at: number, portrait = false, g?: { u: number; t: number; s: number }): Blocking => {
   // birds flying with an aircraft are drawn larger than life, or a flock beside an airliner is specks
   const jet = w0.cast.find((c) => flies(c) && c.build.archetype === "vehicle");
   const world = jet
@@ -233,7 +239,8 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
       if (o) p.yaw = Math.atan2(-(o.pos.z - p.pos.z), o.pos.x - p.pos.x);
     });
   }
-  return { actors: placed, cam: direct(world, placed, u, t, U, D, fps, at, portrait), U, t, k, u };
+  const G = g ?? { u, t, s: D / fps };
+  return { actors: placed, cam: direct(world, placed, u, t, U, D, fps, at, portrait, G.u), U, t, k, u, gu: G.u, gt: G.t, gs: G.s };
 };
 
 // The height of the flat floe at an iceberg's foot (hero.tsx Iceberg), for an iceberg h tall.
@@ -256,7 +263,11 @@ const COVER: Record<string, string> = {
   top_down: "hero", reveal: "close", static: "close",
 };
 
-export const setupsOf = (world: World, D: number, fps: number, at: number) => {
+type Setup = { move: string; from: number; to: number; on?: string; from_?: string; prop?: string };
+export const setupsOf = (world: World, D: number, fps: number, at: number): Setup[] => {
+  // the scene director's shot list (fyt/director.py plan_camera), each held until the next one's cue
+  const shots = world.direction?.shots ?? [];
+  if (shots.length) return shots.map((sh, i) => ({ move: sh.move, from: i ? sh.from ?? 0 : 0, to: shots[i + 1]?.from ?? 1, on: sh.on, from_: sh.from_, prop: sh.prop }));
   const secs = D / fps;
   const first = world.camera || "static";
   if (secs < 4.2) return [{ move: first, from: 0, to: 1 }];
@@ -264,8 +275,12 @@ export const setupsOf = (world: World, D: number, fps: number, at: number) => {
   return [{ move: first, from: 0, to: cut }, { move: COVER[first] ?? "close", from: cut, to: 1 }];
 };
 
-const direct = (world: World, placed: Placed[], u: number, t: number, U0: number, D = 150, fps = 30, at = 0.5, portrait = false) => {
-  const on = placed.find((p) => p.m.entity === world.on) ?? placed[0];
+const direct = (world: World, placed: Placed[], u: number, t: number, U0: number, D = 150, fps = 30, at = 0.5, portrait = false, gu = u) => {
+  const setups = setupsOf(world, D, fps, at);
+  const su = world.direction?.shots?.length ? gu : u;
+  const k = Math.max(0, setups.findIndex((s) => su >= s.from && su <= s.to + 1e-6));
+  const sh = setups[k];
+  const on = placed.find((p) => p.m.entity === (sh.on || world.on)) ?? placed.find((p) => p.m.entity === world.on) ?? placed[0];
   // the stage's unit is set by its largest thing; a person beside an iceberg is framed at a person's scale
   const U = Math.min(U0, Math.max(on.w, on.h) * 2.5);
   // a subject lying down (asleep, fallen, dead) is low: aim at it there, not at where its head was standing
@@ -290,7 +305,7 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
   // (a crash keeps what it runs into in the frame)
   if (long && on.m.verb !== "crash") Rw = Math.min(Rw, on.w * 0.55 * 0.62 + U * 0.2);
   Rh = Math.min(Rh, own * 1.7);
-  const fov = 36;
+  const fov = 36 * art.profile.fov;
   const tanV = Math.tan((((portrait ? fov * PORTRAIT_FOV : fov) / 2) * Math.PI) / 180);
   const tanH = tanV * (portrait ? 9 / 16 : 16 / 9);
   let d = Math.max(Rh / tanV, Rw / tanH) * (portrait ? 1.0 / PORTRAIT_BACK : 1) * 1.05;
@@ -298,13 +313,10 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
   // on its side, its legs reach out across the ground by its standing height: stand further back
   if (lying) d *= 1.25;
   if (inside) d = Math.min(d, U * 3.6);
-  const setups = setupsOf(world, D, fps, at);
-  const k = Math.max(0, setups.findIndex((s) => u >= s.from && u <= s.to + 1e-6));
-  const sh = setups[k];
-  const lu = (u - sh.from) / Math.max(1e-3, sh.to - sh.from);
+  const lu = (su - sh.from) / Math.max(1e-3, sh.to - sh.from);
   const e = smooth(lu);
   // which side a scene is filmed from varies with the scene, so consecutive shots of one place differ
-  const hand = (hashOf(`${world.on}|${world.camera}|${world.seed ?? 0}|${world.set.place ?? ""}`) & 1 ? 1 : -1) * (k === 1 ? -1 : 1);
+  const hand = (hashOf(`${world.on}|${world.camera}|${world.seed ?? 0}|${world.set.place ?? ""}`) & 1 ? 1 : -1) * (k % 2 === 1 ? -1 : 1);
   const fwd = new THREE.Vector3(Math.cos(on.yaw), 0, -Math.sin(on.yaw));
   const across = new THREE.Vector3(Math.sin(on.yaw), 0, Math.cos(on.yaw));
   const side = (a: number, dist: number, y: number) => {
@@ -340,17 +352,6 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
       off = side(0.7 - 0.3 * e, d * (0.85 - 0.08 * e), Math.max(0.2, on.h * 0.06));
       target = look.clone().add(new THREE.Vector3(0, on.h * 0.25, 0));
       break;
-    case "close": {
-      // on the side the subject faces, drifting across it: a person head and shoulders, anything else
-      // its front half
-      const person = on.m.build.archetype === "humanoid";
-      const front = Math.atan2(Math.cos(on.yaw), -Math.sin(on.yaw)) + hand * (0.5 - 0.3 * e);
-      const span = person ? on.h * 0.48 : Math.max(on.h, on.w * 0.6) * 0.6;
-      const dc = (span / tanV) * (1.05 - 0.08 * e);
-      off = new THREE.Vector3(Math.sin(front) * dc, person ? 0 : on.h * 0.15 + dc * 0.08, Math.cos(front) * dc);
-      target = person ? on.pos.clone().add(new THREE.Vector3(0, on.h * 0.72, 0)) : look.clone().add(new THREE.Vector3(Math.cos(on.yaw) * on.w * 0.15, on.h * 0.05, -Math.sin(on.yaw) * on.w * 0.15));
-      break;
-    }
     case "hero":
       // the subject large against the sky: low, slow crane up
       off = side(-0.35 + 0.2 * e, d * 0.9, on.h * (0.05 + 0.5 * e));
@@ -360,13 +361,44 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
       // over the shoulder of whoever the subject is dealing with: a living one before the ship or set
       // they are standing on, whose 'shoulder' is a hull's length away
       const near = placed.filter((p) => p !== on && Math.abs(p.pos.y - on.pos.y) < U * 3);
-      const other = near.find((p) => LIVING_ARCH.includes(p.m.build.archetype)) ?? near.find((p) => Math.max(p.w, p.h) < U * 2);
+      const other = near.find((p) => p.m.entity === sh.from_) ?? near.find((p) => LIVING_ARCH.includes(p.m.build.archetype)) ?? near.find((p) => Math.max(p.w, p.h) < U * 2);
       if (other) {
+        // just behind and beside their head, close enough that their shoulder frames the shot
         const back = other.pos.clone().sub(on.pos).setY(0).normalize();
-        const pos = other.pos.clone().add(back.multiplyScalar(other.w * 0.9 + U * (0.6 - 0.15 * e))).add(new THREE.Vector3(0, other.h * 1.0, 0)).add(new THREE.Vector3(U * 0.3 * e, 0, U * 0.5));
-        return { pos, look, fov: fov - 4, setup: k };
+        const beside = new THREE.Vector3(-back.z, 0, back.x).multiplyScalar(hand * other.w * (0.35 + 0.1 * e));
+        const pos = other.pos.clone().add(back.multiplyScalar(other.w * 0.55 + U * (0.35 - 0.1 * e))).add(beside).add(new THREE.Vector3(0, other.h * 0.95, 0));
+        return { pos, look, fov: fov - 6, setup: k, roll: 0 };
       }
       off = side(0.3 + 0.2 * e, d * (1 - 0.12 * e), on.h * 0.4);
+      break;
+    }
+    case "track":
+      // a dolly alongside the subject as it goes, a little ahead of it and level with it, so whichever
+      // way it walks it is seen three-quarters from the front
+      off = across.clone().multiplyScalar(hand * d * 0.85).add(fwd.clone().multiplyScalar(d * (0.45 - 0.1 * e))).setY(on.h * 0.4 + d * 0.06);
+      target = look.clone().add(fwd.clone().multiplyScalar(on.w * 0.25));
+      break;
+    case "insert": {
+      // close on the hands and what they hold (a camera at the eye), from in front and to the side
+      const tgt = on.pos.clone().add(new THREE.Vector3(0, on.h * 0.84, 0)).add(fwd.clone().multiplyScalar(on.h * 0.08));
+      const a = Math.atan2(fwd.x, fwd.z) + hand * (0.75 - 0.15 * e);
+      const di = on.h * (0.95 - 0.12 * e);
+      off = new THREE.Vector3(Math.sin(a) * di, -on.h * 0.04, Math.cos(a) * di);
+      target = tgt;
+      f = fov - 6;
+      break;
+    }
+    case "reaction":
+    case "close": {
+      // on the side the subject faces, drifting across it: a person head and shoulders, anything else
+      // its front half (a reaction: tighter, and pushing in)
+      const tight = move === "reaction" ? 0.82 - 0.08 * e : 1.05 - 0.08 * e;
+      const person = on.m.build.archetype === "humanoid";
+      const front = Math.atan2(Math.cos(on.yaw), -Math.sin(on.yaw)) + hand * (0.5 - 0.3 * e);
+      const span = person ? on.h * 0.48 : Math.max(on.h, on.w * 0.6) * 0.6;
+      const dc = (span / tanV) * tight;
+      off = new THREE.Vector3(Math.sin(front) * dc, person ? 0 : on.h * 0.15 + dc * 0.08, Math.cos(front) * dc);
+      target = person ? on.pos.clone().add(new THREE.Vector3(0, on.h * 0.72, 0)) : look.clone().add(new THREE.Vector3(Math.cos(on.yaw) * on.w * 0.15, on.h * 0.05, -Math.sin(on.yaw) * on.w * 0.15));
       break;
     }
     case "top_down":
@@ -395,7 +427,9 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
   // a slow hand-held breath on top of the move
   pos.x += Math.sin(t * 0.5) * d * 0.01;
   pos.y += Math.sin(t * 0.37 + 1) * d * 0.006;
-  return { pos, look: target, fov: f, setup: k };
+  // the profile's dutch angle on the dramatic setups
+  const roll = ["low_angle", "reveal", "insert", "reaction"].includes(move) ? art.profile.dutch * hand : 0;
+  return { pos, look: target, fov: f, setup: k, roll };
 };
 
 // The camera exactly as aim() in kit.tsx places it, for projecting labels.
@@ -404,6 +438,7 @@ export const finalCamera = (b: Blocking, portrait: boolean, aspect: number) => {
   const cam = new THREE.PerspectiveCamera(portrait ? b.cam.fov * PORTRAIT_FOV : b.cam.fov, aspect, 0.1, 3000);
   cam.position.copy(pos);
   cam.lookAt(b.cam.look);
+  cam.rotateZ(b.cam.roll);
   cam.updateMatrixWorld(true);
   cam.updateProjectionMatrix();
   return cam;
@@ -591,14 +626,17 @@ export const clipFor = (names: string[], verb: string) => {
 };
 
 const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loaded: Parameters<typeof prepare>[0] }> = ({ p, loaded, b, look, world }) => {
+  const act = world.direction?.acts?.[p.m.entity];
   const made = React.useMemo(
     () => {
-      const it = prepare(loaded, p.m.model?.fit?.forward ?? "auto", p.m.model?.fit?.up ?? "+y", look.toon ? null : { envMap: env.map, intensity: env.intensity * 1.2 });
+      // (an inked or printed profile draws found models in its own flat bands, with ink outlines)
+      const it = prepare(loaded, p.m.model?.fit?.forward ?? "auto", p.m.model?.fit?.up ?? "+y", look.toon || artToon() ? null : { envMap: env.map, intensity: env.intensity * 1.2 });
       if (p.m.build.archetype === "humanoid") tone(it.root, p.m.build);
+      if (act?.paint) paint(it.root, act.paint);
       return it;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [loaded, p.m.model, look.toon],
+    [loaded, p.m.model, look.toon, art.profile.name, act?.paint],
   );
   const living = LIVING_ARCH.includes(p.m.build.archetype);
   const spinners = React.useMemo(() => (living ? [] : spinningParts(made.root)), [made, living]);
@@ -621,7 +659,9 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
   const gait = (loaded.scene.userData?.gait ?? {}) as Record<string, number>;
   const natural = clip >= 0 ? (gait[loaded.clips[clip].name] ?? 0) * Math.max(0.05, p.m.build.size) : 0;
   const pace = natural > 0 && p.speed > 0.05 ? Math.min(2, Math.max(0.5, p.speed / natural)) : 1;
-  if (mixer) mixer.setTime((b.t + p.phase * 0.3) * pace);
+  const time = (b.t + p.phase * 0.3) * pace;
+  if (mixer) mixer.setTime(time);
+  const spot = useActs(made.root, act, p, b, world, () => mixer?.setTime(time));
   // prepare() scales the largest side to 4 units; the design's size says how big it really is.
   const k = Math.max(0.05, p.m.build.size) / 4;
   // a still library animal is moved as a whole when it has no clip for the verb, and laid on its side
@@ -645,8 +685,36 @@ const Prepared: React.FC<{ p: Placed; look: Look; b: Blocking; world: World; loa
       <group scale={k}>
         <primitive object={made.root} />
       </group>
+      {p.m.held && act ? <HeldProp build={p.m.held} look={look} size={p.h * 0.1} spot={spot} /> : null}
     </group>
   );
+};
+
+// A person's acts (actions.tsx) on the body their clip has posed, each frame: the clip is set again
+// from the bind pose first, so the acts never pile up from one frame to the next.
+const useActs = (root: THREE.Object3D, act: Act | undefined, p: Placed, b: Blocking, world: World, pose: () => void) => {
+  const humanoid = p.m.build.archetype === "humanoid";
+  const rig = React.useMemo(() => (humanoid && act ? rigOf(root) : null), [root, humanoid, Boolean(act)]);
+  const spot = React.useRef<{ at: THREE.Vector3; fwd: THREE.Vector3 } | null>(null);
+  const reveal = world.direction?.shots?.find((x) => ["reveal", "insert"].includes(x.move) && (x.from ?? 0) > 0)?.from;
+  const other = act?.look ? b.actors.find((a) => a.m.entity === act.look) : undefined;
+  const state: Omit<ActState, "act"> = {
+    t: b.gt,
+    since: b.gt - (act?.from ?? 0) * b.gs,
+    reveal: reveal !== undefined ? b.gt - reveal * b.gs : -1e3,
+    fwd: new THREE.Vector3(Math.cos(p.yaw), 0, -Math.sin(p.yaw)),
+    height: p.h,
+    target: other ? other.pos.clone().add(new THREE.Vector3(0, other.h * 0.9, 0)) : undefined,
+    phase: (hashOf(p.m.entity) % 100) / 16,
+  };
+  useFrame(() => {
+    if (!rig || !act) return;
+    resetRig(rig);
+    pose();
+    root.updateWorldMatrix(true, true);
+    spot.current = perform(rig, { act, ...state });
+  });
+  return spot;
 };
 
 const LIVING_ARCH = ["humanoid", "quadruped", "bird", "fish", "insect", "serpent"];
@@ -932,12 +1000,13 @@ const keepOutOf = (world: World, fps: number, D: number, at: number, portrait: b
   };
 };
 
-const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: number; keep: KeepOut; frame: number }> = ({ world, b, portrait, seed, keep, frame }) => {
+const World3D: React.FC<{ world: World; b: Blocking; ba: Blocking; portrait: boolean; seed: number; keep: KeepOut; frame: number; shotCam?: ShotCam }> = ({ world, b, ba, portrait, seed, keep, frame, shotCam }) => {
   const { camera, gl } = useThree();
   gl.shadowMap.enabled = !((world as unknown as { fx?: string }).fx ?? "").includes("shadow");
   gl.shadowMap.type = THREE.PCFShadowMap;
   const look = lookOf(world.style);
-  const light = lightOf(look, world.set, b.U);
+  const d = world.direction;
+  const light = d ? rigged(lightOf(look, world.set, b.U), d.light, art.profile) : lightOf(look, world.set, b.U);
   // everything in the air over a town: the town drops below, so the aircraft fly over the roofs, not down
   // the street, and the haze thins so the town below keeps its shape
   const aloft = ["city", "town", "street"].includes(world.set.kind) && world.cast.length > 0 && world.cast.every(flies);
@@ -946,6 +1015,7 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
   const p = portrait ? b.cam.look.clone().add(b.cam.pos.clone().sub(b.cam.look).multiplyScalar(PORTRAIT_BACK)) : b.cam.pos;
   camera.position.copy(p);
   camera.lookAt(b.cam.look);
+  camera.rotateZ(b.cam.roll);
   if (camera instanceof THREE.PerspectiveCamera) {
     camera.fov = portrait ? b.cam.fov * PORTRAIT_FOV : b.cam.fov;
     camera.near = Math.max(0.05, b.U * 0.03);
@@ -980,17 +1050,18 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
       <hemisphereLight args={[light.amb, light.ground, light.ambI]} />
       <directionalLight position={sun.toArray()} target-position={focus.toArray()} intensity={light.sunI} color={light.sun} castShadow
         shadow-mapSize={[2048, 2048]} shadow-camera-left={-S} shadow-camera-right={S} shadow-camera-top={S} shadow-camera-bottom={-S} shadow-camera-near={0.1} shadow-camera-far={S * 5}
-        shadow-bias={-0.0003} shadow-normalBias={b.U * 0.01} shadow-radius={3} />
+        shadow-bias={-0.0003} shadow-normalBias={b.U * 0.01} shadow-radius={d ? art.profile.shadowSoft : 3} />
       <directionalLight position={rim.toArray()} target-position={b.cam.look.toArray()} intensity={light.rimI} color={light.rim} />
       {look.gloss ? <directionalLight position={[b.U * 6, b.U * 2, -b.U * 6]} intensity={1.0} color="#9ff0ff" /> : null}
       {off("env") ? null : (
         <group position={[0, aloft ? -b.U * 34 : 0, 0]}>
-          <Environment set={world.set} look={look} light={light} unit={b.U} seed={seed} t={b.t} keep={keep} fx={(world as unknown as { fx?: string }).fx} />
+          <Environment set={world.set} look={look} light={light} unit={b.U} seed={seed} t={b.gt} keep={keep} fx={(world as unknown as { fx?: string }).fx}
+            recipe={d?.recipe} cam={shotCam} shot={b.cam.setup} />
         </group>
       )}
-      {b.actors.map((a, i) => (
+      {ba.actors.map((a, i) => (
         <group key={i} position={[0, water && !flies(a.m) && a.pos.y <= 0 && a.m.build.form !== "iceberg" ? -a.h * 0.18 : 0, 0]}>
-          {off("actors") ? null : <Actor p={a} look={look} b={b} world={world} />}
+          {off("actors") ? null : <Actor p={a} look={look} b={ba} world={world} />}
           {grounded && a.air === 0 && a.pos.y >= 0 && !waterBand(world.set.kind)?.length ? (
             <group position={[a.pos.x, 0, a.pos.z]} rotation={[0, a.yaw, 0]}>
               <ContactShadow w={a.w * 0.95} d={a.m.build.archetype === "humanoid" ? a.w * 0.6 : a.w * 0.55} y={b.U * 0.012} />
@@ -1000,7 +1071,7 @@ const World3D: React.FC<{ world: World; b: Blocking; portrait: boolean; seed: nu
       ))}
       <Marks world={world} b={b} look={look} />
       {VOID.includes(world.set.kind) ? <ambientLight intensity={0.2} /> : null}
-      {off("post") || !glowing ? null : <Post finish={finish} />}
+      {off("post") || (!glowing && !d) ? null : <Post finish={d ? { ...finish, art: d.art, profile: art.profile, contrast: d.light?.contrast ?? 1, glow: glowing } : finish} />}
     </>
   );
 };
@@ -1035,9 +1106,29 @@ export const StoryWorldScene: React.FC<SceneProps> = ({ scene, theme, format }) 
   const frame = useCurrentFrame();
   const { width, height, fps, durationInFrames } = useVideoConfig();
   const short = format === "short";
-  const seg = segmentOf(scene.world as World, frame, durationInFrames, momentOf(scene));
+  useArt((scene.world as World).direction?.art);
+  const blockAt = (f: number) => {
+    const sg = segmentOf(scene.world as World, f, durationInFrames, momentOf(scene));
+    return { sg, b: block(sg.world, sg.frame, fps, sg.D, sg.at, short, { u: f / Math.max(1, durationInFrames - 1), t: f / fps, s: durationInFrames / fps }) };
+  };
+  const { sg: seg, b } = blockAt(frame);
   const world = seg.world;
-  const b = block(world, seg.frame, fps, seg.D, seg.at, short);
+  // a printed profile's people move on twos, like drawn animation; the camera and the place stay smooth
+  const step = art.profile.step;
+  const ba = step > 1 ? blockAt(frame - (frame % step)).b : b;
+  // the foreground of each shot is placed from where its camera stands half way through it
+  const setups = setupsOf(world, seg.D, fps, seg.at);
+  const directed = Boolean((scene.world as World).direction?.shots?.length);
+  const sh = setups[b.cam.setup] ?? setups[0];
+  const midFrame = directed ? Math.round(((sh.from + sh.to) / 2) * (durationInFrames - 1)) : -1;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const shotCam = React.useMemo<ShotCam | undefined>(() => {
+    if (!directed) return undefined;
+    const mb = blockAt(midFrame).b;
+    const cam = finalCamera(mb, short, width / height);
+    return { pos: cam.position.clone(), look: mb.cam.look.clone(), fov: cam.fov, aspect: width / height };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene.world, midFrame, short, width, height]);
   const look = lookOf(world.style);
   const seed = (world.seed ?? 0) ^ [...(world.set.place || world.set.kind)].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7);
   const k = unitOf(format);
@@ -1047,7 +1138,7 @@ export const StoryWorldScene: React.FC<SceneProps> = ({ scene, theme, format }) 
   return (
     <AbsoluteFill style={{ background: theme.background }}>
       {loaded ? <ThreeCanvas width={width} height={height} camera={{ fov: 36, position: [8, 3, 8] }} gl={{ antialias: true }} shadows>
-        <World3D world={world} b={b} portrait={short} seed={seed} keep={keep} frame={frame} />
+        <World3D world={world} b={b} ba={ba} portrait={short} seed={seed} keep={keep} frame={frame} shotCam={shotCam} />
       </ThreeCanvas> : null}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: `radial-gradient(ellipse 75% 65% at 50% 48%, transparent 55%, rgba(0,0,0,${lightOf(look, world.set, b.U).vignette}))` }} />
       <Callouts world={world} b={b} portrait={short} width={width} height={height} scale={k} font={theme.font} />

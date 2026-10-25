@@ -12,7 +12,9 @@ import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { Water as MirrorWater } from "three/examples/jsm/objects/Water.js";
 import { rng } from "../../world3d";
+import { type Profile, stylePass, tuneStyle } from "./artstyle";
 import { env } from "./style";
+import type { Art } from "./types";
 
 // --- sky --------------------------------------------------------------------------------------------
 
@@ -246,31 +248,48 @@ const GRADE = {
     }`,
 };
 
-export type Finish = { samples: number; bloom: number; threshold: number; focus: number; aperture: number; vignette: number; lift: string; gain: string; frame: number };
+export type Finish = { samples: number; bloom: number; threshold: number; focus: number; aperture: number; vignette: number; lift: string; gain: string; frame: number;
+  // the art profile's finishing (artstyle.ts): grade, ink or print; glow: whether anything gives off light
+  art?: Art; profile?: Profile; contrast?: number; glow?: boolean };
 
-// The finishing passes, run in place of the plain render: bloom so lights and glows read as light, a
-// shallow depth of field on close shots so the subject separates from the set, and a grade (lift, gain,
-// vignette, a little grain) that pulls the frame together.
+// The finishing passes, run in place of the plain render: the art profile's own pass first (a film
+// grade, ink lines and hatching from the depth and edges, or a stencil print), bloom so lights and
+// glows read as light, a shallow depth of field on close shots so the subject separates from the set.
 export const Post: React.FC<{ finish: Finish }> = ({ finish }) => {
   const { gl, scene, camera, size } = useThree();
   const chain = useMemo(() => {
-    const target = new THREE.WebGLRenderTarget(size.width * gl.getPixelRatio(), size.height * gl.getPixelRatio(), { type: THREE.HalfFloatType, samples: finish.samples });
+    const w = size.width * gl.getPixelRatio(), h = size.height * gl.getPixelRatio();
+    const target = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, samples: finish.samples });
+    // the scene's depth, for the ink and print passes' silhouettes
+    target.depthTexture = new THREE.DepthTexture(w, h);
+    target.depthTexture.type = THREE.UnsignedIntType;
     const composer = new EffectComposer(gl, target);
-    composer.addPass(new RenderPass(scene, camera));
+    // the scene is drawn into the composer's read buffer, whose depth the style pass reads after the
+    // tone-mapping output pass, in display colours (nothing in between writes that buffer's depth)
+    const style = stylePass();
+    class DepthRenderPass extends RenderPass {
+      render(r: THREE.WebGLRenderer, w: THREE.WebGLRenderTarget, read: THREE.WebGLRenderTarget, dt: number, mask: boolean) {
+        style.uniforms.tDepth.value = read.depthTexture;
+        super.render(r, w, read, dt, mask);
+      }
+    }
+    composer.addPass(new DepthRenderPass(scene, camera));
     const bokeh = new BokehPass(scene, camera, { focus: 10, aperture: 0.0002, maxblur: 0.006 });
     if (finish.aperture > 0) composer.addPass(bokeh);
     const bloom = new UnrealBloomPass(new THREE.Vector2(size.width / 2, size.height / 2), 0.4, 0.55, 0.85);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
+    composer.addPass(style);
     const grade = new ShaderPass(GRADE);
     composer.addPass(grade);
     grade.enabled = false; // the vignette is drawn over the frame instead
-    return { composer, bokeh, bloom, grade };
+    return { composer, bokeh, bloom, grade, style };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl, scene, camera, size.width, size.height, finish.samples, finish.aperture > 0]);
   useEffect(() => () => chain.composer.dispose(), [chain]);
   useFrame(() => {
-    const { composer, bokeh, bloom, grade } = chain;
+    const { composer, bokeh, bloom, grade, style } = chain;
+    bloom.enabled = finish.glow !== false;
     bloom.strength = finish.bloom;
     bloom.threshold = finish.threshold;
     bokeh.enabled = finish.aperture > 0;
@@ -281,6 +300,11 @@ export const Post: React.FC<{ finish: Finish }> = ({ finish }) => {
     grade.uniforms.seed.value = finish.frame * 0.618;
     grade.uniforms.lift.value.set(finish.lift);
     grade.uniforms.gain.value.set(finish.gain);
+    style.enabled = Boolean(finish.art && finish.profile);
+    if (finish.art && finish.profile) {
+      tuneStyle(style, finish.art, finish.profile, finish.frame, camera, finish.contrast ?? 1, finish.focus);
+      style.uniforms.res.value.set(size.width * gl.getPixelRatio(), size.height * gl.getPixelRatio());
+    }
     composer.render();
   }, 1);
   return null;

@@ -196,6 +196,49 @@ This runs offline too: without an API key the story world is designed and direct
 the workflow, a test render with `replay` set to an earlier test run's id does the same from that run's
 saved files on the `asset-library` branch.
 
+### The scene director: places, acting, camera and art style
+
+On top of the story world, `fyt/director.py` directs every stage scene before it renders, from the
+manifest and the narration alone (no extra model calls, no cost):
+
+- **Casting put right.** A person is always built as a person (a "Templeton" is not a temple), a child
+  is drawn as a child, and a garment the story names (Annie's blue dress) is worn by the person it
+  belongs to, in its colour, instead of standing on the set as a box.
+- **Environment recipes.** Each kind of place gets layers: foreground framing for each shot, clusters
+  round the action, a horizon, mist, wind in the vegetation, particles and background life
+  (`renderer/.../storyworld/layers.tsx`: instanced reeds and grass that sway in one draw call, pools and
+  creeks that reflect the sky, fence lines, drifting mist banks, gulls). The marsh is its own place now.
+- **Acting.** The narration's gestures become acts on the person's own clip (`actions.tsx`): raising a
+  camera to the eye on the cue word, pointing, talking with the hands, waving, holding a prop, heads
+  turning to whoever matters, a start when something is revealed, a shift of weight while standing.
+  They work on any rigged library person, whatever its bones are called.
+- **Camera choreography.** Each scene gets a shot list on its cue words: an establishing or aerial
+  shot the first time a place is seen, a track alongside a walker, an insert on the hands at the
+  gesture, a reveal, and a reaction shot on someone not yet framed.
+- **Lighting rig.** Overcast, golden hour, hard sun, moonlight or interior, from the place's own words
+  and the chosen atmosphere.
+
+**Art styles.** One profile per video changes the whole scene, not a filter on the last frame: the
+materials (smooth, three-band or two-band toon), the light ratios and shadow softness, the fog and mist,
+how dense the set is, the lens and dutch angles, animation on twos for the print look, and a finishing
+pass that reads the scene's depth.
+
+| Profile | Look | Chosen for |
+|---|---|---|
+| `cinematic` (default) | soft physically lit, film grade | nature, travel, machines, disasters |
+| `ink` | inked graphic novel: wobbling depth outlines, hatching, halftone, solid blacks | mysteries, crimes, hoaxes, the unexplained |
+| `stencil` | four-ink stencil print, out of register, red accent | wars, revolutions, propaganda, protest |
+
+Settings in `config.yaml` under `visuals`: `art_style` (`auto`, `cinematic`, `ink`, `stencil`),
+`art_strength` (0-1, default 0.75), `environment_detail` (0-1, default 0.8) and `atmosphere` (`auto`,
+`natural`, `dramatic`, `dreamlike`, `graphic`).
+
+**Render inspection.** After every render, `fyt/inspect3d.py` scores each 3D scene twice, from the
+video's own pixels: *environment richness* (detail and empty space in the frame) and *animation
+quality* (what moves inside the picture once the camera's own move is taken out, cuts, and the longest
+still run). Both go into `coverage.json` and `coverage.md`, and a bare place or a lifeless scene is a
+quality warning in the log (warnings never hold a video).
+
 ### Art direction
 
 Each video gets one look (`fyt/artdirect.py`), kept in every scene: archival for stories before 1950,
@@ -553,6 +596,8 @@ fyt/                 Python pipeline
   visualplan.py      the visual plan: which moments become 3D reconstructions, within the render budget
   scenes3d.py        the 3D catalog on the Python side, and the guards that keep world scenes true
   worldgen.py        each video's story world: cast, sets, direction and style, designed from the story
+  director.py        the scene director: casting fixes, place layers, acts, shot lists, light, art profile
+  inspect3d.py       render inspection: environment richness and animation quality of each 3D scene
   assets.py          which real object each 3D scene shows, and the most faithful model of it available
   artdirect.py       each video's look
   shotlist.py        the production storyboard (shotlist.json)

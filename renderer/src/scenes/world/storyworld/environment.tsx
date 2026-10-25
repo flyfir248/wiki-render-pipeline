@@ -5,12 +5,14 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
 import { rng } from "../../world3d";
+import { art, artRamp, artToon } from "./artstyle";
 import { ReflectiveWater } from "./cinema";
 import { rbcGeometry } from "./creatures";
 import { Block, PartMesh, partsBounds } from "./parts";
 import { Binned, type Bins, deal } from "./pieces";
 import { Background, type Light, type Look, material } from "./style";
-import type { Dressing, SetSpec } from "./types";
+import { Layers, type ShotCam } from "./layers";
+import type { Dressing, Recipe, SetSpec } from "./types";
 
 type R = () => number;
 const tone = (c: string, k: number) => "#" + new THREE.Color(c).multiplyScalar(k).getHexString();
@@ -373,7 +375,7 @@ const Dressed: React.FC<{ d: Dressing; look: Look; seed: number; clear: number; 
   );
 };
 
-export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; unit: number; seed: number; t: number; keep?: KeepOut; fx?: string }> = ({ set, look, light, unit: U, seed, t, keep, fx = "" }) => {
+export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; unit: number; seed: number; t: number; keep?: KeepOut; fx?: string; recipe?: Recipe; cam?: ShotCam; shot?: number }> = ({ set, look, light, unit: U, seed, t, keep, fx = "", recipe, cam, shot = 0 }) => {
   const kind = set.kind;
   const r = useMemo(() => rng(seed ^ 0x5e7), [seed]);
   const ground = light.ground;
@@ -467,6 +469,13 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
           if (dock) deal(bins, [dock], [0, 1, 2, 3].map((i) => ({ x: side * U * 7, z: (band[0] - 0.4 - i * 1.6) * U, a: 0, s: U * 1.7 })), rr, "w");
           if (boat) deal(bins, [boat], [{ x: -side * U * 6, z: (band[0] + 0.6) * U, a: 0.6, s: U * 1.8 }], rr, "w");
         }
+        break;
+      case "marsh":
+        // open salt marsh: flat to the horizon, a few low bushes and stones; its reeds, grass, pools and
+        // creeks are the place's layers (layers.tsx)
+        put("bush", 10, U * 14, U * 0.6, (s) => <Bush look={look} s={U * 0.35 * s.s} color={tone(leaf, 0.9)} />, 0.4, U * 3);
+        put("rock", 6, U * 12, U * 0.35, (s) => <Rock look={look} s={U * 0.25 * s.s} color="#77756a" />, 0.4, U * 3);
+        cover(90);
         break;
       case "swamp":
         put("tree", 18, U * 16, U * 3.2, (s) => <DeadTree look={look} h={U * 2.8 * s.s} />, 0.3, U * 3);
@@ -604,10 +613,12 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
   }, [kind, U, seed, look.name, set.time, leaf, dry, JSON.stringify(P)]);
 
   const groundSize = U * 120;
-  const bump = kind === "mountain" ? U * 2.2 : ["forest", "grassland", "snow", "desert"].includes(kind) ? U * 0.6 : kind === "underwater" ? U * 0.4 : 0;
+  const bump = kind === "mountain" ? U * 2.2 : ["forest", "grassland", "snow", "desert"].includes(kind) ? U * 0.6 : kind === "underwater" ? U * 0.4 : kind === "marsh" ? U * 0.15 : 0;
   const floorColor = INSIDE.includes(kind) ? (kind === "cave" ? "#3a322a" : kind === "lab" || kind === "hospital" ? "#c8cdd0" : tone(set.ground, 1)) : ground;
   const gGeom = useMemo(() => groundGeometry(groundSize, bump, seed, U * 4, floorColor, U), [groundSize, bump, seed, U, floorColor]);
-  const gMat = useMemo(() => (look.toon ? new THREE.MeshToonMaterial({ vertexColors: true }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: look.blocky })), [look]);
+  const gMat = useMemo(() => (artToon() ? new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: artRamp() }) : look.toon ? new THREE.MeshToonMaterial({ vertexColors: true }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: look.blocky })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [look, art.profile.name]);
   const water = mix(set.sky, "#1d4a6a", 0.55);
   const mirror = !look.toon && !look.blocky && !fx.includes("water");
   const sunDir = new THREE.Vector3(...light.sunDir);
@@ -649,18 +660,22 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
       {!INSIDE.includes(kind) && !VOID.includes(kind) && (backdrop === "hills" || backdrop === "mountains") ? (
         <Skyline U={U} seed={seed} look={look} color={mix(kind === "snow" ? "#dfe8ee" : kind === "desert" ? "#c8a070" : tone(leaf, 0.8), light.horizon, 0.3)}
           far={mix(kind === "desert" ? "#b89070" : "#6f7f8a", light.horizon, 0.55)} snow={kind === "snow" || backdrop === "mountains"}
-          height={backdrop === "mountains" ? 16 : kind === "sea" || kind === "beach" ? 3 : 8} />
+          height={backdrop === "mountains" ? 16 : kind === "sea" || kind === "beach" ? 3 : kind === "marsh" ? 2.5 : 8} />
       ) : null}
       {!INSIDE.includes(kind) && !VOID.includes(kind) && kind !== "underwater" && set.time !== "night" ? <Birds U={U} seed={seed} t={t} color={tone(light.horizon, 0.35)} /> : null}
       {fx.includes("items") ? null : items}
       {fx.includes("items") ? null : <Binned bins={bins} look={look} />}
-      {set.dressing.map((d, i) => (
+      {recipe && cam && !fx.includes("layers") ? <Layers recipe={recipe} kind={kind} light={light} U={U} seed={seed} t={t} keep={dry} cam={cam} shot={shot} /> : null}
+      {set.dressing.filter((d) => !(recipe && LAYERED.test(d.name))).map((d, i) => (
         <Dressed key={i} d={d} look={look} seed={seed + i * 101} clear={clear * 0.8} keep={dry} />
       ))}
     </group>
     </Background.Provider>
   );
 };
+
+// set dressing the place's layers draw better (a reed bed of a thousand swaying blades, not a few rods)
+const LAYERED = /reed|rush|sedge|grass|weed|fern/i;
 
 // Life in the sky over an outdoor place: a loose flock crossing far off, wings beating, so the place
 // itself moves while the story happens in front of it (seeded, so the same in every render of a frame).

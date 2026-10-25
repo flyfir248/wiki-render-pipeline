@@ -55,4 +55,6 @@ def dress(entity_words: str, build, public: Path) -> dict | None:
     e = outfits()[key]
     (public / "models").mkdir(parents=True, exist_ok=True)
     shutil.copy2(assets.MODELS_DIR / e["src"], public / "models" / e["src"])
-    return {"id": key, "src": f"models/{e['src']}", "fit": {}, "clips": e.get("clips", []), "licence": e["licence"], "title": e["title"]}
+    # (a glTF person faces +z; measured "auto", a body with its arms out reads as facing sideways and
+    # walked crabwise across the set)
+    return {"id": key, "src": f"models/{e['src']}", "fit": {"forward": e.get("forward", "+z")}, "clips": e.get("clips", []), "licence": e["licence"], "title": e["title"]}

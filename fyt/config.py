@@ -75,6 +75,15 @@ class VisualsConfig(BaseModel):
     # The look every story world is built in: auto lets the design pick per story, or one of the styles
     # in renderer/src/scenes/world/storyworld/grammar.json (lowpoly, voxel, noir, diorama, clinical).
     world_style: str = "auto"
+    # The scene director's art direction (fyt/director.py), one profile per video: auto picks from the
+    # story (inked graphic novel for mysteries, crime and strange true stories; stencil / cutout for
+    # political history, wars and anomalies; cinematic stylised 3D otherwise), or name one of
+    # cinematic, ink, stencil. Strength (0-1) is how far the profile's stylisation goes; environment
+    # detail (0.2-1) how densely places are dressed; atmosphere: auto, natural, dramatic, dreamlike, graphic.
+    art_style: str = "auto"
+    art_strength: float = 0.75
+    environment_detail: float = 0.8
+    atmosphere: str = "auto"
     # Where models are looked for, in order, after the project library and the model cache:
     # sketchfab: Sketchfab's search, downloaded from the Objaverse mirror (no key) or with SKETCHFAB_TOKEN;
     # polypizza: Poly Pizza's CC0 / CC-BY low-poly library (POLY_PIZZA_KEY, free);

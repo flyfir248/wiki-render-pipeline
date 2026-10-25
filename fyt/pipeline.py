@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
+from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -501,7 +501,15 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     ids = list(dict.fromkeys(e.id for k in staged for e in story_manifest.in_scene(story, k) if not worldgen.is_place(e)))
     log(job, f"building the story world: {len(ids)} entities for {len(staged)} scenes")
     style, builds, settings, made = worldgen.design(cfg, script, story, ids, log=lambda m: log(job, m))
+    # the scene director (fyt/director.py): casting put right, then each scene's art, place layers, light,
+    # acts and shots on top of the blocking
+    builds, worn = director.fix_cast(builds, story)
     shots, made["direction"] = worldgen.direct(cfg, script, story, builds, staged, log=lambda m: log(job, m))
+    shots = director.drop_worn(shots, worn)
+    v = cfg.visuals
+    art = director.choose_art(script, story, v.art_style, v.art_strength, v.environment_detail, v.atmosphere)
+    shots, directions = director.direct(script, story, builds, settings, shots, art, worn)
+    log(job, "scene director: " + director.summary(directions) + (f"; worn: {', '.join(f'{g} by {w}' for g, w in worn.items())}" if worn else ""))
     models = {}
     for eid, a in found.items():
         if eid in srcs:
@@ -542,11 +550,13 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
         lead_e = story_manifest.entity(story, lead)
         label = "ILLUSTRATION" if s.illustrative else "RECONSTRUCTION" if (m and lead_e.certain) else "RECONSTRUCTION · ILLUSTRATIVE"
         world = worldgen.world_of(style, seed, shot, builds, settings, models) | ({"kit": cast_kit} if cast_kit else {})
+        if i + 1 in directions:
+            world["direction"] = directions[i + 1]
         # the place built from the packs' trees, rocks, houses, roads and machines for its kind
         if style != "voxel" and (pieces := sets.stage(world["set"]["kind"], job.public)):
             world["set"]["pieces"] = pieces
         scenes[i] = s.model_copy(update={"subject_name": lead, "world": world, "model": model, "label": label})
-    job.file("world.json").write_text(json.dumps(worldgen.record(style, builds, settings, shots, made, models), indent=2))
+    job.file("world.json").write_text(json.dumps(worldgen.record(style, builds, settings, shots, made, models) | {"direction": {str(k): d for k, d in directions.items()}}, indent=2))
     log(job, f"story world ({style}): cast {made['cast']}, sets {made['sets']}, direction {made['direction']}; "
              + ", ".join(f"{b.entity} as {b.archetype}" for b in builds.values()))
     return script.model_copy(update={"scenes": scenes}), back

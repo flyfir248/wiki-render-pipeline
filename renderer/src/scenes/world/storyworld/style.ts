@@ -3,7 +3,8 @@
 import React from "react";
 import * as THREE from "three";
 import { toonRamp } from "../../world3d";
-import type { SetSpec, StyleName } from "./types";
+import { art, artRamp, artToon } from "./artstyle";
+import type { LightSetup, SetSpec, StyleName } from "./types";
 
 export type Look = {
   name: StyleName;
@@ -37,7 +38,7 @@ export const Background = React.createContext(false);
 
 // One material per look, colour and finish, shared by every mesh that uses it.
 export const material = (look: Look, color: string, opts: { glow?: boolean; opacity?: number; wire?: boolean; rough?: number; cheap?: boolean } = {}) => {
-  const key = `${look.name}|${color}|${opts.glow ? 1 : 0}|${opts.opacity ?? 1}|${opts.wire ? 1 : 0}|${opts.rough ?? -1}|${opts.cheap ? 1 : 0}`;
+  const key = `${look.name}|${art.profile.name}|${color}|${opts.glow ? 1 : 0}|${opts.opacity ?? 1}|${opts.wire ? 1 : 0}|${opts.rough ?? -1}|${opts.cheap ? 1 : 0}`;
   let m = cache.get(key);
   if (m) {
     if (look.gloss && m instanceof THREE.MeshStandardMaterial) {
@@ -51,6 +52,9 @@ export const material = (look: Look, color: string, opts: { glow?: boolean; opac
   const wireframe = Boolean(opts.wire);
   if (opts.glow) {
     m = new THREE.MeshBasicMaterial({ color: c.clone().multiplyScalar(2.2), transparent, opacity: opts.opacity ?? 1, wireframe });
+  } else if (artToon()) {
+    // an inked or printed look: hard light bands, whatever the world's own look
+    m = new THREE.MeshToonMaterial({ color: c, gradientMap: artRamp(), transparent, opacity: opts.opacity ?? 1, wireframe });
   } else if (opts.cheap && !look.toon && !look.gloss) {
     m = new THREE.MeshLambertMaterial({ color: c, flatShading: look.blocky, transparent, opacity: opts.opacity ?? 1, wireframe });
   } else if (look.toon) {
@@ -130,3 +134,27 @@ export const lightOf = (look: Look, set: SetSpec, unit: number): Light => {
 };
 
 const INSIDE_KINDS = ["room", "hall", "lab", "hospital", "cave", "factory", "shop", "station"];
+
+// The scene director's lighting rig (fyt/director.py lighting_for) on top of the time of day, scaled by
+// the art profile: an overcast marsh is soft, high and grey with a lifted fill; golden hour rakes in low
+// and warm; a hard sun cuts deep shadows. key, fill and rim scale the three lights.
+export const rigged = (l: Light, rig: LightSetup | undefined, p: { key: number; fill: number; rim: number; fog: number }): Light => {
+  let o = { ...l };
+  switch (rig?.rig) {
+    case "overcast":
+      o = { ...o, sun: mix(o.sun, "#e8edf0", 0.6), sunI: o.sunI * 0.6, ambI: o.ambI * 1.35, envI: o.envI * 1.15, clouds: Math.max(o.clouds, 0.9),
+        top: mix(o.top, "#8f9aa3", 0.5), horizon: mix(o.horizon, "#c4cacd", 0.4), sunDir: [-0.25, 0.85, 0.45], fogDensity: o.fogDensity * 1.4 };
+      break;
+    case "golden":
+      o = { ...o, sun: "#ffb874", sunDir: [-0.72, 0.22, 0.62], horizon: mix(o.horizon, "#ffc890", 0.4), rim: "#ffd6a0", sunI: o.sunI * 1.05 };
+      break;
+    case "hard_sun":
+      o = { ...o, sunI: o.sunI * 1.15, ambI: o.ambI * 0.8, clouds: Math.min(o.clouds, 0.2) };
+      break;
+    case "moonlit":
+      o = { ...o, rim: "#b4ccff", rimI: Math.max(o.rimI, 2) };
+      break;
+  }
+  return { ...o, sunI: o.sunI * (rig?.key ?? 1) * p.key, ambI: o.ambI * (rig?.fill ?? 1) * p.fill, envI: o.envI * Math.min(1.2, (rig?.fill ?? 1) * p.fill),
+    rimI: o.rimI * (rig?.rim ?? 1) * p.rim, fogDensity: o.fogDensity * p.fog };
+};

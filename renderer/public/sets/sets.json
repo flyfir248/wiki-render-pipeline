@@ -862,6 +862,27 @@
     "sets/mega-pack-cube-356.glb",
     "sets/mega-pack-cube-357.glb"
    ]
+  },
+  "marsh": {
+   "tree": [
+    "sets/nature-bush-common.glb",
+    "sets/quaternius-nature-lite-bush2.glb"
+   ],
+   "bush": [
+    "sets/nature-plant-7-big.glb",
+    "sets/nature-fern-1.glb",
+    "sets/quaternius-nature-lite-bush1.glb"
+   ],
+   "rock": [
+    "sets/nature-rock-medium-1.glb",
+    "sets/quaternius-nature-lite-rock1.glb"
+   ],
+   "grass": [
+    "sets/nature-grass-wispy-tall.glb",
+    "sets/nature-grass-common-tall.glb",
+    "sets/nature-grass-wispy-short.glb",
+    "sets/quaternius-nature-lite-grass2.glb"
+   ]
   }
  }
 }
