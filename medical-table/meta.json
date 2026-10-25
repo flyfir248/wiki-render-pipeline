@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "medical-table",
+  "query": "medical table",
+  "source": "objaverse",
+  "uid": "sketchfab:b74f0862d3344eb9a4e310067669780c",
+  "title": "Medical table",
+  "author": "2301253",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-b74f0862d3344eb9a4e310067669780c",
+  "checked": "vision",
+  "triangles": 51300,
+  "bytes": 1415980,
+  "size": [
+    3.2035,
+    2.949,
+    5.9805
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "dark wooden table with metal restraints, 1800s style",
+  "added": "2026-10-25T06:08:49+00:00"
+}
