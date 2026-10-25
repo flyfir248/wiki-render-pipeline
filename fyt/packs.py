@@ -15,7 +15,7 @@ from pathlib import Path
 from fyt import assets, kit, rigging
 
 PICKS = kit.BUNDLED.parent / "library-picks.json"
-ORDER = (".glb", ".gltf", ".fbx")
+ORDER = (".glb", ".gltf", ".fbx", ".obj")
 
 
 def _find(pack: dict, zips: list[Path]) -> Path | None:

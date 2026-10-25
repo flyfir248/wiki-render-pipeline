@@ -108,6 +108,16 @@ def _to_glb(fbx: Path) -> None:
     subprocess.run([str(exe), "--binary", "--input", str(fbx), "--output", str(fbx.with_suffix(""))], check=True, timeout=900, capture_output=True)
 
 
+def _obj_to_glb(obj: Path) -> Path:
+    """An OBJ (with its MTL colours) converted to a binary glTF beside it, for a pack that ships no other
+    format (a voxel car pack). trimesh is needed only here, when a pack is imported by hand."""
+    import trimesh
+
+    out = obj.with_suffix(".glb")
+    trimesh.load(obj, force="scene").export(out)
+    return out
+
+
 def _glb_json(data: bytes) -> dict:
     if data[:4] != b"glTF":
         return json.loads(data)
@@ -348,6 +358,8 @@ weapons) when given;
     if f.suffix.lower() == ".fbx":
         _to_glb(f)
         f = f.with_suffix(".glb")
+    if f.suffix.lower() == ".obj":
+        f = _obj_to_glb(f)
     if clips and f.suffix.lower() == ".gltf":
         g = json.loads(f.read_text())
         g["animations"] = [a for a in g.get("animations", []) if a.get("name") in clips]

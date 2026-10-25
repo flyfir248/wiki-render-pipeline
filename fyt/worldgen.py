@@ -590,6 +590,10 @@ SET_WORDS: list[tuple[str, tuple[str, ...]]] = [
     ("micro", ("bloodstream", "inside the body", "microscop", "cell", "tissue", "vein", "artery", "under the skin", "wound", "intestin", "stomach")),
     ("hospital", ("hospital", "clinic", "operating", "ward", "surgery", "emergency room", "doctor's")),
     ("lab", ("laborator", "lab ")),
+    ("station", ("space station", "spacecraft", "spaceship", "starship", "inside the shuttle", "aboard the iss", "international space station")),
+    ("shop", ("supermarket", "grocery", "convenience store", "department store", "shopping", "mall", "boutique", "shop ")),
+    ("castle", ("castle", "fortress", "citadel", "stronghold", "ramparts", "battlements", "siege")),
+    ("village", ("medieval", "middle ages", "viking", "tudor", "hamlet", "feudal", "market square")),
     ("space", ("space", "orbit", "lunar", "moon's surface", "mars")),
     ("underwater", ("underwater", "seabed", "sea floor", "ocean floor", "beneath the waves", "reef")),
     ("sky", ("in the air", "over the clouds", "sky", "mid-air", "airborne")),
@@ -623,6 +627,8 @@ SET_COLOURS = {
     "factory": ("#6e6e6a", "#c8c6c0", "#ffd27a"), "railway": ("#7a8a5a", "#a8c8e0", "#ffe0a0"),
     "room": ("#8a6a4a", "#e8dccb", "#ffe2b0"), "hall": ("#9a9080", "#d8d0c0", "#ffe8c0"), "lab": ("#c8ccd0", "#eef2f4", "#7fe0ff"),
     "hospital": ("#cdd6d8", "#eef4f4", "#a0f0e0"), "cave": ("#4a4038", "#2a2420", "#ffb060"), "underwater": ("#c8b890", "#1e5a7a", "#9fe8ff"),
+    "village": ("#7a8a50", "#a8c8e0", "#ffd98a"), "castle": ("#7a7a68", "#a8c0d8", "#ffd98a"),
+    "shop": ("#c8c4bc", "#eeeae2", "#ffd27a"), "station": ("#8a929c", "#d0d6dc", "#7fe0ff"),
     "sky": ("#6a8a5a", "#8fc0ec", "#ffffff"), "space": ("#5a5a66", "#03040c", "#ffffff"), "micro": ("#6a1c2c", "#3a0c18", "#ff9fb0"),
 }
 
@@ -744,7 +750,8 @@ def _capped(c: str, most: float) -> str:
 # burn out under the lights, so the inside of a body stays deep and a room stays a soft mid-tone.
 # Too bright for a deep set, the rules' own colours are used, so the inside of a body stays red.
 SET_LIGHT = {"micro": (0.12, 0.22), "underwater": (0.2, 0.75), "space": (0.05, 0.3),
-             "room": (0.72, 0.6), "hall": (0.72, 0.6), "factory": (0.72, 0.6), "lab": (0.72, 0.6), "hospital": (0.72, 0.6)}
+             "room": (0.72, 0.6), "hall": (0.72, 0.6), "factory": (0.72, 0.6), "lab": (0.72, 0.6), "hospital": (0.72, 0.6),
+             "shop": (0.72, 0.6), "station": (0.72, 0.6)}
 DEEP_SETS = ("micro", "underwater", "space")
 
 

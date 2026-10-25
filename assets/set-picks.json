@@ -12,27 +12,32 @@
     "factory": {"zip": "kenney_factory-kit_3.0.zip", "source": "https://kenney.nl/assets/factory-kit", "author": "Kenney"},
     "station": {"zip": "kenney_space-station-kit.zip", "source": "https://kenney.nl/assets/space-station-kit", "author": "Kenney"},
     "town": {"zip": "kenney_fantasy-town-kit_2.0.zip", "source": "https://kenney.nl/assets/fantasy-town-kit", "author": "Kenney"},
-    "graveyard": {"zip": "kenney_graveyard-kit_5.0.zip", "source": "https://kenney.nl/assets/graveyard-kit", "author": "Kenney"}
+    "graveyard": {"zip": "kenney_graveyard-kit_5.0.zip", "source": "https://kenney.nl/assets/graveyard-kit", "author": "Kenney"},
+    "mega-pack": {"has": "low_poly_mega_assets_pack.glb", "scene": "low_poly_mega_assets_pack.glb", "licence": "by", "author": "carlcapu9", "source": "https://sketchfab.com/3d-models/low-poly-mega-assets-pack-57cfb802f15a4e4aa3f4f44d7631deab"},
+    "kenney-mini-market": {"has": "cash-register.glb", "source": "https://kenney.nl/assets/mini-market", "author": "Kenney"},
+    "kenney-space-modular": {"has": "gate-lasers.glb", "source": "https://kenney.nl/assets/modular-space-kit", "author": "Kenney"},
+    "quaternius-nature-lite": {"has": "Tree4.fbx", "source": "https://quaternius.com", "author": "Quaternius"},
+    "quaternius-farm": {"has": "Windmill.fbx", "source": "https://quaternius.com", "author": "Quaternius"}
   },
   "sets": {
     "forest": {
-      "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_2"], ["nature", "CommonTree_3"], ["nature", "Pine_1"], ["nature", "Pine_2"], ["nature", "Pine_3"], ["nature", "Pine_4"], ["nature", "CommonTree_4"]],
-      "bush": [["nature", "Bush_Common"], ["nature", "Fern_1"], ["nature", "Plant_1_Big"], ["nature", "Plant_7_Big"]],
-      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_2"], ["nature", "Rock_Medium_3"]],
-      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Tall"], ["nature", "Mushroom_Common"], ["nature", "Fern_1"]]
+      "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_2"], ["nature", "CommonTree_3"], ["nature", "Pine_1"], ["nature", "Pine_2"], ["nature", "Pine_3"], ["nature", "Pine_4"], ["nature", "CommonTree_4"], ["quaternius-nature-lite", "Tree1"], ["quaternius-nature-lite", "Tree2"], ["quaternius-nature-lite", "Tree3"], ["quaternius-nature-lite", "Tree4"], ["mega-pack", "Cylinder.012"], ["mega-pack", "Cylinder.021"], ["mega-pack", "Cylinder.022"], ["mega-pack", "Cylinder.023"], ["mega-pack", "Cube.037"], ["mega-pack", "Cube.038"], ["mega-pack", "Cube.039"], ["mega-pack", "Cube.040"], ["mega-pack", "Cube.041"], ["mega-pack", "Cube.042"], ["mega-pack", "Cube.043"], ["mega-pack", "Cube.046"], ["mega-pack", "Cube.048"]],
+      "bush": [["nature", "Bush_Common"], ["nature", "Fern_1"], ["nature", "Plant_1_Big"], ["nature", "Plant_7_Big"], ["quaternius-nature-lite", "Bush1"], ["quaternius-nature-lite", "Bush2"], ["quaternius-nature-lite", "Bush3"], ["mega-pack", "Cube.280"], ["mega-pack", "Cube.342"], ["mega-pack", "Cylinder.043"]],
+      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_2"], ["nature", "Rock_Medium_3"], ["quaternius-nature-lite", "Rock1"], ["quaternius-nature-lite", "Rock2"], ["quaternius-nature-lite", "Rock3"]],
+      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Tall"], ["nature", "Mushroom_Common"], ["nature", "Fern_1"], ["quaternius-nature-lite", "Grass1"], ["quaternius-nature-lite", "Grass2"], ["quaternius-nature-lite", "Grass3"], ["mega-pack", "Cube.349"], ["mega-pack", "Cube.362"], ["mega-pack", "Cube.367"], ["mega-pack", "Cylinder.179"], ["mega-pack", "Cylinder.185"], ["mega-pack", "Cube.369"], ["mega-pack", "Cube.370"], ["mega-pack", "Cube.375"], ["mega-pack", "Cube.376"], ["mega-pack", "Cube.378"], ["mega-pack", "Cube.381"], ["mega-pack", "Cube.385"], ["mega-pack", "Cube.391"]]
     },
     "grassland": {
-      "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_2"], ["nature", "CommonTree_5"], ["nature", "Pine_2"]],
-      "bush": [["nature", "Bush_Common"]],
-      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_2"]],
-      "grass": [["nature", "Grass_Common_Short"], ["nature", "Grass_Wispy_Tall"], ["nature", "Flower_3_Group"], ["nature", "Flower_4_Group"], ["nature", "Grass_Common_Tall"]]
+      "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_2"], ["nature", "CommonTree_5"], ["nature", "Pine_2"], ["quaternius-nature-lite", "Tree1"], ["quaternius-nature-lite", "Tree3"], ["mega-pack", "Cube.169"], ["mega-pack", "Cube.178"], ["mega-pack", "Cube.193"], ["mega-pack", "Cube.116"], ["mega-pack", "Cube.120"], ["mega-pack", "Cube.125"], ["mega-pack", "Cube.127"], ["mega-pack", "Cube.052"], ["mega-pack", "Cube.053"], ["mega-pack", "Cube.054"], ["mega-pack", "Cube.055"], ["mega-pack", "Cube.058"], ["mega-pack", "Cube.059"], ["mega-pack", "Cube.061"], ["mega-pack", "Cube.062"], ["mega-pack", "Cube.066"], ["mega-pack", "Cube.067"], ["mega-pack", "Cube.068"], ["mega-pack", "Cube.069"]],
+      "bush": [["nature", "Bush_Common"], ["quaternius-nature-lite", "Bush1"], ["quaternius-nature-lite", "Bush2"]],
+      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_2"], ["quaternius-nature-lite", "Rock1"], ["quaternius-nature-lite", "Rock2"]],
+      "grass": [["nature", "Grass_Common_Short"], ["nature", "Grass_Wispy_Tall"], ["nature", "Flower_3_Group"], ["nature", "Flower_4_Group"], ["nature", "Grass_Common_Tall"], ["quaternius-nature-lite", "Grass1"], ["quaternius-nature-lite", "Grass2"]]
     },
     "farm": {
       "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_5"]],
       "bush": [["nature", "Bush_Common"]],
       "rock": [["nature", "Rock_Medium_2"]],
       "grass": [["nature", "Grass_Common_Short"], ["nature", "Flower_3_Group"], ["nature", "Grass_Wispy_Short"]],
-      "prop": [["town", "cart"], ["town", "fence"]]
+      "prop": [["town", "cart"], ["town", "fence"], ["mega-pack", "Cube.194"], ["mega-pack", "Cube.195"], ["mega-pack", "Cube.210"], ["mega-pack", "Cube.211"], ["mega-pack", "Cube.212"], ["mega-pack", "Cube.214"], ["mega-pack", "Cube.218"], ["mega-pack", "Cylinder.026"], ["mega-pack", "Cylinder.027"], ["mega-pack", "Cylinder.028"], ["mega-pack", "Cylinder.029"], ["mega-pack", "Cube.220"], ["mega-pack", "Cube.221"], ["mega-pack", "Cube.230"], ["mega-pack", "Cube.231"], ["mega-pack", "Cube.232"], ["mega-pack", "Cube.233"], ["mega-pack", "Cube.234"], ["mega-pack", "Cube.239"], ["mega-pack", "Cube.240"], ["mega-pack", "Cube.241"], ["mega-pack", "Cube.242"], ["mega-pack", "Cube.243"], ["mega-pack", "Cube.244"], ["mega-pack", "Cube.245"], ["mega-pack", "Cylinder.030"], ["mega-pack", "Cube.247"], ["mega-pack", "Cylinder.032"], ["mega-pack", "Cube.248"], ["mega-pack", "Cube.010"], ["mega-pack", "Cube.011"], ["mega-pack", "Cube.015"], ["mega-pack", "Cube.016"], ["mega-pack", "Cube.204"], ["quaternius-farm", "Fence"], ["quaternius-farm", "Fence2"]]
     },
     "mountain": {
       "tree": [["nature", "Pine_1"], ["nature", "Pine_2"], ["nature", "Pine_3"], ["nature", "Pine_5"]],
@@ -45,28 +50,30 @@
       "grass": [["holiday", "snow-pile"]]
     },
     "river": {
-      "tree": [["nature", "CommonTree_2"], ["nature", "CommonTree_3"], ["nature", "Pine_2"], ["nature", "Pine_4"], ["nature", "CommonTree_4"]],
-      "bush": [["nature", "Bush_Common"], ["nature", "Fern_1"], ["nature", "Plant_7_Big"]],
-      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_3"]],
-      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Tall"], ["nature", "Flower_4_Group"]]
+      "tree": [["nature", "CommonTree_2"], ["nature", "CommonTree_3"], ["nature", "Pine_2"], ["nature", "Pine_4"], ["nature", "CommonTree_4"], ["quaternius-nature-lite", "Tree2"], ["quaternius-nature-lite", "Tree4"]],
+      "bush": [["nature", "Bush_Common"], ["nature", "Fern_1"], ["nature", "Plant_7_Big"], ["quaternius-nature-lite", "Bush3"]],
+      "rock": [["nature", "Rock_Medium_1"], ["nature", "Rock_Medium_3"], ["quaternius-nature-lite", "Rock3"]],
+      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Tall"], ["nature", "Flower_4_Group"]],
+      "prop": [["mega-pack", "Plane.007"], ["mega-pack", "Plane.008"], ["mega-pack", "Cube.254"], ["mega-pack", "Cube.255"], ["mega-pack", "Cube.256"], ["mega-pack", "Cube.257"], ["mega-pack", "Cube.261"], ["mega-pack", "Cube.262"], ["mega-pack", "Cube.263"], ["mega-pack", "Cube.264"], ["mega-pack", "Cube.266"], ["mega-pack", "Cube.267"], ["mega-pack", "Cube.268"], ["mega-pack", "Cube.269"], ["mega-pack", "Cube.271"], ["mega-pack", "Cube.272"], ["mega-pack", "Cube.276"]]
     },
     "lake": {
-      "tree": [["nature", "Pine_1"], ["nature", "Pine_3"], ["nature", "CommonTree_1"], ["nature", "CommonTree_3"]],
+      "tree": [["nature", "Pine_1"], ["nature", "Pine_3"], ["nature", "CommonTree_1"], ["nature", "CommonTree_3"], ["quaternius-nature-lite", "Tree1"], ["quaternius-nature-lite", "Tree2"]],
       "bush": [["nature", "Bush_Common"], ["nature", "Plant_1_Big"]],
-      "rock": [["nature", "Rock_Medium_2"], ["nature", "Rock_Medium_3"]],
-      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Short"]]
+      "rock": [["nature", "Rock_Medium_2"], ["nature", "Rock_Medium_3"], ["quaternius-nature-lite", "Rock2"]],
+      "grass": [["nature", "Grass_Common_Tall"], ["nature", "Grass_Wispy_Short"]],
+      "prop": [["mega-pack", "Cube.287"], ["mega-pack", "Cube.288"], ["mega-pack", "Plane.009"], ["mega-pack", "Cube.001"], ["mega-pack", "Cube.012"], ["mega-pack", "Cube.013"], ["mega-pack", "Cube.014"], ["mega-pack", "Cylinder.002"], ["mega-pack", "Cube.026"], ["mega-pack", "Cube.027"], ["mega-pack", "Cube.028"], ["mega-pack", "Cube.002"], ["mega-pack", "Cube.044"], ["mega-pack", "Cube.045"], ["mega-pack", "Cube.060"], ["mega-pack", "Cube.170"], ["mega-pack", "Cube.260"]]
     },
     "swamp": {
-      "tree": [["nature", "DeadTree_1"], ["nature", "DeadTree_2"], ["nature", "DeadTree_3"], ["nature", "DeadTree_4"], ["nature", "DeadTree_5"]],
+      "tree": [["nature", "DeadTree_1"], ["nature", "DeadTree_2"], ["nature", "DeadTree_3"], ["nature", "DeadTree_4"], ["nature", "DeadTree_5"], ["mega-pack", "Cube.139"], ["mega-pack", "Cube.144"], ["mega-pack", "Cube.145"], ["mega-pack", "Cube.146"]],
       "bush": [["nature", "Fern_1"], ["nature", "Plant_7_Big"]],
       "grass": [["nature", "Grass_Wispy_Tall"], ["nature", "Grass_Common_Tall"], ["nature", "Mushroom_Laetiporus"]]
     },
     "desert": {
-      "tree": [["nature", "DeadTree_4"], ["nature", "DeadTree_5"]],
+      "tree": [["nature", "DeadTree_4"], ["nature", "DeadTree_5"], ["mega-pack", "Cylinder.188"], ["mega-pack", "Cylinder.192"]],
       "rock": [["survival", "rock-sand-a"], ["survival", "rock-sand-b"], ["survival", "rock-sand-c"], ["pirate", "rocks-sand-a"], ["pirate", "rocks-sand-b"]]
     },
     "beach": {
-      "tree": [["pirate", "palm-detailed-bend"], ["pirate", "palm-detailed-straight"], ["pirate", "palm-bend"], ["pirate", "palm-straight"]],
+      "tree": [["pirate", "palm-detailed-bend"], ["pirate", "palm-detailed-straight"], ["pirate", "palm-bend"], ["pirate", "palm-straight"], ["mega-pack", "Cylinder"], ["mega-pack", "Cylinder.006"], ["mega-pack", "Cylinder.007"], ["mega-pack", "Cylinder.008"], ["mega-pack", "Cylinder.009"], ["mega-pack", "Cylinder.010"], ["mega-pack", "Cylinder.011"]],
       "rock": [["pirate", "rocks-sand-a"], ["pirate", "rocks-sand-b"], ["pirate", "rocks-sand-c"]],
       "grass": [["pirate", "grass-plant"]],
       "prop": [["pirate", "structure-platform-dock"], ["pirate", "boat-row-small"], ["pirate", "barrel"]]
@@ -75,7 +82,7 @@
       "building": [["suburban", "building-type-a"], ["suburban", "building-type-b"], ["suburban", "building-type-c"], ["suburban", "building-type-d"], ["suburban", "building-type-e"], ["suburban", "building-type-f"], ["suburban", "building-type-g"], ["suburban", "building-type-h"], ["suburban", "building-type-k"], ["suburban", "building-type-m"], ["suburban", "building-type-p"], ["suburban", "building-type-s"]],
       "tree": [["suburban", "tree-large"], ["suburban", "tree-small"]],
       "street": [["roads", "road-straight"]],
-      "prop": [["roads", "light-curved"], ["suburban", "planter"], ["roads", "road-sign-street"]]
+      "prop": [["roads", "light-curved"], ["suburban", "planter"], ["roads", "road-sign-street"], ["mega-pack", "Cube.229"], ["mega-pack", "Cube.235"], ["mega-pack", "Cube.236"], ["mega-pack", "Cube.237"], ["mega-pack", "Cube.238"], ["mega-pack", "Cylinder.031"], ["mega-pack", "Cylinder.033"], ["mega-pack", "Cylinder.034"], ["mega-pack", "Cylinder.035"], ["mega-pack", "Cylinder.039"], ["mega-pack", "Cylinder.040"], ["mega-pack", "Cylinder.041"], ["mega-pack", "Cylinder.044"], ["mega-pack", "Cube.303"], ["mega-pack", "Cube.352"], ["mega-pack", "Cube.353"], ["mega-pack", "Cube.284"], ["mega-pack", "Cube.282"], ["mega-pack", "Cube.278"], ["mega-pack", "Cube.285"]]
     },
     "city": {
       "building": [["commercial", "building-a"], ["commercial", "building-b"], ["commercial", "building-c"], ["commercial", "building-d"], ["commercial", "building-e"], ["commercial", "building-f"], ["commercial", "building-g"], ["commercial", "building-h"], ["commercial", "building-i"], ["commercial", "building-j"], ["commercial", "building-k"], ["commercial", "building-l"]],
@@ -87,7 +94,7 @@
       "tree": [["nature", "CommonTree_1"], ["nature", "CommonTree_5"], ["nature", "Pine_2"]],
       "grass": [["nature", "Grass_Common_Short"], ["nature", "Grass_Wispy_Short"]],
       "street": [["roads", "road-straight"]],
-      "prop": [["roads", "electricity-pole"], ["roads", "sign-highway"], ["roads", "road-sign-warning"]]
+      "prop": [["roads", "electricity-pole"], ["roads", "sign-highway"], ["roads", "road-sign-warning"], ["mega-pack", "Cube.310"], ["mega-pack", "Cube.311"], ["mega-pack", "Cube.312"], ["mega-pack", "Cube.313"]]
     },
     "railway": {
       "tree": [["nature", "CommonTree_2"], ["nature", "Pine_1"], ["nature", "CommonTree_5"]],
@@ -110,7 +117,31 @@
       "prop": [["station", "bed-single-cover"], ["station", "computer-screen"], ["station", "table"]]
     },
     "room": {
-      "prop": [["station", "table-large"], ["station", "chair-cushion"], ["station", "container"]]
+      "prop": [["station", "table-large"], ["station", "chair-cushion"], ["station", "container"], ["mega-pack", "Cube.292"], ["mega-pack", "Cube.294"], ["mega-pack", "Cube.296"], ["mega-pack", "Cube.304"], ["mega-pack", "Cube.305"], ["mega-pack", "Cube.306"], ["mega-pack", "Cube.308"], ["mega-pack", "Cube.316"], ["mega-pack", "Cube.327"], ["mega-pack", "Cube.328"], ["mega-pack", "Cube.003"], ["mega-pack", "Cube.006"], ["mega-pack", "Cube.007"], ["mega-pack", "Cube.008"], ["mega-pack", "Cube.009"], ["mega-pack", "Cube.030"]]
+    },
+    "village": {
+      "building": [["mega-pack", "Cube.395"], ["mega-pack", "Cube.461"], ["mega-pack", "Cube.511"], ["mega-pack", "Cube.603"], ["mega-pack", "Cube.778"], ["mega-pack", "Cube.071"]],
+      "tree": [["mega-pack", "Cube.085"], ["mega-pack", "Cube.079"], ["mega-pack", "Cube.029"], ["mega-pack", "Cube.034"], ["mega-pack", "Cube.036"], ["mega-pack", "Cube.056"], ["mega-pack", "Cube.057"], ["mega-pack", "Cube.063"], ["mega-pack", "Cube.065"]],
+      "bush": [["mega-pack", "Cylinder.052"], ["mega-pack", "Cylinder.081"], ["mega-pack", "Plane.186"], ["mega-pack", "Cylinder.042"], ["mega-pack", "Plane.215"]],
+      "rock": [["mega-pack", "Cube.047"], ["mega-pack", "Cube.049"], ["mega-pack", "Cube.050"], ["mega-pack", "Cube.051"]],
+      "grass": [["mega-pack", "Cylinder.100"], ["mega-pack", "Cylinder.013"], ["mega-pack", "Cylinder.014"], ["mega-pack", "Cylinder.015"], ["mega-pack", "Cylinder.016"], ["mega-pack", "Cylinder.017"], ["mega-pack", "Cylinder.018"]],
+      "prop": [["mega-pack", "Cube.319"], ["mega-pack", "Cube.351"], ["mega-pack", "Cube.032"], ["mega-pack", "Cube.035"], ["mega-pack", "Cylinder.036"], ["mega-pack", "Cylinder.037"], ["mega-pack", "Cylinder.038"], ["mega-pack", "Cube.293"], ["mega-pack", "Cube.295"], ["mega-pack", "Cylinder.048"], ["mega-pack", "Cube.326"], ["mega-pack", "Cube.033"], ["mega-pack", "Cube.329"], ["mega-pack", "Cube.333"], ["mega-pack", "Cube.289"], ["mega-pack", "Cube.302"], ["mega-pack", "Cube.331"], ["mega-pack", "Cylinder.004"], ["mega-pack", "Cylinder.001"], ["mega-pack", "Cube.318"], ["mega-pack", "Cube.317"], ["mega-pack", "Cube.337"], ["mega-pack", "Cylinder.003"], ["mega-pack", "Cylinder.005"], ["mega-pack", "Cube.031"], ["mega-pack", "Cube.292"]]
+    },
+    "castle": {
+      "building": [["mega-pack", "Cube.172"], ["mega-pack", "Cube.191"], ["mega-pack", "Cube.173"], ["mega-pack", "Cube.174"], ["mega-pack", "Cube.072"], ["mega-pack", "Cube.070"], ["mega-pack", "Cube.358"], ["mega-pack", "Cube.359"], ["mega-pack", "Cube.196"], ["mega-pack", "Cube.197"], ["mega-pack", "Cube.207"], ["mega-pack", "Cube.208"], ["mega-pack", "Cube.209"], ["mega-pack", "Cube.217"], ["mega-pack", "Cube.219"]],
+      "tree": [["mega-pack", "Cylinder.012"], ["mega-pack", "Cylinder.021"], ["mega-pack", "Cylinder.022"], ["mega-pack", "Cylinder.023"]],
+      "rock": [["mega-pack", "Cube.047"], ["mega-pack", "Cube.223"], ["mega-pack", "Cube.224"], ["mega-pack", "Cube.225"], ["mega-pack", "Cube.226"], ["mega-pack", "Cube.227"], ["mega-pack", "Cube.228"]],
+      "grass": [["mega-pack", "Cylinder.013"], ["mega-pack", "Cylinder.015"], ["mega-pack", "Cylinder.018"]],
+      "prop": [["mega-pack", "Cube.341"], ["mega-pack", "Cube.346"], ["mega-pack", "Cube.017"], ["mega-pack", "Cube.018"], ["mega-pack", "Cube.019"], ["mega-pack", "Cube.020"], ["mega-pack", "Cube.021"], ["mega-pack", "Cube.022"], ["mega-pack", "Cube.023"], ["mega-pack", "Cube.343"], ["mega-pack", "Cube.024"], ["mega-pack", "Cube.025"], ["mega-pack", "Cylinder.036"], ["mega-pack", "Cube.293"], ["mega-pack", "Cylinder.049"], ["mega-pack", "Cube.314"], ["mega-pack", "Cube.315"], ["mega-pack", "Cube.309"], ["mega-pack", "Cube.324"], ["mega-pack", "Cube.330"], ["mega-pack", "Cube.289"], ["mega-pack", "Cube.321"], ["mega-pack", "Cube.332"], ["mega-pack", "Cube.334"], ["mega-pack", "Cube.335"], ["mega-pack", "Cube.311"], ["mega-pack", "Cube.312"], ["mega-pack", "Cube.313"], ["mega-pack", "Cube.310"], ["mega-pack", "Cube.216"], ["mega-pack", "Cube.215"], ["mega-pack", "Cube.213"], ["mega-pack", "Cube.198"], ["mega-pack", "Cube.199"], ["mega-pack", "Cube.206"], ["mega-pack", "Cylinder.024"]]
+    },
+    "shop": {
+      "prop": [["kenney-mini-market", "shelf-bags"], ["kenney-mini-market", "shelf-boxes"], ["kenney-mini-market", "shelf-end"], ["kenney-mini-market", "freezers-standing"], ["kenney-mini-market", "freezer"], ["kenney-mini-market", "display-fruit"], ["kenney-mini-market", "display-bread"], ["kenney-mini-market", "cash-register"], ["kenney-mini-market", "bottle-return"], ["kenney-mini-market", "shopping-cart"], ["kenney-mini-market", "shopping-basket"], ["kenney-mini-market", "column"], ["kenney-mini-market", "character-employee"], ["kenney-mini-market", "fence"], ["kenney-mini-market", "fence-door-rotate"], ["kenney-mini-market", "wall"], ["kenney-mini-market", "wall-corner"], ["kenney-mini-market", "wall-door-rotate"], ["kenney-mini-market", "wall-window"], ["kenney-mini-market", "floor"]]
+    },
+    "station": {
+      "prop": [["kenney-space-modular", "gate"], ["kenney-space-modular", "gate-door"], ["kenney-space-modular", "gate-door-window"], ["kenney-space-modular", "gate-lasers"], ["kenney-space-modular", "stairs"], ["kenney-space-modular", "stairs-wide"], ["kenney-space-modular", "cables"], ["kenney-space-modular", "corridor"], ["kenney-space-modular", "corridor-wide"], ["kenney-space-modular", "corridor-corner"], ["kenney-space-modular", "corridor-end"], ["kenney-space-modular", "corridor-intersection"], ["kenney-space-modular", "corridor-junction"], ["kenney-space-modular", "corridor-transition"], ["kenney-space-modular", "corridor-wide-corner"], ["kenney-space-modular", "corridor-wide-end"], ["kenney-space-modular", "corridor-wide-intersection"], ["kenney-space-modular", "corridor-wide-junction"], ["kenney-space-modular", "room-corner"], ["kenney-space-modular", "room-large"], ["kenney-space-modular", "room-large-variation"], ["kenney-space-modular", "room-small"], ["kenney-space-modular", "room-small-variation"], ["kenney-space-modular", "room-wide"], ["kenney-space-modular", "room-wide-variation"], ["kenney-space-modular", "template-corner"], ["kenney-space-modular", "template-detail"], ["kenney-space-modular", "template-floor"], ["kenney-space-modular", "template-floor-big"], ["kenney-space-modular", "template-floor-detail"], ["kenney-space-modular", "template-floor-detail-a"], ["kenney-space-modular", "template-floor-layer"], ["kenney-space-modular", "template-floor-layer-hole"], ["kenney-space-modular", "template-floor-layer-raised"], ["kenney-space-modular", "template-wall"], ["kenney-space-modular", "template-wall-corner"], ["kenney-space-modular", "template-wall-detail-a"], ["kenney-space-modular", "template-wall-half"], ["kenney-space-modular", "template-wall-stairs"], ["kenney-space-modular", "template-wall-top"]]
+    },
+    "hall": {
+      "prop": [["mega-pack", "Cube.333"], ["mega-pack", "Cube.334"], ["mega-pack", "Cube.335"], ["mega-pack", "Cube.347"], ["mega-pack", "Cube.363"], ["mega-pack", "Cube.005"], ["mega-pack", "Cube.004"], ["mega-pack", "Cube.205"], ["mega-pack", "Cube.354"], ["mega-pack", "Cube.355"], ["mega-pack", "Cube.356"], ["mega-pack", "Cube.357"]]
     }
   }
 }

@@ -17,7 +17,7 @@ const tone = (c: string, k: number) => "#" + new THREE.Color(c).multiplyScalar(k
 const mix = (a: string, b: string, t: number) => "#" + new THREE.Color(a).lerp(new THREE.Color(b), t).getHexString();
 
 export const WATER = ["sea", "lake", "river", "beach", "swamp"];
-export const INSIDE = ["room", "hall", "lab", "hospital", "cave", "factory"];
+export const INSIDE = ["room", "hall", "lab", "hospital", "cave", "factory", "shop", "station"];
 export const VOID = ["space", "micro", "sky"];
 
 // The open water of a set as [near z, far z] in units: it begins just behind the centre spot, so
@@ -506,7 +506,10 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         beyond(80);
         break;
       case "town":
+      case "village":
+      case "castle":
       case "city": {
+        // (a village's cottages and a castle's walls and towers line the street as a town's houses do)
         const tall = kind === "city";
         const cols = ["#c98e6b", "#e1d3b8", "#9fa7b5", "#b9705a", "#d8c08f", "#8e9bb0"];
         const lit = set.time === "night" || set.time === "dusk" ? 0.55 : 0.2;
@@ -536,7 +539,7 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         if (P.tree?.length) deal(bins, P.tree, [-3, -1, 1, 3].map((i) => ({ x: i * U * 4.5 + U * 1.2, z: -U * 2.9, a: rr() * 6, s: U * 2.4 })).filter((s) => !(keep && keep(s.x, s.z, U * 0.6, U * 2.4))), rr);
         const lamp = P.prop?.find((x) => x.includes("light-")) ?? P.prop?.find((x) => x.includes("light"));
         if (lamp) deal(bins, [lamp], [-3, -2, -1, 0, 1, 2, 3].map((i) => ({ x: i * U * 5, z: -U * 2.6, a: Math.PI, s: U * 2.2 })).filter((s) => !(keep && keep(s.x, s.z, U * 0.3, U * 2.2))), rr);
-        else
+        else if (kind === "town" || kind === "city")
           for (let i = -3; i <= 3; i++) out.push(<Block key={`lamp${i}`} look={look} color="#3a3d44" size={[U * 0.07, U * 1.8, U * 0.07]} at={[i * U * 5, U * 0.9, -U * 2.6]} />,
             <Block key={`lt${i}`} look={look} color="#ffe2a0" glow={set.time !== "day"} size={[U * 0.25, U * 0.12, U * 0.25]} at={[i * U * 5, U * 1.82, -U * 2.6]} />);
         const extra = P.prop?.filter((x) => x !== lamp) ?? [];
@@ -544,14 +547,16 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
         break;
       }
       case "room":
+      case "shop":
+      case "station":
       case "hall":
       case "lab":
       case "hospital":
       case "factory": {
-        const big = kind === "hall" || kind === "factory";
+        const big = kind === "hall" || kind === "factory" || kind === "station";
         const W = U * (big ? 9 : 4.2);
         const H = U * (big ? 5 : 2.2);
-        const wall = kind === "lab" || kind === "hospital" ? "#e3e8ea" : kind === "factory" ? "#8e9296" : mix(set.sky, "#e8dccb", 0.5);
+        const wall = kind === "lab" || kind === "hospital" || kind === "shop" ? "#e3e8ea" : kind === "factory" || kind === "station" ? "#8e9296" : mix(set.sky, "#e8dccb", 0.5);
         // the place's own furniture or machines along the back and sides, clear of the action
         if (P.prop?.length) {
           const n = big ? 9 : 5;

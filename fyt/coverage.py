@@ -30,7 +30,7 @@ from fyt.models import RenderProps, Script
 STILL_VERBS = {"idle", "present", "sit", "lie", "sleep", "talk", "phone", "glow"}
 # Kinds of place that move by themselves (water, flow, clouds), and outdoor kinds that get birds by day.
 MOVING_SETS = {"sea", "lake", "river", "beach", "swamp", "underwater", "micro", "sky"}
-INDOOR_OR_VOID = {"room", "hall", "lab", "hospital", "cave", "factory", "space", "micro", "sky", "underwater"}
+INDOOR_OR_VOID = {"room", "hall", "lab", "hospital", "cave", "factory", "shop", "station", "space", "micro", "sky", "underwater"}
 MODULE_STILL = {"present"}
 
 
