@@ -14,8 +14,10 @@ def test_every_still_library_animal_is_rigged_or_says_why_not():
     rigged = {k: e for k, e in still.items() if e.get("rig") == "auto"}
     assert len(rigged) >= 90
     for k, e in still.items():
-        assert e.get("rig") in ("auto", "none"), k
-        if e["rig"] == "auto":
+        assert e.get("rig") in ("auto", "none", "own"), k
+        if e["rig"] == "own":  # a rigged farm animal with an idle but no walk: posed for its gait
+            assert e["clips"], k
+        elif e["rig"] == "auto":
             assert e["rig_type"] in ("quadruped", "bird", "serpent") and e["clips"], k
         else:
             assert e.get("rig_note") and not e["clips"], k

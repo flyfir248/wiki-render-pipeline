@@ -7,7 +7,8 @@ from fyt.manifest import Place
 
 def test_every_kind_of_place_the_packs_cover_has_its_pieces_on_disk():
     index = json.loads(sets.INDEX.read_text())
-    assert all(s["licence"] == "CC0" for s in index["sources"].values())
+    # free packs only: CC0, and the mega pack's CC BY (credited in the description)
+    assert all(s["licence"] in ("CC0", "by") for s in index["sources"].values())
     kinds = index["sets"]
     for kind in ("forest", "grassland", "mountain", "snow", "river", "lake", "swamp", "desert", "beach", "town", "city", "road", "railway", "factory", "lab"):
         assert kinds[kind], kind
@@ -41,3 +42,13 @@ def test_the_first_establishing_shot_of_each_new_place_is_aerial():
              for k, (p, c) in enumerate([("forest", "establish"), ("forest", "establish"), ("town", "orbit"), ("river", "establish")], 1)}
     out = worldgen.vary_cameras(shots)
     assert [out[k].camera for k in sorted(out)] == ["aerial", "establish", "orbit", "aerial"]
+
+
+def test_cc_by_set_pieces_are_credited():
+    from fyt.models import Script, ScriptScene
+    kinds = json.loads(sets.INDEX.read_text())["sets"]
+    sc = Script(title="T", description="D", tags=["a"], thumbnail_text="X", thumbnail_kicker="K", thumbnail_query="q",
+                scenes=[ScriptScene(narration="n", type="world", world={"set": {"pieces": kinds["village"]}})], sources=["https://example.com"])
+    assert any("carlcapu9" in line for line in sets.credits(sc))
+    assert kinds["castle"]["building"] and kinds["shop"]["prop"] and kinds["station"]["prop"]
+    assert worldgen.set_kind("a medieval market square", "") == "village" and worldgen.set_kind("Windsor Castle", "") == "castle"

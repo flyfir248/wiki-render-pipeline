@@ -96,3 +96,16 @@ def stage(kind: str, public: Path) -> dict[str, list[str]]:
             to.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(RENDERER_DIR / "public" / src, to)
     return got
+
+
+def credits(script) -> list[str]:
+    """Description lines for the set pieces a video shows from packs that ask for credit (CC BY)."""
+    if not INDEX.is_file():
+        return []
+    sources = json.loads(INDEX.read_text()).get("sources", {})
+    shown = {f for s in script.scenes for fs in ((s.world or {}).get("set", {}).get("pieces") or {}).values() for f in fs}
+    out = []
+    for pid, src in sources.items():
+        if src.get("licence") == "by" and any(f.startswith(f"sets/{pid}-") for f in shown):
+            out.append(f"Set pieces from {pid.replace('-', ' ')} by {src['author']} (CC BY 4.0) {src['source']}")
+    return out

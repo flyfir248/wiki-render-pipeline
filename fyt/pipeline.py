@@ -156,7 +156,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             update={"description": script.description.rstrip() + "\n\nImage credits:\n" + "\n".join(credits)}
         )
         job.file("script.json").write_text(script.model_dump_json(indent=2))
-    model_credits = assetlib.credits(found)
+    model_credits = assetlib.credits(found) + sets.credits(script)
     if model_credits:
         script = script.model_copy(
             update={"description": script.description.rstrip() + "\n\n3D models:\n" + "\n".join(model_credits)}
