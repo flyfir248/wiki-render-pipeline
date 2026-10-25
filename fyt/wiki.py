@@ -184,6 +184,9 @@ class WikiImage:
     description: str
     artist: str
     license: str
+    # "" for the article's own images; otherwise where a search found it (commons, openverse, loc, nasa),
+    # which means it is checked by eye before it goes behind a scene
+    source: str = ""
 
     @property
     def credit(self) -> str:
@@ -242,7 +245,10 @@ def search_commons(query: str, limit: int = 6) -> list[WikiImage]:
     r.raise_for_status()
     body = r.json()
     pages = sorted(body.get("query", {}).get("pages", []), key=lambda p: p.get("index", 0))
-    return _images({"query": {"pages": pages}})[:limit]
+    found = _images({"query": {"pages": pages}})[:limit]
+    for im in found:
+        im.source = "commons"
+    return found
 
 
 def _images(body: dict) -> list[WikiImage]:

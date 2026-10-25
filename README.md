@@ -326,6 +326,16 @@ with no fitting photo get Pexels stock footage for a search written for that mom
 `PEXELS_API_KEY` secret); charts and numbers stay on the plain background. Photo credits are
 added to the description automatically.
 
+When the article has few photos, or a topic has no article, the list is topped up with freely
+licensed photos of the subject (`fyt/freeimages.py`, `growth.image_sources`): Wikimedia Commons first,
+then Openverse (Flickr and museum images under CC0, CC BY or CC BY-SA only, never NC or ND), the
+Library of Congress (only items marked "no known restrictions") and NASA (public domain). None needs a
+key. Each searched photo must name the subject and pass the same vision check before it goes behind a
+scene, and is credited with its author and licence. Google Images and other web image searches are
+deliberately not used: most of their results are copyrighted, and a monetised channel can lose a video
+or get a strike for one. (Google's own licence-filtered Custom Search API is closed to new users and
+shuts down at the start of 2027.)
+
 Before Kokoro speaks, `fyt/speech.py` rewrites the narration into plain spoken words: years
 ("1992" as "nineteen ninety-two"), decades, dates, ordinals, money, percentages, units, Roman
 numerals, abbreviations ("Dr.", "St.", "c. 1450") and acronyms ("HAL" as a name, "FBI" letter by
@@ -402,7 +412,8 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
   the curiosity polish. YouTube often limits ads on tragedy coverage.
 - *Visuals in every scene* (`visuals_every_scene`): scenes the script gave no picture (charts, numbers,
   quotes) get a real photo behind them, darkened, with a slow zoom: a spare article image, then a
-  Wikimedia Commons photo of the subject, then a stock photo. Commons images are credited in the description.
+  freely licensed photo of the subject (Commons, Openverse, Library of Congress, NASA), then a stock photo.
+  Searched photos are credited in the description.
 - *Music:* with no tracks in `music_dir`, each video gets an original background track composed note by
   note (`fyt/music.py`) in the mood the script picks: somber (slow, dark, quiet, no beat) for deaths,
   disasters and war, tense, curious, uplifting or playful, with a light pulse in Shorts where it fits. No licences, no Content ID claims, nothing to disclose. Drop your own tracks in `music_dir` to

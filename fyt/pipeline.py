@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, factcheck, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
+from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -64,6 +64,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             notes = llm.research(cfg, topic)
             job.file("research.md").write_text(notes)
         subject = article.title if article else topic
+        images = _more_images(cfg, job, images, subject)
         menu = wiki.image_menu(images)
         g = cfg.growth
         two_part = (
@@ -694,6 +695,22 @@ def _on_subject(hits: list["wiki.WikiImage"], subject: str) -> list["wiki.WikiIm
     return [im for im in hits if key & _words(f"{im.description} {im.title}")]
 
 
+def _more_images(cfg: Config, job: Job, images: list["wiki.WikiImage"], subject: str) -> list["wiki.WikiImage"]:
+    """The article's images, topped up to `growth.menu_images` with freely licensed photos of the subject
+    (fyt/freeimages.py), so the scriptwriter has real pictures to choose from even when the article has
+    few or there is no article. Each searched one is checked by eye before it is shown."""
+    want = cfg.growth.menu_images - len(images)
+    if want <= 0 or not subject.strip():
+        return images
+    have = {im.title for im in images}
+    found = freeimages.search(cfg, subject, limit=want + 2, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m))
+    extra = [im for im in found if im.title not in have][:want]
+    if extra:
+        log(job, f"{len(extra)} more freely licensed photos of the subject: "
+            + ", ".join(sorted({im.source for im in extra})))
+    return [*images, *extra]
+
+
 def _photo_fits(cfg: Config, job: Job, path: Path, scene, subject: str) -> bool:
     """A free vision model's word on whether a searched-for photo belongs behind this scene. True when
     no check can be made (no vision model, a clip rather than a photo)."""
@@ -739,7 +756,12 @@ def scene_visuals(
         ext = im.url.rsplit(".", 1)[-1].split("?")[0].lower()
         if not use_image(i, im, f"media/wiki{n}.{ext if ext in ('jpg', 'jpeg', 'png', 'webp') else 'jpg'}"):
             return False
-        taken.add(n)
+        taken.add(n)  # tried once, whatever the check says
+        # a photo found by searching, not the article's own, is checked by eye like any searched one
+        if im.source and not _photo_fits(cfg, job, job.public / scene_media[i].src, script.scenes[i], subject):
+            del scene_media[i]
+            credits.pop()
+            return False
         return True
 
     for i, s in enumerate(script.scenes):
@@ -771,12 +793,8 @@ def scene_visuals(
         commons_seen: set[str] = set()
 
         def commons(query: str) -> list["wiki.WikiImage"]:
-            try:
-                found = wiki.search_commons(query)
-            except Exception as e:  # Commons is a nice-to-have
-                log(job, f"warning: Commons search failed for {query!r}: {e}")
-                return []
-            return [im for im in _on_subject(found, subject) if im.title not in commons_seen]
+            found = freeimages.search(cfg, query, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m))
+            return [im for im in found if im.title not in commons_seen]
 
         for i, s in enumerate(script.scenes):
             if i in scene_media or s.type in DRAWN:
@@ -812,7 +830,7 @@ def scene_visuals(
                     break
 
     kinds = [("wiki" in m.src or "commons" in m.src) for m in scene_media.values()]
-    log(job, f"visuals: {sum(kinds)} Wikipedia/Commons images, {len(kinds) - sum(kinds)} stock, "
+    log(job, f"visuals: {sum(kinds)} Wikipedia and freely licensed images, {len(kinds) - sum(kinds)} stock, "
         f"{len(script.scenes) - len(scene_media)} scenes on plain background")
     return scene_media, credits, used
 
@@ -847,11 +865,9 @@ def extra_shots(
 
     def commons(query: str) -> list["wiki.WikiImage"]:
         if query not in commons_cache:
-            try:
-                commons_cache[query] = _on_subject(wiki.search_commons(query), subject)
-            except Exception as e:  # Commons is a nice-to-have
-                log(job, f"warning: Commons search failed for {query!r}: {e}")
-                commons_cache[query] = []
+            commons_cache[query] = freeimages.search(
+                cfg, query, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m)
+            )
         return [im for im in commons_cache[query] if im.title.removeprefix("File:") not in seen]
 
     def download(im: "wiki.WikiImage", rel: str) -> Media | None:
@@ -881,6 +897,9 @@ def extra_shots(
             if n is not None:
                 spare.remove(n)
                 found = download(images[n - 1], f"{name}.jpg")
+                if found and images[n - 1].source and not _photo_fits(cfg, job, job.public / found.src, s, subject):
+                    credits.pop()
+                    continue
             else:
                 query = s.broll_query or s.heading or ""
                 hits = (commons(f"{subject} {query}".strip()) if subject and query else []) or (commons(subject) if subject else [])

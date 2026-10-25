@@ -23,3 +23,15 @@ def plan_without_a_model(request, monkeypatch):
         raise RuntimeError("no model in tests")
 
     monkeypatch.setattr(visualplan, "_llm_plan", offline)
+
+
+@pytest.fixture(autouse=True)
+def only_commons_is_searched(request, monkeypatch):
+    """Pipeline tests fake Commons search; the other free image sources stay offline (test_freeimages
+    tests them)."""
+    if request.module.__name__.endswith("test_freeimages"):
+        return
+    from fyt import freeimages
+
+    for name in ("openverse", "loc", "nasa"):
+        monkeypatch.setitem(freeimages.SOURCES, name, lambda q, n: [])
