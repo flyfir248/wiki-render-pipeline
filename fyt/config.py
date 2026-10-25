@@ -307,6 +307,24 @@ class ThreadsConfig(BaseModel):
     max_per_run: int = 3
 
 
+class TikTokConfig(BaseModel):
+    """Shorts cross-posted to TikTok (fyt/tiktok.py). Needs the TIKTOK_CLIENT_KEY, TIKTOK_CLIENT_SECRET and
+    TIKTOK_REFRESH_TOKEN secrets. Shares instagram's caption, hashtags and max_age_hours."""
+
+    publish: bool = False
+    # draft: the video lands in the TikTok app's inbox and is posted from there (caption in the run summary).
+    # direct: posted outright, but private until TikTok audits the app, which it doesn't do for a tool
+    # posting to your own accounts.
+    mode: Literal["draft", "direct"] = "draft"
+    privacy: Literal["PUBLIC_TO_EVERYONE", "FOLLOWER_OF_CREATOR", "MUTUAL_FOLLOW_FRIENDS", "SELF_ONLY"] = "PUBLIC_TO_EVERYONE"
+    # TikTok's "Creator labeled as AI-generated" tag (direct only; for a draft, set it in the app).
+    ai_label: bool = True
+    # Links in TikTok captions can't be tapped, and a bio link needs 1,000 followers, so this names the
+    # channel (instagram.youtube_handle is added after it).
+    cta: str = "Full story, and a new one every day, on YouTube:"
+    max_per_run: int = 3
+
+
 class Config(BaseModel):
     channel: ChannelInfo = Field(default_factory=ChannelInfo)
     format: Literal["long", "short"] = "long"
@@ -352,6 +370,7 @@ class Config(BaseModel):
     instagram: InstagramConfig = Field(default_factory=InstagramConfig)
     facebook: FacebookConfig = Field(default_factory=FacebookConfig)
     threads: ThreadsConfig = Field(default_factory=ThreadsConfig)
+    tiktok: TikTokConfig = Field(default_factory=TikTokConfig)
     # Upload only after `fyt approve <job>`; strongly recommended (see README).
     require_review: bool = True
     jobs_dir: str = "jobs"

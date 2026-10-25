@@ -77,12 +77,17 @@ def main(argv: list[str] | None = None) -> None:
     rl = sub.add_parser("reel", help="write a Short's Instagram caption (instagram.txt); --post also posts it as a Reel")
     rl.add_argument("job")
     rl.add_argument("--post", action="store_true", help="post it to Instagram now")
-    rl = sub.add_parser("reels", help="post Shorts that are public on YouTube to Instagram, Facebook and Threads (*.publish)")
+    rl = sub.add_parser("reels", help="post Shorts that are public on YouTube to Instagram, Facebook, Threads and TikTok (*.publish)")
     rl.add_argument("--hours", type=float, default=None, help="look back this far for Shorts not posted yet (default: instagram.max_age_hours)")
     it = sub.add_parser("ig-token", help="make the INSTAGRAM_TOKEN and INSTAGRAM_USER_ID secrets from a Graph API Explorer token")
     it.add_argument("--app-id", required=True)
     it.add_argument("--app-secret", required=True)
     it.add_argument("--token", required=True, help="a user token from the Graph API Explorer")
+    tk = sub.add_parser("tiktok-token", help="make the TIKTOK_REFRESH_TOKEN secret: prints TikTok's sign-in link, then trades the address it sends you to")
+    tk.add_argument("--client-key", required=True)
+    tk.add_argument("--client-secret", required=True)
+    tk.add_argument("--redirect-uri", required=True, help="the Redirect URI set in the TikTok app's Login Kit, exactly")
+    tk.add_argument("--url", help="the address TikTok sent the browser to after you allowed the app (asked for when left out)")
 
     sh = sub.add_parser("sheet", help="lay a video's frames out on one image, to check a render by eye")
     sh.add_argument("source", type=Path, help="a rendered video, or a props.json to draw frames from directly")
@@ -316,7 +321,7 @@ def main(argv: list[str] | None = None) -> None:
             print(f"posted {instagram.post_due(cfg, tmp=Path(tmp))} Reels")
             for platform in crosspost.PLATFORMS:
                 if getattr(cfg, platform).publish:
-                    print(f"posted {crosspost.post_due(cfg, platform, tmp=Path(tmp))} to {platform.title()}")
+                    print(f"posted {crosspost.post_due(cfg, platform, tmp=Path(tmp))} to {crosspost._name(platform)}")
     elif args.cmd == "ig-token":
         from fyt import instagram
 
@@ -326,6 +331,18 @@ def main(argv: list[str] | None = None) -> None:
         print(f"INSTAGRAM_USER_ID={found['user_id']}\nINSTAGRAM_TOKEN={found['token']}")
         if found["expires"]:
             print("\nThis token expires in about 60 days; run this again before then.")
+    elif args.cmd == "tiktok-token":
+        from fyt import tiktok
+
+        url = args.url
+        if not url:
+            print("Open this link signed in to the channel's TikTok account and allow the app:\n")
+            print(tiktok.authorize_url(args.client_key, args.redirect_uri) + "\n")
+            url = input("Then paste the whole address the browser lands on: ")
+        got = tiktok.exchange_code(args.client_key, args.client_secret, args.redirect_uri, url)
+        print(f"\nAllowed: {got.get('scope')}")
+        print("Add these as repository secrets (Settings > Secrets and variables > Actions):\n")
+        print(f"TIKTOK_CLIENT_KEY={args.client_key}\nTIKTOK_CLIENT_SECRET={args.client_secret}\nTIKTOK_REFRESH_TOKEN={got['refresh_token']}")
     elif args.cmd == "relabel":
         from fyt import youtube
 

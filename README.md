@@ -511,6 +511,34 @@ a warning in the run, without using up the Shorts' retries.
   60 days; with the app secret the run renews it every week and keeps it in `state.db`, encrypted with the
   app secret. Threads only takes videos from a link, so it always uses the temporary host.
 
+## TikTok
+
+The same Shorts can go to TikTok (`fyt/tiktok.py`, `tiktok` in `channel.yaml`), from the same queue and in
+the same step as the Reels. TikTok's Content Posting API has two routes:
+
+- **`mode: draft`** (the default) sends each Short to the TikTok app's inbox once it is public on YouTube.
+  TikTok notifies the account; tap the notification, paste the caption from the run's summary page (GitHub >
+  Actions > the run), pick a sound if you like and post it to Everyone. Needs the `video.upload` scope.
+- **`mode: direct`** posts it outright with the caption and the AI-generated label (`ai_label`). TikTok keeps
+  every post from an app it hasn't audited private (`SELF_ONLY`), and such an app may only post to an account
+  that is set to private. TikTok's Content Sharing Guidelines say a tool that uploads to your own accounts
+  won't pass the audit, so this only helps if that changes.
+
+Setup:
+
+1. Sign in at developers.tiktok.com (an email sign-up works) and **Manage apps > Connect an app**. Add the
+   **Login Kit** and **Content Posting API** products (turn on **Direct Post** too if you want `direct`) and
+   the scopes `user.info.basic`, `video.upload` and `video.publish`.
+2. Under Login Kit, set a **Redirect URI**: any https address you won't use for anything else, such as this
+   repo's GitHub page. TikTok sends the browser there with the code in the address.
+3. Use the app's **Sandbox** and add the channel's TikTok account as a **target user**, or submit the app for
+   review to use it in production.
+4. On a computer: `python -m fyt tiktok-token --client-key KEY --client-secret SECRET --redirect-uri URI`.
+   Open the link it prints, allow the app, and paste back the address the browser lands on. It prints the
+   three secrets: add `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET` and `TIKTOK_REFRESH_TOKEN`.
+5. Set `tiktok.publish: true`. The refresh token lasts a year from its last use; each run uses it, and keeps
+   any newer one TikTok hands back in `state.db`, encrypted with the client secret.
+
 ## Monetization: read this before going hands-off
 
 - **YouTube Partner Program:** 1,000 subscribers plus 4,000 public watch hours in 12 months,

@@ -1,4 +1,4 @@
-"""Shorts cross-posted to the Facebook Page and to Threads, next to the Instagram Reels.
+"""Shorts cross-posted to the Facebook Page, Threads and TikTok (fyt/tiktok.py), next to the Instagram Reels.
 
 Both go out from the same queue as the Reels (fyt/instagram.py): a Short is posted once it is public
 on YouTube, with its video file fetched from the run that made it. Unlike Instagram captions, links
@@ -22,7 +22,7 @@ from pathlib import Path
 
 import requests
 
-from fyt import instagram
+from fyt import instagram, tiktok
 from fyt.config import Config, secret
 from fyt.models import Script
 from fyt.store import Uploads
@@ -260,7 +260,12 @@ def check_threads(cfg: Config, session=requests) -> str:
 PLATFORMS = {
     "facebook": (lambda cfg: cfg.facebook, lambda: bool(instagram.credentials()), check_facebook, facebook_text, post_facebook),
     "threads": (lambda cfg: cfg.threads, lambda: bool(secret("THREADS_TOKEN")), check_threads, threads_text, post_threads),
+    "tiktok": (lambda cfg: cfg.tiktok, tiktok.has_secrets, tiktok.check, tiktok.text, tiktok.post),
 }
+
+
+def _name(platform: str) -> str:
+    return {"tiktok": "TikTok"}.get(platform, platform.title())
 
 
 def post_due(cfg: Config, platform: str, now: datetime | None = None, tmp: Path | None = None) -> int:
@@ -270,7 +275,7 @@ def post_due(cfg: Config, platform: str, now: datetime | None = None, tmp: Path 
     if not conf.publish:
         return 0
     if not has_secrets():
-        print(f"::warning::{platform}.publish is on but its secrets aren't set; nothing posted to {platform.title()}")
+        print(f"::warning::{platform}.publish is on but its secrets aren't set; nothing posted to {_name(platform)}")
         return 0
     works = check(cfg)
     if works.startswith("::warning::"):  # don't use up the Shorts' tries on a setup problem
@@ -285,13 +290,13 @@ def post_due(cfg: Config, platform: str, now: datetime | None = None, tmp: Path 
         for youtube_id, job_id, run in uploads.due_crossposts(platform, now.isoformat(timespec="seconds"), since)[: conf.max_per_run]:
             folder = instagram.find_files(cfg, job_id, run, tmp or Path(own)) if job_id else None
             if folder is None:
-                print(f"::warning::no video file for https://youtu.be/{youtube_id}; not posted to {platform.title()}")
+                print(f"::warning::no video file for https://youtu.be/{youtube_id}; not posted to {_name(platform)}")
                 uploads.crosspost_done(youtube_id, platform, None)
                 continue
             try:
                 post_id = post(cfg, folder / "video.mp4", text_for(cfg, folder, youtube_id))
             except Exception as e:
-                print(f"::warning::https://youtu.be/{youtube_id} not posted to {platform.title()}: {e}")
+                print(f"::warning::https://youtu.be/{youtube_id} not posted to {_name(platform)}: {e}")
                 uploads.crosspost_done(youtube_id, platform, None)
                 continue
             uploads.crosspost_done(youtube_id, platform, post_id)

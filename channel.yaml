@@ -130,6 +130,13 @@ threads:
   publish: true
   topic: "Weird History"    # Threads takes one topic tag per post
 
+# The same Shorts on TikTok. Needs the TIKTOK_CLIENT_KEY, TIKTOK_CLIENT_SECRET and TIKTOK_REFRESH_TOKEN
+# secrets; see "TikTok" in the README. Off until they are set.
+tiktok:
+  publish: false
+  mode: draft               # each Short lands in the TikTok app's inbox; finish it there (caption in the run summary)
+  ai_label: true            # TikTok's "AI-generated" tag, for the AI narration (direct mode only)
+
 # true: the daily run only makes the video (download it from the run's Artifacts
 # and upload by hand). false: it also uploads when the YOUTUBE_TOKEN_JSON secret is
 # set; without the secret it only makes the video.
