@@ -225,3 +225,14 @@ def test_a_failing_comment_is_retried_at_most_three_times(cfg, monkeypatch):
     for _ in range(5):
         schedule.post_comments(cfg, MONDAY)
     assert len(calls) == 3
+
+
+def test_the_long_video_is_made_before_shorts_that_can_wait():
+    from fyt.schedule import Slot
+
+    now = datetime(2026, 10, 28, 7, 0, tzinfo=timezone.utc)
+    at = lambda d, h: datetime(2026, 10, d, h, 0, tzinfo=timezone.utc)  # noqa: E731
+    slots = [Slot(at(28, 14), "short"), Slot(at(28, 22), "short", True), Slot(at(29, 14), "short"), Slot(at(31, 16), "long")]
+    order = [(s.at.day, s.at.hour, s.kind) for s in schedule.by_urgency(slots, now)]
+    # the Short due today comes first, then the long video, then the Shorts that can wait for the next run
+    assert order == [(28, 14, "short"), (31, 16, "long"), (28, 22, "short"), (29, 14, "short")]
