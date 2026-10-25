@@ -1,0 +1,41 @@
+{
+  "warnings": [
+    "scene 4 at 22.7s: Subject cut off by frame edge.",
+    "scene 6 at 38.4s: Subject cut off by frame edge.",
+    "scene 6 at 41.8s: Subject cut off by frame edge."
+  ],
+  "frames": [
+    {
+      "scene": 4,
+      "at": 22.74,
+      "contrast": 45.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject cut off by frame edge."
+    },
+    {
+      "scene": 4,
+      "at": 26.77,
+      "contrast": 57.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 6,
+      "at": 38.43,
+      "contrast": 49.3,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject cut off by frame edge."
+    },
+    {
+      "scene": 6,
+      "at": 41.85,
+      "contrast": 28.2,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject cut off by frame edge."
+    }
+  ]
+}

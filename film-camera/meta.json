@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "film-camera",
+  "query": "film camera",
+  "source": "sketchfab",
+  "uid": "sketchfab:9de66868d0f240e985da00c9480bfc82",
+  "title": "Canon AT-1 Retro Camera",
+  "author": "AleixoAlonso",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-9de66868d0f240e985da00c9480bfc82",
+  "checked": "vision",
+  "triangles": 17984,
+  "bytes": 3136744,
+  "size": [
+    0.1439,
+    0.0898,
+    0.1182
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "1960s box\u2011type camera, black metal body",
+  "added": "2026-10-25T11:47:56+00:00"
+}

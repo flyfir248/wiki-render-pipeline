@@ -1,0 +1,154 @@
+{
+  "entities": [
+    {
+      "id": "photographer",
+      "name": "Jim Templeton",
+      "kind": "person",
+      "search": [
+        "photographer",
+        "person"
+      ],
+      "look": "middle\u2011aged man, 1940s clothing, dark hair",
+      "certain": true,
+      "scenes": [
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "id": "daughter",
+      "name": "Elizabeth Templeton",
+      "kind": "person",
+      "search": [
+        "young girl",
+        "child",
+        "person"
+      ],
+      "look": "five\u2011year\u2011old girl, short hair, 1960s dress",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "wife",
+      "name": "Annie Templeton",
+      "kind": "person",
+      "search": [
+        "woman",
+        "adult female",
+        "person"
+      ],
+      "look": "adult woman, back to camera, blue dress appearing white",
+      "certain": true,
+      "scenes": [
+        2,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "id": "bluedress",
+      "name": "blue dress",
+      "kind": "object",
+      "search": [
+        "blue dress",
+        "dress",
+        "clothing"
+      ],
+      "look": "blue cotton dress, overexposed to appear white",
+      "certain": true,
+      "scenes": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": "camera",
+      "name": "film camera",
+      "kind": "object",
+      "search": [
+        "film camera",
+        "camera",
+        "photographic equipment"
+      ],
+      "look": "1960s box\u2011type camera, black metal body",
+      "certain": true,
+      "scenes": [
+        2,
+        5
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "burghmarsh",
+      "name": "Burgh Marsh",
+      "look": "wetland marsh, reeds, flat horizon, overcast 1964 light",
+      "scenes": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "daughter",
+      "place": "burghmarsh",
+      "action": "stand behind child",
+      "motion": "present",
+      "cue": "a space\u2011suit figure looms behind a child",
+      "documented": false,
+      "priority": 2
+    },
+    {
+      "scene": 2,
+      "entity": "photographer",
+      "place": "burghmarsh",
+      "action": "snap three pictures of daughter",
+      "motion": "present",
+      "cue": "Jim Templeton snapped three pictures of his daughter",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 4,
+      "entity": "wife",
+      "place": "burghmarsh",
+      "action": "walk into frame",
+      "motion": "move",
+      "cue": "his wife Annie walked into the shot",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 5,
+      "entity": "camera",
+      "place": "burghmarsh",
+      "action": "limit viewfinder field",
+      "motion": "present",
+      "cue": "the camera\u2019s limited viewfinder let the figure slip behind the photographer\u2019s view",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 6,
+      "entity": "wife",
+      "place": "",
+      "action": "identified as woman in blue dress",
+      "motion": "present",
+      "cue": "The \u201cspaceman\u201d was simply a woman in a blue dress",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

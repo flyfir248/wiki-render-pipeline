@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 4 at 22.7s: Subject cut off by frame edge.",
+    "scene 6 at 38.4s: Subject cut off by frame edge.",
+    "scene 6 at 41.8s: Subject cut off by frame edge.",
+    "3D covers 33% of the runtime, under the 80% target"
+  ],
+  "repair": [],
+  "repaired": []
+}

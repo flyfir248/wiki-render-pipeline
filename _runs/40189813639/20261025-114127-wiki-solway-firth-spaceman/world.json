@@ -1,0 +1,640 @@
+{
+  "style": "lowpoly",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "photographer",
+      "archetype": "structure",
+      "size": 1.75,
+      "primary": "#4a3f35",
+      "secondary": "#2b2b2b",
+      "accent": "#000000",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.4,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "none",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            2.56,
+            0.0
+          ],
+          "size": [
+            7.2,
+            5.12,
+            6.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#c9b79a",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "wedge",
+          "at": [
+            0.0,
+            6.4,
+            0.0
+          ],
+          "size": [
+            7.6,
+            2.56,
+            6.4
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#7a4a3a",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            3.608,
+            1.44,
+            0.0
+          ],
+          "size": [
+            0.08,
+            2.72,
+            1.28
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#4a3220",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            3.608,
+            3.36,
+            1.76
+          ],
+          "size": [
+            0.08,
+            0.96,
+            0.96
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffd98a",
+          "bone": "body",
+          "spin": "",
+          "glow": true
+        },
+        {
+          "shape": "box",
+          "at": [
+            3.608,
+            3.36,
+            -1.76
+          ],
+          "size": [
+            0.08,
+            0.96,
+            0.96
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffd98a",
+          "bone": "body",
+          "spin": "",
+          "glow": true
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        2
+      ]
+    },
+    {
+      "entity": "daughter",
+      "archetype": "humanoid",
+      "size": 1.2,
+      "primary": "#3a6cc2",
+      "secondary": "#d4a373",
+      "accent": "#ffcc00",
+      "skin": "#f5c6a5",
+      "hair": "#ffcc00",
+      "body": {
+        "build": 0.3,
+        "legs": 0.5,
+        "neck": 0.2,
+        "head": 0.6,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "none",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "child"
+      },
+      "outfit": {
+        "top": "dress",
+        "bottom": "none",
+        "hair": "short",
+        "beard": false,
+        "glasses": false
+      },
+      "parts": [],
+      "form": "",
+      "sex": "f",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "entity": "wife",
+      "archetype": "humanoid",
+      "size": 1.65,
+      "primary": "#1e90ff",
+      "secondary": "#ffffff",
+      "accent": "#c0c0c0",
+      "skin": "#f5c6a5",
+      "hair": "#3b2d25",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "none",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": {
+        "top": "dress",
+        "bottom": "none",
+        "hair": "short",
+        "beard": false,
+        "glasses": false
+      },
+      "parts": [],
+      "form": "",
+      "sex": "f",
+      "source": "found model",
+      "scenes": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "entity": "bluedress",
+      "archetype": "object",
+      "size": 0.9,
+      "primary": "#1e90ff",
+      "secondary": "#ffffff",
+      "accent": "#c0c0c0",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.9,
+            0.005,
+            1.2
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1e90ff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.5,
+            0.0
+          ],
+          "size": [
+            0.9,
+            0.7,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1e90ff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            1.2,
+            0.0
+          ],
+          "size": [
+            0.9,
+            0.005,
+            1.2
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1e90ff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        4,
+        6
+      ]
+    },
+    {
+      "entity": "camera",
+      "archetype": "object",
+      "size": 0.3,
+      "primary": "#000000",
+      "secondary": "#2b2b2b",
+      "accent": "#555555",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.15,
+            0.25,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2b2b2b",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            0.07,
+            0.12,
+            0.05
+          ],
+          "size": [
+            0.02,
+            0.1,
+            0.02
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#000000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.05,
+            0.22,
+            0.0
+          ],
+          "size": [
+            0.08,
+            0.02,
+            0.08
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#555555",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        2
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "burghmarsh",
+      "kind": "swamp",
+      "time": "day",
+      "ground": "#736b5e",
+      "sky": "#a0a0a0",
+      "accent": "#c0c0ff",
+      "backdrop": "none",
+      "dressing": [
+        {
+          "name": "reeds",
+          "build": {
+            "entity": "burghmarsh:reeds",
+            "archetype": "plant",
+            "size": 2.0,
+            "primary": "#228b22",
+            "secondary": "#006400",
+            "accent": "#a0d0a0",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  0.2,
+                  2.0,
+                  0.2
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#228b22",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 30,
+          "spread": 20.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "burghmarsh",
+      "time": "",
+      "actors": [
+        {
+          "entity": "daughter",
+          "verb": "walk",
+          "at": "left",
+          "to": "right",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "aerial",
+      "on": "daughter",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "2": {
+      "scene": 2,
+      "place": "burghmarsh",
+      "time": "",
+      "actors": [
+        {
+          "entity": "photographer",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "daughter",
+          "verb": "idle",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "wife",
+          "verb": "idle",
+          "at": "left",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "camera",
+          "verb": "present",
+          "at": "back",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "orbit",
+      "on": "photographer",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "4": {
+      "scene": 4,
+      "place": "burghmarsh",
+      "time": "",
+      "actors": [
+        {
+          "entity": "wife",
+          "verb": "walk",
+          "at": "left",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "daughter",
+          "verb": "idle",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "bluedress",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "low_angle",
+      "on": "wife",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "6": {
+      "scene": 6,
+      "place": "burghmarsh",
+      "time": "",
+      "actors": [
+        {
+          "entity": "wife",
+          "verb": "look_around",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "bluedress",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "wife",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    }
+  }
+}

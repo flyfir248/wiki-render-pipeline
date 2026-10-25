@@ -1,0 +1,13 @@
+{
+  "checked": [
+    1,
+    2,
+    4,
+    6
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "1": "frame check: Shows an adult figure, not a child.",
+    "2": "frame check: No photographer visible; only a small, indistinct figure in a landscape."
+  }
+}

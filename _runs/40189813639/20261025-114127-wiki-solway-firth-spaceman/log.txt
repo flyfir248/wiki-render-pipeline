@@ -1,0 +1,59 @@
+fetching Wikipedia article
+0 article images available
+writing script
+using watch-time lessons: Scene types that held viewers best (use them more): story (lost viewers 58% slower than average, 18 scenes); quote (lost viewers 44% slower than average, 15 scenes); list (lost viewers 44% slower than average, 5 scenes); timeline (lost viewers 32% slower than average, 11 scenes); map (lost viewers 28% slower than average, 19 scenes). Scene types that lost viewers fastest (use them less, or keep them short): statement (lost viewers 56% faster than average, 32 scenes); world (lost viewers 78% faster than average, 5 scenes); broll (lost viewers 97% faster than average, 9 scenes). On average 91% of viewers are still watching 3 seconds in. The opening line decides this: start on the most surprising concrete detail.
+sharpening title, hook and thumbnail text
+story fixed where it lost the thread: Scene 5 mentions researcher David Clarke without prior introduction.
+checking facts against the source
+facts check out
+reading the story: what it shows
+story: Jim Templeton, Elizabeth Templeton, Annie Templeton, blue dress, film camera; 5 moments
+planning the visuals
+visual plan (model): 4 3D, 2 2D (65% of the runtime in 3D, aiming for 80%); 3D: stage present, stage present, stage move, stage present
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: 'Girl photographer' (sketchfab) is not a photographer: shows woman, not middle-aged man
+assets: 'Spider-man PETER PARKER: THE PHOTOGRAPHER' (sketchfab) is not a photographer: Shows a cartoon character, not a 1940s photographer.
+assets: Jim Templeton -> 'Jonny Wildlife Photographer (rigged)' from sketchfab (by, 13986 triangles, 0 animations)
+assets: 'Vintage Film Camera Eumig C16R' (sketchfab) is not a film camera: White body, not black metal as specified.
+assets: film camera -> 'Canon AT-1 Retro Camera' from sketchfab (by, 17984 triangles, 0 animations)
+assets: 'Blue dress' (sketchfab) is not a blue dress: shows full character, not just the dress
+assets: 'Blue Dress' (sketchfab) is not a blue dress: Multiple views shown, not a single whole dress.
+assets: 'Blue dress' (sketchfab) is not a blue dress: Shows full figure, not just the dress.
+assets: 'blue dress' (sketchfab) is not a blue dress: appears white, not blue
+assets: 'Blue Light Dress' (sketchfab) is not a blue dress: Shows a broken, fragmented object, not a dress.
+assets: 'Dress of a poor woman - Victorian era' (sketchfab) is not a blue dress: Shows full figure, not just the dress.
+assets: 'Dress' (sketchfab) is not a dress: shows multiple views, not a single whole dress
+assets: 'Dress' (sketchfab) is not a dress: Shows full body, not just the dress.
+assets: 'dress' (sketchfab) is not a dress: dress is black, not blue or white
+assets: 'Woman Dress' (sketchfab) is not a dress: Shows two separate garments, not a single dress.
+assets: 'Medieval Dress' (sketchfab) is not a dress: shows yellow patterned dress, not blue cotton
+assets: 'Journey - character clothing concept' (sketchfab) is not a clothing: shows red cape, not blue cotton dress
+assets: 'Clothing Store' (sketchfab) is not a clothing: Shows a whole scene, not a single clothing item.
+assets: 'Clothing: pants' (sketchfab) is not a clothing: Shows pants, not a blue cotton dress.
+assets: 'Sci-Fi Armor Clothing' (sketchfab) is not a clothing: Shows a robotic suit, not a blue cotton dress.
+assets: 'clothing: Jacket' (sketchfab) is not a clothing: Shows a jacket, not a blue cotton dress.
+assets: 'blue dress (generated)' (generated) failed: the concept picture is not a blue dress: shows white dress, not blue
+assets: no usable model of blue dress (blue dress, dress, clothing): its scenes stay painted
+building the story world: 5 entities for 4 scenes
+people: daughter as f-smooth-female-dress, wife as f-smooth-female-dress
+story world (lowpoly): cast model, sets model, direction model; photographer as structure, daughter as humanoid, wife as humanoid, bluedress as object, camera as object
+voicing 6 scenes with kokoro
+fetching visuals
+warning: loc image search failed for 'Solway Firth Spaceman Templeton’s Letter': HTTPSConnectionPool(host='www.loc.gov', port=443): Read timed out. (read timeout=30)
+visuals: 0 Wikipedia and freely licensed images, 0 stock, 6 scenes on plain background
+relevance: checking 4 3D scenes by eye
+relevance: filming scenes [1, 2] again, closer on their subject
+scene 1: 3D dropped: frame check: Shows an adult figure, not a child.
+scene 2: 3D dropped: frame check: No photographer visible; only a small, indistinct figure in a landscape.
+storyboarding: an illustration for each sentence
+storyboard: 3 illustrated sentences of 3 planned, 5 in the cast; 3 checked, 0 redrawn, 0 left out
+art direction: signature
+rendering 43s short video
+look: scene 4 at 22.7s: Subject cut off by frame edge.
+look: scene 6 at 38.4s: Subject cut off by frame edge.
+look: scene 6 at 41.8s: Subject cut off by frame edge.
+3D coverage: 33% of the runtime in 3D (target 80%), 33% moving on its own, 2 3D shots
+quality: 3D covers 33% of the runtime, under the 80% target
+rendering thumbnail
+thumbnail: world take
+done: approved

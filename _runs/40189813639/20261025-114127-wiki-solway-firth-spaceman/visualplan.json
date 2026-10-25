@@ -1,0 +1,94 @@
+{
+  "planner": "model",
+  "budget_seconds": 60.0,
+  "world_seconds": 27.1,
+  "dropped_for_budget": [],
+  "target_share": 0.8,
+  "world_share": 0.647,
+  "filled": [],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "a space\u2011suit figure looms behind a child",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "Jim Templeton snapped three pictures of his daughter",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "document",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "his wife Annie walked into the shot",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "The \u201cspaceman\u201d was simply a woman in a blue dress",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    }
+  ]
+}

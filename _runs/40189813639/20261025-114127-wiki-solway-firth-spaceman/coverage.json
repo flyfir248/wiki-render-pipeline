@@ -1,0 +1,100 @@
+{
+  "format": "short",
+  "duration": 43.0,
+  "target_3d": 0.8,
+  "share_3d": 0.333,
+  "share_animated": 0.333,
+  "share_subject_moving": 0.333,
+  "share_matched": 1.0,
+  "share_library_models": 1.0,
+  "share_camera_moving": 0.333,
+  "share_2d": 0.667,
+  "shots_3d": 2,
+  "static": [],
+  "repeats": [],
+  "frozen": [],
+  "dropped_to_2d": [
+    1,
+    2
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "seconds": 6.2,
+      "template": "title",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "start": 6.2,
+      "seconds": 7.93,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 3,
+      "start": 14.13,
+      "seconds": 6.29,
+      "template": "document",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "start": 20.42,
+      "seconds": 7.74,
+      "template": "world",
+      "kind": "3D",
+      "subject": "walk",
+      "secondary": [
+        "its own animation"
+      ],
+      "environment": [
+        "water or flow",
+        "birds overhead"
+      ],
+      "camera": "low_angle",
+      "lead": "wife",
+      "place": "burghmarsh",
+      "set": "swamp",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 27.36
+    },
+    {
+      "scene": 5,
+      "start": 28.16,
+      "seconds": 8.29,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "start": 36.45,
+      "seconds": 6.58,
+      "template": "world",
+      "kind": "3D",
+      "subject": "look_around",
+      "secondary": [
+        "its own animation"
+      ],
+      "environment": [
+        "water or flow",
+        "birds overhead"
+      ],
+      "camera": "push_in",
+      "lead": "wife",
+      "place": "burghmarsh",
+      "set": "swamp",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 50.8
+    }
+  ]
+}
