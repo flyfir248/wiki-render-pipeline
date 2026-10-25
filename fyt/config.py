@@ -178,6 +178,9 @@ class LLMConfig(BaseModel):
     # A second OpenAI-compatible provider tried when `model` is rate limited or failing, before the
     # fallback models: its own limits, so runs side by side don't all wait on the first one.
     backup: BackupLLM | None = None
+    # Further OpenAI-compatible providers asked after the fallback models, each only when its key is set
+    # (and any $VARIABLE in its base_url). Cloudflare Workers AI's free daily allowance, for one.
+    last_resort: list[BackupLLM] = Field(default_factory=list)
 
 
 class WikipediaConfig(BaseModel):

@@ -310,3 +310,57 @@ def test_a_small_fallback_saying_too_large_is_not_blamed_on_the_main_model(cfg, 
     with pytest.raises(llm.ClaudeError) as e:
         llm._openai_structured(cfg, "s", "u", llm.Script)
     assert not isinstance(e.value, llm.RequestTooLarge)
+
+
+def test_a_model_out_of_tokens_for_the_day_is_skipped_at_once_and_for_the_rest_of_the_run(cfg, monkeypatch):
+    monkeypatch.setattr(llm, "_EXHAUSTED", set())
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["small"]})})
+    asked = []
+
+    def post(url, headers, json, timeout):
+        asked.append(json["model"])
+        if json["model"] == cfg.llm.model:
+            return Resp(429, {"error": {"message": "Rate limit reached on tokens per day (TPD): Limit 200000"}})
+        return reply(_json.dumps(SCRIPT))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    llm.write_script(cfg, "Mary", "notes")
+    llm.write_script(cfg, "Mary", "notes")
+    assert asked == [cfg.llm.model, "small", "small"]  # no minute-long waits, and not asked again
+
+
+def test_a_quick_call_gives_up_on_a_rate_limit_instead_of_waiting(cfg, monkeypatch):
+    monkeypatch.setattr(llm, "_EXHAUSTED", set())
+    waits = []
+    monkeypatch.setattr(llm.time, "sleep", waits.append)
+    monkeypatch.setattr(llm.requests, "post", lambda url, headers, json, timeout: Resp(429, {"error": "tokens per minute"}, {"retry-after": "20"}))
+    with pytest.raises(llm.ClaudeError):
+        llm.structured(cfg, "s", "u", llm.Tightened, quick=True)
+    assert waits == []
+
+
+def test_cloudflare_is_a_last_resort_when_its_keys_are_set(cfg, monkeypatch):
+    from fyt.config import BackupLLM
+
+    monkeypatch.setattr(llm, "_EXHAUSTED", set())
+    cf = BackupLLM(base_url="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1",
+                   api_key_env="CLOUDFLARE_API_TOKEN", models=["@cf/meta/llama-3.3-70b-instruct-fp8-fast"])
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": ["small"], "last_resort": [cf]})})
+    monkeypatch.delenv("CLOUDFLARE_ACCOUNT_ID", raising=False)
+    monkeypatch.setenv("CLOUDFLARE_API_TOKEN", "cf")
+    assert [c.llm.model for c in llm._chain(cfg)] == [cfg.llm.model, "small"]  # no account id: not asked
+    monkeypatch.setenv("CLOUDFLARE_ACCOUNT_ID", "acct")
+    assert llm._chain(cfg)[-1].llm.model == "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+    urls = []
+
+    def post(url, headers, json, timeout):
+        urls.append(url)
+        if "groq" in url:
+            return Resp(429, {"error": {"message": "on tokens per day (TPD)"}})
+        if "response_format" in json:  # a provider without JSON mode
+            return Resp(400, {"error": "response_format is not supported"})
+        return reply(_json.dumps(SCRIPT))
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    assert llm.write_script(cfg, "Mary", "notes").title == SCRIPT["title"]
+    assert urls[-1] == "https://api.cloudflare.com/client/v4/accounts/acct/ai/v1/chat/completions"

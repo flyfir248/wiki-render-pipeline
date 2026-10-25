@@ -1286,6 +1286,18 @@ def vary_cameras(out: dict[int, Shot]) -> dict[int, Shot]:
     for a, b in zip(ordered, ordered[1:]):
         if out[a].camera == out[b].camera:
             out[b] = out[b].model_copy(update={"camera": MOVE_CYCLE[(MOVE_CYCLE.index(out[b].camera) + 1) % len(MOVE_CYCLE)] if out[b].camera in MOVE_CYCLE else "orbit"})
+    # Nor the same subject doing the same thing under the same move anywhere in the video: a repeat.
+    shown: set[tuple] = set()
+    for n, k in enumerate(ordered):
+        key = lambda sh: (sh.actors[0].entity, sh.actors[0].verb, sh.camera) if sh.actors else (sh.camera,)
+        if out[k].actors and out[k].camera != "aerial" and key(out[k]) in shown:  # a new place's aerial stays
+            near = {out[j].camera for j in ordered[max(0, n - 1):n + 2] if j != k}
+            for cam in MOVE_CYCLE:
+                c = out[k].model_copy(update={"camera": cam})
+                if key(c) not in shown and cam not in near:
+                    out[k] = c
+                    break
+        shown.add(key(out[k]))
     return out
 
 

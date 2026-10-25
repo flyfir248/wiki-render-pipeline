@@ -28,6 +28,12 @@ llm:
     base_url: https://router.huggingface.co/v1
     api_key_env: HF_TOKEN
     models: [Qwen/Qwen3-235B-A22B-Instruct-2507, deepseek-ai/DeepSeek-V3.1]
+  # Asked last, when every model above is rate limited or out of tokens for the day: Cloudflare Workers AI's
+  # free daily allowance, with the keys the picture checks already use.
+  last_resort:
+    - base_url: https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1
+      api_key_env: CLOUDFLARE_API_TOKEN
+      models: ["@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
 
 source: wikipedia
 wikipedia:
