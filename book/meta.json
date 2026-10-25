@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "book",
+  "query": "book",
+  "source": "sketchfab",
+  "uid": "sketchfab:5115ffc67b8d4ab8abb807a959ceb603",
+  "title": "Magic Book of Eden",
+  "author": "luisservin89",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-5115ffc67b8d4ab8abb807a959ceb603",
+  "checked": "vision",
+  "triangles": 468,
+  "bytes": 2125688,
+  "size": [
+    103.2118,
+    42.3197,
+    166.5501
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "hardcover 100\u2011page mystery, dark cover, gold title lettering",
+  "added": "2026-10-25T17:15:38+00:00"
+}
