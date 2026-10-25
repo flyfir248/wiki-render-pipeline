@@ -294,15 +294,22 @@ def archetype_of(e: Entity) -> str:
     if is_person(e):
         return "humanoid"
     texts = (e.kind.lower(), f"{e.name} {' '.join(e.search)}".lower(), e.look.lower())
-    # A specific word anywhere ("tardigrade") beats a generic one ("microscopic animal").
+
+    def match(text: str, generic: bool, first: bool) -> str | None:
+        found = [(max((_at(text, w) for w in words if (w in GENERIC) == generic), default=-1), -k, arche) for k, (arche, words) in enumerate(KIND_WORDS)]
+        found = [f for f in found if f[0] >= 0]
+        return (max(found)[2] if first else min(found, key=lambda f: -f[1])[2]) if found else None
+
     # In the kind, the last word named is the thing itself: a "passenger liner" is a ship, not a passenger.
+    said = match(texts[0], False, True) or match(texts[0], True, True)
+    # A specific word anywhere ("tardigrade") beats a generic one ("microscopic animal"), but a name never
+    # turns what the kind says is a building into a creature or back: the Eagle's Nest is a chalet.
     for generic in (False, True):
         for i, text in enumerate(texts):
-            found = [(max((_at(text, w) for w in words if (w in GENERIC) == generic), default=-1), -k, arche) for k, (arche, words) in enumerate(KIND_WORDS)]
-            found = [f for f in found if f[0] >= 0]
-            if found:
-                return max(found)[2] if i == 0 else min(found, key=lambda f: -f[1])[2]
-    return "object"
+            got = match(text, generic, i == 0)
+            if got and not (said and (got in LIVING) != (said in LIVING)):
+                return got
+    return said or "object"
 
 
 def colours_in(text: str) -> list[str]:

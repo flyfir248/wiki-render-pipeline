@@ -190,3 +190,11 @@ def test_the_same_subject_doing_the_same_thing_is_never_filmed_the_same_way_twic
     a = lambda k, cam: worldgen.Shot(scene=k, actors=[worldgen.Actor(entity="x", verb="walk")], camera=cam, on="x")  # noqa: E731
     out = worldgen.vary_cameras({1: a(1, "orbit"), 2: a(2, "follow"), 3: a(3, "orbit")})
     assert out[3].camera not in ("orbit", "follow")
+
+
+def test_a_building_named_after_a_bird_is_built_as_a_building():
+    e = Entity(id="k", name="the Kehlsteinhaus", kind="building", search=["Eagle's Nest"], look="stone chalet on a summit", certain=True, scenes=[1])
+    assert worldgen.archetype_of(e) == "structure"
+    b = worldgen.Build(entity="k", archetype="bird", size=2, primary="#000000", secondary="#000000", accent="#000000")
+    assert worldgen.checked_build(b, e, 1).archetype == "structure"  # the model's bird is overruled
+    assert worldgen.archetype_of(Entity(id="t", name="tardigrade", kind="microscopic animal", search=[], look="", certain=True, scenes=[1])) == "insect"
