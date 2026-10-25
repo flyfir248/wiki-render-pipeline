@@ -36,6 +36,12 @@ Fail it if it shows something else, or nothing recognisable.
 Reply with a single JSON object: {"matches": true or false, "problems": "at most 12 words, or empty"}."""
 
 
+# checkers too weak to drop a 3D scene: Cloudflare's 11B model failed four right frames in one run ("does
+# not show a bear, it shows a 3D cartoon bear"; "not a Cessna, but a small plane"). With only these left,
+# a frame goes unchecked and keeps its 3D.
+WEAK = (storyboard.CLOUDFLARE_VISION,)
+
+
 # search terms too general to say what a thing is
 GENERIC = {"object", "thing", "item", "animal", "vehicle", "building", "structure", "machine", "person", "people"}
 
@@ -96,15 +102,18 @@ def picture_gate(cfg: Config, script: Script, story: Manifest | None, props, pro
     except Exception as e:
         log(f"relevance: could not render the 3D key frames ({str(e)[:120]}); not checked by eye")
         return {}
-    bad = {}
+    bad, unchecked = {}, []
     for (i, _), file in zip(frames.items(), files):
         s = script.scenes[i]
         meant = f"{subject_text(s, story)}. The narrator says: \"{s.narration[:200]}\""
-        v = storyboard.review(cfg, file, meant, rules=FRAME) if file.is_file() else None
+        v = storyboard.review(cfg, file, meant, rules=FRAME, skip=WEAK) if file.is_file() else None
         if v is None:
+            unchecked.append(i + 1)
             continue
         if not v.matches:
             bad[i] = f"frame check: {v.problems or 'does not show the subject'}"
+    if unchecked:
+        log(f"relevance: no vision model able to judge 3D was free for scenes {unchecked}; they keep their 3D unchecked")
     return bad
 
 

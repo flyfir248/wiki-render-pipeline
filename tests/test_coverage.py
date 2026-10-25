@@ -2,6 +2,8 @@
 cast fill the video toward the 3D target only where something will move, data scenes keep their figures
 over the 3D scene, and the coverage report counts a scene as animated only when its subject or its place
 moves, never for the camera alone."""
+from pathlib import Path
+
 from fyt import coverage, llm, relevance, visualplan, worldgen
 from fyt.config import Config
 from fyt.manifest import Entity, Manifest, Moment, Place
@@ -140,3 +142,22 @@ def test_the_frame_check_asks_for_the_kind_of_thing_not_its_make():
         Entity(id="box", name="containers", kind="object", search=["plastic container", "container", "object"], look="", certain=True, scenes=[1])])
     ask = lambda e: relevance.subject_text(ScriptScene(narration="n", type="world", subject_name=e), m)  # noqa: E731
     assert (ask("bear"), ask("plane"), ask("box")) == ("a bear", "a cessna, a light aircraft", "a container")
+
+
+def test_what_is_dropped_from_a_plane_falls_not_the_plane():
+    b = {"plane": worldgen.Build(entity="plane", archetype="vehicle", size=4, primary="#ffffff", secondary="#000000", accent="#000000", form="light"),
+         "box": worldgen.Build(entity="box", archetype="object", size=1, primary="#ffffff", secondary="#000000", accent="#000000")}
+    actors = [worldgen.Actor(entity="plane", verb="fly"), worldgen.Actor(entity="box", verb="present")]
+    beats = worldgen.checked_beats([worldgen.Beat(cue="dropped", camera="aerial", actors=[worldgen.BeatActor(entity="plane", verb="fall")])],
+                                   "Forty containers were dropped from a Cessna over Tennessee.", actors, b)
+    assert {a.entity: a.verb for a in beats[0].actors} == {"plane": "fly", "box": "fall"}
+
+
+def test_a_weak_checker_never_drops_3d(monkeypatch):
+    from fyt import storyboard
+    asked = []
+    monkeypatch.setattr(storyboard, "_checkers", lambda cfg: [(storyboard.CLOUDFLARE_VISION, lambda *a: asked.append(1))])
+    monkeypatch.setattr(storyboard, "_small_jpeg", lambda p: b"x")
+    cfg = Config()
+    cfg.review_model = "auto"
+    assert storyboard.review(cfg, Path("f.png"), "a bear", skip=relevance.WEAK) is None and not asked

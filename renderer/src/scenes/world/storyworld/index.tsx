@@ -295,6 +295,8 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
   const tanH = tanV * (portrait ? 9 / 16 : 16 / 9);
   let d = Math.max(Rh / tanV, Rw / tanH) * (portrait ? 1.0 / PORTRAIT_BACK : 1) * 1.05;
   const inside = INSIDE.includes(world.set.kind) && world.set.kind !== "cave";
+  // on its side, its legs reach out across the ground by its standing height: stand further back
+  if (lying) d *= 1.25;
   if (inside) d = Math.min(d, U * 3.6);
   const setups = setupsOf(world, D, fps, at);
   const k = Math.max(0, setups.findIndex((s) => u >= s.from && u <= s.to + 1e-6));
@@ -314,7 +316,13 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
   let off: THREE.Vector3;
   let target = look.clone();
   let f = fov;
-  switch (sh.move) {
+  // a ground-level or close move on a subject lying down ran into its legs: look down on it from a
+  // three-quarter view instead, drifting round it
+  const move = lying && ["low_angle", "close", "hero", "follow"].includes(sh.move) ? "lying" : sh.move;
+  switch (move) {
+    case "lying":
+      off = side(0.5 - 0.2 * e, d * (1.1 - 0.08 * e), on.h * 0.8 + d * 0.32);
+      break;
     case "establish":
       off = side(0.55 - 0.25 * e, d * (1.45 - 0.5 * e) * (long ? 0.8 : 1), d * (0.6 - 0.38 * e) + on.h * 0.3);
       break;

@@ -91,8 +91,10 @@ export const lightOf = (look: Look, set: SetSpec, unit: number): Light => {
         sunDir: [0.55, 0.5, 0.65], rim: "#b4ccff", rimI: 2.0, night: 1, clouds: 0.25, envI: 0.45, exposure: 1.15, bloom: 0.7, threshold: 0.8, lift: "#03050b", gain: "#eef3ff", vignette: 0.42 };
       break;
     case "dusk":
-      l = { ...base, top: mix(sky, "#26325f", 0.6), horizon: mix(sky, "#f5a066", 0.65), below: "#3a2e34", sun: "#ffad66", sunI: 3.4, amb: "#b8a2c4", ambI: 0.5, ground: set.ground,
-        sunDir: [-0.85, 0.24, 0.3], rim: "#ffcc90", rimI: 1.8, night: 0.2, clouds: 0.6, envI: 0.6, exposure: 1.05, bloom: 0.45, threshold: 0.8, lift: "#0c0608", gain: "#fff1e2", vignette: 0.38 };
+      // the low sun rakes in from the side and front, not from behind, and the ground is lifted towards
+      // the warm sky: a dark model-chosen ground and sky turned a backlit bear into a brown silhouette
+      l = { ...base, top: mix(sky, "#26325f", 0.6), horizon: mix(sky, "#f5a066", 0.65), below: "#3a2e34", sun: "#ffad66", sunI: 3.4, amb: "#c4b2d0", ambI: 0.8, ground: mix(set.ground, "#c9a07a", 0.3),
+        sunDir: [-0.6, 0.3, 0.75], rim: "#ffcc90", rimI: 1.8, night: 0.2, clouds: 0.6, envI: 0.7, exposure: 1.15, bloom: 0.45, threshold: 0.8, lift: "#0c0608", gain: "#fff1e2", vignette: 0.38 };
       break;
     case "dawn":
       l = { ...base, top: mix(sky, "#5878b8", 0.45), horizon: mix(sky, "#ffc4a0", 0.6), below: "#4a4048", sun: "#ffd0a8", sunI: 2.8, amb: "#aeb6dc", ambI: 0.55, ground: set.ground,
@@ -102,6 +104,11 @@ export const lightOf = (look: Look, set: SetSpec, unit: number): Light => {
       l = { ...base, top: mix(sky, "#3b6db8", 0.45), horizon: mix(sky, "#eef4f8", 0.5), below: shade(set.ground, 0.8), sun: "#fff0d8", sunI: 3.0, amb: mix(sky, "#ffffff", 0.35), ambI: 0.6, ground: set.ground,
         sunDir: [-0.55, 0.52, 0.5], rim: "#dbe8ff", rimI: 1.0, night: 0, clouds: 0.5, envI: 0.65, exposure: 1.0 };
   }
+  // a ground the model chose near black (a "#4a3b2c" forest floor) swallows a dark animal standing on
+  // it by day: lift it towards a light earth, keeping its hue
+  const hsl = { h: 0, s: 0, l: 0 };
+  new THREE.Color(l.ground).getHSL(hsl);
+  if (set.time !== "night" && hsl.l < 0.3) l = { ...l, ground: mix(l.ground, "#bfa585", (0.3 - hsl.l) * 1.6) };
   if (look.dark > 0) {
     // noir: a cold blue hour with a hard key and a strong rim, deep but never grey
     l = { ...l, top: mix(l.top, "#081226", look.dark), horizon: mix(l.horizon, "#2d4466", look.dark * 0.85), below: mix(l.below, "#0a0f18", look.dark),

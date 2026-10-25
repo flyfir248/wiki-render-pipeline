@@ -1041,6 +1041,10 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
         # an aircraft the story hasn't brought down is in the air, and birds beside it fly with it
         actors = [a.model_copy(update={"verb": "fly"}) if (a.entity in aloft and a.verb in G["calm"])
                   or (builds[a.entity].archetype in ("bird", "insect") and a.verb in G["calm"]) else a for a in actors]
+    if DROPPED_FROM.search(narration):
+        # what was dropped from a craft falls; the craft does not
+        actors = [a.model_copy(update={"verb": "fly" if a.entity in aloft else "move"}) if builds[a.entity].archetype == "vehicle" and a.verb in FALLS
+                  else a for a in actors]
     if any(a.verb == "fly" and builds[a.entity].archetype == "vehicle" for a in actors):
         # people are aboard an aircraft in flight, not standing on the ground beneath it
         actors = [a for a in actors if builds[a.entity].archetype != "humanoid"] or actors
@@ -1064,6 +1068,23 @@ def checked_shot(sh: Shot, script: Script, story: Manifest, builds: dict[str, Bu
     on = _slug(sh.on) if sh.on and _slug(sh.on) in ids else actors[0].entity
     return Shot(scene=scene, place=place, time=sh.time, actors=actors[:5], camera=sh.camera, on=on, marks=marks, callouts=callouts,
                 beats=checked_beats(sh.beats, narration, actors[:5], builds))
+
+
+# "dropped from a Cessna", "fell out of the plane": what falls is the load, never the craft it fell from
+DROPPED_FROM = re.compile(r"\b(dropped|drops|fell|falls|fallen|thrown|tossed|jettisoned|released|dumped|tumbled)\s+(out\s+)?(of|from)\b", re.I)
+FALLS = {"fall", "crash", "sink"}
+
+
+def _dropped(acts: list[BeatActor], actors: list[Actor], builds: dict[str, Build]) -> list[BeatActor]:
+    """A beat whose words drop something from a vehicle: the vehicle carries on as it was (a plane the
+    model sent down for "containers dropped from a Cessna" flies on), and the objects on stage fall."""
+    was = {a.entity: a.verb for a in actors}
+    out = [a.model_copy(update={"verb": was.get(a.entity) if was.get(a.entity) not in FALLS | {None} else "move"})
+           if builds[a.entity].archetype == "vehicle" and a.verb in FALLS else a for a in acts]
+    loads = [a.entity for a in actors if builds[a.entity].archetype == "object"]
+    out = [a.model_copy(update={"verb": "fall"}) if a.entity in loads and a.verb in G["calm"] else a for a in out]
+    out += [BeatActor(entity=e, verb="fall") for e in loads if all(a.entity != e for a in out)]
+    return out
 
 
 def checked_beats(beats: list[Beat], narration: str, actors: list[Actor], builds: dict[str, Build]) -> list[Beat]:
@@ -1093,6 +1114,8 @@ def checked_beats(beats: list[Beat], narration: str, actors: list[Actor], builds
                                   state=_state(a.state, rest), face=a.face if a.face in ("camera", "") or _slug(a.face) in ids else ""))
         if not acts:
             continue
+        if DROPPED_FROM.search(rest[:80]):
+            acts = _dropped(acts, actors, builds)
         on = _slug(bt.on) if bt.on and _slug(bt.on) in ids else acts[0].entity
         out.append(Beat(cue=narration[i:i + len(cue)], actors=acts, camera=bt.camera, on=on))
         pos = i + len(cue)
