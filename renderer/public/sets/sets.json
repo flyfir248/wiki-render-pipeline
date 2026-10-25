@@ -60,6 +60,31 @@
    "source": "https://kenney.nl/assets/graveyard-kit",
    "author": "Kenney",
    "licence": "CC0"
+  },
+  "mega-pack": {
+   "source": "https://sketchfab.com/3d-models/low-poly-mega-assets-pack-57cfb802f15a4e4aa3f4f44d7631deab",
+   "author": "carlcapu9",
+   "licence": "by"
+  },
+  "kenney-mini-market": {
+   "source": "https://kenney.nl/assets/mini-market",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "kenney-space-modular": {
+   "source": "https://kenney.nl/assets/modular-space-kit",
+   "author": "Kenney",
+   "licence": "CC0"
+  },
+  "quaternius-nature-lite": {
+   "source": "https://quaternius.com",
+   "author": "Quaternius",
+   "licence": "CC0"
+  },
+  "quaternius-farm": {
+   "source": "https://quaternius.com",
+   "author": "Quaternius",
+   "licence": "CC0"
   }
  },
  "sets": {
@@ -72,24 +97,66 @@
     "sets/nature-pine-2.glb",
     "sets/nature-pine-3.glb",
     "sets/nature-pine-4.glb",
-    "sets/nature-commontree-4.glb"
+    "sets/nature-commontree-4.glb",
+    "sets/quaternius-nature-lite-tree1.glb",
+    "sets/quaternius-nature-lite-tree2.glb",
+    "sets/quaternius-nature-lite-tree3.glb",
+    "sets/quaternius-nature-lite-tree4.glb",
+    "sets/mega-pack-cylinder-012.glb",
+    "sets/mega-pack-cylinder-021.glb",
+    "sets/mega-pack-cylinder-022.glb",
+    "sets/mega-pack-cylinder-023.glb",
+    "sets/mega-pack-cube-037.glb",
+    "sets/mega-pack-cube-038.glb",
+    "sets/mega-pack-cube-039.glb",
+    "sets/mega-pack-cube-040.glb",
+    "sets/mega-pack-cube-041.glb",
+    "sets/mega-pack-cube-042.glb",
+    "sets/mega-pack-cube-043.glb",
+    "sets/mega-pack-cube-046.glb",
+    "sets/mega-pack-cube-048.glb"
    ],
    "bush": [
     "sets/nature-bush-common.glb",
     "sets/nature-fern-1.glb",
     "sets/nature-plant-1-big.glb",
-    "sets/nature-plant-7-big.glb"
+    "sets/nature-plant-7-big.glb",
+    "sets/quaternius-nature-lite-bush1.glb",
+    "sets/quaternius-nature-lite-bush2.glb",
+    "sets/quaternius-nature-lite-bush3.glb",
+    "sets/mega-pack-cube-280.glb",
+    "sets/mega-pack-cube-342.glb",
+    "sets/mega-pack-cylinder-043.glb"
    ],
    "rock": [
     "sets/nature-rock-medium-1.glb",
     "sets/nature-rock-medium-2.glb",
-    "sets/nature-rock-medium-3.glb"
+    "sets/nature-rock-medium-3.glb",
+    "sets/quaternius-nature-lite-rock1.glb",
+    "sets/quaternius-nature-lite-rock2.glb",
+    "sets/quaternius-nature-lite-rock3.glb"
    ],
    "grass": [
     "sets/nature-grass-common-tall.glb",
     "sets/nature-grass-wispy-tall.glb",
     "sets/nature-mushroom-common.glb",
-    "sets/nature-fern-1.glb"
+    "sets/nature-fern-1.glb",
+    "sets/quaternius-nature-lite-grass1.glb",
+    "sets/quaternius-nature-lite-grass2.glb",
+    "sets/quaternius-nature-lite-grass3.glb",
+    "sets/mega-pack-cube-349.glb",
+    "sets/mega-pack-cube-362.glb",
+    "sets/mega-pack-cube-367.glb",
+    "sets/mega-pack-cylinder-179.glb",
+    "sets/mega-pack-cylinder-185.glb",
+    "sets/mega-pack-cube-369.glb",
+    "sets/mega-pack-cube-370.glb",
+    "sets/mega-pack-cube-375.glb",
+    "sets/mega-pack-cube-376.glb",
+    "sets/mega-pack-cube-378.glb",
+    "sets/mega-pack-cube-381.glb",
+    "sets/mega-pack-cube-385.glb",
+    "sets/mega-pack-cube-391.glb"
    ]
   },
   "grassland": {
@@ -97,21 +164,48 @@
     "sets/nature-commontree-1.glb",
     "sets/nature-commontree-2.glb",
     "sets/nature-commontree-5.glb",
-    "sets/nature-pine-2.glb"
+    "sets/nature-pine-2.glb",
+    "sets/quaternius-nature-lite-tree1.glb",
+    "sets/quaternius-nature-lite-tree3.glb",
+    "sets/mega-pack-cube-169.glb",
+    "sets/mega-pack-cube-178.glb",
+    "sets/mega-pack-cube-193.glb",
+    "sets/mega-pack-cube-116.glb",
+    "sets/mega-pack-cube-120.glb",
+    "sets/mega-pack-cube-125.glb",
+    "sets/mega-pack-cube-127.glb",
+    "sets/mega-pack-cube-052.glb",
+    "sets/mega-pack-cube-053.glb",
+    "sets/mega-pack-cube-054.glb",
+    "sets/mega-pack-cube-055.glb",
+    "sets/mega-pack-cube-058.glb",
+    "sets/mega-pack-cube-059.glb",
+    "sets/mega-pack-cube-061.glb",
+    "sets/mega-pack-cube-062.glb",
+    "sets/mega-pack-cube-066.glb",
+    "sets/mega-pack-cube-067.glb",
+    "sets/mega-pack-cube-068.glb",
+    "sets/mega-pack-cube-069.glb"
    ],
    "bush": [
-    "sets/nature-bush-common.glb"
+    "sets/nature-bush-common.glb",
+    "sets/quaternius-nature-lite-bush1.glb",
+    "sets/quaternius-nature-lite-bush2.glb"
    ],
    "rock": [
     "sets/nature-rock-medium-1.glb",
-    "sets/nature-rock-medium-2.glb"
+    "sets/nature-rock-medium-2.glb",
+    "sets/quaternius-nature-lite-rock1.glb",
+    "sets/quaternius-nature-lite-rock2.glb"
    ],
    "grass": [
     "sets/nature-grass-common-short.glb",
     "sets/nature-grass-wispy-tall.glb",
     "sets/nature-flower-3-group.glb",
     "sets/nature-flower-4-group.glb",
-    "sets/nature-grass-common-tall.glb"
+    "sets/nature-grass-common-tall.glb",
+    "sets/quaternius-nature-lite-grass1.glb",
+    "sets/quaternius-nature-lite-grass2.glb"
    ]
   },
   "farm": {
@@ -132,7 +226,43 @@
    ],
    "prop": [
     "sets/town-cart.glb",
-    "sets/town-fence.glb"
+    "sets/town-fence.glb",
+    "sets/mega-pack-cube-194.glb",
+    "sets/mega-pack-cube-195.glb",
+    "sets/mega-pack-cube-210.glb",
+    "sets/mega-pack-cube-211.glb",
+    "sets/mega-pack-cube-212.glb",
+    "sets/mega-pack-cube-214.glb",
+    "sets/mega-pack-cube-218.glb",
+    "sets/mega-pack-cylinder-026.glb",
+    "sets/mega-pack-cylinder-027.glb",
+    "sets/mega-pack-cylinder-028.glb",
+    "sets/mega-pack-cylinder-029.glb",
+    "sets/mega-pack-cube-220.glb",
+    "sets/mega-pack-cube-221.glb",
+    "sets/mega-pack-cube-230.glb",
+    "sets/mega-pack-cube-231.glb",
+    "sets/mega-pack-cube-232.glb",
+    "sets/mega-pack-cube-233.glb",
+    "sets/mega-pack-cube-234.glb",
+    "sets/mega-pack-cube-239.glb",
+    "sets/mega-pack-cube-240.glb",
+    "sets/mega-pack-cube-241.glb",
+    "sets/mega-pack-cube-242.glb",
+    "sets/mega-pack-cube-243.glb",
+    "sets/mega-pack-cube-244.glb",
+    "sets/mega-pack-cube-245.glb",
+    "sets/mega-pack-cylinder-030.glb",
+    "sets/mega-pack-cube-247.glb",
+    "sets/mega-pack-cylinder-032.glb",
+    "sets/mega-pack-cube-248.glb",
+    "sets/mega-pack-cube-010.glb",
+    "sets/mega-pack-cube-011.glb",
+    "sets/mega-pack-cube-015.glb",
+    "sets/mega-pack-cube-016.glb",
+    "sets/mega-pack-cube-204.glb",
+    "sets/quaternius-farm-fence.glb",
+    "sets/quaternius-farm-fence2.glb"
    ]
   },
   "mountain": {
@@ -172,21 +302,44 @@
     "sets/nature-commontree-3.glb",
     "sets/nature-pine-2.glb",
     "sets/nature-pine-4.glb",
-    "sets/nature-commontree-4.glb"
+    "sets/nature-commontree-4.glb",
+    "sets/quaternius-nature-lite-tree2.glb",
+    "sets/quaternius-nature-lite-tree4.glb"
    ],
    "bush": [
     "sets/nature-bush-common.glb",
     "sets/nature-fern-1.glb",
-    "sets/nature-plant-7-big.glb"
+    "sets/nature-plant-7-big.glb",
+    "sets/quaternius-nature-lite-bush3.glb"
    ],
    "rock": [
     "sets/nature-rock-medium-1.glb",
-    "sets/nature-rock-medium-3.glb"
+    "sets/nature-rock-medium-3.glb",
+    "sets/quaternius-nature-lite-rock3.glb"
    ],
    "grass": [
     "sets/nature-grass-common-tall.glb",
     "sets/nature-grass-wispy-tall.glb",
     "sets/nature-flower-4-group.glb"
+   ],
+   "prop": [
+    "sets/mega-pack-plane-007.glb",
+    "sets/mega-pack-plane-008.glb",
+    "sets/mega-pack-cube-254.glb",
+    "sets/mega-pack-cube-255.glb",
+    "sets/mega-pack-cube-256.glb",
+    "sets/mega-pack-cube-257.glb",
+    "sets/mega-pack-cube-261.glb",
+    "sets/mega-pack-cube-262.glb",
+    "sets/mega-pack-cube-263.glb",
+    "sets/mega-pack-cube-264.glb",
+    "sets/mega-pack-cube-266.glb",
+    "sets/mega-pack-cube-267.glb",
+    "sets/mega-pack-cube-268.glb",
+    "sets/mega-pack-cube-269.glb",
+    "sets/mega-pack-cube-271.glb",
+    "sets/mega-pack-cube-272.glb",
+    "sets/mega-pack-cube-276.glb"
    ]
   },
   "lake": {
@@ -194,7 +347,9 @@
     "sets/nature-pine-1.glb",
     "sets/nature-pine-3.glb",
     "sets/nature-commontree-1.glb",
-    "sets/nature-commontree-3.glb"
+    "sets/nature-commontree-3.glb",
+    "sets/quaternius-nature-lite-tree1.glb",
+    "sets/quaternius-nature-lite-tree2.glb"
    ],
    "bush": [
     "sets/nature-bush-common.glb",
@@ -202,11 +357,31 @@
    ],
    "rock": [
     "sets/nature-rock-medium-2.glb",
-    "sets/nature-rock-medium-3.glb"
+    "sets/nature-rock-medium-3.glb",
+    "sets/quaternius-nature-lite-rock2.glb"
    ],
    "grass": [
     "sets/nature-grass-common-tall.glb",
     "sets/nature-grass-wispy-short.glb"
+   ],
+   "prop": [
+    "sets/mega-pack-cube-287.glb",
+    "sets/mega-pack-cube-288.glb",
+    "sets/mega-pack-plane-009.glb",
+    "sets/mega-pack-cube-001.glb",
+    "sets/mega-pack-cube-012.glb",
+    "sets/mega-pack-cube-013.glb",
+    "sets/mega-pack-cube-014.glb",
+    "sets/mega-pack-cylinder-002.glb",
+    "sets/mega-pack-cube-026.glb",
+    "sets/mega-pack-cube-027.glb",
+    "sets/mega-pack-cube-028.glb",
+    "sets/mega-pack-cube-002.glb",
+    "sets/mega-pack-cube-044.glb",
+    "sets/mega-pack-cube-045.glb",
+    "sets/mega-pack-cube-060.glb",
+    "sets/mega-pack-cube-170.glb",
+    "sets/mega-pack-cube-260.glb"
    ]
   },
   "swamp": {
@@ -215,7 +390,11 @@
     "sets/nature-deadtree-2.glb",
     "sets/nature-deadtree-3.glb",
     "sets/nature-deadtree-4.glb",
-    "sets/nature-deadtree-5.glb"
+    "sets/nature-deadtree-5.glb",
+    "sets/mega-pack-cube-139.glb",
+    "sets/mega-pack-cube-144.glb",
+    "sets/mega-pack-cube-145.glb",
+    "sets/mega-pack-cube-146.glb"
    ],
    "bush": [
     "sets/nature-fern-1.glb",
@@ -230,7 +409,9 @@
   "desert": {
    "tree": [
     "sets/nature-deadtree-4.glb",
-    "sets/nature-deadtree-5.glb"
+    "sets/nature-deadtree-5.glb",
+    "sets/mega-pack-cylinder-188.glb",
+    "sets/mega-pack-cylinder-192.glb"
    ],
    "rock": [
     "sets/survival-rock-sand-a.glb",
@@ -245,7 +426,14 @@
     "sets/pirate-palm-detailed-bend.glb",
     "sets/pirate-palm-detailed-straight.glb",
     "sets/pirate-palm-bend.glb",
-    "sets/pirate-palm-straight.glb"
+    "sets/pirate-palm-straight.glb",
+    "sets/mega-pack-cylinder.glb",
+    "sets/mega-pack-cylinder-006.glb",
+    "sets/mega-pack-cylinder-007.glb",
+    "sets/mega-pack-cylinder-008.glb",
+    "sets/mega-pack-cylinder-009.glb",
+    "sets/mega-pack-cylinder-010.glb",
+    "sets/mega-pack-cylinder-011.glb"
    ],
    "rock": [
     "sets/pirate-rocks-sand-a.glb",
@@ -286,7 +474,27 @@
    "prop": [
     "sets/roads-light-curved.glb",
     "sets/suburban-planter.glb",
-    "sets/roads-road-sign-street.glb"
+    "sets/roads-road-sign-street.glb",
+    "sets/mega-pack-cube-229.glb",
+    "sets/mega-pack-cube-235.glb",
+    "sets/mega-pack-cube-236.glb",
+    "sets/mega-pack-cube-237.glb",
+    "sets/mega-pack-cube-238.glb",
+    "sets/mega-pack-cylinder-031.glb",
+    "sets/mega-pack-cylinder-033.glb",
+    "sets/mega-pack-cylinder-034.glb",
+    "sets/mega-pack-cylinder-035.glb",
+    "sets/mega-pack-cylinder-039.glb",
+    "sets/mega-pack-cylinder-040.glb",
+    "sets/mega-pack-cylinder-041.glb",
+    "sets/mega-pack-cylinder-044.glb",
+    "sets/mega-pack-cube-303.glb",
+    "sets/mega-pack-cube-352.glb",
+    "sets/mega-pack-cube-353.glb",
+    "sets/mega-pack-cube-284.glb",
+    "sets/mega-pack-cube-282.glb",
+    "sets/mega-pack-cube-278.glb",
+    "sets/mega-pack-cube-285.glb"
    ]
   },
   "city": {
@@ -336,7 +544,11 @@
    "prop": [
     "sets/roads-electricity-pole.glb",
     "sets/roads-sign-highway.glb",
-    "sets/roads-road-sign-warning.glb"
+    "sets/roads-road-sign-warning.glb",
+    "sets/mega-pack-cube-310.glb",
+    "sets/mega-pack-cube-311.glb",
+    "sets/mega-pack-cube-312.glb",
+    "sets/mega-pack-cube-313.glb"
    ]
   },
   "railway": {
@@ -400,7 +612,255 @@
    "prop": [
     "sets/station-table-large.glb",
     "sets/station-chair-cushion.glb",
-    "sets/station-container.glb"
+    "sets/station-container.glb",
+    "sets/mega-pack-cube-292.glb",
+    "sets/mega-pack-cube-294.glb",
+    "sets/mega-pack-cube-296.glb",
+    "sets/mega-pack-cube-304.glb",
+    "sets/mega-pack-cube-305.glb",
+    "sets/mega-pack-cube-306.glb",
+    "sets/mega-pack-cube-308.glb",
+    "sets/mega-pack-cube-316.glb",
+    "sets/mega-pack-cube-327.glb",
+    "sets/mega-pack-cube-328.glb",
+    "sets/mega-pack-cube-003.glb",
+    "sets/mega-pack-cube-006.glb",
+    "sets/mega-pack-cube-007.glb",
+    "sets/mega-pack-cube-008.glb",
+    "sets/mega-pack-cube-009.glb",
+    "sets/mega-pack-cube-030.glb"
+   ]
+  },
+  "village": {
+   "building": [
+    "sets/mega-pack-cube-395.glb",
+    "sets/mega-pack-cube-461.glb",
+    "sets/mega-pack-cube-511.glb",
+    "sets/mega-pack-cube-603.glb",
+    "sets/mega-pack-cube-778.glb",
+    "sets/mega-pack-cube-071.glb"
+   ],
+   "tree": [
+    "sets/mega-pack-cube-085.glb",
+    "sets/mega-pack-cube-079.glb",
+    "sets/mega-pack-cube-029.glb",
+    "sets/mega-pack-cube-034.glb",
+    "sets/mega-pack-cube-036.glb",
+    "sets/mega-pack-cube-056.glb",
+    "sets/mega-pack-cube-057.glb",
+    "sets/mega-pack-cube-063.glb",
+    "sets/mega-pack-cube-065.glb"
+   ],
+   "bush": [
+    "sets/mega-pack-cylinder-052.glb",
+    "sets/mega-pack-cylinder-081.glb",
+    "sets/mega-pack-plane-186.glb",
+    "sets/mega-pack-cylinder-042.glb",
+    "sets/mega-pack-plane-215.glb"
+   ],
+   "rock": [
+    "sets/mega-pack-cube-047.glb",
+    "sets/mega-pack-cube-049.glb",
+    "sets/mega-pack-cube-050.glb",
+    "sets/mega-pack-cube-051.glb"
+   ],
+   "grass": [
+    "sets/mega-pack-cylinder-100.glb",
+    "sets/mega-pack-cylinder-013.glb",
+    "sets/mega-pack-cylinder-014.glb",
+    "sets/mega-pack-cylinder-015.glb",
+    "sets/mega-pack-cylinder-016.glb",
+    "sets/mega-pack-cylinder-017.glb",
+    "sets/mega-pack-cylinder-018.glb"
+   ],
+   "prop": [
+    "sets/mega-pack-cube-319.glb",
+    "sets/mega-pack-cube-351.glb",
+    "sets/mega-pack-cube-032.glb",
+    "sets/mega-pack-cube-035.glb",
+    "sets/mega-pack-cylinder-036.glb",
+    "sets/mega-pack-cylinder-037.glb",
+    "sets/mega-pack-cylinder-038.glb",
+    "sets/mega-pack-cube-293.glb",
+    "sets/mega-pack-cube-295.glb",
+    "sets/mega-pack-cylinder-048.glb",
+    "sets/mega-pack-cube-326.glb",
+    "sets/mega-pack-cube-033.glb",
+    "sets/mega-pack-cube-329.glb",
+    "sets/mega-pack-cube-333.glb",
+    "sets/mega-pack-cube-289.glb",
+    "sets/mega-pack-cube-302.glb",
+    "sets/mega-pack-cube-331.glb",
+    "sets/mega-pack-cylinder-004.glb",
+    "sets/mega-pack-cylinder-001.glb",
+    "sets/mega-pack-cube-318.glb",
+    "sets/mega-pack-cube-317.glb",
+    "sets/mega-pack-cube-337.glb",
+    "sets/mega-pack-cylinder-003.glb",
+    "sets/mega-pack-cylinder-005.glb",
+    "sets/mega-pack-cube-031.glb",
+    "sets/mega-pack-cube-292.glb"
+   ]
+  },
+  "castle": {
+   "building": [
+    "sets/mega-pack-cube-172.glb",
+    "sets/mega-pack-cube-191.glb",
+    "sets/mega-pack-cube-173.glb",
+    "sets/mega-pack-cube-174.glb",
+    "sets/mega-pack-cube-072.glb",
+    "sets/mega-pack-cube-070.glb",
+    "sets/mega-pack-cube-358.glb",
+    "sets/mega-pack-cube-359.glb",
+    "sets/mega-pack-cube-196.glb",
+    "sets/mega-pack-cube-197.glb",
+    "sets/mega-pack-cube-207.glb",
+    "sets/mega-pack-cube-208.glb",
+    "sets/mega-pack-cube-209.glb",
+    "sets/mega-pack-cube-217.glb",
+    "sets/mega-pack-cube-219.glb"
+   ],
+   "tree": [
+    "sets/mega-pack-cylinder-012.glb",
+    "sets/mega-pack-cylinder-021.glb",
+    "sets/mega-pack-cylinder-022.glb",
+    "sets/mega-pack-cylinder-023.glb"
+   ],
+   "rock": [
+    "sets/mega-pack-cube-047.glb",
+    "sets/mega-pack-cube-223.glb",
+    "sets/mega-pack-cube-224.glb",
+    "sets/mega-pack-cube-225.glb",
+    "sets/mega-pack-cube-226.glb",
+    "sets/mega-pack-cube-227.glb",
+    "sets/mega-pack-cube-228.glb"
+   ],
+   "grass": [
+    "sets/mega-pack-cylinder-013.glb",
+    "sets/mega-pack-cylinder-015.glb",
+    "sets/mega-pack-cylinder-018.glb"
+   ],
+   "prop": [
+    "sets/mega-pack-cube-341.glb",
+    "sets/mega-pack-cube-346.glb",
+    "sets/mega-pack-cube-017.glb",
+    "sets/mega-pack-cube-018.glb",
+    "sets/mega-pack-cube-019.glb",
+    "sets/mega-pack-cube-020.glb",
+    "sets/mega-pack-cube-021.glb",
+    "sets/mega-pack-cube-022.glb",
+    "sets/mega-pack-cube-023.glb",
+    "sets/mega-pack-cube-343.glb",
+    "sets/mega-pack-cube-024.glb",
+    "sets/mega-pack-cube-025.glb",
+    "sets/mega-pack-cylinder-036.glb",
+    "sets/mega-pack-cube-293.glb",
+    "sets/mega-pack-cylinder-049.glb",
+    "sets/mega-pack-cube-314.glb",
+    "sets/mega-pack-cube-315.glb",
+    "sets/mega-pack-cube-309.glb",
+    "sets/mega-pack-cube-324.glb",
+    "sets/mega-pack-cube-330.glb",
+    "sets/mega-pack-cube-289.glb",
+    "sets/mega-pack-cube-321.glb",
+    "sets/mega-pack-cube-332.glb",
+    "sets/mega-pack-cube-334.glb",
+    "sets/mega-pack-cube-335.glb",
+    "sets/mega-pack-cube-311.glb",
+    "sets/mega-pack-cube-312.glb",
+    "sets/mega-pack-cube-313.glb",
+    "sets/mega-pack-cube-310.glb",
+    "sets/mega-pack-cube-216.glb",
+    "sets/mega-pack-cube-215.glb",
+    "sets/mega-pack-cube-213.glb",
+    "sets/mega-pack-cube-198.glb",
+    "sets/mega-pack-cube-199.glb",
+    "sets/mega-pack-cube-206.glb",
+    "sets/mega-pack-cylinder-024.glb"
+   ]
+  },
+  "shop": {
+   "prop": [
+    "sets/kenney-mini-market-shelf-bags.glb",
+    "sets/kenney-mini-market-shelf-boxes.glb",
+    "sets/kenney-mini-market-shelf-end.glb",
+    "sets/kenney-mini-market-freezers-standing.glb",
+    "sets/kenney-mini-market-freezer.glb",
+    "sets/kenney-mini-market-display-fruit.glb",
+    "sets/kenney-mini-market-display-bread.glb",
+    "sets/kenney-mini-market-cash-register.glb",
+    "sets/kenney-mini-market-bottle-return.glb",
+    "sets/kenney-mini-market-shopping-cart.glb",
+    "sets/kenney-mini-market-shopping-basket.glb",
+    "sets/kenney-mini-market-column.glb",
+    "sets/kenney-mini-market-character-employee.glb",
+    "sets/kenney-mini-market-fence.glb",
+    "sets/kenney-mini-market-fence-door-rotate.glb",
+    "sets/kenney-mini-market-wall.glb",
+    "sets/kenney-mini-market-wall-corner.glb",
+    "sets/kenney-mini-market-wall-door-rotate.glb",
+    "sets/kenney-mini-market-wall-window.glb",
+    "sets/kenney-mini-market-floor.glb"
+   ]
+  },
+  "station": {
+   "prop": [
+    "sets/kenney-space-modular-gate.glb",
+    "sets/kenney-space-modular-gate-door.glb",
+    "sets/kenney-space-modular-gate-door-window.glb",
+    "sets/kenney-space-modular-gate-lasers.glb",
+    "sets/kenney-space-modular-stairs.glb",
+    "sets/kenney-space-modular-stairs-wide.glb",
+    "sets/kenney-space-modular-cables.glb",
+    "sets/kenney-space-modular-corridor.glb",
+    "sets/kenney-space-modular-corridor-wide.glb",
+    "sets/kenney-space-modular-corridor-corner.glb",
+    "sets/kenney-space-modular-corridor-end.glb",
+    "sets/kenney-space-modular-corridor-intersection.glb",
+    "sets/kenney-space-modular-corridor-junction.glb",
+    "sets/kenney-space-modular-corridor-transition.glb",
+    "sets/kenney-space-modular-corridor-wide-corner.glb",
+    "sets/kenney-space-modular-corridor-wide-end.glb",
+    "sets/kenney-space-modular-corridor-wide-intersection.glb",
+    "sets/kenney-space-modular-corridor-wide-junction.glb",
+    "sets/kenney-space-modular-room-corner.glb",
+    "sets/kenney-space-modular-room-large.glb",
+    "sets/kenney-space-modular-room-large-variation.glb",
+    "sets/kenney-space-modular-room-small.glb",
+    "sets/kenney-space-modular-room-small-variation.glb",
+    "sets/kenney-space-modular-room-wide.glb",
+    "sets/kenney-space-modular-room-wide-variation.glb",
+    "sets/kenney-space-modular-template-corner.glb",
+    "sets/kenney-space-modular-template-detail.glb",
+    "sets/kenney-space-modular-template-floor.glb",
+    "sets/kenney-space-modular-template-floor-big.glb",
+    "sets/kenney-space-modular-template-floor-detail.glb",
+    "sets/kenney-space-modular-template-floor-detail-a.glb",
+    "sets/kenney-space-modular-template-floor-layer.glb",
+    "sets/kenney-space-modular-template-floor-layer-hole.glb",
+    "sets/kenney-space-modular-template-floor-layer-raised.glb",
+    "sets/kenney-space-modular-template-wall.glb",
+    "sets/kenney-space-modular-template-wall-corner.glb",
+    "sets/kenney-space-modular-template-wall-detail-a.glb",
+    "sets/kenney-space-modular-template-wall-half.glb",
+    "sets/kenney-space-modular-template-wall-stairs.glb",
+    "sets/kenney-space-modular-template-wall-top.glb"
+   ]
+  },
+  "hall": {
+   "prop": [
+    "sets/mega-pack-cube-333.glb",
+    "sets/mega-pack-cube-334.glb",
+    "sets/mega-pack-cube-335.glb",
+    "sets/mega-pack-cube-347.glb",
+    "sets/mega-pack-cube-363.glb",
+    "sets/mega-pack-cube-005.glb",
+    "sets/mega-pack-cube-004.glb",
+    "sets/mega-pack-cube-205.glb",
+    "sets/mega-pack-cube-354.glb",
+    "sets/mega-pack-cube-355.glb",
+    "sets/mega-pack-cube-356.glb",
+    "sets/mega-pack-cube-357.glb"
    ]
   }
  }
