@@ -23,12 +23,15 @@
  "early-20th-century-passenger-ship": "2026-10-21T18:31:48+00:00",
  "ecce-homo-fresco": "2026-10-18T06:04:04+00:00",
  "ecce-mono-fresco": "2026-10-18T06:04:13+00:00",
+ "forged-document": "2026-10-25T21:50:09+00:00",
  "gene-editing": "2026-10-19T16:50:41+00:00",
  "generated-blue-dress": "2026-10-25T11:53:30+00:00",
  "generated-titan-ocean-liner": "2026-10-22T18:03:43+00:00",
+ "generated-zinoviev-letter": "2026-10-25T21:52:08+00:00",
  "hard-puzzle-book": "2026-10-25T17:14:44+00:00",
  "hind-leg-brush": "2026-10-22T19:24:43+00:00",
  "iceberg": "2026-10-23T02:18:33+00:00",
+ "letter": "2026-10-25T21:52:08+00:00",
  "monkey-christ-fresco": "2026-10-18T06:04:13+00:00",
  "octuple-bypass-burger": "2026-10-20T18:51:22+00:00",
  "plastic-container": "2026-10-24T05:33:48+00:00",
@@ -37,5 +40,6 @@
  "sludge-pile": "2026-10-20T13:41:00+00:00",
  "titan-ocean-liner": "2026-10-21T18:31:47+00:00",
  "wall-fresco": "2026-10-18T06:04:07+00:00",
- "white-powder": "2026-10-24T04:25:48+00:00"
+ "white-powder": "2026-10-24T04:25:48+00:00",
+ "zinoviev-letter": "2026-10-25T21:49:56+00:00"
 }
