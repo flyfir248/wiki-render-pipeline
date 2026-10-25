@@ -377,8 +377,9 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
         off = side(0.55 - 0.25 * e, d * (1.45 - 0.5 * e), d * (0.6 - 0.38 * e) + on.h * 0.3);
         break;
       }
-      // a drone high over the whole place, a quarter turn round it as it sinks towards the subject
-      const far = Math.max(d * 3.4, U * 26) * (1 - 0.45 * e);
+      // a drone high over the whole place, a quarter turn round it as it sinks towards the subject, ending
+      // near the usual framing so the subject is never left a speck in the middle of the place
+      const far = d * (portrait ? 2.2 : 2.8) * (1 - 0.55 * e) * (long ? 0.85 : 1);
       off = side(-0.5 + 0.9 * e, far, far * (0.62 - 0.12 * e));
       f = fov + 6 * (1 - e);
       break;

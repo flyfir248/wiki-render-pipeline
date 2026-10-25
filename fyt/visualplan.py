@@ -14,6 +14,8 @@ scene then passes fyt.scenes3d.guard, which draws an event only when the narrati
 
 from __future__ import annotations
 
+from collections import Counter
+
 import json
 import re
 from typing import Callable, Literal
@@ -428,6 +430,11 @@ def fill(cfg: Config, script: Script, story: Manifest, recon: list[Reconstructio
     taken = {r.scene for r in recon} | {i for i, s in enumerate(scenes, 1) if s.type in ("world", "aircraft", "ship")}
     have = sum(seconds(cfg, scenes[k - 1]) for k in taken if 1 <= k <= len(scenes))
     settings = scenes3d.subjects()["stage"]["settings"]
+    # the story's own subject, the entity most of its moments are about: a scene naming no one of its own
+    # (a closing line, dated events) shows it rather than going to a text card
+    # (or, once the story has sunk or killed it, whoever it leaves behind: the iceberg after the liner)
+    counts = Counter(m.entity for m in story.moments)
+    cast = sorted((e for e in story.entities if not worldgen.is_place(e)), key=lambda e: (-counts[e.id], -len(e.scenes)))
     picks = []
     for i, s in enumerate(scenes, 1):
         data = s.type in OVERLAYS
@@ -435,16 +442,27 @@ def fill(cfg: Config, script: Script, story: Manifest, recon: list[Reconstructio
             continue
         moment = next((m for m in story.moments if m.scene == i and manifest.entity(story, m.entity)), None)
         ents = [e for e in manifest.in_scene(story, i) if not worldgen.is_place(e)]
+        main = None
+        if not ents and not moment and (data or s.type in ("statement", "title")):
+            main = next((e for e in cast if not _ended(story, e, i) and _moves(s, e, None, story, i)), None)
+            ents = [main] if main else []
         # the moment's entity, else the first entity in the scene that can move in it
         lead = next((e.id for e in ([manifest.entity(story, moment.entity)] if moment else []) + ents if _moves(s, e, moment, story, i)), None)
         if lead is None:
             continue  # a 3D scene where nothing would move is a still picture: the 2D scene says more
-        picks.append(((1 if data else 0, 0 if moment and moment.documented else 1, i), i, s, moment, lead))
+        picks.append(((1 if data else 0, 0 if moment and moment.documented else 1, i), i, s, moment, lead, main))
     out: list[Reconstruction] = []
-    for _, i, s, moment, lead in sorted(picks):
+    for _, i, s, moment, lead, main in sorted(picks):
         if have / total >= cfg.visuals.world_share(cfg.format):
             break
         p = manifest.place(story, moment.place) if moment and moment.place else next((x for x in story.places if i in x.scenes), None)
+        if p is None and main:  # where the story last was
+            last = [m for m in story.moments if m.place and m.scene <= i] or [m for m in story.moments if m.place]
+            p = manifest.place(story, max(last, key=lambda m: m.scene).place) if last else None
+        if main and i not in main.scenes:  # the scene now shows it, for the world built from it
+            main.scenes.append(i)
+            if p is not None and not any(i in x.scenes for x in story.places):
+                p.scenes.append(i)
         where = f"{p.name}, {p.look}" if p else ""
         out.append(Reconstruction(
             scene=i, subject="stage", variant="model", action=moment.motion if moment else "present",
@@ -455,6 +473,16 @@ def fill(cfg: Config, script: Script, story: Manifest, recon: list[Reconstructio
         ))
         have += seconds(cfg, s)
     return out
+
+
+def _ended(story: Manifest, e: manifest.Entity, scene: int) -> bool:
+    """Whether the story has already sunk, crashed or killed this entity by this scene: it can't be shown
+    carrying on as before."""
+    before = [m for m in story.moments if m.entity == e.id and m.scene < scene]
+    if not before:
+        return False
+    last = max(before, key=lambda m: m.scene)
+    return bool(scenes3d.find(f"{last.motion} {last.action}", ["sink", "sank", "sunk", "crash", "fall", "die", "dead", "destroy", "wreck", "burn", "explode"]))
 
 
 WATER = ("river", "lake", "sea", "ocean", "water", "harbour", "harbor", "bay", "beach", "coast", "swamp", "waterfall")
@@ -474,6 +502,9 @@ def _moves(s: ScriptScene, e: manifest.Entity, moment: manifest.Moment | None, s
     if not still and arche == "vehicle" and not scenes3d.find(s.narration, list(worldgen.LANDED) + ["parked", "abandoned", "crash"]):
         return True
     p = manifest.place(story, moment.place) if moment and moment.place else next((x for x in story.places if scene in x.scenes), None)
+    if p is None and scene not in e.scenes:  # a scene borrowing it: where the story last was
+        last = [m for m in story.moments if m.place and m.scene <= scene]
+        p = manifest.place(story, max(last, key=lambda m: m.scene).place) if last else None
     return bool(p) and scenes3d.find(f"{p.name} {p.look}", list(WATER))
 
 

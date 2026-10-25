@@ -21,6 +21,14 @@ NAMES = {
     "ru": "Russian", "tr": "Turkish", "nl": "Dutch", "pl": "Polish", "vi": "Vietnamese",
 }  # fmt: skip
 STAMP = re.compile(r"(?m)^\s*(\d{1,2}:\d{2}(?::\d{2})?)\b")
+# Credit paragraphs (model and set-piece credits, links) stay as they are, so they aren't sent to be translated:
+# on a free tier every token counts, and a video with many 3D models has a long credits list.
+CREDITS = re.compile(r"^(3D models:|Set pieces from|Images?:|Music:)|https?://|\bCC[- ]?(BY|0)\b", re.I)
+
+
+def _credit(paragraph: str) -> bool:
+    lines = [x for x in paragraph.splitlines() if x.strip()]
+    return bool(lines) and (bool(CREDITS.match(lines[0].strip())) and lines[0].strip().endswith(":") or all(CREDITS.search(x) for x in lines))
 
 
 class Translation(BaseModel):
@@ -43,14 +51,17 @@ def _clean(text: str) -> str:
 def translate(cfg: Config, script: Script, languages: list[str] | None = None, log=print) -> dict[str, dict]:
     """{language code: {"title", "description"}} for each configured language that translated cleanly."""
     out: dict[str, dict] = {}
+    paragraphs = script.description.strip().split("\n\n")
+    kept = [p for p in paragraphs if _credit(p)]
+    text = "\n\n".join(p for p in paragraphs if not _credit(p))
     for code in languages if languages is not None else cfg.youtube.localize:
         if code == cfg.channel.language:
             continue
         language = NAMES.get(code, code)
         guide = GUIDE.format(channel=cfg.channel.name, niche=cfg.channel.niche, language=language)
-        user = f"Translate into {language}.\n\nTITLE:\n{script.title}\n\nDESCRIPTION:\n{script.description}"
-        try:
-            t = llm.structured(cfg, guide, user, Translation, max_tokens=4000)
+        user = f"Translate into {language}.\n\nTITLE:\n{script.title}\n\nDESCRIPTION:\n{text}"
+        try:  # never waits on a rate limit: the video goes up fine without it
+            t = llm.structured(cfg, guide, user, Translation, max_tokens=2500, quick=True)
         except Exception as e:  # the video is fine without it
             log(f"warning: no {language} title and description ({e})")
             continue
@@ -61,5 +72,5 @@ def translate(cfg: Config, script: Script, languages: list[str] | None = None, l
             # Chapters only work when every timestamp survives; drop the chapter lines rather than mislead.
             description = "\n".join(line for line in description.splitlines() if not STAMP.match(line))
             log(f"warning: {language} description lost its chapter times; chapters left out")
-        out[code] = {"title": title, "description": description}
+        out[code] = {"title": title, "description": "\n\n".join([description, *kept])}
     return out

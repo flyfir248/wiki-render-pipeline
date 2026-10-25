@@ -161,3 +161,32 @@ def test_a_weak_checker_never_drops_3d(monkeypatch):
     cfg = Config()
     cfg.review_model = "auto"
     assert storyboard.review(cfg, Path("f.png"), "a bear", skip=relevance.WEAK) is None and not asked
+
+
+def test_a_closing_line_naming_no_one_shows_whoever_the_story_leaves_behind(monkeypatch):
+    _offline(monkeypatch)
+    lines = [("statement", "The liner Titan steamed across the Atlantic."), ("statement", "It struck an iceberg and sank."),
+             ("statement", "A sailor clung to the ice."), ("statement", "A novel had foretold it all fourteen years before.")]
+    sc = Script(title="Titan", description="D", tags=["a"], thumbnail_text="X", thumbnail_kicker="K", thumbnail_query="q",
+                scenes=[ScriptScene(narration=t, type=k, text="t", heading="h") for k, t in lines], sources=["https://example.com"])
+    m = Manifest(
+        entities=[Entity(id="titan", name="liner Titan", kind="ship", search=["ocean liner"], look="liner", certain=True, scenes=[1, 2]),
+                  Entity(id="sailor", name="sailor", kind="person", search=["sailor"], look="sailor", certain=True, scenes=[3])],
+        places=[Place(id="sea", name="North Atlantic", look="open sea", scenes=[1, 2, 3])],
+        moments=[Moment(scene=1, entity="titan", place="sea", action="steams on", motion="move", cue="steamed", documented=True),
+                 Moment(scene=2, entity="titan", place="sea", action="strikes iceberg and sinks", motion="fall", cue="sank", documented=True),
+                 Moment(scene=3, entity="sailor", place="sea", action="clings to the ice", motion="present", cue="clung", documented=True)],
+    )
+    cfg = Config()
+    cfg.format = "short"
+    cfg.visuals.world_share_short = 1.0
+    planned, _ = visualplan.plan(cfg, sc, story=m)
+    # the closing line is 3D, never the sunk liner sailing on: the sailor it left, at sea
+    assert planned.scenes[3].type == "world" and planned.scenes[3].subject_name == "sailor"
+    assert 4 in m.entities[1].scenes and 4 in m.places[0].scenes
+
+
+def test_the_same_subject_doing_the_same_thing_is_never_filmed_the_same_way_twice():
+    a = lambda k, cam: worldgen.Shot(scene=k, actors=[worldgen.Actor(entity="x", verb="walk")], camera=cam, on="x")  # noqa: E731
+    out = worldgen.vary_cameras({1: a(1, "orbit"), 2: a(2, "follow"), 3: a(3, "orbit")})
+    assert out[3].camera not in ("orbit", "follow")

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from datetime import datetime, timezone
 
@@ -72,7 +73,7 @@ def _strip_descriptions(node):
 
 
 def _with_model(cfg: Config, model: str) -> Config:
-    return cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"model": model, "fallback_models": [], "backup": None})})
+    return cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"model": model, "fallback_models": [], "backup": None, "last_resort": []})})
 
 
 class RateLimited(ClaudeError):
@@ -80,6 +81,18 @@ class RateLimited(ClaudeError):
 
 
 _SPENT: set[str] = set()  # providers that said the account has no credit left: not asked again this run
+# Models whose free tokens for the day ran out: not asked again this run. A per-minute limit clears in a
+# minute; a daily one doesn't, and waiting it out a minute at a time stalled whole scheduled runs.
+_EXHAUSTED: set[tuple[str, str]] = set()
+DAILY = re.compile(r"per day|\(TPD\)|\(RPD\)", re.I)
+
+
+def _out_for_the_day(r) -> bool:
+    try:
+        wait = float(r.headers.get("retry-after") or 0)
+    except ValueError:
+        wait = 0
+    return bool(DAILY.search(r.text or "")) or wait > 120
 
 
 def _chain(cfg: Config) -> list[Config]:
@@ -90,28 +103,38 @@ def _chain(cfg: Config) -> list[Config]:
     if b and b.models and os.environ.get(b.api_key_env) and b.base_url not in _SPENT:
         for m in b.models:
             steps.append(cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
-                "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None})}))
-    return steps + [_with_model(cfg, m) for m in cfg.llm.fallback_models]
+                "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None,
+                "last_resort": []})}))
+    steps += [_with_model(cfg, m) for m in cfg.llm.fallback_models]
+    for b in cfg.llm.last_resort:
+        if b.models and os.environ.get(b.api_key_env) and all(os.environ.get(v) for v in re.findall(r"\$(\w+)", b.base_url)):
+            steps += [cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
+                "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None,
+                "last_resort": []})}) for m in b.models]
+    return steps
 
 
-def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 16000):
+def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 16000, quick: bool = False):
     """Structured output from an OpenAI-compatible API (Groq, OpenRouter, Ollama...).
 
     Asks for JSON matching the schema, validates it, and on a bad answer retries
     with the validation error so the model can correct itself. If the model keeps
     failing, tries the backup provider and then each of `llm.fallback_models` in turn.
     With a backup set up, the main model and the backup's models move on after a couple of
-    rate-limit waits instead of seven, since the next one has limits of its own.
+    rate-limit waits instead of seven, since the next one has limits of its own. A model out of tokens for
+    the day is skipped for the rest of the run. `quick` (for extras a video is fine without) never waits on
+    a rate limit: each model is asked once and the call gives up when none has room.
     """
     steps = _chain(cfg)
     hurry = len(steps) - len(cfg.llm.fallback_models)  # the main model and the backup's
     error: ClaudeError | None = None
     for i, step in enumerate(steps):
-        if step.llm.base_url in _SPENT:
-            continue  # it ran out of credit earlier in this call
+        if step.llm.base_url in _SPENT or (step.llm.base_url, step.llm.model) in _EXHAUSTED:
+            continue  # it ran out of credit, or of tokens for the day, earlier in this run
         last = i == len(steps) - 1
         try:
-            return _openai_structured_once(step, step.llm.model, system, user, schema, max_tokens, patient=last or hurry == 1 or i >= hurry)
+            patient = not quick and (last or hurry == 1 or i >= hurry)
+            return _openai_structured_once(step, step.llm.model, system, user, schema, max_tokens, patient=patient, quick=quick)
         except RequestTooLarge as e:
             if i == 0:
                 raise  # the caller shrinks the request
@@ -123,15 +146,21 @@ def _openai_structured(cfg: Config, system: str, user: str, schema: type[BaseMod
                 raise
             error = e
             print(f"{step.llm.model} failed ({str(e)[:200]}); trying the next model")
-    if hurry > 1:  # the backup couldn't help: wait for the main model as before
+    if quick:
+        raise error or ClaudeError("no model had room")
+    if all((st.llm.base_url, st.llm.model) in _EXHAUSTED or st.llm.base_url in _SPENT for st in steps):
+        raise error or ClaudeError("every model is out of tokens for the day")
+    if hurry > 1 and (steps[0].llm.base_url, steps[0].llm.model) not in _EXHAUSTED:  # the backup couldn't help: wait for the main model as before
         return _openai_structured_once(steps[0], steps[0].llm.model, system, user, schema, max_tokens, patient=True)
     raise error or ClaudeError("no model answered")
 
 
 def _openai_structured_once(
-    cfg: Config, model: str, system: str, user: str, schema: type[BaseModel], max_tokens: int, patient: bool = True
+    cfg: Config, model: str, system: str, user: str, schema: type[BaseModel], max_tokens: int, patient: bool = True,
+    quick: bool = False,
 ):
     c = cfg.llm
+    base_url = os.path.expandvars(c.base_url)  # e.g. Cloudflare's, which holds $CLOUDFLARE_ACCOUNT_ID
     key = os.environ.get(c.api_key_env)
     if not key and "localhost" not in c.base_url:
         raise ClaudeError(f"{c.api_key_env} is not set")
@@ -155,7 +184,7 @@ def _openai_structured_once(
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user + retry_note}]
         try:
             r = requests.post(
-                f"{c.base_url.rstrip('/')}/chat/completions",
+                f"{base_url.rstrip('/')}/chat/completions",
                 headers={"Authorization": f"Bearer {key or 'none'}"},
                 json={**body, "messages": messages},
                 timeout=300,
@@ -170,7 +199,11 @@ def _openai_structured_once(
             print(f"{c.base_url} returned {r.status_code}; retrying")
             time.sleep(min(10 * (attempt + 1), 60))
             continue
-        if r.status_code == 429 and not patient and attempt >= 2:  # someone else may have room now
+        if r.status_code == 429 and _out_for_the_day(r):  # waiting a minute at a time won't help
+            _EXHAUSTED.add((c.base_url, model))
+            print(f"{model} is out of free tokens for the day; not asking it again this run")
+            raise RateLimited(f"{c.base_url} returned 429: {r.text[:300]}")
+        if r.status_code == 429 and (quick or (not patient and attempt >= 2)):  # someone else may have room now
             raise RateLimited(f"{c.base_url} returned 429: {r.text[:300]}")
         if r.status_code == 429 and attempt < 7:  # free tiers limit tokens per minute
             wait = min(max(float(r.headers.get("retry-after") or 30), 10), 65)
@@ -183,6 +216,9 @@ def _openai_structured_once(
             raise ClaudeError(f"{c.base_url} returned 402: {r.text[:300]}")
         if r.status_code == 413:
             raise RequestTooLarge(f"{c.base_url} returned 413: {r.text[:500]}")
+        if r.status_code == 400 and "response_format" in r.text and "response_format" in body:
+            body.pop("response_format")  # a provider without JSON mode: the prompt asks for JSON anyway
+            continue
         if r.status_code == 400 and "json_validate_failed" in r.text:
             # Groq rejects replies that aren't valid JSON, e.g. when the model ran out of tokens.
             last_error = r.text[:500]
@@ -203,10 +239,11 @@ def _openai_structured_once(
     raise ClaudeError(f"{model} did not return a valid answer: {last_error}")
 
 
-def structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 3000):
-    """A small structured answer from whichever provider the channel uses."""
+def structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 3000, quick: bool = False):
+    """A small structured answer from whichever provider the channel uses. `quick`: an extra the video is
+    fine without, so a rate limit gives up instead of waiting."""
     if cfg.llm.provider == "openai":
-        return _openai_structured(cfg, system, user, schema, max_tokens=max_tokens)
+        return _openai_structured(cfg, system, user, schema, max_tokens=max_tokens, quick=quick)
     response = _client().beta.messages.parse(
         model=cfg.model,
         max_tokens=max(max_tokens, 8000),
