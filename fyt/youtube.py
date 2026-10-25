@@ -477,6 +477,20 @@ def iso_seconds(duration: str) -> int:
     return ((d * 24 + h) * 60 + mins) * 60 + s
 
 
+def unschedule(video_id: str) -> None:
+    """Take a scheduled video off the schedule: it stays on the channel, private, and never goes public
+    by itself (reversible in YouTube Studio). videos.update replaces the whole status, so it is sent back."""
+    yt = _service()
+    items = yt.videos().list(part="status", id=video_id).execute().get("items", [])
+    if not items:
+        raise SystemExit(f"https://youtu.be/{video_id} is not on the channel")
+    status = items[0]["status"]
+    keep = ("license", "embeddable", "publicStatsViewable", "selfDeclaredMadeForKids", "containsSyntheticMedia")
+    body = {k: status[k] for k in keep if k in status}
+    body["privacyStatus"] = "private"
+    yt.videos().update(part="status", body={"id": video_id, "status": body}).execute()
+
+
 def recent_uploads(limit: int = 100) -> list[dict]:
     """The channel's newest uploads, scheduled ones included: id, publish_at (or None), title, description.
     Costs a few quota units; needs more than the upload-only scope."""

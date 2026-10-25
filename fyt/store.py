@@ -147,6 +147,27 @@ class Uploads:
             self.save_outline(youtube_id, json.loads(found[0].read_text()))
         self.db.commit()
 
+    def scheduled_for(self, slug: str, after: str) -> tuple[int, str, str | None, str, str] | None:
+        """(row, youtube_id, slot, kind, publish_at) of the latest upload of the job slug (a job id without
+        its time stamp) still due to go public after `after`."""
+        return self.db.execute(
+            "select id, youtube_id, slot, kind, publish_at from uploads where job like ? and youtube_id is not null"
+            " and publish_at > ? order by id desc limit 1",
+            (f"%-{slug}", after),
+        ).fetchone()
+
+    def upload_row(self, youtube_id: str) -> tuple[int, str, str | None, str, str] | None:
+        return self.db.execute(
+            "select id, youtube_id, slot, kind, publish_at from uploads where youtube_id=? order by id desc limit 1", (youtube_id,)
+        ).fetchone()
+
+    def retire(self, row: int, youtube_id: str) -> None:
+        """An upload taken off the schedule: it frees its slot, and its comment and Reel are never posted."""
+        self.db.execute("update uploads set slot=null, kind='replaced' where id=?", (row,))
+        for table in ("comments", "reels", "crossposts"):
+            self.db.execute(f"delete from {table} where youtube_id=?", (youtube_id,))
+        self.db.commit()
+
     def save_outline(self, youtube_id: str, props: dict) -> None:
         outline = {
             "duration": props["duration"],
