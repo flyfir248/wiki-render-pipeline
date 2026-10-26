@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "server-rack",
+  "query": "server rack",
+  "source": "sketchfab",
+  "uid": "sketchfab:62f6779cb7e448b19aaf58544c3c7218",
+  "title": "Server Rack",
+  "author": "Spellkaze",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-62f6779cb7e448b19aaf58544c3c7218",
+  "checked": "vision",
+  "triangles": 744,
+  "bytes": 3329272,
+  "size": [
+    0.6471,
+    2,
+    0.6471
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "metal rack, blinking LEDs, cables",
+  "added": "2026-10-26T14:24:16+00:00"
+}

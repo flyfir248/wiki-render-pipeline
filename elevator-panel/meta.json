@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "elevator-panel",
+  "query": "elevator panel",
+  "source": "sketchfab",
+  "uid": "sketchfab:00b34a3bae9c4294ab8fe783f267ae84",
+  "title": "Elevator Control Panel",
+  "author": "dev.mansaf",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-00b34a3bae9c4294ab8fe783f267ae84",
+  "checked": "vision",
+  "triangles": 110122,
+  "bytes": 5943908,
+  "size": [
+    0.77,
+    1.979,
+    0.1263
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "metallic panel with illuminated floor buttons, missing button 4",
+  "added": "2026-10-26T14:57:42+00:00"
+}
