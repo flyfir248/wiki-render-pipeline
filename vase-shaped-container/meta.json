@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "vase-shaped-container",
+  "query": "vase-shaped container",
+  "source": "sketchfab",
+  "uid": "sketchfab:84c4674ac0cb484191f0c416cc10da56",
+  "title": "Rustic Terracotta Vase with Handles 3D Model",
+  "author": "propsworld.3d",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-84c4674ac0cb484191f0c416cc10da56",
+  "checked": "vision",
+  "triangles": 39978,
+  "bytes": 2065668,
+  "size": [
+    0.6893,
+    0.9999,
+    0.6859
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "oval, vase-shaped, stone, representing womb",
+  "added": "2026-10-27T13:28:28+00:00"
+}
