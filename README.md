@@ -501,6 +501,24 @@ loops one chapter opens are the ones a later chapter closes. Scenes are short be
 photo scenes cut to a new shot every 5 seconds (`growth.long_shot_seconds`), and each chapter after
 the first opens with a "Part N" card and a hit. A long video takes about an hour to render on the free runner.
 
+A Short is built on one question and its answer (`SHORT_STRUCTURE` in `fyt/llm.py`): the writer first
+decides what a stranger would ask after the hook, the answer, and why someone who never heard of the
+subject should care, then writes hook, context, build and payoff around that. Every scene adds a new
+fact, at least three concrete specifics come from the notes, and at most two names or specialist terms
+appear besides the subject, each explained where it first comes up. Three checks stop a Short that
+has too little to say (`fyt/qa.py` `substance`, `fyt/pipeline.py`):
+- a draft under `SHORT_MIN_WORDS` (105) or with a sentence that restates an earlier one is written
+  again, told what was wrong;
+- the story editor (`llm.mend`) fixes where a newcomer would get lost and says what a stranger takes
+  away, scoring the Short 0-10; under `SHORT_MIN_WORTH` (5) the topic is skipped;
+- after every rewrite, cut and fix, a Short under `SHORT_FLOOR_WORDS` (100) or still repeating itself
+  is not made, and the scheduler moves on to the next topic.
+The log names the model that wrote each script and the editor's takeaway and score.
+The main model's free daily tokens are kept for scripts: translations, the visual plan, 3D casting, sets and
+direction, storyboards, topic ranking and post drafts ask `llm.helper_models` first and the main model only
+when every helper fails (`llm.helping`). Writing, the story editor, tightening, polish and the fact check
+stay on the main model.
+
 Change the times in the workflow's `cron` lines, and the niche in `channel.yaml`
 (`wikipedia.list_pages`, `categories` or `articles`). Try one article locally with
 `python -m fyt make "wiki:Boston Molasses Disaster"`, or queue some with

@@ -364,3 +364,13 @@ def test_cloudflare_is_a_last_resort_when_its_keys_are_set(cfg, monkeypatch):
     monkeypatch.setattr(llm.requests, "post", post)
     assert llm.write_script(cfg, "Mary", "notes").title == SCRIPT["title"]
     assert urls[-1] == "https://api.cloudflare.com/client/v4/accounts/acct/ai/v1/chat/completions"
+
+
+def test_supporting_calls_ask_the_helper_models_first_and_the_main_model_last(cfg):
+    cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
+        "model": "big", "fallback_models": ["small", "other"], "helper_models": ["small", "tiny"]})})
+    helper = llm.helping(cfg)
+    assert [c.llm.model for c in llm._chain(helper)] == ["small", "tiny", "other", "big"]
+    assert [c.llm.model for c in llm._chain(cfg)] == ["big", "small", "other"]  # scripts: unchanged
+    plain = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"helper_models": []})})
+    assert llm.helping(plain) is plain

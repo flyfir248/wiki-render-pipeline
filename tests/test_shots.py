@@ -1,4 +1,6 @@
-from fyt import llm, media, pipeline, wiki
+import pytest
+
+from fyt import llm, media, pipeline, qa, wiki
 from fyt.config import Config
 from fyt.models import Media, Script
 from fyt.store import Job
@@ -131,3 +133,74 @@ def test_a_thin_short_is_written_again_with_context(monkeypatch, tmp_path):
     job.public.mkdir(parents=True)
     out = pipeline._short_enough(Config(format="short"), job, "t", "n", True, "")
     assert pipeline.narration_words(out) == 120 and "only 60 words" in notes[1]
+
+
+def test_a_sentence_that_says_again_what_an_earlier_one_said_is_found():
+    s = _script(
+        {"narration": "A small god rises from a lotus inside a jar.", "type": "statement", "text": "x"},
+        {"narration": "The carving is four palms tall.", "type": "statement", "text": "x"},
+        {"narration": "Inside the jar, the small god rises from the lotus.", "type": "statement", "text": "x"},
+        {"narration": "So the snake is a god, not a cable.", "type": "statement", "text": "x"},
+    )
+    assert qa.repeats(s) == ['scene 3 repeats scene 1: "Inside the jar, the small god rises from the lotus."']
+    figures = _script(
+        {"narration": "At five percent, a hundred dollars becomes eleven hundred in fifty years.", "type": "statement", "text": "x"},
+        {"narration": "Watch a thousand dollars at five percent.", "type": "statement", "text": "x"},
+    )
+    assert qa.repeats(figures) == []  # the same figures, saying something new
+    loop = _script(
+        {"narration": "A bear ate a duffel bag of cocaine.", "type": "statement", "text": "x"},
+        {"narration": "Smugglers had dropped it over the Georgia woods.", "type": "statement", "text": "x"},
+        {"narration": "Which is how a bear ate a duffel bag of cocaine.", "type": "statement", "text": "x"},
+    )
+    assert qa.repeats(loop) == []  # the last line may lead back into the hook
+
+
+def test_a_short_the_story_editor_finds_not_worth_watching_is_not_made(monkeypatch, tmp_path):
+    s = _script({"narration": "A god rises from a lotus.", "type": "statement", "text": "x"})
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+    monkeypatch.setattr(llm, "structured", lambda *a, **k: llm.Mended(problems=[], narrations=["x"], takeaway="", worth=2))
+    with pytest.raises(RuntimeError, match="not worth watching"):
+        pipeline.make_sense(Config(format="short"), job, s)
+    assert job.meta["status"] == "qa_failed"
+
+    monkeypatch.setattr(llm, "structured", lambda *a, **k: llm.Mended(
+        problems=[], narrations=["x"], takeaway="The bulbs are a lotus and a snake god.", worth=7))
+    assert pipeline.make_sense(Config(format="short"), job, s) is s
+
+
+def test_a_short_too_thin_after_its_checks_is_not_made(tmp_path):
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+    thin = _script({"narration": " ".join(["word"] * 70), "type": "statement", "text": "x"})
+    with pytest.raises(RuntimeError, match="only 70 words"):
+        pipeline.has_substance(Config(format="short"), job, thin)
+    full = _script(*[{"narration": f"Fact number {i} " + " ".join(f"w{i}x{k}" for k in range(20)), "type": "statement", "text": "x"} for i in range(6)])
+    pipeline.has_substance(Config(format="short"), job, full)
+    pipeline.has_substance(Config(format="long"), job, thin)  # long videos have their own length checks
+
+
+def test_a_repetitive_short_is_written_again(monkeypatch, tmp_path):
+    circling = [{"narration": "The golden statue rises from the sacred lotus inside the temple jar." + " filler" * 50, "type": "statement", "text": "x"},
+                {"narration": "Inside the temple jar, the golden statue rises from the sacred lotus." + " filler" * 50, "type": "statement", "text": "x"}]
+    fresh = [{"narration": line + " more" * 15, "type": "statement", "text": "x"} for line in (
+        "Carvings in an Egyptian temple look like giant light bulbs.",
+        "They sit in a crypt under the temple of Hathor at Dendera.",
+        "Fringe writers claim they prove ancient electricity.",
+        "But the hieroglyphs beside them describe a myth.",
+        "The bulb is a lotus flower and the filament is a snake.",
+        "The snake is a young god being born at sunrise.")]
+    drafts = [circling, fresh]
+    notes = []
+
+    def write_script(cfg, topic, n, from_wikipedia=False, images="", feedback="", news=False, lessons=""):
+        notes.append(feedback)
+        return _script(*drafts[len(notes) - 1])
+
+    monkeypatch.setattr(llm, "write_script", write_script)
+    monkeypatch.setattr(pipeline.insights, "scene_lessons", lambda cfg: "")
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+    out = pipeline._short_enough(Config(format="short"), job, "t", "n", True, "")
+    assert len(out.scenes) == 6 and "scene 2 repeats scene 1" in notes[1]

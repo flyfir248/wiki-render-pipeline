@@ -906,7 +906,7 @@ def design(cfg: Config, script: Script, story: Manifest, ids: list[str], log=pri
             guide = CAST_GUIDE.format(
                 styles="; ".join(f"{k} ({v})" for k, v in G["styles"].items()),
                 archetypes="; ".join(f"{k} ({v['describe']})" for k, v in G["archetypes"].items()), max_parts=MAX_PARTS)
-            cast = llm.structured(cfg, guide, user, Cast, max_tokens=7000)
+            cast = llm.structured(llm.helping(cfg), guide, user, Cast, max_tokens=7000)
             style = cast.style if cfg.visuals.world_style == "auto" else style
             for b in cast.builds:
                 e = ents.get(_slug(b.entity))
@@ -923,7 +923,7 @@ def design(cfg: Config, script: Script, story: Manifest, ids: list[str], log=pri
     if story.places:
         user = f"Title: {script.title}\n\nPlaces:\n" + "\n".join(f"- {p.id}: {p.name}; looks: {p.look}" for p in story.places)
         try:
-            sets = llm.structured(cfg, SETS_GUIDE.format(sets="; ".join(f"{k} ({v})" for k, v in G["sets"].items()), max_parts=MAX_PARTS),
+            sets = llm.structured(llm.helping(cfg), SETS_GUIDE.format(sets="; ".join(f"{k} ({v})" for k, v in G["sets"].items()), max_parts=MAX_PARTS),
                                   user, Sets, max_tokens=5000)
             places = {p.id: p for p in story.places}
             for s in sets.settings:
@@ -1224,7 +1224,7 @@ def direct(cfg: Config, script: Script, story: Manifest, builds: dict[str, Build
             camera="; ".join(f"{k} ({v})" for k, v in G["camera"].items()),
             marks="; ".join(f"{k} ({v})" for k, v in G["marks"].items()))
         try:
-            d = llm.structured(cfg, guide, user, Direction, max_tokens=5000)
+            d = llm.structured(llm.helping(cfg), guide, user, Direction, max_tokens=5000)
             for sh in d.shots:
                 if sh.scene in scenes and sh.scene not in out:
                     c = checked_shot(sh, script, story, builds, sh.scene)

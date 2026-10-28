@@ -16,6 +16,7 @@ llm:
   base_url: https://api.groq.com/openai/v1       # openai only; Ollama: http://localhost:11434/v1
   model: openai/gpt-oss-120b                     # openai only
   api_key_env: GROQ_API_KEY                      # openai only
+  helper_models: []    # openai only: smaller models for translations, visual planning, 3D casting and topic ranking, keeping `model` for scripts
 source: web             # web: Claude researches each topic | wikipedia: videos from niche Wikipedia articles
 research: true          # Claude web research before scripting (source: web)
 wikipedia:              # used when source: wikipedia (or for "wiki:<Title>" topics)

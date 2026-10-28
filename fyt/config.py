@@ -190,6 +190,10 @@ class LLMConfig(BaseModel):
     # Further OpenAI-compatible providers asked after the fallback models, each only when its key is set
     # (and any $VARIABLE in its base_url). Cloudflare Workers AI's free daily allowance, for one.
     last_resort: list[BackupLLM] = Field(default_factory=list)
+    # Models for the supporting calls (translations, visual planning, 3D casting and direction, storyboard,
+    # topic ranking, posts), so `model`'s free daily tokens are still there when a script is written,
+    # fixed and fact checked. `model` is asked for these only when every helper fails. Empty: all use `model`.
+    helper_models: list[str] = Field(default_factory=list)
 
 
 class WikipediaConfig(BaseModel):
