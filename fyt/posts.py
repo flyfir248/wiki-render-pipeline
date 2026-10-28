@@ -66,7 +66,7 @@ def draft(cfg: Config, now: datetime) -> str:
         material += f"\n\nThis week's long video: {long_video['title']}, live {when:%A}.\n{long_video['description'][:600]}"
     material += "\n\nRecent videos:\n" + "\n".join(f"- {v['title']}: {v['description'][:300]}" for v in recent)
     guide = GUIDE.format(niche=cfg.channel.niche, audience=cfg.channel.audience, tone=cfg.channel.tone)
-    d = llm.structured(cfg, guide, material, Drafts, max_tokens=2000)
+    d = llm.structured(llm.helping(cfg), guide, material, Drafts, max_tokens=2000)
     options = "\n".join(f"   - {o[:65]}" for o in d.poll.options[:4])
     out = [
         "Three posts for the Community tab this week. YouTube doesn't let apps publish these, so paste each one "

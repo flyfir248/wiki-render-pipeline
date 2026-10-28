@@ -135,7 +135,7 @@ def _llm_plan(cfg: Config, script: Script, notes: str) -> list[Reconstruction]:
         f"Title: {script.title}\nCore message: {script.core_message}\n\n"
         f"<source>\n{notes[:2500]}\n</source>\n\n<script>\n" + "\n".join(rows) + "\n</script>"
     )
-    plan = llm.structured(cfg, PLAN_GUIDE.format(catalog=_catalog_text()), user, VisualPlan, max_tokens=2500)
+    plan = llm.structured(llm.helping(cfg), PLAN_GUIDE.format(catalog=_catalog_text()), user, VisualPlan, max_tokens=2500)
     return plan.reconstructions
 
 

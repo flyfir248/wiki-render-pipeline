@@ -244,9 +244,20 @@ def _openai_structured_once(
     raise ClaudeError(f"{model} did not return a valid answer: {last_error}")
 
 
+def helping(cfg: Config) -> Config:
+    """The config for a supporting call: the helper models first and the main model last, so the main
+    model's daily tokens go to writing and checking scripts."""
+    helpers = cfg.llm.helper_models
+    if cfg.llm.provider != "openai" or not helpers:
+        return cfg
+    rest = [m for m in helpers[1:] + cfg.llm.fallback_models if m not in (helpers[0], cfg.llm.model)]
+    rest = list(dict.fromkeys(rest)) + [cfg.llm.model]
+    return cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"model": helpers[0], "fallback_models": rest})})
+
+
 def structured(cfg: Config, system: str, user: str, schema: type[BaseModel], max_tokens: int = 3000, quick: bool = False):
     """A small structured answer from whichever provider the channel uses. `quick`: an extra the video is
-    fine without, so a rate limit gives up instead of waiting."""
+    fine without, so a rate limit gives up instead of waiting. A supporting call passes `helping(cfg)`."""
     if cfg.llm.provider == "openai":
         return _openai_structured(cfg, system, user, schema, max_tokens=max_tokens, quick=quick)
     response = _client().beta.messages.parse(

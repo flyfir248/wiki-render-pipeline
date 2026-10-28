@@ -134,7 +134,7 @@ def plan(cfg: Config, script: Script, todo: list[tuple[int, int, str]], known: d
     lines += [f"Scene {i + 1}, sentence {k + 1}: {s}" for i, k, s in todo]
     context = " ".join(sc.narration for sc in script.scenes)
     user = "\n".join(lines) + f"\n\nThe whole narration, for context:\n{context[:2500]}"
-    return llm.structured(cfg, GUIDE, user, Board, max_tokens=3000)
+    return llm.structured(llm.helping(cfg), GUIDE, user, Board, max_tokens=3000)
 
 
 def sentence_starts(narration: str, words: list[Word], duration: float) -> list[float]:

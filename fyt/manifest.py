@@ -147,7 +147,7 @@ def analyse(cfg: Config, script: Script, notes: str = "") -> Manifest:
     lines = [f"Title: {script.title}"] + [f"Scene {i} ({s.type}): {s.narration}" for i, s in enumerate(script.scenes, 1)]
     if notes:
         lines.append("\nNotes (for what things looked like):\n" + notes[:1500])
-    raw = llm.structured(cfg, GUIDE, "\n".join(lines), Manifest, max_tokens=2000)
+    raw = llm.structured(llm.helping(cfg), GUIDE, "\n".join(lines), Manifest, max_tokens=2000)
     return checked(raw, script)
 
 

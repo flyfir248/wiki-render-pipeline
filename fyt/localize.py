@@ -61,7 +61,7 @@ def translate(cfg: Config, script: Script, languages: list[str] | None = None, l
         guide = GUIDE.format(channel=cfg.channel.name, niche=cfg.channel.niche, language=language)
         user = f"Translate into {language}.\n\nTITLE:\n{script.title}\n\nDESCRIPTION:\n{text}"
         try:  # never waits on a rate limit: the video goes up fine without it
-            t = llm.structured(cfg, guide, user, Translation, max_tokens=2500, quick=True)
+            t = llm.structured(llm.helping(cfg), guide, user, Translation, max_tokens=2500, quick=True)
         except Exception as e:  # the video is fine without it
             log(f"warning: no {language} title and description ({e})")
             continue

@@ -21,6 +21,10 @@ llm:
   # Used in turn if the main model is down or out of free tokens for the day
   # (each model on Groq has its own free limits).
   fallback_models: [openai/gpt-oss-20b, qwen/qwen3.8-27b]
+  # Translations, visual planning, 3D casting and direction, storyboards and topic ranking go to these
+  # first, so the main model's free daily tokens are kept for writing and checking scripts. Thin Shorts
+  # came from the main model running out before the script was written.
+  helper_models: [openai/gpt-oss-20b, qwen/qwen3.8-27b]
   # Hugging Face's inference router with HF_TOKEN, asked when the main model is rate limited or
   # failing, before the smaller fallbacks above. Its own limits, so runs side by side don't all wait
   # on Groq. Billed to the Hugging Face account past its monthly free credit.

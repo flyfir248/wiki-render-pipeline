@@ -182,7 +182,7 @@ def score_topics(cfg: Config, candidates: list[tuple[str, int]], extra: str = ""
     """candidates: (title, 30-day pageviews). Returns title -> fit 0-10."""
     guide = RANK_GUIDE.format(niche=cfg.channel.niche, audience=cfg.channel.audience, extra=extra)
     user = "Candidates (title | readers in the last 30 days):\n" + "\n".join(f"- {t} | {v}" for t, v in candidates)
-    scores = llm.structured(cfg, guide, user, TopicScores, max_tokens=2500)
+    scores = llm.structured(llm.helping(cfg), guide, user, TopicScores, max_tokens=2500)
     return {s.title: max(0, min(10, s.fit)) for s in scores.scores}
 
 
@@ -348,7 +348,7 @@ def pick_news(cfg: Config, used: set[str], min_fit: int, min_chars: int, day: da
         return None
     guide = NEWS_RANK_GUIDE.format(niche=cfg.channel.niche, audience=cfg.channel.audience)
     user = "Candidates (title | readers yesterday):\n" + "\n".join(f"- {t} | {v}" for t, v in cands)
-    scores = llm.structured(cfg, guide, user, TopicScores, max_tokens=2500)
+    scores = llm.structured(llm.helping(cfg), guide, user, TopicScores, max_tokens=2500)
     fits = {x.title: max(0, min(10, x.fit)) for x in scores.scores}
     views = dict(cands)
     for title in rank(fits, views, min_fit):
@@ -388,7 +388,7 @@ def cut_scripts(cfg: Config, script: Script, video_id: str, n: int) -> list[Scri
     menu = "\n".join(f"{i}. {title}: {' '.join(s.narration for s in scenes)[:400]}" for i, (title, scenes) in enumerate(groups, 1))
     try:
         choice = llm.structured(
-            cfg,
+            llm.helping(cfg),
             "Pick the chapters of this video that would each work best as a standalone YouTube Short: "
             "a self-contained surprising story or fact that makes sense without the rest.",
             menu,

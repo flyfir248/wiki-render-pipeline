@@ -62,7 +62,7 @@ def classify(cfg: Config, videos: list[dict]) -> dict[str, str]:
         batch = videos[i : i + 40]
         menu = "\n".join(f"{n}. {v['title']} | {v['description'][:150]!r}" for n, v in enumerate(batch, 1))
         answer = llm.structured(
-            cfg,
+            llm.helping(cfg),
             f"File each video of a YouTube channel under the series that fits it best: {', '.join(names)}. "
             f"Use {cfg.growth.news_series!r} only for explainers of a recent news incident.",
             menu,

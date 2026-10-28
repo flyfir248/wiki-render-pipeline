@@ -514,6 +514,10 @@ has too little to say (`fyt/qa.py` `substance`, `fyt/pipeline.py`):
 - after every rewrite, cut and fix, a Short under `SHORT_FLOOR_WORDS` (100) or still repeating itself
   is not made, and the scheduler moves on to the next topic.
 The log names the model that wrote each script and the editor's takeaway and score.
+The main model's free daily tokens are kept for scripts: translations, the visual plan, 3D casting, sets and
+direction, storyboards, topic ranking and post drafts ask `llm.helper_models` first and the main model only
+when every helper fails (`llm.helping`). Writing, the story editor, tightening, polish and the fact check
+stay on the main model.
 
 Change the times in the workflow's `cron` lines, and the niche in `channel.yaml`
 (`wikipedia.list_pages`, `categories` or `articles`). Try one article locally with
