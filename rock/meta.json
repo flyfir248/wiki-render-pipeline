@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "rock",
+  "query": "rock",
+  "source": "sketchfab",
+  "uid": "sketchfab:b66d5b63deb447299ca3effa904bc789",
+  "title": "Rock",
+  "author": "Siesta",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-b66d5b63deb447299ca3effa904bc789",
+  "checked": "vision",
+  "triangles": 13728,
+  "bytes": 4846744,
+  "size": [
+    8.2679,
+    5.3604,
+    7.8991
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "small, irregularly shaped, dark gray, smooth edges",
+  "added": "2026-10-28T14:12:02+00:00"
+}
