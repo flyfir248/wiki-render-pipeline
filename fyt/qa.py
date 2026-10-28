@@ -66,6 +66,53 @@ def check_script(cfg: Config, script: Script) -> list[str]:
     return problems
 
 
+# Words that say nothing about what a sentence is about, left out when comparing two sentences.
+FILLER = {"about", "after", "again", "also", "because", "before", "being", "could", "every", "from", "have", "into",
+          "just", "later", "more", "most", "only", "over", "same", "some", "than", "that", "their", "them", "then",
+          "there", "these", "they", "this", "those", "through", "under", "very", "were", "what", "when", "which",
+          "while", "with", "would", "still", "even", "never", "where", "your"}
+# Figures may come back in a later sentence (a count-up, a comparison) without saying the same thing again.
+NUMBER_WORDS = {"zero", "three", "four", "five", "seven", "eight", "nine", "eleven", "twelve", "twenty", "thirty",
+                "forty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred", "thousand", "million", "billion",
+                "percent", "half", "dollars", "pounds", "years", "first", "second", "third"}
+
+
+def _gist(sentence: str) -> set[str]:
+    words = "".join(c if c.isalnum() else " " for c in sentence.lower()).split()
+    return {w[:6] for w in words if len(w) >= 4 and w not in FILLER and w not in NUMBER_WORDS and not w.isdigit()}
+
+
+def repeats(script: Script, overlap: float = 0.7) -> list[str]:
+    """Sentences that say again what an earlier one said: most of their content words were already used
+    together in one earlier sentence. The last sentence may echo the first (a Short's loop back into
+    its hook)."""
+    said: list[tuple[int, str, set[str]]] = []
+    found = []
+    sentences = [(i, t) for i, sc in enumerate(script.scenes, 1) for t in re.split(r"(?<=[.!?])\s+", sc.narration.strip()) if t]
+    for k, (i, text) in enumerate(sentences):
+        gist = _gist(text)
+        last = k == len(sentences) - 1
+        for j, (scene, earlier, g) in enumerate(said):
+            if last and j == 0:
+                continue
+            small = min(len(gist), len(g))
+            if small >= 4 and len(gist & g) >= overlap * small:
+                found.append(f'scene {i} repeats scene {scene}: "{text}"')
+                break
+        said.append((i, text, gist))
+    return found
+
+
+def substance(script: Script, floor: int) -> list[str]:
+    """Why a Short has too little to say to be worth uploading: too few words to explain itself, or
+    sentences that only restate earlier ones."""
+    problems = []
+    words = sum(len(s.narration.split()) for s in script.scenes)
+    if words < floor:
+        problems.append(f"only {words} words of narration, too few to explain the story (at least {floor})")
+    return problems + repeats(script)
+
+
 def check_render(cfg: Config, props: RenderProps, video: Path, voiced: bool = True) -> list[str]:
     problems = []
     if not video.exists() or video.stat().st_size < 10_000:

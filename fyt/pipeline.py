@@ -113,6 +113,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)
         script = check_facts(cfg, job, script, notes)
+        has_substance(cfg, job, script)
     # the script as written and checked, before any visual is planned: a test can re-render from it
     job.file("written.json").write_text(script.model_dump_json(indent=2))
     if given_story is not None:
@@ -321,13 +322,15 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
 def _short_enough(
     cfg: Config, job: Job, subject: str, notes: str, from_wiki: bool, menu: str, note: str = "", news: bool = False
 ) -> Script:
-    """Write the script, asking once more for a shorter one when a Short runs long."""
+    """Write the script, asking once more when a Short runs long, or is too thin or repetitive to follow."""
     lessons = insights.scene_lessons(cfg)
     if lessons:
         log(job, "using watch-time lessons: " + lessons.replace("\n", " "))
+    llm.LAST_MODEL = ""
     script = llm.write_script(
         cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note, news=news, lessons=lessons
     )
+    log(job, f"script written by {llm.LAST_MODEL or cfg.model}: {narration_words(script)} words")
     limit = llm.SHORT_MAX_WORDS if cfg.format == "short" else None
     if limit and narration_words(script) > limit:
         log(job, f"script is {narration_words(script)} words; asking for a shorter one")
@@ -347,12 +350,14 @@ def _short_enough(
         )
         if narration_words(retry) < narration_words(script):
             script = retry
-    elif limit and narration_words(script) < llm.SHORT_MIN_WORDS:
-        # Too thin a Short skips the context, and then the story makes no sense to a newcomer.
-        log(job, f"script is only {narration_words(script)} words; asking for a fuller one")
+    elif limit and (thin := qa.substance(script, llm.SHORT_MIN_WORDS)):
+        # Too thin a Short skips the context, and one that circles a detail has nothing to say: either way
+        # a newcomer can't follow it. Rewrite once, saying what was wrong.
+        log(job, "draft has too little to say; asking for a fuller one: " + "; ".join(thin)[:300])
         feedback = (
-            f"Your previous draft had only {narration_words(script)} words of narration, too few to follow. "
-            f"Write about {llm.SHORT_WORDS} words: say who or what this is and why the hook is true before the build."
+            "Your previous draft had too little substance: " + "; ".join(thin) + ". "
+            f"Write about {llm.SHORT_WORDS} words: say who or what this is and why the hook is true before the build, "
+            "give every scene a new fact, and answer the hook's question in the payoff."
         )
         retry = llm.write_script(
             cfg,
@@ -364,7 +369,9 @@ def _short_enough(
             news=news,
             lessons=lessons,
         )
-        if narration_words(script) < narration_words(retry) <= limit:
+        log(job, f"rewritten by {llm.LAST_MODEL or cfg.model}: {narration_words(retry)} words")
+        again = qa.substance(retry, llm.SHORT_MIN_WORDS)
+        if narration_words(retry) <= limit and (len(again), -narration_words(retry)) < (len(thin), -narration_words(script)):
             script = retry
     return script
 
@@ -384,17 +391,39 @@ def keep_short(cfg: Config, job: Job, script: Script) -> Script:
 
 
 def make_sense(cfg: Config, job: Job, script: Script) -> Script:
-    """A Short is heard once at speed: check it tells one followable story, and fix the lines that don't."""
+    """A Short is heard once at speed: check it tells one followable story, and fix the lines that don't.
+    The story editor also says what a stranger takes away; a Short it rates not worth watching is not made."""
     if cfg.format != "short":
         return script
     try:
-        fixed, problems = llm.mend(cfg, script)
+        fixed, problems, verdict = llm.mend(cfg, script)
     except Exception as e:  # the script as written is still a Short
         log(job, f"warning: could not check the story: {e}")
         return script
     if problems:
         log(job, "story fixed where it lost the thread: " + "; ".join(problems))
+    log(job, f"takeaway ({verdict.worth}/10): {verdict.takeaway or 'none'}")
+    if verdict.worth < llm.SHORT_MIN_WORTH:
+        _reject(job, script, [f"not worth watching ({verdict.worth}/10): " + (verdict.takeaway.strip() or "no clear point")]
+                + problems)
     return fixed
+
+
+def has_substance(cfg: Config, job: Job, script: Script) -> None:
+    """The last word before a Short is voiced: after every rewrite, cut and fix it must still be long
+    enough to explain itself and say each thing once. A skipped topic costs less than a Short that
+    makes no sense."""
+    if cfg.format != "short":
+        return
+    problems = qa.substance(script, llm.SHORT_FLOOR_WORDS)
+    if problems:
+        _reject(job, script, problems)
+
+
+def _reject(job: Job, script: Script, problems: list[str]) -> None:
+    job.file("script.json").write_text(script.model_dump_json(indent=2))
+    job.update(status="qa_failed", problems=problems)
+    raise RuntimeError("script has too little substance: " + "; ".join(problems))
 
 
 def check_facts(cfg: Config, job: Job, script: Script, notes: str) -> Script:

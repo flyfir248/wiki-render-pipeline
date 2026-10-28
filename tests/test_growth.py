@@ -16,7 +16,7 @@ NOW = datetime(2026, 9, 29, 13, 0, tzinfo=timezone.utc)
 def plain_shorts(monkeypatch):
     """These tests are about topics and packaging, not script length or the story check."""
     monkeypatch.setattr(llm, "SHORT_MIN_WORDS", 0)
-    monkeypatch.setattr(llm, "mend", lambda cfg, s: (s, []))
+    monkeypatch.setattr(llm, "mend", lambda cfg, s: (s, [], llm.Mended(problems=[], narrations=[])))
 
 
 def script(n=6, chapters=None) -> Script:

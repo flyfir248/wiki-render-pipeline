@@ -80,6 +80,7 @@ class RateLimited(ClaudeError):
     pass
 
 
+LAST_MODEL = ""  # the model that gave the last structured answer, for the job's log
 _SPENT: set[str] = set()  # providers that said the account has no credit left: not asked again this run
 # Models whose free tokens for the day ran out: not asked again this run. A per-minute limit clears in a
 # minute; a daily one doesn't, and waiting it out a minute at a time stalled whole scheduled runs.
@@ -159,6 +160,7 @@ def _openai_structured_once(
     cfg: Config, model: str, system: str, user: str, schema: type[BaseModel], max_tokens: int, patient: bool = True,
     quick: bool = False,
 ):
+    global LAST_MODEL
     c = cfg.llm
     base_url = os.path.expandvars(c.base_url)  # e.g. Cloudflare's, which holds $CLOUDFLARE_ACCOUNT_ID
     key = os.environ.get(c.api_key_env)
@@ -231,11 +233,14 @@ def _openai_structured_once(
         if content.startswith("```"):  # tolerate a fenced reply
             content = content.strip("`").removeprefix("json").strip()
         try:
-            return schema.model_validate_json(content)
+            answer = schema.model_validate_json(content)
         except ValidationError as e:
             last_error = str(e)[:800]
             print(f"{model} reply did not match the schema; retrying")
             retry_note = f"\n\nYour previous reply did not match the schema:\n{last_error}\nReply with the corrected JSON object only."
+            continue
+        LAST_MODEL = model
+        return answer
     raise ClaudeError(f"{model} did not return a valid answer: {last_error}")
 
 
@@ -291,6 +296,8 @@ def tighten(cfg: Config, script: Script, words: int | None = None) -> Script:
 class Mended(BaseModel):
     problems: list[str] = Field(description="Each place a first-time viewer would get lost, or empty if none.")
     narrations: list[str] = Field(description="The narration for each scene, in the same order, fixed where needed.")
+    takeaway: str = Field(default="", description="What a stranger learns, in one plain sentence, or empty if nothing clear.")
+    worth: int = Field(default=10, description="0-10: would a stranger who swiped in be glad they watched?")
 
 
 MEND_GUIDE = """You are the story editor of a YouTube Short. Read the script as a viewer who has never heard
@@ -307,11 +314,17 @@ context, reorder within a scene, or drop the stray fact. Keep every scene and it
 about what it shows now, keep the total length about the same ({words} words, never over {limit}), use
 only facts already in the script, and keep the narrator's voice. Keep any line that leads back into the
 opening, or that says part two is next. Sentences of 6-16 words, written for the ear.
-Return exactly {n} narrations, one per scene."""
+Return exactly {n} narrations, one per scene.
+Then judge the fixed script as that stranger. `takeaway`: what they now know, in one plain sentence; leave
+it empty if there is no clear point. `worth` (0-10): would they be glad they watched? Score 3 or less for
+a script that circles one detail, leans on names or terms it never explains, or ends without answering
+its hook (a part 1 that ends saying part two is next may leave it open); 7 or more only when it has a
+clear point, several concrete facts and a real payoff."""
 
 
-def mend(cfg: Config, script: Script) -> tuple[Script, list[str]]:
-    """Check a Short tells one followable story; fix the lines where a first-time viewer would get lost."""
+def mend(cfg: Config, script: Script) -> tuple[Script, list[str], Mended]:
+    """Check a Short tells one followable story; fix the lines where a first-time viewer would get lost.
+    Also returns the editor's verdict: what a stranger takes away, and whether it is worth watching."""
     n = len(script.scenes)
     words = sum(len(s.narration.split()) for s in script.scenes)
     user = (f"Core message: {script.core_message}\n\n" if script.core_message else "") + "\n".join(
@@ -322,14 +335,14 @@ def mend(cfg: Config, script: Script) -> tuple[Script, list[str]]:
     m = structured(cfg, guide, user, Mended, max_tokens=2500)
     problems = [p.strip() for p in m.problems if p.strip()]
     if not problems:
-        return script, []
+        return script, [], m
     lines = [x.strip() for x in m.narrations]
     if len(lines) != n or not all(lines):
         raise ValueError(f"expected {n} narrations, got {len(lines)}")
     if sum(len(x.split()) for x in lines) > max(words, SHORT_MAX_WORDS):
         raise ValueError("the fixed script ran too long")
     scenes = [sc.model_copy(update={"narration": line}) for sc, line in zip(script.scenes, lines)]
-    return script.model_copy(update={"scenes": scenes}), problems
+    return script.model_copy(update={"scenes": scenes}), problems, m
 
 
 class TopicIdeas(BaseModel):
@@ -417,25 +430,31 @@ Prefer primary and reputable sources. Flag anything uncertain.""",
 SHORT_WORDS = 130  # about 50 seconds at the Shorts reading speed (110 words ran 44s): room to explain the story
 SHORT_MAX_WORDS = 150  # about a minute: longer gets tightened
 SHORT_MIN_WORDS = 105  # under about 40 seconds there is no room for context: shorter gets rewritten
+SHORT_FLOOR_WORDS = 100  # still under this after the rewrite and the checks: too thin to upload
+SHORT_MIN_WORTH = 5  # the story editor's 0-10 score below which a Short is not made
 
-SHORT_STRUCTURE = """Structure of a Short (45-55 seconds, 6-8 scenes; viewers decide in the first second whether to swipe):
-1. Hook (scene 1, max 12 words): the strangest concrete fact, stated flatly. The viewer must know
-   at once what this is about. No "welcome back", no "in this video", no "did you know", no question.
-   Scene 1 is a `title` scene shown over a photo of the subject: its heading is the hook in 2-5 big
-   words (e.g. "Watch it with your eyes shut"), never just the topic's name. Leave its text empty.
-2. Context (1-2 scenes): who or what this is, where and when, in plain words, so a viewer who has
-   never heard of it can follow. Explain the hook here: why is that strange fact true?
-3. Build (2-3 scenes): each one follows from the one before ("so", "but", "then") and escalates
-   with a new, stranger or higher-stakes detail of the same thread. When the story has a size, share,
-   change over time or place, show it in one of these with a moving graphic (scale, proportion, trend
-   or map) rather than a still: motion on screen is what keeps a thumb from swiping.
-4. Payoff (1 scene): the twist or answer, saying the core message in plain words.
-5. End on the payoff. No subscribe line, no "thanks for watching", no question to the audience:
-   Shorts replay automatically, and a clean ending makes the replay seamless.
-One thread only: tell one story from start to finish, not a list of facts about the subject.
-Introduce every person, place and object before relying on it, and never jump to a new topic
-(an unexplained "flight", a different discovery, a later career) without saying how it connects.
-Read it back as a stranger would: if any sentence would make them ask "wait, what?", fix it."""
+SHORT_STRUCTURE = """Structure of a Short (45-55 seconds, 6-8 scenes; viewers decide in the first second whether to swipe).
+It is worth watching only if a stranger comes away with something they can retell in one sentence. First
+decide the question a stranger would ask after the hook ("why?", "how did it survive?", "what does it
+really show?"), its answer (the core message), and why someone who never heard of it should care (the
+human stake, the surprise, the claim people argue about; pick that angle over technical detail).
+1. Hook (scene 1, max 12 words): the strangest concrete fact, stated flatly in everyday words, raising
+   the question. No "welcome back", "in this video", "did you know", no question, and never open on a
+   name or term the viewer can't know: say what it is or does. Scene 1 is a `title` scene over a photo
+   of the subject: its heading is the hook in 2-5 big words (e.g. "Watch it with your eyes shut"),
+   never just the topic's name. Leave its text empty.
+2. Context (1-2 scenes): who or what this is, where and when, and why the hook is true.
+3. Build (2-3 scenes): each follows from the last ("so", "but", "then") and escalates with a new,
+   stranger or higher-stakes detail of the same thread. Show a size, share, change over time or place
+   with a moving graphic (scale, proportion, trend or map) rather than a still.
+4. Payoff (1 scene): answer the hook's question; say the core message in plain words.
+5. End on the payoff: no subscribe line, no thanks, no question; the replay should feel seamless.
+Substance over jargon: every scene adds a new fact and no sentence repeats an earlier one; use at
+least three concrete specifics from the notes (number, date, place, person, exact detail) and say
+what each means; besides the subject, at most two names or specialist terms, each explained where it
+first appears ("an Egyptian god", not a name to remember). Write the full {words} words.
+One thread only, introduced before it is relied on; never jump to a new topic without the link.
+If any sentence would make a stranger ask "wait, what?", fix it.""".replace("{words}", str(SHORT_WORDS))
 
 LONG_STRUCTURE = """Structure of a long video (a documentary told like a thriller; viewers leave the moment
 nothing is at stake, so there is always an unanswered question on the table):
