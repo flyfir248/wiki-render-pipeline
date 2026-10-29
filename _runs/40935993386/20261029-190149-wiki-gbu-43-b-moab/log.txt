@@ -1,0 +1,9 @@
+fetching Wikipedia article
+2 article images available
+4 more freely licensed photos of the subject: commons
+writing script
+script written by gemini-3.5-flash-lite: 1109 words
+sharpening title, hook and thumbnail text
+title: "Why the MOAB uses thin aluminum instead of armor" (viewer's question: How did engineers build the largest non-nuclear bomb in just nine weeks?); passed over: "The 21,000-lb MOAB: How Engineers Built It in Nine Weeks": a "Label: subtitle" headline; "How a cargo plane drops the twenty-thousand-pound MOAB": an invented hyphenated compound
+checking facts against the source
+fact check found: scene 0: unsupported claim "BUILT IN 9 WEEKS"; scene 10: unsupported claim "Engineers raced to turn concept into reality in just nine weeks"; scene 18: unsupported claim "Grid fins mounted at the nose stabilize the massive body as it slices through the upper atmosphere."; scene 22: unsupported claim "Yet a single ninety-foot weapon replaced an entire squadron of bombers in a fraction of the time."; scene 23: unsupported claim "The entire system went from initial concept to live testing in just nine weeks of intense development."; scene 60: unsupported claim "MOAB 21600 pounds total weight"; scene 66: unsupported claim "Rapid nine-week design project completed"
