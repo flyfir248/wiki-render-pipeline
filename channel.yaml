@@ -25,23 +25,27 @@ llm:
   # first, so the main model's free daily tokens are kept for writing and checking scripts. Thin Shorts
   # came from the main model running out before the script was written.
   helper_models: [openai/gpt-oss-20b, qwen/qwen3.8-27b]
-  # Hugging Face's inference router with HF_TOKEN, asked when the main model is rate limited or
-  # failing, before the smaller fallbacks above. Its own limits, so runs side by side don't all wait
-  # on Groq. Billed to the Hugging Face account past its monthly free credit.
+  # NVIDIA's API catalog (build.nvidia.com, secret NVIDIA_API_KEY), asked when the main model is rate
+  # limited or failing, before the smaller fallbacks above: its own free limits, so runs don't all wait on
+  # Groq. Skipped while the secret isn't set.
   backup:
-    base_url: https://router.huggingface.co/v1
-    api_key_env: HF_TOKEN
-    models: [Qwen/Qwen3-235B-A22B-Instruct-2507, deepseek-ai/DeepSeek-V3.1]
-  # Asked last, when every model above is rate limited or out of tokens for the day: Cloudflare Workers AI's
-  # free daily allowance, with the keys the picture checks already use.
+    base_url: https://integrate.api.nvidia.com/v1
+    api_key_env: NVIDIA_API_KEY
+    models: [openai/gpt-oss-120b, deepseek-ai/deepseek-v4-pro]
+  # Asked last, when every model above is rate limited or out of tokens for the day: Hugging Face's router
+  # (billed past its small monthly free credit), then Cloudflare Workers AI's free daily allowance, with the
+  # keys the picture checks already use.
   last_resort:
+    - base_url: https://router.huggingface.co/v1
+      api_key_env: HF_TOKEN
+      models: [Qwen/Qwen3-235B-A22B-Instruct-2507, deepseek-ai/DeepSeek-V3.1]
     - base_url: https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1
       api_key_env: CLOUDFLARE_API_TOKEN
       models: ["@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
 
 # Long videos use their own models, so the week's long script doesn't depend on what the Shorts left of
 # the free tiers above: Google's free Gemini API first (secret GEMINI_API_KEY; without it, the models
-# above), then Groq, then Cloudflare. Only the long video asks Gemini, so its free daily limits are its own.
+# above), then NVIDIA, then Groq and Cloudflare. Only the long video asks Gemini, so its free daily limits are its own.
 long_llm:
   provider: openai
   base_url: https://generativelanguage.googleapis.com/v1beta/openai
@@ -53,10 +57,13 @@ long_llm:
   # Flash is there for the script and the fact check.
   helper_models: ["newest:flash-lite"]
   backup:
-    base_url: https://api.groq.com/openai/v1
-    api_key_env: GROQ_API_KEY
-    models: [openai/gpt-oss-120b, openai/gpt-oss-20b]
+    base_url: https://integrate.api.nvidia.com/v1
+    api_key_env: NVIDIA_API_KEY
+    models: [openai/gpt-oss-120b, deepseek-ai/deepseek-v4-pro]
   last_resort:
+    - base_url: https://api.groq.com/openai/v1
+      api_key_env: GROQ_API_KEY
+      models: [openai/gpt-oss-120b, openai/gpt-oss-20b]
     - base_url: https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1
       api_key_env: CLOUDFLARE_API_TOKEN
       models: ["@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
