@@ -1,0 +1,2512 @@
+{
+  "style": "noir",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "cargo-plane",
+      "archetype": "vehicle",
+      "size": 9.92,
+      "primary": "#4b5320",
+      "secondary": "#2f3513",
+      "accent": "#cccccc",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            1.1904,
+            0.0
+          ],
+          "size": [
+            1.2896,
+            9.92,
+            1.2896
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#4b5320",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.1984,
+            1.3888,
+            0.0
+          ],
+          "size": [
+            1.7855999999999999,
+            0.1984,
+            10.416
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#4b5320",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.3648,
+            1.984,
+            0.0
+          ],
+          "size": [
+            0.992,
+            1.5872,
+            0.1984
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2f3513",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.3648,
+            1.2896,
+            0.0
+          ],
+          "size": [
+            0.7936,
+            0.1984,
+            3.1744
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2f3513",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            2.976,
+            1.6864000000000001,
+            0.0
+          ],
+          "size": [
+            0.992,
+            0.496,
+            1.1904
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            5.0592,
+            1.1904,
+            0.0
+          ],
+          "size": [
+            0.0992,
+            2.1824,
+            0.2976
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "x",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.496,
+            1.1904,
+            -2.0831999999999997
+          ],
+          "size": [
+            1.1904,
+            0.5952,
+            0.5952
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#cccccc",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.496,
+            1.1904,
+            2.0831999999999997
+          ],
+          "size": [
+            1.1904,
+            0.5952,
+            0.5952
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#cccccc",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "plane",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        6,
+        7,
+        13,
+        14,
+        23,
+        27,
+        28,
+        31,
+        35,
+        37,
+        41,
+        44,
+        49,
+        53,
+        54,
+        56,
+        59,
+        60,
+        63
+      ]
+    },
+    {
+      "entity": "weapon",
+      "archetype": "object",
+      "size": 6.4,
+      "primary": "#cccccc",
+      "secondary": "#222222",
+      "accent": "#ff3300",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.0,
+            6.4,
+            1.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#cccccc",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cone",
+          "at": [
+            3.2,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.0,
+            1.8,
+            1.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            270.0
+          ],
+          "color": "#cccccc",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -3.0,
+            0.8,
+            0.0
+          ],
+          "size": [
+            0.8,
+            1.2,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#222222",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -3.0,
+            -0.8,
+            0.0
+          ],
+          "size": [
+            0.8,
+            1.2,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#222222",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -3.0,
+            0.0,
+            0.8
+          ],
+          "size": [
+            0.8,
+            0.1,
+            1.2
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#222222",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -3.0,
+            0.0,
+            -0.8
+          ],
+          "size": [
+            0.8,
+            0.1,
+            1.2
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#222222",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            2.5,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.2,
+            0.4,
+            0.2
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#ff3300",
+          "bone": "body",
+          "spin": "",
+          "glow": true
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        28,
+        35,
+        36,
+        53,
+        55
+      ]
+    },
+    {
+      "entity": "parachute",
+      "archetype": "object",
+      "size": 5.0,
+      "primary": "#ffffff",
+      "secondary": "#ff6600",
+      "accent": "#333333",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "sphere",
+          "at": [
+            0.0,
+            3.0,
+            0.0
+          ],
+          "size": [
+            5.0,
+            4.0,
+            5.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffffff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "sphere",
+          "at": [
+            0.0,
+            3.2,
+            0.0
+          ],
+          "size": [
+            4.8,
+            3.8,
+            4.8
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ff6600",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "size": [
+            0.05,
+            3.0,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "size": [
+            0.05,
+            3.0,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -1.0,
+            1.0,
+            1.0
+          ],
+          "size": [
+            0.05,
+            3.0,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            1.0,
+            1.0,
+            -1.0
+          ],
+          "size": [
+            0.05,
+            3.0,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -1.0,
+            1.0,
+            -1.0
+          ],
+          "size": [
+            0.05,
+            3.0,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "procedural, designed by the model",
+      "scenes": [
+        2,
+        28,
+        30,
+        31,
+        35,
+        36,
+        55
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "mountain-range",
+      "kind": "mountain",
+      "time": "day",
+      "ground": "#665e53",
+      "sky": "#7091b5",
+      "accent": "#ffd89e",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "alpine pine",
+          "build": {
+            "entity": "mountain-range:alpine-pine",
+            "archetype": "plant",
+            "size": 12.0,
+            "primary": "#334422",
+            "secondary": "#223311",
+            "accent": "#556644",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.866,
+                  0.0
+                ],
+                "size": [
+                  0.26,
+                  1.732,
+                  0.26
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#5e4b3c",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  3.464,
+                  0.0
+                ],
+                "size": [
+                  1.732,
+                  3.464,
+                  1.732
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#334422",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 15,
+          "spread": 25.0
+        },
+        {
+          "name": "boulder",
+          "build": {
+            "entity": "mountain-range:boulder",
+            "archetype": "object",
+            "size": 3.0,
+            "primary": "#777777",
+            "secondary": "#555555",
+            "accent": "#888888",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "sphere",
+                "at": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "size": [
+                  3.0,
+                  2.2,
+                  3.0
+                ],
+                "rot": [
+                  12.0,
+                  45.0,
+                  8.0
+                ],
+                "color": "#777777",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 8,
+          "spread": 18.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "weapon",
+          "verb": "present",
+          "at": "center",
+          "to": "far",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "far",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "aerial",
+      "on": "weapon",
+      "marks": [
+        {
+          "kind": "path",
+          "on": "cargo-plane",
+          "to": "",
+          "color": ""
+        }
+      ],
+      "callouts": [],
+      "beats": []
+    },
+    "2": {
+      "scene": 2,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "far",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "weapon",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "parachute",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "follow",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "6": {
+      "scene": 6,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "7": {
+      "scene": 7,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "13": {
+      "scene": 13,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "orbit",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "14": {
+      "scene": 14,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "low_angle",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "23": {
+      "scene": 23,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "reveal",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "27": {
+      "scene": 27,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "28": {
+      "scene": 28,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "weapon",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "parachute",
+          "verb": "present",
+          "at": "left",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "orbit",
+      "on": "weapon",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "30": {
+      "scene": 30,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "parachute",
+          "verb": "move",
+          "at": "center",
+          "to": "back",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "parachute",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "pull the entire pallet backward out",
+          "actors": [
+            {
+              "entity": "parachute",
+              "verb": "open",
+              "to": "back",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "follow",
+          "on": "parachute"
+        }
+      ]
+    },
+    "31": {
+      "scene": 31,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "parachute",
+          "verb": "present",
+          "at": "center",
+          "to": "far",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "follow",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "35": {
+      "scene": 35,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "parachute",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "weapon",
+          "verb": "present",
+          "at": "left",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "parachute",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "deploy instantly",
+          "actors": [
+            {
+              "entity": "parachute",
+              "verb": "present",
+              "to": "",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "push_in",
+          "on": "parachute"
+        }
+      ]
+    },
+    "36": {
+      "scene": 36,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "weapon",
+          "verb": "fall",
+          "at": "center",
+          "to": "far",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "parachute",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "follow",
+      "on": "weapon",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "separates cleanly",
+          "actors": [
+            {
+              "entity": "weapon",
+              "verb": "fall",
+              "to": "far",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "follow",
+          "on": "weapon"
+        }
+      ]
+    },
+    "37": {
+      "scene": 37,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "aerial",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "41": {
+      "scene": 41,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "44": {
+      "scene": 44,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "49": {
+      "scene": 49,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "53": {
+      "scene": 53,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "approach",
+          "at": "far",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "weapon",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "follow",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "54": {
+      "scene": 54,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "55": {
+      "scene": 55,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "weapon",
+          "verb": "present",
+          "at": "center",
+          "to": "far",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "parachute",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "aerial",
+      "on": "weapon",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "watching the parachutes extract",
+          "actors": [
+            {
+              "entity": "weapon",
+              "verb": "present",
+              "to": "far",
+              "state": "normal",
+              "face": ""
+            },
+            {
+              "entity": "parachute",
+              "verb": "move",
+              "to": "far",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "follow",
+          "on": "weapon"
+        }
+      ]
+    },
+    "56": {
+      "scene": 56,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "59": {
+      "scene": 59,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "60": {
+      "scene": 60,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "63": {
+      "scene": 63,
+      "place": "mountain-range",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "cargo-plane",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "cargo-plane",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    }
+  },
+  "direction": {
+    "1": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "aerial",
+          "on": "weapon"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "2": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "6": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "7": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "13": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "14": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "23": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "27": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "28": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "orbit",
+          "on": "weapon"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "30": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "parachute"
+        },
+        {
+          "move": "follow",
+          "on": "parachute",
+          "cue": "pull the entire pallet backward out"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "31": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "35": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "push_in",
+          "on": "parachute"
+        },
+        {
+          "move": "push_in",
+          "on": "parachute",
+          "cue": "deploy instantly"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "36": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "weapon"
+        },
+        {
+          "move": "follow",
+          "on": "weapon",
+          "cue": "separates cleanly"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "37": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "41": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "44": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "49": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "53": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "54": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "55": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "weapon"
+        },
+        {
+          "move": "follow",
+          "on": "weapon",
+          "cue": "watching the parachutes extract"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "56": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "59": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "60": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "63": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "cargo-plane"
+        },
+        {
+          "move": "push_in",
+          "on": "cargo-plane",
+          "cue": "figure"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    }
+  }
+}

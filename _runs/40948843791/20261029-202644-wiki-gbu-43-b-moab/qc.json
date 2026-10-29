@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "coverage": "warn",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scenes 11-13 are words on screen with no picture",
+    "scenes 60-62 are words on screen with no picture",
+    "scene 1 at 2.9s: Subject is too small and difficult to read on a phone.",
+    "scene 1 at 7.9s: Subject is too small and difficult to read on a phone.",
+    "scene 28 at 208.6s: Subject is too small and difficult to read on a phone.",
+    "scene 36 at 254.2s: Subject is too small and lacks clear lighting/detail.",
+    "scene 36 at 257.9s: Subject is too small and difficult to read on a phone.",
+    "scene 55 at 406.5s: The subject (weapon) is unrecognizable and lacks clear detail.",
+    "scene 59 at 440.7s: Subject is missing; frame is mostly black and empty.",
+    "scene 59 at 445.1s: Subject is missing; frame is mostly black and empty.",
+    "3D covers 8% of the runtime, under the 75% target",
+    "3D scenes [59] look bare (environment richness under 40)",
+    "3D scenes [36] have little moving in the picture beyond the camera (animation under 40)",
+    "the picture barely changes from 36s to 43s"
+  ],
+  "repair": [],
+  "repaired": []
+}

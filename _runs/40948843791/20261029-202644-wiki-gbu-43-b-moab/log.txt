@@ -1,0 +1,104 @@
+fetching Wikipedia article
+2 article images available
+warning: openverse image search failed for 'GBU-43/B MOAB': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+4 more freely licensed photos of the subject: commons
+writing script
+script written by gemini-3.5-flash-lite: 1107 words
+sharpening title, hook and thumbnail text
+title: "How the US built the largest conventional bomb in history" (viewer's question: How did the US military build the largest conventional bomb in history?)
+checking facts against the source
+fact check found: scene 17: unsupported claim "Under 9 Weeks"; scene 22: unsupported claim "twenty-one-foot monster"; scene 23: unsupported claim "42 Days Total"; scene 32: unsupported claim "Grid fins at the tail snap open to stabilize the weapon during its long descent to the target."; scene 57: unsupported claim "Officials reported that the blast completely destroyed the tunnel complex and eliminated dozens of enemy combatants."; scene 61: unsupported claim "Local officials reported that the colossal explosion killed nearly one hundred militants without causing any civilian casualties in the valley."; scene 62: unsupported claim "Military analysts noted that the weapon had remained unused for over a decade primarily due to strict fears of civilian casualties."
+facts check out
+reading the story: what it shows
+story: a modified cargo plane, a twenty-one-foot weapon, massive parachute extraction system; 8 moments
+planning the visuals
+visual plan (model): 24 3D, 10 2.5D, 29 2D (38% of the runtime in 3D, aiming for 75%); 3D: stage fall, stage move, stage present, stage present, stage present, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: 'Merrel MOAB 3 Boot' (sketchfab) is not a moab: Shows a shoe instead of a MOAB bomb
+assets: 'Bedform trough cross sets, Kayenta Fm., Moab' (sketchfab) is not a moab: Shows a landscape/rock formation instead of a bomb.
+assets: 'Bedform cross sets, Kayenta near Moab' (sketchfab) is not a moab: Shows a rock formation and university logos instead of a bomb.
+assets: 'Bed form cross strata, Kayenta Formation, Moab' (sketchfab) is not a moab: Shows a rock fragment and a logo instead of a bomb
+assets: 'MOAB' (sketchfab) is not a moab: contains text/logo on the object
+assets: 'Atomic Bomb - Easter Freebie' (sketchfab) is not a bomb: Does not have grid fins; looks like a different object.
+assets: 'Vitamin bomb: The Banana bomb!' (sketchfab) is not a bomb: Shows a banana with liquid splashes, not a bomb.
+assets: 'bomb' (sketchfab) is not a bomb: contains text on the object
+assets: 'Vitamin bomb: The Brinjal bomb!' (sketchfab) is not a bomb: Shows sliced eggplants instead of a bomb
+assets: 'Simple C4- Bomb' (sketchfab) is not a bomb: Shows a makeshift dynamite bomb, not a conventional aerial bomb.
+assets: a twenty-one-foot weapon -> 'Nuclear Bomb' from sketchfab (by, 407 triangles, 0 animations)
+assets: 'Parachute Deployment Test' (sketchfab) is not a parachute: Object is too small and unrecognizable
+assets: 'Army Parachute' (sketchfab) is not a parachute: Wrong color; subject must be white and orange fabric.
+assets: 'Parachute' (sketchfab) can't be used: only 144 triangles
+assets: no vision check could be made (first candidate 'Parachute Simple'); massive parachute extraction system stays painted this time
+assets: no usable model of massive parachute extraction system (parachute, extraction parachute, drogue parachute): its scenes stay painted
+building the story world: 3 entities for 24 scenes
+scene director: cinematic (dramatic, strength 0.75); scene 1: aerial; scene 2: track; scene 6: track; scene 7: track; scene 13: track; scene 14: track; scene 23: track; scene 27: track; scene 28: orbit; scene 30: track/follow; scene 31: track; scene 35: push_in/push_in; scene 36: track/follow; scene 37: track; scene 41: track; scene 44: track; scene 49: track; scene 53: track; scene 54: track; scene 55: track/follow; scene 56: track; scene 59: track; scene 60: track; scene 63: track/push_in
+story world (noir): cast model, sets model, direction model; cargo-plane as vehicle, weapon as object, parachute as object
+voicing 63 scenes with kokoro
+fetching visuals
+photo wiki6.jpg left out: Shows a pet bakery, unrelated to the bomb subject.
+warning: openverse image search failed for 'GBU-43/B MOAB The Origin': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+warning: openverse image search failed for 'GBU-43/B MOAB': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+warning: openverse image search failed for 'GBU-43/B MOAB The Challenge': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+warning: openverse image search failed for 'GBU-43/B MOAB': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+warning: openverse image search failed for 'GBU-43/B MOAB The Question': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+photo commons11.jpg left out: Shows a pet bakery, unrelated to bombs or warfare.
+photo commons11.jpg left out: Shows a museum sign for Moab, unrelated to bombs.
+warning: openverse image search failed for 'GBU-43/B MOAB engineer writing calculations on a whiteboard quickly': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+warning: loc image search failed for 'GBU-43/B MOAB engineer writing calculations on a whiteboard quickly': HTTPSConnectionPool(host='www.loc.gov', port=443): Read timed out.
+warning: openverse image search failed for 'GBU-43/B MOAB massive bomb on military testing ground': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+photo p50.jpg left out: Shows Blue Angels jets and smoke, not bombs or historical explosives.
+photo p50.jpg left out: Shows a rocket pod, not a T-12 Cloudmaker or MOAB.
+warning: openverse image search failed for 'GBU-43/B MOAB The Aftermath': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+warning: openverse image search failed for 'GBU-43/B MOAB Delayed Deployment': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
+visuals: 8 Wikipedia and freely licensed images, 24 stock, 31 scenes on plain background
+collage: 10 photos styled, 7 with a cut-out subject
+drawing story scenes (cloudflare)
+warning: no background art for scene 5: image generation failed: 429: the free daily image allowance is used up
+warning: no art for 'a military leader in a desert uniform': image generation failed: the free daily image allowance is used up
+warning: no background art for scene 15: image generation failed: the free daily image allowance is used up
+warning: no art for 'a man in a collared shirt holding blueprints': image generation failed: the free daily image allowance is used up
+warning: no background art for scene 21: image generation failed: the free daily image allowance is used up
+warning: no art for 'a giant aluminum bomb casing being welded': image generation failed: the free daily image allowance is used up
+0 illustrations drawn
+relevance: checking 24 3D scenes by eye
+relevance: no vision model able to judge 3D was free for scenes [59]; they keep their 3D unchecked
+relevance: filming scenes [2, 6, 13, 14, 23, 31, 37, 41, 49, 53, 54, 56, 60] again, closer on their subject
+scene 2: 3D dropped: frame check: The subject airplane is not visible in the frame.
+scene 6: 3D dropped: frame check: No airplane or light aircraft is visible in the frame.
+scene 7: 3D dropped: frame check: No airplane or light aircraft is visible in the frame.
+scene 13: 3D dropped: frame check: No airplane or light aircraft is visible in the frame.
+scene 14: 3D dropped: frame check: No airplane or light aircraft is visible in the frame.
+scene 23: 3D dropped: frame check: No airplane or light aircraft is visible in the frame.
+scene 27: 3D dropped: frame check: The airplane is not visible; frame is mostly black.
+scene 30: 3D dropped: frame check: The object is a sphere, not a parachute.
+scene 31: 3D dropped: frame check: The airplane is not visible in the frame.
+scene 35: 3D dropped: frame check: The object looks like a ball or buoy, not a parachute.
+scene 37: 3D dropped: frame check: The subject airplane is not visible in the frame.
+scene 41: 3D dropped: frame check: Subject airplane is not visible in the frame
+scene 44: 3D dropped: frame check: No airplane or light aircraft is visible in the frame.
+scene 49: 3D dropped: frame check: The subject (airplane) is not visible in the frame.
+scene 53: 3D dropped: frame check: The subject (airplane) is not visible in the frame.
+scene 54: 3D dropped: frame check: Subject airplane is not visible in the frame
+scene 56: 3D dropped: frame check: The subject, an airplane, is not visible in the frame.
+scene 60: 3D dropped: frame check: No airplane or light aircraft is visible in the frame.
+scene 63: 3D dropped: frame check: Subject not visible; frame is mostly a dark rectangle.
+art direction: noir
+quality: scenes 11-13 are words on screen with no picture
+quality: scenes 60-62 are words on screen with no picture
+rendering 500s long video
+look: scene 1 at 2.9s: Subject is too small and difficult to read on a phone.
+look: scene 1 at 7.9s: Subject is too small and difficult to read on a phone.
+look: scene 28 at 208.6s: Subject is too small and difficult to read on a phone.
+look: scene 36 at 254.2s: Subject is too small and lacks clear lighting/detail.
+look: scene 36 at 257.9s: Subject is too small and difficult to read on a phone.
+look: scene 55 at 406.5s: The subject (weapon) is unrecognizable and lacks clear detail.
+look: scene 59 at 440.7s: Subject is missing; frame is mostly black and empty.
+look: scene 59 at 445.1s: Subject is missing; frame is mostly black and empty.
+3D coverage: 8% of the runtime in 3D (target 75%), 8% moving on its own, 5 3D shots; environment richness 67, animation quality 60
+quality: 3D covers 8% of the runtime, under the 75% target
+quality: 3D scenes [59] look bare (environment richness under 40)
+quality: 3D scenes [36] have little moving in the picture beyond the camera (animation under 40)
+rendering thumbnail
+thumbnail: cutout take
+warning: the picture barely changes from 36s to 43s
+done: approved

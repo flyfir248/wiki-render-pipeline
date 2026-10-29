@@ -1,0 +1,195 @@
+{
+  "entities": [
+    {
+      "id": "cargo-plane",
+      "name": "a modified cargo plane",
+      "kind": "light aircraft",
+      "search": [
+        "mc-130",
+        "cargo aircraft",
+        "airplane"
+      ],
+      "look": "Four-engine turboprop military transport aircraft, gray camouflage, large fuselage, high wings.",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        27,
+        28,
+        31,
+        35,
+        53
+      ]
+    },
+    {
+      "id": "weapon",
+      "name": "a twenty-one-foot weapon",
+      "kind": "weapon",
+      "search": [
+        "gbu-43",
+        "moab",
+        "bomb"
+      ],
+      "look": "Massive twenty-one-foot conventional bomb with grid fins and thin aluminum casing.",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        9,
+        11,
+        12,
+        16,
+        17,
+        20,
+        22,
+        24,
+        25,
+        26,
+        28,
+        29,
+        32,
+        34,
+        35,
+        36,
+        38,
+        39,
+        40,
+        43,
+        45,
+        46,
+        47,
+        48,
+        51,
+        52,
+        53,
+        55,
+        58,
+        62
+      ]
+    },
+    {
+      "id": "parachute",
+      "name": "massive parachute extraction system",
+      "kind": "object",
+      "search": [
+        "parachute",
+        "extraction parachute",
+        "drogue parachute"
+      ],
+      "look": "Large military cargo extraction parachutes, white and orange fabric.",
+      "certain": true,
+      "scenes": [
+        2,
+        12,
+        21,
+        28,
+        29,
+        30,
+        31,
+        33,
+        35,
+        36,
+        39,
+        42,
+        46,
+        51,
+        52,
+        55,
+        58
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "mountain-range",
+      "name": "rugged mountain range",
+      "look": "Rugged, barren mountain ranges with steep rocky slopes and deep valleys under daylight.",
+      "scenes": []
+    }
+  ],
+  "moments": [
+    {
+      "scene": 1,
+      "entity": "weapon",
+      "place": "mountain-range",
+      "action": "releases a twenty-one-foot weapon over a rugged mountain range",
+      "motion": "fall",
+      "cue": "A modified cargo plane releases a twenty-one-foot weapon over a rugged mountain range",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 2,
+      "entity": "cargo-plane",
+      "place": "mountain-range",
+      "action": "flies over a rugged mountain range",
+      "motion": "move",
+      "cue": "A modified cargo plane flies over a rugged mountain range in Afghanistan",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 28,
+      "entity": "weapon",
+      "place": "",
+      "action": "loaded horizontally onto a specialized airdrop platform",
+      "motion": "present",
+      "cue": "Technicians loaded the massive weapon horizontally onto a specialized airdrop platform",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 30,
+      "entity": "parachute",
+      "place": "",
+      "action": "pull the entire pallet backward out",
+      "motion": "move",
+      "cue": "Small parachutes pull the entire pallet backward out of the open rear ramp",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 35,
+      "entity": "parachute",
+      "place": "",
+      "action": "deploy instantly as the pallet clears",
+      "motion": "move",
+      "cue": "Specialized extraction parachutes deploy instantly as the pallet clears the rear ramp",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 36,
+      "entity": "weapon",
+      "place": "",
+      "action": "separates cleanly from its delivery system",
+      "motion": "fall",
+      "cue": "The massive bomb separates cleanly from its delivery system to begin its unpowered fall",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 53,
+      "entity": "cargo-plane",
+      "place": "mountain-range",
+      "action": "carried the weapon toward the rugged mountains",
+      "motion": "move",
+      "cue": "an MC-130 cargo plane carried the weapon toward the rugged mountains of Afghanistan",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 55,
+      "entity": "weapon",
+      "place": "mountain-range",
+      "action": "deployed over the valley",
+      "motion": "fall",
+      "cue": "The crew deployed the twenty-one-foot weapon over the valley",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

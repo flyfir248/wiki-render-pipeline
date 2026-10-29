@@ -1,0 +1,92 @@
+{
+  "warnings": [
+    "scene 1 at 2.9s: Subject is too small and difficult to read on a phone.",
+    "scene 1 at 7.9s: Subject is too small and difficult to read on a phone.",
+    "scene 28 at 208.6s: Subject is too small and difficult to read on a phone.",
+    "scene 36 at 254.2s: Subject is too small and lacks clear lighting/detail.",
+    "scene 36 at 257.9s: Subject is too small and difficult to read on a phone.",
+    "scene 55 at 406.5s: The subject (weapon) is unrecognizable and lacks clear detail.",
+    "scene 59 at 440.7s: Subject is missing; frame is mostly black and empty.",
+    "scene 59 at 445.1s: Subject is missing; frame is mostly black and empty."
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 2.91,
+      "contrast": 19.8,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is too small and difficult to read on a phone."
+    },
+    {
+      "scene": 1,
+      "at": 7.94,
+      "contrast": 26.3,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is too small and difficult to read on a phone."
+    },
+    {
+      "scene": 28,
+      "at": 204.48,
+      "contrast": 38.9,
+      "burnt": 0.0
+    },
+    {
+      "scene": 28,
+      "at": 208.61,
+      "contrast": 35.9,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is too small and difficult to read on a phone."
+    },
+    {
+      "scene": 36,
+      "at": 254.24,
+      "contrast": 56.1,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is too small and lacks clear lighting/detail."
+    },
+    {
+      "scene": 36,
+      "at": 257.91,
+      "contrast": 42.5,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is too small and difficult to read on a phone."
+    },
+    {
+      "scene": 55,
+      "at": 406.49,
+      "contrast": 52.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "The subject (weapon) is unrecognizable and lacks clear detail."
+    },
+    {
+      "scene": 55,
+      "at": 410.14,
+      "contrast": 54.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 59,
+      "at": 440.65,
+      "contrast": 45.6,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is missing; frame is mostly black and empty."
+    },
+    {
+      "scene": 59,
+      "at": 445.06,
+      "contrast": 47.3,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is missing; frame is mostly black and empty."
+    }
+  ]
+}

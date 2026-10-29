@@ -1,0 +1,664 @@
+{
+  "format": "long",
+  "duration": 499.7,
+  "target_3d": 0.75,
+  "share_3d": 0.08,
+  "share_animated": 0.08,
+  "share_subject_moving": 0.031,
+  "share_matched": 1.0,
+  "share_library_models": 1.0,
+  "share_camera_moving": 0.08,
+  "share_2d": 0.92,
+  "shots_3d": 5,
+  "static": [],
+  "repeats": [],
+  "frozen": [],
+  "environment_richness": 66.8,
+  "animation_quality": 60.3,
+  "bare": [
+    59
+  ],
+  "lifeless": [
+    36
+  ],
+  "dropped_to_2d": [
+    2,
+    6,
+    7,
+    13,
+    14,
+    23,
+    27,
+    30,
+    31,
+    35,
+    37,
+    41,
+    44,
+    49,
+    53,
+    54,
+    56,
+    60,
+    63
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "seconds": 9.69,
+      "template": "world",
+      "kind": "3D",
+      "subject": "",
+      "secondary": [
+        "others moving"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "aerial",
+      "lead": "weapon",
+      "place": "mountain-range",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 15.88,
+      "environment_richness": 76.0,
+      "animation_quality": 71.2,
+      "inspection": {
+        "environment": {
+          "score": 76.0,
+          "edges": 0.141,
+          "empty": 0.097
+        },
+        "animation": {
+          "camera": 0.905,
+          "local": 0.174,
+          "moving": 0.59,
+          "cuts": 0,
+          "still_run": 2.25,
+          "score": 71.2
+        }
+      }
+    },
+    {
+      "scene": 2,
+      "start": 9.69,
+      "seconds": 10.86,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 3,
+      "start": 20.55,
+      "seconds": 7.4,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 4,
+      "start": 27.95,
+      "seconds": 7.89,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "start": 35.84,
+      "seconds": 7.7,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 6,
+      "start": 43.55,
+      "seconds": 7.04,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "start": 50.59,
+      "seconds": 7.53,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 8,
+      "start": 58.12,
+      "seconds": 6.47,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 9,
+      "start": 64.59,
+      "seconds": 6.36,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 10,
+      "start": 70.94,
+      "seconds": 8.04,
+      "template": "broll",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 11,
+      "start": 78.99,
+      "seconds": 7.77,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "start": 86.76,
+      "seconds": 8.45,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 13,
+      "start": 95.2,
+      "seconds": 8.11,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 14,
+      "start": 103.31,
+      "seconds": 8.11,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 15,
+      "start": 111.42,
+      "seconds": 7.02,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 16,
+      "start": 118.44,
+      "seconds": 7.02,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 17,
+      "start": 125.46,
+      "seconds": 7.35,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "start": 132.81,
+      "seconds": 7.75,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 19,
+      "start": 140.56,
+      "seconds": 8.0,
+      "template": "process",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "start": 148.56,
+      "seconds": 7.04,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 21,
+      "start": 155.6,
+      "seconds": 6.47,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 22,
+      "start": 162.07,
+      "seconds": 4.87,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 23,
+      "start": 166.93,
+      "seconds": 7.66,
+      "template": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 24,
+      "start": 174.59,
+      "seconds": 7.33,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 25,
+      "start": 181.93,
+      "seconds": 7.33,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "start": 189.26,
+      "seconds": 6.34,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "start": 195.59,
+      "seconds": 6.51,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 28,
+      "start": 202.1,
+      "seconds": 7.94,
+      "template": "world",
+      "kind": "3D",
+      "subject": "",
+      "secondary": [
+        "others moving"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "orbit",
+      "lead": "weapon",
+      "place": "mountain-range",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 26.49,
+      "environment_richness": 78.5,
+      "animation_quality": 62.9,
+      "inspection": {
+        "environment": {
+          "score": 78.5,
+          "edges": 0.168,
+          "empty": 0.19
+        },
+        "animation": {
+          "camera": 0.9,
+          "local": 0.161,
+          "moving": 0.431,
+          "cuts": 0,
+          "still_run": 1.5,
+          "score": 62.9
+        }
+      }
+    },
+    {
+      "scene": 29,
+      "start": 210.04,
+      "seconds": 7.17,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 30,
+      "start": 217.21,
+      "seconds": 6.02,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 31,
+      "start": 223.23,
+      "seconds": 6.04,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "start": 229.27,
+      "seconds": 5.1,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 33,
+      "start": 234.37,
+      "seconds": 6.59,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "start": 240.96,
+      "seconds": 3.8,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 35,
+      "start": 244.76,
+      "seconds": 7.36,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 36,
+      "start": 252.12,
+      "seconds": 7.06,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fall",
+      "secondary": [],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "weapon",
+      "place": "mountain-range",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 28.87,
+      "environment_richness": 74.9,
+      "animation_quality": 26.2,
+      "inspection": {
+        "environment": {
+          "score": 74.9,
+          "edges": 0.145,
+          "empty": 0.139
+        },
+        "animation": {
+          "camera": 0.245,
+          "local": 0.1,
+          "moving": 0.163,
+          "cuts": 4,
+          "still_run": 3.5,
+          "score": 26.2
+        }
+      }
+    },
+    {
+      "scene": 37,
+      "start": 259.18,
+      "seconds": 8.9,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 38,
+      "start": 268.08,
+      "seconds": 9.24,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 39,
+      "start": 277.32,
+      "seconds": 7.66,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 40,
+      "start": 284.98,
+      "seconds": 7.85,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 41,
+      "start": 292.83,
+      "seconds": 8.13,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 42,
+      "start": 300.96,
+      "seconds": 8.24,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 43,
+      "start": 309.19,
+      "seconds": 9.15,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 44,
+      "start": 318.35,
+      "seconds": 6.64,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 45,
+      "start": 324.98,
+      "seconds": 8.15,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 46,
+      "start": 333.13,
+      "seconds": 9.67,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 47,
+      "start": 342.8,
+      "seconds": 9.69,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 48,
+      "start": 352.49,
+      "seconds": 5.72,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 49,
+      "start": 358.21,
+      "seconds": 7.51,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 50,
+      "start": 365.72,
+      "seconds": 9.47,
+      "template": "comparison",
+      "kind": "2D"
+    },
+    {
+      "scene": 51,
+      "start": 375.19,
+      "seconds": 7.23,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 52,
+      "start": 382.42,
+      "seconds": 7.23,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 53,
+      "start": 389.66,
+      "seconds": 9.2,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 54,
+      "start": 398.85,
+      "seconds": 5.53,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 55,
+      "start": 404.38,
+      "seconds": 7.02,
+      "template": "world",
+      "kind": "3D",
+      "subject": "",
+      "secondary": [],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track/follow",
+      "lead": "weapon",
+      "place": "mountain-range",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 31.01,
+      "environment_richness": 75.2,
+      "animation_quality": 78.1,
+      "inspection": {
+        "environment": {
+          "score": 75.2,
+          "edges": 0.142,
+          "empty": 0.116
+        },
+        "animation": {
+          "camera": 0.792,
+          "local": 0.263,
+          "moving": 0.658,
+          "cuts": 7,
+          "still_run": 0.62,
+          "score": 78.1
+        }
+      }
+    },
+    {
+      "scene": 56,
+      "start": 411.4,
+      "seconds": 9.07,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 57,
+      "start": 420.47,
+      "seconds": 7.85,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 58,
+      "start": 428.32,
+      "seconds": 9.79,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 59,
+      "start": 438.11,
+      "seconds": 8.47,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "cargo-plane",
+      "place": "mountain-range",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 3.53,
+      "environment_richness": 31.8,
+      "animation_quality": 59.3,
+      "inspection": {
+        "environment": {
+          "score": 31.8,
+          "edges": 0.048,
+          "empty": 0.56
+        },
+        "animation": {
+          "camera": 0.27,
+          "local": 0.177,
+          "moving": 0.639,
+          "cuts": 0,
+          "still_run": 2.25,
+          "score": 59.3
+        }
+      }
+    },
+    {
+      "scene": 60,
+      "start": 446.58,
+      "seconds": 6.04,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 61,
+      "start": 452.62,
+      "seconds": 9.75,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 62,
+      "start": 462.37,
+      "seconds": 12.03,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 63,
+      "start": 474.41,
+      "seconds": 25.29,
+      "template": "statement",
+      "kind": "2D"
+    }
+  ]
+}

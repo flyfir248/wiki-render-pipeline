@@ -1,0 +1,694 @@
+{
+  "planner": "model",
+  "budget_seconds": 360.0,
+  "world_seconds": 170.3,
+  "dropped_for_budget": [],
+  "target_share": 0.75,
+  "world_share": 0.382,
+  "filled": [
+    6,
+    7,
+    13,
+    14,
+    23,
+    27,
+    31,
+    37,
+    41,
+    44,
+    49,
+    54,
+    56,
+    59,
+    60,
+    63
+  ],
+  "off_story": [
+    {
+      "scene": 2,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 28,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 30,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 35,
+      "subject": "rocket",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 53,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 55,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    },
+    {
+      "scene": 56,
+      "subject": "rocket",
+      "why": "no entity in this scene is that kind of thing"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "fall",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "A modified cargo plane releases a twenty-one-foot weapon over a rugged mountain range",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "A modified cargo plane flies over a rugged mountain range in Afghanistan",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 4,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "type": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 6,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 7,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 8,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 9,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 10,
+      "type": "broll",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 11,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 13,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 14,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 15,
+      "type": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 16,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 17,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 19,
+      "type": "process",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 21,
+      "type": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 22,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 23,
+      "type": "world",
+      "kind": "3D",
+      "overlay": "stat",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 24,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 25,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 28,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "Technicians loaded the massive weapon horizontally onto a specialized airdrop platform",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 29,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 30,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "room",
+      "weather": null,
+      "cue": "Small parachutes pull the entire pallet backward out of the open rear ramp",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 31,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 32,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 33,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 35,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "room",
+      "weather": null,
+      "cue": "Specialized extraction parachutes deploy instantly as the pallet clears the rear ramp",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 36,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "fall",
+      "setting": "room",
+      "weather": null,
+      "cue": "The massive bomb separates cleanly from its delivery system to begin its unpowered fall",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 37,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 38,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 39,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 40,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 41,
+      "type": "world",
+      "kind": "3D",
+      "overlay": "stat",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 42,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 43,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 44,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 45,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 46,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 47,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 48,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 49,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 50,
+      "type": "comparison",
+      "kind": "2D"
+    },
+    {
+      "scene": 51,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 52,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 53,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "an MC-130 cargo plane carried the weapon toward the rugged mountains of Afghanistan",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 54,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 55,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "fall",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "The crew deployed the twenty-one-foot weapon over the valley",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 56,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 57,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 58,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 59,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 60,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 61,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 62,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 63,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    }
+  ]
+}

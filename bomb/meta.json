@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "bomb",
+  "query": "bomb",
+  "source": "sketchfab",
+  "uid": "sketchfab:983f0611b6c54a329b09f3383d26d18a",
+  "title": "Nuclear Bomb",
+  "author": "FWTeastwood",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-983f0611b6c54a329b09f3383d26d18a",
+  "checked": "vision",
+  "triangles": 407,
+  "bytes": 2839212,
+  "size": [
+    7.9358,
+    8.1168,
+    24.1708
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "Massive twenty-one-foot conventional bomb with grid fins and thin aluminum casing.",
+  "added": "2026-10-29T20:29:58+00:00"
+}
