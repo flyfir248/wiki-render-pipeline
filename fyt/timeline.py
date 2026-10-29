@@ -127,7 +127,7 @@ def build_props(
         showCaptions=cfg.captions,
         showVisualizer=cfg.visualizer,
         badge=(script.series or None) if cfg.growth.series_badge else None,
-        subscribe=cfg.growth.subscribe_line.strip() or None,
+        subscribe=cfg.growth.subscribe_for(script.title) or None,
         endCard=round(end_card, 3),
     )
 

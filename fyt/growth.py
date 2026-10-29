@@ -216,6 +216,8 @@ fascinate its audience. 8-10: squarely in the niche with a surprising, story-sha
 ordinary. 0-4: off-niche (for example celebrities, sports seasons, companies, lists, places with nothing odd).
 Score 0 for anything about a recent death, a recent tragedy or disaster with living victims, current politics
 or elections, or a private person.
+Score at most 3 for a subject whose story is mainly about sex or sexual behaviour, suicide or self-harm, or
+gore: YouTube limits ads on it and shows it to fewer viewers, however it is told.
 {extra}"""
 
 
@@ -224,7 +226,8 @@ def score_topics(cfg: Config, candidates: list[tuple[str, int]], extra: str = ""
     guide = RANK_GUIDE.format(niche=cfg.channel.niche, audience=cfg.channel.audience, extra=extra)
     user = "Candidates (title | readers in the last 30 days):\n" + "\n".join(f"- {t} | {v}" for t, v in candidates)
     scores = llm.structured(llm.helping(cfg), guide, user, TopicScores, max_tokens=2500)
-    return {s.title: max(0, min(10, s.fit)) for s in scores.scores}
+    # a title that names it is held back even when the model scores it high ("Prostitution among animals")
+    return {s.title: max(0, min(3 if titles.UNSAFE.search(s.title) else 10, s.fit)) for s in scores.scores}
 
 
 def rank(fits: dict[str, int], views: dict[str, int], min_fit: int) -> list[str]:

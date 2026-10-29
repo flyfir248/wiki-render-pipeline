@@ -126,13 +126,32 @@ def publish_time(cfg: Config, slot: Slot, rng: random.Random | None = None) -> d
     return slot.at + timedelta(minutes=(rng or random).uniform(0, jitter) if jitter else 0)
 
 
+def spaced_time(cfg: Config, fmt: str, rng: random.Random | None = None, now: datetime | None = None) -> datetime:
+    """The soonest publish time for a video off the schedule (a bonus) that keeps schedule.min_gap_hours
+    from every other video of its format, scheduled or already public; within a day, else the time
+    farthest from them."""
+    now = now or utcnow()
+    start = now + timedelta(minutes=youtube.MIN_PUBLISH_LEAD_MINUTES)
+    jitter = cfg.youtube.publish_jitter_minutes
+    start += timedelta(minutes=(rng or random).uniform(0, jitter) if jitter else 0)
+    # (earliest, latest) each other video goes public: a slot not yet filled counts from its time to its jitter's end
+    others = [(t, t) for t in (datetime.fromisoformat(p.replace("Z", "+00:00")) for p in Uploads(cfg).publish_times(fmt == "long"))]
+    others += [(s.at, s.at + timedelta(minutes=jitter)) for s in upcoming_slots(cfg, now, hold=False) if s.kind == fmt]
+    gap = timedelta(hours=cfg.schedule.min_gap_hours)
+    nearest = lambda at: min((max(lo - at, at - hi, timedelta(0)) for lo, hi in others), default=gap)  # noqa: E731
+    candidates = [start + timedelta(minutes=15 * i) for i in range(4 * 24)]
+    return next((at for at in candidates if nearest(at) >= gap), None) or max(candidates, key=nearest)
+
+
 def _upload(
-    cfg: Config, job: Job, slot: Slot, rng: random.Random | None, now: datetime, kind: str | None = None
+    cfg: Config, job: Job, slot: Slot, rng: random.Random | None, now: datetime, kind: str | None = None,
+    exact: bool = False,
 ) -> bool | None:
-    """Upload a job into a slot. True on success, None when the daily quota ran out, False otherwise."""
+    """Upload a job into a slot (at the slot's time itself when `exact`, else up to the jitter after it).
+    True on success, None when the daily quota ran out, False otherwise."""
     # A long render can outlast a near slot; YouTube needs publishAt in the future.
     earliest = utcnow() + timedelta(minutes=youtube.MIN_PUBLISH_LEAD_MINUTES)
-    publish_at = max(publish_time(cfg, slot, rng), earliest)
+    publish_at = max(slot.at if exact else publish_time(cfg, slot, rng), earliest)
     try:
         video_id = pipeline.upload_job(cfg, job, publish_at=publish_at)
     except Exception as e:
@@ -405,6 +424,8 @@ def bonus(cfg: Config, now: datetime, rng, clock, started: float, budget: int, t
             print(f"not enough time left for a bonus {kind} video")
             continue
         min_fit = getattr(cfg.growth, BONUS_MIN_FIT[kind])
+        if kind == "short" and cfg.growth.bonus_short_min_fit is not None:
+            min_fit = cfg.growth.bonus_short_min_fit
         try:
             if kind == "news":
                 title = growth.pick_news(cfg, set(topics.titles()), min_fit, cfg.growth.news_min_chars)
@@ -432,8 +453,8 @@ def bonus(cfg: Config, now: datetime, rng, clock, started: float, budget: int, t
         topics.set(topic_id, "done", job.id)
         if job.meta.get("status") != "approved":
             continue
-        # Trending topics go out soon: at a random minute within the jitter window from now.
-        result = _upload(cfg, job, Slot(utcnow(), fmt), rng, now, kind=f"bonus-{kind}")
+        # Trending topics go out soon, but never on top of another video: the first time that keeps the gap.
+        result = _upload(cfg, job, Slot(spaced_time(cfg, fmt, rng), fmt), rng, now, kind=f"bonus-{kind}", exact=True)
         if result:
             budget -= 1
             made += 1

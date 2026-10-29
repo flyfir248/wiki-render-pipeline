@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import zlib
 from pathlib import Path
 from typing import Literal
 
@@ -227,6 +228,9 @@ class ScheduleConfig(BaseModel):
     # On this channel Shorts on trending topics got about twice the first-week views of evergreen ones.
     timely_slots: list[str] = Field(default_factory=list)
     timely_hold_hours: float = 10.0
+    # No two Shorts (and no two long videos) go public closer together than this. A bonus video on a
+    # trend goes out at the first time that keeps it, so it never lands on top of a scheduled one.
+    min_gap_hours: float = 3.0
 
 
 class GrowthConfig(BaseModel):
@@ -262,6 +266,9 @@ class GrowthConfig(BaseModel):
     bonus_shorts_per_day: int = 1
     bonus_longs_per_week: int = 1
     bonus_min_fit: int = 7  # 0-10
+    # The bonus Short is an extra on top of the schedule: only for a trend this strong (0-10; None for
+    # bonus_min_fit, which timely slots use).
+    bonus_short_min_fit: int | None = None
     bonus_long_min_fit: int = 9
     # A weekly long explainer on a recent news incident (from Wikipedia's "In the news" and most-read
     # articles, at least a day old), on top of the schedule, when one is strong enough.
@@ -276,9 +283,17 @@ class GrowthConfig(BaseModel):
     # stays seamless), on the long video's end card, and as a one-click subscribe link at the top of
     # each description. Empty for none.
     subscribe_line: str = ""
+    # Other ways of saying it, so not every video ends on the same words (YouTube's reviewers look for
+    # templated videos). Each video keeps one, picked from its title, on screen and in its description.
+    subscribe_lines: list[str] = []
     # Seconds a long video holds an end card after the narration, the space YouTube's end screen
     # (subscribe button, next video) covers. Add the end screen in YouTube Studio. 0 for none.
     end_card_seconds: float = 0.0
+
+    def subscribe_for(self, title: str) -> str:
+        """This video's subscribe line: the same one every time it is asked for, empty for none."""
+        lines = [x.strip() for x in [self.subscribe_line, *self.subscribe_lines] if x.strip()]
+        return lines[zlib.crc32(title.encode()) % len(lines)] if lines else ""
 
 
 class InstagramConfig(BaseModel):
