@@ -168,3 +168,37 @@ def test_a_long_video_drops_a_few_unbacked_scenes_and_a_thumbnail_claim():
     assert pipeline.without_failed_scenes(long, ['scene 1: wrong claim "x"']) is None
     short = long.model_copy(update={"chapters": [], "scenes": scenes[:12]})
     assert pipeline.without_failed_scenes(short, ['scene 3: x', 'scene 4: x', 'scene 5: x']) is None
+
+
+def test_made_up_choices_are_dropped_instead_of_costing_a_retry():
+    import json
+
+    from fyt import llm
+    from fyt.llm import ChapterScenes
+
+    reply = {"scenes": [{"narration": "The bomb fell.", "type": "story", "setting": "mountain",
+                         "actors": [{"thing": "airplane", "action": "cruise"}]}]}
+    try:
+        ChapterScenes.model_validate(reply)
+        raise AssertionError("expected the made-up values to fail")
+    except llm.ValidationError as e:
+        saved = llm._salvage(ChapterScenes, json.dumps(reply), e)
+    assert saved.scenes[0].setting is None and saved.scenes[0].narration == "The bomb fell."
+    assert saved.scenes[0].actors[0].thing == "airplane" and saved.scenes[0].actors[0].action == "none"
+    # A missing narration can't be saved: that still asks again.
+    bad = {"scenes": [{"type": "stat", "value": 3}]}
+    try:
+        ChapterScenes.model_validate(bad)
+    except llm.ValidationError as e:
+        assert llm._salvage(ChapterScenes, json.dumps(bad), e) is None
+
+
+def test_backup_models_are_looked_up_by_name(monkeypatch):
+    from fyt import llm
+    from fyt.config import BackupLLM
+
+    monkeypatch.setattr(llm, "_resolved", {})
+    monkeypatch.setattr(llm, "newest_model", lambda b, m: {"newest:deepseek-v4-flash": "deepseek-ai/deepseek-v4-flash"}.get(m))
+    b = BackupLLM(base_url="https://integrate.api.nvidia.com/v1", api_key_env="NVIDIA_API_KEY",
+                  models=["newest:nemotron-9", "newest:deepseek-v4-flash", "fixed/model"])
+    assert llm._models(b) == ["deepseek-ai/deepseek-v4-flash", "fixed/model"]

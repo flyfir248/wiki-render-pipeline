@@ -31,7 +31,7 @@ llm:
   backup:
     base_url: https://integrate.api.nvidia.com/v1
     api_key_env: NVIDIA_API_KEY
-    models: [openai/gpt-oss-120b, deepseek-ai/deepseek-v4-pro]
+    models: ["newest:nemotron-3-super", "newest:deepseek-v4-flash"]  # NVIDIA retires models often: looked up each run
   # Asked last, when every model above is rate limited or out of tokens for the day: Hugging Face's router
   # (billed past its small monthly free credit), then Cloudflare Workers AI's free daily allowance, with the
   # keys the picture checks already use.
@@ -59,7 +59,7 @@ long_llm:
   backup:
     base_url: https://integrate.api.nvidia.com/v1
     api_key_env: NVIDIA_API_KEY
-    models: [openai/gpt-oss-120b, deepseek-ai/deepseek-v4-pro]
+    models: ["newest:nemotron-3-super", "newest:deepseek-v4-flash"]  # NVIDIA retires models often: looked up each run
   last_resort:
     - base_url: https://api.groq.com/openai/v1
       api_key_env: GROQ_API_KEY

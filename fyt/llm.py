@@ -100,7 +100,7 @@ NEWEST = "newest:"  # a model named "newest:flash" is the provider's newest stab
 _SKIP_MODELS = ("image", "tts", "audio", "live", "embedding", "exp", "vision", "robotics")
 
 
-def newest_model(c: "LLMConfig", name: str) -> str | None:
+def newest_model(c, name: str) -> str | None:
     """`name` as is, or for "newest:<word>" the newest model the provider lists (GET /models) whose name has
     that word, preferring stable ones over previews. Providers retire models for new keys (Gemini 2.5 Flash
     was no longer offered to new users by late 2026), so a fixed name goes stale. None if none is listed."""
@@ -128,13 +128,29 @@ def newest_model(c: "LLMConfig", name: str) -> str | None:
     return max(fits, key=rank) if fits else None
 
 
+_resolved: dict[tuple[str, str], str | None] = {}  # (base_url, "newest:...") -> model id, once per run
+
+
+def _models(b) -> list[str]:
+    """A backup provider's models, with any "newest:<word>" looked up in its model list."""
+    out = []
+    for m in b.models:
+        if m.startswith(NEWEST):
+            if (b.base_url, m) not in _resolved:
+                _resolved[(b.base_url, m)] = newest_model(b, m)
+            m = _resolved[(b.base_url, m)]
+        if m and m not in out:
+            out.append(m)
+    return out
+
+
 def _chain(cfg: Config) -> list[Config]:
     """Who to ask, in order: the main model, the backup provider's models (when its key is set), then the
     fallback models on the main provider."""
     steps = [_with_model(cfg, cfg.llm.model)]
     b = cfg.llm.backup
     if b and b.models and os.environ.get(b.api_key_env) and b.base_url not in _SPENT:
-        for m in b.models:
+        for m in _models(b):
             steps.append(cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
                 "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None,
                 "last_resort": []})}))
@@ -143,7 +159,7 @@ def _chain(cfg: Config) -> list[Config]:
         if b.models and os.environ.get(b.api_key_env) and all(os.environ.get(v) for v in re.findall(r"\$(\w+)", b.base_url)):
             steps += [cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
                 "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None,
-                "last_resort": []})}) for m in b.models]
+                "last_resort": []})}) for m in _models(b)]
     return steps
 
 
@@ -244,6 +260,9 @@ def _openai_structured_once(
             print(f"rate limited by {c.base_url}; waiting {wait:.0f}s")
             time.sleep(wait)
             continue
+        if r.status_code in (404, 410) and "model" in r.text.lower():  # retired or unknown: not again this run
+            _EXHAUSTED.add((c.base_url, model))
+            raise ClaudeError(f"{c.base_url} returned {r.status_code}: {r.text[:300]}")
         if r.status_code == 402:  # out of credit: no use asking this provider again today
             _SPENT.add(c.base_url)
             print(f"{c.base_url} has no credit left; not asking it again this run")
@@ -269,6 +288,10 @@ def _openai_structured_once(
         try:
             answer = schema.model_validate_json(content)
         except ValidationError as e:
+            answer = _salvage(schema, content, e)
+            if answer is not None:
+                LAST_MODEL = model
+                return answer
             last_error = str(e)[:800]
             print(f"{model} reply did not match the schema ({' '.join(str(e).split())[:200]}); retrying")
             retry_note = f"\n\nYour previous reply did not match the schema:\n{last_error}\nReply with the corrected JSON object only."
@@ -276,6 +299,28 @@ def _openai_structured_once(
         LAST_MODEL = model
         return answer
     raise ClaudeError(f"{model} did not return a valid answer: {last_error}")
+
+
+def _salvage(schema: type[BaseModel], content: str, error: ValidationError):
+    """The answer with every made-up value in a choice field left out (an actor's action "cruise", a setting
+    "mountain"), when that is all that is wrong and those fields have defaults. Smaller models often invent
+    such values; a retry costs a request and often invents another. None when it can't be saved."""
+    if not all(err["type"] in ("literal_error", "enum") for err in error.errors()):
+        return None
+    try:
+        data = json.loads(content)
+        for err in error.errors():
+            *path, key = err["loc"]
+            node = data
+            for step in path:
+                node = node[step]
+            if isinstance(node, dict):
+                node.pop(key, None)
+            elif isinstance(node, list) and isinstance(key, int):
+                node[key] = None
+        return schema.model_validate(data)
+    except Exception:
+        return None
 
 
 def helping(cfg: Config) -> Config:
