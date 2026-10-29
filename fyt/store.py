@@ -53,6 +53,11 @@ class Topics:
     def find(self, topic: str) -> tuple[int, str] | None:
         return self.db.execute("select id, topic from topics where topic=?", (topic.strip(),)).fetchone()
 
+    def of_job(self, job: str) -> str | None:
+        """The topic a job was made from, or None."""
+        row = self.db.execute("select topic from topics where job=?", (job,)).fetchone()
+        return row[0] if row else None
+
     def mark_done(self, topic: str) -> None:
         """Record a topic as already made (it stays done if it was)."""
         self.add([topic])

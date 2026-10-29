@@ -4,9 +4,10 @@ so a failed run can be inspected and individual steps re-run."""
 from __future__ import annotations
 
 import json
+import os
 import random
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, wiki, worldgen, youtube
@@ -33,6 +34,7 @@ def make_video(
     """Topic -> rendered video + thumbnail + captions, ready for review/upload.
     `polish` (default: when the script is written here) sharpens title, hook and thumbnail text.
     `story`, a manifest already read from this same script, skips reading it again (a test re-render)."""
+    cfg = for_format(cfg)
     job = Job.create(cfg, topic)
     try:
         _make(cfg, job, topic, script, voice, script is None if polish is None else polish, story)
@@ -40,6 +42,18 @@ def make_video(
         job.update(status="failed", error=f"{type(e).__name__}: {e}")
         raise
     return job
+
+
+def for_format(cfg: Config) -> Config:
+    """The settings a video is made with: a long video uses `long_llm` when that model's key is set."""
+    alt = cfg.long_llm
+    if cfg.format != "long" or alt is None:
+        return cfg
+    key = "ANTHROPIC_API_KEY" if alt.provider == "anthropic" else alt.api_key_env
+    if not os.environ.get(key):
+        print(f"long_llm is set but {key} isn't; the long video uses the usual models")
+        return cfg
+    return cfg.model_copy(update={"llm": alt})
 
 
 def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False,
@@ -1193,8 +1207,12 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
 
 
 def long_topic(cfg: Config, topics: Topics) -> tuple[int, str] | None:
-    """A fresh article with enough material for a long video. The queue is filled with
-    Short-sized articles, so long videos pick their own."""
+    """The full story of a recent Short that did well (growth.long_from_shorts), else a fresh article with
+    enough material for a long video. The queue is filled with Short-sized articles, so long videos pick
+    their own."""
+    proven = proven_topic(cfg, topics)
+    if proven:
+        return proven
     titles = growth.pick_topics(
         cfg, 1, set(topics.titles()), min_chars=cfg.wikipedia.long_min_chars, performance=performance_summary(cfg)
     )
@@ -1202,6 +1220,55 @@ def long_topic(cfg: Config, topics: Topics) -> tuple[int, str] | None:
         return None
     topics.add([wiki.topic_for(titles[0])])
     return topics.find(wiki.topic_for(titles[0]))
+
+
+LONG_KINDS = ("long", "bonus-long", "bonus-news", "channel")  # uploads that aren't Shorts (or may not be)
+PROVEN_NOTE = "long-from-short"  # Shorts already given a long video (a JSON list of their topics)
+
+
+def proven_topic(cfg: Config, topics: Topics, now: datetime | None = None) -> tuple[int, str] | None:
+    """The topic of the recent Short with the most views, told again as a long video. On this channel a
+    few Shorts get several times the views of the rest (MOAB 1,125, a stolen trawler 1,031, against a
+    median of 61), while long videos on fresh articles got 2-40 views: the Short tests the topic for free.
+    None when it's off, stats can't be read, or no Short did well enough and has the material."""
+    g = cfg.growth
+    if not g.long_from_shorts or not youtube.can_manage():
+        return None
+    now = now or datetime.now(timezone.utc)
+    uploads = Uploads(cfg)
+    settled = (now - timedelta(days=g.long_from_short_settle_days)).isoformat(timespec="seconds")
+    shorts = {
+        r["youtube_id"]: r["job"]
+        for r in uploads.recent((now - timedelta(days=g.long_from_short_days)).isoformat(timespec="seconds"))
+        if r["kind"] not in LONG_KINDS and r["job"] and (r["publish_at"] or r["uploaded"]) <= settled
+    }
+    if not shorts:
+        return None
+    try:
+        rows = youtube.stats(list(shorts))
+    except Exception as e:  # without views there is nothing to go on; a fresh article it is
+        print(f"warning: could not read Short views for the long video's topic: {e}")
+        return None
+    done = set(json.loads(uploads.note(PROVEN_NOTE) or "[]"))
+    for r in sorted(rows, key=lambda r: r["views"], reverse=True):
+        if r["views"] < g.long_from_short_min_views:
+            break
+        topic = topics.of_job(shorts[r["id"]])
+        if not topic or topic in done or not topic.startswith(wiki.PREFIX):
+            continue  # a cut from a long video or a news Short, or this one already has its long video
+        try:
+            article = wiki.fetch_article(cfg, wiki.title_of(topic))
+        except Exception as e:
+            print(f"warning: could not read {topic}: {e}")
+            continue
+        done.add(topic)  # tried once, whatever happens next, so a topic that fails isn't picked every run
+        uploads.set_note(PROVEN_NOTE, json.dumps(sorted(done)))
+        if len(article.text) < g.long_from_short_min_chars:
+            print(f"the Short on {topic} did well ({r['views']} views) but its article is too thin for a long video")
+            continue
+        print(f"long video: the full story of a Short that did well: {r['title']} ({r['views']} views)")
+        return topics.find(topic)
+    return None
 
 
 _performance: dict[tuple, str] = {}  # one lookup per run: every video made in it gets the same answer

@@ -39,6 +39,13 @@ llm:
       api_key_env: CLOUDFLARE_API_TOKEN
       models: ["@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
 
+# Long videos can use their own model, asked first, once its key is a repository secret (unset: the
+# models above). A long script is a dozen big calls and the free tiers are often spent by the time it's
+# written. For example Claude (secret ANTHROPIC_API_KEY, billed per use, once a week):
+# long_llm:
+#   provider: anthropic
+#   model: claude-sonnet-5-5
+
 source: wikipedia
 wikipedia:
   list_pages:
@@ -93,6 +100,10 @@ growth:
   rank_topics: true         # pick articles by fit with the niche and Wikipedia readers
   min_topic_fit: 6          # 0-10
   cuts_per_long: 2          # Shorts cut from each long video, linking to it
+  # The weekly long video tells the full story of the recent Short with the most views (at least 300,
+  # public 2+ days, from the last 3 weeks), else a fresh article. In October the best Shorts got 1,000+
+  # views while long videos on fresh articles got 2-40.
+  long_from_shorts: true
   series:                   # a playlist each; every video is filed under one
     - Weird History
     - Strange Science
@@ -100,12 +111,14 @@ growth:
     - Unbelievable People
   bonus_shorts_per_day: 1   # extra Short on a trending topic that fits (if one does)
   bonus_short_min_fit: 8    # only for a strong trend: the two daily Shorts already follow what's trending
-  bonus_longs_per_week: 1   # extra long video, only for a very strong trending fit
+  # Off while the weekly long video gets the run time and the free model tokens: no long video went out
+  # after 17 Oct because the Shorts used them first. Bonus and news long videos got 2-16 views each.
+  bonus_longs_per_week: 0   # extra long video, only for a very strong trending fit
   bonus_min_fit: 7
   bonus_long_min_fit: 9
   # A weekly long explainer on a recent news incident (Wikipedia "In the news" and most read, at
   # least a day old). Factual and attributed, no speculation; see NEWS_GUIDE in fyt/llm.py.
-  news_longs_per_week: 1
+  news_longs_per_week: 0
   news_min_fit: 8
   # Turning viewers into subscribers: the series name on screen, the reason to subscribe over a Short's
   # last seconds and on a long video's end card, and a one-click subscribe link in every description.

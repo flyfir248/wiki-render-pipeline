@@ -436,6 +436,12 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
   playlist of that name (created the first time).
 - *Cuts:* each long video's strongest chapters become Shorts that link to the full video. They take
   the next regular Short slots.
+- *Long videos from Shorts that did well* (`growth.long_from_shorts`): the weekly long video tells the
+  full story of the recent Short with the most views (at least `long_from_short_min_views`, public for
+  two days, from the last `long_from_short_days`), when its article has the material. Each Short gets one
+  long video at most; with none that qualifies, a fresh article is picked as before.
+- *A model for long videos* (`long_llm`): long videos ask this model first once its key is set, so the
+  week's long script doesn't wait on free tiers the Shorts have spent.
 - *Timely slots* (`schedule.timely_slots`): a Short slot kept for what is in the news that day. It
   stays empty until `timely_hold_hours` before it goes live, then gets the trending article (most read
   yesterday, or today's anniversary) that fits the channel best, or the next evergreen topic when none
