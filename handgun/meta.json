@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "key": "handgun",
+  "query": "handgun",
+  "source": "sketchfab",
+  "uid": "sketchfab:eca27ed7524c44959cedf68186b10ad8",
+  "title": "Handgun",
+  "author": "Wilbruh",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-eca27ed7524c44959cedf68186b10ad8",
+  "checked": "vision",
+  "triangles": 18529,
+  "bytes": 3531720,
+  "size": [
+    0.0031,
+    0.0138,
+    0.0194
+  ],
+  "clips": [
+    "Empty Load & Dry Fire"
+  ],
+  "skinned": true,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "compact black handgun with a glowing trigger indicator",
+  "added": "2026-10-29T14:37:27+00:00"
+}
