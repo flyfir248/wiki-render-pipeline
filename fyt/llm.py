@@ -374,6 +374,7 @@ Propose {n} specific video topics. Each must be:
 - searchable (something people actually look up) or strongly curiosity-driven
 - explainable with data, charts, timelines, lists or comparisons (our visuals are motion graphics)
 - factual and verifiable; no medical/financial advice framed as instructions
+- not mainly about sex, suicide or gore (YouTube limits ads and reach on those)
 
 Already covered or queued -- do not repeat or closely paraphrase:
 {chr(10).join(f"- {t}" for t in avoid) or "- (none yet)"}

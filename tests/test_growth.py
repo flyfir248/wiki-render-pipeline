@@ -121,6 +121,13 @@ def test_a_failed_polish_keeps_the_video(monkeypatch, tmp_path):
     assert json.loads(job.file("script.json").read_text())["title"] == "Old title"
 
 
+def test_topics_youtube_holds_back_are_scored_low(monkeypatch):
+    calls = answer(monkeypatch, {"scores": [{"title": "Prostitution among animals", "fit": 9}, {"title": "Molasses flood", "fit": 9}]})
+    fits = growth.score_topics(Config(), [("Prostitution among animals", 5000), ("Molasses flood", 4000)])
+    assert fits == {"Prostitution among animals": 3, "Molasses flood": 9}
+    assert "sexual behaviour" in calls[0][0]
+
+
 def test_rank_prefers_fit_then_readers():
     fits = {"Molasses flood": 9, "Bruno Mars": 2, "Tanganyika laughter epidemic": 9, "Dull": 6}
     views = {"Molasses flood": 50_000, "Bruno Mars": 900_000, "Tanganyika laughter epidemic": 5_000, "Dull": 10}
