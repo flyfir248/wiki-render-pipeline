@@ -260,7 +260,7 @@ def _openai_structured_once(
             print(f"rate limited by {c.base_url}; waiting {wait:.0f}s")
             time.sleep(wait)
             continue
-        if r.status_code in (404, 410) and "model" in r.text.lower():  # retired or unknown: not again this run
+        if r.status_code in (404, 410):  # retired, unknown, or not open to this account: not again this run
             _EXHAUSTED.add((c.base_url, model))
             raise ClaudeError(f"{c.base_url} returned {r.status_code}: {r.text[:300]}")
         if r.status_code == 402:  # out of credit: no use asking this provider again today
