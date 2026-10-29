@@ -167,7 +167,7 @@ def description_footer(cfg: Config, script: Script) -> str:
     footer = ""
     link = _subscribe_link(cfg)
     if link:
-        footer += f"\n\n{cfg.growth.subscribe_line.strip()}: {link}"
+        footer += f"\n\n{cfg.growth.subscribe_for(script.title)}: {link}"
     if script.sources:
         footer += "\n\nSources:\n" + "\n".join(f"- {s}" for s in script.sources)
     if script.series:
@@ -179,7 +179,7 @@ def description_footer(cfg: Config, script: Script) -> str:
 
 def _subscribe_link(cfg: Config) -> str | None:
     """The one-click subscribe link for descriptions, when the line is set and the channel can be read."""
-    if not cfg.growth.subscribe_line.strip() or not authorised() or not can_manage():
+    if not cfg.growth.subscribe_for("") or not authorised() or not can_manage():
         return None
     try:
         return subscribe_url(channel_id())

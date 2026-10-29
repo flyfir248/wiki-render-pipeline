@@ -39,6 +39,19 @@ def test_short_carries_the_series_badge_and_subscribe_line_without_getting_longe
     assert props.endCard == 0 and props.duration == 6.0 + TAIL_SECONDS  # a Short has no end card
 
 
+def test_videos_vary_the_subscribe_line_and_keep_one_each(monkeypatch):
+    lines = ["Subscribe for a strange true story every day", "Follow for more true stories", "One weird true story a day"]
+    c = cfg(subscribe_line=lines[0], subscribe_lines=lines[1:])
+    picked = {c.growth.subscribe_for(f"Story {i}") for i in range(30)}
+    assert picked == set(lines)
+    monkeypatch.setattr(youtube, "authorised", lambda: True)
+    monkeypatch.setattr(youtube, "can_manage", lambda: True)
+    monkeypatch.setattr(youtube, "channel_id", lambda: "UC123")
+    s = script()
+    on_screen = build_props(c, s, SPANS, WORDS, {}, None, None).subscribe
+    assert f"{on_screen}: https://www.youtube.com" in build_body(c, s)["snippet"]["description"]
+
+
 def test_long_video_holds_an_end_card_after_the_voice():
     props = build_props(cfg("long", end_card_seconds=15), script(), SPANS, WORDS, {}, None, None)
     assert props.endCard == 15

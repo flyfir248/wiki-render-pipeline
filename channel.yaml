@@ -109,6 +109,11 @@ growth:
   # last seconds and on a long video's end card, and a one-click subscribe link in every description.
   series_badge: true
   subscribe_line: "Subscribe for a strange true story every day"
+  subscribe_lines:          # said instead on some videos, so they don't all end the same way
+    - "Follow for a weird true story every day"
+    - "Subscribe: one strange true story a day"
+    - "More true stories like this every day"
+    - "Subscribe for tomorrow's strange true story"
   end_card_seconds: 15      # add the end screen (subscribe + best video) in YouTube Studio
 
 # Shorts cross-posted as Instagram Reels, pointing viewers to the YouTube channel (fyt/instagram.py).

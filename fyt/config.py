@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import zlib
 from pathlib import Path
 from typing import Literal
 
@@ -276,9 +277,17 @@ class GrowthConfig(BaseModel):
     # stays seamless), on the long video's end card, and as a one-click subscribe link at the top of
     # each description. Empty for none.
     subscribe_line: str = ""
+    # Other ways of saying it, so not every video ends on the same words (YouTube's reviewers look for
+    # templated videos). Each video keeps one, picked from its title, on screen and in its description.
+    subscribe_lines: list[str] = []
     # Seconds a long video holds an end card after the narration, the space YouTube's end screen
     # (subscribe button, next video) covers. Add the end screen in YouTube Studio. 0 for none.
     end_card_seconds: float = 0.0
+
+    def subscribe_for(self, title: str) -> str:
+        """This video's subscribe line: the same one every time it is asked for, empty for none."""
+        lines = [x.strip() for x in [self.subscribe_line, *self.subscribe_lines] if x.strip()]
+        return lines[zlib.crc32(title.encode()) % len(lines)] if lines else ""
 
 
 class InstagramConfig(BaseModel):
