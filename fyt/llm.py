@@ -96,6 +96,38 @@ def _out_for_the_day(r) -> bool:
     return bool(DAILY.search(r.text or "")) or wait > 120
 
 
+NEWEST = "newest:"  # a model named "newest:flash" is the provider's newest stable model with "flash" in its name
+_SKIP_MODELS = ("image", "tts", "audio", "live", "embedding", "exp", "vision", "robotics")
+
+
+def newest_model(c: "LLMConfig", name: str) -> str | None:
+    """`name` as is, or for "newest:<word>" the newest model the provider lists (GET /models) whose name has
+    that word, preferring stable ones over previews. Providers retire models for new keys (Gemini 2.5 Flash
+    was no longer offered to new users by late 2026), so a fixed name goes stale. None if none is listed."""
+    if not name.startswith(NEWEST):
+        return name
+    word = name[len(NEWEST):]
+    try:
+        r = requests.get(
+            f"{os.path.expandvars(c.base_url).rstrip('/')}/models",
+            headers={"Authorization": f"Bearer {os.environ.get(c.api_key_env, '')}"},
+            timeout=30,
+        )
+        r.raise_for_status()
+        ids = [m["id"].removeprefix("models/") for m in r.json().get("data", [])]
+    except Exception as e:
+        print(f"could not list the models at {c.base_url}: {e}")
+        return None
+    others = [w for w in ("lite", "pro", "flash") if w != word and w not in word]
+    fits = [i for i in ids if word in i and not any(w in i for w in others + list(_SKIP_MODELS))]
+
+    def rank(i: str) -> tuple:
+        m = re.search(r"-(\d+(?:\.\d+)*)(?:-|$)", i)  # gemini-3.1-flash -> (3, 1)
+        return ("preview" not in i, tuple(int(n) for n in m.group(1).split(".")) if m else (), -len(i))
+
+    return max(fits, key=rank) if fits else None
+
+
 def _chain(cfg: Config) -> list[Config]:
     """Who to ask, in order: the main model, the backup provider's models (when its key is set), then the
     fallback models on the main provider."""

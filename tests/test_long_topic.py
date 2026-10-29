@@ -121,3 +121,28 @@ def test_models_running_out_dont_burn_more_long_topics(cfg, monkeypatch):
     tried.clear()
     assert pipeline.make_next(cfg.model_copy(update={"format": "short"}), Topics(cfg)) is None
     assert len(tried) == 3  # a Short still tries other topics
+
+
+def test_the_newest_listed_model_is_used(monkeypatch):
+    from fyt import llm
+
+    listed = ["models/gemini-2.5-flash", "models/gemini-3.1-flash", "models/gemini-3.1-flash-lite", "models/gemini-3.5-flash-preview-11-2026",
+              "models/gemini-3.1-pro", "models/gemini-3.1-flash-image", "models/text-embedding-004"]
+
+    class Resp:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"data": [{"id": i} for i in listed]}
+
+    monkeypatch.setattr(llm.requests, "get", lambda url, headers, timeout: Resp())
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    alt = LLMConfig(provider="openai", base_url="https://g/v1beta/openai", model="newest:flash", api_key_env="GEMINI_API_KEY",
+                    fallback_models=["newest:flash-lite"])
+    cfg = Config(format="long", long_llm=alt)
+    used = pipeline.for_format(cfg).llm
+    assert (used.model, used.fallback_models) == ("gemini-3.1-flash", ["gemini-3.1-flash-lite"])  # stable over preview
+    assert llm.newest_model(alt, "gemini-2.5-flash") == "gemini-2.5-flash"  # a fixed name stays as written
+    listed[:] = ["models/gemini-3.5-flash-preview-11-2026"]
+    assert llm.newest_model(alt, "newest:flash") == "gemini-3.5-flash-preview-11-2026"  # a preview when that's all

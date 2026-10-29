@@ -55,7 +55,13 @@ def for_format(cfg: Config) -> Config:
     if not os.environ.get(key):
         print(f"long_llm is set but {key} isn't; the long video uses the usual models")
         return cfg
-    return cfg.model_copy(update={"llm": alt})
+    model = llm.newest_model(alt, alt.model)
+    fallbacks = [m for m in (llm.newest_model(alt, f) for f in alt.fallback_models) if m and m != model]
+    if model is None:  # nothing listed fits: its fallbacks lead, else the backup and last resorts do
+        model, fallbacks = (fallbacks[0], fallbacks[1:]) if fallbacks else (alt.model, [])
+    if model != alt.model or fallbacks != alt.fallback_models:
+        print(f"long video models: {', '.join([model, *fallbacks])}")
+    return cfg.model_copy(update={"llm": alt.model_copy(update={"model": model, "fallback_models": fallbacks})})
 
 
 def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False,
