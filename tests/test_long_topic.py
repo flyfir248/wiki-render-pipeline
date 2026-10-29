@@ -139,10 +139,32 @@ def test_the_newest_listed_model_is_used(monkeypatch):
     monkeypatch.setattr(llm.requests, "get", lambda url, headers, timeout: Resp())
     monkeypatch.setenv("GEMINI_API_KEY", "k")
     alt = LLMConfig(provider="openai", base_url="https://g/v1beta/openai", model="newest:flash", api_key_env="GEMINI_API_KEY",
-                    fallback_models=["newest:flash-lite"])
+                    fallback_models=["newest:flash-lite"], helper_models=["newest:flash-lite"])
     cfg = Config(format="long", long_llm=alt)
     used = pipeline.for_format(cfg).llm
     assert (used.model, used.fallback_models) == ("gemini-3.1-flash", ["gemini-3.1-flash-lite"])  # stable over preview
+    assert used.helper_models == ["gemini-3.1-flash-lite"]
     assert llm.newest_model(alt, "gemini-2.5-flash") == "gemini-2.5-flash"  # a fixed name stays as written
     listed[:] = ["models/gemini-3.5-flash-preview-11-2026"]
     assert llm.newest_model(alt, "newest:flash") == "gemini-3.5-flash-preview-11-2026"  # a preview when that's all
+
+
+def test_a_long_video_drops_a_few_unbacked_scenes_and_a_thumbnail_claim():
+    from fyt.models import Chapter, Script, ScriptScene
+
+    scenes = [ScriptScene(narration=f"line {i}.", type="statement", text="t") for i in range(1, 41)]
+    long = Script(title="The heaviest bomb ever dropped", description="D", tags=["a"], thumbnail_text="BUILT IN 9 WEEKS",
+                  thumbnail_kicker="K", thumbnail_query="q", scenes=scenes, sources=[],
+                  chapters=[Chapter(title="One", scene=0), Chapter(title="Two", scene=20)])
+    problems = ['scene 0: unsupported claim "BUILT IN 9 WEEKS"', 'scene 11: unsupported claim "nine weeks"',
+                'scene 23: wrong claim "One bomb replaced a squadron." (source says: ...)']
+    cut = pipeline.without_failed_scenes(long, problems)
+    assert len(cut.scenes) == 38 and "line 11." not in [s.narration for s in cut.scenes]
+    assert cut.thumbnail_text == "The heaviest bomb ever"
+    assert [(c.title, c.scene) for c in cut.chapters] == [("One", 0), ("Two", 19)]
+    assert cut.scenes[19].narration == "line 21."  # chapter two still starts where it did
+    # A claim in the title itself, or in the opening scene, still stops the video; so does a Short losing three.
+    assert pipeline.without_failed_scenes(long, ['scene 0: unsupported claim "heaviest bomb"']) is None
+    assert pipeline.without_failed_scenes(long, ['scene 1: wrong claim "x"']) is None
+    short = long.model_copy(update={"chapters": [], "scenes": scenes[:12]})
+    assert pipeline.without_failed_scenes(short, ['scene 3: x', 'scene 4: x', 'scene 5: x']) is None

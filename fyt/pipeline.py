@@ -59,9 +59,11 @@ def for_format(cfg: Config) -> Config:
     fallbacks = [m for m in (llm.newest_model(alt, f) for f in alt.fallback_models) if m and m != model]
     if model is None:  # nothing listed fits: its fallbacks lead, else the backup and last resorts do
         model, fallbacks = (fallbacks[0], fallbacks[1:]) if fallbacks else (alt.model, [])
-    if model != alt.model or fallbacks != alt.fallback_models:
-        print(f"long video models: {', '.join([model, *fallbacks])}")
-    return cfg.model_copy(update={"llm": alt.model_copy(update={"model": model, "fallback_models": fallbacks})})
+    helpers = [m for m in (llm.newest_model(alt, h) for h in alt.helper_models) if m]
+    if model != alt.model or fallbacks != alt.fallback_models or helpers != alt.helper_models:
+        print(f"long video models: {', '.join([model, *fallbacks])}; supporting calls: {', '.join(helpers) or model}")
+    update = {"model": model, "fallback_models": fallbacks, "helper_models": helpers}
+    return cfg.model_copy(update={"llm": alt.model_copy(update=update)})
 
 
 def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False,
@@ -487,18 +489,37 @@ MIN_SCENES_LEFT = 5
 
 def without_failed_scenes(script: Script, problems: list[str]) -> Script | None:
     """The script with the scenes that still fail the fact check taken out, when that is a clean cut:
-    every problem names a scene, the opening scene is not one of them, at most two go, and at least
-    MIN_SCENES_LEFT remain. Otherwise None, and the video stops. A claim cut is a claim not made."""
+    every problem names a scene, the opening scene is not one of them, at most two go (a tenth of a long
+    video's), and at least MIN_SCENES_LEFT remain. A claim only in the thumbnail text (scene 0) gives way to
+    the start of the checked title. Otherwise None, and the video stops. A claim cut is a claim not made."""
     bad = set()
+    thumbnail = script.thumbnail_text
     for p in problems:
-        m = re.match(r"scene (\d+):", p)
+        m = re.match(r'scene (\d+): \w+ claim "([^"]*)"', p) or re.match(r"scene (\d+):", p)
         if not m:
             return None
-        bad.add(int(m.group(1)))
+        k = int(m.group(1))
+        if k == 0:
+            claim = m.group(2).lower() if m.lastindex == 2 else ""
+            if not claim or claim not in thumbnail.lower() or claim in script.title.lower():
+                return None
+            thumbnail = " ".join(script.title.split()[:4])
+            continue
+        bad.add(k)
     n = len(script.scenes)
-    if 1 in bad or len(bad) > 2 or n - len(bad) < MIN_SCENES_LEFT or any(not 1 <= k <= n for k in bad):
+    most = max(2, n // 10) if script.chapters else 2
+    if 1 in bad or len(bad) > most or n - len(bad) < MIN_SCENES_LEFT or any(not 1 <= k <= n for k in bad):
         return None
-    return script.model_copy(update={"scenes": [sc for i, sc in enumerate(script.scenes, 1) if i not in bad]})
+    if script.chapters and bad:  # chapters start at scene indexes: keep them on the same scenes
+        gone = sorted(k - 1 for k in bad)
+        chapters = [c.model_copy(update={"scene": c.scene - sum(1 for g in gone if g < c.scene)}) for c in script.chapters]
+    else:
+        chapters = script.chapters
+    return script.model_copy(update={
+        "scenes": [sc for i, sc in enumerate(script.scenes, 1) if i not in bad],
+        "thumbnail_text": thumbnail,
+        "chapters": chapters,
+    })
 
 
 def read_story(cfg: Config, job: Job, script: Script, notes: str) -> "story_manifest.Manifest | None":

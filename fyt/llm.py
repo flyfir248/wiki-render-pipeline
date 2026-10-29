@@ -264,11 +264,13 @@ def _openai_structured_once(
         content = (r.json()["choices"][0]["message"]["content"] or "").strip()
         if content.startswith("```"):  # tolerate a fenced reply
             content = content.strip("`").removeprefix("json").strip()
+        if not content.startswith("{") and "{" in content:  # a sentence before or after the object (Gemini)
+            content = content[content.index("{"): content.rindex("}") + 1]
         try:
             answer = schema.model_validate_json(content)
         except ValidationError as e:
             last_error = str(e)[:800]
-            print(f"{model} reply did not match the schema; retrying")
+            print(f"{model} reply did not match the schema ({' '.join(str(e).split())[:200]}); retrying")
             retry_note = f"\n\nYour previous reply did not match the schema:\n{last_error}\nReply with the corrected JSON object only."
             continue
         LAST_MODEL = model

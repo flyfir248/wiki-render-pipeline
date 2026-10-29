@@ -49,6 +49,9 @@ long_llm:
   model: "newest:flash"
   api_key_env: GEMINI_API_KEY
   fallback_models: ["newest:flash-lite"]
+  # Flash's free daily allowance is small: visual planning, casting and translations go to Flash-Lite, so
+  # Flash is there for the script and the fact check.
+  helper_models: ["newest:flash-lite"]
   backup:
     base_url: https://api.groq.com/openai/v1
     api_key_env: GROQ_API_KEY
