@@ -101,6 +101,18 @@ def test_verify_reports_claims_that_stay_wrong(monkeypatch):
     assert problems and "two thirds" in problems[0]
 
 
+def test_a_fix_that_fails_leaves_the_scene_flagged_rather_than_stopping_the_check(monkeypatch):
+    def fake(cfg, system, user, schema, max_tokens=3000):
+        if schema is FactCheck:
+            return FactCheck(claims=[Claim(scene=2, claim="two thirds", verdict="wrong", correction="over 70%")])
+        return SceneFacts(narration=" ", heading="Krakatoa island", value=67, text="t")  # nothing left to say
+
+    monkeypatch.setattr(factcheck.llm, "structured", fake)
+    fixed, problems = factcheck.verify(Config(), script(), NOTES, log=lambda m: None)
+    assert problems == ['scene 2: wrong claim "two thirds" (source says: over 70%)']
+    assert fixed.scenes[1] == script().scenes[1]
+
+
 def test_title_claims_are_fixed(monkeypatch):
     def fake(cfg, system, user, schema, max_tokens=3000):
         if schema is FactCheck:

@@ -231,13 +231,18 @@ def verify(cfg: Config, script: Script, notes: str, log: Callable[[str], None] =
     flagged = sorted({c.scene for c in claims})
     for i in flagged:
         mine = [c for c in claims if c.scene == i]
-        if i == 0:
-            source = evidence(script.title + " " + script.thumbnail_text + " " + " ".join(c.claim for c in mine), chunks, cfg.llm.max_note_chars)
-            script = _fix_title(cfg, script, mine, source)
-            continue
-        query = json.dumps(scene_facts(scenes[i - 1]), ensure_ascii=False) + " " + " ".join(c.claim + " " + c.correction for c in mine)
-        source = evidence(query, chunks, cfg.llm.max_note_chars)
-        scenes[i - 1] = _fix_scene(cfg, scenes[i - 1], mine, source)
+        # A fix that fails (no model answered, or it left nothing to say) keeps the scene as it was: the
+        # re-check flags it again, and the caller decides whether the video can do without it.
+        try:
+            if i == 0:
+                source = evidence(script.title + " " + script.thumbnail_text + " " + " ".join(c.claim for c in mine), chunks, cfg.llm.max_note_chars)
+                script = _fix_title(cfg, script, mine, source)
+                continue
+            query = json.dumps(scene_facts(scenes[i - 1]), ensure_ascii=False) + " " + " ".join(c.claim + " " + c.correction for c in mine)
+            source = evidence(query, chunks, cfg.llm.max_note_chars)
+            scenes[i - 1] = _fix_scene(cfg, scenes[i - 1], mine, source)
+        except Exception as e:
+            log(f"could not fix scene {i}: {str(e)[:160]}")
     script = script.model_copy(update={"scenes": scenes})
     remaining = check(cfg, script, notes, only=set(flagged))
     return script, describe(remaining)
