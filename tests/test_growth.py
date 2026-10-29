@@ -81,6 +81,36 @@ def test_polish_ignores_a_made_up_series_and_long_hooks(monkeypatch):
     assert s.scenes[0].narration.startswith("Scene 0") and s.series is None
 
 
+def test_polish_passes_over_a_title_youtube_would_hold_back(monkeypatch):
+    cfg = Config(format="short")
+    calls = answer(
+        monkeypatch,
+        {
+            "viewer_question": "Why would a penguin pay for a mate?",
+            "subject": "penguins",
+            "titles": ["Stone heist: penguins at it again", "Why do penguins pay for mates in pebbles?"],
+            "best_title": "Pebble\u2011for\u2011sex: Adelie penguin\u2019s stone heist",
+            "thumbnail_text": "PAID IN PEBBLES",
+            "hook": "Some penguins trade a stone for a mate.",
+        },
+    )
+    logged = []
+    s = growth.polish(cfg, script(), log=logged.append)
+    assert s.title == "Why do penguins pay for mates in pebbles?"
+    assert "viewer's question" in calls[0][0] and "first 40 characters" in calls[0][0]
+    assert "Why would a penguin pay for a mate?" in logged[0] and "limits ads" in logged[0]
+
+
+def test_when_no_title_passes_the_editor_tries_once_more(monkeypatch):
+    cfg = Config(format="long")
+    bad = {"subject": "molasses", "titles": ["SEX and molasses: the sticky truth"], "best_title": "x", "thumbnail_text": "", "hook": ""}
+    calls = answer(monkeypatch, bad, {"titles": ["The day a wave of molasses flooded Boston"]})
+    assert growth.polish(cfg, script()).title == "The day a wave of molasses flooded Boston"
+    assert "limits ads" in calls[1][1]
+    answer(monkeypatch, bad, {"titles": ["Sexy molasses"]})
+    assert growth.polish(cfg, script()).title == "Old title"  # nothing passed: the script's own title stays
+
+
 def test_a_failed_polish_keeps_the_video(monkeypatch, tmp_path):
     cfg = Config(jobs_dir=str(tmp_path))
     answer(monkeypatch, RuntimeError("groq down"))
