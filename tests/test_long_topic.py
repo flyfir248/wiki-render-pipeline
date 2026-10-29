@@ -27,7 +27,7 @@ def short(cfg, topic, youtube_id, published="2026-10-22T14:00:00+00:00", kind="s
 @pytest.fixture
 def channel(monkeypatch):
     views = {}
-    monkeypatch.setattr(youtube, "stats", lambda ids: [{"id": i, "title": i, "views": views[i]} for i in ids])
+    monkeypatch.setattr(youtube, "stats", lambda ids: [{"id": i, "title": i, "views": views[i], "likes": 0, "comments": 0} for i in ids])
     texts = {}
     monkeypatch.setattr(wiki, "fetch_article", lambda cfg, title: wiki.Article(title=title, url="", text=texts.get(title, "x" * 20000)))
     return views, texts
@@ -77,3 +77,47 @@ def test_long_videos_use_their_own_model_once_its_key_is_set(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
     assert pipeline.for_format(cfg).llm.model == "claude-sonnet-5-5"
     assert pipeline.for_format(cfg.model_copy(update={"format": "short"})).llm == cfg.llm
+
+
+def test_a_long_video_that_didnt_get_made_is_tried_again_with_its_script(cfg, channel, monkeypatch):
+    from fyt import growth
+    from fyt.pipeline import load_script
+
+    views, _ = channel
+    short(cfg, "wiki:MOAB", "a")
+    views["a"] = 1125
+    topics = Topics(cfg)
+    assert pipeline.long_topic(cfg, topics)[1] == "wiki:MOAB"
+    script = load_script(pipeline.Path(__file__).resolve().parent.parent / "fixtures" / "demo_script_long.json")
+    pipeline.save_long_script(cfg, "wiki:MOAB", script)
+    pipeline.save_long_script(cfg, "wiki:Other", script)  # only the long video being made keeps its script
+    # The run failed after the script was written: the next run takes the same topic and script back.
+    monkeypatch.setattr(growth, "pick_topics", lambda *a, **k: pytest.fail("a fresh topic was picked"))
+    assert pipeline.long_topic(cfg, topics)[1] == "wiki:MOAB"
+    assert pipeline.saved_long_script(cfg, "wiki:MOAB").title == script.title
+    assert pipeline.saved_long_script(cfg, "wiki:Other") is None
+    assert pipeline.saved_long_script(cfg.model_copy(update={"format": "short"}), "wiki:MOAB") is None
+    for _ in range(pipeline.LONG_TRIES - 2):
+        assert pipeline.long_topic(cfg, topics)[1] == "wiki:MOAB"
+    # After LONG_TRIES runs it is given up and a new topic is picked.
+    monkeypatch.setattr(growth, "pick_topics", lambda *a, **k: ["Trawler"])
+    assert pipeline.long_topic(cfg, topics)[1] == "wiki:Trawler"
+    assert pipeline.saved_long_script(cfg, "wiki:MOAB") is None
+
+
+def test_models_running_out_dont_burn_more_long_topics(cfg, monkeypatch):
+    from fyt import llm
+
+    tried = []
+    monkeypatch.setattr(pipeline, "next_topic", lambda cfg, topics: (len(tried) + 1, f"wiki:T{len(tried)}"))
+
+    def make(cfg, topic):
+        tried.append(topic)
+        raise llm.RateLimited("429: out of tokens for the day")
+
+    monkeypatch.setattr(pipeline, "make_topic", make)
+    assert pipeline.make_next(cfg, Topics(cfg)) is None
+    assert tried == ["wiki:T0"]
+    tried.clear()
+    assert pipeline.make_next(cfg.model_copy(update={"format": "short"}), Topics(cfg)) is None
+    assert len(tried) == 3  # a Short still tries other topics

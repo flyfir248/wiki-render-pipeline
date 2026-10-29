@@ -442,6 +442,9 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
   long video at most; with none that qualifies, a fresh article is picked as before.
 - *A model for long videos* (`long_llm`): long videos ask this model first once its key is set, so the
   week's long script doesn't wait on free tiers the Shorts have spent.
+- *A long video that doesn't get made is picked up again:* when the free models run out partway, the next
+  run takes the same topic (up to four runs) instead of burning other topics, and once its script has been
+  written and fact checked it is kept, so a later failure doesn't cost the script again.
 - *Timely slots* (`schedule.timely_slots`): a Short slot kept for what is in the news that day. It
   stays empty until `timely_hold_hours` before it goes live, then gets the trending article (most read
   yesterday, or today's anniversary) that fits the channel best, or the next evergreen topic when none

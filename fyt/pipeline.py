@@ -41,6 +41,8 @@ def make_video(
     except Exception as e:
         job.update(status="failed", error=f"{type(e).__name__}: {e}")
         raise
+    if cfg.format == "long" and json.loads(Uploads(cfg).note(LONG_NEXT) or "{}").get("topic") == topic:
+        Uploads(cfg).set_note(LONG_NEXT, "")  # made: the next long video starts afresh
     return job
 
 
@@ -80,38 +82,43 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         subject = article.title if article else topic
         images = _more_images(cfg, job, images, subject)
         menu = wiki.image_menu(images)
+        saved = saved_long_script(cfg, topic)
         g = cfg.growth
-        two_part = (
-            cfg.format == "short" and article is not None and len(notes) >= g.two_part_min_chars
-            and random.random() < g.two_part_share
-        )
-        news = wiki.is_news_topic(topic)
-        two_part = two_part and not news
-        log(job, "writing a news explainer" if news else "writing part 1 of a two-part script" if two_part else "writing script")
-        script = _short_enough(
-            cfg, job, subject, notes, article is not None, menu, llm.PART1_NOTE if two_part else "", news=news
-        )
-        if two_part:
-            try:
-                previous = " ".join(s.narration for s in script.scenes)
-                note = llm.PART2_NOTE.format(previous=previous, message=script.core_message)
-                log(job, "writing part 2")
-                part2 = _short_enough(cfg, job, subject, notes, True, menu, note)
-                if cfg.fact_check:
-                    log(job, "checking part 2's facts against the source")
-                    part2, wrong = factcheck.verify(cfg, part2, notes, log=lambda m: log(job, m))
-                    if wrong:
-                        raise RuntimeError("part 2 failed the fact check: " + "; ".join(wrong))
-                job.file("part2.json").write_text(wiki_attribute(part2, article).model_dump_json(indent=2))
-                last = script.scenes[-1]
-                if "part two" not in last.narration.lower():
-                    script.scenes[-1] = last.model_copy(update={"narration": last.narration.rstrip() + " Part two is up next."})
-            except Exception as e:  # a single Short is still fine
-                log(job, f"warning: no part 2 ({e}); making a single Short")
-                two_part = False
-        if article:
+        if saved:
+            log(job, "using the script an earlier run wrote and checked for this long video")
+            script, written, polish, two_part = saved, False, False, False
+        else:
+            two_part = (
+                cfg.format == "short" and article is not None and len(notes) >= g.two_part_min_chars
+                and random.random() < g.two_part_share
+            )
+            news = wiki.is_news_topic(topic)
+            two_part = two_part and not news
+            log(job, "writing a news explainer" if news else "writing part 1 of a two-part script" if two_part else "writing script")
+            script = _short_enough(
+                cfg, job, subject, notes, article is not None, menu, llm.PART1_NOTE if two_part else "", news=news
+            )
+            if two_part:
+                try:
+                    previous = " ".join(s.narration for s in script.scenes)
+                    note = llm.PART2_NOTE.format(previous=previous, message=script.core_message)
+                    log(job, "writing part 2")
+                    part2 = _short_enough(cfg, job, subject, notes, True, menu, note)
+                    if cfg.fact_check:
+                        log(job, "checking part 2's facts against the source")
+                        part2, wrong = factcheck.verify(cfg, part2, notes, log=lambda m: log(job, m))
+                        if wrong:
+                            raise RuntimeError("part 2 failed the fact check: " + "; ".join(wrong))
+                    job.file("part2.json").write_text(wiki_attribute(part2, article).model_dump_json(indent=2))
+                    last = script.scenes[-1]
+                    if "part two" not in last.narration.lower():
+                        script.scenes[-1] = last.model_copy(update={"narration": last.narration.rstrip() + " Part two is up next."})
+                except Exception as e:  # a single Short is still fine
+                    log(job, f"warning: no part 2 ({e}); making a single Short")
+                    two_part = False
+        if article and not saved:
             script = wiki_attribute(script, article)
-        if news and cfg.growth.news_series:
+        if not saved and news and cfg.growth.news_series:
             script = script.model_copy(update={"series": cfg.growth.news_series})
     else:
         two_part = False
@@ -134,6 +141,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         has_substance(cfg, job, script)
     # the script as written and checked, before any visual is planned: a test can re-render from it
     job.file("written.json").write_text(script.model_dump_json(indent=2))
+    if written and cfg.format == "long":
+        save_long_script(cfg, topic, script)
     if given_story is not None:
         story = given_story
         job.file("manifest.json").write_text(story_manifest.dumps(story))
@@ -1156,6 +1165,11 @@ def make_next(cfg: Config, topics: Topics, attempts: int = 3) -> Job | None:
         except Exception as e:
             topics.set(topic_id, "failed")
             print(f"::warning::failed: {topic}: {e}")
+            if cfg.format == "long" and isinstance(e, llm.ClaudeError):
+                # the models are out of tokens or struggling: another topic would fail the same way, and this
+                # one is kept for the next run (LONG_NEXT)
+                print("the models can't write a long video right now; the next run tries again")
+                return None
             continue
         topics.set(topic_id, "done", job.id)
         return job
@@ -1210,16 +1224,47 @@ def long_topic(cfg: Config, topics: Topics) -> tuple[int, str] | None:
     """The full story of a recent Short that did well (growth.long_from_shorts), else a fresh article with
     enough material for a long video. The queue is filled with Short-sized articles, so long videos pick
     their own."""
-    proven = proven_topic(cfg, topics)
-    if proven:
-        return proven
-    titles = growth.pick_topics(
-        cfg, 1, set(topics.titles()), min_chars=cfg.wikipedia.long_min_chars, performance=performance_summary(cfg)
-    )
-    if not titles:
+    uploads = Uploads(cfg)
+    nxt = json.loads(uploads.note(LONG_NEXT) or "{}")
+    if nxt.get("topic") and nxt.get("tries", 0) < LONG_TRIES:
+        # the last run's long video didn't get made, most often because the free models ran out: same topic,
+        # and its script if it got that far
+        uploads.set_note(LONG_NEXT, json.dumps({**nxt, "tries": nxt.get("tries", 0) + 1}))
+        topics.add([nxt["topic"]])
+        print(f"long video: trying {nxt['topic']} again (try {nxt.get('tries', 0) + 1} of {LONG_TRIES})")
+        return topics.find(nxt["topic"])
+    found = proven_topic(cfg, topics)
+    if not found:
+        titles = growth.pick_topics(
+            cfg, 1, set(topics.titles()), min_chars=cfg.wikipedia.long_min_chars, performance=performance_summary(cfg)
+        )
+        if not titles:
+            return None
+        topics.add([wiki.topic_for(titles[0])])
+        found = topics.find(wiki.topic_for(titles[0]))
+    if found:
+        uploads.set_note(LONG_NEXT, json.dumps({"topic": found[1], "tries": 1}))
+    return found
+
+
+LONG_NEXT = "long-next"  # the long video being made: {"topic", "tries", "script"} until it is made
+LONG_TRIES = 4  # runs that try the same long video before it is given up
+
+
+def save_long_script(cfg: Config, topic: str, script: Script) -> None:
+    """Keep a long script once it is written and checked, so a run that fails later (or runs out of free
+    model tokens) doesn't have to write it again."""
+    uploads = Uploads(cfg)
+    nxt = json.loads(uploads.note(LONG_NEXT) or "{}")
+    if nxt.get("topic") == topic:
+        uploads.set_note(LONG_NEXT, json.dumps({**nxt, "script": script.model_dump(mode="json")}))
+
+
+def saved_long_script(cfg: Config, topic: str) -> Script | None:
+    if cfg.format != "long":
         return None
-    topics.add([wiki.topic_for(titles[0])])
-    return topics.find(wiki.topic_for(titles[0]))
+    nxt = json.loads(Uploads(cfg).note(LONG_NEXT) or "{}")
+    return Script.model_validate(nxt["script"]) if nxt.get("topic") == topic and nxt.get("script") else None
 
 
 LONG_KINDS = ("long", "bonus-long", "bonus-news", "channel")  # uploads that aren't Shorts (or may not be)
