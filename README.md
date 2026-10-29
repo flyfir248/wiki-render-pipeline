@@ -440,7 +440,7 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
   full story of the recent Short with the most views (at least `long_from_short_min_views`, public for
   two days, from the last `long_from_short_days`), when its article has the material. Each Short gets one
   long video at most; with none that qualifies, a fresh article is picked as before.
-- *A model for long videos* (`long_llm`): long videos ask this model first once its key is set, so the
+- *A model for long videos* (`long_llm`): long videos ask these models first once the first one's key is set, so the
   week's long script doesn't wait on free tiers the Shorts have spent.
 - *A long video that doesn't get made is picked up again:* when the free models run out partway, the next
   run takes the same topic (up to four runs) instead of burning other topics, and once its script has been

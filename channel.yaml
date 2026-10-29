@@ -39,12 +39,23 @@ llm:
       api_key_env: CLOUDFLARE_API_TOKEN
       models: ["@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
 
-# Long videos can use their own model, asked first, once its key is a repository secret (unset: the
-# models above). A long script is a dozen big calls and the free tiers are often spent by the time it's
-# written. For example Claude (secret ANTHROPIC_API_KEY, billed per use, once a week):
-# long_llm:
-#   provider: anthropic
-#   model: claude-sonnet-5-5
+# Long videos use their own models, so the week's long script doesn't depend on what the Shorts left of
+# the free tiers above: Google's free Gemini API first (secret GEMINI_API_KEY; without it, the models
+# above), then Groq, then Cloudflare. Only the long video asks Gemini, so its free daily limits are its own.
+long_llm:
+  provider: openai
+  base_url: https://generativelanguage.googleapis.com/v1beta/openai
+  model: gemini-2.5-flash
+  api_key_env: GEMINI_API_KEY
+  fallback_models: [gemini-2.5-flash-lite]
+  backup:
+    base_url: https://api.groq.com/openai/v1
+    api_key_env: GROQ_API_KEY
+    models: [openai/gpt-oss-120b, openai/gpt-oss-20b]
+  last_resort:
+    - base_url: https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1
+      api_key_env: CLOUDFLARE_API_TOKEN
+      models: ["@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
 
 source: wikipedia
 wikipedia:
