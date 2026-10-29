@@ -284,6 +284,14 @@ class Uploads:
         """When the last upload of this kind happened (ISO time), or None."""
         return self.db.execute("select max(uploaded) from uploads where kind=?", (kind,)).fetchone()[0]
 
+    def publish_times(self, long: bool) -> list[str]:
+        """When each Short (or each long video) went or goes public (ISO times). Uploads found on the
+        channel without a known kind count as both, to be safe."""
+        kinds = ("long", "bonus-long", "bonus-news")
+        sql = "select publish_at from uploads where publish_at is not null and youtube_id is not null and problem is null and "
+        sql += "(kind in (?, ?, ?) or kind='channel')" if long else "kind not in (?, ?, ?)"
+        return [r[0] for r in self.db.execute(sql, kinds)]
+
     def count_since(self, since: str) -> int:
         return self.db.execute("select count(*) from uploads where uploaded >= ?", (since,)).fetchone()[0]
 

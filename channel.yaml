@@ -79,11 +79,12 @@ schedule:
   buffer_days: 2                    # Shorts are uploaded up to 2 days before they go live
   long_lead_days: 5                 # made from Monday, so several runs get a chance at it
   max_uploads_per_day: 4            # YouTube API quota
-  # The 22:00 Short is kept for what's in the news that day: filled about 9 hours ahead with the
+  # Both Shorts are kept for what's in the news that day: filled about 9 hours ahead with the
   # trending Wikipedia article that fits best (growth.bonus_min_fit), else an evergreen topic.
   # Trending Shorts got about twice the first-week views of evergreen ones (`stats` task).
-  timely_slots: ["22:00"]
+  timely_slots: ["14:00", "22:00"]
   timely_hold_hours: 10
+  min_gap_hours: 3                  # no two Shorts go public closer together than this (bonus ones included)
 
 # Growth: sharper packaging, better topics, series, Shorts cut from long videos,
 # and bonus videos on trending topics. See GrowthConfig in fyt/config.py.
@@ -98,6 +99,7 @@ growth:
     - Bizarre Places
     - Unbelievable People
   bonus_shorts_per_day: 1   # extra Short on a trending topic that fits (if one does)
+  bonus_short_min_fit: 8    # only for a strong trend: the two daily Shorts already follow what's trending
   bonus_longs_per_week: 1   # extra long video, only for a very strong trending fit
   bonus_min_fit: 7
   bonus_long_min_fit: 9

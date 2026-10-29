@@ -349,6 +349,42 @@ def test_one_bonus_short_a_day_published_soon(cfg, monkeypatch):
     assert schedule.bonus_due(cfg, "short", NOW + timedelta(hours=25))
 
 
+def test_a_bonus_short_never_goes_public_on_top_of_another(cfg, monkeypatch):
+    made, uploaded = fake_channel(monkeypatch)
+    cfg.growth.bonus_longs_per_week = 0
+    up = Uploads(cfg)
+    up.record("short", "j1", "v1", (NOW + timedelta(minutes=40)).isoformat(), at=NOW.isoformat())  # a slot's Short
+    up.record("bonus-short", "j2", "v2", (NOW - timedelta(hours=2)).isoformat(), at=(NOW - timedelta(days=2)).isoformat())
+    up.record("long", "j3", "v3", (NOW + timedelta(hours=4)).isoformat(), at=NOW.isoformat())  # a long video doesn't count
+    assert schedule.fill(cfg, now=NOW, rng=random.Random(0)) == 1
+    at = uploaded[0][1]
+    assert at >= NOW + timedelta(minutes=40, hours=3)  # 3 hours clear of the scheduled Short
+    assert at <= NOW + timedelta(minutes=55, hours=3)  # and no later than it has to be
+
+
+def test_a_bonus_short_keeps_clear_of_a_slot_not_filled_yet(cfg, monkeypatch):
+    made, uploaded = fake_channel(monkeypatch)
+    cfg.growth.bonus_longs_per_week = 0
+    cfg.schedule.short_slots = ["15:00"]  # NOW is 13:00; a timely slot, filled later
+    cfg.schedule.timely_slots = ["15:00"]
+    cfg.schedule.timely_hold_hours = 1
+    cfg.youtube.publish_jitter_minutes = 90  # the slot's Short goes public between 15:00 and 16:30
+    monkeypatch.setattr(schedule, "make_timely", lambda cfg, topics: None)
+    monkeypatch.setattr(pipeline, "make_next", lambda cfg, topics: None)
+    schedule.fill(cfg, now=NOW, rng=random.Random(0))
+    at = uploaded[-1][1]
+    assert at >= NOW + timedelta(hours=2, minutes=90) + timedelta(hours=3)  # after the slot's whole jitter window
+
+
+def test_the_bonus_short_can_ask_for_a_stronger_trend(cfg, monkeypatch):
+    fits = []
+    monkeypatch.setattr(growth, "pick_trending", lambda cfg, used, fit, chars, day=None: fits.append(fit))
+    cfg.growth.bonus_longs_per_week = 0
+    cfg.growth.bonus_short_min_fit = 8
+    schedule.fill(cfg, now=NOW)
+    assert fits == [8]
+
+
 def test_bonus_long_at_most_weekly(cfg, monkeypatch):
     cfg.growth.bonus_shorts_per_day = 0
     made, _ = fake_channel(monkeypatch, trending=("Great Emu War", "Another"))
