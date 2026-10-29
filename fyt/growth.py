@@ -11,12 +11,13 @@ import json
 import math
 import random
 from datetime import date, datetime, timedelta, timezone
+from typing import Callable
 from urllib.parse import quote
 
 import requests
 from pydantic import BaseModel, Field
 
-from fyt import llm, wiki
+from fyt import llm, titles, wiki
 from fyt.config import Config
 from fyt.models import Script, ScriptScene
 
@@ -24,13 +25,23 @@ from fyt.models import Script, ScriptScene
 
 
 class Polish(BaseModel):
-    titles: list[str] = Field(description="5 different title ideas, each max 70 characters.")
-    best_title: str = Field(description="The strongest of the titles (or a better one), max 70 characters.")
+    viewer_question: str = Field(
+        default="",
+        description="Write this first: the question a stranger scrolling past would want answered, in their "
+        "everyday words, max 12 words, which the video answers.",
+    )
+    subject: str = Field(default="", description="The everyday name of what the video is about, 1-3 words a viewer would type (\"penguins\").")
+    titles: list[str] = Field(description="5 different title ideas built on the viewer's question, best first.")
+    best_title: str = Field(description="The strongest of the titles (or a better one) that follows every title rule.")
     thumbnail_text: str = Field(description="2-4 punchy words for the thumbnail that add to the title.")
     hook: str = Field(description="New opening narration: 1-2 sentences, max 35 words, facts from the script only.")
     loop_line: str = Field(default="", description="Shorts only: last sentence, max 12 words, that flows back into the hook.")
     hook_heading: str = Field(default="", description="Shorts only: 2-5 words shown huge on the first frame, over the photo.")
     series: str = Field(default="", description="The series this video belongs to, exactly as listed, or empty.")
+
+
+class Retitle(BaseModel):
+    titles: list[str] = Field(description="5 new titles that follow every rule, best first.")
 
 
 POLISH_GUIDE = """You are the packaging editor of a faceless YouTube channel. The script is written; your job
@@ -40,10 +51,9 @@ Channel niche: {niche}
 Audience: {audience}
 Format: {format}
 
-Titles:
-- max 70 characters, specific, create a curiosity gap about something the video really answers
-- lead with the most surprising concrete detail (a number, an odd object, a strange outcome)
-- no clickbait lies, no ALL CAPS words except one short one at most, no emoji, no "you won't believe"
+First write the viewer's question: what a stranger who never heard of this would wonder on seeing
+the video's strangest fact. The title is built on it, and the video's payoff answers it.
+{title_rules}
 Thumbnail text: 2-4 words, read in a glance on a phone, that add what the title doesn't say: the
 number, the twist or the stakes ("SURVIVED 3 SINKINGS", "IT ATE 40 KG", "HE LIVED"). Never the topic's
 name, never a repeat of the title, never a full sentence.
@@ -58,7 +68,8 @@ else loses the viewer when the video doesn't deliver it.
 {loop_rule}{heading_rule}{series_rule}"""
 
 
-def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True) -> Script:
+def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True,
+           log: Callable[[str], None] = lambda m: None) -> Script:
     """Rewrite the title, thumbnail text and opening line for clicks and retention."""
     short = cfg.format == "short"
     looped = short and loop
@@ -86,6 +97,7 @@ def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True
             else "Leave hook_heading empty.\n"
         ),
         series_rule=f"Series: pick the one that fits best: {', '.join(series)}.\n" if series else "Leave series empty.\n",
+        title_rules=titles.rules(short),
     )
     user = (
         (f"Core message: {script.core_message}\n" if script.core_message else "")
@@ -105,15 +117,44 @@ def polish(cfg: Config, script: Script, performance: str = "", loop: bool = True
     loop_line = p.loop_line.strip()
     if looped and scenes and loop_line and len(loop_line.split()) <= 16:
         scenes[-1] = scenes[-1].model_copy(update={"narration": scenes[-1].narration.rstrip() + " " + loop_line})
-    title = p.best_title.strip()
-    update = {"scenes": scenes}
-    if 10 <= len(title) <= 100:
-        update["title"] = title
+    update = {"scenes": scenes, "title": choose_title(cfg, script, p, log)}
     if p.thumbnail_text.strip():
         update["thumbnail_text"] = p.thumbnail_text.strip()
     if p.series in series:
         update["series"] = p.series
     return script.model_copy(update=update)
+
+
+def choose_title(cfg: Config, script: Script, p: Polish, log: Callable[[str], None] = lambda m: None) -> str:
+    """The best of the polished titles that passes the title checks; when none does, the editor tries
+    again once with what was wrong, and failing that the script's own title stays."""
+    short = cfg.format == "short"
+    subject = p.subject.strip()
+    title, notes = titles.pick([p.best_title, *p.titles], short, subject)
+    if title is None:
+        try:
+            user = (
+                f"Viewer's question: {p.viewer_question}\nSubject: {subject}\n"
+                + (f"Core message: {script.core_message}\n" if script.core_message else "")
+                + "These titles break the rules:\n" + "\n".join(f"- {n}" for n in notes)
+            )
+            again = llm.structured(cfg, RETITLE_GUIDE.format(title_rules=titles.rules(short)), user, Retitle, max_tokens=800)
+            title, more = titles.pick(again.titles, short, subject)
+            notes += more
+        except Exception as e:  # the script's title is still there
+            log(f"warning: title rewrite failed: {e}")
+    if title is None:
+        title = titles.clean(script.title)
+        log(f"warning: no polished title passed the checks ({'; '.join(notes)}); keeping \"{title}\"")
+    else:
+        log(f"title: \"{title}\" (viewer's question: {p.viewer_question.strip()})"
+            + (f"; passed over: {'; '.join(notes)}" if notes else ""))
+    return title
+
+
+RETITLE_GUIDE = """You write YouTube titles for a channel of strange, true stories. The titles below break
+the rules; write new ones that answer the same viewer's question.
+{title_rules}"""
 
 
 # --- Topic choice ---------------------------------------------------------------

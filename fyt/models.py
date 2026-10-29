@@ -223,13 +223,16 @@ class Chapter(BaseModel):
     scene: int  # index of the scene the chapter starts on
 
 
+TITLE_HELP = "YouTube title, max 70 characters (55 for a Short): the subject first, then the question it answers."
+
+
 class Script(BaseModel):
     core_message: str = Field(
         default="",
         description="Write this first: the one sentence the viewer should remember, max 20 words. Every scene serves it.",
     )
     mood: Mood = Field(default="curious", description=MOOD_HELP)
-    title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
+    title: str = Field(description=TITLE_HELP)
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")
     thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail (not the title).")

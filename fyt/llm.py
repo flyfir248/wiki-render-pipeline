@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 from fyt import scenes3d
 from fyt.config import Config
-from fyt.models import MOOD_HELP, Chapter, Mood, Script, ScriptScene
+from fyt.models import MOOD_HELP, TITLE_HELP, Chapter, Mood, Script, ScriptScene
 
 # Server-side refusal fallbacks: if the primary model declines, the API reroutes
 # the same request to a suitable fallback model inside the same call.
@@ -606,7 +606,8 @@ Rules:
 - Vary the templates; don't use the same template more than twice in a row.
 - Only use numbers, dates and quotes that appear in the research notes. If unsure, don't state it.
 - On-screen text must be short and scannable; the narration carries the detail.
-- Title max 70 characters; no false clickbait. Description must be accurate.
+- Title: the subject in everyday words first, then the question the video answers; plain words, no puns
+  or labels, never words about sex, suicide or gore. No false clickbait. Description must be accurate.
 - List the sources you relied on.
 - Write `comment_question`: one specific, easy question about this story for the channel's first
   comment, the kind people answer in a few words. No "let me know in the comments".
@@ -791,7 +792,7 @@ class Outline(BaseModel):
         "its outcome, max 25 words. The last chapter returns to it.",
     )
     mood: Mood = Field(default="curious", description=MOOD_HELP)
-    title: str = Field(description="YouTube title, max 70 characters, curiosity-driven but truthful.")
+    title: str = Field(description=TITLE_HELP)
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")
     thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail (not the title).")

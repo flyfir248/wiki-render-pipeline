@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, tts, visualplan, wiki, worldgen, youtube
+from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -106,9 +106,13 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         log(job, "sharpening title, hook and thumbnail text")
         try:
             # Part 1 ends on its cliffhanger, not a line looping back into the hook.
-            script = growth.polish(cfg, script, performance_summary(cfg), loop=not two_part and not topic.startswith(CUT))
+            script = growth.polish(cfg, script, performance_summary(cfg), loop=not two_part and not topic.startswith(CUT),
+                                   log=lambda m: log(job, m))
         except Exception as e:  # the unpolished script is still fine
             log(job, f"warning: polish failed: {e}")
+    # every title goes up in plain characters, news and unpolished ones too: typographic hyphens and quotes
+    # look the same but don't match what people search
+    script = script.model_copy(update={"title": titles.clean(script.title) or script.title})
     if written:
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)

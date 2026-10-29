@@ -14,7 +14,7 @@ from typing import Callable, Literal
 
 from pydantic import BaseModel, Field
 
-from fyt import llm
+from fyt import llm, titles
 from fyt.config import Config
 from fyt.models import DataPoint, DialogueLine, Script, ScriptScene, TimelineEvent
 
@@ -91,7 +91,8 @@ write numbers as the narrator should say them, as the original does."""
 
 TITLE_GUIDE = """You are the fact checker for a YouTube channel that tells true stories. The video's title or
 thumbnail text makes a claim the source doesn't back. Rewrite only what is needed so it is true to the
-source passages, keeping it as short and curious as it is. Title max 70 characters, thumbnail text 2-5 words."""
+source passages, keeping it as short and curious as it is, in plain words with the subject named near the
+start. Title max 70 characters (55 for a Short), thumbnail text 2-5 words."""
 
 
 def _strict(cfg: Config) -> Config:
@@ -206,7 +207,7 @@ def _fix_title(cfg: Config, script: Script, claims: list[Claim], source: str) ->
     problems = "\n".join(f"- {c.claim}" + (f" (source: {c.correction})" if c.correction else "") for c in claims)
     user = f"<source>\n{source}\n</source>\n\nProblems:\n{problems}\n\nTitle: {script.title}\nThumbnail text: {script.thumbnail_text}"
     fixed = llm.structured(_strict(cfg), TITLE_GUIDE, user, TitleFacts, max_tokens=800)
-    return script.model_copy(update={"title": fixed.title.strip()[:100], "thumbnail_text": fixed.thumbnail_text.strip()})
+    return script.model_copy(update={"title": titles.clean(fixed.title)[:100], "thumbnail_text": fixed.thumbnail_text.strip()})
 
 
 def describe(claims: list[Claim]) -> list[str]:
