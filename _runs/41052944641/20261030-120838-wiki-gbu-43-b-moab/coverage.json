@@ -1,0 +1,1233 @@
+{
+  "format": "long",
+  "duration": 320.1,
+  "target_3d": 0.75,
+  "share_3d": 0.412,
+  "share_animated": 0.412,
+  "share_subject_moving": 0.377,
+  "share_matched": 1.0,
+  "share_library_models": 1.0,
+  "share_camera_moving": 0.412,
+  "share_2d": 0.588,
+  "shots_3d": 22,
+  "static": [],
+  "repeats": [
+    5,
+    8,
+    10,
+    16,
+    18,
+    22,
+    27,
+    36,
+    39,
+    41,
+    43,
+    45,
+    48,
+    52,
+    53,
+    55,
+    57
+  ],
+  "frozen": [],
+  "environment_richness": 73.8,
+  "animation_quality": 73.4,
+  "bare": [],
+  "lifeless": [
+    11
+  ],
+  "dropped_to_2d": [
+    19
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "seconds": 7.64,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [
+        "others moving"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "aerial/follow",
+      "lead": "moab",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 10.07,
+      "environment_richness": 64.8,
+      "animation_quality": 65.6,
+      "inspection": {
+        "environment": {
+          "score": 64.8,
+          "edges": 0.125,
+          "empty": 0.25
+        },
+        "animation": {
+          "camera": 0.69,
+          "local": 0.157,
+          "moving": 0.473,
+          "cuts": 1,
+          "still_run": 1.38,
+          "score": 65.6
+        }
+      }
+    },
+    {
+      "scene": 2,
+      "start": 7.64,
+      "seconds": 9.61,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts",
+        "others moving"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track/push_in/follow",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 45.81,
+      "environment_richness": 88.0,
+      "animation_quality": 82.3,
+      "inspection": {
+        "environment": {
+          "score": 88.0,
+          "edges": 0.194,
+          "empty": 0.12
+        },
+        "animation": {
+          "camera": 0.968,
+          "local": 0.3,
+          "moving": 0.724,
+          "cuts": 1,
+          "still_run": 0.62,
+          "score": 82.3
+        }
+      }
+    },
+    {
+      "scene": 3,
+      "start": 17.25,
+      "seconds": 7.63,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "start": 24.88,
+      "seconds": 4.61,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 38.07,
+      "environment_richness": 74.8,
+      "animation_quality": 81.7,
+      "inspection": {
+        "environment": {
+          "score": 74.8,
+          "edges": 0.14,
+          "empty": 0.116
+        },
+        "animation": {
+          "camera": 0.765,
+          "local": 0.371,
+          "moving": 0.71,
+          "cuts": 1,
+          "still_run": 0.25,
+          "score": 81.7
+        }
+      }
+    },
+    {
+      "scene": 5,
+      "start": 29.48,
+      "seconds": 7.52,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 39.12,
+      "environment_richness": 74.5,
+      "animation_quality": 78.4,
+      "inspection": {
+        "environment": {
+          "score": 74.5,
+          "edges": 0.139,
+          "empty": 0.12
+        },
+        "animation": {
+          "camera": 0.737,
+          "local": 0.287,
+          "moving": 0.648,
+          "cuts": 1,
+          "still_run": 0.25,
+          "score": 78.4
+        }
+      }
+    },
+    {
+      "scene": 6,
+      "start": 37.01,
+      "seconds": 6.38,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 7,
+      "start": 43.39,
+      "seconds": 6.96,
+      "template": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 8,
+      "start": 50.34,
+      "seconds": 5.78,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 37.37,
+      "environment_richness": 74.9,
+      "animation_quality": 75.6,
+      "inspection": {
+        "environment": {
+          "score": 74.9,
+          "edges": 0.144,
+          "empty": 0.134
+        },
+        "animation": {
+          "camera": 0.767,
+          "local": 0.309,
+          "moving": 0.61,
+          "cuts": 0,
+          "still_run": 0.38,
+          "score": 75.6
+        }
+      }
+    },
+    {
+      "scene": 9,
+      "start": 56.13,
+      "seconds": 3.52,
+      "template": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 10,
+      "start": 59.65,
+      "seconds": 3.29,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 33.47,
+      "environment_richness": 77.6,
+      "animation_quality": 89.3,
+      "inspection": {
+        "environment": {
+          "score": 77.6,
+          "edges": 0.152,
+          "empty": 0.12
+        },
+        "animation": {
+          "camera": 0.913,
+          "local": 0.316,
+          "moving": 0.842,
+          "cuts": 2,
+          "still_run": 0.25,
+          "score": 89.3
+        }
+      }
+    },
+    {
+      "scene": 11,
+      "start": 62.94,
+      "seconds": 10.97,
+      "template": "world",
+      "kind": "3D",
+      "subject": "",
+      "secondary": [],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "push_in",
+      "lead": "blu82",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 12.34,
+      "environment_richness": 64.7,
+      "animation_quality": 14.7,
+      "inspection": {
+        "environment": {
+          "score": 64.7,
+          "edges": 0.12,
+          "empty": 0.231
+        },
+        "animation": {
+          "camera": 0.016,
+          "local": 0.042,
+          "moving": 0.098,
+          "cuts": 0,
+          "still_run": 3.62,
+          "score": 14.7
+        }
+      }
+    },
+    {
+      "scene": 12,
+      "start": 73.9,
+      "seconds": 7.04,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 13,
+      "start": 80.94,
+      "seconds": 6.3,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 14,
+      "start": 87.24,
+      "seconds": 4.2,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 15,
+      "start": 91.44,
+      "seconds": 4.31,
+      "template": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 16,
+      "start": 95.75,
+      "seconds": 3.93,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 33.65,
+      "environment_richness": 79.1,
+      "animation_quality": 82.3,
+      "inspection": {
+        "environment": {
+          "score": 79.1,
+          "edges": 0.155,
+          "empty": 0.106
+        },
+        "animation": {
+          "camera": 0.964,
+          "local": 0.357,
+          "moving": 0.731,
+          "cuts": 0,
+          "still_run": 0.38,
+          "score": 82.3
+        }
+      }
+    },
+    {
+      "scene": 17,
+      "start": 99.68,
+      "seconds": 2.75,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "start": 102.43,
+      "seconds": 4.97,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 37.94,
+      "environment_richness": 76.4,
+      "animation_quality": 83.0,
+      "inspection": {
+        "environment": {
+          "score": 76.4,
+          "edges": 0.147,
+          "empty": 0.12
+        },
+        "animation": {
+          "camera": 0.622,
+          "local": 0.381,
+          "moving": 0.758,
+          "cuts": 2,
+          "still_run": 0.25,
+          "score": 83.0
+        }
+      }
+    },
+    {
+      "scene": 19,
+      "start": 107.41,
+      "seconds": 4.97,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "start": 112.38,
+      "seconds": 4.08,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 21,
+      "start": 116.45,
+      "seconds": 3.93,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 22,
+      "start": 120.38,
+      "seconds": 4.29,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 34.61,
+      "environment_richness": 78.8,
+      "animation_quality": 84.1,
+      "inspection": {
+        "environment": {
+          "score": 78.8,
+          "edges": 0.155,
+          "empty": 0.111
+        },
+        "animation": {
+          "camera": 0.935,
+          "local": 0.271,
+          "moving": 0.75,
+          "cuts": 1,
+          "still_run": 0.25,
+          "score": 84.1
+        }
+      }
+    },
+    {
+      "scene": 23,
+      "start": 124.67,
+      "seconds": 4.59,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "start": 129.26,
+      "seconds": 3.73,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 25,
+      "start": 132.99,
+      "seconds": 5.21,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "start": 138.2,
+      "seconds": 4.44,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "start": 142.64,
+      "seconds": 5.36,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 36.87,
+      "environment_richness": 76.1,
+      "animation_quality": 84.3,
+      "inspection": {
+        "environment": {
+          "score": 76.1,
+          "edges": 0.149,
+          "empty": 0.139
+        },
+        "animation": {
+          "camera": 0.725,
+          "local": 0.366,
+          "moving": 0.75,
+          "cuts": 2,
+          "still_run": 0.25,
+          "score": 84.3
+        }
+      }
+    },
+    {
+      "scene": 28,
+      "start": 147.99,
+      "seconds": 4.59,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "start": 152.58,
+      "seconds": 5.74,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 30,
+      "start": 158.32,
+      "seconds": 4.82,
+      "template": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 31,
+      "start": 163.14,
+      "seconds": 5.01,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "start": 168.16,
+      "seconds": 3.86,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 33,
+      "start": 172.02,
+      "seconds": 5.72,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "start": 177.74,
+      "seconds": 2.77,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 35,
+      "start": 180.51,
+      "seconds": 8.39,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 36,
+      "start": 188.9,
+      "seconds": 4.2,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 35.15,
+      "environment_richness": 80.5,
+      "animation_quality": 92.9,
+      "inspection": {
+        "environment": {
+          "score": 80.5,
+          "edges": 0.163,
+          "empty": 0.116
+        },
+        "animation": {
+          "camera": 0.935,
+          "local": 0.37,
+          "moving": 0.889,
+          "cuts": 2,
+          "still_run": 0.12,
+          "score": 92.9
+        }
+      }
+    },
+    {
+      "scene": 37,
+      "start": 193.1,
+      "seconds": 10.71,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 38,
+      "start": 203.81,
+      "seconds": 4.59,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 39,
+      "start": 208.4,
+      "seconds": 4.12,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 36.62,
+      "environment_richness": 77.6,
+      "animation_quality": 79.0,
+      "inspection": {
+        "environment": {
+          "score": 77.6,
+          "edges": 0.153,
+          "empty": 0.125
+        },
+        "animation": {
+          "camera": 0.667,
+          "local": 0.4,
+          "moving": 0.667,
+          "cuts": 1,
+          "still_run": 0.25,
+          "score": 79.0
+        }
+      }
+    },
+    {
+      "scene": 40,
+      "start": 212.52,
+      "seconds": 4.61,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 41,
+      "start": 217.13,
+      "seconds": 4.91,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 37.64,
+      "environment_richness": 81.3,
+      "animation_quality": 80.6,
+      "inspection": {
+        "environment": {
+          "score": 81.3,
+          "edges": 0.165,
+          "empty": 0.111
+        },
+        "animation": {
+          "camera": 0.861,
+          "local": 0.254,
+          "moving": 0.697,
+          "cuts": 1,
+          "still_run": 0.38,
+          "score": 80.6
+        }
+      }
+    },
+    {
+      "scene": 42,
+      "start": 222.04,
+      "seconds": 4.38,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track/follow",
+      "lead": "moab",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 13.45,
+      "environment_richness": 75.7,
+      "animation_quality": 88.3,
+      "inspection": {
+        "environment": {
+          "score": 75.7,
+          "edges": 0.159,
+          "empty": 0.204
+        },
+        "animation": {
+          "camera": 0.719,
+          "local": 0.298,
+          "moving": 0.828,
+          "cuts": 1,
+          "still_run": 0.38,
+          "score": 88.3
+        }
+      }
+    },
+    {
+      "scene": 43,
+      "start": 226.41,
+      "seconds": 3.56,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 34.48,
+      "environment_richness": 80.9,
+      "animation_quality": 84.1,
+      "inspection": {
+        "environment": {
+          "score": 80.9,
+          "edges": 0.164,
+          "empty": 0.116
+        },
+        "animation": {
+          "camera": 0.96,
+          "local": 0.262,
+          "moving": 0.773,
+          "cuts": 1,
+          "still_run": 0.5,
+          "score": 84.1
+        }
+      }
+    },
+    {
+      "scene": 44,
+      "start": 229.98,
+      "seconds": 5.21,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 45,
+      "start": 235.18,
+      "seconds": 3.65,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 32.18,
+      "environment_richness": 81.1,
+      "animation_quality": 91.3,
+      "inspection": {
+        "environment": {
+          "score": 81.1,
+          "edges": 0.164,
+          "empty": 0.106
+        },
+        "animation": {
+          "camera": 0.923,
+          "local": 0.307,
+          "moving": 0.864,
+          "cuts": 2,
+          "still_run": 0.12,
+          "score": 91.3
+        }
+      }
+    },
+    {
+      "scene": 46,
+      "start": 238.83,
+      "seconds": 6.17,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 47,
+      "start": 245.0,
+      "seconds": 8.39,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 48,
+      "start": 253.39,
+      "seconds": 3.39,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 36.53,
+      "environment_richness": 76.9,
+      "animation_quality": 75.3,
+      "inspection": {
+        "environment": {
+          "score": 76.9,
+          "edges": 0.152,
+          "empty": 0.134
+        },
+        "animation": {
+          "camera": 0.75,
+          "local": 0.411,
+          "moving": 0.619,
+          "cuts": 1,
+          "still_run": 0.38,
+          "score": 75.3
+        }
+      }
+    },
+    {
+      "scene": 49,
+      "start": 256.78,
+      "seconds": 3.95,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 50,
+      "start": 260.73,
+      "seconds": 6.53,
+      "template": "comparison",
+      "kind": "2D"
+    },
+    {
+      "scene": 51,
+      "start": 267.26,
+      "seconds": 7.77,
+      "template": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 52,
+      "start": 275.02,
+      "seconds": 4.95,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 36.83,
+      "environment_richness": 78.9,
+      "animation_quality": 85.1,
+      "inspection": {
+        "environment": {
+          "score": 78.9,
+          "edges": 0.155,
+          "empty": 0.106
+        },
+        "animation": {
+          "camera": 0.865,
+          "local": 0.323,
+          "moving": 0.758,
+          "cuts": 2,
+          "still_run": 0.12,
+          "score": 85.1
+        }
+      }
+    },
+    {
+      "scene": 53,
+      "start": 279.97,
+      "seconds": 4.52,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 35.01,
+      "environment_richness": 76.4,
+      "animation_quality": 79.8,
+      "inspection": {
+        "environment": {
+          "score": 76.4,
+          "edges": 0.149,
+          "empty": 0.13
+        },
+        "animation": {
+          "camera": 0.667,
+          "local": 0.333,
+          "moving": 0.677,
+          "cuts": 0,
+          "still_run": 0.25,
+          "score": 79.8
+        }
+      }
+    },
+    {
+      "scene": 54,
+      "start": 284.5,
+      "seconds": 5.29,
+      "template": "document",
+      "kind": "2D"
+    },
+    {
+      "scene": 55,
+      "start": 289.79,
+      "seconds": 5.7,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 36.68,
+      "environment_richness": 82.3,
+      "animation_quality": 88.0,
+      "inspection": {
+        "environment": {
+          "score": 82.3,
+          "edges": 0.167,
+          "empty": 0.102
+        },
+        "animation": {
+          "camera": 0.86,
+          "local": 0.324,
+          "moving": 0.805,
+          "cuts": 0,
+          "still_run": 0.12,
+          "score": 88.0
+        }
+      }
+    },
+    {
+      "scene": 56,
+      "start": 295.49,
+      "seconds": 4.16,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 57,
+      "start": 299.65,
+      "seconds": 20.43,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "c130",
+      "place": "afghanistan",
+      "set": "mountain",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 58.85,
+      "environment_richness": 59.3,
+      "animation_quality": 63.9,
+      "inspection": {
+        "environment": {
+          "score": 59.3,
+          "edges": 0.112,
+          "empty": 0.305
+        },
+        "animation": {
+          "camera": 0.508,
+          "local": 0.155,
+          "moving": 0.509,
+          "cuts": 2,
+          "still_run": 0.38,
+          "score": 63.9
+        }
+      }
+    }
+  ]
+}

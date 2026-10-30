@@ -1,0 +1,31 @@
+{
+  "checked": [
+    1,
+    2,
+    4,
+    5,
+    8,
+    10,
+    11,
+    16,
+    18,
+    19,
+    22,
+    27,
+    36,
+    39,
+    41,
+    42,
+    43,
+    45,
+    48,
+    52,
+    53,
+    55,
+    57
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "19": "frame check: The frame shows trees in a landscape, not an airplane."
+  }
+}

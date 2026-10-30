@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 2 at 10.5s: Missing subject: C-130 aircraft is not visible in the frame.",
+    "scene 2 at 15.5s: Shows a bomb instead of the requested C-130 aircraft.",
+    "scene 4 at 28.7s: subject cut off by frame edge",
+    "3D covers 41% of the runtime, under the 75% target",
+    "3D scenes [5, 8, 10, 16, 18, 22, 27, 36, 39, 41, 43, 45, 48, 52, 53, 55, 57] repeat an earlier shot",
+    "3D scenes [11] have little moving in the picture beyond the camera (animation under 40)"
+  ],
+  "repair": [],
+  "repaired": []
+}

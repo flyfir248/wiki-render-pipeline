@@ -1,0 +1,2484 @@
+{
+  "style": "noir",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model"
+  },
+  "builds": [
+    {
+      "entity": "moab",
+      "archetype": "object",
+      "size": 9.18,
+      "primary": "#4a4a4a",
+      "secondary": "#2b2b2b",
+      "accent": "#ffd700",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.02,
+            9.18,
+            1.02
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#4a4a4a",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cone",
+          "at": [
+            4.5,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.02,
+            2.0,
+            1.02
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            270.0
+          ],
+          "color": "#2b2b2b",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.2,
+            0.6,
+            0.6
+          ],
+          "size": [
+            0.8,
+            0.8,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#111111",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.2,
+            -0.6,
+            0.6
+          ],
+          "size": [
+            0.8,
+            0.8,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#111111",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.2,
+            0.6,
+            -0.6
+          ],
+          "size": [
+            0.8,
+            0.8,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#111111",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.2,
+            -0.6,
+            -0.6
+          ],
+          "size": [
+            0.8,
+            0.8,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#111111",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        19,
+        42
+      ]
+    },
+    {
+      "entity": "c130",
+      "archetype": "vehicle",
+      "size": 7.35,
+      "primary": "#555b54",
+      "secondary": "#3e423d",
+      "accent": "#ff3333",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            0.8819999999999999,
+            0.0
+          ],
+          "size": [
+            0.9555,
+            7.35,
+            0.9555
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#555b54",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.147,
+            1.0290000000000001,
+            0.0
+          ],
+          "size": [
+            1.323,
+            0.147,
+            7.7175
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#555b54",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -3.234,
+            1.47,
+            0.0
+          ],
+          "size": [
+            0.735,
+            1.176,
+            0.147
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3e423d",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -3.234,
+            0.9555,
+            0.0
+          ],
+          "size": [
+            0.588,
+            0.147,
+            2.352
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3e423d",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            2.2049999999999996,
+            1.2495,
+            0.0
+          ],
+          "size": [
+            0.735,
+            0.3675,
+            0.8819999999999999
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            3.7485,
+            0.8819999999999999,
+            0.0
+          ],
+          "size": [
+            0.0735,
+            1.617,
+            0.22049999999999997
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "x",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.3675,
+            0.8819999999999999,
+            -1.5434999999999999
+          ],
+          "size": [
+            0.8819999999999999,
+            0.44099999999999995,
+            0.44099999999999995
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ff3333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.3675,
+            0.8819999999999999,
+            1.5434999999999999
+          ],
+          "size": [
+            0.8819999999999999,
+            0.44099999999999995,
+            0.44099999999999995
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ff3333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "plane",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        4,
+        5,
+        8,
+        10,
+        16,
+        18,
+        19,
+        22,
+        27,
+        36,
+        39,
+        41,
+        43,
+        45,
+        48,
+        52,
+        53,
+        55,
+        57
+      ]
+    },
+    {
+      "entity": "blu82",
+      "archetype": "object",
+      "size": 3.7,
+      "primary": "#3b3a36",
+      "secondary": "#262522",
+      "accent": "#cccccc",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.3,
+            3.7,
+            1.3
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#3b3a36",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            2.3,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.15,
+            1.0,
+            0.15
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#cccccc",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -1.8,
+            0.5,
+            0.5
+          ],
+          "size": [
+            0.6,
+            0.6,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#262522",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -1.8,
+            -0.5,
+            0.5
+          ],
+          "size": [
+            0.6,
+            0.6,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#262522",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -1.8,
+            0.5,
+            -0.5
+          ],
+          "size": [
+            0.6,
+            0.6,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#262522",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -1.8,
+            -0.5,
+            -0.5
+          ],
+          "size": [
+            0.6,
+            0.6,
+            0.05
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#262522",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        11,
+        19,
+        42
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "afghanistan",
+      "kind": "mountain",
+      "time": "day",
+      "ground": "#8b7d6b",
+      "sky": "#c4d8e2",
+      "accent": "#ffd700",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "acacia bush",
+          "build": {
+            "entity": "afghanistan:acacia-bush",
+            "archetype": "plant",
+            "size": 2.5,
+            "primary": "#556b2f",
+            "secondary": "#8b4513",
+            "accent": "#d2b48c",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.452,
+                  0.0
+                ],
+                "size": [
+                  0.271,
+                  0.905,
+                  0.271
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#8b4513",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "sphere",
+                "at": [
+                  0.0,
+                  1.809,
+                  0.0
+                ],
+                "size": [
+                  1.809,
+                  1.357,
+                  1.809
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#556b2f",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 5,
+          "spread": 20.0
+        },
+        {
+          "name": "rock outcrop",
+          "build": {
+            "entity": "afghanistan:rock-outcrop",
+            "archetype": "object",
+            "size": 1.8,
+            "primary": "#a9a9a9",
+            "secondary": "#808080",
+            "accent": "#696969",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "wedge",
+                "at": [
+                  0.0,
+                  0.9,
+                  0.0
+                ],
+                "size": [
+                  2.0,
+                  1.8,
+                  1.5
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#a9a9a9",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 8,
+          "spread": 15.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "moab",
+          "verb": "move",
+          "at": "center",
+          "to": "front",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "back",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "blu82",
+          "verb": "present",
+          "at": "far",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "aerial",
+      "on": "moab",
+      "marks": [
+        {
+          "kind": "path",
+          "on": "moab",
+          "to": "",
+          "color": ""
+        }
+      ],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "rolls out of a C-130",
+          "actors": [
+            {
+              "entity": "moab",
+              "verb": "move",
+              "to": "front",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "follow",
+          "on": "moab"
+        }
+      ]
+    },
+    "2": {
+      "scene": 2,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "moab",
+          "verb": "move",
+          "at": "center",
+          "to": "front",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "blu82",
+          "verb": "present",
+          "at": "far",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "Its rear ramp opens.",
+          "actors": [
+            {
+              "entity": "c130",
+              "verb": "approach",
+              "to": "",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "push_in",
+          "on": "c130"
+        },
+        {
+          "cue": "rolls out",
+          "actors": [
+            {
+              "entity": "moab",
+              "verb": "move",
+              "to": "front",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "follow",
+          "on": "moab"
+        }
+      ]
+    },
+    "4": {
+      "scene": 4,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "5": {
+      "scene": 5,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "orbit",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "8": {
+      "scene": 8,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "low_angle",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "10": {
+      "scene": 10,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "follow",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "11": {
+      "scene": 11,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "blu82",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "blu82",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "16": {
+      "scene": 16,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "reveal",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "18": {
+      "scene": 18,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "19": {
+      "scene": 19,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "moab",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "blu82",
+          "verb": "present",
+          "at": "far",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "orbit",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "22": {
+      "scene": 22,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "27": {
+      "scene": 27,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "36": {
+      "scene": 36,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "39": {
+      "scene": 39,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "41": {
+      "scene": 41,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "42": {
+      "scene": 42,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "moab",
+          "verb": "move",
+          "at": "center",
+          "to": "front",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        },
+        {
+          "entity": "blu82",
+          "verb": "present",
+          "at": "far",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "aerial",
+      "on": "moab",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "rolled out",
+          "actors": [
+            {
+              "entity": "moab",
+              "verb": "move",
+              "to": "front",
+              "state": "normal",
+              "face": ""
+            }
+          ],
+          "camera": "follow",
+          "on": "moab"
+        }
+      ]
+    },
+    "43": {
+      "scene": 43,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "follow",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "45": {
+      "scene": 45,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "48": {
+      "scene": 48,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "52": {
+      "scene": 52,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "53": {
+      "scene": 53,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "55": {
+      "scene": 55,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "establish",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "57": {
+      "scene": 57,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1
+        }
+      ],
+      "camera": "push_in",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    }
+  },
+  "direction": {
+    "1": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "aerial",
+          "on": "moab"
+        },
+        {
+          "move": "follow",
+          "on": "moab",
+          "cue": "rolls out of a C-130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "2": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        },
+        {
+          "move": "push_in",
+          "on": "c130",
+          "cue": "Its rear ramp opens."
+        },
+        {
+          "move": "follow",
+          "on": "moab",
+          "cue": "rolls out"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "4": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "5": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "8": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "10": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "11": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "push_in",
+          "on": "blu82"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "16": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "18": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "19": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "22": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "27": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "36": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "39": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "41": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "42": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "moab"
+        },
+        {
+          "move": "follow",
+          "on": "moab",
+          "cue": "rolled out"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "43": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "45": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "48": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "52": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "53": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "55": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    },
+    "57": {
+      "art": {
+        "profile": "stencil",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "graphic",
+        "palette": [
+          "#efe4cc",
+          "#8a5a3a",
+          "#1b1612",
+          "#d23a2c"
+        ]
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.3,
+        "fill": 0.425,
+        "rim": 1.4,
+        "contrast": 1.6500000000000001
+      }
+    }
+  }
+}

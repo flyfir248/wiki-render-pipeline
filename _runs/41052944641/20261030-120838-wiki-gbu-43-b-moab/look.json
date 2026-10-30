@@ -1,0 +1,201 @@
+{
+  "warnings": [
+    "scene 2 at 10.5s: Missing subject: C-130 aircraft is not visible in the frame.",
+    "scene 2 at 15.5s: Shows a bomb instead of the requested C-130 aircraft.",
+    "scene 4 at 28.7s: subject cut off by frame edge"
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 2.29,
+      "contrast": 45.1,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 1,
+      "at": 6.26,
+      "contrast": 46.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 2,
+      "at": 10.52,
+      "contrast": 68.6,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Missing subject: C-130 aircraft is not visible in the frame."
+    },
+    {
+      "scene": 2,
+      "at": 15.52,
+      "contrast": 51.2,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a bomb instead of the requested C-130 aircraft."
+    },
+    {
+      "scene": 4,
+      "at": 26.26,
+      "contrast": 58.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 4,
+      "at": 28.66,
+      "contrast": 56.4,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "subject cut off by frame edge"
+    },
+    {
+      "scene": 5,
+      "at": 31.74,
+      "contrast": 58.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 5,
+      "at": 35.65,
+      "contrast": 57.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 8,
+      "at": 52.08,
+      "contrast": 59.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 8,
+      "at": 55.09,
+      "contrast": 58.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 10,
+      "at": 60.64,
+      "contrast": 61.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 10,
+      "at": 62.34,
+      "contrast": 57.9,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 66.23,
+      "contrast": 43.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 71.93,
+      "contrast": 43.7,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 16,
+      "at": 96.93,
+      "contrast": 62.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 16,
+      "at": 98.97,
+      "contrast": 58.1,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 103.92,
+      "contrast": 59.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 106.51,
+      "contrast": 57.9,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 22,
+      "at": 121.67,
+      "contrast": 62.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 22,
+      "at": 123.9,
+      "contrast": 57.8,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 27,
+      "at": 144.24,
+      "contrast": 58.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 27,
+      "at": 147.03,
+      "contrast": 57.1,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 36,
+      "at": 190.16,
+      "contrast": 62.7,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 36,
+      "at": 192.35,
+      "contrast": 59.1,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    }
+  ]
+}

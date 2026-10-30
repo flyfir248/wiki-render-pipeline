@@ -1,0 +1,621 @@
+{
+  "planner": "model",
+  "budget_seconds": 360.0,
+  "world_seconds": 124.2,
+  "dropped_for_budget": [],
+  "target_share": 0.75,
+  "world_share": 0.402,
+  "filled": [
+    4,
+    5,
+    8,
+    10,
+    16,
+    18,
+    22,
+    27,
+    36,
+    39,
+    41,
+    43,
+    45,
+    48,
+    52,
+    53,
+    55,
+    57
+  ],
+  "off_story": [
+    {
+      "scene": 42,
+      "subject": "aircraft",
+      "why": "no entity in this scene is that kind of thing"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "rolls out of a C-130",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "flies over Afghanistan",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 6,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 7,
+      "type": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 8,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 9,
+      "type": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 10,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 11,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "The design copied the BLU-82 Daisy Cutter",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 12,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 13,
+      "type": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 14,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 15,
+      "type": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 16,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 17,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 19,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": "A C-130 cargo plane carries it on a cradle inside the rear bay.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 20,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 21,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 22,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 23,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 25,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 28,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 30,
+      "type": "stat",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 31,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 33,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 35,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 36,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 37,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 38,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 39,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 40,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 41,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 42,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "The rear ramp opened and the bomb rolled out toward the mountains.",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 43,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 44,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 45,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 46,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 47,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 48,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 49,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 50,
+      "type": "comparison",
+      "kind": "2D"
+    },
+    {
+      "scene": 51,
+      "type": "statement",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 52,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 53,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 54,
+      "type": "document",
+      "kind": "2D"
+    },
+    {
+      "scene": 55,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 56,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 57,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    }
+  ]
+}
