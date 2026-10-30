@@ -406,3 +406,31 @@ def test_filler_3d_does_not_show_the_same_shot_over_and_over():
     out = visualplan.fill(cfg, script(*lines), story, [])
     shots = [(r.subject_name, r.action, r.setting) for r in out]
     assert out and max(shots.count(k) for k in shots) <= visualplan.MAX_SAME_FILL
+
+
+def test_polyfork_candidates_are_free_checked_by_their_render_and_never_kept(monkeypatch):
+    from fyt import assetlib
+    from fyt.config import load_config
+
+    rows = {"assets": [
+        {"id": "lancaster-bomber-1a2b", "title": "Lancaster Bomber", "class": "vehicle", "kit": "ww2-aircraft-kit", "free": True,
+         "triangles": 4200, "page": "https://polyfork.dev/asset/lancaster-bomber-1a2b", "thumbnail": "https://polyfork.dev/files/x/hero.png",
+         "size_m": {"x": 31.1, "y": 6.1, "z": 21.2}, "download": {"glb": "https://polyfork.dev/cdn/lancaster-bomber-1a2b.glb"}},
+        {"id": "bomber-pack", "title": "Bomber Pack", "class": "vehicle", "free": True},  # several things, not one
+        {"id": "tank-9", "title": "Tank", "class": "vehicle", "free": True},  # not a bomber
+    ]}
+
+    class R:
+        def json(self):
+            return rows
+
+    seen = {}
+    monkeypatch.setattr(assetlib, "_get", lambda url, **kw: seen.update(url=url, params=kw.get("params")) or R())
+    out = assetlib.polyfork(load_config(), "lancaster bomber", print)
+    assert seen["params"]["free"] == 1 and seen["url"].endswith("/api/assets")
+    assert [c["uid"] for c in out] == ["polyfork:lancaster-bomber-1a2b"]
+    c = out[0]
+    assert c["licence"] == "polyfork" and c["thumb"] and c["keep"] is False  # its licence forbids mirroring the files
+    assert "polyfork" in load_config().visuals.licences and "polyfork" in assetlib.SOURCES
+    assert not str(assetlib.FETCHED).startswith(str(assetlib.CACHE))  # never on the asset-library branch
+    assert "Polyfork free licence" in assetlib.credit({"key": "k", "title": "Lancaster Bomber", "licence": "polyfork", "url": c["url"]})

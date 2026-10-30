@@ -10,6 +10,9 @@ plan wants in 3D is resolved here, best first:
      `visuals.licences`; downloaded from the Objaverse mirror on Hugging Face (no key), or from
      Sketchfab itself with SKETCHFAB_TOKEN;
    - polypizza: Poly Pizza's CC0 / CC-BY library, with POLY_PIZZA_KEY;
+   - polyfork: Polyfork's free low-poly library (no key; real-world sizes in metres). Its licence allows
+     use in videos but not mirroring the files, so its models are fetched per run and never kept on the
+     shared asset-library branch;
    - image_to_3d: a picture of the entity drawn in the house style and made 3D by an image-to-3D model
      on Hugging Face (`visuals.image_to_3d_space`), when one is configured;
 4. nothing: the entity has no 3D model and its scenes keep their painted pictures. A model of
@@ -46,6 +49,10 @@ CACHE = ROOT / "assets" / "models"
 SKETCHFAB = "https://api.sketchfab.com/v3"
 OBJAVERSE = "https://huggingface.co/datasets/allenai/objaverse/resolve/main"
 POLY_PIZZA = "https://api.poly.pizza/v1.1"
+POLYFORK = "https://polyfork.dev"
+# Polyfork's free models may be used but not redistributed: they are kept for this run only, outside the
+# asset-library clone (CACHE), which every run pushes.
+FETCHED = ROOT / "assets" / "polyfork"
 MISS_DAYS = 14  # a search that found nothing is not repeated for this long
 MIN_TRIANGLES = 300  # fewer is a handful of boxes, not a recognisable model
 CANDIDATES = 6  # per search term, checked in the order the source ranks them
@@ -58,7 +65,7 @@ LICENCES = {  # Sketchfab's licence slugs and labels, and Poly Pizza's, to one c
     "by-nc-sa": "by-nc-sa", "cc attribution-noncommercial-sharealike": "by-nc-sa",
     "by-nc-nd": "by-nc-nd", "cc attribution-noncommercial-noderivs": "by-nc-nd",
 }
-LICENCE_NAMES = {"cc0": "CC0", "by": "CC BY 4.0", "by-sa": "CC BY-SA 4.0"}
+LICENCE_NAMES = {"cc0": "CC0", "by": "CC BY 4.0", "by-sa": "CC BY-SA 4.0", "polyfork": "Polyfork free licence"}
 # A model whose title says it is several things or a whole place, not the one thing asked for.
 NOT_ONE_THING = re.compile(r"\b(pack|collection|bundle|kit|set of|diorama|scene|environment|room|level|map|asset ?pack)\b", re.I)
 # A model of a part or remains of the thing (a bear's jawbone scan), unless that part is what was asked for.
@@ -310,6 +317,30 @@ def polypizza(cfg: Config, term: str, log) -> list[dict]:
     return out
 
 
+def polyfork(cfg: Config, term: str, log) -> list[dict]:
+    """Polyfork's free low-poly models (no key). Each row carries a hero render to check by eye, its real
+    size in metres and a plain GLB."""
+    r = _get(f"{POLYFORK}/api/assets", params={"q": term, "free": 1, "per_page": 24})
+    out = []
+    for m in r.json().get("assets", []):
+        title = m.get("title", "")
+        # its class and kit say what it is part of (a 'heavy bomber' from a spaceship kit is a spaceship)
+        tags = [x for x in (m.get("class", ""), (m.get("kit") or "").replace("-", " ")) if x]
+        glb = (m.get("download") or {}).get("glb") or f"{POLYFORK}/cdn/{m.get('id')}.glb"
+        if not m.get("id") or not m.get("free", True) or not relevant(term, title, tags):
+            continue
+        out.append({
+            "uid": f"polyfork:{m['id']}", "source": "polyfork", "title": title, "tags": tags, "author": "Polyfork",
+            "licence": "polyfork", "url": m.get("page") or f"{POLYFORK}/asset/{m['id']}", "thumb": m.get("thumbnail"),
+            "triangles": m.get("triangles") or 0, "animated": False, "score": relevant(term, title, tags),
+            "size_m": m.get("size_m"), "keep": False,
+            "fetch": (lambda u: (lambda dest: _download(u, dest)))(glb),
+        })
+        if len(out) >= CANDIDATES:
+            break
+    return out
+
+
 GENERATE_SECONDS = 600  # one image-to-3D job, queue included; a GPU worker that takes longer is given up on
 
 
@@ -427,7 +458,7 @@ def image_to_3d(cfg: Config, term: str, log, entity: Entity | None = None) -> li
     }]
 
 
-SOURCES: dict[str, Callable] = {"sketchfab": sketchfab, "polypizza": polypizza, "image_to_3d": image_to_3d}
+SOURCES: dict[str, Callable] = {"sketchfab": sketchfab, "polypizza": polypizza, "polyfork": polyfork, "image_to_3d": image_to_3d}
 
 
 # --- checks and preparation -----------------------------------------------------------------
@@ -521,7 +552,7 @@ def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log, an
             _note_rejected(c["uid"], bad)
             return None
         key = slug(term)
-        folder = CACHE / key
+        folder = (CACHE if c.get("keep", True) else FETCHED) / key
         if folder.exists():
             shutil.rmtree(folder)
         folder.mkdir(parents=True)
