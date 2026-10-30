@@ -21,9 +21,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary). kit: fetch the CC0 character kit into the model library (inventory in the run summary). replace: upload a reviewed test render (its run id in replay) in place of the same article's Short or long video still scheduled on YouTube, at its publish time; the old one is made private"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary). kit: fetch the CC0 character kit into the model library (inventory in the run summary). replace: upload a reviewed test render (its run id in replay) in place of the same article's Short or long video still scheduled on YouTube, at its publish time; the old one is made private. publish: the same, and when nothing of that article is scheduled, the reviewed test render takes the next empty slot of its format"
         type: choice
-        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck, bench, kit, replace]
+        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck, bench, kit, replace, publish]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -170,7 +170,7 @@ jobs:
         run: |
           if [ "$TASK" = fill ]; then
             echo "needed=$(python -m fyt buffer --needed)" >> "$GITHUB_OUTPUT"
-          elif [ "$TASK" = relabel ] || [ "$TASK" = stats ] || [ "$TASK" = playlists ] || [ "$TASK" = posts ] || [ "$TASK" = reels ] || [ "$TASK" = replace ]; then
+          elif [ "$TASK" = relabel ] || [ "$TASK" = stats ] || [ "$TASK" = playlists ] || [ "$TASK" = posts ] || [ "$TASK" = reels ] || [ "$TASK" = replace ] || [ "$TASK" = publish ]; then
             echo "needed=no" >> "$GITHUB_OUTPUT"
           else
             echo "needed=yes" >> "$GITHUB_OUTPUT"
@@ -233,18 +233,18 @@ jobs:
       # from the test run's artifact, it takes the old video's publish time and slot, and the old video is
       # made private (still on the channel, so it can be brought back in YouTube Studio).
       - name: Replace a scheduled video with a reviewed test render
-        if: env.TASK == 'replace'
+        if: env.TASK == 'replace' || env.TASK == 'publish'
         env:
           REPLAY: ${{ inputs.replay }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          [ -n "$REPLAY" ] || { echo "replace needs the test render's run id in replay"; exit 1; }
+          [ -n "$REPLAY" ] || { echo "$TASK needs the test render's run id in replay"; exit 1; }
           mkdir -p jobs
           gh run download "$REPLAY" --repo "$GITHUB_REPOSITORY" --name "videos-$REPLAY-1" --dir jobs
           job=$(ls -d jobs/*/ | grep -v -e '/pending/' -e '/cuts/' -e '/bench/' | head -1)
           [ -f "$job/video.mp4" ] || { echo "run $REPLAY kept no video"; exit 1; }
-          python -m fyt replace "$job" | tee -a "$GITHUB_STEP_SUMMARY"
+          python -m fyt "$TASK" "$job" | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Channel stats and watch-time lessons
         if: env.TASK == 'stats'
@@ -385,7 +385,7 @@ jobs:
           key: fyt-state-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Keep the videos for a week
-        if: always() && (steps.need.outputs.needed == 'yes' || env.TASK == 'replace')
+        if: always() && (steps.need.outputs.needed == 'yes' || env.TASK == 'replace' || env.TASK == 'publish')
         uses: actions/upload-artifact@v6
         with:
           name: videos-${{ github.run_id }}-${{ github.run_attempt }}

@@ -201,6 +201,36 @@ def replace(cfg: Config, job: Job, now: datetime | None = None) -> str:
     return new_id
 
 
+def publish(cfg: Config, job: Job, now: datetime | None = None, rng: random.Random | None = None) -> str:
+    """Upload a reviewed test render: in place of the same article's scheduled video when there is one
+    (`replace`), else into the next empty slot of its format, else at the soonest time that keeps
+    schedule.min_gap_hours from the channel's other videos of its format. Returns the new video's id."""
+    now = now or utcnow()
+    try:
+        return replace(cfg, job, now)
+    except SystemExit:
+        pass  # nothing of this article is waiting to go public: it takes a slot of its own
+    fmt = job.meta.get("format", cfg.format)
+    job.update(status="approved", youtube_id=None)
+    topic = job.meta.get("topic", "")
+    if topic:  # made: the queue doesn't pick the article again
+        topics = Topics(cfg)
+        topics.add([topic])
+        if (row := topics.find(topic)) is not None:
+            topics.set(row[0], "done", job.id)
+    slot = next((s for s in empty_slots(cfg, now) if s.kind == fmt), None)
+    if slot is not None:
+        if not _upload(cfg, job, slot, rng, now):
+            raise SystemExit(f"upload of {job.id} failed")
+        return job.meta["youtube_id"]
+    at = spaced_time(cfg, fmt, rng, now)
+    new_id = pipeline.upload_job(cfg, job, publish_at=at)
+    Uploads(cfg).record(f"bonus-{fmt}" if fmt == "long" else fmt, job.id, new_id, at.isoformat(), None,
+                        at=now.isoformat(timespec="seconds"))
+    print(f"no empty {fmt} slot: scheduled https://youtu.be/{new_id} for {at:%a %d %b %H:%M} UTC")
+    return new_id
+
+
 ARTICLE = re.compile(r'Based on the Wikipedia article "(.+?)" \(')
 SLOT_SLACK_MINUTES = 60  # a publish time can land past the jitter window when a render ran long
 
