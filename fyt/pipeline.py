@@ -10,7 +10,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, wiki, worldgen, youtube
+from fyt import animation, artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
@@ -601,8 +601,18 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
     # the scene director (fyt/director.py): casting put right, then each scene's art, place layers, light,
     # acts and shots on top of the blocking
     builds, worn = director.fix_cast(builds, story)
+    # the Spatial Director (fyt/animation.py): everything at its real size before anything is placed
+    research = job.file("research.md")
+    builds, resized = animation.fix_scale(builds, story, research.read_text() if research.exists() else "")
+    if resized:
+        log(job, "real sizes: " + "; ".join(resized))
     shots, made["direction"] = worldgen.direct(cfg, script, story, builds, staged, log=lambda m: log(job, m))
     shots = director.drop_worn(shots, worn)
+    # the Animation Director: what physically happens in each scene (a load riding on its carrier, let go,
+    # falling, detonating), checked against what the bodies can do, before it is filmed
+    shots, plans, made["animation"] = animation.plan(cfg, script, story, builds, shots, log=lambda m: log(job, m))
+    job.file("animation.json").write_text(json.dumps({str(k): r for k, r in sorted(plans.items())}, indent=2))
+    log(job, f"animation director ({made['animation']}): " + animation.summary(plans))
     v = cfg.visuals
     art = director.choose_art(script, story, v.art_style, v.art_strength, v.environment_detail, v.atmosphere)
     shots, directions = director.direct(script, story, builds, settings, shots, art, worn)

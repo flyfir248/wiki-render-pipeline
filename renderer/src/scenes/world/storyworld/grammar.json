@@ -14,9 +14,9 @@
     "fish": {"describe": "a fish, whale, shark or other swimmer", "verbs": ["swim", "idle", "turn", "rise", "fall"]},
     "insect": {"describe": "an insect, spider or other many-legged small creature", "verbs": ["idle", "walk", "run", "fly", "look_around"]},
     "serpent": {"describe": "a snake, worm or eel", "verbs": ["idle", "move", "rear", "swim"]},
-    "vehicle": {"describe": "a car, truck, aircraft, helicopter, boat, train or bicycle", "verbs": ["present", "move", "drive", "fly", "approach", "depart", "turn", "rise", "fall", "crash", "shake", "sink"]},
-    "object": {"describe": "a thing people use or carry: a bag, a tool, a phone, a package, a bottle, a device", "verbs": ["present", "move", "rise", "fall", "turn", "shake", "spin", "open", "split", "glow"]},
-    "structure": {"describe": "a building, tower, bridge, tent or other built place", "verbs": ["present", "shake", "collapse", "glow", "turn"]},
+    "vehicle": {"describe": "a car, truck, aircraft, helicopter, boat, train or bicycle", "verbs": ["present", "move", "drive", "fly", "approach", "depart", "turn", "rise", "fall", "crash", "shake", "sink", "explode"]},
+    "object": {"describe": "a thing people use or carry: a bag, a tool, a phone, a package, a bottle, a device", "verbs": ["present", "move", "rise", "fall", "turn", "shake", "spin", "open", "split", "glow", "explode"]},
+    "structure": {"describe": "a building, tower, bridge, tent or other built place", "verbs": ["present", "shake", "collapse", "glow", "turn", "explode"]},
     "plant": {"describe": "a tree, flower, crop or fungus", "verbs": ["present", "sway", "grow", "fall"]},
     "cell": {"describe": "a cell, virus, bacterium, organ or other body part, shown as a model", "verbs": ["present", "pulse", "move", "split", "spin", "grow", "turn"]}
   },
@@ -48,7 +48,8 @@
     "flap": ["flap", "took off", "flew"],
     "drive": ["drove", "drive", "driving"],
     "depart": ["left", "depart", "flew off", "sailed", "drove off", "took off"],
-    "approach": ["approach", "came", "arrived", "neared", "toward"]
+    "approach": ["approach", "came", "arrived", "neared", "toward"],
+    "explode": ["explod", "detonat", "blew up", "blown up", "blast", "went off", "obliterat"]
   },
   "states": {
     "normal": [],
