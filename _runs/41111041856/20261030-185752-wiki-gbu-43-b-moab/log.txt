@@ -1,0 +1,93 @@
+story (given): a twenty-one-thousand-pound bomb, a C-130, BLU-82 Daisy Cutter; 5 moments
+planning the visuals
+visual plan (model): 8 3D, 13 2.5D, 36 2D (17% of the runtime in 3D, aiming for 75%); 3D: stage present, stage move, stage present, stage present, stage present, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: 'Lockheed Martin C130J"Super Hercules" (REUPLOAD)' (sketchfab) can't be used: 19 MB after preparation
+assets: a C-130 -> 'Lockheed AC-130 "Hercules"' from sketchfab (by, 46749 triangles, 0 animations)
+building the story world: 3 entities for 8 scenes
+real sizes: c130: 7.35 m -> 29.8 m (reference size for 'c-130')
+animation director (model): scene 1: moab on c130, moab release, moab fall (revised: blu82: only named by a word another subject owns here; left out); scene 2: moab on c130, c130 approach, moab release, moab fall (revised: blu82: only named by a word another subject owns here; left out); scene 19: moab on c130, blu82 on c130; scene 42: moab present (revised: moab move: an inert object can't move by itself; shown still)
+scene director: stencil (graphic, strength 0.75); scene 1: aerial/follow; scene 2: track/push_in/follow/follow; scene 4: track; scene 5: track; scene 11: establish; scene 18: track; scene 19: track; scene 42: track/push_in
+story world (noir): cast model, sets model, direction model; moab as object, c130 as vehicle, blu82 as object
+voicing 57 scenes with kokoro
+fetching visuals
+stock clip s3.mp4 left out: a clip can't be checked
+stock clip s10.mp4 left out: a clip can't be checked
+stock clip s12.mp4 left out: a clip can't be checked
+stock clip s14.mp4 left out: a clip can't be checked
+stock clip s16.mp4 left out: a clip can't be checked
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s20.mp4 left out: a clip can't be checked
+stock clip s21.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s23.mp4 left out: a clip can't be checked
+stock clip s24.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s26.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s29.mp4 left out: a clip can't be checked
+stock clip s32.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s39.mp4 left out: a clip can't be checked
+stock clip s40.mp4 left out: a clip can't be checked
+stock clip s43.mp4 left out: a clip can't be checked
+stock clip s44.mp4 left out: a clip can't be checked
+stock clip s45.mp4 left out: a clip can't be checked
+stock clip s46.mp4 left out: a clip can't be checked
+stock clip s48.mp4 left out: a clip can't be checked
+stock clip s51.mp4 left out: a clip can't be checked
+stock clip s52.mp4 left out: a clip can't be checked
+stock clip s53.mp4 left out: a clip can't be checked
+stock clip s55.mp4 left out: a clip can't be checked
+stock clip s57.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Mother of All Bombs large bomb on tarmac': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for 'Mother of All Bombs': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+photo commons7.jpg left out: Shows Whistler's Mother painting instead of a bomb.
+photo commons7.jpg left out: Shows sparrows instead of the Mother of All Bombs.
+photo commons7.jpg left out: Shows a religious painting instead of the Mother of All Bombs.
+warning: loc image search failed for 'Mother of All Bombs Intended use': HTTPSConnectionPool(host='www.loc.gov', port=443): Read timed out.
+photo commons8.jpg left out: Shows a political rally logo instead of the Mother of All Bombs.
+warning: loc image search failed for 'Mother of All Bombs empty bomb storage facility': HTTPSConnectionPool(host='www.loc.gov', port=443): Read timed out. (read timeout=15) (not asked again this run)
+photo p16.jpg left out: Shows a highway tunnel instead of the Mother of All Bombs.
+photo p20.jpg left out: Shows fighter jets on a runway instead of bomb deployment.
+photo p21.jpg left out: Shows a rocket pod on an aircraft, not the Mother of All Bombs.
+photo p21.jpg left out: Shows a fighter jet, not the Mother of All Bombs.
+photo p25.jpg left out: Shows skydivers and a small sport plane, not the Mother of All Bombs deployment.
+photo p25.jpg left out: Shows personal skydiving gear, not a military cargo extraction parachute.
+photo p26.jpg left out: Shows World War II atomic bomb newspaper, unrelated to the Mother of All Bombs.
+photo p27.jpg left out: Shows a bursting water balloon, unrelated to the Mother of All Bombs.
+photo p33.jpg left out: Shows a fighter jet instead of the bomb.
+photo p35.jpg left out: Shows a WWII Marine Corsair model, not the MOAB.
+photo p35.jpg left out: Shows a B-29 and atomic bombs, not the MOAB.
+photo p43.jpg left out: Shows a recreational skydiver instead of a military bomb parachute.
+photo p43.jpg left out: Shows a skydiver instead of the MOAB deployment.
+photo p44.jpg left out: Shows a consumer drone instead of a GPS-guided MOAB bomb.
+photo p44.jpg left out: Shows a consumer drone controller instead of GPS weapon guidance.
+photo p47.jpg left out: Shows a volcano instead of the MOAB bomb.
+photo p47.jpg left out: Shows a volcano instead of a bomb explosion.
+photo p51.jpg left out: Shows a nuclear test explosion, not a conventional bomb.
+photo p55.jpg left out: Shows a garment factory, unrelated to bomb manufacturing.
+17 scenes without a picture of their own reuse one of the video's photos
+visuals: 4 Wikipedia and freely licensed images, 44 stock, 9 scenes on plain background
+photo shot37-1.jpg left out: Shows Whistler's Mother painting, completely unrelated to the MOAB bomb.
+photo shot37-1.jpg left out: Shows sparrows instead of the MOAB bomb or test range.
+photo shot37-1.jpg left out: Shows a religious painting instead of the MOAB bomb or test.
+collage: 31 photos styled, 16 with a cut-out subject
+drawing story scenes (cloudflare)
+warning: no background art for scene 13: image generation failed: 429: the free daily image allowance is used up
+warning: no art for 'a man in a white shirt and tie at a drafting table': image generation failed: the free daily image allowance is used up
+0 illustrations drawn
+relevance: checking 8 3D scenes by eye
+art direction: news
+rendering 320s long video
+look: scene 1 at 6.3s: Subject c130 is missing from the frame.
+look: scene 19 at 108.9s: The tree trunk clips through the tail of the plane.
+3D coverage: 17% of the runtime in 3D (target 75%), 17% moving on its own, 8 3D shots; environment richness 70, animation quality 71
+quality: 3D covers 17% of the runtime, under the 75% target
+quality: 3D scenes [5, 18, 19] repeat an earlier shot
+quality: 3D scenes [11, 42] have little moving in the picture beyond the camera (animation under 40)
+rendering thumbnail
+thumbnail: cutout take
+warning: the picture barely changes from 82s to 86s
+done: approved

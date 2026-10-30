@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 1 at 6.3s: Subject c130 is missing from the frame.",
+    "scene 19 at 108.9s: The tree trunk clips through the tail of the plane.",
+    "3D covers 17% of the runtime, under the 75% target",
+    "3D scenes [5, 18, 19] repeat an earlier shot",
+    "3D scenes [11, 42] have little moving in the picture beyond the camera (animation under 40)",
+    "the picture barely changes from 82s to 86s"
+  ],
+  "repair": [],
+  "repaired": []
+}

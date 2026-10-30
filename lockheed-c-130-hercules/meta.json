@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "lockheed-c-130-hercules",
+  "query": "lockheed c-130 hercules",
+  "source": "sketchfab",
+  "uid": "sketchfab:361991c9874d4680931b3e0d23500e43",
+  "title": "Lockheed AC-130 \"Hercules\"",
+  "author": "helijah",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-361991c9874d4680931b3e0d23500e43",
+  "checked": "vision",
+  "triangles": 46749,
+  "bytes": 5184608,
+  "size": [
+    29.6388,
+    12.0656,
+    40.2919
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "Four-engine turboprop military transport aircraft, gray camouflage, high wing.",
+  "added": "2026-10-30T18:58:16+00:00"
+}

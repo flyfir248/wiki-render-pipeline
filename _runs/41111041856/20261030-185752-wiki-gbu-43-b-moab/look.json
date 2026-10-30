@@ -1,0 +1,136 @@
+{
+  "warnings": [
+    "scene 1 at 6.3s: Subject c130 is missing from the frame.",
+    "scene 19 at 108.9s: The tree trunk clips through the tail of the plane."
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 2.29,
+      "contrast": 54.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 1,
+      "at": 6.26,
+      "contrast": 41.2,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject c130 is missing from the frame."
+    },
+    {
+      "scene": 2,
+      "at": 10.52,
+      "contrast": 48.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 2,
+      "at": 15.52,
+      "contrast": 30.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 4,
+      "at": 26.26,
+      "contrast": 52.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 4,
+      "at": 28.66,
+      "contrast": 50.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 5,
+      "at": 31.74,
+      "contrast": 49.5,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 5,
+      "at": 35.65,
+      "contrast": 48.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 66.23,
+      "contrast": 47.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 71.93,
+      "contrast": 55.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 103.92,
+      "contrast": 50.7,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 106.51,
+      "contrast": 49.7,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 19,
+      "at": 108.9,
+      "contrast": 56.9,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "The tree trunk clips through the tail of the plane."
+    },
+    {
+      "scene": 19,
+      "at": 111.48,
+      "contrast": 53.1,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 42,
+      "at": 223.35,
+      "contrast": 50.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 42,
+      "at": 225.63,
+      "contrast": 52.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    }
+  ]
+}
