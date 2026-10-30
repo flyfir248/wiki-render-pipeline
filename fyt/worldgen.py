@@ -40,6 +40,7 @@ from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
 
 from fyt import llm, manifest, scenes3d
 from fyt.config import Config
@@ -155,6 +156,12 @@ class Actor(BaseModel):
     state: State = "normal"
     holding: str = Field(default="", description="The id of an object entity it holds, or empty.")
     count: int = Field(default=1, description="How many are shown together: 1, or 2-9 for a flock, crowd, herd or fleet the story names.")
+    # set by the Animation Director (fyt/animation.py), never asked of the blocking model: the entity this
+    # one rides with until a beat releases it (a bomb under its aircraft), how, and what it does on
+    # reaching the ground after a release ("explode")
+    attached: SkipJsonSchema[str] = ""
+    mount: SkipJsonSchema[str] = ""
+    impact: SkipJsonSchema[str] = ""
 
 
 class Mark(BaseModel):
@@ -175,6 +182,7 @@ class BeatActor(BaseModel):
     to: Spot | Literal[""] = Field(default="", description="Where it moves to in this beat, or empty to stay.")
     state: State = "normal"
     face: str = Field(default="", description="An entity id it turns to, 'camera', or empty.")
+    release: SkipJsonSchema[bool] = False  # leaves what it was attached to at this beat (fyt/animation.py)
 
 
 class Beat(BaseModel):

@@ -66,6 +66,14 @@ export type CastMember = {
   count?: number;
   build: Build;
   held?: Build;
+  // the Animation Director (fyt/animation.py): the entity it rides with (under, inside, on or held)
+  // until a beat releases it, and what it does on reaching the ground after a release
+  attached?: string;
+  mount?: "under" | "inside" | "on" | "held" | "";
+  impact?: "explode" | "";
+  // set as the beats play (segmentOf): what it was released from, and whether that was this beat
+  released?: string;
+  dropNow?: boolean;
   // posed: a still library animal the renderer moves as a whole (a gait, a breath, a turn)
   model?: { id: string; src: string; fit?: { forward?: string; up?: string }; clips?: string[]; posed?: boolean };
 };
@@ -92,7 +100,7 @@ export type StyleName = "lowpoly" | "voxel" | "noir" | "diorama" | "clinical";
 
 // A beat of a directed scene: from its cue on, these actors take up a new verb, go somewhere or change
 // state, starting where the last beat left them, and the camera cuts to the beat's move.
-export type BeatActor = { entity: string; verb?: string; to?: Spot | ""; state?: State; face?: string };
+export type BeatActor = { entity: string; verb?: string; to?: Spot | ""; state?: State; face?: string; release?: boolean };
 export type Beat = { from: number; cue?: string; cast: BeatActor[]; camera?: string; on?: string };
 
 // The scene director's plan (fyt/director.py): one art profile for the video, the place's layers, the

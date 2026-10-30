@@ -9,7 +9,7 @@ import * as THREE from "three";
 import { unit as unitOf } from "../../../theme";
 import type { SceneProps } from "../../shared";
 import { HeadingPlate, WeatherOverlay } from "../../world3d";
-import { momentOf } from "../kit";
+import { Billow, Fireball, momentOf } from "../kit";
 import { load as loadModel, type Loaded, prepare, ready } from "../stage";
 import { Bird, Cell, Fish, Insect, Quadruped, quadDims, quadPose, Serpent } from "./creatures";
 import { Airliner, Boat, Car, heroOf, Iceberg, LightPlane, Liner, Spray } from "./hero";
@@ -56,7 +56,10 @@ export const footprint = (b: Build) => {
 
 const SPOTS: Record<Spot, [number, number]> = { center: [0, 0], left: [-1.7, 0.25], right: [1.7, 0.25], back: [0.2, -2.4], front: [-0.2, 1.3], far: [0.4, -7] };
 
-type Placed = { m: CastMember; pos: THREE.Vector3; yaw: number; phase: number; speed: number; h: number; w: number; w0: number; air: number };
+// ride: how it rides with another (attached, not yet released); drop: 0-1 through its fall from what
+// released it, >1 once landed; boom: seconds since it detonated (negative before)
+type Placed = { m: CastMember; pos: THREE.Vector3; yaw: number; phase: number; speed: number; h: number; w: number; w0: number; air: number;
+  ride?: string; hidden?: boolean; drop?: number; boom?: number; blast?: number; start?: THREE.Vector3 };
 // (gu, gt, gs: how far through the whole scene, in 0-1 and seconds, and its length: the director's shots
 // and acts are timed on the scene, not on a beat)
 export type Blocking = { actors: Placed[]; cam: { pos: THREE.Vector3; look: THREE.Vector3; fov: number; setup: number; roll: number }; U: number; t: number; k: number; u: number;
@@ -82,11 +85,15 @@ export const segmentOf = (world: World, frame: number, D: number, at: number) =>
   let cast = world.cast;
   let camera = world.camera;
   let on = world.on;
-  for (const bt of beats.slice(0, i)) {
+  for (const [j, bt] of beats.slice(0, i).entries()) {
     cast = cast.map((c) => {
       const o = bt.cast.find((x) => x.entity === c.entity);
       const from = (c.to || c.at) as Spot; // where the last beat left it
-      return o ? { ...c, at: from, to: o.to ?? "", verb: o.verb || c.verb, state: o.state || c.state, face: o.face ?? c.face } : { ...c, at: from, to: "" };
+      // released at this beat: it leaves what it rode with and falls from it in this beat; in a later
+      // beat it is where it landed
+      const rel = o?.release && c.attached ? { attached: "", released: c.attached, dropNow: j === i - 1 } : { dropNow: false };
+      return o ? { ...c, at: from, to: o.to ?? "", verb: o.verb || c.verb, state: o.state || c.state, face: o.face ?? c.face, ...rel }
+        : { ...c, at: from, to: "", dropNow: false };
     });
     camera = bt.camera || camera;
     on = bt.on && cast.some((c) => c.entity === bt.on) ? bt.on : on;
@@ -112,7 +119,9 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
   const t = frame / fps;
   const k = (u - at) * (D / fps);
   const sizes = world.cast.map((m) => footprint(m.build));
-  const ground = world.cast.filter((m) => !flies(m));
+  // what rides on something, or was let go from it, is placed from its carrier, not on the ground
+  const carried = (m: CastMember) => Boolean(m.attached || m.released);
+  const ground = world.cast.filter((m) => !flies(m) && !carried(m));
   const U = Math.max(1.1, ...ground.map((m) => footprint(m.build).w * 0.9), ...(ground.length ? [] : sizes.map((s) => s.w * 0.6)));
   const used = new Map<string, number>();
   const starts = world.cast.map((m, i) => {
@@ -192,8 +201,9 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     pos.y = air || (floats ? -h * 0.12 : 0);
     const speed = dist / Math.max(0.1, t);
     const many = Math.max(1, Math.min(9, m.count ?? 1));
-    return { m, pos, yaw, phase, speed, h, w: w * (1 + 0.9 * Math.sqrt(many - 1)), w0: w, air };
+    return { m, pos, yaw, phase, speed, h, w: w * (1 + 0.9 * Math.sqrt(many - 1)), w0: w, air, start: start.clone() };
   });
+  carry(placed, D / fps, t, U);
   // on open water, people and animals stand on something afloat, never on the water: the ice floe at an
   // iceberg's foot, else the deck of a boat or a ditched airliner
   if (waterBand(world.set.kind) || world.set.kind === "sea") {
@@ -241,6 +251,67 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
   }
   const G = g ?? { u, t, s: D / fps };
   return { actors: placed, cam: direct(world, placed, u, t, U, D, fps, at, portrait, G.u), U, t, k, u, gu: G.u, gt: G.t, gs: G.s };
+};
+
+// The Animation Director's attachments (fyt/animation.py). A thing attached to another rides with it:
+// under it (a bomb under its aircraft), inside it (unseen), on top, or held. Once a beat releases it, it
+// falls from where its carrier was when the beat began, keeping the carrier's forward speed and
+// accelerating down, so it traces an arc and lands ahead of where it was let go; an explosive detonates
+// where it lands. In a later beat it is where it landed. `secs` is the beat's length, `t` the time in it.
+const FALL_MIN = 1.4;
+const FALL_MAX = 3.2;
+export const carry = (placed: Placed[], secs: number, t: number, U: number) => {
+  const by = new Map(placed.map((p) => [p.m.entity, p]));
+  for (const p of placed) {
+    const parent = by.get(p.m.attached || p.m.released || "");
+    if (!parent || parent === p) continue;
+    const fwd = new THREE.Vector3(Math.cos(parent.yaw), 0, -Math.sin(parent.yaw));
+    if (p.m.attached) {
+      p.ride = p.m.mount || "under";
+      p.yaw = parent.yaw;
+      p.hidden = p.ride === "inside";
+      const bob = parent.m.verb === "fly" ? Math.sin(t * 1.1) * parent.h * 0.05 : 0;
+      const y = p.ride === "on" ? parent.pos.y + parent.h * 0.62 : p.ride === "held" ? parent.pos.y + parent.h * 0.45 : parent.pos.y + parent.h * 0.02 - p.h;
+      p.pos.set(parent.pos.x, y + bob, parent.pos.z);
+      if (p.ride === "held") p.pos.add(new THREE.Vector3(Math.sin(parent.yaw), 0, Math.cos(parent.yaw)).multiplyScalar(parent.w0 * 0.25));
+      p.air = Math.max(0, p.pos.y);
+      continue;
+    }
+    // released: from under where the carrier was as the beat began, to the ground ahead of it
+    const from = (parent.start ?? parent.pos).clone();
+    from.y = parent.air ? parent.air + parent.h * 0.02 - p.h : parent.h * 0.5;
+    const T = Math.min(FALL_MAX, Math.max(FALL_MIN, secs * 0.6));
+    // (by the carrier's length, not its speed this frame, so the landing point holds still)
+    const reach = parent.w0 * (parent.air ? 1.2 : 0.4);
+    const land = from.clone().add(fwd.clone().multiplyScalar(reach)).setY(0);
+    const s = p.m.dropNow ? Math.min(1, t / T) : 1;
+    p.drop = p.m.dropNow ? t / T : 2;
+    p.yaw = parent.yaw;
+    p.pos.set(from.x + (land.x - from.x) * s, Math.max(0, from.y) * (1 - s * s), from.z + (land.z - from.z) * s);
+    p.air = p.pos.y;
+    if (p.m.impact === "explode" || p.m.verb === "explode") {
+      const since = p.m.verb === "explode" && !p.m.dropNow ? t - 0.15 : t - T;
+      p.boom = since;
+      p.blast = Math.max(p.w0 * 1.6, U * 1.4);
+      if (since > 0.08) {
+        p.hidden = true;
+        // framed as the blast it has become: the camera pulls back to take it in
+        p.w = p.blast * 2.2;
+        p.h = p.blast * 1.6;
+      }
+    }
+  }
+  // a thing told to explode where it stands (a building, a vehicle)
+  for (const p of placed) {
+    if (p.boom !== undefined || p.m.verb !== "explode") continue;
+    p.boom = t - 0.15;
+    p.blast = Math.max(p.w0 * 1.2, U * 1.2);
+    if (p.boom > 0.08) {
+      p.hidden = true;
+      p.w = p.blast * 2.2;
+      p.h = p.blast * 1.6;
+    }
+  }
 };
 
 // The height of the flat floe at an iceberg's foot (hero.tsx Iceberg), for an iceberg h tall.
@@ -454,6 +525,9 @@ const rigidPose = (p: Placed, b: Blocking, vehicle: boolean) => {
   let rot: [number, number, number] = [0, 0, 0];
   const off = new THREE.Vector3();
   let scale = 1;
+  // riding with its carrier it is held still in its frame; falling from it, its nose drops as it goes
+  if (p.ride) return { rot, off, scale };
+  if (p.drop !== undefined) return { rot: [0, 0, -Math.min(1, p.drop) * 0.9] as [number, number, number], off, scale };
   switch (verb) {
     case "present":
       rot = [0, Math.sin(t * 0.4) * 0.12, 0];
@@ -831,6 +905,7 @@ const kitFor = (world: World, m: CastMember) => {
 const Actor: React.FC<{ p: Placed; look: Look; b: Blocking; world: World }> = (props) => {
   const { p, look, b } = props;
   const { m } = p;
+  if (p.hidden) return null; // inside its carrier, or blown apart
   const s = m.state;
   const one = (dt: number) => {
     const t = b.t + dt;
@@ -1069,10 +1144,33 @@ const World3D: React.FC<{ world: World; b: Blocking; ba: Blocking; portrait: boo
           ) : null}
         </group>
       ))}
+      {ba.actors.map((a, i) => (a.boom !== undefined && a.blast ? <Blast key={`blast${i}`} at={[a.pos.x, 0, a.pos.z]} since={a.boom} size={a.blast} /> : null))}
       <Marks world={world} b={b} look={look} />
       {VOID.includes(world.set.kind) ? <ambientLight intensity={0.2} /> : null}
       {off("post") || (!glowing && !d) ? null : <Post finish={d ? { ...finish, art: d.art, profile: art.profile, contrast: d.light?.contrast ?? 1, glow: glowing } : finish} />}
     </>
+  );
+};
+
+// A detonation where a thing lands or stands: a flash and fireball, a shock ring racing out over the
+// ground, and a column of dust and smoke that rises and spreads. `since` in seconds, size in metres.
+const Blast: React.FC<{ at: [number, number, number]; since: number; size: number }> = ({ at, since, size }) => {
+  if (since < 0) return null;
+  const f = since * 30;
+  const ring = Math.min(1, since / 1.2);
+  return (
+    <group>
+      <Fireball at={[at[0], size * 0.25, at[2]]} since={f} size={size * 0.32} />
+      {ring < 1 ? (
+        <mesh position={[at[0], size * 0.02, at[2]]} rotation={[-Math.PI / 2, 0, 0]} scale={size * (0.4 + 3.6 * ring)}>
+          <ringGeometry args={[0.92, 1, 64]} />
+          <meshBasicMaterial color="#fff2c8" transparent opacity={0.85 * (1 - ring)} side={THREE.DoubleSide} />
+        </mesh>
+      ) : null}
+      <Fireball at={[at[0] + size * 0.15, size * 0.12, at[2] - size * 0.1]} since={f - 3} size={size * 0.22} />
+      <Billow at={at} since={f - 4} count={30} spread={size * 0.22} rise={size * 0.3} size={size * 0.28} color="#6e6458" dark="#2e2924" life={240} />
+      {since < 0.12 ? <pointLight position={[at[0], size * 0.5, at[2]]} intensity={40} distance={size * 12} color="#ffe2a0" /> : null}
+    </group>
   );
 };
 
