@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import difflib
 import json
 import os
 import re
@@ -96,13 +97,61 @@ def _out_for_the_day(r) -> bool:
     return bool(DAILY.search(r.text or "")) or wait > 120
 
 
+NEWEST = "newest:"  # a model named "newest:flash" is the provider's newest stable model with "flash" in its name
+_SKIP_MODELS = ("image", "tts", "audio", "live", "embedding", "exp", "vision", "robotics")
+
+
+def newest_model(c, name: str) -> str | None:
+    """`name` as is, or for "newest:<word>" the newest model the provider lists (GET /models) whose name has
+    that word, preferring stable ones over previews. Providers retire models for new keys (Gemini 2.5 Flash
+    was no longer offered to new users by late 2026), so a fixed name goes stale. None if none is listed."""
+    if not name.startswith(NEWEST):
+        return name
+    word = name[len(NEWEST):]
+    try:
+        r = requests.get(
+            f"{os.path.expandvars(c.base_url).rstrip('/')}/models",
+            headers={"Authorization": f"Bearer {os.environ.get(c.api_key_env, '')}"},
+            timeout=30,
+        )
+        r.raise_for_status()
+        ids = [m["id"].removeprefix("models/") for m in r.json().get("data", [])]
+    except Exception as e:
+        print(f"could not list the models at {c.base_url}: {e}")
+        return None
+    others = [w for w in ("lite", "pro", "flash") if w != word and w not in word]
+    fits = [i for i in ids if word in i and not any(w in i for w in others + list(_SKIP_MODELS))]
+
+    def rank(i: str) -> tuple:
+        m = re.search(r"-(\d+(?:\.\d+)*)(?:-|$)", i)  # gemini-3.1-flash -> (3, 1)
+        return ("preview" not in i, tuple(int(n) for n in m.group(1).split(".")) if m else (), -len(i))
+
+    return max(fits, key=rank) if fits else None
+
+
+_resolved: dict[tuple[str, str], str | None] = {}  # (base_url, "newest:...") -> model id, once per run
+
+
+def _models(b) -> list[str]:
+    """A backup provider's models, with any "newest:<word>" looked up in its model list."""
+    out = []
+    for m in b.models:
+        if m.startswith(NEWEST):
+            if (b.base_url, m) not in _resolved:
+                _resolved[(b.base_url, m)] = newest_model(b, m)
+            m = _resolved[(b.base_url, m)]
+        if m and m not in out:
+            out.append(m)
+    return out
+
+
 def _chain(cfg: Config) -> list[Config]:
     """Who to ask, in order: the main model, the backup provider's models (when its key is set), then the
     fallback models on the main provider."""
     steps = [_with_model(cfg, cfg.llm.model)]
     b = cfg.llm.backup
     if b and b.models and os.environ.get(b.api_key_env) and b.base_url not in _SPENT:
-        for m in b.models:
+        for m in _models(b):
             steps.append(cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
                 "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None,
                 "last_resort": []})}))
@@ -111,7 +160,7 @@ def _chain(cfg: Config) -> list[Config]:
         if b.models and os.environ.get(b.api_key_env) and all(os.environ.get(v) for v in re.findall(r"\$(\w+)", b.base_url)):
             steps += [cfg.model_copy(update={"llm": cfg.llm.model_copy(update={
                 "model": m, "base_url": b.base_url, "api_key_env": b.api_key_env, "fallback_models": [], "backup": None,
-                "last_resort": []})}) for m in b.models]
+                "last_resort": []})}) for m in _models(b)]
     return steps
 
 
@@ -178,6 +227,15 @@ def _openai_structured_once(
     }
     if c.reasoning_effort and "gpt-oss" in model:
         body["reasoning_effort"] = c.reasoning_effort
+    if "generativelanguage.googleapis.com" in c.base_url:
+        # Gemini thinks before it answers and the thinking counts against max_tokens: a 3000-token chapter
+        # came back cut off mid-JSON again and again, each retry spending one of Flash's few free requests.
+        # Its output limit is far higher, and the free tier counts requests, not tokens.
+        body["max_tokens"] = max(max_tokens, 16000)
+        body["reasoning_effort"] = "low"
+    if "nemotron" in model and "nvidia.com" in c.base_url:
+        # Nemotron thinks at length by default, and the thinking counts against max_tokens
+        body["chat_template_kwargs"] = {"enable_thinking": False}
     retry_note = ""
     last_error = ""
     for attempt in range(8):
@@ -212,6 +270,9 @@ def _openai_structured_once(
             print(f"rate limited by {c.base_url}; waiting {wait:.0f}s")
             time.sleep(wait)
             continue
+        if r.status_code in (404, 410):  # retired, unknown, or not open to this account: not again this run
+            _EXHAUSTED.add((c.base_url, model))
+            raise ClaudeError(f"{c.base_url} returned {r.status_code}: {r.text[:300]}")
         if r.status_code == 402:  # out of credit: no use asking this provider again today
             _SPENT.add(c.base_url)
             print(f"{c.base_url} has no credit left; not asking it again this run")
@@ -229,19 +290,51 @@ def _openai_structured_once(
             continue
         if r.status_code >= 400:
             raise ClaudeError(f"{c.base_url} returned {r.status_code}: {r.text[:500]}")
-        content = (r.json()["choices"][0]["message"]["content"] or "").strip()
+        choice = r.json()["choices"][0]
+        content = (choice["message"]["content"] or "").strip()
+        if choice.get("finish_reason") == "length" and body["max_tokens"] < 32000:
+            body["max_tokens"] = min(body["max_tokens"] * 2, 32000)  # cut off: the next try gets room to finish
+            print(f"{model} ran out of room mid-reply; retrying with max_tokens {body['max_tokens']}")
         if content.startswith("```"):  # tolerate a fenced reply
             content = content.strip("`").removeprefix("json").strip()
+        if not content.startswith("{") and "{" in content:  # a sentence before or after the object (Gemini)
+            content = content[content.index("{"): content.rindex("}") + 1]
         try:
             answer = schema.model_validate_json(content)
         except ValidationError as e:
+            answer = _salvage(schema, content, e)
+            if answer is not None:
+                LAST_MODEL = model
+                return answer
             last_error = str(e)[:800]
-            print(f"{model} reply did not match the schema; retrying")
+            print(f"{model} reply did not match the schema ({' '.join(str(e).split())[:200]}); retrying")
             retry_note = f"\n\nYour previous reply did not match the schema:\n{last_error}\nReply with the corrected JSON object only."
             continue
         LAST_MODEL = model
         return answer
     raise ClaudeError(f"{model} did not return a valid answer: {last_error}")
+
+
+def _salvage(schema: type[BaseModel], content: str, error: ValidationError):
+    """The answer with every made-up value in a choice field left out (an actor's action "cruise", a setting
+    "mountain"), when that is all that is wrong and those fields have defaults. Smaller models often invent
+    such values; a retry costs a request and often invents another. None when it can't be saved."""
+    if not all(err["type"] in ("literal_error", "enum") for err in error.errors()):
+        return None
+    try:
+        data = json.loads(content)
+        for err in error.errors():
+            *path, key = err["loc"]
+            node = data
+            for step in path:
+                node = node[step]
+            if isinstance(node, dict):
+                node.pop(key, None)
+            elif isinstance(node, list) and isinstance(key, int):
+                node[key] = None
+        return schema.model_validate(data)
+    except Exception:
+        return None
 
 
 def helping(cfg: Config) -> Config:
@@ -762,6 +855,10 @@ LONG_WPM = 135
 MIDROLL_MARGIN_MINUTES = 0.5  # aim a little past the minimum so a brisk read still clears it
 
 
+EXTEND_TRIES = 3  # calls that lengthen one short chapter
+SAID_CHARS = 9000  # earlier chapters' narration each chapter is shown, so it doesn't say it again
+
+
 def long_words(cfg: Config) -> int:
     """Narration words a long video needs to run its target length, and at least the minimum
     length for mid-roll ads (`long_min_minutes`), with a margin."""
@@ -828,30 +925,98 @@ def split_notes(notes: str, parts: int, limit: int) -> list[str]:
     return chunks
 
 
+def _ending(scenes: list[ScriptScene]) -> int:
+    """Where a chapter's ending starts: the scene inviting viewers to subscribe, else its last scene."""
+    for k in range(len(scenes) - 1, 0, -1):
+        if "subscrib" in scenes[k].narration.lower():
+            return k
+    return max(1, len(scenes) - 1)
+
+
 def _extend_chapter(
     cfg: Config, system: str, user: str, scenes: list[ScriptScene], missing: int, next_plan: ChapterPlan | None
 ) -> list[ScriptScene]:
-    """More scenes for a chapter that came out short, continuing from its last line. [] if the call fails."""
-    lead = f' It still has to lead into the next chapter, "{next_plan.heading}".' if next_plan else ""
-    so_far = "\n".join(sc.narration for sc in scenes)
+    """A chapter that came out short, with more scenes put before its ending (its cliffhanger, or the
+    video's close), so nothing comes after the subscribe line. The chapter as it was if the call fails."""
+    cut = _ending(scenes) if len(scenes) > 1 else len(scenes)
+    body, ending = scenes[:cut], scenes[cut:]
+    lead = f' The ending leads into the next chapter, "{next_plan.heading}".' if next_plan else ""
+    so_far = "\n".join(sc.narration for sc in body)
+    end_text = "\n".join(sc.narration for sc in ending)
     ask = (
-        f"{user}\n\nYou already wrote this chapter's opening:\n{so_far}\n\nIt is {missing} words too short. "
-        f"Return only the NEW scenes that continue it: about {missing} more words of narration, with new facts "
-        f"and detail from the notes, not repetition.{lead}"
+        f"{user}\n\nYou already wrote this chapter. Its middle:\n{so_far}\n\nIts ending:\n{end_text or '(none)'}\n\n"
+        f"It is {missing} words too short. Return only NEW scenes that go between the middle and the ending: "
+        f"about {missing} more words of narration, with new facts and detail from the notes that the chapter "
+        f"doesn't say yet. Don't repeat or reword anything above, and don't wrap up: the ending stays last.{lead}"
     )
     try:
         extra = _openai_structured(cfg, system, ask, ChapterScenes, max_tokens=3000).scenes
     except Exception as e:  # the chapter as written still works, just shorter
         print(f"could not lengthen a short chapter: {e}")
-        return []
+        return scenes
     print(f"added {sum(len(sc.narration.split()) for sc in extra)} words to a short chapter")
-    return extra
+    return body + extra + ending
+
+
+def _words(text: str) -> list[str]:
+    return re.findall(r"[a-z0-9']+", text.lower())
+
+
+def _sentences(text: str) -> list[str]:
+    return [t for t in re.split(r"(?<=[.!?])\s+", text.strip()) if t]
+
+
+def _repeats(sentence: list[str], said: list[list[str]]) -> bool:
+    """Whether a sentence says again what an earlier one said: most of its words, in much the same order."""
+    if len(sentence) < 5:
+        return False
+    words = set(sentence)
+    for old in said:
+        if len(words & set(old)) / len(words | set(old)) >= 0.6:
+            return True
+        if difflib.SequenceMatcher(None, sentence, old).ratio() >= 0.75:
+            return True
+    return False
+
+
+def drop_repeats(scenes: list, chapters: list[Chapter] | None = None) -> tuple[list, list[Chapter]]:
+    """The scenes without narration that repeats what an earlier scene already said: a repeated sentence is
+    cut, and a scene that is mostly repeats goes. The first scene stays. Chapter starts move to match."""
+    said: list[list[str]] = []
+    kept, where = [], []
+    for k, sc in enumerate(scenes):
+        parts = _sentences(sc.narration)
+        fresh = [t for t in parts if not _repeats(_words(t), said)]
+        said += [_words(t) for t in parts]
+        if k and len(fresh) * 2 < len(parts):
+            print(f"dropped a scene that repeats earlier narration: {sc.narration[:80]!r}")
+            where.append(len(kept))
+            continue
+        if k and len(fresh) < len(parts):
+            print(f"cut {len(parts) - len(fresh)} repeated sentence(s) from a scene")
+            sc = sc.model_copy(update={"narration": " ".join(fresh)})
+        where.append(len(kept))
+        kept.append(sc)
+    moved: list[Chapter] = []
+    for c in chapters or []:
+        start = where[c.scene] if c.scene < len(where) else len(kept)
+        if start >= len(kept):
+            continue
+        if moved and moved[-1].scene == start:
+            moved[-1] = c.model_copy(update={"scene": start})  # its scenes all went: the next chapter starts there
+        else:
+            moved.append(c.model_copy(update={"scene": start}))
+    return kept, moved
 
 
 def write_long_script(
     cfg: Config, topic: str, notes: str, guide: str, images: str = "", from_wikipedia: bool = False
 ) -> Script:
     guide += LONG_WIKI_GUIDE if from_wikipedia else ""
+    if cfg.llm.strict_writer:
+        # only the main model, then the backup provider's (NVIDIA's 120B Nemotron), write the script: a small
+        # fallback's long script isn't worth a week's video, and when both are out the next run tries again
+        cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": [], "last_resort": []})})
     limit = cfg.llm.max_note_chars
     n = chapter_count(cfg)
     chunks = split_notes(notes, n, limit)
@@ -899,6 +1064,12 @@ def write_long_script(
         else:
             ending = f": {plan.cliffhanger}" if plan.cliffhanger else ", a question the next chapters answer"
             position += f" Don't wrap up or invite viewers to subscribe yet; end on the open question{ending}"
+        said = "\n".join(sc.narration for sc in scenes)[-SAID_CHARS:]
+        if said:
+            position += (
+                f"\n\nThe narration so far (earlier chapters), which this chapter must not repeat, reword or "
+                f"recap: tell only what comes next.\n<said>\n{said}\n</said>"
+            )
         taken = f"\nImages already used (don't reuse): {', '.join(map(str, sorted(used_images)))}" if used_images else ""
         system = guide + (
             f"\n\nYou are writing one chapter of this video at a time. Return only this chapter's scenes: "
@@ -923,11 +1094,16 @@ def write_long_script(
                 print(f"request too large; retrying chapter {i} with {len(chunk)} characters of notes")
         if not part.scenes:
             continue
-        written = sum(len(sc.narration.split()) for sc in part.scenes)
-        if written < words * 0.85:
-            # Models write short; a chapter that falls well short would pull the video under its minimum.
-            more = _extend_chapter(cfg, system, user, part.scenes, words - written, plans[i] if i < n else None)
-            part = ChapterScenes(scenes=part.scenes + more)
+        for _ in range(EXTEND_TRIES):
+            # Models write short (Nemotron's five chapters came to 765 words, a 5-minute video); a chapter that
+            # falls short pulls the video under the minimum for mid-roll ads
+            written = sum(len(sc.narration.split()) for sc in part.scenes)
+            if written >= words * 0.9:
+                break
+            longer = _extend_chapter(cfg, system, user, part.scenes, words - written, plans[i] if i < n else None)
+            if len(longer) == len(part.scenes):
+                break  # the call failed: the chapter stays as it is
+            part = ChapterScenes(scenes=longer)
         chapters.append(Chapter(title=plan.heading, scene=len(scenes)))
         for sc in part.scenes:
             if sc.image is not None:
@@ -935,6 +1111,7 @@ def write_long_script(
         scenes.extend(part.scenes)
         print(f"wrote chapter {i}/{n}: {plan.heading} ({sum(len(sc.narration.split()) for sc in part.scenes)} words)")
 
+    scenes, chapters = drop_repeats(scenes, chapters)
     return Script(
         core_message=outline.core_message,
         mood=outline.mood,

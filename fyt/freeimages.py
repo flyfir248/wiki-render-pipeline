@@ -35,7 +35,7 @@ Keep = Callable[[list[WikiImage]], list[WikiImage]]
 
 
 def _get(url: str, params: dict) -> dict:
-    r = requests.get(url, params=params, headers={"User-Agent": USER_AGENT}, timeout=30)
+    r = requests.get(url, params=params, headers={"User-Agent": USER_AGENT}, timeout=15)
     r.raise_for_status()
     return r.json()
 
@@ -170,6 +170,8 @@ def broader(query: str, most: int = 3) -> list[str]:
 
 
 _cache: dict[tuple[str, str], list[WikiImage]] = {}  # a run asks the same archive the same thing often
+_failures: dict[str, int] = {}  # failed searches per source this run
+DEAD_AFTER = 2  # a source that fails this often (timing out, most often) isn't asked again this run
 
 
 def search(
@@ -184,13 +186,15 @@ def search(
     for q in broader(query) if broaden else [query]:
         for name in cfg.growth.image_sources:
             fn = SOURCES.get(name)
-            if fn is None:
+            if fn is None or _failures.get(name, 0) >= DEAD_AFTER:
                 continue
             if (name, q) not in _cache:
                 try:
                     _cache[name, q] = fn(q, limit)
                 except Exception as e:  # any one source is a nice-to-have
-                    log(f"warning: {name} image search failed for {q!r}: {e}")
+                    _failures[name] = _failures.get(name, 0) + 1
+                    gone = " (not asked again this run)" if _failures[name] >= DEAD_AFTER else ""
+                    log(f"warning: {name} image search failed for {q!r}: {str(e)[:150]}{gone}")
                     continue
             hits = _cache[name, q]
             hits = [im for im in (keep(hits) if keep else hits) if im.url not in seen and im.title not in seen]

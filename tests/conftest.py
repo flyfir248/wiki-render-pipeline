@@ -32,6 +32,7 @@ def only_commons_is_searched(request, monkeypatch):
     from fyt import freeimages
 
     monkeypatch.setattr(freeimages, "_cache", {})
+    monkeypatch.setattr(freeimages, "_failures", {})
     if request.module.__name__.endswith("test_freeimages"):
         return
 

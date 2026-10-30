@@ -92,9 +92,10 @@ def key_frames(props, script: Script, only: set[int] | None = None) -> dict[int,
 
 
 def picture_gate(cfg: Config, script: Script, story: Manifest | None, props, props_json: Path, public: Path, work: Path, log=print,
-                 only: set[int] | None = None) -> dict[int, str]:
+                 only: set[int] | None = None, strict: bool = False) -> dict[int, str]:
     """{scene index: why} for 3D scenes whose key frame doesn't show their subject. Scenes are passed
-    when no check can be made (no vision model, a render error), with a log line saying so."""
+    when no check can be made (no vision model, a render error), with a log line saying so; with `strict`
+    (long videos), only those showing a vetted library model are, and the rest go back to 2D."""
     frames = key_frames(props, script, only)
     if not frames:
         return {}
@@ -115,9 +116,20 @@ def picture_gate(cfg: Config, script: Script, story: Manifest | None, props, pro
             log(f"relevance: scene {i + 1} kept: the check failed it while saying it shows its subject ({(v.problems or '')[:90]})")
         elif not v.matches:
             bad[i] = f"frame check: {v.problems or 'does not show the subject'}"
+    if strict:
+        for n in [n for n in unchecked if not trusted(script.scenes[n - 1])]:
+            bad[n - 1] = "no vision model could check it, and its model isn't a vetted library one"
+            unchecked.remove(n)
     if unchecked:
         log(f"relevance: no vision model able to judge 3D was free for scenes {unchecked}; they keep their 3D unchecked")
     return bad
+
+
+def trusted(scene) -> bool:
+    """A 3D scene whose model is from the project's vetted library (or built to a spec), so it shows its
+    subject without a check by eye."""
+    m = scene.model or {}
+    return m.get("level") in ("library", "spec") or m.get("checked") == "vetted"
 
 
 # the same kind of thing in the words a vision model uses for it

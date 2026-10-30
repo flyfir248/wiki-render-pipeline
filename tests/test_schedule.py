@@ -5,7 +5,7 @@ import pytest
 
 from fyt import pipeline, schedule, youtube
 from fyt.config import Config
-from fyt.store import Job, Uploads
+from fyt.store import Topics, Job, Uploads
 
 MONDAY = datetime(2026, 9, 28, 19, 0, tzinfo=timezone.utc)
 
@@ -260,3 +260,28 @@ def test_a_reviewed_test_render_replaces_the_scheduled_video_of_its_article(cfg,
     monkeypatch.setattr(youtube, "recent_uploads", lambda n=100: [])
     with pytest.raises(SystemExit):  # nothing of that article is waiting to go public
         schedule.replace(cfg, other)
+
+
+def test_a_reviewed_long_test_render_with_nothing_to_replace_takes_the_next_empty_long_slot(cfg, monkeypatch, tmp_path):
+    cfg.schedule.long_weekday = 5
+    cfg.schedule.long_slot = "16:00"
+    cfg.schedule.long_lead_days = 5
+    cfg.youtube.publish_jitter_minutes = 0
+    job = Job(tmp_path / "test" / "20261030-120838-wiki-gbu-43-b-moab")
+    job.path.mkdir(parents=True)
+    job.update(topic="wiki:GBU-43/B MOAB", status="approved", format="long")
+    monkeypatch.setattr(youtube, "recent_uploads", lambda n=100: [])
+    sent = []
+
+    def upload(cfg, j, publish_at=None):
+        sent.append(publish_at)
+        j.update(youtube_id="moab1")
+        return "moab1"
+
+    monkeypatch.setattr(pipeline, "upload_job", upload)
+    now = datetime(2026, 10, 30, 18, 0, tzinfo=timezone.utc)  # a Friday
+    assert schedule.publish(cfg, job, now=now) == "moab1"
+    saturday = datetime(2026, 10, 31, 16, 0, tzinfo=timezone.utc)
+    assert sent == [saturday]
+    assert Uploads(cfg).filled()[saturday.isoformat()][0] == "moab1"  # the slot is taken: fill won't make another
+    assert Topics(cfg).of_job(job.id) == "wiki:GBU-43/B MOAB"

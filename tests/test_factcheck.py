@@ -101,6 +101,18 @@ def test_verify_reports_claims_that_stay_wrong(monkeypatch):
     assert problems and "two thirds" in problems[0]
 
 
+def test_a_fix_that_fails_leaves_the_scene_flagged_rather_than_stopping_the_check(monkeypatch):
+    def fake(cfg, system, user, schema, max_tokens=3000):
+        if schema is FactCheck:
+            return FactCheck(claims=[Claim(scene=2, claim="two thirds", verdict="wrong", correction="over 70%")])
+        return SceneFacts(narration=" ", heading="Krakatoa island", value=67, text="t")  # nothing left to say
+
+    monkeypatch.setattr(factcheck.llm, "structured", fake)
+    fixed, problems = factcheck.verify(Config(), script(), NOTES, log=lambda m: None)
+    assert problems == ['scene 2: wrong claim "two thirds" (source says: over 70%)']
+    assert fixed.scenes[1] == script().scenes[1]
+
+
 def test_title_claims_are_fixed(monkeypatch):
     def fake(cfg, system, user, schema, max_tokens=3000):
         if schema is FactCheck:
@@ -164,3 +176,24 @@ def test_a_scene_the_source_does_not_back_is_cut_rather_than_losing_the_video(mo
         monkeypatch.setattr(factcheck, "verify", lambda cfg, s, notes, log, p=problems: (s, p))
         with pytest.raises(RuntimeError, match="fact check"):
             pipeline.check_facts(Config(), FakeJob(tmp_path), long, NOTES)
+
+
+def test_figures_said_in_words_are_read_as_numbers():
+    from fyt.factcheck import figures
+
+    assert {21000, 18700} <= set(figures("A twenty-one-thousand-pound bomb with eighteen thousand seven hundred pounds of H-6"))
+    assert figures("The MOAB weighs 21,600 lb (9,800 kg).") == [21600, 9800]
+    assert figures("one strike in two thousand and three") == [2003]
+
+
+def test_a_wrong_verdict_on_a_figure_the_article_gives_is_overruled():
+    from fyt.factcheck import Claim, misread
+
+    notes = "The MOAB weighs 21,600 pounds. It has a light 2,900 lb aluminum casing around 18,700 lb of explosive."
+    casing = Claim(scene=7, claim="The bomb weighs twenty-one thousand pounds", verdict="wrong",
+                   correction="a light 2,900 lb (1.3 t) aluminum casing")
+    assert misread(casing, notes)
+    made_up = Claim(scene=8, claim="The bomb weighs thirty thousand pounds", verdict="wrong", correction="21,600 pounds")
+    assert not misread(made_up, notes)
+    named = Claim(scene=9, claim="It was designed by Albert Weimorts", verdict="wrong", correction="Albert L. Weimorts Jr.")
+    assert not misread(named, notes)  # no figure in dispute

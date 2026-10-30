@@ -159,7 +159,7 @@ def test_scene_visuals_uses_chosen_images_then_stock(monkeypatch, tmp_path):
     )
     job = Job(tmp_path / "job")
     job.public.mkdir(parents=True)
-    cfg = Config()
+    cfg = Config(format="short")  # a long video's empty scenes reuse a photo (test_long_video_scenes_reuse_photos)
     cfg.growth.visuals_every_scene = False
     scene_media, credits, _ = pipeline.scene_visuals(cfg, job, s, images, "topic")
     assert scene_media[0].src == "media/wiki2.jpg"
@@ -254,7 +254,7 @@ def test_filler_photos_must_match_the_scene(monkeypatch, tmp_path):
     )
     job = Job(tmp_path / "job")
     job.public.mkdir(parents=True)
-    scene_media, credits, _ = pipeline.scene_visuals(Config(), job, s, images, "wiki:Titanic", "Titanic")
+    scene_media, credits, _ = pipeline.scene_visuals(Config(format="short"), job, s, images, "wiki:Titanic", "Titanic")
     assert scene_media[0].src == "media/wiki1.jpg"
     assert scene_media[1].src == "media/wiki2.jpg"  # the image about Robertson, not the next one in the list
     assert 2 not in scene_media  # no spare image fits, the wrestler isn't the Titanic, no query: plain background

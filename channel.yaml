@@ -25,16 +25,51 @@ llm:
   # first, so the main model's free daily tokens are kept for writing and checking scripts. Thin Shorts
   # came from the main model running out before the script was written.
   helper_models: [openai/gpt-oss-20b, qwen/qwen3.8-27b]
-  # Hugging Face's inference router with HF_TOKEN, asked when the main model is rate limited or
-  # failing, before the smaller fallbacks above. Its own limits, so runs side by side don't all wait
-  # on Groq. Billed to the Hugging Face account past its monthly free credit.
+  # NVIDIA's API catalog (build.nvidia.com, secret NVIDIA_API_KEY), asked when the main model is rate
+  # limited or failing, before the smaller fallbacks above: its own free limits, so runs don't all wait on
+  # Groq. Skipped while the secret isn't set.
   backup:
-    base_url: https://router.huggingface.co/v1
-    api_key_env: HF_TOKEN
-    models: [Qwen/Qwen3-235B-A22B-Instruct-2507, deepseek-ai/DeepSeek-V3.1]
-  # Asked last, when every model above is rate limited or out of tokens for the day: Cloudflare Workers AI's
-  # free daily allowance, with the keys the picture checks already use.
+    base_url: https://integrate.api.nvidia.com/v1
+    api_key_env: NVIDIA_API_KEY
+    # Nemotron 3.5 Super VL has a free endpoint (3 Super isn't open to free accounts) and reads images, so it
+    # also checks pictures. NVIDIA retires models often: the newest: one is looked up each run.
+    models: ["nvidia/nemotron-3.5-super-vl-120b-a12b", "newest:deepseek-v4-flash"]
+  # Asked last, when every model above is rate limited or out of tokens for the day: Hugging Face's router
+  # (billed past its small monthly free credit), then Cloudflare Workers AI's free daily allowance, with the
+  # keys the picture checks already use.
   last_resort:
+    - base_url: https://router.huggingface.co/v1
+      api_key_env: HF_TOKEN
+      models: [Qwen/Qwen3-235B-A22B-Instruct-2507, deepseek-ai/DeepSeek-V3.1]
+    - base_url: https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1
+      api_key_env: CLOUDFLARE_API_TOKEN
+      models: ["@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
+
+# Long videos use their own models, so the week's long script doesn't depend on what the Shorts left of
+# the free tiers above: Google's free Gemini API first (secret GEMINI_API_KEY; without it, the models
+# above), then NVIDIA, then Groq and Cloudflare. Only the long video asks Gemini, so its free daily limits are its own.
+long_llm:
+  provider: openai
+  base_url: https://generativelanguage.googleapis.com/v1beta/openai
+  # The newest Flash model the key can use (Google retires older ones for new keys), then the newest Flash-Lite.
+  model: "newest:flash"
+  api_key_env: GEMINI_API_KEY
+  fallback_models: ["newest:flash-lite"]
+  # Flash's free daily allowance is small: visual planning, casting and translations go to Flash-Lite, so
+  # Flash is there for the script and the fact check.
+  helper_models: ["newest:flash-lite"]
+  # Only Flash, then NVIDIA's Nemotron, write the long script: when both are out, the next run tries again.
+  strict_writer: true
+  backup:
+    base_url: https://integrate.api.nvidia.com/v1
+    api_key_env: NVIDIA_API_KEY
+    # Nemotron 3.5 Super VL has a free endpoint (3 Super isn't open to free accounts) and reads images, so it
+    # also checks pictures. NVIDIA retires models often: the newest: one is looked up each run.
+    models: ["nvidia/nemotron-3.5-super-vl-120b-a12b", "newest:deepseek-v4-flash"]
+  last_resort:
+    - base_url: https://api.groq.com/openai/v1
+      api_key_env: GROQ_API_KEY
+      models: [openai/gpt-oss-120b, openai/gpt-oss-20b]
     - base_url: https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1
       api_key_env: CLOUDFLARE_API_TOKEN
       models: ["@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
@@ -93,6 +128,10 @@ growth:
   rank_topics: true         # pick articles by fit with the niche and Wikipedia readers
   min_topic_fit: 6          # 0-10
   cuts_per_long: 2          # Shorts cut from each long video, linking to it
+  # The weekly long video tells the full story of the recent Short with the most views (at least 300,
+  # public 2+ days, from the last 3 weeks), else a fresh article. In October the best Shorts got 1,000+
+  # views while long videos on fresh articles got 2-40.
+  long_from_shorts: true
   series:                   # a playlist each; every video is filed under one
     - Weird History
     - Strange Science
@@ -100,12 +139,14 @@ growth:
     - Unbelievable People
   bonus_shorts_per_day: 1   # extra Short on a trending topic that fits (if one does)
   bonus_short_min_fit: 8    # only for a strong trend: the two daily Shorts already follow what's trending
-  bonus_longs_per_week: 1   # extra long video, only for a very strong trending fit
+  # Off while the weekly long video gets the run time and the free model tokens: no long video went out
+  # after 17 Oct because the Shorts used them first. Bonus and news long videos got 2-16 views each.
+  bonus_longs_per_week: 0   # extra long video, only for a very strong trending fit
   bonus_min_fit: 7
   bonus_long_min_fit: 9
   # A weekly long explainer on a recent news incident (Wikipedia "In the news" and most read, at
   # least a day old). Factual and attributed, no speculation; see NEWS_GUIDE in fyt/llm.py.
-  news_longs_per_week: 1
+  news_longs_per_week: 0
   news_min_fit: 8
   # Turning viewers into subscribers: the series name on screen, the reason to subscribe over a Short's
   # last seconds and on a long video's end card, and a one-click subscribe link in every description.

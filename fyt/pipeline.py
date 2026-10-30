@@ -4,9 +4,10 @@ so a failed run can be inspected and individual steps re-run."""
 from __future__ import annotations
 
 import json
+import os
 import random
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fyt import artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, wiki, worldgen, youtube
@@ -33,13 +34,40 @@ def make_video(
     """Topic -> rendered video + thumbnail + captions, ready for review/upload.
     `polish` (default: when the script is written here) sharpens title, hook and thumbnail text.
     `story`, a manifest already read from this same script, skips reading it again (a test re-render)."""
+    cfg = for_format(cfg)
     job = Job.create(cfg, topic)
     try:
         _make(cfg, job, topic, script, voice, script is None if polish is None else polish, story)
     except Exception as e:
         job.update(status="failed", error=f"{type(e).__name__}: {e}")
         raise
+    if cfg.format == "long" and json.loads(Uploads(cfg).note(LONG_NEXT) or "{}").get("topic") == topic:
+        Uploads(cfg).set_note(LONG_NEXT, "")  # made: the next long video starts afresh
     return job
+
+
+LONG_ARTICLE_IMAGES = 20  # the article's own photos a long video may use
+LONG_LINKED_IMAGES = 24  # photos from the articles it links to
+
+
+def for_format(cfg: Config) -> Config:
+    """The settings a video is made with: a long video uses `long_llm` when that model's key is set."""
+    alt = cfg.long_llm
+    if cfg.format != "long" or alt is None:
+        return cfg
+    key = "ANTHROPIC_API_KEY" if alt.provider == "anthropic" else alt.api_key_env
+    if not os.environ.get(key):
+        print(f"long_llm is set but {key} isn't; the long video uses the usual models")
+        return cfg
+    model = llm.newest_model(alt, alt.model)
+    fallbacks = [m for m in (llm.newest_model(alt, f) for f in alt.fallback_models) if m and m != model]
+    if model is None:  # nothing listed fits: its fallbacks lead, else the backup and last resorts do
+        model, fallbacks = (fallbacks[0], fallbacks[1:]) if fallbacks else (alt.model, [])
+    helpers = [m for m in (llm.newest_model(alt, h) for h in alt.helper_models) if m]
+    if model != alt.model or fallbacks != alt.fallback_models or helpers != alt.helper_models:
+        print(f"long video models: {', '.join([model, *fallbacks])}; supporting calls: {', '.join(helpers) or model}")
+    update = {"model": model, "fallback_models": fallbacks, "helper_models": helpers}
+    return cfg.model_copy(update={"llm": alt.model_copy(update=update)})
 
 
 def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str | None, polish: bool = False,
@@ -55,9 +83,19 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             notes = wiki.notes(article)
             job.file("research.md").write_text(notes)
             try:
-                images = wiki.fetch_images(cfg, article.title)
+                images = wiki.fetch_images(cfg, article.title, limit=LONG_ARTICLE_IMAGES if cfg.format == "long" else 8)
             except Exception as e:  # images are a nice-to-have
                 log(job, f"warning: no article images: {e}")
+            if cfg.format == "long":
+                # dozens of scenes need dozens of pictures: the photos of what the story names (its aircraft,
+                # places and people) from the articles it links to
+                try:
+                    linked = wiki.linked_images(cfg, article, limit=LONG_LINKED_IMAGES)
+                    have = {im.title for im in images}
+                    images += [im for im in linked if im.title not in have]
+                    log(job, f"{len(linked)} photos from linked articles")
+                except Exception as e:
+                    log(job, f"warning: no linked-article photos: {e}")
             log(job, f"{len(images)} article images available")
         elif cfg.research:
             log(job, "researching")
@@ -66,38 +104,43 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         subject = article.title if article else topic
         images = _more_images(cfg, job, images, subject)
         menu = wiki.image_menu(images)
+        saved = saved_long_script(cfg, topic)
         g = cfg.growth
-        two_part = (
-            cfg.format == "short" and article is not None and len(notes) >= g.two_part_min_chars
-            and random.random() < g.two_part_share
-        )
-        news = wiki.is_news_topic(topic)
-        two_part = two_part and not news
-        log(job, "writing a news explainer" if news else "writing part 1 of a two-part script" if two_part else "writing script")
-        script = _short_enough(
-            cfg, job, subject, notes, article is not None, menu, llm.PART1_NOTE if two_part else "", news=news
-        )
-        if two_part:
-            try:
-                previous = " ".join(s.narration for s in script.scenes)
-                note = llm.PART2_NOTE.format(previous=previous, message=script.core_message)
-                log(job, "writing part 2")
-                part2 = _short_enough(cfg, job, subject, notes, True, menu, note)
-                if cfg.fact_check:
-                    log(job, "checking part 2's facts against the source")
-                    part2, wrong = factcheck.verify(cfg, part2, notes, log=lambda m: log(job, m))
-                    if wrong:
-                        raise RuntimeError("part 2 failed the fact check: " + "; ".join(wrong))
-                job.file("part2.json").write_text(wiki_attribute(part2, article).model_dump_json(indent=2))
-                last = script.scenes[-1]
-                if "part two" not in last.narration.lower():
-                    script.scenes[-1] = last.model_copy(update={"narration": last.narration.rstrip() + " Part two is up next."})
-            except Exception as e:  # a single Short is still fine
-                log(job, f"warning: no part 2 ({e}); making a single Short")
-                two_part = False
-        if article:
+        if saved:
+            log(job, "using the script an earlier run wrote and checked for this long video")
+            script, written, polish, two_part = saved, False, False, False
+        else:
+            two_part = (
+                cfg.format == "short" and article is not None and len(notes) >= g.two_part_min_chars
+                and random.random() < g.two_part_share
+            )
+            news = wiki.is_news_topic(topic)
+            two_part = two_part and not news
+            log(job, "writing a news explainer" if news else "writing part 1 of a two-part script" if two_part else "writing script")
+            script = _short_enough(
+                cfg, job, subject, notes, article is not None, menu, llm.PART1_NOTE if two_part else "", news=news
+            )
+            if two_part:
+                try:
+                    previous = " ".join(s.narration for s in script.scenes)
+                    note = llm.PART2_NOTE.format(previous=previous, message=script.core_message)
+                    log(job, "writing part 2")
+                    part2 = _short_enough(cfg, job, subject, notes, True, menu, note)
+                    if cfg.fact_check:
+                        log(job, "checking part 2's facts against the source")
+                        part2, wrong = factcheck.verify(cfg, part2, notes, log=lambda m: log(job, m))
+                        if wrong:
+                            raise RuntimeError("part 2 failed the fact check: " + "; ".join(wrong))
+                    job.file("part2.json").write_text(wiki_attribute(part2, article).model_dump_json(indent=2))
+                    last = script.scenes[-1]
+                    if "part two" not in last.narration.lower():
+                        script.scenes[-1] = last.model_copy(update={"narration": last.narration.rstrip() + " Part two is up next."})
+                except Exception as e:  # a single Short is still fine
+                    log(job, f"warning: no part 2 ({e}); making a single Short")
+                    two_part = False
+        if article and not saved:
             script = wiki_attribute(script, article)
-        if news and cfg.growth.news_series:
+        if not saved and news and cfg.growth.news_series:
             script = script.model_copy(update={"series": cfg.growth.news_series})
     else:
         two_part = False
@@ -120,6 +163,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         has_substance(cfg, job, script)
     # the script as written and checked, before any visual is planned: a test can re-render from it
     job.file("written.json").write_text(script.model_dump_json(indent=2))
+    if written and cfg.format == "long":
+        save_long_script(cfg, topic, script)
     if given_story is not None:
         story = given_story
         job.file("manifest.json").write_text(story_manifest.dumps(story))
@@ -458,18 +503,37 @@ MIN_SCENES_LEFT = 5
 
 def without_failed_scenes(script: Script, problems: list[str]) -> Script | None:
     """The script with the scenes that still fail the fact check taken out, when that is a clean cut:
-    every problem names a scene, the opening scene is not one of them, at most two go, and at least
-    MIN_SCENES_LEFT remain. Otherwise None, and the video stops. A claim cut is a claim not made."""
+    every problem names a scene, the opening scene is not one of them, at most two go (a tenth of a long
+    video's), and at least MIN_SCENES_LEFT remain. A claim only in the thumbnail text (scene 0) gives way to
+    the start of the checked title. Otherwise None, and the video stops. A claim cut is a claim not made."""
     bad = set()
+    thumbnail = script.thumbnail_text
     for p in problems:
-        m = re.match(r"scene (\d+):", p)
+        m = re.match(r'scene (\d+): \w+ claim "([^"]*)"', p) or re.match(r"scene (\d+):", p)
         if not m:
             return None
-        bad.add(int(m.group(1)))
+        k = int(m.group(1))
+        if k == 0:
+            claim = m.group(2).lower() if m.lastindex == 2 else ""
+            if not claim or claim not in thumbnail.lower() or claim in script.title.lower():
+                return None
+            thumbnail = " ".join(script.title.split()[:4])
+            continue
+        bad.add(k)
     n = len(script.scenes)
-    if 1 in bad or len(bad) > 2 or n - len(bad) < MIN_SCENES_LEFT or any(not 1 <= k <= n for k in bad):
+    most = max(2, n // 10) if script.chapters else 2
+    if 1 in bad or len(bad) > most or n - len(bad) < MIN_SCENES_LEFT or any(not 1 <= k <= n for k in bad):
         return None
-    return script.model_copy(update={"scenes": [sc for i, sc in enumerate(script.scenes, 1) if i not in bad]})
+    if script.chapters and bad:  # chapters start at scene indexes: keep them on the same scenes
+        gone = sorted(k - 1 for k in bad)
+        chapters = [c.model_copy(update={"scene": c.scene - sum(1 for g in gone if g < c.scene)}) for c in script.chapters]
+    else:
+        chapters = script.chapters
+    return script.model_copy(update={
+        "scenes": [sc for i, sc in enumerate(script.scenes, 1) if i not in bad],
+        "thumbnail_text": thumbnail,
+        "chapters": chapters,
+    })
 
 
 def read_story(cfg: Config, job: Job, script: Script, notes: str) -> "story_manifest.Manifest | None":
@@ -623,6 +687,15 @@ def relevance_gate(cfg: Config, job: Job, script: Script, story, spans, words, s
         for i, why in text.items():
             log(job, f"scene {i + 1}: 3D dropped: {why}")
         script = relevance.apply(script, text)
+    if cfg.format == "long":
+        # a long video has a real photo for every scene: a simplified stand-in (a ball for a parachute) is
+        # worse than the photo
+        stand_ins = {i: "only a simplified stand-in model was found for its subject" for i, s in enumerate(script.scenes)
+                     if relevance.is_3d(s) and (s.model or {}).get("level") == "generic"}
+        for i, why in stand_ins.items():
+            log(job, f"scene {i + 1}: 3D dropped: {why}")
+        script = relevance.apply(script, stand_ins)
+        text = text | stand_ins
     checked = [i for i, s in enumerate(script.scenes) if relevance.is_3d(s)]
     picture: dict[int, str] = {}
     if checked and cfg.review_model:
@@ -632,7 +705,8 @@ def relevance_gate(cfg: Config, job: Job, script: Script, story, spans, words, s
         props = build_props(cfg, script, spans, words, scene_media, None, None, None, shots, {})
         job.file("gate-props.json").write_text(props.model_dump_json())
         log(job, f"relevance: checking {len(checked)} 3D scenes by eye")
-        picture = relevance.picture_gate(cfg, script, story, props, job.file("gate-props.json"), job.public, job.file("gate"), log=lambda m: log(job, m))
+        picture = relevance.picture_gate(cfg, script, story, props, job.file("gate-props.json"), job.public, job.file("gate"),
+                                         log=lambda m: log(job, m), strict=cfg.format == "long")
         retakes = {i: t for i in picture if (t := relevance.retake(script.scenes[i])) is not None}
         if retakes:
             # 3D first: a scene whose frame missed its subject gets a closer take before it goes to 2D
@@ -755,15 +829,25 @@ def _more_images(cfg: Config, job: Job, images: list["wiki.WikiImage"], subject:
     return [*images, *extra]
 
 
-def _photo_fits(cfg: Config, job: Job, path: Path, scene, subject: str) -> bool:
+def _photo_fits(cfg: Config, job: Job, path: Path, scene, subject: str, stock: bool = False) -> bool:
     """A free vision model's word on whether a searched-for photo belongs behind this scene. True when
-    no check can be made (no vision model, a clip rather than a photo)."""
+    no check can be made (no vision model, a clip rather than a photo), except for a stock photo or clip in
+    a long video: stock search matches loosely (a fire truck for "rescue", an emoji for "shock"), so there
+    it goes in only when a vision model has seen it fit."""
+    strict = stock and cfg.format == "long"
     if path.suffix.lower() not in (".jpg", ".jpeg", ".png", ".webp") or not path.is_file():
-        return True
+        if strict:
+            log(job, f"stock clip {path.name} left out: a clip can't be checked")
+            path.unlink(missing_ok=True)
+        return not strict
     meant = f"Subject of the video: {subject or 'see the line'}. The narrator says: \"{scene.narration[:220]}\""
     v = storyboard.review(cfg, path, meant, rules=PHOTO_CHECK)
     if v is not None and not v.matches:
         log(job, f"photo {path.name} left out: {v.problems or 'not about this scene'}")
+        path.unlink(missing_ok=True)
+        return False
+    if v is None and strict:
+        log(job, f"stock photo {path.name} left out: no vision model could check it")
         path.unlink(missing_ok=True)
         return False
     return True
@@ -822,7 +906,7 @@ def scene_visuals(
             except Exception as e:  # stock footage is optional; fall back to the plain background
                 log(job, f"warning: no stock footage for scene {i + 1}: {e}")
                 m = None
-            if m and _photo_fits(cfg, job, job.public / m.src, s, subject):
+            if m and _photo_fits(cfg, job, job.public / m.src, s, subject, stock=True):
                 scene_media[i] = m
                 if m.credit:
                     credits.append(m.credit)
@@ -868,16 +952,52 @@ def scene_visuals(
                     m = None
                 if m is None:
                     break
-                if _photo_fits(cfg, job, job.public / m.src, s, subject):
+                if _photo_fits(cfg, job, job.public / m.src, s, subject, stock=True):
                     scene_media[i] = m
                     if m.credit:
                         credits.append(m.credit)
                     break
 
+    if cfg.format == "long":
+        refill(job, script, images, scene_media)
+
     kinds = [("wiki" in m.src or "commons" in m.src) for m in scene_media.values()]
     log(job, f"visuals: {sum(kinds)} Wikipedia and freely licensed images, {len(kinds) - sum(kinds)} stock, "
         f"{len(script.scenes) - len(scene_media)} scenes on plain background")
     return scene_media, credits, used
+
+
+def refill(job: Job, script: Script, images: list["wiki.WikiImage"], scene_media: dict[int, Media]) -> None:
+    """A long video's scenes still on a plain background get a photo the video already has: the one whose
+    description best matches the scene, else the one used least, never the photo of the scene before or after.
+    The renderer frames a reused photo with its own camera move, so it doesn't look repeated."""
+    have = sorted({m.src for m in scene_media.values() if m.kind == "image"})
+    if not have:
+        return
+    by_src = {f"media/wiki{n}": images[n - 1] for n in range(1, len(images) + 1)}
+    uses = {src: 0 for src in have}
+    for m in scene_media.values():
+        if m.src in uses:
+            uses[m.src] += 1
+    def fit(i: int, src: str) -> int:
+        im = by_src.get(src.rsplit(".", 1)[0])
+        return len(_about(script.scenes[i]) & _words(f"{im.description} {im.title}")) if im else 0
+
+    empty = [i for i, s in enumerate(script.scenes) if i not in scene_media and s.type not in DRAWN]
+    # scenes that name what a photo shows choose first, so a neighbour doesn't take their photo
+    empty.sort(key=lambda i: -max(fit(i, src) for src in have))
+    filled = 0
+    for i in empty:
+        near = {scene_media[k].src for k in (i - 1, i + 1) if k in scene_media}
+        free = [src for src in have if src not in near]
+        if not free:
+            continue
+        src = max(free, key=lambda src: (fit(i, src), -uses[src]))
+        scene_media[i] = Media(src=src, kind="image")
+        uses[src] += 1
+        filled += 1
+    if filled:
+        log(job, f"{filled} scenes without a picture of their own reuse one of the video's photos")
 
 
 MAX_EXTRA_SHOTS = 2  # per scene; the renderer re-frames the photos it has for any further cuts
@@ -958,7 +1078,7 @@ def extra_shots(
                         found = media.fetch_photo(cfg, s.broll_query, job.public, name.removeprefix("media/"), used)
                     except Exception as e:
                         log(job, f"warning: no stock photo for scene {i + 1}: {e}")
-                    if found and not _photo_fits(cfg, job, job.public / found.src, s, subject):
+                    if found and not _photo_fits(cfg, job, job.public / found.src, s, subject, stock=True):
                         continue
                     if found and found.credit:
                         credits.append(found.credit)
@@ -1142,6 +1262,11 @@ def make_next(cfg: Config, topics: Topics, attempts: int = 3) -> Job | None:
         except Exception as e:
             topics.set(topic_id, "failed")
             print(f"::warning::failed: {topic}: {e}")
+            if cfg.format == "long" and isinstance(e, llm.ClaudeError):
+                # the models are out of tokens or struggling: another topic would fail the same way, and this
+                # one is kept for the next run (LONG_NEXT)
+                print("the models can't write a long video right now; the next run tries again")
+                return None
             continue
         topics.set(topic_id, "done", job.id)
         return job
@@ -1193,15 +1318,99 @@ def run_queue(cfg: Config, count: int = 1, ideate_when_empty: int = 10) -> list[
 
 
 def long_topic(cfg: Config, topics: Topics) -> tuple[int, str] | None:
-    """A fresh article with enough material for a long video. The queue is filled with
-    Short-sized articles, so long videos pick their own."""
-    titles = growth.pick_topics(
-        cfg, 1, set(topics.titles()), min_chars=cfg.wikipedia.long_min_chars, performance=performance_summary(cfg)
-    )
-    if not titles:
+    """The full story of a recent Short that did well (growth.long_from_shorts), else a fresh article with
+    enough material for a long video. The queue is filled with Short-sized articles, so long videos pick
+    their own."""
+    uploads = Uploads(cfg)
+    nxt = json.loads(uploads.note(LONG_NEXT) or "{}")
+    if nxt.get("topic") and nxt.get("tries", 0) < LONG_TRIES:
+        # the last run's long video didn't get made, most often because the free models ran out: same topic,
+        # and its script if it got that far
+        uploads.set_note(LONG_NEXT, json.dumps({**nxt, "tries": nxt.get("tries", 0) + 1}))
+        topics.add([nxt["topic"]])
+        print(f"long video: trying {nxt['topic']} again (try {nxt.get('tries', 0) + 1} of {LONG_TRIES})")
+        return topics.find(nxt["topic"])
+    found = proven_topic(cfg, topics)
+    if not found:
+        titles = growth.pick_topics(
+            cfg, 1, set(topics.titles()), min_chars=cfg.wikipedia.long_min_chars, performance=performance_summary(cfg)
+        )
+        if not titles:
+            return None
+        topics.add([wiki.topic_for(titles[0])])
+        found = topics.find(wiki.topic_for(titles[0]))
+    if found:
+        uploads.set_note(LONG_NEXT, json.dumps({"topic": found[1], "tries": 1}))
+    return found
+
+
+LONG_NEXT = "long-next"  # the long video being made: {"topic", "tries", "script"} until it is made
+LONG_TRIES = 4  # runs that try the same long video before it is given up
+
+
+def save_long_script(cfg: Config, topic: str, script: Script) -> None:
+    """Keep a long script once it is written and checked, so a run that fails later (or runs out of free
+    model tokens) doesn't have to write it again."""
+    uploads = Uploads(cfg)
+    nxt = json.loads(uploads.note(LONG_NEXT) or "{}")
+    if nxt.get("topic") == topic:
+        uploads.set_note(LONG_NEXT, json.dumps({**nxt, "script": script.model_dump(mode="json")}))
+
+
+def saved_long_script(cfg: Config, topic: str) -> Script | None:
+    if cfg.format != "long":
         return None
-    topics.add([wiki.topic_for(titles[0])])
-    return topics.find(wiki.topic_for(titles[0]))
+    nxt = json.loads(Uploads(cfg).note(LONG_NEXT) or "{}")
+    return Script.model_validate(nxt["script"]) if nxt.get("topic") == topic and nxt.get("script") else None
+
+
+LONG_KINDS = ("long", "bonus-long", "bonus-news", "channel")  # uploads that aren't Shorts (or may not be)
+PROVEN_NOTE = "long-from-short"  # Shorts already given a long video (a JSON list of their topics)
+
+
+def proven_topic(cfg: Config, topics: Topics, now: datetime | None = None) -> tuple[int, str] | None:
+    """The topic of the recent Short with the most views, told again as a long video. On this channel a
+    few Shorts get several times the views of the rest (MOAB 1,125, a stolen trawler 1,031, against a
+    median of 61), while long videos on fresh articles got 2-40 views: the Short tests the topic for free.
+    None when it's off, stats can't be read, or no Short did well enough and has the material."""
+    g = cfg.growth
+    if not g.long_from_shorts or not youtube.can_manage():
+        return None
+    now = now or datetime.now(timezone.utc)
+    uploads = Uploads(cfg)
+    settled = (now - timedelta(days=g.long_from_short_settle_days)).isoformat(timespec="seconds")
+    shorts = {
+        r["youtube_id"]: r["job"]
+        for r in uploads.recent((now - timedelta(days=g.long_from_short_days)).isoformat(timespec="seconds"))
+        if r["kind"] not in LONG_KINDS and r["job"] and (r["publish_at"] or r["uploaded"]) <= settled
+    }
+    if not shorts:
+        return None
+    try:
+        rows = youtube.stats(list(shorts))
+    except Exception as e:  # without views there is nothing to go on; a fresh article it is
+        print(f"warning: could not read Short views for the long video's topic: {e}")
+        return None
+    done = set(json.loads(uploads.note(PROVEN_NOTE) or "[]"))
+    for r in sorted(rows, key=lambda r: r["views"], reverse=True):
+        if r["views"] < g.long_from_short_min_views:
+            break
+        topic = topics.of_job(shorts[r["id"]])
+        if not topic or topic in done or not topic.startswith(wiki.PREFIX):
+            continue  # a cut from a long video or a news Short, or this one already has its long video
+        try:
+            article = wiki.fetch_article(cfg, wiki.title_of(topic))
+        except Exception as e:
+            print(f"warning: could not read {topic}: {e}")
+            continue
+        done.add(topic)  # tried once, whatever happens next, so a topic that fails isn't picked every run
+        uploads.set_note(PROVEN_NOTE, json.dumps(sorted(done)))
+        if len(article.text) < g.long_from_short_min_chars:
+            print(f"the Short on {topic} did well ({r['views']} views) but its article is too thin for a long video")
+            continue
+        print(f"long video: the full story of a Short that did well: {r['title']} ({r['views']} views)")
+        return topics.find(topic)
+    return None
 
 
 _performance: dict[tuple, str] = {}  # one lookup per run: every video made in it gets the same answer

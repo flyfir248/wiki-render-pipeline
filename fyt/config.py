@@ -195,6 +195,9 @@ class LLMConfig(BaseModel):
     # topic ranking, posts), so `model`'s free daily tokens are still there when a script is written,
     # fixed and fact checked. `model` is asked for these only when every helper fails. Empty: all use `model`.
     helper_models: list[str] = Field(default_factory=list)
+    # A long script is written by `model`, then the `backup` provider's models, never the fallback or last-resort
+    # ones: when all of those are out for the day the run gives up and the next run tries the same video again.
+    strict_writer: bool = False
 
 
 class WikipediaConfig(BaseModel):
@@ -261,6 +264,17 @@ class GrowthConfig(BaseModel):
     two_part_share: float = 0.25
     two_part_min_chars: int = 8000
     cuts_per_long: int = 2  # Shorts cut from each long video (they fill regular Short slots)
+    # The weekly long video tells the full story of a recent Short that did well, so every Short is a
+    # cheap test of a topic and the long video goes to one viewers already chose. The Short with the most
+    # views among those public for at least long_from_short_settle_days and uploaded in the last
+    # long_from_short_days, with at least long_from_short_min_views and an article of at least
+    # long_from_short_min_chars (a Short's article can be shorter than wikipedia.long_min_chars and still
+    # carry a long video). Each Short gets one long video at most. Needs the full YouTube permission.
+    long_from_shorts: bool = False
+    long_from_short_days: int = 21
+    long_from_short_settle_days: float = 2.0
+    long_from_short_min_views: int = 300
+    long_from_short_min_chars: int = 8000
     series: list[str] = Field(default_factory=list)  # playlists; each video is filed under one
     # Extra videos on topics trending on Wikipedia that fit the niche, on top of the schedule.
     bonus_shorts_per_day: int = 1
@@ -352,6 +366,9 @@ class Config(BaseModel):
     long_min_minutes: float = 8.0
     model: str = "claude-opus-5"
     llm: LLMConfig = Field(default_factory=LLMConfig)
+    # Used instead of `llm` for long videos when its key is set: a long script is a dozen big calls, and by
+    # the time the week's long video is written the free tiers are often spent on Shorts. None: `llm`.
+    long_llm: LLMConfig | None = None
     # wikipedia: videos are written from niche Wikipedia articles (see `wikipedia`).
     # web: Claude researches each topic with web search first.
     source: Literal["wikipedia", "web"] = "web"

@@ -63,6 +63,8 @@ def main(argv: list[str] | None = None) -> None:
     u.add_argument("--force", action="store_true", help="upload even if not approved")
     rp = sub.add_parser("replace", help="upload a reviewed re-render in place of the same article's scheduled video (the old one goes private)")
     rp.add_argument("job")
+    pb = sub.add_parser("publish", help="upload a reviewed test render: in place of its article's scheduled video, else into the next empty slot")
+    pb.add_argument("job")
     sub.add_parser("auth", help="authorise YouTube uploads (opens a browser)")
     sub.add_parser("stats", help="show views for uploaded videos")
     w = sub.add_parser("watchdog", help="find uploads YouTube never processed and queue them to upload again")
@@ -267,6 +269,10 @@ def main(argv: list[str] | None = None) -> None:
         from fyt import schedule
 
         schedule.replace(cfg, find_job(cfg, args.job))
+    elif args.cmd == "publish":
+        from fyt import schedule
+
+        schedule.publish(cfg, find_job(cfg, args.job))
     elif args.cmd == "auth":
         from fyt import youtube
 

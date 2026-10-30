@@ -394,3 +394,15 @@ def test_a_living_thing_takes_only_a_model_that_can_move(cache, monkeypatch):
         (cache / "models" / assetlib.slug(term)).exists() and __import__("shutil").rmtree(cache / "models" / assetlib.slug(term))
     assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None)["title"] == "American Black Bear statue pose"
     assert assetlib.resolve(cfg, BEAR, "medium", log=lambda m: None, animated=True) is None
+
+
+def test_filler_3d_does_not_show_the_same_shot_over_and_over():
+    lines = [f"The C-130 cargo plane flew another mission over the valley, number {k}." for k in range(1, 9)]
+    plane = Entity(id="c130", name="the C-130 cargo plane", kind="aircraft", search=["c-130", "cargo aircraft"],
+                   look="a grey four-engine transport", certain=True, scenes=list(range(1, 9)))
+    story = Manifest(entities=[plane], places=[], moments=[])
+    cfg = Config(format="long")
+    cfg.visuals.world_share_long = 1.0
+    out = visualplan.fill(cfg, script(*lines), story, [])
+    shots = [(r.subject_name, r.action, r.setting) for r in out]
+    assert out and max(shots.count(k) for k in shots) <= visualplan.MAX_SAME_FILL
