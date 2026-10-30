@@ -176,3 +176,20 @@ def test_an_image_archive_that_keeps_failing_is_not_asked_again(monkeypatch):
     for q in ("a", "b", "c", "d"):
         freeimages.search(cfg, q, log=lambda m: None)
     assert tries == ["a", "b"]
+
+
+def test_gemini_and_nvidia_vision_models_check_pictures(monkeypatch):
+    from fyt import storyboard
+    from fyt.config import BackupLLM
+
+    monkeypatch.setenv("GEMINI_API_KEY", "g")
+    monkeypatch.setenv("NVIDIA_API_KEY", "n")
+    monkeypatch.delenv("CLOUDFLARE_ACCOUNT_ID", raising=False)
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    monkeypatch.setattr(storyboard, "secret", lambda name: None)
+    cfg = Config(llm=LLMConfig(
+        provider="openai", base_url="https://generativelanguage.googleapis.com/v1beta/openai", api_key_env="GEMINI_API_KEY",
+        model="gemini-3-flash", helper_models=["gemini-3-flash-lite"],
+        backup=BackupLLM(base_url="https://integrate.api.nvidia.com/v1", api_key_env="NVIDIA_API_KEY",
+                         models=["nvidia/nemotron-3.5-super-vl-120b-a12b", "newest:deepseek-v4-flash"])))
+    assert [n for n, _ in storyboard._checkers(cfg)] == ["gemini-3-flash-lite", "gemini-3-flash", "nvidia/nemotron-3.5-super-vl-120b-a12b"]

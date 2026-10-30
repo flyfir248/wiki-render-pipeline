@@ -180,6 +180,7 @@ VISION_HINTS = ("scout", "maverick", "vision", "llava", "-vl")  # model ids that
 # hinted ones, and dropped for the run the first time one turns an image away.
 MAYBE_VISION = ("qwen3.5", "qwen3.6", "qwen3.7", "qwen3.8", "qwen3.9", "gemma-3", "gemma-4", "llama-4", "kimi-k2.5")
 CLOUDFLARE_VISION = "@cf/meta/llama-3.2-11b-vision-instruct"
+GEMINI = "generativelanguage.googleapis.com"
 # On Hugging Face's inference router (HF_TOKEN), when neither of the above can check a picture.
 HF_VISION = ("Qwen/Qwen2.5-VL-7B-Instruct", "google/gemma-3-27b-it", "Qwen/Qwen2.5-VL-32B-Instruct")
 _found: dict[str, str | None] = {}
@@ -241,6 +242,8 @@ def _ask_openai(base_url: str, key: str, model: str, image: bytes, meant: str, r
             },
         ],
     }
+    if "nvidia.com" in base_url:
+        body["chat_template_kwargs"] = {"enable_thinking": False}  # a verdict, not an essay: 200 tokens is all it gets
     url, headers = f"{base_url.rstrip('/')}/chat/completions", {"Authorization": f"Bearer {key}"}
     r = requests.post(url, headers=headers, json=body, timeout=90)
     if r.status_code == 429 and "per day" not in r.text.lower():
@@ -281,8 +284,16 @@ def _checkers(cfg: Config) -> list[tuple[str, Callable[[bytes, str, str], Verdic
     out = []
     key = os.environ.get(cfg.llm.api_key_env)
     if key and cfg.llm.provider == "openai":
-        for m in _groq_vision_models(cfg, key):
+        # every Gemini model reads images: the supporting-call models first, so Flash keeps its allowance
+        own = ([*cfg.llm.helper_models, cfg.llm.model] if GEMINI in cfg.llm.base_url and cfg.review_model == "auto"
+               else _groq_vision_models(cfg, key))
+        for m in dict.fromkeys(own):
             out.append((m, lambda img, meant, rules, m=m: _ask_openai(cfg.llm.base_url, key, m, img, meant, rules)))
+    b = cfg.llm.backup
+    bkey = os.environ.get(b.api_key_env) if b and cfg.llm.provider == "openai" else None
+    if bkey:  # the backup provider's image-reading models (NVIDIA's Nemotron VL)
+        for m in [m for m in b.models if any(h in m.lower() for h in VISION_HINTS) and not m.startswith("newest:")]:
+            out.append((m, lambda img, meant, rules, m=m: _ask_openai(b.base_url, bkey, m, img, meant, rules)))
     if secret("CLOUDFLARE_ACCOUNT_ID") and secret("CLOUDFLARE_API_TOKEN"):
         out.append((CLOUDFLARE_VISION, _ask_cloudflare))
     hf = secret("HF_TOKEN")

@@ -227,6 +227,9 @@ def _openai_structured_once(
     }
     if c.reasoning_effort and "gpt-oss" in model:
         body["reasoning_effort"] = c.reasoning_effort
+    if "nemotron" in model and "nvidia.com" in c.base_url:
+        # Nemotron thinks at length by default, and the thinking counts against max_tokens
+        body["chat_template_kwargs"] = {"enable_thinking": False}
     retry_note = ""
     last_error = ""
     for attempt in range(8):

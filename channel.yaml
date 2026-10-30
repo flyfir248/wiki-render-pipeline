@@ -31,7 +31,9 @@ llm:
   backup:
     base_url: https://integrate.api.nvidia.com/v1
     api_key_env: NVIDIA_API_KEY
-    models: ["newest:nemotron-3-super", "newest:deepseek-v4-flash"]  # NVIDIA retires models often: looked up each run
+    # Nemotron 3.5 Super VL has a free endpoint (3 Super isn't open to free accounts) and reads images, so it
+    # also checks pictures. NVIDIA retires models often: the newest: one is looked up each run.
+    models: ["nvidia/nemotron-3.5-super-vl-120b-a12b", "newest:deepseek-v4-flash"]
   # Asked last, when every model above is rate limited or out of tokens for the day: Hugging Face's router
   # (billed past its small monthly free credit), then Cloudflare Workers AI's free daily allowance, with the
   # keys the picture checks already use.
@@ -61,7 +63,9 @@ long_llm:
   backup:
     base_url: https://integrate.api.nvidia.com/v1
     api_key_env: NVIDIA_API_KEY
-    models: ["newest:nemotron-3-super", "newest:deepseek-v4-flash"]  # NVIDIA retires models often: looked up each run
+    # Nemotron 3.5 Super VL has a free endpoint (3 Super isn't open to free accounts) and reads images, so it
+    # also checks pictures. NVIDIA retires models often: the newest: one is looked up each run.
+    models: ["nvidia/nemotron-3.5-super-vl-120b-a12b", "newest:deepseek-v4-flash"]
   last_resort:
     - base_url: https://api.groq.com/openai/v1
       api_key_env: GROQ_API_KEY
