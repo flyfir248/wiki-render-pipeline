@@ -58,7 +58,7 @@ long_llm:
   # Flash's free daily allowance is small: visual planning, casting and translations go to Flash-Lite, so
   # Flash is there for the script and the fact check.
   helper_models: ["newest:flash-lite"]
-  # Only Flash writes the long script: when it is out for the day, the next run tries the same video again.
+  # Only Flash, then NVIDIA's Nemotron, write the long script: when both are out, the next run tries again.
   strict_writer: true
   backup:
     base_url: https://integrate.api.nvidia.com/v1

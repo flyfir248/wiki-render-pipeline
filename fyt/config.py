@@ -195,8 +195,8 @@ class LLMConfig(BaseModel):
     # topic ranking, posts), so `model`'s free daily tokens are still there when a script is written,
     # fixed and fact checked. `model` is asked for these only when every helper fails. Empty: all use `model`.
     helper_models: list[str] = Field(default_factory=list)
-    # A long script is written by `model` alone: when it is out for the day the run gives up and the next run
-    # tries the same video again, instead of a backup or fallback model writing a weaker script.
+    # A long script is written by `model`, then the `backup` provider's models, never the fallback or last-resort
+    # ones: when all of those are out for the day the run gives up and the next run tries the same video again.
     strict_writer: bool = False
 
 

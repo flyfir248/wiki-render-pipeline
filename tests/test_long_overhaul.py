@@ -70,7 +70,7 @@ def test_each_chapter_is_shown_what_earlier_chapters_said(monkeypatch):
     assert "<said>" not in asks[1] and "Fact number 2" in asks[2] and "must not repeat" in asks[2]
 
 
-def test_a_strict_writer_never_hands_the_script_to_another_model(monkeypatch):
+def test_a_strict_writer_never_hands_the_script_to_a_small_model(monkeypatch):
     seen = []
 
     def answer(cfg, system, user, schema, max_tokens=0):
@@ -78,12 +78,16 @@ def test_a_strict_writer_never_hands_the_script_to_another_model(monkeypatch):
         raise llm.ClaudeError("out for the day")
 
     monkeypatch.setattr(llm, "_openai_structured", answer)
-    cfg = Config(format="long", llm=LLMConfig(provider="openai", model="flash", fallback_models=["lite"], strict_writer=True))
+    from fyt.config import BackupLLM
+
+    backup = BackupLLM(base_url="https://integrate.api.nvidia.com/v1", api_key_env="NVIDIA_API_KEY", models=["nemotron"])
+    cfg = Config(format="long", llm=LLMConfig(provider="openai", model="flash", fallback_models=["lite"], strict_writer=True,
+                                              backup=backup, last_resort=[BackupLLM(models=["small"])]))
     try:
         llm.write_long_script(cfg, "MOAB", "notes", "guide")
     except llm.ClaudeError:
         pass
-    assert seen == [("flash", [], None, [])]
+    assert seen == [("flash", [], backup, [])]  # Flash, then the backup provider's big model; never Flash-Lite
 
 
 def test_a_cargo_plane_is_not_cast_as_a_cargo_crate():

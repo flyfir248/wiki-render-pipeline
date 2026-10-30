@@ -1013,9 +1013,9 @@ def write_long_script(
 ) -> Script:
     guide += LONG_WIKI_GUIDE if from_wikipedia else ""
     if cfg.llm.strict_writer:
-        # only the main model writes the script: a weaker one's long script isn't worth a week's video, and
-        # when the main model is out for the day the run gives up and the next one tries again
-        cfg = _with_model(cfg, cfg.llm.model)
+        # only the main model, then the backup provider's (NVIDIA's 120B Nemotron), write the script: a small
+        # fallback's long script isn't worth a week's video, and when both are out the next run tries again
+        cfg = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"fallback_models": [], "last_resort": []})})
     limit = cfg.llm.max_note_chars
     n = chapter_count(cfg)
     chunks = split_notes(notes, n, limit)
