@@ -855,6 +855,7 @@ LONG_WPM = 135
 MIDROLL_MARGIN_MINUTES = 0.5  # aim a little past the minimum so a brisk read still clears it
 
 
+EXTEND_TRIES = 3  # calls that lengthen one short chapter
 SAID_CHARS = 9000  # earlier chapters' narration each chapter is shown, so it doesn't say it again
 
 
@@ -1093,10 +1094,16 @@ def write_long_script(
                 print(f"request too large; retrying chapter {i} with {len(chunk)} characters of notes")
         if not part.scenes:
             continue
-        written = sum(len(sc.narration.split()) for sc in part.scenes)
-        if written < words * 0.85:
-            # Models write short; a chapter that falls well short would pull the video under its minimum.
-            part = ChapterScenes(scenes=_extend_chapter(cfg, system, user, part.scenes, words - written, plans[i] if i < n else None))
+        for _ in range(EXTEND_TRIES):
+            # Models write short (Nemotron's five chapters came to 765 words, a 5-minute video); a chapter that
+            # falls short pulls the video under the minimum for mid-roll ads
+            written = sum(len(sc.narration.split()) for sc in part.scenes)
+            if written >= words * 0.9:
+                break
+            longer = _extend_chapter(cfg, system, user, part.scenes, words - written, plans[i] if i < n else None)
+            if len(longer) == len(part.scenes):
+                break  # the call failed: the chapter stays as it is
+            part = ChapterScenes(scenes=longer)
         chapters.append(Chapter(title=plan.heading, scene=len(scenes)))
         for sc in part.scenes:
             if sc.image is not None:

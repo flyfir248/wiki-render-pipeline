@@ -417,6 +417,9 @@ def stage_plan(script: Script, story: Manifest, taken: set[int], modules: bool =
     return out
 
 
+MAX_SAME_FILL = 2  # filler 3D scenes showing the same entity doing the same thing in the same setting
+
+
 def fill(cfg: Config, script: Script, story: Manifest, recon: list[Reconstruction]) -> list[Reconstruction]:
     """3D first: stage scenes of the story's own cast for scenes the plan left in 2D, until 3D carries
     `visuals.world_share` of the runtime. Narrative scenes go first, then stat, proportion, list and
@@ -452,6 +455,7 @@ def fill(cfg: Config, script: Script, story: Manifest, recon: list[Reconstructio
             continue  # a 3D scene where nothing would move is a still picture: the 2D scene says more
         picks.append(((1 if data else 0, 0 if moment and moment.documented else 1, i), i, s, moment, lead, main))
     out: list[Reconstruction] = []
+    same: Counter = Counter()  # filler scenes per (who, doing what, where)
     for _, i, s, moment, lead, main in sorted(picks):
         if have / total >= cfg.visuals.world_share(cfg.format):
             break
@@ -464,10 +468,17 @@ def fill(cfg: Config, script: Script, story: Manifest, recon: list[Reconstructio
             if p is not None and not any(i in x.scenes for x in story.places):
                 p.scenes.append(i)
         where = f"{p.name}, {p.look}" if p else ""
+        setting = _setting(f"{s.narration} {where}", settings) or ("countryside" if p else "room")
+        action = moment.motion if moment else "present"
+        if same[lead, action, setting] >= MAX_SAME_FILL:
+            # the MOAB video showed the same plane over the same trees in 17 scenes: past a couple, the
+            # scene's photo says more than another take of a shot the viewer has seen
+            continue
+        same[lead, action, setting] += 1
         out.append(Reconstruction(
-            scene=i, subject="stage", variant="model", action=moment.motion if moment else "present",
+            scene=i, subject="stage", variant="model", action=action,
             shot=STAGE_SHOTS[(len(recon) + len(out)) % len(STAGE_SHOTS)],
-            setting=_setting(f"{s.narration} {where}", settings) or ("countryside" if p else "room"),
+            setting=setting,
             cue=(moment.cue if moment else None) or None, subject_name=lead, backdrop=where or None, priority=3,
             overlay=s.type if s.type in OVERLAYS else None, in_story=True,
         ))

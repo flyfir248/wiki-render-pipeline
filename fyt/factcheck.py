@@ -133,6 +133,54 @@ def _numbers(text: str) -> set[str]:
     return {n for n in nums if n}
 
 
+UNITS = {w: i for i, w in enumerate(
+    "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen "
+    "seventeen eighteen nineteen".split())}
+TENS = {w: 10 * i for i, w in enumerate("_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()) if w != "_"}
+SCALES = {"hundred": 100, "thousand": 1000, "million": 10**6, "billion": 10**9}
+
+
+def figures(text: str) -> list[float]:
+    """Every figure in the text, in digits ("21,600", "8.5") or said in words ("twenty-one thousand",
+    "eighteen thousand seven hundred"), as numbers. Small words on their own ("one strike") don't count."""
+    out = [float(n.replace(",", "")) for n in re.findall(r"\d[\d,]*(?:\.\d+)?", text)]
+    total = current = 0
+    said = []
+    for w in re.findall(r"[a-z]+", text.lower().replace("-", " ")) + ["."]:
+        if w in UNITS or w in TENS:
+            current += UNITS.get(w, TENS.get(w, 0))
+            said.append(w)
+        elif w in SCALES and said:
+            if w == "hundred":
+                current = (current or 1) * 100
+            else:
+                total += (current or 1) * SCALES[w]
+                current = 0
+            said.append(w)
+        elif w == "and" and said:
+            continue
+        else:
+            if said and (total + current >= 100 or any(x in SCALES for x in said)):
+                out.append(float(total + current))
+            total = current = 0
+            said = []
+    return out
+
+
+def _known(figure: float, source: list[float]) -> bool:
+    return any(abs(figure - f) <= 0.05 * max(abs(f), 1) for f in source)
+
+
+def misread(claim: "Claim", notes: str) -> bool:
+    """A "wrong" verdict on a figure the article itself gives (within rounding): the checker read a
+    different figure in a passage as the claim's ("weighs 21,000 pounds" judged against the 2,900 lb casing
+    weight). Taking such a fix wrote a wrong weight into a video, so the claim stands."""
+    if claim.verdict != "wrong":
+        return False
+    said, source = figures(claim.claim), figures(notes)
+    return bool(said) and bool(figures(claim.correction)) and all(_known(f, source) for f in said)
+
+
 def _terms(text: str) -> set[str]:
     words = {w for w in re.findall(r"[a-z][a-z'-]+", text.lower()) if len(w) > 2 and w not in STOP}
     return {w[:-1] if w.endswith("s") and len(w) > 4 else w for w in words}
@@ -223,6 +271,10 @@ def verify(cfg: Config, script: Script, notes: str, log: Callable[[str], None] =
     Returns the script and the claims that still fail (empty when it is safe to publish).
     """
     claims = check(cfg, script, notes)
+    kept = [c for c in claims if misread(c, notes)]
+    if kept:
+        log("fact check overruled where the article gives the claim's figure: " + "; ".join(describe(kept)))
+        claims = [c for c in claims if c not in kept]
     if not claims:
         return script, []
     log("fact check found: " + "; ".join(describe(claims)))
@@ -244,5 +296,5 @@ def verify(cfg: Config, script: Script, notes: str, log: Callable[[str], None] =
         except Exception as e:
             log(f"could not fix scene {i}: {str(e)[:160]}")
     script = script.model_copy(update={"scenes": scenes})
-    remaining = check(cfg, script, notes, only=set(flagged))
+    remaining = [c for c in check(cfg, script, notes, only=set(flagged)) if not misread(c, notes)]
     return script, describe(remaining)

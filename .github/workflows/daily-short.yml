@@ -238,6 +238,10 @@ jobs:
           REPLAY: ${{ inputs.replay }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
           GH_TOKEN: ${{ github.token }}
+          # picking the chapters to cut into Shorts from a long video asks a model
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           [ -n "$REPLAY" ] || { echo "$TASK needs the test render's run id in replay"; exit 1; }
           mkdir -p jobs

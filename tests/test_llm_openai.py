@@ -221,7 +221,8 @@ def test_a_short_chapter_is_lengthened(monkeypatch):
     full = " ".join(["word"] * words)
     first = [{"narration": "Too short.", "type": "statement"}, {"narration": "What happened next?", "type": "statement"}]
     answers = [reply(json.dumps(outline)), reply(json.dumps({"scenes": first}))]
-    answers += [reply(json.dumps({"scenes": [{"narration": "More words here.", "type": "statement"}]}))]
+    more = "More words here. " + " ".join(["more"] * words)  # enough that the chapter is long enough now
+    answers += [reply(json.dumps({"scenes": [{"narration": more, "type": "statement"}]}))]
     answers += [reply(json.dumps({"scenes": [{"narration": full, "type": "statement"}]})) for _ in range(n - 1)]
     asks = []
 
@@ -232,7 +233,7 @@ def test_a_short_chapter_is_lengthened(monkeypatch):
     monkeypatch.setattr(llm.requests, "post", post)
     script = llm.write_script(cfg, "Mary", "notes", from_wikipedia=True)
     # the added scene goes before the chapter's ending (its cliffhanger), never after it
-    assert [s.narration for s in script.scenes[:3]] == ["Too short.", "More words here.", "What happened next?"]
+    assert [s.narration for s in script.scenes[:3]] == ["Too short.", more, "What happened next?"]
     assert "Too short." in asks[2] and 'next chapter, "Part 2"' in asks[2]
     assert script.chapters[1].scene == 3  # the next chapter starts after the chapter's ending
     assert len(asks) == n + 2
