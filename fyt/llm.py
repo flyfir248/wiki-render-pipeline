@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import difflib
 import json
 import os
 import re
@@ -841,6 +842,9 @@ LONG_WPM = 135
 MIDROLL_MARGIN_MINUTES = 0.5  # aim a little past the minimum so a brisk read still clears it
 
 
+SAID_CHARS = 9000  # earlier chapters' narration each chapter is shown, so it doesn't say it again
+
+
 def long_words(cfg: Config) -> int:
     """Narration words a long video needs to run its target length, and at least the minimum
     length for mid-roll ads (`long_min_minutes`), with a margin."""
@@ -907,30 +911,98 @@ def split_notes(notes: str, parts: int, limit: int) -> list[str]:
     return chunks
 
 
+def _ending(scenes: list[ScriptScene]) -> int:
+    """Where a chapter's ending starts: the scene inviting viewers to subscribe, else its last scene."""
+    for k in range(len(scenes) - 1, 0, -1):
+        if "subscrib" in scenes[k].narration.lower():
+            return k
+    return max(1, len(scenes) - 1)
+
+
 def _extend_chapter(
     cfg: Config, system: str, user: str, scenes: list[ScriptScene], missing: int, next_plan: ChapterPlan | None
 ) -> list[ScriptScene]:
-    """More scenes for a chapter that came out short, continuing from its last line. [] if the call fails."""
-    lead = f' It still has to lead into the next chapter, "{next_plan.heading}".' if next_plan else ""
-    so_far = "\n".join(sc.narration for sc in scenes)
+    """A chapter that came out short, with more scenes put before its ending (its cliffhanger, or the
+    video's close), so nothing comes after the subscribe line. The chapter as it was if the call fails."""
+    cut = _ending(scenes) if len(scenes) > 1 else len(scenes)
+    body, ending = scenes[:cut], scenes[cut:]
+    lead = f' The ending leads into the next chapter, "{next_plan.heading}".' if next_plan else ""
+    so_far = "\n".join(sc.narration for sc in body)
+    end_text = "\n".join(sc.narration for sc in ending)
     ask = (
-        f"{user}\n\nYou already wrote this chapter's opening:\n{so_far}\n\nIt is {missing} words too short. "
-        f"Return only the NEW scenes that continue it: about {missing} more words of narration, with new facts "
-        f"and detail from the notes, not repetition.{lead}"
+        f"{user}\n\nYou already wrote this chapter. Its middle:\n{so_far}\n\nIts ending:\n{end_text or '(none)'}\n\n"
+        f"It is {missing} words too short. Return only NEW scenes that go between the middle and the ending: "
+        f"about {missing} more words of narration, with new facts and detail from the notes that the chapter "
+        f"doesn't say yet. Don't repeat or reword anything above, and don't wrap up: the ending stays last.{lead}"
     )
     try:
         extra = _openai_structured(cfg, system, ask, ChapterScenes, max_tokens=3000).scenes
     except Exception as e:  # the chapter as written still works, just shorter
         print(f"could not lengthen a short chapter: {e}")
-        return []
+        return scenes
     print(f"added {sum(len(sc.narration.split()) for sc in extra)} words to a short chapter")
-    return extra
+    return body + extra + ending
+
+
+def _words(text: str) -> list[str]:
+    return re.findall(r"[a-z0-9']+", text.lower())
+
+
+def _sentences(text: str) -> list[str]:
+    return [t for t in re.split(r"(?<=[.!?])\s+", text.strip()) if t]
+
+
+def _repeats(sentence: list[str], said: list[list[str]]) -> bool:
+    """Whether a sentence says again what an earlier one said: most of its words, in much the same order."""
+    if len(sentence) < 5:
+        return False
+    words = set(sentence)
+    for old in said:
+        if len(words & set(old)) / len(words | set(old)) >= 0.6:
+            return True
+        if difflib.SequenceMatcher(None, sentence, old).ratio() >= 0.75:
+            return True
+    return False
+
+
+def drop_repeats(scenes: list, chapters: list[Chapter] | None = None) -> tuple[list, list[Chapter]]:
+    """The scenes without narration that repeats what an earlier scene already said: a repeated sentence is
+    cut, and a scene that is mostly repeats goes. The first scene stays. Chapter starts move to match."""
+    said: list[list[str]] = []
+    kept, where = [], []
+    for k, sc in enumerate(scenes):
+        parts = _sentences(sc.narration)
+        fresh = [t for t in parts if not _repeats(_words(t), said)]
+        said += [_words(t) for t in parts]
+        if k and len(fresh) * 2 < len(parts):
+            print(f"dropped a scene that repeats earlier narration: {sc.narration[:80]!r}")
+            where.append(len(kept))
+            continue
+        if k and len(fresh) < len(parts):
+            print(f"cut {len(parts) - len(fresh)} repeated sentence(s) from a scene")
+            sc = sc.model_copy(update={"narration": " ".join(fresh)})
+        where.append(len(kept))
+        kept.append(sc)
+    moved: list[Chapter] = []
+    for c in chapters or []:
+        start = where[c.scene] if c.scene < len(where) else len(kept)
+        if start >= len(kept):
+            continue
+        if moved and moved[-1].scene == start:
+            moved[-1] = c.model_copy(update={"scene": start})  # its scenes all went: the next chapter starts there
+        else:
+            moved.append(c.model_copy(update={"scene": start}))
+    return kept, moved
 
 
 def write_long_script(
     cfg: Config, topic: str, notes: str, guide: str, images: str = "", from_wikipedia: bool = False
 ) -> Script:
     guide += LONG_WIKI_GUIDE if from_wikipedia else ""
+    if cfg.llm.strict_writer:
+        # only the main model writes the script: a weaker one's long script isn't worth a week's video, and
+        # when the main model is out for the day the run gives up and the next one tries again
+        cfg = _with_model(cfg, cfg.llm.model)
     limit = cfg.llm.max_note_chars
     n = chapter_count(cfg)
     chunks = split_notes(notes, n, limit)
@@ -978,6 +1050,12 @@ def write_long_script(
         else:
             ending = f": {plan.cliffhanger}" if plan.cliffhanger else ", a question the next chapters answer"
             position += f" Don't wrap up or invite viewers to subscribe yet; end on the open question{ending}"
+        said = "\n".join(sc.narration for sc in scenes)[-SAID_CHARS:]
+        if said:
+            position += (
+                f"\n\nThe narration so far (earlier chapters), which this chapter must not repeat, reword or "
+                f"recap: tell only what comes next.\n<said>\n{said}\n</said>"
+            )
         taken = f"\nImages already used (don't reuse): {', '.join(map(str, sorted(used_images)))}" if used_images else ""
         system = guide + (
             f"\n\nYou are writing one chapter of this video at a time. Return only this chapter's scenes: "
@@ -1005,8 +1083,7 @@ def write_long_script(
         written = sum(len(sc.narration.split()) for sc in part.scenes)
         if written < words * 0.85:
             # Models write short; a chapter that falls well short would pull the video under its minimum.
-            more = _extend_chapter(cfg, system, user, part.scenes, words - written, plans[i] if i < n else None)
-            part = ChapterScenes(scenes=part.scenes + more)
+            part = ChapterScenes(scenes=_extend_chapter(cfg, system, user, part.scenes, words - written, plans[i] if i < n else None))
         chapters.append(Chapter(title=plan.heading, scene=len(scenes)))
         for sc in part.scenes:
             if sc.image is not None:
@@ -1014,6 +1091,7 @@ def write_long_script(
         scenes.extend(part.scenes)
         print(f"wrote chapter {i}/{n}: {plan.heading} ({sum(len(sc.narration.split()) for sc in part.scenes)} words)")
 
+    scenes, chapters = drop_repeats(scenes, chapters)
     return Script(
         core_message=outline.core_message,
         mood=outline.mood,

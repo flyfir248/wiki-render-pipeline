@@ -46,6 +46,10 @@ def make_video(
     return job
 
 
+LONG_ARTICLE_IMAGES = 20  # the article's own photos a long video may use
+LONG_LINKED_IMAGES = 24  # photos from the articles it links to
+
+
 def for_format(cfg: Config) -> Config:
     """The settings a video is made with: a long video uses `long_llm` when that model's key is set."""
     alt = cfg.long_llm
@@ -79,9 +83,19 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             notes = wiki.notes(article)
             job.file("research.md").write_text(notes)
             try:
-                images = wiki.fetch_images(cfg, article.title)
+                images = wiki.fetch_images(cfg, article.title, limit=LONG_ARTICLE_IMAGES if cfg.format == "long" else 8)
             except Exception as e:  # images are a nice-to-have
                 log(job, f"warning: no article images: {e}")
+            if cfg.format == "long":
+                # dozens of scenes need dozens of pictures: the photos of what the story names (its aircraft,
+                # places and people) from the articles it links to
+                try:
+                    linked = wiki.linked_images(cfg, article, limit=LONG_LINKED_IMAGES)
+                    have = {im.title for im in images}
+                    images += [im for im in linked if im.title not in have]
+                    log(job, f"{len(linked)} photos from linked articles")
+                except Exception as e:
+                    log(job, f"warning: no linked-article photos: {e}")
             log(job, f"{len(images)} article images available")
         elif cfg.research:
             log(job, "researching")
@@ -673,6 +687,15 @@ def relevance_gate(cfg: Config, job: Job, script: Script, story, spans, words, s
         for i, why in text.items():
             log(job, f"scene {i + 1}: 3D dropped: {why}")
         script = relevance.apply(script, text)
+    if cfg.format == "long":
+        # a long video has a real photo for every scene: a simplified stand-in (a ball for a parachute) is
+        # worse than the photo
+        stand_ins = {i: "only a simplified stand-in model was found for its subject" for i, s in enumerate(script.scenes)
+                     if relevance.is_3d(s) and (s.model or {}).get("level") == "generic"}
+        for i, why in stand_ins.items():
+            log(job, f"scene {i + 1}: 3D dropped: {why}")
+        script = relevance.apply(script, stand_ins)
+        text = text | stand_ins
     checked = [i for i, s in enumerate(script.scenes) if relevance.is_3d(s)]
     picture: dict[int, str] = {}
     if checked and cfg.review_model:
@@ -682,7 +705,8 @@ def relevance_gate(cfg: Config, job: Job, script: Script, story, spans, words, s
         props = build_props(cfg, script, spans, words, scene_media, None, None, None, shots, {})
         job.file("gate-props.json").write_text(props.model_dump_json())
         log(job, f"relevance: checking {len(checked)} 3D scenes by eye")
-        picture = relevance.picture_gate(cfg, script, story, props, job.file("gate-props.json"), job.public, job.file("gate"), log=lambda m: log(job, m))
+        picture = relevance.picture_gate(cfg, script, story, props, job.file("gate-props.json"), job.public, job.file("gate"),
+                                         log=lambda m: log(job, m), strict=cfg.format == "long")
         retakes = {i: t for i in picture if (t := relevance.retake(script.scenes[i])) is not None}
         if retakes:
             # 3D first: a scene whose frame missed its subject gets a closer take before it goes to 2D
@@ -805,15 +829,25 @@ def _more_images(cfg: Config, job: Job, images: list["wiki.WikiImage"], subject:
     return [*images, *extra]
 
 
-def _photo_fits(cfg: Config, job: Job, path: Path, scene, subject: str) -> bool:
+def _photo_fits(cfg: Config, job: Job, path: Path, scene, subject: str, stock: bool = False) -> bool:
     """A free vision model's word on whether a searched-for photo belongs behind this scene. True when
-    no check can be made (no vision model, a clip rather than a photo)."""
+    no check can be made (no vision model, a clip rather than a photo), except for a stock photo or clip in
+    a long video: stock search matches loosely (a fire truck for "rescue", an emoji for "shock"), so there
+    it goes in only when a vision model has seen it fit."""
+    strict = stock and cfg.format == "long"
     if path.suffix.lower() not in (".jpg", ".jpeg", ".png", ".webp") or not path.is_file():
-        return True
+        if strict:
+            log(job, f"stock clip {path.name} left out: a clip can't be checked")
+            path.unlink(missing_ok=True)
+        return not strict
     meant = f"Subject of the video: {subject or 'see the line'}. The narrator says: \"{scene.narration[:220]}\""
     v = storyboard.review(cfg, path, meant, rules=PHOTO_CHECK)
     if v is not None and not v.matches:
         log(job, f"photo {path.name} left out: {v.problems or 'not about this scene'}")
+        path.unlink(missing_ok=True)
+        return False
+    if v is None and strict:
+        log(job, f"stock photo {path.name} left out: no vision model could check it")
         path.unlink(missing_ok=True)
         return False
     return True
@@ -872,7 +906,7 @@ def scene_visuals(
             except Exception as e:  # stock footage is optional; fall back to the plain background
                 log(job, f"warning: no stock footage for scene {i + 1}: {e}")
                 m = None
-            if m and _photo_fits(cfg, job, job.public / m.src, s, subject):
+            if m and _photo_fits(cfg, job, job.public / m.src, s, subject, stock=True):
                 scene_media[i] = m
                 if m.credit:
                     credits.append(m.credit)
@@ -918,16 +952,52 @@ def scene_visuals(
                     m = None
                 if m is None:
                     break
-                if _photo_fits(cfg, job, job.public / m.src, s, subject):
+                if _photo_fits(cfg, job, job.public / m.src, s, subject, stock=True):
                     scene_media[i] = m
                     if m.credit:
                         credits.append(m.credit)
                     break
 
+    if cfg.format == "long":
+        refill(job, script, images, scene_media)
+
     kinds = [("wiki" in m.src or "commons" in m.src) for m in scene_media.values()]
     log(job, f"visuals: {sum(kinds)} Wikipedia and freely licensed images, {len(kinds) - sum(kinds)} stock, "
         f"{len(script.scenes) - len(scene_media)} scenes on plain background")
     return scene_media, credits, used
+
+
+def refill(job: Job, script: Script, images: list["wiki.WikiImage"], scene_media: dict[int, Media]) -> None:
+    """A long video's scenes still on a plain background get a photo the video already has: the one whose
+    description best matches the scene, else the one used least, never the photo of the scene before or after.
+    The renderer frames a reused photo with its own camera move, so it doesn't look repeated."""
+    have = sorted({m.src for m in scene_media.values() if m.kind == "image"})
+    if not have:
+        return
+    by_src = {f"media/wiki{n}": images[n - 1] for n in range(1, len(images) + 1)}
+    uses = {src: 0 for src in have}
+    for m in scene_media.values():
+        if m.src in uses:
+            uses[m.src] += 1
+    def fit(i: int, src: str) -> int:
+        im = by_src.get(src.rsplit(".", 1)[0])
+        return len(_about(script.scenes[i]) & _words(f"{im.description} {im.title}")) if im else 0
+
+    empty = [i for i, s in enumerate(script.scenes) if i not in scene_media and s.type not in DRAWN]
+    # scenes that name what a photo shows choose first, so a neighbour doesn't take their photo
+    empty.sort(key=lambda i: -max(fit(i, src) for src in have))
+    filled = 0
+    for i in empty:
+        near = {scene_media[k].src for k in (i - 1, i + 1) if k in scene_media}
+        free = [src for src in have if src not in near]
+        if not free:
+            continue
+        src = max(free, key=lambda src: (fit(i, src), -uses[src]))
+        scene_media[i] = Media(src=src, kind="image")
+        uses[src] += 1
+        filled += 1
+    if filled:
+        log(job, f"{filled} scenes without a picture of their own reuse one of the video's photos")
 
 
 MAX_EXTRA_SHOTS = 2  # per scene; the renderer re-frames the photos it has for any further cuts
@@ -1008,7 +1078,7 @@ def extra_shots(
                         found = media.fetch_photo(cfg, s.broll_query, job.public, name.removeprefix("media/"), used)
                     except Exception as e:
                         log(job, f"warning: no stock photo for scene {i + 1}: {e}")
-                    if found and not _photo_fits(cfg, job, job.public / found.src, s, subject):
+                    if found and not _photo_fits(cfg, job, job.public / found.src, s, subject, stock=True):
                         continue
                     if found and found.credit:
                         credits.append(found.credit)

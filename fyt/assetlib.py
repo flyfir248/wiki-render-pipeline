@@ -550,11 +550,16 @@ def _try(cfg: Config, entity: Entity, term: str, c: dict, fidelity: str, log, an
 
 
 def project_model(entity: Entity) -> dict | None:
-    """A vetted model in the project library that names the entity."""
+    """A vetted model in the project library that names the entity: the name it matched is what the entity
+    is (its head noun), not a word describing it, so "a modified cargo plane" isn't cast as a cargo crate."""
     text = " ".join([entity.name] + entity.search)
+    heads = {head_noun(t) for t in [entity.name, entity.kind, *entity.search]} - {""}
+    nouns = " ".join(re.findall(r"[a-z0-9]+", t.lower())[-1] for t in [entity.name, entity.kind, *entity.search]
+                     if re.search(r"[a-z0-9]", t.lower()))
     reg = assets.registry()
     for key, e in reg.items():
-        if assets.library_ready(e) and scenes3d.find(text, e.get("names", [])):
+        said = scenes3d.find(text, e.get("names", [])) if assets.library_ready(e) else None
+        if said and (head_noun(said) in heads or scenes3d.find(nouns, e.get("names", []))):
             if e.get("group"):
                 # variants of one thing (a pack's cars in five colours): each story's entity gets one of
                 # them, the same one every time it is named, so a pack's every model is used
@@ -703,7 +708,8 @@ def attach(script, story: "manifest.Manifest", found: dict[str, dict], srcs: dic
         model = {"id": a["key"], "level": "generated" if generated else "found", "title": a.get("title"), "kind": "object",
                  "src": srcs[s.subject_name], "fit": a.get("fit") or facing(e), "clips": a.get("clips", []), "params": {},
                  "sources": [a["url"]] if a.get("url") else [], "licence": a.get("licence"), "author": a.get("author", ""),
-                 "notes": f"{a.get('source')} model for {e.name}: {e.look}"}
+                 "notes": f"{a.get('source')} model for {e.name}: {e.look}",
+                 "checked": a.get("checked")}
         if s.illustrative:
             label = "ILLUSTRATION"
         elif generated or not e.certain:

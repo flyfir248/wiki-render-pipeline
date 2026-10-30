@@ -219,6 +219,45 @@ def fetch_images(cfg: Config, title: str, limit: int = 8) -> list[WikiImage]:
     return images[:limit]
 
 
+def linked_images(cfg: Config, article: Article, limit: int = 24) -> list[WikiImage]:
+    """The lead photos of the articles this one links to most (the aircraft, the base, the people in the
+    story), each described by the linked article's name so a scene that names it finds it. Free images
+    only: Wikipedia's page images are freely licensed unless asked otherwise."""
+    named: dict[str, str] = {}  # linked article -> its page image's file name
+    params = dict(action="query", generator="links", titles=article.title, redirects=1, gplnamespace=0,
+                  gpllimit="max", prop="pageimages", piprop="name", pilimit="max")
+    for _ in range(12):
+        body = _api(cfg, **params)
+        for page in body.get("query", {}).get("pages", []):
+            if page.get("pageimage"):
+                named[page["title"]] = page["pageimage"]
+        if "continue" not in body:
+            break
+        params.update(body["continue"])
+    text = article.text.lower()
+    mentions = {t: text.count(re.sub(r" \(.*\)$", "", t).lower()) for t in named}
+    ranked = sorted((t for t in named if mentions[t]), key=lambda t: -mentions[t])
+    files: dict[str, str] = {}
+    for t in ranked:
+        files.setdefault(f"File:{named[t]}", t)
+        if len(files) >= limit * 2:
+            break
+    if not files:
+        return []
+    body = _api(cfg, action="query", titles="|".join(list(files)[:50]), prop="imageinfo",
+                iiprop="url|size|mime|extmetadata", iiurlwidth=1280)
+    found = {im.title.replace("_", " "): im for im in _images(body)}
+    out = []
+    for name, t in files.items():
+        im = found.get(name.replace("_", " "))
+        if im is None:
+            continue
+        im.description = f"{t}: {im.description}"[:120]
+        im.source = "linked"
+        out.append(im)
+    return out[:limit]
+
+
 COMMONS = "https://commons.wikimedia.org/w/api.php"
 
 

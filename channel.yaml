@@ -56,6 +56,8 @@ long_llm:
   # Flash's free daily allowance is small: visual planning, casting and translations go to Flash-Lite, so
   # Flash is there for the script and the fact check.
   helper_models: ["newest:flash-lite"]
+  # Only Flash writes the long script: when it is out for the day, the next run tries the same video again.
+  strict_writer: true
   backup:
     base_url: https://integrate.api.nvidia.com/v1
     api_key_env: NVIDIA_API_KEY
