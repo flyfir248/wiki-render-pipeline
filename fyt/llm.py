@@ -227,6 +227,12 @@ def _openai_structured_once(
     }
     if c.reasoning_effort and "gpt-oss" in model:
         body["reasoning_effort"] = c.reasoning_effort
+    if "generativelanguage.googleapis.com" in c.base_url:
+        # Gemini thinks before it answers and the thinking counts against max_tokens: a 3000-token chapter
+        # came back cut off mid-JSON again and again, each retry spending one of Flash's few free requests.
+        # Its output limit is far higher, and the free tier counts requests, not tokens.
+        body["max_tokens"] = max(max_tokens, 16000)
+        body["reasoning_effort"] = "low"
     if "nemotron" in model and "nvidia.com" in c.base_url:
         # Nemotron thinks at length by default, and the thinking counts against max_tokens
         body["chat_template_kwargs"] = {"enable_thinking": False}
@@ -284,7 +290,11 @@ def _openai_structured_once(
             continue
         if r.status_code >= 400:
             raise ClaudeError(f"{c.base_url} returned {r.status_code}: {r.text[:500]}")
-        content = (r.json()["choices"][0]["message"]["content"] or "").strip()
+        choice = r.json()["choices"][0]
+        content = (choice["message"]["content"] or "").strip()
+        if choice.get("finish_reason") == "length" and body["max_tokens"] < 32000:
+            body["max_tokens"] = min(body["max_tokens"] * 2, 32000)  # cut off: the next try gets room to finish
+            print(f"{model} ran out of room mid-reply; retrying with max_tokens {body['max_tokens']}")
         if content.startswith("```"):  # tolerate a fenced reply
             content = content.strip("`").removeprefix("json").strip()
         if not content.startswith("{") and "{" in content:  # a sentence before or after the object (Gemini)

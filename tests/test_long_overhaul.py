@@ -193,3 +193,32 @@ def test_gemini_and_nvidia_vision_models_check_pictures(monkeypatch):
         backup=BackupLLM(base_url="https://integrate.api.nvidia.com/v1", api_key_env="NVIDIA_API_KEY",
                          models=["nvidia/nemotron-3.5-super-vl-120b-a12b", "newest:deepseek-v4-flash"])))
     assert [n for n, _ in storyboard._checkers(cfg)] == ["gemini-3-flash-lite", "gemini-3-flash", "nvidia/nemotron-3.5-super-vl-120b-a12b"]
+
+
+def test_gemini_gets_room_to_think_and_a_cut_off_reply_gets_more(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "g")
+    sent = []
+
+    class R:
+        status_code = 200
+        headers = {}
+        text = ""
+
+        def __init__(self, content, finish):
+            self._j = {"choices": [{"message": {"content": content}, "finish_reason": finish}]}
+
+        def json(self):
+            return self._j
+
+    replies = [R('{"scenes": [{"narr', "length"), R(json.dumps({"scenes": [{"narration": "Done.", "type": "statement"}]}), "stop")]
+
+    def post(url, headers, json, timeout):
+        sent.append(dict(json))
+        return replies.pop(0)
+
+    monkeypatch.setattr(llm.requests, "post", post)
+    cfg = Config(llm=LLMConfig(provider="openai", base_url="https://generativelanguage.googleapis.com/v1beta/openai",
+                               api_key_env="GEMINI_API_KEY", model="gemini-3-flash"))
+    got = llm._openai_structured_once(cfg, "gemini-3-flash", "s", "u", llm.ChapterScenes, 3000)
+    assert got.scenes[0].narration == "Done."
+    assert [b["max_tokens"] for b in sent] == [16000, 32000] and sent[0]["reasoning_effort"] == "low"
