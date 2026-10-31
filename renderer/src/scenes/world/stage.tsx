@@ -81,6 +81,40 @@ const settle = (root: THREE.Object3D) => {
   });
 };
 
+// Where an aircraft's tail is: a plane's tail fin stands higher than anything else on it, so the middle
+// of its topmost points lies well towards the tail along its length, and on the middle line across its
+// wings (they are the same on both sides). For x and for z, how far off the middle those points lie, as a
+// share of the model's extent that way (-0.5 .. 0.5).
+export const tailOffset = (root: THREE.Object3D): { x: number; z: number } => {
+  const pts: number[] = [];
+  const v = new THREE.Vector3();
+  root.traverse((n) => {
+    const mesh = n as THREE.Mesh;
+    const pos = mesh.isMesh ? mesh.geometry?.attributes?.position : undefined;
+    if (!pos) return;
+    const step = Math.max(1, Math.floor(pos.count / 20000));
+    for (let i = 0; i < pos.count; i += step) {
+      v.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld);
+      pts.push(v.x, v.y, v.z);
+    }
+  });
+  if (pts.length < 24) return { x: 0, z: 0 };
+  const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+  for (let i = 0; i < pts.length; i++) {
+    lo[i % 3] = Math.min(lo[i % 3], pts[i]);
+    hi[i % 3] = Math.max(hi[i % 3], pts[i]);
+  }
+  const band = hi[1] - (hi[1] - lo[1]) * 0.06;
+  let sx = 0, sz = 0, count = 0;
+  for (let i = 0; i < pts.length; i += 3) if (pts[i + 1] >= band) {
+    sx += pts[i];
+    sz += pts[i + 2];
+    count++;
+  }
+  const off = (sum: number, a: number) => (hi[a] - lo[a] < 1e-6 ? 0 : (sum / count - (lo[a] + hi[a]) / 2) / (hi[a] - lo[a]));
+  return count ? { x: off(sx, 0), z: off(sz, 2) } : { x: 0, z: 0 };
+};
+
 // The model cel-shaded, turned to face +x (by its record's `forward`, else its long side; see below),
 // scaled so its largest side is SIZE and stood on y = 0.
 // `own`: keep the model's own (physically based) materials, lit by the scene's sky (`envMap`), as a
@@ -129,11 +163,21 @@ export const prepare = (m: Loaded, forward: string, up: string, own: { envMap: T
   if (forward === "auto" || forward === "short") {
     // No record of which way it faces: a ship or an animal is longest from front to back, so its long
     // horizontal side is taken as its length ("auto"); a winged thing is wider than it is long ("short").
-    // Seen side-on, never head-on; which end is the front is a guess.
+    // Seen side-on, never head-on; which end is the front is a guess, except for an aircraft (by its tail fin).
     settle(turn);
     const raw = new THREE.Box3().setFromObject(turn).getSize(new THREE.Vector3());
-    const alongX = forward === "auto" ? raw.x > raw.z * 1.15 : raw.x * 1.15 < raw.z;
-    forward = alongX ? "+x" : "+z";
+    let alongX = forward === "auto" ? raw.x > raw.z * 1.15 : raw.x * 1.15 < raw.z;
+    let tail = 0;
+    if (forward === "short") {
+      // an aircraft: its length is the way its tail fin lies off the middle (a fighter can be longer than
+      // its wingspan), and its front is the end away from the fin, whichever way its maker built it
+      const off = tailOffset(turn);
+      const [ax, az] = [Math.abs(off.x), Math.abs(off.z)];
+      if (Math.max(ax, az) > 0.18 && Math.min(ax, az) < Math.max(ax, az) * 0.5) alongX = ax > az;
+      const along = alongX ? off.x : off.z;
+      tail = along > 0.18 ? 1 : along < -0.18 ? -1 : 0;
+    }
+    forward = (tail > 0 ? "-" : "+") + (alongX ? "x" : "z");
   }
   turn.rotation.y = YAW[forward] ?? YAW["+z"];
   const outer = new THREE.Group();

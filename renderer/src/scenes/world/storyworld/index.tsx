@@ -205,6 +205,12 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     const many = Math.max(1, Math.min(9, m.count ?? 1));
     return { m, pos, yaw, phase, speed, h, w: w * (1 + 0.9 * Math.sqrt(many - 1)), w0: w, air, start: start.clone() };
   });
+  // what falls in a shot with an aircraft and was not let go from it by name still left it: it keeps
+  // the aircraft's heading, so it drops pointing the way the aircraft flies, not wherever it stood
+  const flier = placed.find((p) => flies(p.m) && p.m.build.archetype === "vehicle");
+  if (flier)
+    for (const p of placed)
+      if (p.m.verb === "fall" && !carried(p.m) && !["vehicle", "humanoid", "quadruped"].includes(p.m.build.archetype)) p.yaw = flier.yaw;
   carry(placed, D / fps, t, U);
   // on open water, people and animals stand on something afloat, never on the water: the ice floe at an
   // iceberg's foot, else the deck of a boat or a ditched airliner
@@ -545,7 +551,11 @@ const rigidPose = (p: Placed, b: Blocking, vehicle: boolean) => {
       off.y = Math.sin(t * 1.1) * p.h * 0.05;
       break;
     case "fall":
-      rot = vehicle ? [0.25 * ease((k + 1.2) / 1.2), 0, -0.35 * ease((k + 1.2) / 1.2)] : [ease((k + 0.4) / 0.5) * 1.2, 0, ease((k + 0.4) / 0.5) * 0.4];
+      // a craft noses down and banks; a long thing (a bomb, a missile, a log) tips nose first as it
+      // drops, its front (+x) leading; anything else tumbles
+      rot = vehicle ? [0.25 * ease((k + 1.2) / 1.2), 0, -0.35 * ease((k + 1.2) / 1.2)]
+        : p.w0 > p.h * 1.6 ? [0, 0, -ease((k + 1.2) / 1.2) * 1.1]
+        : [ease((k + 0.4) / 0.5) * 1.2, 0, ease((k + 0.4) / 0.5) * 0.4];
       break;
     case "sink": {
       // bow first and listing, settling until the stern stands out of the water

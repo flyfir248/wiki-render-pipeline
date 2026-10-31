@@ -40,7 +40,6 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable
 
-import numpy as np
 import requests
 
 from fyt import assets, manifest, scenes3d
@@ -698,31 +697,14 @@ def _faces(cfg: Config, thing: str, picture: Path) -> str | None:
     return "left" if v.problems.strip().lower().startswith("left") else "unclear"
 
 
-def tail_end(picture: Path) -> str | None:
-    """Which end of an aircraft drawn side-on carries its tail fin, its highest point: 'left', 'right', or
-    None when the highest point is not near an end (a helicopter's rotor, a blimp)."""
-    from PIL import Image
-
-    img = np.asarray(Image.open(picture).convert("RGB"), dtype=np.int16)
-    body = np.abs(img - img[2, 2]).sum(axis=2) > 40  # the plain backdrop is the corner's colour
-    cols = np.flatnonzero(body.any(axis=0))
-    if cols.size < 10:
-        return None
-    x0, x1 = cols[0], cols[-1]
-    rows = np.flatnonzero(body.any(axis=1))
-    top = rows[0] + max(1, (rows[-1] - rows[0]) // 25)
-    highest = np.flatnonzero(body[: top + 1].any(axis=0))
-    at = (highest.mean() - x0) / max(1, x1 - x0)
-    return "left" if at < 0.3 else "right" if at > 0.7 else None
-
-
 def orient(cfg: Config, m: "manifest.Manifest", found: dict[str, dict], log=print) -> None:
     """Which way each found model faces, checked once and kept with it. The stage turns a model nobody
     recorded the facing of by its shape, which finds its length but not which end is the front, so a plane
     could fly tail first. Each model is drawn side-on as the stage would turn it, and again turned half
-    round; a vision model says which way it points in each. Two answers that agree settle it: the front
+    round; a vision model says which way it points in each, and one clear answer settles it: the front
     axis is kept in the model's record (meta.json "fit") and used from then on. Library models come with
-    their facing, and a model checked before is not checked again."""
+    their facing, and a model checked before is not checked again. An aircraft is not asked about: the
+    stage finds its front from its own shape, the end away from its tail fin (stage.tsx `tailOffset`)."""
     todo = []
     for eid, a in found.items():
         e = manifest.entity(m, eid)
@@ -730,7 +712,7 @@ def orient(cfg: Config, m: "manifest.Manifest", found: dict[str, dict], log=prin
         if e is None or a.get("source") == "project" or a.get("facing") in ("checked", "unclear:2") or not a.get("file"):
             continue
         guess = (a.get("fit") or facing(e)).get("forward", "auto")
-        if (a.get("fit") or {}).get("up", "+y") != "+y" or axis(a.get("size") or [], guess) is None:
+        if guess == "short" or (a.get("fit") or {}).get("up", "+y") != "+y" or axis(a.get("size") or [], guess) is None:
             continue
         todo.append((eid, e, a, guess))
     if not todo:
@@ -759,11 +741,6 @@ def orient(cfg: Config, m: "manifest.Manifest", found: dict[str, dict], log=prin
             # each clear answer is a vote on the model as the stage turns it: its front to the right as it
             # is, or to the left once turned round, says it is the right way; the opposite says turn it
             votes = {"keep" if s == ("right" if i == 0 else "left") else "turn" for i, s in enumerate(seen) if s in ("right", "left")}
-            how = "by eye"
-            if not votes and WINGED.search(f"{e.kind} {' '.join(e.search)}"):
-                tail = tail_end(pics[0])  # an aircraft's tail fin is its highest point
-                votes = {"keep" if tail == "left" else "turn"} if tail else set()
-                how = "by its tail fin"
             if len(votes) != 1:
                 if None in seen and not votes:
                     log(f"assets: {e.name}: no vision check of its facing could be made; checked next time")
@@ -774,7 +751,7 @@ def orient(cfg: Config, m: "manifest.Manifest", found: dict[str, dict], log=prin
                 verdict = front
             else:
                 verdict = FLIP[front]
-                log(f"assets: {e.name} ({a.get('title')!r}) faced backwards ({how}): turned round ({front} -> {verdict})")
+                log(f"assets: {e.name} ({a.get('title')!r}) faced backwards: turned round ({front} -> {verdict})")
             fit = dict(a.get("fit") or {})
             if verdict:
                 fit["forward"] = verdict
