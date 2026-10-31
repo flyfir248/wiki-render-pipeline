@@ -298,6 +298,12 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             job.update(status="qa_failed", problems=before.problems)
             raise RuntimeError("failed the quality gate before rendering: " + "; ".join(before.problems))
 
+        # motion QA: anything in the 3D scenes that would jump, lurch or snap round (a note, not a gate)
+        jerky = render.motion_check(job.file("props.json"))
+        for f in jerky[:12]:
+            log(job, f"motion: {f['scene']} frame {f['frame']}: {f['what']}, {f['detail']}")
+        if len(jerky) > 12:
+            log(job, f"motion: and {len(jerky) - 12} more")
         log(job, f"rendering {props.duration:.0f}s {cfg.format} video")
         video = render.render(job.file("props.json"), job.public, job.file("video.mp4"))
         after = qcheck.after_render(cfg, script, props, video, voiced=provider != "silent")
