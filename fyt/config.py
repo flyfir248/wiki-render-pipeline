@@ -385,6 +385,10 @@ class Config(BaseModel):
     visuals: VisualsConfig = Field(default_factory=VisualsConfig)
     sound_effects: bool = True  # whooshes, pops and booms timed to the animation (fyt/sfx.py)
     sfx_volume: float = 0.3  # relative to the narrator at 1.0
+    # The finished video's sound is mastered to this integrated loudness (LUFS) with a -1 dBTP ceiling,
+    # YouTube's playback level, so every video sounds as loud as the next one (fyt/render.py `master`).
+    # null leaves the mix as rendered.
+    loudness_lufs: float | None = -14.0
     stock_footage: bool = True  # needs PEXELS_API_KEY
     # AI illustrations for story scenes in the flat house style (fyt/artgen.py); needs
     # CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN or TOGETHER_API_KEY, else emoji-style props.

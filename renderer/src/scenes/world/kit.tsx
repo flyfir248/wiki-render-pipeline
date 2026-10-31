@@ -5,6 +5,7 @@ import React, { useMemo } from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import * as THREE from "three";
+import { SunShadows } from "../shadows";
 import type { Scene } from "../../types";
 import { unit } from "../../theme";
 import type { SceneProps } from "../shared";
@@ -13,6 +14,7 @@ import {
   type Palette, type Weather,
 } from "../world3d";
 import catalog from "./catalog.json";
+import { Blast, BillowCloud } from "../vfx";
 
 export type WorldProps = { scene: Scene; portrait: boolean };
 
@@ -188,45 +190,10 @@ export const Billow: React.FC<{
   dark?: string;
   seed?: number;
   life?: number;
-}> = ({ at, since, count = 24, spread = 1, rise = 1, size = 1, color = "#9a948c", dark = "#6f6a64", seed = 5, life = 200 }) => {
-  if (since < 0) return null;
-  const t = Math.min(since, life);
-  return (
-    <group position={at}>
-      {Array.from({ length: count }, (_, i) => {
-        const r = rng(i * 13 + seed);
-        const a = r() * Math.PI * 2;
-        const born = r() * 14;
-        const age = t - born;
-        if (age <= 0) return null;
-        const out = (1 - Math.exp(-age / 30)) * spread * (2 + r() * 5);
-        const up = (1 - Math.exp(-age / 45)) * rise * (1 + r() * 7);
-        const sc = size * (0.6 + r() * 1.2) * (0.3 + Math.min(1.4, age / 25));
-        return (
-          <mesh key={i} geometry={puff} position={[Math.cos(a) * out, up + r() * 0.5, Math.sin(a) * out]} scale={sc}>
-            <meshToonMaterial color={i % 3 ? color : dark} emissive={color} emissiveIntensity={0.25} gradientMap={toonRamp} />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-};
+}> = (p) => <BillowCloud {...p} />;
 
 // A fireball that swells and burns out into smoke.
-export const Fireball: React.FC<{ at: [number, number, number]; since: number; size?: number }> = ({ at, since, size = 1 }) => {
-  if (since < 0 || since > 40) return null;
-  const k = since / 40;
-  return (
-    <group position={at}>
-      <mesh geometry={ball} scale={size * (0.8 + 3.2 * Math.sqrt(k))}>
-        <meshBasicMaterial color={k < 0.3 ? "#fff1b0" : k < 0.6 ? "#ffb347" : "#ff6a2a"} transparent opacity={1 - k * 0.8} />
-      </mesh>
-      <mesh geometry={ball} scale={size * (0.5 + 2.2 * Math.sqrt(k))} position={[0.4 * size, 0.6 * size * k, 0]}>
-        <meshBasicMaterial color="#ffd36a" transparent opacity={1 - k} />
-      </mesh>
-    </group>
-  );
-};
+export const Fireball: React.FC<{ at: [number, number, number]; since: number; size?: number }> = (p) => <Blast {...p} />;
 
 // Pieces thrown out of an impact, tumbling as they fly and fall.
 export const Debris: React.FC<{ at: [number, number, number]; since: number; count?: number; speed?: number; color?: string; seed?: number; gravity?: number; floor?: number }> = ({
@@ -269,6 +236,7 @@ export const moduleScene = (World: React.FC<WorldProps>): React.FC<SceneProps> =
       <AbsoluteFill>
         <ThreeCanvas width={width} height={height} camera={{ fov: 36, position: [-20, 8, 12] }} gl={{ antialias: true }}>
           <World scene={scene} portrait={short} />
+          <SunShadows />
         </ThreeCanvas>
         <WeatherOverlay weather={scene.weather} seed={sceneSeed(scene)} night={scene.setting === "night"} />
         <AbsoluteFill style={{ pointerEvents: "none" }}>

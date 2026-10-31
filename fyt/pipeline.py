@@ -307,7 +307,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         if len(jerky) > 12:
             log(job, f"motion: and {len(jerky) - 12} more")
         log(job, f"rendering {props.duration:.0f}s {cfg.format} video")
-        video = render.render(job.file("props.json"), job.public, job.file("video.mp4"))
+        video = render.render(job.file("props.json"), job.public, job.file("video.mp4"), lufs=cfg.loudness_lufs)
         after = qcheck.after_render(cfg, script, props, video, voiced=provider != "silent")
         for w in after.warnings:
             log(job, f"quality: {w}")

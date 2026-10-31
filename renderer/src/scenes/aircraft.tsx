@@ -11,6 +11,7 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Eas
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { SunShadows } from "./shadows";
 import type { Scene, Theme } from "../types";
 import { unit } from "../theme";
 import { formatNumber, type SceneProps } from "./shared";
@@ -473,6 +474,7 @@ export const AircraftScene: React.FC<SceneProps> = ({ scene, theme, format }) =>
     <AbsoluteFill>
       <ThreeCanvas width={width} height={height} camera={{ fov: 36, position: [-15, 4, 6] }} gl={{ antialias: true }}>
         <World scene={scene} theme={theme} portrait={short} />
+        <SunShadows />
       </ThreeCanvas>
       <WeatherOverlay weather={scene.weather} seed={sceneSeed(scene)} night={scene.setting === "night"} />
       <Readout scene={scene} theme={theme} short={short} />
