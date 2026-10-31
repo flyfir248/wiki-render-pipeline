@@ -23,6 +23,7 @@ import type { Act, Build, CastMember, Spot, World } from "./types";
 import { art, artToon, useArt } from "./artstyle";
 import { HeldProp, perform, resetRig, rigOf, paint, type ActState } from "./actions";
 import type { ShotCam } from "./layers";
+import { bridged, rateOf, trip, withDrift } from "./motion";
 
 const ease = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 const MOVING = ["walk", "run", "carry", "drive", "fly", "swim", "move", "approach", "depart", "climb", "crash"];
@@ -71,37 +72,41 @@ const flies = (m: CastMember) => m.verb === "fly" && ["vehicle", "bird", "insect
 // take up a new verb, place or state, starting from where the last beat left them, and the camera cuts
 // to the beat's move. Returns the world as it stands in this frame's beat, with the beat's own frame,
 // length and key moment, so blocking and camera treat each beat as a shot of its own.
-export const segmentOf = (world: World, frame: number, D: number, at: number) => {
+export const segmentOf = (world: World, frame: number, D: number, at: number, fps = 30) => {
   const beats = (world.beats ?? []).filter((x) => x.from > 0.05 && x.from < 0.95).sort((a, b) => a.from - b.from);
-  if (!beats.length) return { world, frame, D, at, i: 0 };
   const u = frame / Math.max(1, D - 1);
   let i = 0;
   while (i < beats.length && u >= beats[i].from) i++;
-  if (i === 0) {
-    // the opening beat ends at the first cue
-    const end = beats[0].from;
-    return { world, frame, D: Math.max(2, Math.round(end * (D - 1)) + 1), at: at < end ? at / end : 0.5, i };
-  }
-  let cast = world.cast;
-  let camera = world.camera;
-  let on = world.on;
-  for (const [j, bt] of beats.slice(0, i).entries()) {
-    cast = cast.map((c) => {
+  // the cast as each beat leaves it, from the opening one on
+  const casts: CastMember[][] = [world.cast];
+  for (const [j, bt] of beats.entries()) {
+    casts.push(casts[j].map((c) => {
       const o = bt.cast.find((x) => x.entity === c.entity);
       const from = (c.to || c.at) as Spot; // where the last beat left it
       // released at this beat: it leaves what it rode with and falls from it in this beat; in a later
       // beat it is where it landed
-      const rel = o?.release && c.attached ? { attached: "", released: c.attached, dropNow: j === i - 1 } : { dropNow: false };
+      const rel = o?.release && c.attached ? { attached: "", released: c.attached, dropNow: true } : { dropNow: false };
       return o ? { ...c, at: from, to: o.to ?? "", verb: o.verb || c.verb, state: o.state || c.state, face: o.face ?? c.face, ...rel }
         : { ...c, at: from, to: "", dropNow: false };
-    });
+    }));
+  }
+  const edges = [0, ...beats.map((bt) => Math.round(bt.from * (D - 1))), D - 1];
+  const cast = withDrift(casts, edges, fps, i);
+  if (i === 0) {
+    // the opening beat ends at the first cue
+    const end = beats.length ? beats[0].from : 1;
+    return { world: { ...world, cast }, frame, D: beats.length ? Math.max(2, edges[1] + 1) : D, at: at < end ? at / end : 0.5, i };
+  }
+  let camera = world.camera;
+  let on = world.on;
+  for (const [j, bt] of beats.slice(0, i).entries()) {
     camera = bt.camera || camera;
-    on = bt.on && cast.some((c) => c.entity === bt.on) ? bt.on : on;
+    on = bt.on && casts[j + 1].some((c) => c.entity === bt.on) ? bt.on : on;
   }
   const from = beats[i - 1].from;
   const to = i < beats.length ? beats[i].from : 1;
-  const start = Math.round(from * (D - 1));
-  const len = Math.max(2, Math.round(to * (D - 1)) - start + 1);
+  const start = edges[i];
+  const len = Math.max(2, edges[i + 1] - start + 1);
   const local = at >= from && at < to ? (at - from) / (to - from) : 0.3;
   // a mark plans the setup; once a beat plays the action itself, it would only cover it
   return { world: { ...world, cast, camera, on, marks: [] }, frame: frame - start, D: len, at: local, i };
@@ -150,6 +155,16 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
       const dir = starts[hit].clone().sub(start);
       const reach = Math.max(0, dir.length() - (w / 2 + sizes[hit].w / 2) * 0.85);
       end = start.clone().add(dir.normalize().multiplyScalar(reach));
+    } else if (m.drift !== undefined) {
+      // carried on from the beats before (motion.ts): from where its travel has taken it, on at a steady
+      // speed, or on to a spot it was sent to
+      const base = m.build.archetype === "vehicle" ? w : U;
+      start.x += base * m.drift;
+      end = start.clone();
+      if (m.to && m.to !== m.at) {
+        const [ex, ez] = SPOTS[m.to] ?? SPOTS.center;
+        end = new THREE.Vector3(ex * U, 0, ez * U);
+      } else if (m.cruising) end.x += base * rateOf(m.verb, m.build.archetype) * (Math.max(1, D - 1) / fps);
     } else if (m.to && m.to !== m.at) {
       const [ex, ez] = SPOTS[m.to] ?? SPOTS.center;
       end = new THREE.Vector3(ex * U, 0, ez * U);
@@ -159,7 +174,12 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
       start.x -= reach / 2;
       end = start.clone().add(new THREE.Vector3(reach, 0, 0));
     }
-    const go = m.verb === "crash" ? ease(Math.min(1, u / Math.max(0.1, at))) : m.verb === "approach" || m.verb === "depart" ? ease(u) : u;
+    // how it covers the way (motion.ts): a crash runs in to its moment, an approach or departure eases,
+    // a trip to a named spot speeds up and slows down (a vehicle over more of it than a person), and a
+    // cruise holds its speed
+    const sent = Boolean(m.to && m.to !== m.at);
+    const go = m.verb === "crash" ? ease(Math.min(1, u / Math.max(0.1, at))) : m.verb === "approach" || m.verb === "depart" ? ease(u)
+      : sent && !flies(m) ? trip(u, m.build.archetype === "vehicle" ? 0.35 : 0.2) : u;
     // in a set with open water, what floats (boats, a ditched aircraft, swimmers) is out on it
     const band = waterBand(world.set.kind);
     const floats = band && (m.build.archetype === "fish" || m.verb === "swim" || (m.build.archetype === "vehicle" && !flies(m) && m.verb !== "drive"));
@@ -266,6 +286,13 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
 // falls from where its carrier was when the beat began, keeping the carrier's forward speed and
 // accelerating down, so it traces an arc and lands ahead of where it was let go; an explosive detonates
 // where it lands. In a later beat it is where it landed. `secs` is the beat's length, `t` the time in it.
+// how much room a blast takes in the frame, growing over its first 1.6 s
+const grow = (p: Placed, since: number) => {
+  if (since <= 0 || !p.blast) return;
+  const g = ease(Math.min(1, since / 1.6));
+  p.w += (p.blast * 2.2 - p.w) * g;
+  p.h += (p.blast * 1.6 - p.h) * g;
+};
 const FALL_MIN = 1.4;
 const FALL_MAX = 3.2;
 export const carry = (placed: Placed[], secs: number, t: number, U: number) => {
@@ -301,12 +328,9 @@ export const carry = (placed: Placed[], secs: number, t: number, U: number) => {
       const since = p.m.verb === "explode" && !p.m.dropNow ? t - 0.15 : t - T;
       p.boom = since;
       p.blast = Math.max(p.w0 * 1.6, U * 1.4);
-      if (since > 0.08) {
-        p.hidden = true;
-        // framed as the blast it has become: the camera pulls back to take it in
-        p.w = p.blast * 2.2;
-        p.h = p.blast * 1.6;
-      }
+      if (since > 0.08) p.hidden = true;
+      // framed as the blast it becomes: the camera pulls back to take it in as it grows
+      grow(p, since);
     }
   }
   // a thing told to explode where it stands (a building, a vehicle)
@@ -314,11 +338,8 @@ export const carry = (placed: Placed[], secs: number, t: number, U: number) => {
     if (p.boom !== undefined || p.m.verb !== "explode") continue;
     p.boom = t - 0.15;
     p.blast = Math.max(p.w0 * 1.2, U * 1.2);
-    if (p.boom > 0.08) {
-      p.hidden = true;
-      p.w = p.blast * 2.2;
-      p.h = p.blast * 1.6;
-    }
+    if (p.boom > 0.08) p.hidden = true;
+    grow(p, p.boom);
   }
 };
 
@@ -369,10 +390,14 @@ const direct = (world: World, placed: Placed[], u: number, t: number, U0: number
   const own = Math.max(on.w, on.h) * 0.62 + U * 0.25;
   let Rw = on.w * 0.55 + U * 0.2;
   let Rh = on.h * 0.55 + U * 0.2;
+  // (one leaving its height, a bomb falling away from its plane, eases out of the frame over a stretch
+  // of height rather than all at once, so the camera does not jump in as it goes)
+  const Rw0 = Rw, Rh0 = Rh;
   placed.forEach((p) => {
-    if (p !== on && Math.abs(p.pos.y - on.pos.y) < U * 3) {
-      Rw = Math.max(Rw, Math.hypot(p.pos.x - on.pos.x, p.pos.z - on.pos.z) * 0.8 + p.w * 0.5);
-      Rh = Math.max(Rh, Math.abs(p.pos.y - on.pos.y) + p.h * 0.6);
+    const share = p === on || p.hidden ? 0 : Math.min(1, Math.max(0, (U * 6 - Math.abs(p.pos.y - on.pos.y)) / (U * 4.5)));
+    if (share > 0) {
+      Rw = Math.max(Rw, Rw0 + (Math.hypot(p.pos.x - on.pos.x, p.pos.z - on.pos.z) * 0.8 + p.w * 0.5 - Rw0) * share);
+      Rh = Math.max(Rh, Rh0 + (Math.abs(p.pos.y - on.pos.y) + p.h * 0.6 - Rh0) * share);
     }
   });
   // others share the frame, but never shrink the subject to a speck; a tall frame keeps the subject
@@ -1218,14 +1243,15 @@ export const StoryWorldScene: React.FC<SceneProps> = ({ scene, theme, format }) 
   const short = format === "short";
   useArt((scene.world as World).direction?.art);
   const blockAt = (f: number) => {
-    const sg = segmentOf(scene.world as World, f, durationInFrames, momentOf(scene));
+    const sg = segmentOf(scene.world as World, f, durationInFrames, momentOf(scene), fps);
     return { sg, b: block(sg.world, sg.frame, fps, sg.D, sg.at, short, { u: f / Math.max(1, durationInFrames - 1), t: f / fps, s: durationInFrames / fps }) };
   };
-  const { sg: seg, b } = blockAt(frame);
+  // (any jump or snap turn left is bridged over a few frames, never across a cut: motion.ts)
+  const { sg: seg, b } = bridged(blockAt, frame, durationInFrames, fps);
   const world = seg.world;
   // a printed profile's people move on twos, like drawn animation; the camera and the place stay smooth
   const step = art.profile.step;
-  const ba = step > 1 ? blockAt(frame - (frame % step)).b : b;
+  const ba = step > 1 ? bridged(blockAt, frame - (frame % step), durationInFrames, fps).b : b;
   // the foreground of each shot is placed from where its camera stands half way through it
   const setups = setupsOf(world, seg.D, fps, seg.at);
   const directed = Boolean((scene.world as World).direction?.shots?.length);

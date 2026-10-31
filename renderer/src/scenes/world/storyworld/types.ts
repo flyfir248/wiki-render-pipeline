@@ -74,6 +74,10 @@ export type CastMember = {
   // set as the beats play (segmentOf): what it was released from, and whether that was this beat
   released?: string;
   dropNow?: boolean;
+  // its motion carried from beat to beat (segmentOf, motion.ts): how far it has travelled on its own
+  // heading before this beat, in its own lengths (a vehicle) or stage units, and whether it travels on now
+  drift?: number;
+  cruising?: boolean;
   // posed: a still library animal the renderer moves as a whole (a gait, a breath, a turn)
   model?: { id: string; src: string; fit?: { forward?: string; up?: string }; clips?: string[]; posed?: boolean };
 };

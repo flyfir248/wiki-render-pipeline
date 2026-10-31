@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -46,3 +47,23 @@ def frames(props_json: Path, public: Path, out_dir: Path, at: list[int]) -> list
     cmd = ["node", "render.mjs", "--frames", ",".join(str(f) for f in at), "--props", str(props_json), "--public", str(public), "--out", str(out_dir)]
     subprocess.run(cmd, cwd=RENDERER_DIR, check=True, env=_env())
     return [out_dir / f"frame-{f:05d}.png" for f in at]
+
+
+def motion_check(props_json: Path, timeout: float = 300) -> list[dict]:
+    """The story-world scenes played through frame by frame without drawing them (renderer/motion-check.mjs):
+    what would look jerky, as {scene, frame, what, detail}. Empty when it can't run: a check, never a gate."""
+    try:
+        ensure_renderer()
+        done = subprocess.run(["node", "motion-check.mjs", "--props", str(Path(props_json).resolve())], cwd=RENDERER_DIR,
+                              capture_output=True, text=True, timeout=timeout, env=_env())
+    except Exception:
+        return []
+    found = []
+    for line in done.stdout.splitlines():
+        try:
+            row = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(row, dict) and "what" in row:
+            found.append(row)
+    return found

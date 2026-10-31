@@ -476,3 +476,20 @@ def test_a_model_found_facing_backwards_is_turned_round_and_remembered(tmp_path,
     monkeypatch.setattr(assetlib.subprocess, "run", lambda *a, **k: pytest.fail("checked again"))
     assetlib.orient(load_config(), m, {"ship": found["ship"], "plane": found["plane"]}, print)
     assert assetlib.axis([10, 2, 3], "auto") == "+x" and assetlib.axis([3, 2, 10], "short") == "+x" and assetlib.axis([1, 1, 1], "-x") == "-x"
+
+
+def test_motion_check_reads_what_would_look_jerky_and_never_stops_a_render(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from fyt import render
+
+    monkeypatch.setattr(render, "ensure_renderer", lambda: None)
+    out = '{"scene":"s2","frame":82,"what":"lurch","detail":"c130: speed 67.99 -> 0.92 per frame"}\nwarning\n{"checked":2,"found":1}\n'
+    monkeypatch.setattr(render.subprocess, "run", lambda cmd, **kw: SimpleNamespace(stdout=out))
+    assert render.motion_check(tmp_path / "props.json") == [{"scene": "s2", "frame": 82, "what": "lurch", "detail": "c130: speed 67.99 -> 0.92 per frame"}]
+
+    def broken(*a, **k):
+        raise TimeoutError("too slow")
+
+    monkeypatch.setattr(render.subprocess, "run", broken)
+    assert render.motion_check(tmp_path / "props.json") == []
