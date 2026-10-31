@@ -5,8 +5,8 @@ each one plays, where they stand). That says what happens; it doesn't say how a 
 module adds the direction every scene needs before the renderer draws it, all from rules, so it costs
 nothing and runs the same with or without a model:
 
-1. art: one art-style profile for the whole video (cinematic stylised, inked graphic novel, or stencil /
-   cutout), picked from the story (``choose_art``). A profile is not a filter: it sets the materials,
+1. art: one art-style profile for the whole video (cinematic stylised, inked graphic novel, stencil /
+   cutout, painterly, cel-shaded, clay / miniature or dark noir), picked from the story (``choose_art``). A profile is not a filter: it sets the materials,
    the light rig, how dense and how simplified the set is, the animation timing, the lens and the
    finishing passes together (renderer/src/scenes/world/storyworld/artstyle.ts).
 2. recipe: how the place is built in layers (``recipe_for``): foreground cover that frames the shot,
@@ -34,23 +34,22 @@ from __future__ import annotations
 import re
 import zlib
 
-from fyt import manifest, worldgen
+from fyt import manifest, scenes3d, worldgen
 from fyt.manifest import Manifest
 from fyt.models import Script
 from fyt.worldgen import Build, Setting, Shot
 
 # --- art style profiles -----------------------------------------------------------------------------
 
-PROFILES = ("cinematic", "ink", "stencil")
+PROFILES = ("cinematic", "ink", "stencil", "painterly", "cel", "clay", "noir")
 
-# Words that call for each profile. A story is scored by how many of each its title and narration use;
-# the cinematic look is the default and wins ties, so a profile is only chosen when the story asks for it.
-INK_WORDS = ("mystery", "mysterious", "unexplained", "unsolved", "hoax", "murder", "crime", "criminal", "detective", "police",
-             "investigat", "case", "spaceman", "ufo", "alien", "ghost", "haunt", "conspiracy", "disappear", "vanish", "legend",
-             "curse", "strange", "bizarre", "weird", "photograph", "photo", "witness", "suspect", "trial", "secret", "spy")
-STENCIL_WORDS = ("war", "revolution", "propaganda", "regime", "protest", "riot", "empire", "coup", "assassinat", "dictator",
-                 "cult", "rebellion", "uprising", "cold war", "soviet", "nazi", "occupation", "massacre", "anomaly", "censor",
-                 "political", "election", "strike", "prison", "execution", "manifesto")
+# Picked by itself (art_style "auto"): the cinematic stylised 3D the first story worlds were made in, the
+# look that reads best, for most stories; dark noir for crime and mysteries; painterly for a story set
+# before PAINTED_BEFORE. The others (ink, stencil, cel, clay) are there to be chosen (art_style). A story is
+# scored by how many of each word list its title and narration use; cinematic wins ties.
+PAINTED_BEFORE = 1850
+NOIR_WORDS = ("mystery", "mysterious", "unexplained", "unsolved", "murder", "crime", "criminal", "detective", "police", "investigat",
+              "ghost", "haunt", "conspiracy", "disappear", "vanish", "witness", "suspect", "trial", "spy", "heist", "gangster")
 CINEMATIC_WORDS = ("animal", "bear", "forest", "ocean", "ship", "aircraft", "plane", "flight", "train", "volcano", "storm",
                    "space", "rocket", "planet", "science", "cell", "river", "mountain", "journey", "expedition", "nature")
 
@@ -77,16 +76,20 @@ def choose_art(script: Script, story: Manifest | None, style: str = "auto", stre
     text = " ".join([script.title, script.description or ""] + [s.narration for s in script.scenes]).lower()
     if story:
         text += " " + " ".join(f"{e.name} {e.kind} {e.look}" for e in story.entities).lower()
-    scores = {"ink": _score(text, INK_WORDS), "stencil": _score(text, STENCIL_WORDS), "cinematic": _score(text, CINEMATIC_WORDS)}
+    scores = {"noir": _score(text, NOIR_WORDS), "cinematic": _score(text, CINEMATIC_WORDS)}
+    year = scenes3d.story_year(" ".join([script.title] + [s.narration for s in script.scenes]))
     if style in PROFILES:
         profile = style
+    elif scores["noir"] >= 2 and scores["noir"] > scores["cinematic"]:
+        profile = "noir"
+    elif year is not None and year < PAINTED_BEFORE:
+        profile = "painterly"
     else:
-        best = max(("ink", "stencil"), key=lambda p: scores[p])
-        profile = best if scores[best] >= 2 and scores[best] > scores["cinematic"] else "cinematic"
+        profile = "cinematic"
     if atmosphere not in ATMOSPHERES:
         mood = (script.mood or "").lower()
-        atmosphere = ("graphic" if profile == "stencil" else "dramatic" if profile == "ink" or mood in ("somber", "tense", "dark")
-                      else "dreamlike" if mood in ("wonder", "awe", "whimsical", "nostalgic") else "natural")
+        atmosphere = ("graphic" if profile in ("stencil", "cel") else "dramatic" if profile in ("ink", "noir") or mood in ("somber", "tense", "dark")
+                      else "dreamlike" if profile == "clay" or mood in ("wonder", "awe", "whimsical", "nostalgic") else "natural")
     return {"profile": profile, "strength": round(max(0.0, min(1.0, strength)), 2), "detail": round(max(0.2, min(1.0, detail)), 2),
             "atmosphere": atmosphere, "scores": scores}
 

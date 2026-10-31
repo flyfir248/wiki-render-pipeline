@@ -93,8 +93,25 @@ def test_a_heading_is_not_an_action():
 
 
 def test_art_profile_is_one_per_video_and_the_setting_wins():
-    assert director.choose_art(SOLWAY, STORY)["profile"] == "ink"  # a mystery reads as an inked graphic novel
+    assert director.choose_art(SOLWAY, STORY)["profile"] in ("cinematic", "noir")
     assert director.choose_art(SOLWAY, STORY, style="stencil")["profile"] == "stencil"
+    for style in ("painterly", "cel", "clay", "noir"):
+        assert director.choose_art(SOLWAY, STORY, style=style)["profile"] == style
+
+    def told(title, *lines, mood="curious"):
+        return Script(title=title, description="D", tags=["a"], thumbnail_text="X", thumbnail_kicker="K", thumbnail_query="q", mood=mood,
+                      scenes=[ScriptScene(narration=t, type="statement", text="t") for t in lines], sources=["https://example.com"])
+
+    # by itself: the cinematic 3D for most stories (a war story no longer goes to a stencil print),
+    war = told("The Mother of All Bombs", "In 2017 a C-130 dropped the bomb on a tunnel complex during the war in Afghanistan.",
+               "The regime's fighters were in the caves.", mood="tense")
+    assert director.choose_art(war, None)["profile"] == "cinematic"
+    # dark noir for crime and mysteries, painterly for a story long ago
+    crime = told("The Unsolved Murder", "Police never found the murder weapon.", "The detective's suspect vanished before the trial.")
+    assert director.choose_art(crime, None)["profile"] == "noir"
+    assert director.choose_art(crime, None)["atmosphere"] == "dramatic"
+    old = told("The Vasa", "In 1628 the warship Vasa sank in Stockholm harbour on her maiden voyage.")
+    assert director.choose_art(old, None)["profile"] == "painterly"
     assert director.choose_art(SOLWAY, STORY, style="cinematic", strength=0.4)["strength"] == 0.4
 
 

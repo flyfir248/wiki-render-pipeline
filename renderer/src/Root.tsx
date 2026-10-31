@@ -1,5 +1,6 @@
 import React from "react";
 import { Composition, Still } from "remotion";
+import { ModelSnap } from "./ModelSnap";
 import { Thumbnail } from "./Thumbnail";
 import { Video } from "./Video";
 import { dims, sampleProps, sampleThumbnail } from "./theme";
@@ -21,6 +22,7 @@ export const Root: React.FC = () => (
         ...dims(props.format),
       })}
     />
+    <Still id="ModelSnap" component={ModelSnap} width={960} height={540} defaultProps={{ src: "", forward: "auto", up: "+y", flip: false }} />
     <Still
       id="Thumbnail"
       component={Thumbnail}
