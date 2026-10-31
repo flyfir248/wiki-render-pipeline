@@ -1,0 +1,138 @@
+{
+  "warnings": [
+    "scene 1 at 2.3s: Bomb clipping into the bottom of the aircraft.",
+    "scene 1 at 6.3s: Shows only airplane shadow, not the C-130 aircraft itself.",
+    "scene 2 at 15.5s: Shows a bomb falling instead of a C-130 aircraft.",
+    "scene 42 at 223.4s: The bomb is floating above the ground with no support."
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 2.29,
+      "contrast": 48.1,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Bomb clipping into the bottom of the aircraft."
+    },
+    {
+      "scene": 1,
+      "at": 6.26,
+      "contrast": 23.9,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows only airplane shadow, not the C-130 aircraft itself."
+    },
+    {
+      "scene": 2,
+      "at": 10.52,
+      "contrast": 70.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 2,
+      "at": 15.52,
+      "contrast": 35.6,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a bomb falling instead of a C-130 aircraft."
+    },
+    {
+      "scene": 4,
+      "at": 26.26,
+      "contrast": 76.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 4,
+      "at": 28.66,
+      "contrast": 74.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 5,
+      "at": 31.74,
+      "contrast": 74.1,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 5,
+      "at": 35.65,
+      "contrast": 71.8,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 66.2,
+      "contrast": 27.7,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 71.91,
+      "contrast": 36.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 103.9,
+      "contrast": 73.7,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 106.49,
+      "contrast": 70.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 19,
+      "at": 108.88,
+      "contrast": 57.1,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 19,
+      "at": 111.46,
+      "contrast": 54.5,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 42,
+      "at": 223.35,
+      "contrast": 56.4,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "The bomb is floating above the ground with no support."
+    },
+    {
+      "scene": 42,
+      "at": 225.63,
+      "contrast": 49.8,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 1 at 2.3s: Bomb clipping into the bottom of the aircraft.",
+    "scene 1 at 6.3s: Shows only airplane shadow, not the C-130 aircraft itself.",
+    "scene 2 at 15.5s: Shows a bomb falling instead of a C-130 aircraft.",
+    "scene 42 at 223.4s: The bomb is floating above the ground with no support.",
+    "3D covers 17% of the runtime, under the 75% target",
+    "3D scenes [5, 18, 19] repeat an earlier shot",
+    "3D scenes [5, 11, 18] have little moving in the picture beyond the camera (animation under 40)"
+  ],
+  "repair": [],
+  "repaired": []
+}
