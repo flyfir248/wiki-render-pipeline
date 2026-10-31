@@ -522,6 +522,7 @@ const registry: Record<Scene["type"], React.FC<SceneProps>> = {
   aircraft: AircraftScene,
   ship: ShipScene,
   world: WorldScene,
+  journey: () => null, // drawn by the journey layer under every scene (journey/Journey.tsx)
 };
 
 // A photo or clip behind a template scene, moved by the scene's camera. It stays bright: the scene's

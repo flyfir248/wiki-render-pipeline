@@ -203,7 +203,10 @@ def guard(scene, context: str = ""):
         documented = bool(scene.cue and scene.cue.lower() in scene.narration.lower())
     else:
         documented = bool(find(scene.narration, action_words(subject, action)))
-    if is_event(subject, action) and not documented:
+    # A What If stage (it carries a `level`, fyt/whatif.py) acts out the premise itself, which no narration
+    # can document: the script's action stands, and the scene is always labelled an illustration.
+    hypothetical = scene.level is not None
+    if is_event(subject, action) and not documented and not hypothetical:
         action = neutral_action(subject)
     obstacle = scene.obstacle if scene.obstacle in s["obstacles"] else None
     if subject == "space" and obstacle is None:
@@ -227,6 +230,6 @@ def guard(scene, context: str = ""):
         # A scene that shows what its narration says happened is a reconstruction; one that shows the
         # subject doing something neutral is an illustration, and says so on screen.
         # A conceptual subject (a neural network, a chip) is always a diagram of the idea, never the real thing.
-        "illustrative": bool(s.get("conceptual")) or not (documented and not s["actions"][action].get("neutral")),
+        "illustrative": hypothetical or bool(s.get("conceptual")) or not (documented and not s["actions"][action].get("neutral")),
         "maneuver": None, "vessel": None, "ship_action": None,
     })

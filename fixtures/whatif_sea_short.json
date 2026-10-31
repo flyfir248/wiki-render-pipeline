@@ -1,0 +1,131 @@
+{
+  "title": "What If the Sea Rose 1 Metre Every Day?",
+  "description": "What if the sea rose one metre every single day, and never stopped? Day by day, from the first flooded streets to the last dry rock on Earth.\n\nThe premise is impossible; the heights, populations and volumes are real.",
+  "tags": [
+    "what if",
+    "sea level",
+    "hypothetical",
+    "flood",
+    "mount everest",
+    "science",
+    "earth",
+    "geography"
+  ],
+  "thumbnail_text": "DAY 8,849: NO LAND",
+  "thumbnail_kicker": "What If",
+  "thumbnail_query": "flooded city aerial",
+  "mood": "tense",
+  "core_message": "One metre a day would drown a tenth of humanity in ten days and every mountain in 24 years.",
+  "comment_question": "Which day would your home go under?",
+  "sources": [
+    "https://en.wikipedia.org/wiki/Sea_level_rise",
+    "https://en.wikipedia.org/wiki/Ocean",
+    "https://en.wikipedia.org/wiki/Elizabeth_Tower",
+    "https://en.wikipedia.org/wiki/Denver",
+    "https://en.wikipedia.org/wiki/Mount_Everest"
+  ],
+  "scenes": [
+    {
+      "type": "world",
+      "subject": "city",
+      "variant": "modern",
+      "action": "flood",
+      "shot": "orbit",
+      "subject_name": "the coastal city",
+      "clock": "DAY 0",
+      "clock_note": "+0 m",
+      "level": 0.03,
+      "narration": "What if the sea rose one metre, every single day, and never stopped?"
+    },
+    {
+      "type": "world",
+      "subject": "city",
+      "variant": "modern",
+      "action": "flood",
+      "shot": "side",
+      "subject_name": "the coastal city",
+      "clock": "DAY 2",
+      "clock_note": "+2 m",
+      "level": 0.07,
+      "narration": "By day two, the sea covers land where two hundred and sixty seven million people live."
+    },
+    {
+      "type": "proportion",
+      "value": 10,
+      "heading": "of people live less than 10 m above the sea",
+      "clock": "DAY 10",
+      "clock_note": "+10 m",
+      "level": 0.13,
+      "narration": "Day ten. One in every ten people on Earth lives less than ten metres above the sea. Their homes are gone."
+    },
+    {
+      "type": "world",
+      "subject": "city",
+      "variant": "modern",
+      "action": "flood",
+      "shot": "wide",
+      "subject_name": "the coastal city",
+      "clock": "DAY 70",
+      "clock_note": "+70 m",
+      "level": 0.34,
+      "narration": "Day seventy. The sea is now higher than if every glacier and ice sheet on Earth melted at once."
+    },
+    {
+      "type": "bars",
+      "heading": "Height, in metres",
+      "data": [
+        {
+          "label": "A house",
+          "value": 8
+        },
+        {
+          "label": "Big Ben's tower",
+          "value": 96
+        },
+        {
+          "label": "The sea, day 96",
+          "value": 96
+        }
+      ],
+      "clock": "DAY 96",
+      "clock_note": "+96 m",
+      "level": 0.42,
+      "narration": "Day ninety six. The water reaches the top of Big Ben's tower in London."
+    },
+    {
+      "type": "map",
+      "places": [
+        {
+          "name": "Denver",
+          "lat": 39.74,
+          "lon": -104.99
+        }
+      ],
+      "clock": "DAY 1,609",
+      "clock_note": "+1,609 m",
+      "level": 0.6,
+      "narration": "Day sixteen hundred and nine, about four years in. Waves reach Denver, the Mile High City."
+    },
+    {
+      "type": "world",
+      "subject": "city",
+      "variant": "modern",
+      "action": "flood",
+      "shot": "orbit",
+      "subject_name": "the coastal city",
+      "clock": "DAY 8,849",
+      "clock_note": "+8,849 m",
+      "level": 1.0,
+      "narration": "After twenty four years, the sea closes over the top of Mount Everest. There is no dry land left on Earth."
+    },
+    {
+      "type": "stat",
+      "value": 361000,
+      "suffix": " km³",
+      "heading": "New water needed, every day",
+      "clock": "DAY 8,849",
+      "level": 1.0,
+      "narration": "And it took three hundred and sixty one thousand cubic kilometres of new water. Every single day."
+    }
+  ]
+}

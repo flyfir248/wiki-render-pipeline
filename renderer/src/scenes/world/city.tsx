@@ -76,14 +76,26 @@ const World: React.FC<WorldProps> = ({ scene, portrait }) => {
     return action === "collapse" ? pool.reduce((a, b) => (b.h > a.h ? b : a), pool[0]) : pool[Math.floor(r() * pool.length)];
   }, [buildings, id, action, size]);
 
+  // A What If video's flood carries on from the last scene's level to this one's, up to over the tallest tower.
+  const top = useMemo(() => buildings.reduce((m, b) => Math.max(m, b.h), 0) + 6, [buildings]);
+  const water =
+    action !== "flood"
+      ? -9
+      : scene.level != null
+        ? -1.5 + (top + 1.5) * interpolate(frame, [0, D * 0.7], [scene.levelFrom ?? 0, scene.level], { ...clamp, easing: Easing.inOut(Easing.quad) })
+        : interpolate(since, [0, D * 0.6], [-1.5, historic ? 2.6 : 4.2], { ...clamp, easing: Easing.out(Easing.quad) });
   const quake = action === "earthquake" ? shake(since, 2.2, frame) : action === "explosion" || action === "collapse" ? shake(since, 1, frame) : new THREE.Vector3();
   const cam = shotOf(scene.shot ?? (action === "flyover" ? "orbit" : "wide"), u, size);
+  // A rising flood lifts the camera with it, so it never ends up looking at the sea from underneath.
+  if (water > -1.4) {
+    cam.pos.y = Math.max(cam.pos.y, water + size * 0.12);
+    cam.look.y = Math.max(cam.look.y, water * 0.85);
+  }
   aim(camera, cam.pos.clone().add(quake), cam.look.clone().add(new THREE.Vector3(origin.x * 0.3, 0, origin.z * 0.3)), cam.fov, portrait);
 
   // The fire spreads outward from its first house; behind the front, buildings are burnt out.
   const fireR = action === "fire" ? Math.max(0, since) * ((size * 0.55) / Math.max(1, D * (1 - at))) : -1;
-  const water = action === "flood" ? interpolate(since, [0, D * 0.6], [-1.5, historic ? 2.6 : 4.2], { ...clamp, easing: Easing.out(Easing.quad) }) : -9;
-  const blastR = action === "explosion" ? Math.max(0, since) * 1.6 : -1;
+const blastR = action === "explosion" ? Math.max(0, since) * 1.6 : -1;
   const topple = useMemo(() => {
     const r = rng(id + 77);
     return buildings.map(() => (r() < 0.16 ? { dir: r() * Math.PI * 2, delay: r() * 30 } : null));

@@ -6,7 +6,7 @@ from typing import Literal
 
 import re
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from pydantic.json_schema import SkipJsonSchema
 
 from fyt import scenes3d
@@ -29,11 +29,12 @@ def plain(text: str) -> str:
 SceneType = Literal[
     "title", "statement", "stat", "bars", "list", "quote", "timeline", "comparison", "broll",
     "map", "process", "document", "dialogue", "story", "evidence", "trend", "proportion", "scale", "cycle",
-    "aircraft", "ship", "world",
+    "aircraft", "ship", "world", "journey",
 ]
 # Scenes that draw their whole picture themselves, so no photo is fetched for them. Code-drawn charts
 # (trend, proportion, scale, cycle) do take one: it sits dim and soft far behind the chart.
-DRAWN = ("map", "story", "aircraft", "ship", "world")
+DRAWN = ("map", "story", "aircraft", "ship", "world", "journey")
+HAND_ONLY_TYPES = ("journey",)
 # How the camera moves over a scene's photo, and how the scene enters. The renderer picks when unset.
 Camera = Literal["push_in", "pull_out", "pan_left", "pan_right", "parallax"]
 Transition = Literal["fade", "slide", "zoom", "wipe", "flash", "thread", "whip"]
@@ -115,8 +116,18 @@ class Actor(BaseModel):
     src: SkipJsonSchema[str | None] = None  # illustration file, set by the pipeline
 
 
+def _hide_hand_only_types(schema: dict) -> None:
+    # journey beats come from journey scripts (fyt/journey.py), never from the LLM's free choice, so the
+    # schema the LLM sees leaves the type out and stays inside the free tier's budget
+    t = schema.get("properties", {}).get("type", {})
+    if "enum" in t:
+        t["enum"] = [v for v in t["enum"] if v not in HAND_ONLY_TYPES]
+
+
 class ScriptScene(BaseModel):
     """One beat of the video: what is said, and what is shown while it is said."""
+
+    model_config = ConfigDict(json_schema_extra=_hide_hand_only_types)
 
     narration: str = Field(description="Exact words the narrator speaks for this scene.")
     purpose: str | None = Field(
@@ -194,6 +205,18 @@ class ScriptScene(BaseModel):
     maneuver: SkipJsonSchema[Maneuver | None] = None
     vessel: SkipJsonSchema[Vessel | None] = None
     ship_action: SkipJsonSchema[ShipAction | None] = None
+    # What If videos (fyt/whatif.py): kept out of the usual schema, so the true-story prompt stays inside a
+    # free tier's per-minute budget; WhatIfScene below asks for them.
+    clock: SkipJsonSchema[str | None] = None
+    clock_note: SkipJsonSchema[str | None] = None
+    level: SkipJsonSchema[float | None] = None
+    # Scale journeys (fyt/journey.py): the measure in metres by the end of the beat, a landmark passed
+    # there, and the second readout once the story brings it in.
+    scale: SkipJsonSchema[float | None] = None
+    landmark: SkipJsonSchema[str | None] = None
+    landmark_note: SkipJsonSchema[str | None] = None
+    gauge: SkipJsonSchema[str | None] = None
+    gauge_label: SkipJsonSchema[str | None] = None
     camera: Camera | None = Field(default=None, description="Optional camera move over this scene's photo.")
     transition: Transition | None = Field(default=None, description="Optional way this scene enters.")
     image: int | None = Field(
@@ -216,6 +239,14 @@ class ScriptScene(BaseModel):
     def _spaced(cls, v: str | None) -> str | None:
         # a word after the number ("13 survivors") is spaced from it; a unit sign ("%", "x", "km") is not
         return " " + v.strip() if v and len(v.strip()) > 3 and v.strip()[0].isalpha() else v
+
+
+class WhatIfScene(ScriptScene):
+    """A scene of a What If video: a stage of the ladder, with its clock."""
+
+    clock: str | None = Field(default=None, description="The stage's time stamp in capitals, a unit and a number ('DAY 70').")
+    clock_note: str | None = Field(default=None, description="What the premise adds up to by then, 1-3 words with a unit ('+70 m').")
+    level: float | None = Field(default=None, description="0-1: how far the world has gone from normal by the scene's end; never falls.")
 
 
 class Chapter(BaseModel):
@@ -248,6 +279,11 @@ class Script(BaseModel):
     # Set by the pipeline for long videos written chapter by chapter; not asked of the model.
     chapters: SkipJsonSchema[list[Chapter] | None] = None
     series: SkipJsonSchema[str | None] = None  # playlist the video is filed under
+    journey: SkipJsonSchema[dict | None] = None  # a scale journey's settings (fyt/journey.py): measure, cold_open
+
+
+class WhatIfScript(Script):
+    scenes: list[WhatIfScene]
 
 
 class Word(BaseModel):
@@ -332,6 +368,10 @@ class RenderScene(BaseModel):
     transition: Transition | None = None
     chapter: str | None = None  # long videos: a chapter starts here; its card shows "Part N" and this title
     chapterNumber: int | None = None
+    clock: str | None = None  # What If videos: the stage's time stamp, drawn over the scene (fyt/whatif.py)
+    clockNote: str | None = None  # ...and what the premise adds up to by then
+    level: float | None = None  # What If videos: 0-1, how far the world has gone from normal by the scene's end
+    levelFrom: float | None = None  # ...and where it stood when the scene began (the last scene's level)
 
 
 class Music(BaseModel):
@@ -360,6 +400,7 @@ class RenderProps(BaseModel):
     badge: str | None = None  # the series name, shown small at the top the whole video
     subscribe: str | None = None  # shown at the end: over a Short's last seconds, on a long video's end card
     endCard: float = 0  # seconds at the end of a long video held for YouTube's end screen
+    journey: dict | None = None  # a scale journey's camera, landmarks and readouts (fyt/journey.py)
 
 
 class ThumbnailProps(BaseModel):

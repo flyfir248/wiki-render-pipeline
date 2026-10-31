@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import zlib
 
-from fyt import artdirect, scenes3d
+from fyt import artdirect, journey, scenes3d, whatif
 from fyt.config import Config
 from fyt.models import Media, Music, RenderBeat, RenderProps, RenderScene, Script, ScriptScene, Sfx, Word
 
@@ -41,6 +41,7 @@ def build_props(
     chapters = {c.scene: (n, c.title) for n, c in enumerate(script.chapters or [], 1) if n > 1 and c.scene > 0}
     if cfg.format != "long":
         chapters = {}
+    level_before = 0.0  # What If videos: each scene's world starts where the last one left it
     for i, (scene, (start, _end)) in enumerate(zip(script.scenes, spans)):
         scene = scenes3d.legacy_to_world(scene)
         # A scene stays on screen until the next one starts, so pauses are covered.
@@ -53,7 +54,7 @@ def build_props(
                 start=round(vis_start, 3),
                 end=round(vis_end, 3),
                 heading=scene.heading,
-                text=scene.text,
+                text=scene.narration if scene.type == "journey" else scene.text,  # a journey shows its line
                 items=scene.items,
                 value=scene.value,
                 prefix=scene.prefix,
@@ -109,8 +110,14 @@ def build_props(
                 transition=scene.transition,
                 chapter=chapters[i][1] if i in chapters else None,
                 chapterNumber=chapters[i][0] if i in chapters else None,
+                clock=scene.clock,
+                clockNote=scene.clock_note,
+                level=scene.level,
+                levelFrom=level_before if scene.level is not None else None,
             )
         )
+        if scene.level is not None:
+            level_before = scene.level
         captions.extend(
             Word(word=w.word, start=round(w.start + start, 3), end=round(w.end + start, 3)) for w in clip_words[i]
         )
@@ -126,9 +133,10 @@ def build_props(
         captions=captions,
         showCaptions=cfg.captions,
         showVisualizer=cfg.visualizer,
-        badge=(script.series or None) if cfg.growth.series_badge else None,
-        subscribe=cfg.growth.subscribe_for(script.title) or None,
+        badge=(script.series or None) if cfg.growth.series_badge and not journey.is_journey(script) else None,  # a journey's readout sits there
+        subscribe=(whatif.SUBSCRIBE if script.series == whatif.SERIES else cfg.growth.subscribe_for(script.title)) or None,
         endCard=round(end_card, 3),
+        journey=journey.build(script, spans) if journey.is_journey(script) else None,
     )
 
 
