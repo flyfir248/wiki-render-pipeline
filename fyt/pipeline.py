@@ -10,7 +10,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fyt import animation, artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, whatif, wiki, worldgen, youtube
+from fyt import animation, artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, whatif, journey, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps, WhatIfScript
@@ -196,7 +196,9 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     job.update(status="scripted", title=script.title, core_message=script.core_message)
 
     problems = qa.check_script(cfg, script)
-    if script.series == whatif.SERIES:
+    if journey.is_journey(script):
+        problems += journey.problems(script)
+    elif script.series == whatif.SERIES:
         problems += whatif.problems(script)
     if problems:
         job.update(status="qa_failed", problems=problems)
@@ -774,6 +776,8 @@ def relevance_gate(cfg: Config, job: Job, script: Script, story, spans, words, s
 def plan_visuals(cfg: Config, job: Job, script: Script, notes: str, story=None) -> Script:
     """Every video's visual plan (fyt/visualplan.py): which moments become 3D reconstructions, guarded
     so they show only what the narration says. Written to visualplan.json next to the script."""
+    if journey.is_journey(script):  # a journey draws its own world from end to end
+        return script
     if not cfg.visuals.plan:
         return assets.resolve(visualplan.apply(script, [], notes)[0])
     log(job, "planning the visuals")

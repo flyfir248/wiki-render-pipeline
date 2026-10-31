@@ -67,7 +67,8 @@ export type SceneType =
   | "cycle"
   | "aircraft"
   | "ship"
-  | "world";
+  | "world"
+  | "journey";
 
 export type Scene = {
   id: string;
@@ -168,6 +169,17 @@ export type Theme = {
   profile?: string;
 };
 
+// A scale journey (fyt/journey.py): one unbroken camera move driven by L, the log10 of the measure in metres.
+export type Journey = {
+  measure: string; // the readout's label: "YOUR HEIGHT"
+  keys: { t: number; L: number }[]; // L over time, seconds from the video's start
+  marks: { name: string; note?: string | null; L: number }[]; // landmarks, tagged as the journey passes them
+  gauges: { t: number; label: string; text: string }[]; // the second readout, from when the story brings it in
+  title?: { text: string; from: number; to: number } | null;
+  coldOpen?: number; // seconds at the start that show where the journey ends
+  seed?: number;
+};
+
 export type RenderProps = {
   format: Format;
   fps: number;
@@ -184,6 +196,7 @@ export type RenderProps = {
   badge?: string | null; // the series name, shown small at the top
   subscribe?: string | null; // over a Short's last seconds, and on a long video's end card
   endCard?: number; // seconds held at the end of a long video for YouTube's end screen
+  journey?: Journey | null; // a scale journey draws the whole picture under the scenes (journey/Journey.tsx)
 };
 
 export type ThumbnailProps = {

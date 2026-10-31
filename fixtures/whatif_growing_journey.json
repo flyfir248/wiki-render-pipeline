@@ -1,0 +1,481 @@
+{
+ "title": "What If You Started Growing and Couldn't Stop?",
+ "description": "What if you started growing, and couldn't stop? From your street to the edge of the observable universe, one continuous journey through every scale, with the real heights and distances of everything you pass.\n\nThe premise is impossible. The sizes, distances and signal speeds are real.",
+ "tags": [
+  "what if",
+  "scale of the universe",
+  "size comparison",
+  "space",
+  "observable universe",
+  "hypothetical",
+  "science",
+  "growing"
+ ],
+ "thumbnail_text": "93 BILLION LIGHT-YEARS TALL",
+ "thumbnail_kicker": "What If",
+ "thumbnail_query": "galaxy",
+ "mood": "curious",
+ "core_message": "Growing from 1.7 m to the size of the observable universe crosses 26 powers of ten.",
+ "comment_question": "Where would you have asked to stop?",
+ "sources": [
+  "https://en.wikipedia.org/wiki/Statue_of_Liberty",
+  "https://en.wikipedia.org/wiki/Burj_Khalifa",
+  "https://en.wikipedia.org/wiki/Mount_Everest",
+  "https://en.wikipedia.org/wiki/K%C3%A1rm%C3%A1n_line",
+  "https://en.wikipedia.org/wiki/International_Space_Station",
+  "https://en.wikipedia.org/wiki/Earth",
+  "https://en.wikipedia.org/wiki/Moon",
+  "https://en.wikipedia.org/wiki/Sun",
+  "https://en.wikipedia.org/wiki/Voyager_1",
+  "https://en.wikipedia.org/wiki/Proxima_Centauri",
+  "https://en.wikipedia.org/wiki/Milky_Way",
+  "https://en.wikipedia.org/wiki/Andromeda_Galaxy",
+  "https://en.wikipedia.org/wiki/Local_Group",
+  "https://en.wikipedia.org/wiki/Virgo_Supercluster",
+  "https://en.wikipedia.org/wiki/Laniakea_Supercluster",
+  "https://en.wikipedia.org/wiki/Observable_universe",
+  "https://en.wikipedia.org/wiki/Nerve_conduction_velocity"
+ ],
+ "series": "What If",
+ "journey": {
+  "measure": "Your height",
+  "cold_open": true
+ },
+ "scenes": [
+  {
+   "type": "journey",
+   "narration": "You can't stop growing."
+  },
+  {
+   "type": "journey",
+   "narration": "What if you started growing, and couldn't stop?",
+   "scale": 1.7
+  },
+  {
+   "type": "journey",
+   "narration": "It starts on an ordinary street, on an ordinary morning.",
+   "scale": 1.72
+  },
+  {
+   "type": "journey",
+   "narration": "One point seven metres. Then one point eight.",
+   "scale": 1.8
+  },
+  {
+   "type": "journey",
+   "narration": "Your shoes split first. Then your jacket.",
+   "scale": 2.4
+  },
+  {
+   "type": "journey",
+   "narration": "By the time you notice, you're looking into upstairs windows.",
+   "scale": 5
+  },
+  {
+   "type": "journey",
+   "narration": "Ten metres. People below are pointing up at you.",
+   "scale": 10,
+   "landmark": "A two-storey house",
+   "landmark_note": "about 10 m"
+  },
+  {
+   "type": "journey",
+   "narration": "You are taller than every house on the street.",
+   "scale": 20
+  },
+  {
+   "type": "journey",
+   "narration": "And every second, you grow a little faster.",
+   "scale": 45
+  },
+  {
+   "type": "journey",
+   "narration": "Ninety three metres. As tall as the Statue of Liberty, pedestal and all.",
+   "scale": 93,
+   "landmark": "Statue of Liberty",
+   "landmark_note": "93 m, ground to torch"
+  },
+  {
+   "type": "journey",
+   "narration": "A step that crossed the road now crosses a city block.",
+   "scale": 200
+  },
+  {
+   "type": "journey",
+   "narration": "Your head is up in the morning haze.",
+   "scale": 400
+  },
+  {
+   "type": "journey",
+   "narration": "Eight hundred and twenty eight metres. You look the world's tallest building in the eye.",
+   "scale": 828,
+   "landmark": "Burj Khalifa",
+   "landmark_note": "828 m"
+  },
+  {
+   "type": "journey",
+   "narration": "And then it's below you.",
+   "scale": 1500
+  },
+  {
+   "type": "journey",
+   "narration": "Here's the strange part. Your nerves carry signals at about a hundred metres a second.",
+   "scale": 2500,
+   "gauge": "25 s",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "So a message from your feet now takes twenty five seconds to reach your brain.",
+   "scale": 2600,
+   "gauge": "26 s",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "You're walking on feet you can't feel in real time.",
+   "scale": 4200,
+   "gauge": "42 s",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Clouds drift around your knees.",
+   "scale": 6000,
+   "gauge": "1.0 min",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Eight thousand eight hundred and forty nine metres. You're as tall as Mount Everest.",
+   "scale": 8849,
+   "landmark": "Mount Everest",
+   "landmark_note": "8,849 m",
+   "gauge": "1.5 min",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Eleven kilometres. Airliners cruise past your face.",
+   "scale": 11000,
+   "landmark": "Airliner cruising height",
+   "landmark_note": "about 11 km",
+   "gauge": "1.8 min",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "The sky above you is turning dark.",
+   "scale": 30000,
+   "gauge": "5.0 min",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "One hundred kilometres. The edge of space.",
+   "scale": 100000,
+   "landmark": "Kármán line",
+   "landmark_note": "100 km up",
+   "gauge": "17 min",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Your head has left the atmosphere. Your feet are still in a city.",
+   "scale": 160000,
+   "gauge": "27 min",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Four hundred kilometres. The space station passes your ear.",
+   "scale": 400000,
+   "landmark": "International Space Station",
+   "landmark_note": "about 400 km up",
+   "gauge": "1.1 hours",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Stub your toe now, and you'll feel it an hour and a half later.",
+   "scale": 560000,
+   "gauge": "1.6 hours",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Each of your feet covers a country. You can't tell which ones.",
+   "scale": 2000000.0,
+   "gauge": "5.6 hours",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Twelve thousand seven hundred kilometres. You're as tall as the Earth is wide.",
+   "scale": 12742000.0,
+   "landmark": "Earth",
+   "landmark_note": "12,742 km across",
+   "gauge": "1 days",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Everyone you have ever met is somewhere under your feet.",
+   "scale": 20000000.0,
+   "gauge": "2 days",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "The whole planet is a ball you could hold, if you could still bend down.",
+   "scale": 60000000.0,
+   "gauge": "7 days",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Three hundred and eighty four thousand kilometres. The Moon drifts past your shoulder.",
+   "scale": 384400000.0,
+   "landmark": "The Moon",
+   "landmark_note": "384,400 km away",
+   "gauge": "44 days",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Apollo astronauts took three days to cross that gap. You grew it in seconds.",
+   "scale": 520000000.0,
+   "gauge": "60 days",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "A message from your toe now takes months to arrive.",
+   "scale": 800000000.0,
+   "gauge": "93 days",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "One point four million kilometres. The Sun is smaller than you are.",
+   "scale": 1390000000.0,
+   "landmark": "The Sun",
+   "landmark_note": "1.39 million km across",
+   "gauge": "161 days",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "Three hundred million kilometres. Earth's whole orbit would fit inside you.",
+   "scale": 300000000000.0,
+   "landmark": "Earth's orbit",
+   "landmark_note": "300 million km across",
+   "gauge": "95 years",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "A signal from your feet would take ninety five years. Longer than a human life.",
+   "scale": 310000000000.0,
+   "gauge": "98 years",
+   "gauge_label": "A signal from your feet"
+  },
+  {
+   "type": "journey",
+   "narration": "And here's the problem. Even light takes time to cross you now.",
+   "scale": 1000000000000.0,
+   "gauge": "56 min",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Light leaving your feet reaches your eyes almost an hour later.",
+   "scale": 1050000000000.0,
+   "gauge": "58 min",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Nine billion kilometres. Neptune's orbit, the edge of the planets.",
+   "scale": 9000000000000.0,
+   "landmark": "Neptune's orbit",
+   "landmark_note": "9 billion km across",
+   "gauge": "8.3 hours",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Voyager one, the farthest thing humans ever built, is somewhere near your waist.",
+   "scale": 50000000000000.0,
+   "landmark": "Voyager 1",
+   "landmark_note": "about 25 billion km from the Sun",
+   "gauge": "2 days",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "It left Earth in nineteen seventy seven. You passed it in a heartbeat.",
+   "scale": 80000000000000.0,
+   "gauge": "3 days",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "The Sun is now a speck of dust somewhere inside you.",
+   "scale": 1000000000000000.0,
+   "gauge": "39 days",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "One light-year. Light takes a whole year to climb you.",
+   "scale": 9460700000000000.0,
+   "landmark": "One light-year",
+   "landmark_note": "9.46 trillion km",
+   "gauge": "365 days",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Four point two light-years. The nearest star, Proxima Centauri.",
+   "scale": 4e+16,
+   "landmark": "Proxima Centauri",
+   "landmark_note": "4.24 light-years away",
+   "gauge": "4.2 years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Hundreds of stars are inside you now. Then thousands.",
+   "scale": 3e+17,
+   "gauge": "32 years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "If you stubbed your toe today, you'd feel it in the year three thousand.",
+   "scale": 1e+19,
+   "gauge": "1,057 years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Everyone you knew has been gone for centuries.",
+   "scale": 3e+19,
+   "gauge": "3,171 years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Below you, a thin bright band appears. It's the disc of our galaxy.",
+   "scale": 2e+20,
+   "gauge": "21,139 years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "A hundred thousand light-years. The Milky Way. All of it.",
+   "scale": 9.4607e+20,
+   "landmark": "The Milky Way",
+   "landmark_note": "about 100,000 light-years across",
+   "gauge": "99,997 years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Hundreds of billions of stars. One of them was yours.",
+   "scale": 1.3e+21,
+   "gauge": "137,407 years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Two and a half million light-years. Andromeda, another whole galaxy.",
+   "scale": 2.4e+22,
+   "landmark": "Andromeda Galaxy",
+   "landmark_note": "2.5 million light-years away",
+   "gauge": "2.54 million years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Humans have only existed for about three hundred thousand years.",
+   "scale": 3.5e+22,
+   "gauge": "3.7 million years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Ten million light-years. Our whole local group of galaxies.",
+   "scale": 9.5e+22,
+   "landmark": "The Local Group",
+   "landmark_note": "about 10 million light-years across",
+   "gauge": "10 million years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Now every speck around you is a galaxy.",
+   "scale": 3e+23,
+   "gauge": "31.7 million years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "A hundred million light-years. Thousands of galaxies, strung together like a web.",
+   "scale": 1.04e+24,
+   "landmark": "Virgo Supercluster",
+   "landmark_note": "about 110 million light-years across",
+   "gauge": "110 million years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Five hundred million light-years. Laniakea, the supercluster that holds us.",
+   "scale": 4.9e+24,
+   "landmark": "Laniakea",
+   "landmark_note": "about 520 million light-years across",
+   "gauge": "518 million years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Between the threads, enormous voids. Nothing at all.",
+   "scale": 1.4e+25,
+   "gauge": "1.48 billion years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "A signal from your feet would now take longer than the universe has existed.",
+   "scale": 1.31e+26,
+   "landmark": "13.8 billion light-years",
+   "landmark_note": "the age of the universe, in light",
+   "gauge": "13.8 billion years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Ninety three billion light-years. The edge of everything we can see.",
+   "scale": 8.8e+26,
+   "landmark": "Observable universe",
+   "landmark_note": "about 93 billion light-years across",
+   "gauge": "93 billion years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "And you're still growing.",
+   "scale": 1.2e+27,
+   "gauge": "127 billion years",
+   "gauge_label": "Even at the speed of light"
+  },
+  {
+   "type": "journey",
+   "narration": "Somewhere far below, on a street that no longer exists, your feet are still standing where you started.",
+   "scale": 1.5e+27,
+   "gauge": "159 billion years",
+   "gauge_label": "Even at the speed of light"
+  }
+ ]
+}

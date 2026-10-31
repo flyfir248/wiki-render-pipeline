@@ -7,6 +7,7 @@ import { ChapterCard } from "./components/ChapterCard";
 import { Atmosphere, Grain } from "./components/Grain";
 import { SoundEffects } from "./components/SoundEffects";
 import { WhatIfClock } from "./components/WhatIfClock";
+import { JourneyLayer, StoryCaptions } from "./journey/Journey";
 import { Visualizer, energyOf, useVoiceSpectrum } from "./components/Visualizer";
 import { SceneFrame, SceneView, sceneSpans, transitionOf } from "./scenes";
 import type { RenderProps, Word } from "./types";
@@ -49,9 +50,16 @@ export const Video: React.FC<RenderProps> = (props) => {
   const spans = sceneSpans(props.scenes, fps);
   return (
     <AbsoluteFill style={{ backgroundColor: props.theme.background }}>
-      {props.voice ? <ReactiveLayer props={props} voice={props.voice} /> : <Background theme={props.theme} />}
+      {props.journey ? (
+        <JourneyLayer journey={props.journey} portrait={props.format === "short"} />
+      ) : props.voice ? (
+        <ReactiveLayer props={props} voice={props.voice} />
+      ) : (
+        <Background theme={props.theme} />
+      )}
 
       {props.scenes.map((scene, i) => {
+        if (scene.type === "journey") return null; // the journey layer draws it
         const { from, len, tail, exit } = spans[i];
         return (
           <Sequence key={scene.id} from={from} durationInFrames={len} name={`${scene.type}:${scene.id}`}>
@@ -70,7 +78,9 @@ export const Video: React.FC<RenderProps> = (props) => {
 
       {props.scenes.some((s) => s.clock) ? <WhatIfClock scenes={props.scenes} theme={props.theme} format={props.format} /> : null}
 
-      {props.showCaptions && props.captions.length ? (
+      {props.journey ? (
+        <StoryCaptions scenes={props.scenes} portrait={props.format === "short"} />
+      ) : props.showCaptions && props.captions.length ? (
         <Captions words={props.captions} theme={props.theme} format={props.format} />
       ) : null}
 
