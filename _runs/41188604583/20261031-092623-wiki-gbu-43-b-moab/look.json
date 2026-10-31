@@ -1,0 +1,137 @@
+{
+  "warnings": [
+    "scene 1 at 6.3s: Subject is a bomb, not a C-130 aircraft",
+    "scene 2 at 15.5s: No C-130 subject visible in frame",
+    "scene 19 at 111.5s: plane clips through tree, subject cut off by frame edge"
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 2.29,
+      "contrast": 47.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 1,
+      "at": 6.26,
+      "contrast": 27.3,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is a bomb, not a C-130 aircraft"
+    },
+    {
+      "scene": 2,
+      "at": 10.52,
+      "contrast": 72.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 2,
+      "at": 15.52,
+      "contrast": 36.5,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "No C-130 subject visible in frame"
+    },
+    {
+      "scene": 4,
+      "at": 26.26,
+      "contrast": 76.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 4,
+      "at": 28.66,
+      "contrast": 74.5,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 5,
+      "at": 31.74,
+      "contrast": 74.0,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 5,
+      "at": 35.65,
+      "contrast": 71.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 66.23,
+      "contrast": 25.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 71.93,
+      "contrast": 32.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 103.92,
+      "contrast": 73.7,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 106.51,
+      "contrast": 70.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 19,
+      "at": 108.9,
+      "contrast": 58.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 19,
+      "at": 111.48,
+      "contrast": 57.8,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "plane clips through tree, subject cut off by frame edge"
+    },
+    {
+      "scene": 42,
+      "at": 223.35,
+      "contrast": 46.8,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 42,
+      "at": 225.63,
+      "contrast": 63.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    }
+  ]
+}

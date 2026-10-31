@@ -1,0 +1,110 @@
+story (given): a twenty-one-thousand-pound bomb, a C-130, BLU-82 Daisy Cutter; 5 moments
+planning the visuals
+visual plan (model): 8 3D, 13 2.5D, 36 2D (17% of the runtime in 3D, aiming for 75%); 3D: stage move, stage move, stage present, stage present, stage present, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+building the story world: 3 entities for 8 scenes
+real sizes: c130: 7.35 m -> 29.8 m (reference size for 'c-130')
+animation director (model): scene 1: moab on c130, moab release, moab fall (revised: blu82: only named by a word another subject owns here; left out); scene 2: moab on c130, c130 approach, moab release, moab fall (revised: blu82: only named by a word another subject owns here; left out); scene 19: moab on c130, blu82 on c130; scene 42: moab present (revised: moab move: an inert object can't move by itself; shown still)
+scene director: cinematic (dramatic, strength 0.75); scene 1: aerial/follow; scene 2: track/push_in/follow/follow; scene 4: track; scene 5: track; scene 11: establish; scene 18: track; scene 19: track; scene 42: track/follow
+story world (noir): cast model, sets model, direction model; moab as object, c130 as vehicle, blu82 as object
+voicing 57 scenes with kokoro
+fetching visuals
+stock clip s3.mp4 left out: a clip can't be checked
+stock clip s10.mp4 left out: a clip can't be checked
+stock clip s12.mp4 left out: a clip can't be checked
+stock clip s14.mp4 left out: a clip can't be checked
+stock clip s16.mp4 left out: a clip can't be checked
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s20.mp4 left out: a clip can't be checked
+stock clip s21.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s23.mp4 left out: a clip can't be checked
+stock clip s24.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s26.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s29.mp4 left out: a clip can't be checked
+stock clip s32.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s39.mp4 left out: a clip can't be checked
+stock clip s40.mp4 left out: a clip can't be checked
+stock clip s43.mp4 left out: a clip can't be checked
+stock clip s44.mp4 left out: a clip can't be checked
+stock clip s45.mp4 left out: a clip can't be checked
+stock clip s46.mp4 left out: a clip can't be checked
+stock clip s48.mp4 left out: a clip can't be checked
+stock clip s51.mp4 left out: a clip can't be checked
+stock clip s52.mp4 left out: a clip can't be checked
+stock clip s53.mp4 left out: a clip can't be checked
+stock clip s55.mp4 left out: a clip can't be checked
+stock clip s57.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Mother of All Bombs': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for 'Mother of All Bombs The bomb is born': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+warning: loc image search failed for 'Mother of All Bombs The bomb is born': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Mother+of+All+Bombs+The+bomb+is+born&fo=json&c=25&fa=online-format%3Aimage
+warning: loc image search failed for 'Mother of All Bombs Weight and explosive fill': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Mother+of+All+Bombs+Weight+and+explosive+fill&fo=json&c=25&fa=online-format (not asked again this run)
+photo commons7.jpg left out: Shows Whistler's Mother painting instead of the Mother of All Bombs.
+photo commons7.jpg left out: Shows sparrows, completely unrelated to the Mother of All Bombs.
+photo commons7.jpg left out: Shows a religious painting instead of the Mother of All Bombs.
+photo commons8.jpg left out: Shows a political rally logo, unrelated to the bomb.
+photo p10.jpg left out: Shows industrial spherical tanks, not bombs or military equipment.
+photo p14.jpg left out: Shows a generic modern office instead of the MOAB.
+photo p14.jpg left out: Shows an empty modern office instead of the MOAB or project development.
+photo p16.jpg left out: Shows Atal Tunnel instead of the Mother of All Bombs.
+photo p17.jpg left out: Shows a person writing instead of the Mother of All Bombs.
+photo p17.jpg left out: Shows graphic design workspace, unrelated to the Mother of All Bombs.
+photo p20.jpg left out: Shows an air show explosion with propeller planes, not the MOAB.
+photo p25.jpg left out: Skydiving plane, unrelated to Mother of All Bombs
+photo p26.jpg left out: Shows a plane and explosion, not the Mother of All Bombs
+photo p26.jpg left out: Shows an airplane, not a bomb or parachute release.
+photo p28.jpg left out: unrelated mountain landscape, not a bomb or target
+photo p28.jpg left out: Unrelated snowy landscape, not Mother of All Bombs
+photo p33.jpg left out: parking lot unrelated to bombs
+photo p33.jpg left out: Bird on road unrelated to bombs
+photo p35.jpg left out: Shows fighter jets, not the MOAB bomb or its explosion.
+photo p35.jpg left out: WWII plane, not MOAB bomb
+photo p36.jpg left out: Old map unrelated to Mother of All Bombs
+photo p36.jpg left out: Map unrelated to Mother of All Bombs
+photo p39.jpg left out: Photo shows a truck in desert, unrelated to Mother of All Bombs.
+photo p43.jpg left out: Shows parachuting, not Mother of All Bombs
+photo p43.jpg left out: Shows skydiver with parachute, not Mother of All Bombs
+photo p44.jpg left out: Drone is unrelated to Mother of All Bombs or GPS-guided weapon
+photo p44.jpg left out: Drone controller, not GPS-guided bomb or tunnel complex
+photo p47.jpg left out: Volcano eruption, not a bomb or explosive device
+photo p47.jpg left out: Volcano eruption, not a bomb or military subject
+photo p48.jpg left out: Shows archery target, not Mother of All Bombs
+photo p48.jpg left out: Shooting range targets, unrelated to Mother of All Bombs
+photo p50.jpg left out: War debris scene unrelated to bombs or explosives
+photo p51.jpg left out: Shows nuclear mushroom cloud, not conventional bomb
+photo p52.jpg left out: Man at table unrelated to Mother of All Bombs
+photo p52.jpg left out: Man at table unrelated to Mother of All Bombs
+photo p55.jpg left out: Textile factory unrelated to Mother of All Bombs
+photo p55.jpg left out: Textile factory unrelated to Mother of All Bombs
+photo p57.jpg left out: star trails unrelated to Mother of All Bombs
+photo p57.jpg left out: Desert landscape unrelated to Mother of All Bombs
+25 scenes without a picture of their own reuse one of the video's photos
+visuals: 6 Wikipedia and freely licensed images, 42 stock, 9 scenes on plain background
+photo shot37-1.jpg left out: Portrait of a woman, unrelated to MOAB bomb
+photo shot37-1.jpg left out: Photo shows sparrows, unrelated to MOAB bomb test.
+photo shot37-1.jpg left out: Religious icon unrelated to MOAB bomb or Eglin Air Force Base
+collage: 23 photos styled, 11 with a cut-out subject
+drawing story scenes (cloudflare)
+2 illustrations drawn
+relevance: checking 8 3D scenes by eye
+storyboarding: an illustration for each sentence
+scene 22, sentence 1 redrawn: No bomb visible, only explosion and figures
+scene 22, sentence 1 redrawn: subject missing
+storyboard: 12 illustrated sentences of 14 planned, 3 in the cast; 14 checked, 1 redrawn, 1 left out
+art direction: news
+motion: s2 frame 249: camera jump, camera: moved 6.82 in one frame, 10% of its distance to the subject
+rendering 320s long video
+look: scene 1 at 6.3s: Subject is a bomb, not a C-130 aircraft
+look: scene 2 at 15.5s: No C-130 subject visible in frame
+look: scene 19 at 111.5s: plane clips through tree, subject cut off by frame edge
+3D coverage: 17% of the runtime in 3D (target 75%), 17% moving on its own, 8 3D shots; environment richness 67, animation quality 51
+quality: 3D covers 17% of the runtime, under the 75% target
+quality: 3D scenes [5, 18, 19] repeat an earlier shot
+quality: 3D scenes [11] have little moving in the picture beyond the camera (animation under 40)
+rendering thumbnail
+thumbnail: cutout take
+done: approved
