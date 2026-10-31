@@ -137,8 +137,7 @@ growth:
     - Strange Science
     - Bizarre Places
     - Unbelievable People
-    - Unsolved Mysteries    # the videos that brought in subscribers (Sea Monk, Lizzie Borden, Unabomber)
-    - True Crime History    # crimes at least a few decades old, never recent ones with child victims
+    - Unsolved Mysteries    # mysteries brought in subscribers (Sea Monk); no crime, which limits ads
   # No Part 1 / Part 2 Shorts: part 2s kept a fraction of part 1's viewers (52-Hz whale 275 -> 32, Nim
   # Chimpsky 138 -> 18), so each Short tells its story whole.
   two_part_share: 0

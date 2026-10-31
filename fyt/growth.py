@@ -219,12 +219,14 @@ Score 0 for anything about a recent death, a recent tragedy or disaster with liv
 or elections, or a private person.
 Score at most 3 for a subject whose story is mainly about sex or sexual behaviour, suicide or self-harm, or
 gore: YouTube limits ads on it and shows it to fewer viewers, however it is told.
-Score 0 for any crime of the last 25 years in which children were killed or harmed: viewers skip it (on this
-channel such videos drew almost no one).
+Score 0 for crime of any age: a murder, killing, serial killer, assassination, kidnapping, massacre, mass
+shooting, terrorist attack, gangster or true-crime case. YouTube limits ads on it, and the channel needs to be
+monetised; recent crimes against children also drew almost no viewers here.
 What grows this channel, from its own numbers:
 - 9-10: a huge, concrete number or scale together with something physical that can be shown (the largest
   bomb, a trawler that caught something impossible, a tree alone in a desert, a record-breaking machine).
-- 8-9: unsolved mysteries, hoaxes and crimes at least a few decades old (these bring in subscribers).
+- 8-9: unsolved mysteries and hoaxes with no crime at their heart: vanished ships and planes, strange
+  signals, lost cities, unexplained objects (these bring in subscribers).
 - at most 4: scholarly, religious, linguistic or literary disputes with nothing to see (a manuscript's
   authorship, a word's origin, a folklore catalogue).
 - at most 3: celebrities, athletes, sports, brands and advertising.
@@ -251,6 +253,29 @@ _HARMED = re.compile(
     re.I,
 )
 _YEAR = re.compile(r"\b(?:19|20)\d{2}\b")
+
+
+# Crime, which YouTube limits ads on however it is told: an article named for one ("Murder of ..."), or one
+# whose opening sentence says that is what it is about ("... was an American serial killer").
+_CRIME_TITLE = re.compile(
+    r"^(murders?|killings?|assassination|abduction|kidnapping|lynching|execution|shooting|stabbing)"
+    r" of\b|\b(murders?|massacre|shooting|bombing|stabbings?|killings|kidnapping|heist|robbery)$",
+    re.I,
+)
+_CRIME_LEAD = re.compile(
+    r"\b(serial killer|spree killer|mass murder\w*|murderer|murder(?:ed|s)?|assassin\w*|gangster|mobster|crime boss|"
+    r"crime family|drug cartel|cannibal\w*|kidnapp\w*|abduct\w*|mass shooting|school shooting|massacre|terrorist attack|"
+    r"terror attack|hijack\w*|serial rapist|con artist|fraudster|hitman|bank robber\w*)\b",
+    re.I,
+)
+
+
+def crime_topic(title: str, text: str) -> bool:
+    """Whether an article is about a crime: named for one, or its first sentence says so."""
+    if _CRIME_TITLE.search(title.strip()):
+        return True
+    first = re.split(r"(?<=[.!?])\s+", text.strip(), maxsplit=1)[0] if text else ""
+    return bool(_CRIME_LEAD.search(first))
 
 
 def grim_recent(title: str, text: str, today: date | None = None, years: int = 25) -> bool:
@@ -306,8 +331,8 @@ def pick_topics(
         except Exception as e:
             print(f"skipping {title}: {e}")
             continue
-        if grim_recent(article.title, article.text):
-            print(f"skipping {title}: a recent crime against children")
+        if crime_topic(article.title, article.text) or grim_recent(article.title, article.text):
+            print(f"skipping {title}: a crime, which YouTube limits ads on")
             continue
         if len(article.text) >= min_chars and wiki.topic_for(article.title) not in used:
             picked.append(article.title)
@@ -357,8 +382,8 @@ def pick_trending(cfg: Config, used: set[str], min_fit: int, min_chars: int, day
         except Exception as e:
             print(f"skipping {title}: {e}")
             continue
-        if grim_recent(article.title, article.text):
-            print(f"skipping {title}: a recent crime against children")
+        if crime_topic(article.title, article.text) or grim_recent(article.title, article.text):
+            print(f"skipping {title}: a crime, which YouTube limits ads on")
             continue
         if len(article.text) >= min_chars and wiki.topic_for(article.title) not in used:
             print(f"trending pick: {article.title} (fit {fits[title]}/10, {views[title]} readers)")
@@ -396,12 +421,11 @@ Channel: {niche}
 Audience: {audience}
 
 Rate every candidate Wikipedia article 0-10 as the subject of a calm, factual explainer about a recent
-incident. 8-10: a specific incident (an accident, disaster, rescue, crime with charges, discovery or
-failure) whose basic facts are established and that the audience would want explained. 5-7: notable but
+incident. 8-10: a specific incident (an accident, disaster, rescue, discovery or failure, never a crime) whose basic facts are established and that the audience would want explained. 5-7: notable but
 thin on facts or less gripping. 0-4: not an incident (people, films, sports results, companies, lists),
 still developing so fast the facts may change within days, about elections or partisan politics,
-centred on a private person, or a violent crime, trial or execution centred on one individual (these
-are hard to monetise and easy to get wrong).
+centred on a private person, or any crime, trial or execution (these are hard to monetise and easy to
+get wrong).
 """
 
 
@@ -442,8 +466,8 @@ def pick_news(cfg: Config, used: set[str], min_fit: int, min_chars: int, day: da
         except Exception as e:
             print(f"skipping {title}: {e}")
             continue
-        if grim_recent(article.title, article.text):
-            print(f"skipping {title}: a recent crime against children")
+        if crime_topic(article.title, article.text) or grim_recent(article.title, article.text):
+            print(f"skipping {title}: a crime, which YouTube limits ads on")
             continue
         try:
             person = wiki.is_about_a_person(cfg, article.title)

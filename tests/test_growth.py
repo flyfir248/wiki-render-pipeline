@@ -540,7 +540,7 @@ def test_pick_topics_skips_grim_recent(monkeypatch):
 
 def test_rank_guide_names_what_grows_the_channel():
     g = growth.RANK_GUIDE
-    assert "children were killed or harmed" in g and "unsolved mysteries" in g and "celebrities, athletes" in g
+    assert "crime of any age" in g and "unsolved mysteries" in g and "celebrities, athletes" in g
 
 
 def test_shorts_get_no_bare_broll():
@@ -555,3 +555,21 @@ def test_shorts_get_no_bare_broll():
 def test_channel_makes_no_two_part_shorts():
     from fyt.config import load_config
     assert load_config().growth.two_part_share == 0
+
+
+def test_crime_topics_are_skipped_for_monetisation():
+    assert growth.crime_topic("Murder of Jane Doe", "Jane Doe was a teacher.")
+    assert growth.crime_topic("Lizzie Borden", "Lizzie Andrew Borden was an American woman who was tried and acquitted of the 1892 axe murders of her father.")
+    assert growth.crime_topic("Aileen Wuornos", "Aileen Carol Wuornos was an American serial killer. She was executed in 2002.")
+    assert growth.crime_topic("Oklahoma City bombing", "The Oklahoma City bombing was a domestic terrorist attack.")
+    # mysteries, disasters, war history and machines are fine
+    assert not growth.crime_topic("Disappearance of Amelia Earhart", "Amelia Earhart vanished over the Pacific in 1937.")
+    assert not growth.crime_topic("GBU-43/B MOAB", "The GBU-43/B is a large-yield bomb. It was first used in 2017.")
+    assert not growth.crime_topic("Mary Celeste", "Mary Celeste was an American brigantine found adrift in 1872.")
+    assert not growth.crime_topic("OPEC", "OPEC is a cartel of oil-producing countries.")
+
+
+def test_crime_words_are_unsafe_in_titles():
+    from fyt import titles
+    assert titles.UNSAFE.search("The axe murders nobody solved")
+    assert not titles.UNSAFE.search("The killer whale that sank a yacht")
