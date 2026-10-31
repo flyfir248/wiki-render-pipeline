@@ -242,7 +242,11 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
+          # The schedule's cache is per branch: an upload from another branch is invisible to the scheduled
+          # runs on main, so the Shorts it queues to cut from a long video would never be made.
+          [ "$GITHUB_REF_NAME" = "$DEFAULT_BRANCH" ] || { echo "::error::run $TASK from $DEFAULT_BRANCH, not $GITHUB_REF_NAME: the schedule it updates lives on $DEFAULT_BRANCH"; exit 1; }
           [ -n "$REPLAY" ] || { echo "$TASK needs the test render's run id in replay"; exit 1; }
           mkdir -p jobs
           gh run download "$REPLAY" --repo "$GITHUB_REPOSITORY" --name "videos-$REPLAY-1" --dir jobs
