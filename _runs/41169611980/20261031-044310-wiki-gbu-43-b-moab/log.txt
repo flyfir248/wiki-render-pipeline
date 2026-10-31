@@ -1,0 +1,101 @@
+story (given): a twenty-one-thousand-pound bomb, a C-130, BLU-82 Daisy Cutter; 5 moments
+planning the visuals
+visual plan (model): 8 3D, 13 2.5D, 36 2D (17% of the runtime in 3D, aiming for 75%); 3D: stage present, stage move, stage present, stage present, stage present, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: a C-130: its front could not be told (unclear, then right turned round); left to its shape
+assets: BLU-82 Daisy Cutter: its front could not be told (right, then unclear turned round); left to its shape
+assets: a twenty-one-thousand-pound bomb: its front could not be told (right, then unclear turned round); left to its shape
+building the story world: 3 entities for 8 scenes
+real sizes: c130: 7.35 m -> 29.8 m (reference size for 'c-130')
+animation director (model): scene 1: moab on c130, moab release, moab fall (revised: blu82: only named by a word another subject owns here; left out); scene 2: moab on c130, c130 approach, moab release, moab fall (revised: blu82: only named by a word another subject owns here; left out); scene 19: moab on c130, blu82 on c130; scene 42: moab present (revised: moab move: an inert object can't move by itself; shown still)
+scene director: cinematic (dramatic, strength 0.75); scene 1: aerial/follow; scene 2: track/push_in/follow/follow; scene 4: track; scene 5: track; scene 11: establish; scene 18: track; scene 19: track; scene 42: track/push_in
+story world (noir): cast model, sets model, direction model; moab as object, c130 as vehicle, blu82 as object
+voicing 57 scenes with kokoro
+fetching visuals
+stock clip s3.mp4 left out: a clip can't be checked
+stock clip s10.mp4 left out: a clip can't be checked
+stock clip s12.mp4 left out: a clip can't be checked
+stock clip s14.mp4 left out: a clip can't be checked
+stock clip s16.mp4 left out: a clip can't be checked
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s20.mp4 left out: a clip can't be checked
+stock clip s21.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s23.mp4 left out: a clip can't be checked
+stock clip s24.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s26.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s29.mp4 left out: a clip can't be checked
+stock clip s32.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s39.mp4 left out: a clip can't be checked
+stock clip s40.mp4 left out: a clip can't be checked
+stock clip s43.mp4 left out: a clip can't be checked
+stock clip s44.mp4 left out: a clip can't be checked
+stock clip s45.mp4 left out: a clip can't be checked
+stock clip s46.mp4 left out: a clip can't be checked
+stock clip s48.mp4 left out: a clip can't be checked
+stock clip s51.mp4 left out: a clip can't be checked
+stock clip s52.mp4 left out: a clip can't be checked
+stock clip s53.mp4 left out: a clip can't be checked
+stock clip s55.mp4 left out: a clip can't be checked
+stock clip s57.mp4 left out: a clip can't be checked
+warning: loc image search failed for 'Mother of All Bombs large bomb on tarmac': HTTPSConnectionPool(host='www.loc.gov', port=443): Read timed out.
+warning: openverse image search failed for 'Mother of All Bombs': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for 'Mother of All Bombs The bomb is born': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+warning: loc image search failed for 'Mother of All Bombs The bomb is born': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Mother+of+All+Bombs+The+bomb+is+born&fo=json&c=25&fa=online-format%3Aimage (not asked again this run)
+photo commons7.jpg left out: Shows Whistler's Mother painting instead of the Mother of All Bombs.
+photo commons7.jpg left out: Shows unrelated sparrows instead of the Mother of All Bombs.
+photo commons7.jpg left out: Shows a religious painting of the Virgin Mary, not the bomb.
+photo commons8.jpg left out: Shows a political rally logo instead of the bomb.
+photo p10.jpg left out: Shows industrial gas spheres, completely unrelated to the Mother of All Bombs.
+photo p14.jpg left out: Shows an unrelated office instead of the MOAB.
+photo p14.jpg left out: Shows an unrelated modern office, not the MOAB weapon.
+photo p17.jpg left out: Shows writing or planning, unrelated to the Mother of All Bombs.
+photo p17.jpg left out: Shows a designer working on a laptop, completely unrelated to the bomb.
+photo p20.jpg left out: Shows an air show explosion instead of the MOAB deployment.
+photo p20.jpg left out: Shows a commercial passenger airplane instead of a cargo aircraft deploying a bomb.
+photo p25.jpg left out: Shows skydivers instead of a heavy bomber or the bomb deployment.
+photo p25.jpg left out: Shows a skydiver's personal parachute, not the MOAB deployment system.
+photo p26.jpg left out: Shows a WWII Japanese aircraft, not the MOAB.
+photo p26.jpg left out: Shows an airplane in flight instead of the bomb release.
+photo p33.jpg left out: Shows an empty parking lot, completely unrelated to bombs.
+photo p33.jpg left out: Shows a bird on a road, completely unrelated to the bomb.
+photo p35.jpg left out: Shows fighter jets, not the MOAB bomb.
+photo p35.jpg left out: Shows a WWII Marine Corsair model, not the MOAB.
+photo p39.jpg left out: Shows a pickup truck driving in a desert, unrelated to the bomb.
+photo p43.jpg left out: Shows a recreational skydiver instead of a bomb deployment parachute.
+photo p43.jpg left out: Shows a skydiver instead of a bomb deployment.
+photo p47.jpg left out: Shows a volcano instead of the MOAB bomb.
+photo p47.jpg left out: Shows a volcano instead of a bomb explosion.
+photo p51.jpg left out: Shows a nuclear bomb test (Baker explosion), not the MOAB.
+photo p51.jpg left out: Photo shows a fighter jet, not the Mother of All Bombs.
+photo p55.jpg left out: Shows a textile factory instead of munitions production.
+photo p55.jpg left out: Shows a textile or garment factory, unrelated to bomb manufacturing.
+22 scenes without a picture of their own reuse one of the video's photos
+visuals: 4 Wikipedia and freely licensed images, 44 stock, 9 scenes on plain background
+photo shot37-1.jpg left out: Shows Whistler's Mother painting, completely unrelated to the MOAB.
+photo shot37-1.jpg left out: Shows sparrows instead of the MOAB bomb or test range.
+photo shot37-1.jpg left out: Shows a religious painting instead of the MOAB bomb or test.
+collage: 26 photos styled, 12 with a cut-out subject
+drawing story scenes (cloudflare)
+warning: no background art for scene 13: image generation failed: 429: the free daily image allowance is used up
+warning: no art for 'a man in a white shirt and tie at a drafting table': image generation failed: the free daily image allowance is used up
+0 illustrations drawn
+relevance: checking 8 3D scenes by eye
+art direction: news
+rendering 320s long video
+look: scene 1 at 2.3s: Airplane is clipping directly through a pine tree mesh.
+look: scene 1 at 6.3s: Missing C-130 aircraft, shows rocks and abstract ground instead.
+look: scene 2 at 10.5s: Tree is clipping through the aircraft wing.
+look: scene 5 at 31.7s: Airplane tail is clipping directly through a pine tree.
+look: scene 5 at 35.7s: The C-130 aircraft is clipping directly through a tree.
+3D coverage: 17% of the runtime in 3D (target 75%), 17% moving on its own, 8 3D shots; environment richness 68, animation quality 56
+quality: 3D covers 17% of the runtime, under the 75% target
+quality: 3D scenes [5, 18, 19] repeat an earlier shot
+quality: 3D scenes [5, 11] have little moving in the picture beyond the camera (animation under 40)
+rendering thumbnail
+thumbnail: cutout take
+done: approved

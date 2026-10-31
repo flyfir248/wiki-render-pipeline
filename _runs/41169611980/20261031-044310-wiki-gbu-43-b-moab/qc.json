@@ -1,0 +1,26 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 1 at 2.3s: Airplane is clipping directly through a pine tree mesh.",
+    "scene 1 at 6.3s: Missing C-130 aircraft, shows rocks and abstract ground instead.",
+    "scene 2 at 10.5s: Tree is clipping through the aircraft wing.",
+    "scene 5 at 31.7s: Airplane tail is clipping directly through a pine tree.",
+    "scene 5 at 35.7s: The C-130 aircraft is clipping directly through a tree.",
+    "3D covers 17% of the runtime, under the 75% target",
+    "3D scenes [5, 18, 19] repeat an earlier shot",
+    "3D scenes [5, 11] have little moving in the picture beyond the camera (animation under 40)"
+  ],
+  "repair": [],
+  "repaired": []
+}

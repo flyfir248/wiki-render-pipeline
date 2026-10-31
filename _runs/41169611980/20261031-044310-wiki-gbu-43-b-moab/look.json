@@ -1,0 +1,139 @@
+{
+  "warnings": [
+    "scene 1 at 2.3s: Airplane is clipping directly through a pine tree mesh.",
+    "scene 1 at 6.3s: Missing C-130 aircraft, shows rocks and abstract ground instead.",
+    "scene 2 at 10.5s: Tree is clipping through the aircraft wing.",
+    "scene 5 at 31.7s: Airplane tail is clipping directly through a pine tree.",
+    "scene 5 at 35.7s: The C-130 aircraft is clipping directly through a tree."
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 2.29,
+      "contrast": 35.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Airplane is clipping directly through a pine tree mesh."
+    },
+    {
+      "scene": 1,
+      "at": 6.26,
+      "contrast": 23.2,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Missing C-130 aircraft, shows rocks and abstract ground instead."
+    },
+    {
+      "scene": 2,
+      "at": 10.52,
+      "contrast": 50.6,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Tree is clipping through the aircraft wing."
+    },
+    {
+      "scene": 2,
+      "at": 15.52,
+      "contrast": 30.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 4,
+      "at": 26.26,
+      "contrast": 61.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 4,
+      "at": 28.66,
+      "contrast": 59.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 5,
+      "at": 31.74,
+      "contrast": 52.4,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Airplane tail is clipping directly through a pine tree."
+    },
+    {
+      "scene": 5,
+      "at": 35.65,
+      "contrast": 52.0,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "The C-130 aircraft is clipping directly through a tree."
+    },
+    {
+      "scene": 11,
+      "at": 66.2,
+      "contrast": 29.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 11,
+      "at": 71.91,
+      "contrast": 38.5,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 103.9,
+      "contrast": 52.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 18,
+      "at": 106.49,
+      "contrast": 50.4,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 19,
+      "at": 108.88,
+      "contrast": 55.8,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 19,
+      "at": 111.46,
+      "contrast": 52.3,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 42,
+      "at": 223.35,
+      "contrast": 43.6,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 42,
+      "at": 225.63,
+      "contrast": 55.5,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    }
+  ]
+}

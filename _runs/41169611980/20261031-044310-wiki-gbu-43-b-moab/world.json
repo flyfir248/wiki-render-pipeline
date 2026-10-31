@@ -1,0 +1,1282 @@
+{
+  "style": "noir",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model",
+    "animation": "model"
+  },
+  "builds": [
+    {
+      "entity": "moab",
+      "archetype": "object",
+      "size": 9.18,
+      "primary": "#333333",
+      "secondary": "#222222",
+      "accent": "#ffcc00",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "cylinder",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.02,
+            7.5,
+            1.02
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cone",
+          "at": [
+            4.8,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.02,
+            1.68,
+            1.02
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            270.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.2,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.2,
+            0.8,
+            1.2
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1a1a1a",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.6,
+            0.6,
+            0.6
+          ],
+          "size": [
+            0.6,
+            0.8,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#444444",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.6,
+            -0.6,
+            0.6
+          ],
+          "size": [
+            0.6,
+            0.8,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#444444",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.6,
+            0.6,
+            -0.6
+          ],
+          "size": [
+            0.6,
+            0.8,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#444444",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -4.6,
+            -0.6,
+            -0.6
+          ],
+          "size": [
+            0.6,
+            0.8,
+            0.1
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#444444",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        19,
+        42
+      ]
+    },
+    {
+      "entity": "c130",
+      "archetype": "vehicle",
+      "size": 29.8,
+      "primary": "#555b54",
+      "secondary": "#3d423c",
+      "accent": "#111111",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "capsule",
+          "at": [
+            0.0,
+            3.5759999999999996,
+            0.0
+          ],
+          "size": [
+            3.874,
+            29.8,
+            3.874
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#555b54",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.596,
+            4.172000000000001,
+            0.0
+          ],
+          "size": [
+            5.364,
+            0.596,
+            31.290000000000003
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#555b54",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -13.112,
+            5.96,
+            0.0
+          ],
+          "size": [
+            2.98,
+            4.768,
+            0.596
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3d423c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -13.112,
+            3.874,
+            0.0
+          ],
+          "size": [
+            2.384,
+            0.596,
+            9.536
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#3d423c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            8.94,
+            5.066000000000001,
+            0.0
+          ],
+          "size": [
+            2.98,
+            1.49,
+            3.5759999999999996
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            15.198,
+            3.5759999999999996,
+            0.0
+          ],
+          "size": [
+            0.298,
+            6.556,
+            0.8939999999999999
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#333333",
+          "bone": "body",
+          "spin": "x",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.49,
+            3.5759999999999996,
+            -6.258
+          ],
+          "size": [
+            3.5759999999999996,
+            1.7879999999999998,
+            1.7879999999999998
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#111111",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            1.49,
+            3.5759999999999996,
+            6.258
+          ],
+          "size": [
+            3.5759999999999996,
+            1.7879999999999998,
+            1.7879999999999998
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#111111",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "plane",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        4,
+        5,
+        18,
+        19
+      ]
+    },
+    {
+      "entity": "blu82",
+      "archetype": "object",
+      "size": 4.38,
+      "primary": "#4a4a3e",
+      "secondary": "#2c2c24",
+      "accent": "#cc3300",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "cylinder",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.38,
+            3.5,
+            1.38
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#4a4a3e",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cone",
+          "at": [
+            1.75,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.38,
+            1.2,
+            1.38
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            270.0
+          ],
+          "color": "#4a4a3e",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            2.8,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.15,
+            1.5,
+            0.15
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            90.0
+          ],
+          "color": "#cccccc",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        11,
+        19,
+        42
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "afghanistan",
+      "kind": "mountain",
+      "time": "day",
+      "ground": "#8b7d6b",
+      "sky": "#87ceeb",
+      "accent": "#ffd700",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "dry scrub bush",
+          "build": {
+            "entity": "afghanistan:dry-scrub-bush",
+            "archetype": "plant",
+            "size": 1.0,
+            "primary": "#556b2f",
+            "secondary": "#8b4513",
+            "accent": "#6b8e23",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "sphere",
+                "at": [
+                  0.0,
+                  0.5,
+                  0.0
+                ],
+                "size": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#556b2f",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 10,
+          "spread": 20.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "back",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        },
+        {
+          "entity": "moab",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "c130",
+          "mount": "under",
+          "impact": "explode"
+        }
+      ],
+      "camera": "aerial",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "rolls out of",
+          "actors": [
+            {
+              "entity": "moab",
+              "verb": "fall",
+              "to": "",
+              "state": "normal",
+              "face": "",
+              "release": true
+            }
+          ],
+          "camera": "follow",
+          "on": "moab"
+        }
+      ]
+    },
+    "2": {
+      "scene": 2,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        },
+        {
+          "entity": "moab",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "c130",
+          "mount": "under",
+          "impact": "explode"
+        }
+      ],
+      "camera": "orbit",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "Its rear ramp opens.",
+          "actors": [
+            {
+              "entity": "c130",
+              "verb": "fly",
+              "to": "",
+              "state": "normal",
+              "face": "",
+              "release": false
+            }
+          ],
+          "camera": "push_in",
+          "on": "c130"
+        },
+        {
+          "cue": "rolls out",
+          "actors": [
+            {
+              "entity": "moab",
+              "verb": "fall",
+              "to": "",
+              "state": "normal",
+              "face": "",
+              "release": true
+            }
+          ],
+          "camera": "follow",
+          "on": "moab"
+        },
+        {
+          "cue": "A twenty-one-thousand-pound bomb rolls out",
+          "actors": [],
+          "camera": "follow",
+          "on": "moab"
+        }
+      ]
+    },
+    "4": {
+      "scene": 4,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "establish",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "5": {
+      "scene": 5,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "push_in",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "11": {
+      "scene": 11,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "blu82",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "establish",
+      "on": "blu82",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "18": {
+      "scene": 18,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "low_angle",
+      "on": "c130",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "19": {
+      "scene": 19,
+      "place": "",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "c130",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        },
+        {
+          "entity": "moab",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "c130",
+          "mount": "inside",
+          "impact": ""
+        },
+        {
+          "entity": "blu82",
+          "verb": "present",
+          "at": "far",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "c130",
+          "mount": "inside",
+          "impact": ""
+        }
+      ],
+      "camera": "reveal",
+      "on": "c130",
+      "marks": [],
+      "callouts": [
+        {
+          "on": "moab",
+          "text": "cargo plane carries it"
+        }
+      ],
+      "beats": []
+    },
+    "42": {
+      "scene": 42,
+      "place": "afghanistan",
+      "time": "day",
+      "actors": [
+        {
+          "entity": "moab",
+          "verb": "move",
+          "at": "center",
+          "to": "front",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        },
+        {
+          "entity": "blu82",
+          "verb": "present",
+          "at": "far",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "follow",
+      "on": "moab",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "bomb rolled out",
+          "actors": [
+            {
+              "entity": "moab",
+              "verb": "present",
+              "to": "",
+              "state": "normal",
+              "face": "",
+              "release": false
+            }
+          ],
+          "camera": "push_in",
+          "on": "moab"
+        }
+      ]
+    }
+  },
+  "direction": {
+    "1": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "aerial",
+          "on": "c130"
+        },
+        {
+          "move": "follow",
+          "on": "moab",
+          "cue": "rolls out of"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "2": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        },
+        {
+          "move": "push_in",
+          "on": "c130",
+          "cue": "Its rear ramp opens."
+        },
+        {
+          "move": "follow",
+          "on": "moab",
+          "cue": "A twenty-one-thousand-pound bomb rolls out"
+        },
+        {
+          "move": "follow",
+          "on": "moab",
+          "cue": "rolls out"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "4": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "5": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "11": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "establish",
+          "on": "blu82"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "18": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "19": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "c130"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "hard_sun",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "42": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "moab"
+        },
+        {
+          "move": "push_in",
+          "on": "moab",
+          "cue": "bomb rolled out"
+        }
+      ],
+      "recipe": {
+        "fore": [
+          "rocks",
+          "grass"
+        ],
+        "mid": [
+          "rocks"
+        ],
+        "far": [
+          "peaks"
+        ],
+        "mist": 0.5,
+        "wind": 0.5,
+        "particles": "none",
+        "life": [
+          "birds"
+        ],
+        "wet": 0.7,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    }
+  }
+}
