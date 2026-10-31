@@ -513,3 +513,45 @@ def test_a_timely_slot_takes_an_evergreen_topic_when_nothing_trending_fits(cfg, 
     assert schedule.fill(cfg, now=NOW) == 1
     assert made == [("short", "wiki:Evergreen 1")]
     assert Uploads(cfg).last("timely-short") is None
+
+
+def test_grim_recent_skips_recent_crimes_against_children():
+    today = datetime(2026, 10, 31).date()
+    recent = "The murder of Jane Doe took place in Leeds in 2023. The girl, aged nine, was strangled by a neighbour."
+    assert growth.grim_recent("Murder of Jane Doe", recent, today)
+    # an old disaster, and a recent story with no child harmed, are fine
+    aberfan = "The Aberfan disaster was the collapse of a spoil tip in 1966. It killed 116 children and 28 adults."
+    assert not growth.grim_recent("Aberfan disaster", aberfan, today)
+    trawler = "In 2019 a trawler off Norway caught a giant squid. The crew's sons later filmed it."
+    assert not growth.grim_recent("Trawler", trawler, today)
+
+
+def test_pick_topics_skips_grim_recent(monkeypatch):
+    cfg = Config()
+    texts = {"Murder of Jane Doe": "In 2023 the girl was murdered at home. " * 200, "Molasses flood": "In 1919 molasses flooded Boston. " * 200}
+    monkeypatch.setattr(wiki, "candidates", lambda cfg: list(texts))
+    monkeypatch.setattr(growth, "page_lengths", lambda cfg, t: {x: 90000 for x in texts})
+    monkeypatch.setattr(growth, "pageviews", lambda cfg, t: {"Murder of Jane Doe": 900000, "Molasses flood": 4000}[t])
+    monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: wiki.Article(t, "u", texts[t]))
+    answer(monkeypatch, {"scores": [{"title": "Murder of Jane Doe", "fit": 9}, {"title": "Molasses flood", "fit": 8}]})
+    # ranked first by the model, but the guard keeps it out
+    assert growth.pick_topics(cfg, 2, set()) == ["Molasses flood"]
+
+
+def test_rank_guide_names_what_grows_the_channel():
+    g = growth.RANK_GUIDE
+    assert "children were killed or harmed" in g and "unsolved mysteries" in g and "celebrities, athletes" in g
+
+
+def test_shorts_get_no_bare_broll():
+    s = script()
+    s.scenes[2] = s.scenes[2].model_copy(update={"type": "broll", "broll_query": "harbor 1919", "heading": None, "text": None,
+                                                 "narration": "The tank burst. Molasses filled the street."})
+    out = pipeline.no_broll(s)
+    assert out.scenes[2].type == "statement" and out.scenes[2].text == "The tank burst." and out.scenes[2].broll_query == "harbor 1919"
+    assert [x.type for i, x in enumerate(out.scenes) if i != 2] == [x.type for i, x in enumerate(s.scenes) if i != 2]
+
+
+def test_channel_makes_no_two_part_shorts():
+    from fyt.config import load_config
+    assert load_config().growth.two_part_share == 0

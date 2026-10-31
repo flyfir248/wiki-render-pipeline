@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import math
 import random
+import re
 from datetime import date, datetime, timedelta, timezone
 from typing import Callable
 from urllib.parse import quote
@@ -218,6 +219,15 @@ Score 0 for anything about a recent death, a recent tragedy or disaster with liv
 or elections, or a private person.
 Score at most 3 for a subject whose story is mainly about sex or sexual behaviour, suicide or self-harm, or
 gore: YouTube limits ads on it and shows it to fewer viewers, however it is told.
+Score 0 for any crime of the last 25 years in which children were killed or harmed: viewers skip it (on this
+channel such videos drew almost no one).
+What grows this channel, from its own numbers:
+- 9-10: a huge, concrete number or scale together with something physical that can be shown (the largest
+  bomb, a trawler that caught something impossible, a tree alone in a desert, a record-breaking machine).
+- 8-9: unsolved mysteries, hoaxes and crimes at least a few decades old (these bring in subscribers).
+- at most 4: scholarly, religious, linguistic or literary disputes with nothing to see (a manuscript's
+  authorship, a word's origin, a folklore catalogue).
+- at most 3: celebrities, athletes, sports, brands and advertising.
 {extra}"""
 
 
@@ -228,6 +238,31 @@ def score_topics(cfg: Config, candidates: list[tuple[str, int]], extra: str = ""
     scores = llm.structured(llm.helping(cfg), guide, user, TopicScores, max_tokens=2500)
     # a title that names it is held back even when the model scores it high ("Prostitution among animals")
     return {s.title: max(0, min(3 if titles.UNSAFE.search(s.title) else 10, s.fit)) for s in scores.scores}
+
+
+_YOUNG = re.compile(
+    r"\b(child|children|kids?|girls?|boys?|bab(?:y|ies)|infants?|toddlers?|sons?|daughters?|pupils?|students?"
+    r"|schoolchildren|teen(?:ager)?s?)\b",
+    re.I,
+)
+_HARMED = re.compile(
+    r"\b(killed|murder(?:ed|s)?|strangled|stabbed|shot|shooting|massacre|abused?|abducted|kidnapped|drowned"
+    r"|smothered|suffocated)\b",
+    re.I,
+)
+_YEAR = re.compile(r"\b(?:19|20)\d{2}\b")
+
+
+def grim_recent(title: str, text: str, today: date | None = None, years: int = 25) -> bool:
+    """Whether an article reads as a crime of the last `years` years against children: a sentence near its
+    start naming both a young victim and harm, in an article whose opening mentions a recent year. The
+    channel's videos on these drew almost no viewers (Duxbury: 0), whatever the model scored them."""
+    today = today or datetime.now(timezone.utc).date()
+    head = f"{title}. {text[:2500]}"
+    latest = max((int(m.group(0)) for m in _YEAR.finditer(head)), default=0)
+    if latest < today.year - years:
+        return False
+    return any(_YOUNG.search(x) and _HARMED.search(x) for x in re.split(r"(?<=[.!?])\s+", head))
 
 
 def rank(fits: dict[str, int], views: dict[str, int], min_fit: int) -> list[str]:
@@ -270,6 +305,9 @@ def pick_topics(
             article = wiki.fetch_article(cfg, title)
         except Exception as e:
             print(f"skipping {title}: {e}")
+            continue
+        if grim_recent(article.title, article.text):
+            print(f"skipping {title}: a recent crime against children")
             continue
         if len(article.text) >= min_chars and wiki.topic_for(article.title) not in used:
             picked.append(article.title)
@@ -318,6 +356,9 @@ def pick_trending(cfg: Config, used: set[str], min_fit: int, min_chars: int, day
             article = wiki.fetch_article(cfg, title)
         except Exception as e:
             print(f"skipping {title}: {e}")
+            continue
+        if grim_recent(article.title, article.text):
+            print(f"skipping {title}: a recent crime against children")
             continue
         if len(article.text) >= min_chars and wiki.topic_for(article.title) not in used:
             print(f"trending pick: {article.title} (fit {fits[title]}/10, {views[title]} readers)")
@@ -400,6 +441,9 @@ def pick_news(cfg: Config, used: set[str], min_fit: int, min_chars: int, day: da
             article = wiki.fetch_article(cfg, title)
         except Exception as e:
             print(f"skipping {title}: {e}")
+            continue
+        if grim_recent(article.title, article.text):
+            print(f"skipping {title}: a recent crime against children")
             continue
         try:
             person = wiki.is_about_a_person(cfg, article.title)

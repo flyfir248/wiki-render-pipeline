@@ -538,6 +538,8 @@ SHORT_MIN_WORDS = 105  # under about 40 seconds there is no room for context: sh
 SHORT_FLOOR_WORDS = 100  # still under this after the rewrite and the checks: too thin to upload
 SHORT_MIN_WORTH = 5  # the story editor's 0-10 score below which a Short is not made
 
+BROLL_TEMPLATE = "- broll: stock footage with a caption [broll_query (concrete, filmable), heading]\n"
+
 SHORT_STRUCTURE = """Structure of a Short (45-55 seconds, 6-8 scenes; viewers decide in the first second whether to swipe).
 It is worth watching only if a stranger comes away with something they can retell in one sentence. First
 decide the question a stranger would ask after the hook ("why?", "how did it survive?", "what does it
@@ -554,6 +556,7 @@ human stake, the surprise, the claim people argue about; pick that angle over te
    with a moving graphic (scale, proportion, trend or map) rather than a still.
 4. Payoff (1 scene): answer the hook's question; say the core message in plain words.
 5. End on the payoff: no subscribe line, no thanks, no question; the replay should feel seamless.
+Favour story, quote, map and timeline scenes (viewers stay); max one statement.
 Substance over jargon: every scene adds a new fact and no sentence repeats an earlier one; use at
 least three concrete specifics from the notes (number, date, place, person, exact detail) and say
 what each means; besides the subject, at most two names or specialist terms, each explained where it
@@ -785,6 +788,8 @@ def write_script(
         words=words,
         structure=SHORT_STRUCTURE if cfg.format == "short" else LONG_STRUCTURE,
     )
+    if cfg.format == "short":  # viewers left a Short's bare stock-footage scenes fastest of all
+        guide = guide.replace(BROLL_TEMPLATE, "")
     if images:
         guide += IMAGES_GUIDE
     if news:
