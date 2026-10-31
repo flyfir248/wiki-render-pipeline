@@ -10,6 +10,7 @@ import { motionCues, statLands } from "../scenes/motion";
 import { lightningFrames, sceneSeed } from "../scenes/world3d";
 import { worldCues } from "../scenes/world";
 import type { Scene } from "../types";
+import { clockCues } from "./WhatIfClock";
 
 type Cue = { at: number; name: string; gain: number };
 
@@ -68,6 +69,8 @@ export const cuesFor = (scenes: Scene[], fps: number): Cue[] => {
     }
     if (scene.type === "document" && scene.author) cues.push({ at: from + Math.round(len * 0.55), name: "thud", gain: 0.8 });
   });
+  // What If videos: the clock ticks through its count to the next stage and lands with a hit.
+  clockCues(scenes, fps).forEach((c) => cues.push(c));
   // Never stack two sounds within a few frames of each other: the first one wins.
   return cues
     .filter((c) => c.at >= 0)

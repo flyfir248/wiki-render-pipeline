@@ -194,6 +194,11 @@ class ScriptScene(BaseModel):
     maneuver: SkipJsonSchema[Maneuver | None] = None
     vessel: SkipJsonSchema[Vessel | None] = None
     ship_action: SkipJsonSchema[ShipAction | None] = None
+    # What If videos (fyt/whatif.py): kept out of the usual schema, so the true-story prompt stays inside a
+    # free tier's per-minute budget; WhatIfScene below asks for them.
+    clock: SkipJsonSchema[str | None] = None
+    clock_note: SkipJsonSchema[str | None] = None
+    level: SkipJsonSchema[float | None] = None
     camera: Camera | None = Field(default=None, description="Optional camera move over this scene's photo.")
     transition: Transition | None = Field(default=None, description="Optional way this scene enters.")
     image: int | None = Field(
@@ -216,6 +221,14 @@ class ScriptScene(BaseModel):
     def _spaced(cls, v: str | None) -> str | None:
         # a word after the number ("13 survivors") is spaced from it; a unit sign ("%", "x", "km") is not
         return " " + v.strip() if v and len(v.strip()) > 3 and v.strip()[0].isalpha() else v
+
+
+class WhatIfScene(ScriptScene):
+    """A scene of a What If video: a stage of the ladder, with its clock."""
+
+    clock: str | None = Field(default=None, description="The stage's time stamp in capitals, a unit and a number ('DAY 70').")
+    clock_note: str | None = Field(default=None, description="What the premise adds up to by then, 1-3 words with a unit ('+70 m').")
+    level: float | None = Field(default=None, description="0-1: how far the world has gone from normal by the scene's end; never falls.")
 
 
 class Chapter(BaseModel):
@@ -248,6 +261,10 @@ class Script(BaseModel):
     # Set by the pipeline for long videos written chapter by chapter; not asked of the model.
     chapters: SkipJsonSchema[list[Chapter] | None] = None
     series: SkipJsonSchema[str | None] = None  # playlist the video is filed under
+
+
+class WhatIfScript(Script):
+    scenes: list[WhatIfScene]
 
 
 class Word(BaseModel):
@@ -332,6 +349,10 @@ class RenderScene(BaseModel):
     transition: Transition | None = None
     chapter: str | None = None  # long videos: a chapter starts here; its card shows "Part N" and this title
     chapterNumber: int | None = None
+    clock: str | None = None  # What If videos: the stage's time stamp, drawn over the scene (fyt/whatif.py)
+    clockNote: str | None = None  # ...and what the premise adds up to by then
+    level: float | None = None  # What If videos: 0-1, how far the world has gone from normal by the scene's end
+    levelFrom: float | None = None  # ...and where it stood when the scene began (the last scene's level)
 
 
 class Music(BaseModel):

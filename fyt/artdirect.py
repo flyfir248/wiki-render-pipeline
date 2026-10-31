@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import re
 
-from fyt import scenes3d
+from fyt import whatif, scenes3d
 from fyt.models import Script
 
 PROFILES: dict[str, dict[str, str]] = {
@@ -26,6 +26,10 @@ PROFILES: dict[str, dict[str, str]] = {
                "grade": "saturate(1.1) contrast(1.05)"},
     "natural": {"background": "#07140d", "background2": "#1d3a2a", "accent2": "#8fd694", "muted": "#a9c7b2",
                 "grade": "saturate(1.08)"},
+    # The What If series (fyt/whatif.py): its own warm amber-on-deep-teal look, so it never reads as the
+    # navy true-story videos, and a brighter, more saturated 3D world.
+    "whatif": {"background": "#061a22", "background2": "#0f3a48", "accent": "#ffb627", "accent2": "#ff5a3c", "muted": "#b7d0d6",
+               "grade": "saturate(1.15) contrast(1.06) brightness(1.03)"},
     "news": {"background": "#0b1020", "background2": "#1b2350", "accent2": "#4dd6ff", "muted": "#a9b3d6", "grade": "none"},
 }
 
@@ -37,6 +41,8 @@ def choose(script: Script, news: bool = False) -> str:
     """The profile that suits the story: its 3D subjects, its era, its mood."""
     if news:
         return "news"
+    if script.series == whatif.SERIES:
+        return "whatif"
     world = [s.subject for s in script.scenes if s.type == "world" and s.subject]
     story = " ".join([script.title] + [s.narration for s in script.scenes])
     charts = sum(1 for s in script.scenes if s.type in CHARTS)

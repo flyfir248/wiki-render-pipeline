@@ -6,6 +6,7 @@ import { Captions } from "./components/Captions";
 import { ChapterCard } from "./components/ChapterCard";
 import { Atmosphere, Grain } from "./components/Grain";
 import { SoundEffects } from "./components/SoundEffects";
+import { WhatIfClock } from "./components/WhatIfClock";
 import { Visualizer, energyOf, useVoiceSpectrum } from "./components/Visualizer";
 import { SceneFrame, SceneView, sceneSpans, transitionOf } from "./scenes";
 import type { RenderProps, Word } from "./types";
@@ -31,6 +32,18 @@ const musicVolume = (base: number, words: Word[], fps: number, total: number) =>
   return (speaking || words.length === 0 ? base : base * 2.2) * fade;
 };
 
+// What If videos: the clock sits at the top of every scene, so a chart or card is drawn a little smaller
+// and lower to leave it room. 3D worlds and maps fill the frame behind it.
+const FULL_BLEED = ["world", "map", "aircraft", "ship", "broll"];
+const ClockRoom: React.FC<{ on: boolean; format: RenderProps["format"]; children: React.ReactNode }> = ({ on, format, children }) =>
+  on ? (
+    <AbsoluteFill style={{ transform: format === "short" ? "translateY(19%) scale(0.78)" : "translateY(9%) scale(0.86)", transformOrigin: "50% 0%" }}>
+      {children}
+    </AbsoluteFill>
+  ) : (
+    <>{children}</>
+  );
+
 export const Video: React.FC<RenderProps> = (props) => {
   const { fps, durationInFrames } = useVideoConfig();
   const spans = sceneSpans(props.scenes, fps);
@@ -43,7 +56,9 @@ export const Video: React.FC<RenderProps> = (props) => {
         return (
           <Sequence key={scene.id} from={from} durationInFrames={len} name={`${scene.type}:${scene.id}`}>
             <SceneFrame transition={transitionOf(scene)} instant={i === 0} tail={tail} exit={exit}>
-              <SceneView scene={scene} theme={props.theme} format={props.format} />
+              <ClockRoom on={Boolean(scene.clock) && !FULL_BLEED.includes(scene.type)} format={props.format}>
+                <SceneView scene={scene} theme={props.theme} format={props.format} />
+              </ClockRoom>
             </SceneFrame>
             {scene.chapter && scene.chapterNumber ? <ChapterCard number={scene.chapterNumber} title={scene.chapter} theme={props.theme} /> : null}
           </Sequence>
@@ -52,6 +67,8 @@ export const Video: React.FC<RenderProps> = (props) => {
 
       <Atmosphere />
       <Grain />
+
+      {props.scenes.some((s) => s.clock) ? <WhatIfClock scenes={props.scenes} theme={props.theme} format={props.format} /> : null}
 
       {props.showCaptions && props.captions.length ? (
         <Captions words={props.captions} theme={props.theme} format={props.format} />

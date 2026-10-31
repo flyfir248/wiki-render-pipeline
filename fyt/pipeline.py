@@ -10,10 +10,10 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fyt import animation, artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, wiki, worldgen, youtube
+from fyt import animation, artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, whatif, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
-from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps
+from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps, WhatIfScript
 from fyt.store import Job, Topics, Uploads, list_jobs
 from fyt.timeline import build_props, to_srt
 
@@ -76,7 +76,21 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     article = None
     written = script is None
     notes = ""
-    if script is None:
+    whatif_premise = whatif.premise_of(topic) if whatif.is_whatif_topic(topic) else None
+    if script is None and whatif_premise:
+        # The What If series: an impossible premise grounded in real articles, written as a ladder of stages.
+        log(job, f"what if {whatif_premise}? finding the articles that ground it")
+        try:
+            notes = whatif.grounding(cfg, whatif_premise)
+        except Exception as e:  # the writer still has its own knowledge; the fact check is skipped without notes
+            log(job, f"warning: no grounding articles: {e}")
+        if notes:
+            job.file("research.md").write_text(notes)
+        log(job, "writing a What If script")
+        script = _short_enough(cfg, job, whatif.title_for(whatif_premise), notes, False, "", whatif.GUIDE, schema=WhatIfScript)
+        script = whatif.normalize(script, whatif_premise)
+        two_part = False
+    elif script is None:
         if wiki.is_wiki_topic(topic):
             log(job, "fetching Wikipedia article")
             article = wiki.fetch_article(cfg, wiki.title_of(topic))
@@ -156,6 +170,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     # every title goes up in plain characters, news and unpolished ones too: typographic hyphens and quotes
     # look the same but don't match what people search
     script = script.model_copy(update={"title": titles.clean(script.title) or script.title})
+    if whatif_premise or script.series == whatif.SERIES:
+        script = whatif.normalize(script, whatif_premise)  # the polish pass may have reworded the title
     if written:
         script = keep_short(cfg, job, script)
         script = make_sense(cfg, job, script)
@@ -180,6 +196,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     job.update(status="scripted", title=script.title, core_message=script.core_message)
 
     problems = qa.check_script(cfg, script)
+    if script.series == whatif.SERIES:
+        problems += whatif.problems(script)
     if problems:
         job.update(status="qa_failed", problems=problems)
         raise RuntimeError("script failed QA: " + "; ".join(problems))
@@ -375,15 +393,17 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
 
 
 def _short_enough(
-    cfg: Config, job: Job, subject: str, notes: str, from_wiki: bool, menu: str, note: str = "", news: bool = False
+    cfg: Config, job: Job, subject: str, notes: str, from_wiki: bool, menu: str, note: str = "", news: bool = False,
+    schema: type[Script] = Script,
 ) -> Script:
     """Write the script, asking once more when a Short runs long, or is too thin or repetitive to follow."""
+    shape = {"schema": schema} if schema is not Script else {}  # the What If shape adds each stage's clock
     lessons = insights.scene_lessons(cfg)
     if lessons:
         log(job, "using watch-time lessons: " + lessons.replace("\n", " "))
     llm.LAST_MODEL = ""
     script = llm.write_script(
-        cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note, news=news, lessons=lessons
+        cfg, subject, notes, from_wikipedia=from_wiki, images=menu, feedback=note, news=news, lessons=lessons, **shape
     )
     log(job, f"script written by {llm.LAST_MODEL or cfg.model}: {narration_words(script)} words")
     limit = llm.SHORT_MAX_WORDS if cfg.format == "short" else None
@@ -402,6 +422,7 @@ def _short_enough(
             feedback=f"{note}\n\n{feedback}".strip(),
             news=news,
             lessons=lessons,
+            **shape,
         )
         if narration_words(retry) < narration_words(script):
             script = retry
@@ -423,6 +444,7 @@ def _short_enough(
             feedback=f"{note}\n\n{feedback}".strip(),
             news=news,
             lessons=lessons,
+            **shape,
         )
         log(job, f"rewritten by {llm.LAST_MODEL or cfg.model}: {narration_words(retry)} words")
         again = qa.substance(retry, llm.SHORT_MIN_WORDS)

@@ -767,7 +767,9 @@ def write_script(
     feedback: str = "",
     news: bool = False,
     lessons: str = "",
+    schema: type[Script] = Script,
 ) -> Script:
+    """`schema`: the script's shape (WhatIfScript for the What If series, which adds each stage's clock)."""
     ch = cfg.channel
     if cfg.format == "short":
         format_line = "YouTube Short, vertical 9:16, 45-55 seconds, 6-8 fast scenes"
@@ -805,7 +807,7 @@ def write_script(
         limit = cfg.llm.max_note_chars
         for attempt in range(4):
             try:
-                return _openai_structured(cfg, guide, user_message(notes[:limit]), Script, max_tokens=3000)
+                return _openai_structured(cfg, guide, user_message(notes[:limit]), schema, max_tokens=3000)
             except RequestTooLarge as e:
                 if attempt == 3:
                     # Still too large with the shortest notes: a fallback model may have a larger
@@ -813,7 +815,7 @@ def write_script(
                     for model in cfg.llm.fallback_models:
                         try:
                             print(f"request too large for {cfg.llm.model}; trying {model}")
-                            return _openai_structured(_with_model(cfg, model), guide, user_message(notes[:limit]), Script, max_tokens=3000)
+                            return _openai_structured(_with_model(cfg, model), guide, user_message(notes[:limit]), schema, max_tokens=3000)
                         except (RequestTooLarge, ClaudeError) as err:
                             e = err
                     raise e
@@ -827,7 +829,7 @@ def write_script(
         fallbacks="default",
         thinking={"type": "adaptive"},
         output_config={"effort": "high"},
-        output_format=Script,
+        output_format=schema,
         system=guide,
         messages=[
             {
