@@ -316,6 +316,31 @@ python -m fyt sheet jobs/<id>/props.json --every 0.5   # frames drawn straight f
 Use it when adding or changing a scene template (`renderer/src/scenes/`): render, look at the sheet,
 fix what is wrong, repeat. It costs nothing at run time; the scheduled pipeline doesn't call it.
 
+## The quality benchmark reel
+
+"It rendered without errors" is not the bar for the renderer. `python -m fyt bench` renders six fixed
+scenes, each testing something real videos need, through the production code with model calls switched
+off, so only the renderer changes between runs:
+
+| Scene | Tests |
+|---|---|
+| `gimli` | an airliner gliding down to land: flight path, camera tracking, ground at speed |
+| `voyager` | a probe in deep space: scale, space lighting |
+| `ghost-army` | a 1944 campaign map, then soldiers and an inflatable tank: borders, routes, map to 3D, people |
+| `krakatoa` | a volcano erupting: smoke, ash, fire, atmosphere |
+| `london` | a historic city burning: buildings in depth, fire spreading |
+| `storm` | a liner in a storm: water, weather, lighting |
+
+```bash
+python -m fyt bench                                   # all six at 16:9 into jobs/bench/<commit>/
+python -m fyt bench --only krakatoa,london            # some of them
+python -m fyt bench --compare jobs/bench/aaa jobs/bench/bbb   # two runs' frames, before above after
+```
+
+Each run keeps a clip, contact sheet and props per scene, `reel.mp4`, `reel.png`, `report.json`
+(seconds per frame, loudness, motion findings, frozen stretches) and `scores.md`, a sheet to score each
+scene from 1 to 5 on ten criteria. A renderer change merges only when no scene scores lower.
+
 ## Uploading to YouTube
 
 1. In Google Cloud Console, create a project, enable **YouTube Data API v3**, and create an

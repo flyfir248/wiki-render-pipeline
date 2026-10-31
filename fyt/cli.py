@@ -94,8 +94,10 @@ def main(argv: list[str] | None = None) -> None:
     sh.add_argument("--out", type=Path, help="where to save the sheet (default: next to the source)")
     sh.add_argument("--public", type=Path, help="the job's public dir, for a props.json (default: next to it)")
 
-    bn = sub.add_parser("bench", help="render the fixed 8-second 3D quality benchmark (contact sheet, timing, look check)")
+    bn = sub.add_parser("bench", help="render the six-scene quality benchmark reel (16:9 unless --format short) with contact sheets, timing, loudness and a scoring sheet")
     bn.add_argument("--out", type=Path, default=Path("jobs/bench"))
+    bn.add_argument("--compare", type=Path, nargs=2, metavar=("BEFORE", "AFTER"), help="instead of rendering, lay two runs' frames side by side (run folders, e.g. jobs/bench/abc1234)")
+    bn.add_argument("--only", default="", help="comma-separated scenes to render (gimli, voyager, ghost-army, krakatoa, london, storm)")
 
     kt = sub.add_parser("kit", help="fetch the CC0 character kit (rigged people, animals, shared clips) into the model library")
     kt.add_argument("--out", type=Path, default=Path("assets/models/_kit"))
@@ -129,7 +131,13 @@ def main(argv: list[str] | None = None) -> None:
     if args.cmd == "bench":
         from fyt import bench
 
-        print(json.dumps(bench.run(cfg, args.out), indent=2))
+        if args.compare:
+            before, after = args.compare
+            print(bench.compare(before, after, args.out / f"compare-{before.name}-{after.name}.png"))
+            return
+        cfg.format = args.format or "long"
+        only = [x.strip() for x in args.only.split(",") if x.strip()] or None
+        print(json.dumps(bench.run(cfg, args.out, only), indent=2))
         return
     if args.cmd == "kit":
         from fyt import kit
