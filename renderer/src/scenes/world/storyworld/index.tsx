@@ -189,13 +189,15 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
       }
     }
     let air = 0;
+    // an aircraft flies clear of the set's tallest trees (up to about U * 5), whatever its own size
+    const aloftAt = (hh: number) => Math.max(U * 2.6 + hh, U * 6.5);
     const aircraft = world.cast.filter((c, j) => flies(c) && c.build.archetype === "vehicle" && j !== i);
-    if (flies(m)) air = m.build.archetype === "vehicle" ? U * 2.6 + h : aircraft.length ? U * 2.6 + footprint(aircraft[0].build).h * 1.2 : ground.length ? U * 1.8 : U * 1.2;
-    if (m.verb === "fall" && m.build.archetype === "vehicle") air = (U * 2.6 + h) * (1 - ease((k + 1.2) / 1.2));
+    if (flies(m)) air = m.build.archetype === "vehicle" ? aloftAt(h) : aircraft.length ? aloftAt(footprint(aircraft[0].build).h * 1.2) : ground.length ? U * 1.8 : U * 1.2;
+    if (m.verb === "fall" && m.build.archetype === "vehicle") air = aloftAt(h) * (1 - ease((k + 1.2) / 1.2));
     if (m.verb === "rise") air = h * 1.4 * ease((k + 0.6) / 1.6);
     if (m.verb === "fall" && m.build.archetype !== "vehicle" && m.build.archetype !== "humanoid" && m.build.archetype !== "quadruped") {
       // dropped: from whatever flies in the shot, else from a few times its own height
-      const from = world.cast.some((c) => flies(c)) ? U * 2.6 + Math.max(...world.cast.filter(flies).map((c) => footprint(c.build).h)) : h * 4;
+      const from = world.cast.some((c) => flies(c)) ? aloftAt(Math.max(...world.cast.filter(flies).map((c) => footprint(c.build).h))) : h * 4;
       air = from * (1 - Math.min(1, Math.max(0, (k + 1.2) / 1.2)) ** 2);
     }
     pos.y = air || (floats ? -h * 0.12 : 0);

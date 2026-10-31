@@ -466,8 +466,25 @@ def test_a_model_found_facing_backwards_is_turned_round_and_remembered(tmp_path,
     assetlib.orient(load_config(), m, found, print)
     assert found["plane"]["fit"] == {"forward": "-x"}  # its short side, x, is its length; the front is the other end
     assert json.loads((folder / "meta.json").read_text())["fit"] == {"forward": "-x"}
-    assert "fit" not in found["rock"] and found["rock"]["facing"] == "unclear"
+    assert "fit" not in found["rock"] and found["rock"]["facing"] == "unclear:2"
     # checked once: a model with a facing on record is not drawn again
     monkeypatch.setattr(assetlib.subprocess, "run", lambda *a, **k: pytest.fail("checked again"))
     assetlib.orient(load_config(), m, {"plane": found["plane"]}, print)
+    # one clear answer is enough; with none, an aircraft is turned by its tail fin, its highest point
+    (folder / "meta.json").write_text(json.dumps({"ok": True, "key": "c-130", "size": [29.6, 12.1, 40.3], "facing": "unclear"}))
+    found = {"plane": json.loads((folder / "meta.json").read_text()) | {"file": str(folder / "model.glb")}}
+
+    def drawn(cmd, **kw):  # a side view with the fin at the right-hand end: the nose points left
+        out = Path(cmd[cmd.index("--out") + 1])
+        out.mkdir(parents=True, exist_ok=True)
+        img = Image.new("RGB", (100, 50), (223, 230, 238))
+        img.paste((90, 90, 90), (10, 30, 90, 38))  # the fuselage
+        img.paste((90, 90, 90), (80, 12, 88, 30))  # the fin
+        img.save(out / "0-as.png")
+        img.transpose(Image.FLIP_LEFT_RIGHT).save(out / "0-flip.png")
+
+    monkeypatch.setattr(assetlib.subprocess, "run", drawn)
+    monkeypatch.setattr(storyboard, "review", lambda *a, **k: None)
+    assetlib.orient(load_config(), m, found, print)
+    assert found["plane"]["fit"] == {"forward": "-x"} and found["plane"]["facing"] == "checked"
     assert assetlib.axis([10, 2, 3], "auto") == "+x" and assetlib.axis([3, 2, 10], "short") == "+x" and assetlib.axis([1, 1, 1], "-x") == "-x"
