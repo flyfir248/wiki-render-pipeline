@@ -1148,7 +1148,9 @@ const World3D: React.FC<{ world: World; b: Blocking; ba: Blocking; portrait: boo
   const close = b.cam.setup === 1 || ["close", "low_angle", "over_shoulder", "push_in"].includes(world.camera);
   // by day only what glows on purpose (marks, lamps: twice white and more) blooms, not a sunlit white
   // patch on a model (an animal's pale eye ring flared into a halo)
-  const finish: Finish = { samples: 0, bloom: light.bloom, threshold: world.set.time === "day" ? Math.max(light.threshold, 1.4) : light.threshold, focus: dist, aperture: 0,
+  // four samples a pixel: the finishing passes draw into their own buffer, so the canvas's own
+  // antialiasing never reaches the picture and edges would stair-step without these
+  const finish: Finish = { samples: 4, bloom: light.bloom, threshold: world.set.time === "day" ? Math.max(light.threshold, 1.4) : light.threshold, focus: dist, aperture: 0,
     vignette: light.vignette, lift: light.lift, gain: light.gain, frame };
   const grounded = !VOID.includes(world.set.kind) && world.set.kind !== "underwater";
   // bloom only where something gives off light: night, lit windows, glowing marks, a glowing cell

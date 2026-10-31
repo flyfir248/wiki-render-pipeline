@@ -132,7 +132,10 @@ def pick_music(
     """Copy a random track from music_dir into the job (use only music you are licensed to use),
     or, with no tracks there, compose an original one (see fyt.music)."""
     folder = (ROOT / cfg.music_dir).resolve()
-    tracks = [p for p in folder.glob("*") if p.suffix.lower() in {".mp3", ".wav", ".m4a", ".ogg"}]
+    audio = {".mp3", ".wav", ".m4a", ".ogg"}
+    # tracks sorted by mood (assets/music/tense/...) are picked for the story's mood; loose tracks suit any
+    by_mood = [p for p in (folder / mood).glob("*") if p.suffix.lower() in audio]
+    tracks = by_mood or [p for p in folder.rglob("*") if p.suffix.lower() in audio]
     if not tracks:
         if not cfg.generate_music:
             return None

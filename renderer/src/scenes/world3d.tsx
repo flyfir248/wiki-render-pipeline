@@ -5,6 +5,8 @@
 import React, { useMemo } from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import * as THREE from "three";
+import { Glow, SmokeColumn } from "./vfx";
+import { surfaceCanvas } from "./surface";
 import type { Scene, Setting, Theme } from "../types";
 import { formatCount } from "./shared";
 
@@ -240,8 +242,17 @@ export const groundTexture = (pal: Palette, setting: Setting | null | undefined,
       g.stroke();
     }
   }
+  // fine detail over the patches (blades, flecks), so the ground holds up when the camera is low
+  if (setting !== "sea") {
+    g.globalCompositeOperation = "multiply";
+    g.globalAlpha = setting === "city" ? 0.5 : 0.8;
+    g.drawImage(surfaceCanvas(setting === "city" ? "soil" : setting === "desert" ? "sand" : setting === "snow" ? "snow" : "grass", seed % 3), 0, 0, 512, 512);
+    g.globalCompositeOperation = "source-over";
+    g.globalAlpha = 1;
+  }
   const tex = new THREE.CanvasTexture(c);
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.anisotropy = 8;
   tex.repeat.set(14, 14);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
@@ -325,58 +336,14 @@ const puff = new THREE.IcosahedronGeometry(1, 0);
 
 // A column of smoke from `at`: puffs born every two frames that rise and drift with the wind, darker
 // near the source, with flickering flame at its foot for fire. `since` is frames since it started.
-export const Smoke: React.FC<{ at: [number, number, number]; since: number; wind: [number, number, number]; fire?: boolean; scale?: number; seed?: number }> = ({
-  at,
-  since,
-  wind,
-  fire = false,
-  scale = 1,
-  seed = 3,
-}) => {
-  if (since < 0) return null;
-  const count = Math.min(32, Math.floor(since / 2));
-  return (
-    <group position={at} scale={scale}>
-      {Array.from({ length: count }, (_, i) => {
-        const age = i * 2 + (since % 2);
-        const r = rng(i * 7 + seed);
-        const k = age / 10;
-        const fadeOut = 1 - Math.max(0, age - 46) / 18;
-        return (
-          <mesh
-            key={i}
-            geometry={puff}
-            position={[wind[0] * age + (r() - 0.5) * 0.5 * k, wind[1] * age + (r() - 0.5) * 0.3 * k, wind[2] * age + (r() - 0.5) * 0.5 * k]}
-            scale={Math.max(0, (0.25 + age * 0.035) * fadeOut)}
-          >
-            <meshToonMaterial color={i < 3 && fire ? "#ff9a3c" : age < 12 ? "#4f5461" : "#868b97"} emissive="#454a56" emissiveIntensity={0.35} gradientMap={toonRamp} />
-          </mesh>
-        );
-      })}
-      {fire
-        ? [0, 1, 2].map((k) => (
-            <mesh key={k} position={[(k - 1) * 0.3, 0.3 + 0.1 * Math.sin(since / 2 + k), 0]} scale={[1, 1 + 0.35 * Math.sin(since / 2 + k * 2), 1]}>
-              <coneGeometry args={[0.32 - k * 0.04, 1.1, 8]} />
-              <meshBasicMaterial color={k === 1 ? "#ffcf4a" : "#ff6a2a"} />
-            </mesh>
-          ))
-        : null}
-    </group>
-  );
-};
+export const Smoke: React.FC<{ at: [number, number, number]; since: number; wind: [number, number, number]; fire?: boolean; scale?: number; seed?: number }> = (p) => (
+  <SmokeColumn {...p} />
+);
 
 // A bright burst that swells and fades over a few frames.
 const ball = new THREE.IcosahedronGeometry(1, 3);
 
-export const Flash: React.FC<{ at: [number, number, number]; since: number; size?: number }> = ({ at, since, size = 1 }) => {
-  const f = since < 0 ? 0 : Math.max(0, 1 - since / 10);
-  if (f <= 0) return null;
-  return (
-    <mesh geometry={ball} position={at} scale={size * (0.6 + 2.6 * (1 - f))}>
-      <meshBasicMaterial color="#fff1b0" transparent opacity={f} />
-    </mesh>
-  );
-};
+export const Flash: React.FC<{ at: [number, number, number]; since: number; size?: number }> = (p) => <Glow {...p} />;
 
 // White water thrown up at `at`, `since` frames ago: puffs flung outward that fall back.
 export const Splash: React.FC<{ at: [number, number, number]; since: number; size?: number; seed?: number }> = ({ at, since, size = 1, seed = 1 }) => {

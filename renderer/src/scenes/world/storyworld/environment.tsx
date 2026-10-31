@@ -5,6 +5,7 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
 import { rng } from "../../world3d";
+import { surfaceOf, surfaceTexture } from "../../surface";
 import { art, artRamp, artToon } from "./artstyle";
 import { ReflectiveWater } from "./cinema";
 import { rbcGeometry } from "./creatures";
@@ -616,9 +617,14 @@ export const Environment: React.FC<{ set: SetSpec; look: Look; light: Light; uni
   const bump = kind === "mountain" ? U * 2.2 : ["forest", "grassland", "snow", "desert"].includes(kind) ? U * 0.6 : kind === "underwater" ? U * 0.4 : kind === "marsh" ? U * 0.15 : 0;
   const floorColor = INSIDE.includes(kind) ? (kind === "cave" ? "#3a322a" : kind === "lab" || kind === "hospital" ? "#c8cdd0" : tone(set.ground, 1)) : ground;
   const gGeom = useMemo(() => groundGeometry(groundSize, bump, seed, U * 4, floorColor, U), [groundSize, bump, seed, U, floorColor]);
-  const gMat = useMemo(() => (artToon() ? new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: artRamp() }) : look.toon ? new THREE.MeshToonMaterial({ vertexColors: true }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: look.blocky })),
+  const gMat = useMemo(() => {
+    // outdoors, a tiling detail of blades, clumps or flecks over the ground's own colours, about one
+    // tile per five stage units, lifted so the ground keeps its brightness
+    const detail = !INSIDE.includes(kind) && !look.blocky ? { map: surfaceTexture(surfaceOf(kind), Math.round(groundSize / (U * 5)), seed % 3), color: new THREE.Color(1.1, 1.1, 1.1) } : {};
+    return artToon() ? new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: artRamp(), ...detail }) : look.toon ? new THREE.MeshToonMaterial({ vertexColors: true, ...detail }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: look.blocky, ...detail });
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [look, art.profile.name]);
+    [look, art.profile.name, kind, groundSize, U, seed]);
   const water = mix(set.sky, "#1d4a6a", 0.55);
   const mirror = !look.toon && !look.blocky && !fx.includes("water");
   const sunDir = new THREE.Vector3(...light.sunDir);
