@@ -31,13 +31,61 @@ def ensure_renderer() -> None:
         subprocess.run([npm, "install"], cwd=RENDERER_DIR, check=True)
 
 
-def render(props_json: Path, public: Path, out: Path, still: bool = False) -> Path:
+def render(props_json: Path, public: Path, out: Path, still: bool = False, lufs: float | None = None) -> Path:
     ensure_renderer()
     cmd = ["node", "render.mjs", "--props", str(props_json), "--public", str(public), "--out", str(out)]
     if still:
         cmd.append("--still")
     subprocess.run(cmd, cwd=RENDERER_DIR, check=True, env=_env())
+    if lufs is not None and not still:
+        master(out, lufs)
     return out
+
+
+def _ffmpeg() -> str:
+    try:
+        import imageio_ffmpeg
+
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return shutil.which("ffmpeg") or "ffmpeg"
+
+
+def loudnorm_stats(stderr: str) -> dict | None:
+    """The measurements ffmpeg's loudnorm filter prints (its last JSON block), or None."""
+    end = stderr.rfind("}")
+    start = stderr.rfind("{", 0, end)
+    if start < 0 or end < 0:
+        return None
+    try:
+        stats = json.loads(stderr[start : end + 1])
+    except ValueError:
+        return None
+    return stats if "input_i" in stats else None
+
+
+def master(video: Path, lufs: float = -14.0, peak: float = -1.0) -> bool:
+    """Bring the video's sound to `lufs` integrated loudness with a true-peak ceiling of `peak` dBTP, in two
+    passes (measure, then correct linearly where it can), keeping the picture as it is. The voice, music
+    and effects are already balanced against each other in the render; this only sets the overall level.
+    False when there is no sound to master or ffmpeg fails (the video is left as rendered)."""
+    ff = _ffmpeg()
+    target = f"I={lufs}:TP={peak}:LRA=11"
+    probe = subprocess.run([ff, "-hide_banner", "-nostats", "-i", str(video), "-af", f"loudnorm={target}:print_format=json", "-vn", "-f", "null", "-"],
+                           capture_output=True, text=True)
+    stats = loudnorm_stats(probe.stderr)
+    if not stats or stats["input_i"] in ("-inf", "inf"):
+        return False
+    tmp = video.with_name(video.stem + ".master" + video.suffix)
+    measured = (f"{target}:measured_I={stats['input_i']}:measured_TP={stats['input_tp']}:measured_LRA={stats['input_lra']}"
+                f":measured_thresh={stats['input_thresh']}:offset={stats['target_offset']}:linear=true")
+    done = subprocess.run([ff, "-hide_banner", "-loglevel", "error", "-y", "-i", str(video), "-af", f"loudnorm={measured},aresample=48000",
+                           "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(tmp)], capture_output=True, text=True)
+    if done.returncode != 0 or not tmp.exists():
+        tmp.unlink(missing_ok=True)
+        return False
+    tmp.replace(video)
+    return True
 
 
 def frames(props_json: Path, public: Path, out_dir: Path, at: list[int]) -> list[Path]:

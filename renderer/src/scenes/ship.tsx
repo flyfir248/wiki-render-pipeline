@@ -11,6 +11,7 @@ import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig, Easing } fr
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { SunShadows } from "./shadows";
 import { mergeVertices } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { Scene, Setting, Theme } from "../types";
 import { unit } from "../theme";
@@ -656,6 +657,7 @@ export const ShipScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
     <AbsoluteFill>
       <ThreeCanvas width={width} height={height} camera={{ fov: 36, position: [-30, 9, 15] }} gl={{ antialias: true }}>
         <World scene={scene} portrait={short} />
+        <SunShadows />
       </ThreeCanvas>
       <WeatherOverlay weather={scene.weather} seed={sceneSeed(scene)} night={scene.setting === "night"} />
       <AbsoluteFill style={{ pointerEvents: "none" }}>
