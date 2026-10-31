@@ -701,16 +701,18 @@ def orient(cfg: Config, m: "manifest.Manifest", found: dict[str, dict], log=prin
     """Which way each found model faces, checked once and kept with it. The stage turns a model nobody
     recorded the facing of by its shape, which finds its length but not which end is the front, so a plane
     could fly tail first. Each model is drawn side-on as the stage would turn it, and again turned half
-    round; a vision model says which way it points in each. Two answers that agree settle it: the front
+    round; a vision model says which way it points in each, and one clear answer settles it: the front
     axis is kept in the model's record (meta.json "fit") and used from then on. Library models come with
-    their facing, and a model checked before is not checked again."""
+    their facing, and a model checked before is not checked again. An aircraft is not asked about: the
+    stage finds its front from its own shape, the end away from its tail fin (stage.tsx `tailOffset`)."""
     todo = []
     for eid, a in found.items():
         e = manifest.entity(m, eid)
-        if e is None or a.get("source") == "project" or a.get("facing") or not a.get("file"):
+        # checked, or unclear to this version of the check ("unclear" alone is from the first, asked again)
+        if e is None or a.get("source") == "project" or a.get("facing") in ("checked", "unclear:2") or not a.get("file"):
             continue
         guess = (a.get("fit") or facing(e)).get("forward", "auto")
-        if (a.get("fit") or {}).get("up", "+y") != "+y" or axis(a.get("size") or [], guess) is None:
+        if guess == "short" or (a.get("fit") or {}).get("up", "+y") != "+y" or axis(a.get("size") or [], guess) is None:
             continue
         todo.append((eid, e, a, guess))
     if not todo:
@@ -735,23 +737,26 @@ def orient(cfg: Config, m: "manifest.Manifest", found: dict[str, dict], log=prin
                 continue
             thing = e.search[0] if e.search else e.name
             seen = [_faces(cfg, thing, p) for p in pics]
-            if None in seen:
-                log(f"assets: {e.name}: no vision check of its facing could be made; checked next time")
-                continue
             front = axis(a.get("size") or [], guess)
-            if seen == ["right", "left"]:
-                verdict = front
-            elif seen == ["left", "right"]:
-                verdict = FLIP[front]
-                log(f"assets: {e.name} ({a.get('title')!r}) faced backwards: turned round ({front} -> {verdict})")
-            else:
+            # each clear answer is a vote on the model as the stage turns it: its front to the right as it
+            # is, or to the left once turned round, says it is the right way; the opposite says turn it
+            votes = {"keep" if s == ("right" if i == 0 else "left") else "turn" for i, s in enumerate(seen) if s in ("right", "left")}
+            if len(votes) != 1:
+                if None in seen and not votes:
+                    log(f"assets: {e.name}: no vision check of its facing could be made; checked next time")
+                    continue
                 log(f"assets: {e.name}: its front could not be told ({seen[0]}, then {seen[1]} turned round); left to its shape")
                 verdict = None
+            elif votes == {"keep"}:
+                verdict = front
+            else:
+                verdict = FLIP[front]
+                log(f"assets: {e.name} ({a.get('title')!r}) faced backwards: turned round ({front} -> {verdict})")
             fit = dict(a.get("fit") or {})
             if verdict:
                 fit["forward"] = verdict
                 a["fit"] = fit
-            a["facing"] = "checked" if verdict else "unclear"
+            a["facing"] = "checked" if verdict else "unclear:2"
             meta_file = Path(a["file"]).with_name("meta.json")
             meta = _read(meta_file, None)
             if meta is not None:

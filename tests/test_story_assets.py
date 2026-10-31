@@ -441,33 +441,38 @@ def test_a_model_found_facing_backwards_is_turned_round_and_remembered(tmp_path,
     from fyt import assetlib, storyboard
     from fyt.config import load_config
 
-    folder = tmp_path / "c-130"
+    folder = tmp_path / "frigate"
     folder.mkdir()
     (folder / "model.glb").write_bytes(b"glb")
-    (folder / "meta.json").write_text(json.dumps({"ok": True, "key": "c-130", "size": [29.6, 12.1, 40.3]}))
-    plane = Entity(id="plane", name="the C-130", kind="cargo plane", search=["c-130"], look="grey four-engine transport plane", certain=True, scenes=[0])
+    (folder / "meta.json").write_text(json.dumps({"ok": True, "key": "frigate", "size": [40, 10, 8]}))
+    ship = Entity(id="ship", name="the frigate", kind="ship", search=["frigate"], look="grey warship", certain=True, scenes=[0])
     rock = Entity(id="rock", name="the boulder", kind="rock", search=["boulder"], look="grey boulder", certain=True, scenes=[0])
-    m = Manifest(entities=[plane, rock])
-    found = {"plane": json.loads((folder / "meta.json").read_text()) | {"file": str(folder / "model.glb")},
-             "rock": {"key": "rock", "size": [2, 1, 2], "file": str(folder / "model.glb")}}
+    plane = Entity(id="plane", name="the C-130", kind="cargo plane", search=["c-130"], look="grey four-engine transport plane", certain=True, scenes=[0])
+    m = Manifest(entities=[ship, rock, plane])
+    found = {"ship": json.loads((folder / "meta.json").read_text()) | {"file": str(folder / "model.glb")},
+             "rock": {"key": "rock", "size": [2, 1, 2], "file": str(folder / "model.glb")},
+             "plane": {"key": "c-130", "size": [29.6, 12.1, 40.3], "file": str(folder / "model.glb")}}
 
-    def snap(cmd, **kw):  # the side views: the plane's nose points left as the stage turns it
+    def snap(cmd, **kw):  # the side views
         out = Path(cmd[cmd.index("--out") + 1])
         out.mkdir(parents=True, exist_ok=True)
         for n in range(len(cmd) - cmd.index("--out") - 2):
             for k in ("as", "flip"):
                 Image.new("RGB", (8, 8)).save(out / f"{n}-{k}.png")
-        assert cmd[-2:] == ["models/0.glb:short:+y", "models/1.glb:auto:+y"]  # winged: its short side is its length
+        # the plane is not drawn: the stage turns an aircraft by its tail fin
+        assert cmd[-2:] == ["models/0.glb:auto:+y", "models/1.glb:auto:+y"]
 
-    answers = iter([storyboard.Verdict(matches=False, problems="left, the nose is on the left"), storyboard.Verdict(matches=True),
+    # the ship's bow points left as the stage turns it (one clear answer is enough); the rock is unclear
+    answers = iter([storyboard.Verdict(matches=False, problems="left, the bow is on the left"), storyboard.Verdict(matches=False, problems="unclear"),
                     storyboard.Verdict(matches=False, problems="unclear: a rock"), storyboard.Verdict(matches=False, problems="unclear")])
     monkeypatch.setattr(assetlib.subprocess, "run", snap)
     monkeypatch.setattr(storyboard, "review", lambda *a, **k: next(answers))
     assetlib.orient(load_config(), m, found, print)
-    assert found["plane"]["fit"] == {"forward": "-x"}  # its short side, x, is its length; the front is the other end
+    assert found["ship"]["fit"] == {"forward": "-x"}  # its long side, x, is its length; the front is the other end
     assert json.loads((folder / "meta.json").read_text())["fit"] == {"forward": "-x"}
-    assert "fit" not in found["rock"] and found["rock"]["facing"] == "unclear"
+    assert "fit" not in found["rock"] and found["rock"]["facing"] == "unclear:2"
+    assert "fit" not in found["plane"] and "facing" not in found["plane"]
     # checked once: a model with a facing on record is not drawn again
     monkeypatch.setattr(assetlib.subprocess, "run", lambda *a, **k: pytest.fail("checked again"))
-    assetlib.orient(load_config(), m, {"plane": found["plane"]}, print)
+    assetlib.orient(load_config(), m, {"ship": found["ship"], "plane": found["plane"]}, print)
     assert assetlib.axis([10, 2, 3], "auto") == "+x" and assetlib.axis([3, 2, 10], "short") == "+x" and assetlib.axis([1, 1, 1], "-x") == "-x"

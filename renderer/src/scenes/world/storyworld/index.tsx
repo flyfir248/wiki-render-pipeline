@@ -189,13 +189,15 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
       }
     }
     let air = 0;
+    // an aircraft flies clear of the set's tallest trees (up to about U * 5), whatever its own size
+    const aloftAt = (hh: number) => Math.max(U * 2.6 + hh, U * 6.5);
     const aircraft = world.cast.filter((c, j) => flies(c) && c.build.archetype === "vehicle" && j !== i);
-    if (flies(m)) air = m.build.archetype === "vehicle" ? U * 2.6 + h : aircraft.length ? U * 2.6 + footprint(aircraft[0].build).h * 1.2 : ground.length ? U * 1.8 : U * 1.2;
-    if (m.verb === "fall" && m.build.archetype === "vehicle") air = (U * 2.6 + h) * (1 - ease((k + 1.2) / 1.2));
+    if (flies(m)) air = m.build.archetype === "vehicle" ? aloftAt(h) : aircraft.length ? aloftAt(footprint(aircraft[0].build).h * 1.2) : ground.length ? U * 1.8 : U * 1.2;
+    if (m.verb === "fall" && m.build.archetype === "vehicle") air = aloftAt(h) * (1 - ease((k + 1.2) / 1.2));
     if (m.verb === "rise") air = h * 1.4 * ease((k + 0.6) / 1.6);
     if (m.verb === "fall" && m.build.archetype !== "vehicle" && m.build.archetype !== "humanoid" && m.build.archetype !== "quadruped") {
       // dropped: from whatever flies in the shot, else from a few times its own height
-      const from = world.cast.some((c) => flies(c)) ? U * 2.6 + Math.max(...world.cast.filter(flies).map((c) => footprint(c.build).h)) : h * 4;
+      const from = world.cast.some((c) => flies(c)) ? aloftAt(Math.max(...world.cast.filter(flies).map((c) => footprint(c.build).h))) : h * 4;
       air = from * (1 - Math.min(1, Math.max(0, (k + 1.2) / 1.2)) ** 2);
     }
     pos.y = air || (floats ? -h * 0.12 : 0);
@@ -203,6 +205,12 @@ export const block = (w0: World, frame: number, fps: number, D: number, at: numb
     const many = Math.max(1, Math.min(9, m.count ?? 1));
     return { m, pos, yaw, phase, speed, h, w: w * (1 + 0.9 * Math.sqrt(many - 1)), w0: w, air, start: start.clone() };
   });
+  // what falls in a shot with an aircraft and was not let go from it by name still left it: it keeps
+  // the aircraft's heading, so it drops pointing the way the aircraft flies, not wherever it stood
+  const flier = placed.find((p) => flies(p.m) && p.m.build.archetype === "vehicle");
+  if (flier)
+    for (const p of placed)
+      if (p.m.verb === "fall" && !carried(p.m) && !["vehicle", "humanoid", "quadruped"].includes(p.m.build.archetype)) p.yaw = flier.yaw;
   carry(placed, D / fps, t, U);
   // on open water, people and animals stand on something afloat, never on the water: the ice floe at an
   // iceberg's foot, else the deck of a boat or a ditched airliner
@@ -543,7 +551,11 @@ const rigidPose = (p: Placed, b: Blocking, vehicle: boolean) => {
       off.y = Math.sin(t * 1.1) * p.h * 0.05;
       break;
     case "fall":
-      rot = vehicle ? [0.25 * ease((k + 1.2) / 1.2), 0, -0.35 * ease((k + 1.2) / 1.2)] : [ease((k + 0.4) / 0.5) * 1.2, 0, ease((k + 0.4) / 0.5) * 0.4];
+      // a craft noses down and banks; a long thing (a bomb, a missile, a log) tips nose first as it
+      // drops, its front (+x) leading; anything else tumbles
+      rot = vehicle ? [0.25 * ease((k + 1.2) / 1.2), 0, -0.35 * ease((k + 1.2) / 1.2)]
+        : p.w0 > p.h * 1.6 ? [0, 0, -ease((k + 1.2) / 1.2) * 1.1]
+        : [ease((k + 0.4) / 0.5) * 1.2, 0, ease((k + 0.4) / 0.5) * 0.4];
       break;
     case "sink": {
       // bow first and listing, settling until the stern stands out of the water
