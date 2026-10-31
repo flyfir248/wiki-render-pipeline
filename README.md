@@ -225,11 +225,15 @@ pass that reads the scene's depth.
 
 | Profile | Look | Chosen for |
 |---|---|---|
-| `cinematic` (default) | soft physically lit, film grade | nature, travel, machines, disasters |
-| `ink` | inked graphic novel: wobbling depth outlines, hatching, halftone, solid blacks | mysteries, crimes, hoaxes, the unexplained |
-| `stencil` | four-ink stencil print, out of register, red accent | wars, revolutions, propaganda, protest |
+| `cinematic` (default) | soft physically lit, film grade | most stories: nature, travel, machines, disasters, wars |
+| `noir` | dark noir: black and white silver print, hard key light, deep shadows, grain | crimes, mysteries, disappearances |
+| `painterly` | painterly 3D: brush strokes (a Kuwahara filter) on a canvas weave | stories set before 1850 |
+| `ink` | inked graphic novel: wobbling depth outlines, hatching, halftone, solid blacks | when chosen |
+| `stencil` | four-ink stencil print, out of register, red accent | when chosen |
+| `cel` | cel-shaded 3D: flat bands of light, bright colour, clean outlines | when chosen |
+| `clay` | clay / miniature: a tilt-shift lens, soft studio light, animation on twos | when chosen |
 
-Settings in `config.yaml` under `visuals`: `art_style` (`auto`, `cinematic`, `ink`, `stencil`),
+Settings in `config.yaml` under `visuals`: `art_style` (`auto` or one of the profiles above),
 `art_strength` (0-1, default 0.75), `environment_detail` (0-1, default 0.8) and `atmosphere` (`auto`,
 `natural`, `dramatic`, `dreamlike`, `graphic`).
 

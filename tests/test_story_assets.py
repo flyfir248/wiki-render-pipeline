@@ -2,6 +2,7 @@
 for it (or none), and a renderer's stock subject never stands in for something the story doesn't name
 (fyt/manifest.py, fyt/visualplan.py, fyt/assetlib.py, fyt/relevance.py)."""
 import json
+from pathlib import Path
 
 import pytest
 from PIL import Image
@@ -434,3 +435,39 @@ def test_polyfork_candidates_are_free_checked_by_their_render_and_never_kept(mon
     assert "polyfork" in load_config().visuals.licences and "polyfork" in assetlib.SOURCES
     assert not str(assetlib.FETCHED).startswith(str(assetlib.CACHE))  # never on the asset-library branch
     assert "Polyfork free licence" in assetlib.credit({"key": "k", "title": "Lancaster Bomber", "licence": "polyfork", "url": c["url"]})
+
+
+def test_a_model_found_facing_backwards_is_turned_round_and_remembered(tmp_path, monkeypatch):
+    from fyt import assetlib, storyboard
+    from fyt.config import load_config
+
+    folder = tmp_path / "c-130"
+    folder.mkdir()
+    (folder / "model.glb").write_bytes(b"glb")
+    (folder / "meta.json").write_text(json.dumps({"ok": True, "key": "c-130", "size": [29.6, 12.1, 40.3]}))
+    plane = Entity(id="plane", name="the C-130", kind="cargo plane", search=["c-130"], look="grey four-engine transport plane", certain=True, scenes=[0])
+    rock = Entity(id="rock", name="the boulder", kind="rock", search=["boulder"], look="grey boulder", certain=True, scenes=[0])
+    m = Manifest(entities=[plane, rock])
+    found = {"plane": json.loads((folder / "meta.json").read_text()) | {"file": str(folder / "model.glb")},
+             "rock": {"key": "rock", "size": [2, 1, 2], "file": str(folder / "model.glb")}}
+
+    def snap(cmd, **kw):  # the side views: the plane's nose points left as the stage turns it
+        out = Path(cmd[cmd.index("--out") + 1])
+        out.mkdir(parents=True, exist_ok=True)
+        for n in range(len(cmd) - cmd.index("--out") - 2):
+            for k in ("as", "flip"):
+                Image.new("RGB", (8, 8)).save(out / f"{n}-{k}.png")
+        assert cmd[-2:] == ["models/0.glb:short:+y", "models/1.glb:auto:+y"]  # winged: its short side is its length
+
+    answers = iter([storyboard.Verdict(matches=False, problems="left, the nose is on the left"), storyboard.Verdict(matches=True),
+                    storyboard.Verdict(matches=False, problems="unclear: a rock"), storyboard.Verdict(matches=False, problems="unclear")])
+    monkeypatch.setattr(assetlib.subprocess, "run", snap)
+    monkeypatch.setattr(storyboard, "review", lambda *a, **k: next(answers))
+    assetlib.orient(load_config(), m, found, print)
+    assert found["plane"]["fit"] == {"forward": "-x"}  # its short side, x, is its length; the front is the other end
+    assert json.loads((folder / "meta.json").read_text())["fit"] == {"forward": "-x"}
+    assert "fit" not in found["rock"] and found["rock"]["facing"] == "unclear"
+    # checked once: a model with a facing on record is not drawn again
+    monkeypatch.setattr(assetlib.subprocess, "run", lambda *a, **k: pytest.fail("checked again"))
+    assetlib.orient(load_config(), m, {"plane": found["plane"]}, print)
+    assert assetlib.axis([10, 2, 3], "auto") == "+x" and assetlib.axis([3, 2, 10], "short") == "+x" and assetlib.axis([1, 1, 1], "-x") == "-x"

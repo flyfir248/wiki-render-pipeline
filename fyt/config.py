@@ -77,9 +77,8 @@ class VisualsConfig(BaseModel):
     # in renderer/src/scenes/world/storyworld/grammar.json (lowpoly, voxel, noir, diorama, clinical).
     world_style: str = "auto"
     # The scene director's art direction (fyt/director.py), one profile per video: auto picks from the
-    # story (inked graphic novel for mysteries, crime and strange true stories; stencil / cutout for
-    # political history, wars and anomalies; cinematic stylised 3D otherwise), or name one of
-    # cinematic, ink, stencil. Strength (0-1) is how far the profile's stylisation goes; environment
+    # story (dark noir for crime and mysteries, painterly for a story before 1850, cinematic stylised 3D
+    # otherwise), or name one of cinematic, ink, stencil, painterly, cel, clay, noir. Strength (0-1) is how far the profile's stylisation goes; environment
     # detail (0.2-1) how densely places are dressed; atmosphere: auto, natural, dramatic, dreamlike, graphic.
     art_style: str = "auto"
     art_strength: float = 0.75

@@ -22,7 +22,8 @@ Every candidate must name the entity's own noun in its title or tags, pass a vis
 preview against the entity's look, load, and hold real detail (not a few primitives). It is then
 prepared (renderer/prepare-model.mjs: old materials converted, meshes simplified to the shot's
 triangle budget, textures shrunk) and stored with its source, author and licence, so the video's
-description can credit it and the next video that needs one reuses it without searching.
+description can credit it and the next video that needs one reuses it without searching. Which way
+it faces is checked once by eye from side views (`orient`) and kept with it, so nothing moves tail first.
 """
 
 from __future__ import annotations
@@ -659,6 +660,105 @@ def _resolve(cfg: Config, entity: Entity, fidelity: str, log, generate: bool = T
     return None
 
 
+# --- which way a model faces ---------------------------------------------------------------------
+
+FACING = """You check which way a 3D model faces, before it is used in a video. The picture shows {thing}
+seen exactly from its side. Its front is where it goes when it moves forward: the nose of an aircraft or
+a missile (the tail fin is at the back), the bow of a ship (the stern is flat), the cab or bonnet of a
+vehicle, the head of an animal, the pointed end of a bomb (its fins are at the back).
+Set matches to true only when its front points to the RIGHT of the picture. When it points to the LEFT,
+set matches to false and start problems with "left". When it has no front (a building, a rock, a round or
+symmetrical thing) or you cannot tell, set matches to false and start problems with "unclear"."""
+
+FLIP = {"+x": "-x", "-x": "+x", "+z": "-z", "-z": "+z"}
+
+
+def axis(size: list, forward: str) -> str | None:
+    """The axis the stage takes as a model's front (stage.tsx `prepare`), from its size [x, y, z]: an
+    axis recorded already, or the long horizontal side ("auto") or the short one ("short", a winged thing)."""
+    if forward in FLIP:
+        return forward
+    if len(size or []) < 3:
+        return None
+    x, z = float(size[0]), float(size[2])
+    along_x = x > z * 1.15 if forward == "auto" else x * 1.15 < z
+    return "+x" if along_x else "+z"
+
+
+def _faces(cfg: Config, thing: str, picture: Path) -> str | None:
+    """'right', 'left' or 'unclear' for one side view; None when no check could be made."""
+    from fyt import storyboard
+
+    v = storyboard.review(cfg, picture, f"which way {thing} faces", rules=FACING.format(thing=thing))
+    if v is None:
+        return None
+    if v.matches:
+        return "right"
+    return "left" if v.problems.strip().lower().startswith("left") else "unclear"
+
+
+def orient(cfg: Config, m: "manifest.Manifest", found: dict[str, dict], log=print) -> None:
+    """Which way each found model faces, checked once and kept with it. The stage turns a model nobody
+    recorded the facing of by its shape, which finds its length but not which end is the front, so a plane
+    could fly tail first. Each model is drawn side-on as the stage would turn it, and again turned half
+    round; a vision model says which way it points in each. Two answers that agree settle it: the front
+    axis is kept in the model's record (meta.json "fit") and used from then on. Library models come with
+    their facing, and a model checked before is not checked again."""
+    todo = []
+    for eid, a in found.items():
+        e = manifest.entity(m, eid)
+        if e is None or a.get("source") == "project" or a.get("facing") or not a.get("file"):
+            continue
+        guess = (a.get("fit") or facing(e)).get("forward", "auto")
+        if (a.get("fit") or {}).get("up", "+y") != "+y" or axis(a.get("size") or [], guess) is None:
+            continue
+        todo.append((eid, e, a, guess))
+    if not todo:
+        return
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        (tmp / "public" / "models").mkdir(parents=True)
+        specs = []
+        for n, (_, _, a, guess) in enumerate(todo):
+            shutil.copy2(a["file"], tmp / "public" / "models" / f"{n}.glb")
+            specs.append(f"models/{n}.glb:{guess}:+y")
+        try:
+            subprocess.run(["node", "snap-models.mjs", "--public", str(tmp / "public"), "--out", str(tmp / "out"), *specs],
+                           cwd=RENDERER_DIR, capture_output=True, text=True, timeout=900)
+        except Exception as e:
+            log(f"assets: the orientation check could not draw the models: {str(e)[:160]}")
+            return
+        for n, (eid, e, a, guess) in enumerate(todo):
+            pics = [tmp / "out" / f"{n}-as.png", tmp / "out" / f"{n}-flip.png"]
+            if not all(p.exists() for p in pics):
+                log(f"assets: {e.name}: no side view drawn; its facing is left to its shape")
+                continue
+            thing = e.search[0] if e.search else e.name
+            seen = [_faces(cfg, thing, p) for p in pics]
+            if None in seen:
+                log(f"assets: {e.name}: no vision check of its facing could be made; checked next time")
+                continue
+            front = axis(a.get("size") or [], guess)
+            if seen == ["right", "left"]:
+                verdict = front
+            elif seen == ["left", "right"]:
+                verdict = FLIP[front]
+                log(f"assets: {e.name} ({a.get('title')!r}) faced backwards: turned round ({front} -> {verdict})")
+            else:
+                log(f"assets: {e.name}: its front could not be told ({seen[0]}, then {seen[1]} turned round); left to its shape")
+                verdict = None
+            fit = dict(a.get("fit") or {})
+            if verdict:
+                fit["forward"] = verdict
+                a["fit"] = fit
+            a["facing"] = "checked" if verdict else "unclear"
+            meta_file = Path(a["file"]).with_name("meta.json")
+            meta = _read(meta_file, None)
+            if meta is not None:
+                meta.update({"facing": a["facing"]} | ({"fit": fit} if verdict else {}))
+                meta_file.write_text(json.dumps(meta, indent=2))
+
+
 def resolve_all(cfg: Config, m: "manifest.Manifest", wanted: dict[str, str], log=print, time_limit: float = 600,
                 animated: set[str] = frozenset()) -> dict[str, dict]:
     """Models for the entities the plan wants in 3D ({entity id: fidelity}), within a time limit; those in
@@ -678,6 +778,10 @@ def resolve_all(cfg: Config, m: "manifest.Manifest", wanted: dict[str, str], log
             log(f"assets: no animated model of {e.name} ({', '.join(e.search)}): it is generated")
         else:
             log(f"assets: no usable model of {e.name} ({', '.join(e.search)}): its scenes stay painted")
+    try:
+        orient(cfg, m, out, log)
+    except Exception as e:  # a check that fails leaves the models as the stage would turn them anyway
+        log(f"assets: the orientation check failed: {str(e)[:160]}")
     return out
 
 

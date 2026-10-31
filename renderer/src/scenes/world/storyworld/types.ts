@@ -106,7 +106,7 @@ export type Beat = { from: number; cue?: string; cast: BeatActor[]; camera?: str
 // The scene director's plan (fyt/director.py): one art profile for the video, the place's layers, the
 // light, each actor's acts beyond its verb and the camera's shots, each timed on the narrator's words
 // (fyt/timeline.py timed_direction: `from` is 0-1 through the scene).
-export type ArtProfile = "cinematic" | "ink" | "stencil";
+export type ArtProfile = "cinematic" | "ink" | "stencil" | "painterly" | "cel" | "clay" | "noir";
 export type Art = { profile: ArtProfile; strength: number; detail: number; atmosphere: "natural" | "dramatic" | "dreamlike" | "graphic"; palette?: string[] };
 export type Recipe = { fore: string[]; mid: string[]; far: string[]; mist: number; wind: number; particles: string; life: string[]; wet: number; density: number; shafts?: boolean };
 export type LightSetup = { rig: "overcast" | "golden" | "hard_sun" | "moonlit" | "interior"; key: number; fill: number; rim: number; contrast: number };

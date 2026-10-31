@@ -1,5 +1,5 @@
 // Art-style profiles (fyt/director.py picks one per video): cinematic stylised 3D, inked graphic novel,
-// and stencil / cutout. A profile is not a filter over a finished frame. It sets, together:
+// stencil / cutout, painterly 3D, cel-shaded 3D, clay / miniature and dark noir. A profile is not a filter over a finished frame. It sets, together:
 // - materials: smooth lit surfaces, or toon ramps with three or two hard bands;
 // - light: how hard the key is, how much fill and rim, how soft the shadows are;
 // - the set: how dense it is dressed and how much mist sits between its layers;
@@ -26,13 +26,17 @@ export type Profile = {
   fov: number; // lens scale
   low: number; // camera height scale on dramatic moves
   dutch: number; // camera roll on low angles and reveals, radians
-  mode: 0 | 1 | 2; // finishing pass: grade, ink, print
+  mode: 0 | 1 | 2 | 3 | 4 | 5 | 6; // finishing pass: grade, ink, print, paint, cel bands, tilt-shift, silver print
 };
 
 export const PROFILES: Record<ArtProfile, Profile> = {
   cinematic: { name: "cinematic", toon: 0, key: 1, fill: 1, rim: 1.15, shadowSoft: 4, fog: 1, mist: 1, detail: 1, step: 1, fov: 1, low: 1, dutch: 0, mode: 0 },
   ink: { name: "ink", toon: 3, key: 1.25, fill: 0.7, rim: 1.4, shadowSoft: 1, fog: 0.75, mist: 0.8, detail: 0.9, step: 1, fov: 1.12, low: 0.8, dutch: 0.07, mode: 1 },
   stencil: { name: "stencil", toon: 2, key: 1.35, fill: 0.55, rim: 1.2, shadowSoft: 0, fog: 0.6, mist: 0.7, detail: 0.75, step: 2, fov: 0.86, low: 1, dutch: 0.04, mode: 2 },
+  painterly: { name: "painterly", toon: 0, key: 1.05, fill: 1.05, rim: 1, shadowSoft: 6, fog: 1.2, mist: 1.2, detail: 0.9, step: 1, fov: 1, low: 1, dutch: 0, mode: 3 },
+  cel: { name: "cel", toon: 3, key: 1.2, fill: 0.95, rim: 1.3, shadowSoft: 0, fog: 0.8, mist: 0.6, detail: 0.9, step: 1, fov: 1, low: 1, dutch: 0, mode: 4 },
+  clay: { name: "clay", toon: 0, key: 0.9, fill: 1.25, rim: 0.7, shadowSoft: 8, fog: 0.5, mist: 0.4, detail: 0.85, step: 2, fov: 0.85, low: 1, dutch: 0, mode: 5 },
+  noir: { name: "noir", toon: 0, key: 1.4, fill: 0.45, rim: 1.6, shadowSoft: 1, fog: 1.3, mist: 1.2, detail: 0.85, step: 1, fov: 1.05, low: 0.8, dutch: 0.06, mode: 6 },
 };
 
 // The video's art, set by the scene before its children draw (one profile for the whole video).
@@ -115,6 +119,85 @@ void main(){
     c += mix(vec3(-0.012, 0.0, 0.018), vec3(0.02, 0.008, -0.014), smoothstep(0.2, 0.8, l)) * strength;
     c += (hash(fc + seed) - 0.5) * 0.025;
     gl_FragColor = vec4(c, src.a);
+    return;
+  }
+  if (mode == 3) {
+    // painterly: a Kuwahara filter (each pixel takes the calmest of the four squares around it, so
+    // flat areas become strokes and edges stay sharp), on a canvas weave, a little warmer
+    float r = floor(5.0 + 5.0 * strength) * max(1.0, k);
+    vec3 m0 = vec3(0.0), m1 = vec3(0.0), m2 = vec3(0.0), m3 = vec3(0.0);
+    vec3 s0 = vec3(0.0), s1 = vec3(0.0), s2 = vec3(0.0), s3 = vec3(0.0);
+    for (int j = 0; j <= 5; j++) {
+      for (int i = 0; i <= 5; i++) {
+        vec2 o = vec2(float(i), float(j)) * r / 5.0 / res;
+        vec3 a = texture2D(tDiffuse, uv + vec2(-o.x, -o.y)).rgb; m0 += a; s0 += a * a;
+        vec3 b = texture2D(tDiffuse, uv + vec2(o.x, -o.y)).rgb; m1 += b; s1 += b * b;
+        vec3 cc = texture2D(tDiffuse, uv + vec2(o.x, o.y)).rgb; m2 += cc; s2 += cc * cc;
+        vec3 d = texture2D(tDiffuse, uv + vec2(-o.x, o.y)).rgb; m3 += d; s3 += d * d;
+      }
+    }
+    float n = 36.0;
+    m0 /= n; m1 /= n; m2 /= n; m3 /= n;
+    float v0 = dot(s0 / n - m0 * m0, vec3(1.0)), v1 = dot(s1 / n - m1 * m1, vec3(1.0));
+    float v2 = dot(s2 / n - m2 * m2, vec3(1.0)), v3 = dot(s3 / n - m3 * m3, vec3(1.0));
+    vec3 col = m0; float best = v0;
+    if (v1 < best) { best = v1; col = m1; }
+    if (v2 < best) { best = v2; col = m2; }
+    if (v3 < best) { best = v3; col = m3; }
+    float l = luma(col);
+    col = mix(vec3(l), col, 1.0 + 0.3 * strength);
+    col += vec3(0.035, 0.018, -0.025) * strength;
+    // canvas: a fine weave and the odd stroke direction showing through
+    float weave = (noise(fc * vec2(0.9, 0.12) + seed) + noise(fc * vec2(0.12, 0.9) + seed)) * 0.5;
+    col *= 0.94 + 0.08 * weave;
+    gl_FragColor = vec4(mix(c, col, 0.6 + 0.4 * strength), src.a);
+    return;
+  }
+  if (mode == 4) {
+    // cel-shaded: light in a few flat bands, colour kept bright and saturated, clean dark outlines
+    float l = luma(c);
+    float band = floor(l * 4.0 + 0.5) / 4.0;
+    vec3 hue = c / max(l, 0.04);
+    vec3 col = clamp(hue * mix(l, band, 0.75 * strength), 0.0, 1.0);
+    col = mix(vec3(luma(col)), col, 1.0 + 0.3 * strength);
+    float e = edgeAt(uv, 1.6 * k);
+    col = mix(col, ink * 0.6, step(0.4, e) * (0.7 + 0.3 * strength));
+    gl_FragColor = vec4(col, src.a);
+    return;
+  }
+  if (mode == 5) {
+    // clay / miniature: a tilt-shift lens (sharp in a band across the middle, blurred above and below,
+    // as when a model set is filmed close up), warm saturated colour, soft shadows lifted
+    float off = abs(uv.y - 0.48);
+    float blur = smoothstep(0.12, 0.42, off) * (6.0 + 6.0 * strength) * k;
+    vec3 acc = c; float wsum = 1.0;
+    for (int i = 0; i < 12; i++) {
+      float a = float(i) * 2.39996;
+      float rr = sqrt(float(i) + 0.5) / sqrt(12.0);
+      vec2 o = vec2(cos(a), sin(a)) * rr * blur / res;
+      acc += texture2D(tDiffuse, uv + o).rgb; wsum += 1.0;
+    }
+    vec3 col = acc / wsum;
+    float l = luma(col);
+    col = mix(vec3(l), col, 1.0 + 0.7 * strength);
+    col = col * 0.9 + 0.08; // lifted, as under soft studio lights
+    col += vec3(0.05, 0.025, -0.02) * strength;
+    col *= 0.97 + 0.03 * noise(fc * 0.25 + seed); // a thumbprinted surface
+    gl_FragColor = vec4(col, src.a);
+    return;
+  }
+  if (mode == 6) {
+    // dark noir: black and white, deep shadows, hard highlights, edges falling into dark, film grain
+    float l = luma(c) * contrast;
+    l = smoothstep(0.06, 0.92, l);
+    l = mix(l, l * l * (3.0 - 2.0 * l), 0.6 * strength);
+    float e = edgeAt(uv, 1.2 * k);
+    l *= 1.0 - 0.35 * e * strength;
+    vec2 q = uv - 0.5;
+    l *= 1.0 - dot(q, q) * 1.3 * strength;
+    l += (hash(fc + seed) - 0.5) * 0.07;
+    vec3 col = vec3(l) * vec3(1.0, 0.985, 0.95); // a silver print, a touch warm
+    gl_FragColor = vec4(mix(c, col, 0.5 + 0.5 * strength), src.a);
     return;
   }
   // a hand-drawn line wobbles: the edge is found a little off where the pixel is
