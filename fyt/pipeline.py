@@ -154,6 +154,8 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
                     two_part = False
         if article and not saved:
             script = wiki_attribute(script, article)
+        if not saved and cfg.format == "short":
+            script = no_broll(script)
         if not saved and news and cfg.growth.news_series:
             script = script.model_copy(update={"series": cfg.growth.news_series})
     else:
@@ -453,6 +455,21 @@ def _short_enough(
         if narration_words(retry) <= limit and (len(again), -narration_words(retry)) < (len(thin), -narration_words(script)):
             script = retry
     return script
+
+
+def no_broll(script: Script) -> Script:
+    """A Short's stock-footage scenes as statement scenes over the same footage: in the channel's Shorts
+    viewers left 92% faster than average on a bare b-roll scene, which says nothing on screen."""
+    scenes = [
+        s.model_copy(update={"type": "statement", "text": s.text or s.heading or _first_sentence(s.narration)})
+        if s.type == "broll" else s
+        for s in script.scenes
+    ]
+    return script.model_copy(update={"scenes": scenes})
+
+
+def _first_sentence(text: str) -> str:
+    return re.split(r"(?<=[.!?])\s+", text.strip(), maxsplit=1)[0]
 
 
 def keep_short(cfg: Config, job: Job, script: Script) -> Script:

@@ -55,7 +55,8 @@ _ASCII = str.maketrans({
 # Words that make YouTube limit ads on a video, or keep it from younger viewers and so from much of the feed.
 UNSAFE = re.compile(
     r"\b(sex(ual(ly)?)?|sexy|porn\w*|prostitut\w*|hooker\w*|brothel\w*|nude\w*|orgy|orgies|incest\w*|"
-    r"rape[ds]?|raping|suicid\w*|gore|gory|decapitat\w*|dismember\w*|beheading\w*)\b",
+    r"rape[ds]?|raping|suicid\w*|gore|gory|decapitat\w*|dismember\w*|beheading\w*|"
+    r"murder\w*|serial killers?|massacre\w*|cannibal\w*)\b",
     re.I,
 )
 _LABEL = re.compile(r"^[^:?!.]{2,32}:\s")  # "Pebble-for-sex: ..."

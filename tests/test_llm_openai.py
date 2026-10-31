@@ -245,7 +245,8 @@ def test_the_short_script_prompt_fits_a_free_tier_minute():
     # 17 October trim; 25,000 was already too many.
     from fyt.models import Script
 
-    guide = llm.SCRIPT_GUIDE + llm.WIKI_GUIDE + llm.SHORT_STRUCTURE
+    # as a Short is sent: without the stock-footage template
+    guide = (llm.SCRIPT_GUIDE + llm.WIKI_GUIDE).replace(llm.BROLL_TEMPLATE, "") + llm.SHORT_STRUCTURE
     schema = _json.dumps(llm._compact(Script.model_json_schema(), guide=guide), separators=(",", ":"))
     assert len(guide) + len(schema) < 21000
 
@@ -377,3 +378,8 @@ def test_supporting_calls_ask_the_helper_models_first_and_the_main_model_last(cf
     assert [c.llm.model for c in llm._chain(cfg)] == ["big", "small", "other"]  # scripts: unchanged
     plain = cfg.model_copy(update={"llm": cfg.llm.model_copy(update={"helper_models": []})})
     assert llm.helping(plain) is plain
+
+
+def test_a_short_is_not_offered_stock_footage_scenes():
+    assert llm.BROLL_TEMPLATE in llm.SCRIPT_GUIDE
+    assert "story, quote, map and timeline" in llm.SHORT_STRUCTURE

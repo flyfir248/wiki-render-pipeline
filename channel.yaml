@@ -137,6 +137,10 @@ growth:
     - Strange Science
     - Bizarre Places
     - Unbelievable People
+    - Unsolved Mysteries    # mysteries brought in subscribers (Sea Monk); no crime, which limits ads
+  # No Part 1 / Part 2 Shorts: part 2s kept a fraction of part 1's viewers (52-Hz whale 275 -> 32, Nim
+  # Chimpsky 138 -> 18), so each Short tells its story whole.
+  two_part_share: 0
   bonus_shorts_per_day: 1   # extra Short on a trending topic that fits (if one does)
   bonus_short_min_fit: 8    # only for a strong trend: the two daily Shorts already follow what's trending
   # Off while the weekly long video gets the run time and the free model tokens: no long video went out

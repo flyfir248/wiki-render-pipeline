@@ -513,3 +513,63 @@ def test_a_timely_slot_takes_an_evergreen_topic_when_nothing_trending_fits(cfg, 
     assert schedule.fill(cfg, now=NOW) == 1
     assert made == [("short", "wiki:Evergreen 1")]
     assert Uploads(cfg).last("timely-short") is None
+
+
+def test_grim_recent_skips_recent_crimes_against_children():
+    today = datetime(2026, 10, 31).date()
+    recent = "The murder of Jane Doe took place in Leeds in 2023. The girl, aged nine, was strangled by a neighbour."
+    assert growth.grim_recent("Murder of Jane Doe", recent, today)
+    # an old disaster, and a recent story with no child harmed, are fine
+    aberfan = "The Aberfan disaster was the collapse of a spoil tip in 1966. It killed 116 children and 28 adults."
+    assert not growth.grim_recent("Aberfan disaster", aberfan, today)
+    trawler = "In 2019 a trawler off Norway caught a giant squid. The crew's sons later filmed it."
+    assert not growth.grim_recent("Trawler", trawler, today)
+
+
+def test_pick_topics_skips_grim_recent(monkeypatch):
+    cfg = Config()
+    texts = {"Murder of Jane Doe": "In 2023 the girl was murdered at home. " * 200, "Molasses flood": "In 1919 molasses flooded Boston. " * 200}
+    monkeypatch.setattr(wiki, "candidates", lambda cfg: list(texts))
+    monkeypatch.setattr(growth, "page_lengths", lambda cfg, t: {x: 90000 for x in texts})
+    monkeypatch.setattr(growth, "pageviews", lambda cfg, t: {"Murder of Jane Doe": 900000, "Molasses flood": 4000}[t])
+    monkeypatch.setattr(wiki, "fetch_article", lambda cfg, t: wiki.Article(t, "u", texts[t]))
+    answer(monkeypatch, {"scores": [{"title": "Murder of Jane Doe", "fit": 9}, {"title": "Molasses flood", "fit": 8}]})
+    # ranked first by the model, but the guard keeps it out
+    assert growth.pick_topics(cfg, 2, set()) == ["Molasses flood"]
+
+
+def test_rank_guide_names_what_grows_the_channel():
+    g = growth.RANK_GUIDE
+    assert "crime of any age" in g and "unsolved mysteries" in g and "celebrities, athletes" in g
+
+
+def test_shorts_get_no_bare_broll():
+    s = script()
+    s.scenes[2] = s.scenes[2].model_copy(update={"type": "broll", "broll_query": "harbor 1919", "heading": None, "text": None,
+                                                 "narration": "The tank burst. Molasses filled the street."})
+    out = pipeline.no_broll(s)
+    assert out.scenes[2].type == "statement" and out.scenes[2].text == "The tank burst." and out.scenes[2].broll_query == "harbor 1919"
+    assert [x.type for i, x in enumerate(out.scenes) if i != 2] == [x.type for i, x in enumerate(s.scenes) if i != 2]
+
+
+def test_channel_makes_no_two_part_shorts():
+    from fyt.config import load_config
+    assert load_config().growth.two_part_share == 0
+
+
+def test_crime_topics_are_skipped_for_monetisation():
+    assert growth.crime_topic("Murder of Jane Doe", "Jane Doe was a teacher.")
+    assert growth.crime_topic("Lizzie Borden", "Lizzie Andrew Borden was an American woman who was tried and acquitted of the 1892 axe murders of her father.")
+    assert growth.crime_topic("Aileen Wuornos", "Aileen Carol Wuornos was an American serial killer. She was executed in 2002.")
+    assert growth.crime_topic("Oklahoma City bombing", "The Oklahoma City bombing was a domestic terrorist attack.")
+    # mysteries, disasters, war history and machines are fine
+    assert not growth.crime_topic("Disappearance of Amelia Earhart", "Amelia Earhart vanished over the Pacific in 1937.")
+    assert not growth.crime_topic("GBU-43/B MOAB", "The GBU-43/B is a large-yield bomb. It was first used in 2017.")
+    assert not growth.crime_topic("Mary Celeste", "Mary Celeste was an American brigantine found adrift in 1872.")
+    assert not growth.crime_topic("OPEC", "OPEC is a cartel of oil-producing countries.")
+
+
+def test_crime_words_are_unsafe_in_titles():
+    from fyt import titles
+    assert titles.UNSAFE.search("The axe murders nobody solved")
+    assert not titles.UNSAFE.search("The killer whale that sank a yacht")
