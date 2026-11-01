@@ -217,6 +217,9 @@ class ScriptScene(BaseModel):
     landmark_note: SkipJsonSchema[str | None] = None
     gauge: SkipJsonSchema[str | None] = None
     gauge_label: SkipJsonSchema[str | None] = None
+    # A prerendered Blender shot (fyt/blender.py) shown full-frame for this scene, by its id in the
+    # script's shot set. Hand-written scripts only.
+    blender_shot: SkipJsonSchema[str | None] = None
     camera: Camera | None = Field(default=None, description="Optional camera move over this scene's photo.")
     transition: Transition | None = Field(default=None, description="Optional way this scene enters.")
     image: int | None = Field(
@@ -280,6 +283,7 @@ class Script(BaseModel):
     chapters: SkipJsonSchema[list[Chapter] | None] = None
     series: SkipJsonSchema[str | None] = None  # playlist the video is filed under
     journey: SkipJsonSchema[dict | None] = None  # a scale journey's settings (fyt/journey.py): measure, cold_open
+    blender: SkipJsonSchema[str | None] = None  # a prerendered Blender shot set in assets/blender/ (fyt/blender.py)
 
 
 class WhatIfScript(Script):

@@ -69,6 +69,22 @@ def test_stage_copies_clips_into_public(tmp_path):
     assert (public / "blender" / "G02.mp4").exists()
 
 
+def test_scene_shots_become_video_scenes(tmp_path):
+    data = json.loads((FIXTURE.parent / "whatif_no_gravity.json").read_text(encoding="utf-8"))
+    s = Script.model_validate(data)
+    z1 = {"id": "Z01", "file": "Z01.mp4", "duration": 9.0}
+    root = _shots(tmp_path, [z1], name="no-gravity")
+    media = blender.scene_media(s, root=root)
+    wanted = [i for i, sc in enumerate(s.scenes) if sc.blender_shot == "Z01"]
+    assert sorted(media) == wanted and media[wanted[0]].src == "blender/Z01.mp4"
+    assert all(media[i].kind == "video" for i in media)
+    # Z02/Z03 aren't in this shot set, so their scenes keep their own type
+    out = blender.as_video_scenes(s, media)
+    assert [out.scenes[i].type for i in wanted] == ["broll"] * len(wanted)
+    others = [i for i, sc in enumerate(s.scenes) if sc.blender_shot and i not in media]
+    assert all(out.scenes[i].type == s.scenes[i].type for i in others)
+
+
 def test_journey_props_carry_clips(tmp_path, monkeypatch):
     monkeypatch.setattr(blender, "ROOT", _shots(tmp_path, [STREET]))
     s = _script()

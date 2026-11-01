@@ -8,6 +8,10 @@ A journey script opts in with `"blender": "<name>"` in its `journey` block. Each
 `scale` falls inside its from_m..to_m range: the clip takes over the picture for those beats (slowed or
 sped up to fit, within limits), while the readouts, landmark tags, narration line and voice carry on over
 it. Where a clip runs out before its beats do, the three.js journey comes back underneath.
+
+Any other hand-written script opts in with a top-level `"blender": "<name>"` and puts `"blender_shot": "<id>"`
+on the scenes that show a clip: those scenes become full-frame video scenes (the What If clock, captions
+and transitions stay on top).
 """
 
 from __future__ import annotations
@@ -16,7 +20,7 @@ import json
 import shutil
 from pathlib import Path
 
-from fyt.models import Script
+from fyt.models import Media, Script
 
 ROOT = Path(__file__).resolve().parent.parent / "assets" / "blender"
 MIN_RATE, MAX_RATE = 0.5, 1.25  # how far a clip may be slowed or sped up to fit its beats
@@ -26,7 +30,7 @@ MIN_SECONDS = 1.0  # a clip squeezed shorter than this is left out
 
 def manifest(script: Script, root: Path | None = None) -> dict | None:
     """The script's shot set, or None when it names none (or the set isn't there)."""
-    name = (script.journey or {}).get("blender")
+    name = (script.journey or {}).get("blender") or script.blender
     if not name:
         return None
     path = (root or ROOT) / name / "manifest.json"
@@ -52,6 +56,27 @@ def stage(script: Script, public: Path, root: Path | None = None) -> list[str]:
             shutil.copy2(src, out / shot["file"])
             copied.append(shot["file"])
     return copied
+
+
+def scene_media(script: Script, root: Path | None = None) -> dict[int, Media]:
+    """The clips of scenes that name a `blender_shot`, by scene index (only shots whose file is there)."""
+    m = manifest(script, root)
+    if not m:
+        return {}
+    src_dir = (root or ROOT) / m["name"]
+    files = {s["id"]: s["file"] for s in m["shots"] if (src_dir / s["file"]).exists()}
+    return {i: Media(src=f"blender/{files[s.blender_shot]}", kind="video")
+            for i, s in enumerate(script.scenes) if s.blender_shot in files}
+
+
+def as_video_scenes(script: Script, media: dict[int, Media]) -> Script:
+    """Scenes that got a clip are drawn as full-frame video (broll) scenes."""
+    if not media:
+        return script
+    return script.model_copy(update={"scenes": [
+        s.model_copy(update={"type": "broll", "camera": s.camera or "push_in"}) if i in media else s
+        for i, s in enumerate(script.scenes)
+    ]})
 
 
 def segments(script: Script, starts: list[float], ends: list[float], first: int = 0,

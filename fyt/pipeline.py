@@ -304,6 +304,12 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     staged = blender.stage(script, job.public)
     if staged:
         log(job, f"prerendered Blender shots: {staged}")
+        rendered = blender.scene_media(script)
+        if rendered:  # those scenes show their clip full-frame, with no stock photos or illustrations cut in
+            scene_media = {**scene_media, **rendered}
+            shots = {i: v for i, v in (shots or {}).items() if i not in rendered}
+            beats = {i: v for i, v in (beats or {}).items() if i not in rendered}
+            script = blender.as_video_scenes(script, rendered)
     profile = artdirect.choose(script, news=wiki.is_news_topic(topic)) if cfg.visuals.art_direction else None
     if profile:
         log(job, f"art direction: {profile}")
