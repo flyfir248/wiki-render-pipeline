@@ -21,9 +21,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary). kit: fetch the CC0 character kit into the model library (inventory in the run summary). replace: upload a reviewed test render (its run id in replay) in place of the same article's Short or long video still scheduled on YouTube, at its publish time; the old one is made private. publish: the same, and when nothing of that article is scheduled, the reviewed test render takes the next empty slot of its format"
+        description: "fill: top up the schedule. short / long: make one video now. news: a long explainer on a recent incident. script: render a hand-written script file (its path in title, e.g. fixtures/whatif_growing_journey.json) as a long test video, never uploaded; publish it later with replay. relabel: clear the AI-content label on videos already up. stats: what the channel's numbers say. playlists: file every video into its series playlist. posts: draft this week's Community posts now. reels: post Shorts that are public on YouTube to Instagram, Facebook and Threads now. assetcheck: test story-driven 3D on a fixed panel of things (report in the run summary). bench: render the 8-second 3D quality benchmark (contact sheet, render time and look check in the run summary). kit: fetch the CC0 character kit into the model library (inventory in the run summary). replace: upload a reviewed test render (its run id in replay) in place of the same article's Short or long video still scheduled on YouTube, at its publish time; the old one is made private. publish: the same, and when nothing of that article is scheduled, the reviewed test render takes the next empty slot of its format"
         type: choice
-        options: [fill, short, long, news, relabel, stats, playlists, posts, reels, assetcheck, bench, kit, replace, publish]
+        options: [fill, short, long, news, script, relabel, stats, playlists, posts, reels, assetcheck, bench, kit, replace, publish]
         default: fill
       upload:
         description: "Upload (for short / long; off only renders the video and keeps it as an artifact)"
@@ -296,6 +296,10 @@ jobs:
           elif [ "$TASK" = kit ]; then
             python -m fyt kit --out assets/models/_kit > kit.txt
             cat kit.txt | tee -a "$GITHUB_STEP_SUMMARY"
+          elif [ "$TASK" = script ]; then
+            # a hand-written script (journeys, Blender shot sets): a long test render, never uploaded
+            [ -f "$TITLE" ] || { echo "no script file $TITLE"; exit 1; }
+            python -m fyt --format long make "script:$(basename "$TITLE" .json)" --script "$TITLE" --no-localize
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
           elif [ -n "$TITLE" ] && [ -n "$REPLAY" ]; then

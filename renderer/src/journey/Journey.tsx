@@ -5,9 +5,9 @@
 // a second readout the story brings in later, a tag on each landmark as it passes, the title, and the
 // narration as one short italic line at a time.
 import React from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
-import type { Journey, Scene } from "../types";
+import type { Journey, JourneyClip, Scene } from "../types";
 import { loadJourneyFonts, SERIF } from "./fonts";
 import { formatLength, shownLevel, smooth } from "./scale";
 import { FADE, ZONES, ZONE_VIEWS } from "./zones";
@@ -40,6 +40,21 @@ const Streaks: React.FC<{ speed: number; frame: number; w: number; h: number }> 
         <line key={l.i} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="#dfe8ff" strokeOpacity={l.o} strokeWidth={1.3} strokeLinecap="round" />
       ))}
     </svg>
+  );
+};
+
+// A prerendered Blender shot (fyt/blender.py) over a stretch of the journey, cross-faded in and out.
+// Rendered inside its own Sequence, so the frame here counts from the clip's start.
+const Clip: React.FC<{ clip: JourneyClip }> = ({ clip }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const len = (clip.to - clip.from) * fps;
+  const f = clip.fade * fps;
+  const o = interpolate(frame, [0, f, len - f, len], [0, 1, 1, 0], clamp);
+  return (
+    <AbsoluteFill style={{ opacity: o }}>
+      <OffthreadVideo src={staticFile(clip.src)} playbackRate={clip.rate} muted style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    </AbsoluteFill>
   );
 };
 
@@ -88,6 +103,11 @@ export const JourneyLayer: React.FC<{ journey: Journey; portrait: boolean }> = (
           </AbsoluteFill>
         );
       })}
+      {(journey.clips ?? []).map((c, i) => (
+        <Sequence key={`clip-${i}`} from={Math.round(c.from * fps)} durationInFrames={Math.max(1, Math.round((c.to - c.from) * fps))} name={`blender:${c.id ?? i}`}>
+          <Clip clip={c} />
+        </Sequence>
+      ))}
       {L > 4.5 ? <Streaks speed={speed} frame={frame} w={width} h={height} /> : null}
       {/* a soft vignette, so the readouts sit on darker ground */}
       <AbsoluteFill style={{ background: "radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%)" }} />

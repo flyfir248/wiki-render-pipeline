@@ -178,7 +178,12 @@ export type Journey = {
   title?: { text: string; from: number; to: number } | null;
   coldOpen?: number; // seconds at the start that show where the journey ends
   seed?: number;
+  clips?: JourneyClip[]; // prerendered Blender shots that take over the picture for some beats (fyt/blender.py)
 };
+
+// A prerendered shot over a stretch of the journey: `from`/`to` in seconds from the video's start,
+// played at `rate` (slowed or sped up to fit its beats), cross-faded over `fade` seconds at each end.
+export type JourneyClip = { id?: string | null; src: string; from: number; to: number; rate: number; fade: number };
 
 export type RenderProps = {
   format: Format;

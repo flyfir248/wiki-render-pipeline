@@ -10,7 +10,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fyt import animation, artdirect, artgen, assetlib, assets, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, whatif, journey, wiki, worldgen, youtube
+from fyt import animation, artdirect, artgen, assetlib, assets, blender, coverage, cutout, director, factcheck, freeimages, growth, illustrate, insights, instagram, kit, llm, localize, media, people, playlists, qa, qcheck, relevance, render, sets, sfx, sheet, shotlist, storyboard, thumbs, titles, tts, visualplan, whatif, journey, wiki, worldgen, youtube
 from fyt import manifest as story_manifest
 from fyt.config import Config
 from fyt.models import DRAWN, Media, RenderProps, Script, ThumbnailProps, WhatIfScript
@@ -301,6 +301,9 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             s.model_copy(update={"model": assets.generic(s), "label": assets.label(s, assets.generic(s))}) if (s.model or {}).get("src") in missing else s
             for s in script.scenes
         ]})
+    staged = blender.stage(script, job.public)
+    if staged:
+        log(job, f"prerendered Blender shots: {staged}")
     profile = artdirect.choose(script, news=wiki.is_news_topic(topic)) if cfg.visuals.art_direction else None
     if profile:
         log(job, f"art direction: {profile}")

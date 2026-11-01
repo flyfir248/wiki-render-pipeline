@@ -5,7 +5,8 @@ A journey script's scenes are beats of type `journey`. Each beat may set `scale`
 by the end of the beat: how tall you are, how far you have gone), a `landmark` passed at that scale
 with a short `landmark_note`, and a second readout (`gauge`, with its `gauge_label`) that the story
 brings in when the first one stops being enough. The script's `journey` block names the measure
-("YOUR HEIGHT") and whether the first beat is a cold open showing where the journey ends.
+("YOUR HEIGHT"), whether the first beat is a cold open showing where the journey ends, and optionally a
+set of prerendered Blender shots to play over some beats (`blender`, see fyt/blender.py).
 
 `build()` turns the beats and their voiced spans into the renderer's `journey` props: L (log10 metres)
 over time, with beats that set no scale filled in so the camera never stops, the landmarks, the second
@@ -17,6 +18,7 @@ from __future__ import annotations
 import math
 import zlib
 
+from fyt import blender
 from fyt.models import Script
 
 MIN_BEATS = 12
@@ -69,6 +71,7 @@ def build(script: Script, spans: list[tuple[float, float]]) -> dict:
         "title": {"text": script.title, "from": round(starts[title_at], 3), "to": round(ends[title_at], 3)},
         "coldOpen": round(ends[0], 3) if cold else 0,
         "seed": zlib.crc32(script.title.encode()) & 0x7FFFFFFF,
+        "clips": blender.segments(script, starts, ends, first),  # prerendered Blender shots over some beats
     }
 
 
