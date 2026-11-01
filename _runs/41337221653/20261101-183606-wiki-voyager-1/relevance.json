@@ -1,0 +1,19 @@
+{
+  "checked": [
+    1,
+    2,
+    3,
+    5,
+    12,
+    13,
+    14,
+    21,
+    54
+  ],
+  "failed_text": {
+    "8": "only a simplified stand-in model was found for its subject",
+    "16": "only a simplified stand-in model was found for its subject",
+    "20": "only a simplified stand-in model was found for its subject"
+  },
+  "failed_picture": {}
+}

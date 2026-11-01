@@ -1,0 +1,126 @@
+reading the story: what it shows
+story: Voyager 1, a Titan rocket; 4 moments
+planning the visuals
+visual plan (model): 12 3D, 1 2.5D, 54 2D (18% of the runtime in 3D, aiming for 75%); 3D: stage present, stage present, stage present, stage present, rocket launch, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+building the story world: 2 entities for 9 scenes
+real sizes: titan-rocket: 6.08 m -> 50 m (reference size for 'rocket')
+animation director (rules): no events to act out
+scene director: cinematic (natural, strength 0.75); scene 1: establish; scene 2: track; scene 3: aerial; scene 5: track; scene 12: aerial; scene 13: track; scene 14: track; scene 21: track; scene 54: track
+story world (clinical): cast model, sets model, direction model; voyager-1 as vehicle, titan-rocket as vehicle
+voicing 67 scenes with kokoro
+fetching visuals
+stock clip s4.mp4 left out: a clip can't be checked
+stock clip s6.mp4 left out: a clip can't be checked
+stock clip s9.mp4 left out: a clip can't be checked
+stock clip s15.mp4 left out: a clip can't be checked
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s18.mp4 left out: a clip can't be checked
+stock clip s19.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s23.mp4 left out: a clip can't be checked
+stock clip s24.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s26.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s30.mp4 left out: a clip can't be checked
+stock clip s31.mp4 left out: a clip can't be checked
+stock clip s32.mp4 left out: a clip can't be checked
+stock clip s33.mp4 left out: a clip can't be checked
+stock clip s34.mp4 left out: a clip can't be checked
+stock clip s35.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s37.mp4 left out: a clip can't be checked
+stock clip s38.mp4 left out: a clip can't be checked
+stock clip s39.mp4 left out: a clip can't be checked
+stock clip s41.mp4 left out: a clip can't be checked
+stock clip s42.mp4 left out: a clip can't be checked
+stock clip s43.mp4 left out: a clip can't be checked
+stock clip s44.mp4 left out: a clip can't be checked
+stock clip s45.mp4 left out: a clip can't be checked
+stock clip s46.mp4 left out: a clip can't be checked
+stock clip s47.mp4 left out: a clip can't be checked
+stock clip s48.mp4 left out: a clip can't be checked
+stock clip s49.mp4 left out: a clip can't be checked
+stock clip s50.mp4 left out: a clip can't be checked
+stock clip s51.mp4 left out: a clip can't be checked
+stock clip s52.mp4 left out: a clip can't be checked
+stock clip s53.mp4 left out: a clip can't be checked
+stock clip s55.mp4 left out: a clip can't be checked
+stock clip s56.mp4 left out: a clip can't be checked
+stock clip s57.mp4 left out: a clip can't be checked
+stock clip s59.mp4 left out: a clip can't be checked
+stock clip s61.mp4 left out: a clip can't be checked
+stock clip s62.mp4 left out: a clip can't be checked
+stock clip s63.mp4 left out: a clip can't be checked
+stock clip s64.mp4 left out: a clip can't be checked
+stock clip s65.mp4 left out: a clip can't be checked
+stock clip s66.mp4 left out: a clip can't be checked
+stock clip s67.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Voyager 1 Io volcanic plume Voyager': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for 'Voyager 1 Voyager 2 Neptune': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+photo commons25.jpg left out: Shows a cruise ship instead of the Voyager 1 spacecraft.
+photo p25.jpg left out: Shows an abstract mosaic, unrelated to Carl Sagan or Voyager 1.
+photo p25.jpg left out: Shows an unrelated colorful mosaic, not Carl Sagan or Voyager.
+warning: loc image search failed for 'Voyager 1 Pale Blue Dot': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Voyager+1+Pale+Blue+Dot&fo=json&c=25&fa=online-format%3Aimage
+warning: loc image search failed for 'Voyager 1 Pale Blue Dot': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Voyager+1+Pale+Blue+Dot&fo=json&c=25&fa=online-format%3Aimage (not asked again this run)
+photo commons28.jpg left out: Shows a train instead of the Voyager 1 spacecraft.
+photo commons28.jpg left out: Shows a cruise ship instead of the Voyager 1 spacecraft.
+photo p37.jpg left out: Shows the ISS cupola, not Voyager 1 or deep space.
+photo p37.jpg left out: Shows Hubble Space Telescope instead of Voyager 1.
+photo p45.jpg left out: Shows futuristic space station and shuttles, not Voyager 1.
+photo p45.jpg left out: Shows a Soyuz spacecraft, not Voyager 1.
+5 scenes without a picture of their own reuse one of the video's photos
+visuals: 43 Wikipedia and freely licensed images, 11 stock, 13 scenes on plain background
+collage: 49 photos styled, 18 with a cut-out subject
+drawing story scenes (cloudflare)
+2 illustrations drawn
+scene 8: 3D dropped: only a simplified stand-in model was found for its subject
+scene 16: 3D dropped: only a simplified stand-in model was found for its subject
+scene 20: 3D dropped: only a simplified stand-in model was found for its subject
+relevance: checking 9 3D scenes by eye
+relevance: scene 1 kept: the check failed it while saying it shows its subject (The frame shows a car instead of a spacecraft or probe.)
+relevance: scene 2 kept: the check failed it while saying it shows its subject (Shows a car instead of a spacecraft or probe.)
+relevance: scene 3 kept: the check failed it while saying it shows its subject (Shows a car instead of a probe or spacecraft.)
+relevance: scene 5 kept: the check failed it while saying it shows its subject (Shows a car instead of a spacecraft or probe.)
+relevance: scene 12 kept: the check failed it while saying it shows its subject (Shows a car instead of a spacecraft or probe.)
+relevance: scene 13 kept: the check failed it while saying it shows its subject (Shows a car instead of a launch vehicle or rocket.)
+relevance: scene 14 kept: the check failed it while saying it shows its subject (Shows a car instead of a spacecraft or probe.)
+relevance: scene 21 kept: the check failed it while saying it shows its subject (Shows a car instead of a rocket or launch vehicle.)
+relevance: scene 54 kept: the check failed it while saying it shows its subject (The frame shows a car, not a spacecraft or probe.)
+storyboarding: an illustration for each sentence
+scene 4, sentence 3 redrawn: The calendar has garbled letters and nonsensical dates.
+scene 4, sentence 3 redrawn: The calendar shows garbled lettering and text.
+scene 6, sentence 1 redrawn: Shows five planets including Earth instead of the four outer planets.
+scene 6, sentence 1 redrawn: Shows five planets instead of the four outer planets.
+scene 11, sentence 2 redrawn: The microchip is not glowing.
+scene 11, sentence 2 redrawn: Garbled lettering on the microchip and circuit board.
+storyboard: 8 illustrated sentences of 14 planned, 2 in the cast; 14 checked, 3 redrawn, 3 left out
+art direction: signature
+rendering 514s long video
+look: scene 1 at 2.9s: Shows a car instead of Voyager 1 spacecraft.
+look: scene 1 at 7.9s: Subject is a generic car model instead of Voyager-1.
+look: scene 2 at 12.3s: Shows a car instead of Voyager 1 spacecraft.
+look: scene 2 at 17.1s: Subject looks like a car instead of Voyager-1 spacecraft.
+look: scene 3 at 21.0s: Shows a generic car on a sphere instead of Voyager-1.
+look: scene 3 at 25.1s: Incomplete or unpolished 3D model, lacks Voyager-1 details and proper lighting.
+look: scene 5 at 37.0s: Shows a car instead of Voyager-1 spacecraft.
+look: scene 5 at 41.5s: Shows a car instead of Voyager-1 spacecraft.
+look: scene 12 at 85.3s: Shows a car and beach, not Voyager-1.
+look: scene 12 at 90.2s: Does not show Voyager-1; shows a generic block object.
+look: scene 13 at 93.2s: Shows a car instead of a titan-rocket.
+look: scene 13 at 95.4s: Shows a red car instead of a titan-rocket.
+look: scene 14 at 98.5s: Car is not Voyager-1, wheels are clipping through ground plane.
+look: scene 14 at 102.5s: Shows a car, not Voyager-1.
+look: scene 21 at 150.8s: Shows a car instead of a titan-rocket.
+look: scene 21 at 153.7s: Shows a red car instead of a titan rocket.
+look: scene 54 at 393.0s: Subject is a car instead of Voyager-1 spacecraft.
+look: scene 54 at 396.9s: Shows a car instead of Voyager-1 spacecraft.
+3D coverage: 14% of the runtime in 3D (target 75%), 14% moving on its own, 9 3D shots; environment richness 61, animation quality 76
+quality: 3D covers 14% of the runtime, under the 75% target
+quality: 3D scenes [21] repeat an earlier shot
+quality: 3D scenes [13, 21] have little moving in the picture beyond the camera (animation under 40)
+rendering thumbnail
+thumbnail: cutout take
+done: approved

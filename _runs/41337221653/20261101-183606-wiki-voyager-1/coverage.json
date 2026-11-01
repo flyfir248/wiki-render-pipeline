@@ -1,0 +1,818 @@
+{
+  "format": "long",
+  "duration": 513.9,
+  "target_3d": 0.75,
+  "share_3d": 0.135,
+  "share_animated": 0.135,
+  "share_subject_moving": 0.135,
+  "share_matched": 1.0,
+  "share_library_models": 1.0,
+  "share_camera_moving": 0.135,
+  "share_2d": 0.865,
+  "shots_3d": 9,
+  "static": [],
+  "repeats": [
+    21
+  ],
+  "frozen": [],
+  "environment_richness": 61.0,
+  "animation_quality": 76.0,
+  "bare": [],
+  "lifeless": [
+    13,
+    21
+  ],
+  "dropped_to_2d": [
+    8,
+    16,
+    20
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "seconds": 9.62,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "establish",
+      "lead": "voyager-1",
+      "place": "jupiter",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 42.66,
+      "environment_richness": 54.0,
+      "animation_quality": 83.1,
+      "inspection": {
+        "environment": {
+          "score": 54.0,
+          "edges": 0.088,
+          "empty": 0.292
+        },
+        "animation": {
+          "camera": 0.714,
+          "local": 0.206,
+          "moving": 0.738,
+          "cuts": 0,
+          "still_run": 0.62,
+          "score": 83.1
+        }
+      }
+    },
+    {
+      "scene": 2,
+      "start": 9.62,
+      "seconds": 9.07,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "jupiter",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 33.94,
+      "environment_richness": 45.4,
+      "animation_quality": 88.2,
+      "inspection": {
+        "environment": {
+          "score": 45.4,
+          "edges": 0.068,
+          "empty": 0.37
+        },
+        "animation": {
+          "camera": 0.857,
+          "local": 0.283,
+          "moving": 0.82,
+          "cuts": 0,
+          "still_run": 0.5,
+          "score": 88.2
+        }
+      }
+    },
+    {
+      "scene": 3,
+      "start": 18.69,
+      "seconds": 7.78,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "drifting mist"
+      ],
+      "camera": "aerial",
+      "lead": "voyager-1",
+      "place": "saturn",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 57.05,
+      "environment_richness": 52.7,
+      "animation_quality": 90.8,
+      "inspection": {
+        "environment": {
+          "score": 52.7,
+          "edges": 0.056,
+          "empty": 0.144
+        },
+        "animation": {
+          "camera": 1.0,
+          "local": 0.33,
+          "moving": 0.86,
+          "cuts": 0,
+          "still_run": 0.38,
+          "score": 90.8
+        }
+      }
+    },
+    {
+      "scene": 4,
+      "start": 26.47,
+      "seconds": 8.01,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "start": 34.48,
+      "seconds": 8.56,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "drifting mist"
+      ],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "saturn",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 32.64,
+      "environment_richness": 56.1,
+      "animation_quality": 83.1,
+      "inspection": {
+        "environment": {
+          "score": 56.1,
+          "edges": 0.086,
+          "empty": 0.232
+        },
+        "animation": {
+          "camera": 0.746,
+          "local": 0.199,
+          "moving": 0.733,
+          "cuts": 1,
+          "still_run": 0.5,
+          "score": 83.1
+        }
+      }
+    },
+    {
+      "scene": 6,
+      "start": 43.04,
+      "seconds": 7.23,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "start": 50.26,
+      "seconds": 7.61,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 8,
+      "start": 57.87,
+      "seconds": 7.23,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 9,
+      "start": 65.11,
+      "seconds": 5.06,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 10,
+      "start": 70.16,
+      "seconds": 4.78,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 11,
+      "start": 74.94,
+      "seconds": 7.48,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "start": 82.42,
+      "seconds": 9.51,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "aerial",
+      "lead": "voyager-1",
+      "place": "cape-canaveral",
+      "set": "beach",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 18.77,
+      "environment_richness": 74.3,
+      "animation_quality": 87.3,
+      "inspection": {
+        "environment": {
+          "score": 74.3,
+          "edges": 0.126,
+          "empty": 0.051
+        },
+        "animation": {
+          "camera": 0.968,
+          "local": 0.297,
+          "moving": 0.797,
+          "cuts": 2,
+          "still_run": 0.25,
+          "score": 87.3
+        }
+      }
+    },
+    {
+      "scene": 13,
+      "start": 91.93,
+      "seconds": 4.27,
+      "template": "world",
+      "kind": "3D",
+      "overlay": "stat",
+      "subject": "move",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track",
+      "lead": "titan-rocket",
+      "place": "cape-canaveral",
+      "set": "beach",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 9.21,
+      "environment_richness": 99.2,
+      "animation_quality": 8.9,
+      "inspection": {
+        "environment": {
+          "score": 99.2,
+          "edges": 0.23,
+          "empty": 0.019
+        },
+        "animation": {
+          "camera": 0.065,
+          "local": 0.08,
+          "moving": 0.069,
+          "cuts": 0,
+          "still_run": 3.38,
+          "score": 8.9
+        }
+      }
+    },
+    {
+      "scene": 14,
+      "start": 96.2,
+      "seconds": 7.72,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "cape-canaveral",
+      "set": "beach",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 23.32,
+      "environment_richness": 56.4,
+      "animation_quality": 97.6,
+      "inspection": {
+        "environment": {
+          "score": 56.4,
+          "edges": 0.09,
+          "empty": 0.245
+        },
+        "animation": {
+          "camera": 0.78,
+          "local": 0.307,
+          "moving": 0.965,
+          "cuts": 0,
+          "still_run": 0.12,
+          "score": 97.6
+        }
+      }
+    },
+    {
+      "scene": 15,
+      "start": 103.92,
+      "seconds": 6.69,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 16,
+      "start": 110.62,
+      "seconds": 6.81,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 17,
+      "start": 117.42,
+      "seconds": 7.92,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "start": 125.34,
+      "seconds": 8.87,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 19,
+      "start": 134.21,
+      "seconds": 6.2,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "start": 140.41,
+      "seconds": 8.76,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 21,
+      "start": 149.17,
+      "seconds": 5.56,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "wind in the vegetation",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track",
+      "lead": "titan-rocket",
+      "place": "cape-canaveral",
+      "set": "beach",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 9.86,
+      "environment_richness": 98.3,
+      "animation_quality": 30.0,
+      "inspection": {
+        "environment": {
+          "score": 98.3,
+          "edges": 0.216,
+          "empty": 0.005
+        },
+        "animation": {
+          "camera": 0.0,
+          "local": 0.076,
+          "moving": 0.297,
+          "cuts": 2,
+          "still_run": 1.0,
+          "score": 30.0
+        }
+      }
+    },
+    {
+      "scene": 22,
+      "start": 154.73,
+      "seconds": 7.38,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 23,
+      "start": 162.11,
+      "seconds": 5.92,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "start": 168.03,
+      "seconds": 7.27,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 25,
+      "start": 175.3,
+      "seconds": 6.19,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "start": 181.49,
+      "seconds": 8.02,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "start": 189.51,
+      "seconds": 5.57,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 28,
+      "start": 195.08,
+      "seconds": 5.46,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "start": 200.54,
+      "seconds": 8.63,
+      "template": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 30,
+      "start": 209.17,
+      "seconds": 7.14,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 31,
+      "start": 216.31,
+      "seconds": 7.63,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "start": 223.94,
+      "seconds": 8.3,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 33,
+      "start": 232.24,
+      "seconds": 6.91,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "start": 239.16,
+      "seconds": 6.84,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 35,
+      "start": 246.0,
+      "seconds": 4.95,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 36,
+      "start": 250.95,
+      "seconds": 6.42,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 37,
+      "start": 257.37,
+      "seconds": 9.83,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 38,
+      "start": 267.2,
+      "seconds": 7.89,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 39,
+      "start": 275.09,
+      "seconds": 9.29,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 40,
+      "start": 284.37,
+      "seconds": 7.72,
+      "template": "proportion",
+      "kind": "2D"
+    },
+    {
+      "scene": 41,
+      "start": 292.09,
+      "seconds": 7.29,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 42,
+      "start": 299.38,
+      "seconds": 5.57,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 43,
+      "start": 304.95,
+      "seconds": 9.1,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 44,
+      "start": 314.05,
+      "seconds": 9.34,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 45,
+      "start": 323.39,
+      "seconds": 7.72,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 46,
+      "start": 331.1,
+      "seconds": 4.52,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 47,
+      "start": 335.62,
+      "seconds": 9.08,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 48,
+      "start": 344.7,
+      "seconds": 6.39,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 49,
+      "start": 351.09,
+      "seconds": 9.19,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 50,
+      "start": 360.28,
+      "seconds": 8.64,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 51,
+      "start": 368.92,
+      "seconds": 8.75,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 52,
+      "start": 377.67,
+      "seconds": 3.41,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 53,
+      "start": 381.08,
+      "seconds": 9.72,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 54,
+      "start": 390.8,
+      "seconds": 7.44,
+      "template": "world",
+      "kind": "3D",
+      "subject": "approach",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "jupiter",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 7.74,
+      "environment_richness": 41.1,
+      "animation_quality": 64.0,
+      "inspection": {
+        "environment": {
+          "score": 41.1,
+          "edges": 0.068,
+          "empty": 0.463
+        },
+        "animation": {
+          "camera": 0.036,
+          "local": 0.165,
+          "moving": 0.808,
+          "cuts": 2,
+          "still_run": 0.38,
+          "score": 64.0
+        }
+      }
+    },
+    {
+      "scene": 55,
+      "start": 398.24,
+      "seconds": 5.53,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 56,
+      "start": 403.76,
+      "seconds": 8.95,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 57,
+      "start": 412.72,
+      "seconds": 4.31,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 58,
+      "start": 417.03,
+      "seconds": 7.56,
+      "template": "scale",
+      "kind": "2D"
+    },
+    {
+      "scene": 59,
+      "start": 424.59,
+      "seconds": 9.11,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 60,
+      "start": 433.7,
+      "seconds": 9.47,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 61,
+      "start": 443.16,
+      "seconds": 9.0,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 62,
+      "start": 452.17,
+      "seconds": 9.23,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 63,
+      "start": 461.4,
+      "seconds": 7.62,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 64,
+      "start": 469.01,
+      "seconds": 8.19,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 65,
+      "start": 477.2,
+      "seconds": 5.65,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 66,
+      "start": 482.85,
+      "seconds": 7.61,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 67,
+      "start": 490.46,
+      "seconds": 23.45,
+      "template": "statement",
+      "kind": "2D"
+    }
+  ]
+}
