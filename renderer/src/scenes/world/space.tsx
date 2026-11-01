@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { mergeVertices } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { clamp, Flash, Inked, InkedBox, rng, Toon, toonRamp } from "../world3d";
 import { aim, Atmosphere, Billow, moduleScene, useWorld, type WorldProps } from "./kit";
+import { Modelled } from "./library";
 
 const puff = new THREE.IcosahedronGeometry(1, 0);
 
@@ -273,7 +274,10 @@ const World: React.FC<WorldProps> = ({ scene, portrait }) => {
 
       {showCraft ? (
         <group position={craft} rotation={[0.2, frame * 0.004, 0.1]}>
-          <Craft variant={variant} seed={id} frame={frame} />
+          {/* a named craft with a library model (Voyager) is drawn as itself; the rest stay procedural */}
+          <Modelled model={variant === "asteroid" || variant === "comet" ? null : scene.model} length={10}>
+            <Craft variant={variant} seed={id} frame={frame} />
+          </Modelled>
           {variant === "comet" || (action === "impact" && since < 0)
             ? Array.from({ length: 16 }, (_, i) => (
                 <mesh key={i} geometry={puff} position={[i * 1.6, i * 0.7, i * 0.5]} scale={1.4 + i * 0.25}>
