@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "cake",
+  "query": "cake",
+  "source": "sketchfab",
+  "uid": "sketchfab:c01b7abbedfa4e49bd25f14c4b2a756a",
+  "title": "Cake #1 - Maison Alyz\u00e9e",
+  "author": "Emm",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-c01b7abbedfa4e49bd25f14c4b2a756a",
+  "checked": "vision",
+  "triangles": 38736,
+  "bytes": 3173488,
+  "size": [
+    0.0824,
+    0.0652,
+    0.0834
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "small, sweet, round cake",
+  "added": "2026-11-01T07:40:11+00:00"
+}
