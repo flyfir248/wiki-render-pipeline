@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "key": "titan-moon",
+  "query": "titan moon",
+  "source": "sketchfab",
+  "uid": "sketchfab:dedf5c0e6250418fbb9bd3d620419799",
+  "title": "Titan moon 3D model",
+  "author": "LeoPeo",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-dedf5c0e6250418fbb9bd3d620419799",
+  "checked": "vision",
+  "triangles": 3968,
+  "bytes": 856556,
+  "size": [
+    1.9984,
+    2,
+    1.9984
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "Large moon covered in a thick orange hazy atmosphere.",
+  "added": "2026-11-01T15:15:10+00:00",
+  "facing": "unclear:2"
+}

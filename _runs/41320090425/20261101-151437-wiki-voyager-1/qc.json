@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 1 at 7.9s: Subject cut off by frame edge",
+    "scene 3 at 21.0s: Voyager-1 subject not visible; only distant lights and planet",
+    "scene 3 at 25.1s: Voyager-1 subject not visible in frame",
+    "scene 4 at 28.9s: Subject is Voyager-1 but image shows a helicopter",
+    "scene 4 at 33.0s: Subject not Voyager-1; appears to be a helicopter or drone",
+    "scene 12 at 85.3s: No Voyager-1 visible; shows spacecraft over landscape",
+    "scene 12 at 90.2s: Voyager-1 not visible; subject missing from frame",
+    "scene 15 at 105.9s: Subject not Voyager-1; background lacks depth",
+    "scene 15 at 109.4s: Subject not Voyager-1; appears to be a drone or aircraft",
+    "scene 24 at 170.2s: Voyager-1 not visible; subject cut off by frame edge",
+    "scene 24 at 174.0s: Voyager-1 not visible; subject cut off by frame edge",
+    "scene 54 at 393.0s: Voyager-1 not visible; background is empty void",
+    "scene 54 at 396.9s: Voyager-1 not visible; only bright light and partial structure",
+    "3D covers 13% of the runtime, under the 75% target",
+    "3D scenes [12, 15, 24] repeat an earlier shot",
+    "3D scenes [2, 3, 24, 54] look bare (environment richness under 40)",
+    "3D scenes [4] have little moving in the picture beyond the camera (animation under 40)"
+  ],
+  "repair": [],
+  "repaired": []
+}

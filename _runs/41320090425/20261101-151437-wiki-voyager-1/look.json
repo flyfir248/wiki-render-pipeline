@@ -1,0 +1,147 @@
+{
+  "warnings": [
+    "scene 1 at 7.9s: Subject cut off by frame edge",
+    "scene 3 at 21.0s: Voyager-1 subject not visible; only distant lights and planet",
+    "scene 3 at 25.1s: Voyager-1 subject not visible in frame",
+    "scene 4 at 28.9s: Subject is Voyager-1 but image shows a helicopter",
+    "scene 4 at 33.0s: Subject not Voyager-1; appears to be a helicopter or drone",
+    "scene 12 at 85.3s: No Voyager-1 visible; shows spacecraft over landscape",
+    "scene 12 at 90.2s: Voyager-1 not visible; subject missing from frame",
+    "scene 15 at 105.9s: Subject not Voyager-1; background lacks depth",
+    "scene 15 at 109.4s: Subject not Voyager-1; appears to be a drone or aircraft",
+    "scene 24 at 170.2s: Voyager-1 not visible; subject cut off by frame edge",
+    "scene 24 at 174.0s: Voyager-1 not visible; subject cut off by frame edge",
+    "scene 54 at 393.0s: Voyager-1 not visible; background is empty void",
+    "scene 54 at 396.9s: Voyager-1 not visible; only bright light and partial structure"
+  ],
+  "frames": [
+    {
+      "scene": 1,
+      "at": 2.88,
+      "contrast": 41.1,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 1,
+      "at": 7.88,
+      "contrast": 43.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject cut off by frame edge"
+    },
+    {
+      "scene": 2,
+      "at": 12.34,
+      "contrast": 83.0,
+      "burnt": 0.01,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 2,
+      "at": 17.05,
+      "contrast": 25.8,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 3,
+      "at": 21.02,
+      "contrast": 17.4,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Voyager-1 subject not visible; only distant lights and planet"
+    },
+    {
+      "scene": 3,
+      "at": 25.07,
+      "contrast": 17.4,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Voyager-1 subject not visible in frame"
+    },
+    {
+      "scene": 4,
+      "at": 28.87,
+      "contrast": 74.9,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is Voyager-1 but image shows a helicopter"
+    },
+    {
+      "scene": 4,
+      "at": 33.04,
+      "contrast": 77.3,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject not Voyager-1; appears to be a helicopter or drone"
+    },
+    {
+      "scene": 12,
+      "at": 85.28,
+      "contrast": 75.4,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "No Voyager-1 visible; shows spacecraft over landscape"
+    },
+    {
+      "scene": 12,
+      "at": 90.22,
+      "contrast": 72.0,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Voyager-1 not visible; subject missing from frame"
+    },
+    {
+      "scene": 15,
+      "at": 105.93,
+      "contrast": 73.5,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject not Voyager-1; background lacks depth"
+    },
+    {
+      "scene": 15,
+      "at": 109.41,
+      "contrast": 75.5,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject not Voyager-1; appears to be a drone or aircraft"
+    },
+    {
+      "scene": 24,
+      "at": 170.21,
+      "contrast": 35.1,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Voyager-1 not visible; subject cut off by frame edge"
+    },
+    {
+      "scene": 24,
+      "at": 173.99,
+      "contrast": 20.2,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Voyager-1 not visible; subject cut off by frame edge"
+    },
+    {
+      "scene": 54,
+      "at": 393.03,
+      "contrast": 34.1,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Voyager-1 not visible; background is empty void"
+    },
+    {
+      "scene": 54,
+      "at": 396.9,
+      "contrast": 30.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Voyager-1 not visible; only bright light and partial structure"
+    }
+  ]
+}

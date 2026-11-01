@@ -1,0 +1,565 @@
+{
+  "planner": "model",
+  "budget_seconds": 360.0,
+  "world_seconds": 124.8,
+  "dropped_for_budget": [],
+  "target_share": 0.75,
+  "world_share": 0.242,
+  "filled": [
+    1,
+    3,
+    4,
+    12,
+    13,
+    15,
+    21,
+    24
+  ],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "Twenty four billion kilometres away, a 49-year-old spacecraft had gone quiet.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 8,
+      "type": "world",
+      "kind": "3D",
+      "subject": "rocket",
+      "variant": "rocket",
+      "action": "launch",
+      "setting": "sea",
+      "weather": null,
+      "cue": "lifted off",
+      "illustrative": false,
+      "label": "RECONSTRUCTION \u00b7 SIMPLIFIED",
+      "model": {
+        "id": "rocket:rocket",
+        "level": "generic",
+        "title": "generic rocket"
+      }
+    },
+    {
+      "scene": 9,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 10,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 11,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 13,
+      "type": "world",
+      "kind": "3D",
+      "overlay": "stat",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 14,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 15,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 16,
+      "type": "world",
+      "kind": "3D",
+      "subject": "space",
+      "variant": "probe",
+      "action": "flyby",
+      "setting": "space",
+      "weather": null,
+      "cue": "flew past",
+      "illustrative": false,
+      "label": "RECONSTRUCTION \u00b7 SIMPLIFIED",
+      "model": {
+        "id": "space:probe",
+        "level": "generic",
+        "title": "generic probe"
+      }
+    },
+    {
+      "scene": 17,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "rise",
+      "setting": "room",
+      "weather": null,
+      "cue": "spotted a strange plume rising off the edge of the moon Io.",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 19,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "type": "world",
+      "kind": "3D",
+      "subject": "space",
+      "variant": "probe",
+      "action": "flyby",
+      "setting": "space",
+      "weather": null,
+      "cue": "swung past",
+      "illustrative": false,
+      "label": "RECONSTRUCTION \u00b7 SIMPLIFIED",
+      "model": {
+        "id": "space:probe",
+        "level": "generic",
+        "title": "generic probe"
+      }
+    },
+    {
+      "scene": 21,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 22,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 23,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 25,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "Earth was a speck smaller than a single pixel, caught in a ray of scattered sunlight.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 27,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 28,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "type": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 30,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 31,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "it crossed the edge.",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 33,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 35,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 36,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 37,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 38,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 39,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 40,
+      "type": "proportion",
+      "kind": "2D"
+    },
+    {
+      "scene": 41,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 42,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 43,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 44,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 45,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 46,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 47,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 48,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 49,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 50,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 51,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 52,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 53,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 54,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "its signal came back. Alone, almost a light-day from home, it had looked after itself.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 55,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 56,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 57,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 58,
+      "type": "scale",
+      "kind": "2D"
+    },
+    {
+      "scene": 59,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 60,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 61,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 62,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 63,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 64,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 65,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 66,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 67,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

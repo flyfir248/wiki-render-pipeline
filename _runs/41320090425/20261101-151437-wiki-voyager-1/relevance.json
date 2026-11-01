@@ -1,0 +1,29 @@
+{
+  "checked": [
+    1,
+    2,
+    3,
+    4,
+    12,
+    13,
+    15,
+    18,
+    21,
+    24,
+    26,
+    32,
+    54
+  ],
+  "failed_text": {
+    "8": "shows rocket 'Titan IIIE', which the story's manifest doesn't list",
+    "16": "shows space 'Voyager 1', which the story's manifest doesn't list",
+    "20": "shows space 'Voyager 1', which the story's manifest doesn't list"
+  },
+  "failed_picture": {
+    "13": "frame check: shows a car, not a rocket",
+    "18": "frame check: no moon visible, only blank grey background",
+    "21": "frame check: No rocket visible in the frame",
+    "26": "frame check: No planet visible, only stars and text",
+    "32": "frame check: no spacecraft visible, only stars and text"
+  }
+}

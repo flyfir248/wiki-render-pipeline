@@ -1,0 +1,271 @@
+{
+  "entities": [
+    {
+      "id": "voyager-1",
+      "name": "Voyager 1",
+      "kind": "spacecraft",
+      "search": [
+        "voyager 1",
+        "space probe",
+        "spacecraft"
+      ],
+      "look": "Golden record mounted on side, long boom antenna, radio dish, multi-hundred-watt radioisotope thermoelectric generators on booms.",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        16,
+        20,
+        22,
+        23,
+        24,
+        31,
+        32,
+        33,
+        35,
+        39,
+        49,
+        53,
+        54,
+        59,
+        61,
+        66
+      ]
+    },
+    {
+      "id": "titan-rocket",
+      "name": "a Titan rocket",
+      "kind": "rocket",
+      "search": [
+        "titan rocket",
+        "space launch vehicle",
+        "rocket"
+      ],
+      "look": "Tall white multi-stage rocket with boosters.",
+      "certain": false,
+      "scenes": [
+        8,
+        10,
+        13,
+        20,
+        21,
+        22,
+        33
+      ]
+    },
+    {
+      "id": "jupiter",
+      "name": "Jupiter",
+      "kind": "planet",
+      "search": [
+        "jupiter",
+        "planet"
+      ],
+      "look": "Large gas giant with swirling orange and white cloud bands and the Great Red Spot.",
+      "certain": true,
+      "scenes": [
+        5,
+        6,
+        9,
+        16,
+        17,
+        22,
+        25,
+        30
+      ]
+    },
+    {
+      "id": "io",
+      "name": "Io",
+      "kind": "moon",
+      "search": [
+        "io moon",
+        "moon"
+      ],
+      "look": "Mottled yellow and red volcanic rocky moon surface.",
+      "certain": true,
+      "scenes": [
+        18,
+        19,
+        20,
+        58
+      ]
+    },
+    {
+      "id": "saturn",
+      "name": "Saturn",
+      "kind": "planet",
+      "search": [
+        "saturn",
+        "planet"
+      ],
+      "look": "Gas giant planet with prominent extensive ring system.",
+      "certain": true,
+      "scenes": [
+        5,
+        6,
+        17,
+        20,
+        22,
+        25,
+        30
+      ]
+    },
+    {
+      "id": "titan-moon",
+      "name": "Titan",
+      "kind": "moon",
+      "search": [
+        "titan moon",
+        "moon"
+      ],
+      "look": "Large moon covered in a thick orange hazy atmosphere.",
+      "certain": true,
+      "scenes": [
+        8,
+        18,
+        20,
+        21,
+        22,
+        58
+      ]
+    },
+    {
+      "id": "earth",
+      "name": "Earth",
+      "kind": "planet",
+      "search": [
+        "earth",
+        "planet"
+      ],
+      "look": "Blue planet with white clouds and continents.",
+      "certain": true,
+      "scenes": [
+        5,
+        14,
+        17,
+        19,
+        22,
+        25,
+        26,
+        30,
+        32,
+        49,
+        56,
+        58,
+        59
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "cape-canaveral",
+      "name": "Cape Canaveral",
+      "look": "Coastal launch pad area with gantry towers, concrete structures, and flat scrubland under a daytime sky.",
+      "scenes": [
+        8
+      ]
+    },
+    {
+      "id": "deep-space",
+      "name": "Interstellar Space",
+      "look": "Vast dark void with distant stars and faint scattered starlight.",
+      "scenes": [
+        2,
+        24,
+        32,
+        33,
+        54,
+        67
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 2,
+      "entity": "voyager-1",
+      "place": "deep-space",
+      "action": "A 49-year-old spacecraft had gone quiet.",
+      "motion": "present",
+      "cue": "Twenty four billion kilometres away, a 49-year-old spacecraft had gone quiet.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 8,
+      "entity": "titan-rocket",
+      "place": "cape-canaveral",
+      "action": "Voyager 1 lifted off from Cape Canaveral.",
+      "motion": "rise",
+      "cue": "Voyager 1 lifted off from Cape Canaveral on a Titan rocket.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 16,
+      "entity": "voyager-1",
+      "place": "",
+      "action": "Voyager 1 flew past Jupiter.",
+      "motion": "move",
+      "cue": "Voyager 1 flew past Jupiter.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 18,
+      "entity": "io",
+      "place": "",
+      "action": "A strange plume rising off the edge of the moon Io.",
+      "motion": "rise",
+      "cue": "spotted a strange plume rising off the edge of the moon Io.",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 20,
+      "entity": "voyager-1",
+      "place": "",
+      "action": "Voyager 1 swung past its rings and Titan.",
+      "motion": "move",
+      "cue": "Voyager 1 swung past its rings and its giant moon, Titan.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 26,
+      "entity": "earth",
+      "place": "deep-space",
+      "action": "Earth was a speck caught in a ray of sunlight.",
+      "motion": "present",
+      "cue": "Earth was a speck smaller than a single pixel, caught in a ray of scattered sunlight.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 32,
+      "entity": "voyager-1",
+      "place": "deep-space",
+      "action": "It crossed the edge into interstellar space.",
+      "motion": "move",
+      "cue": "it crossed the edge.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 54,
+      "entity": "voyager-1",
+      "place": "deep-space",
+      "action": "Its signal came back from a light-day away.",
+      "motion": "present",
+      "cue": "its signal came back. Alone, almost a light-day from home, it had looked after itself.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+reading the story: what it shows
+story: Voyager 1, a Titan rocket, Jupiter, Io, Saturn, Titan, Earth; 8 moments
+planning the visuals
+visual plan (model): 16 3D, 51 2D (24% of the runtime in 3D, aiming for 75%); 3D: stage present, stage present, stage present, stage present, rocket launch, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: 'LUCY | NASA Space Probe | Free Download' (sketchfab) is not a space probe: Shows a spacecraft with large circular solar arrays, not Voyager.
+assets: Voyager 1 -> 'Cassini–Huygens Space Probe' from sketchfab (by, 25736 triangles, 0 animations)
+assets: Io -> 'IO Moon' from sketchfab (by, 40000 triangles, 0 animations)
+assets: 'Kokeshi earth' (sketchfab) is not a earth: Shows a cartoon character shaped like an earth matryoshka doll.
+assets: 'Death Earth' (sketchfab) is not a earth: Shows skeleton hands manipulating the earth as a puppet scene.
+assets: 'Earth' (sketchfab) is not a earth: Shows only a part or fragment of the earth.
+assets: Earth -> 'Earth' from sketchfab (by, 5888 triangles, 0 animations)
+assets: Titan -> 'Titan moon 3D model' from sketchfab (by, 3968 triangles, 0 animations)
+assets: Voyager 1: its front could not be told (unclear, then unclear turned round); left to its shape
+assets: Io: its front could not be told (unclear, then unclear turned round); left to its shape
+assets: Earth: its front could not be told (unclear, then unclear turned round); left to its shape
+assets: Titan: its front could not be told (unclear, then unclear turned round); left to its shape
+building the story world: 5 entities for 13 scenes
+real sizes: titan-rocket: 6.08 m -> 50 m (reference size for 'rocket'); io: 2 m -> 3.474e+06 m (reference size for 'moon'); titan-moon: 2.2 m -> 3.474e+06 m (reference size for 'moon'); earth: 2.5 m -> 1.2742e+07 m (reference size for 'earth')
+animation director (model): scene 18: io rise
+scene director: cinematic (natural, strength 0.75); scene 1: track; scene 2: aerial; scene 3: track; scene 4: track; scene 12: aerial; scene 13: track; scene 15: track; scene 18: establish/push_in/push_in; scene 21: track; scene 24: track; scene 26: push_in; scene 32: track/follow; scene 54: track
+story world (clinical): cast model, sets model, direction model; voyager-1 as vehicle, titan-rocket as vehicle, io as object, titan-moon as object, earth as object
+voicing 67 scenes with kokoro
+fetching visuals
+stock clip s5.mp4 left out: a clip can't be checked
+stock clip s6.mp4 left out: a clip can't be checked
+stock clip s7.mp4 left out: a clip can't be checked
+stock clip s9.mp4 left out: a clip can't be checked
+stock clip s14.mp4 left out: a clip can't be checked
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s19.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s23.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s30.mp4 left out: a clip can't be checked
+stock clip s31.mp4 left out: a clip can't be checked
+stock clip s33.mp4 left out: a clip can't be checked
+stock clip s34.mp4 left out: a clip can't be checked
+stock clip s35.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s37.mp4 left out: a clip can't be checked
+stock clip s38.mp4 left out: a clip can't be checked
+stock clip s39.mp4 left out: a clip can't be checked
+stock clip s41.mp4 left out: a clip can't be checked
+stock clip s42.mp4 left out: a clip can't be checked
+stock clip s43.mp4 left out: a clip can't be checked
+stock clip s44.mp4 left out: a clip can't be checked
+stock clip s45.mp4 left out: a clip can't be checked
+stock clip s46.mp4 left out: a clip can't be checked
+stock clip s47.mp4 left out: a clip can't be checked
+stock clip s48.mp4 left out: a clip can't be checked
+stock clip s49.mp4 left out: a clip can't be checked
+stock clip s50.mp4 left out: a clip can't be checked
+stock clip s51.mp4 left out: a clip can't be checked
+stock clip s52.mp4 left out: a clip can't be checked
+stock clip s53.mp4 left out: a clip can't be checked
+stock clip s55.mp4 left out: a clip can't be checked
+stock clip s56.mp4 left out: a clip can't be checked
+stock clip s57.mp4 left out: a clip can't be checked
+stock clip s59.mp4 left out: a clip can't be checked
+stock clip s61.mp4 left out: a clip can't be checked
+stock clip s62.mp4 left out: a clip can't be checked
+stock clip s63.mp4 left out: a clip can't be checked
+stock clip s64.mp4 left out: a clip can't be checked
+stock clip s65.mp4 left out: a clip can't be checked
+stock clip s66.mp4 left out: a clip can't be checked
+stock clip s67.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Voyager 1 solar system planets': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for 'Voyager 1 stars deep space': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+warning: loc image search failed for 'Voyager 1 Carl Sagan': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Voyager+1+Carl+Sagan&fo=json&c=25&fa=online-format%3Aimage
+warning: loc image search failed for 'Voyager 1 Pale Blue Dot': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Voyager+1+Pale+Blue+Dot&fo=json&c=25&fa=online-format%3Aimage (not asked again this run)
+photo commons28.jpg left out: Photo shows a train, not the Voyager 1 spacecraft.
+photo commons28.jpg left out: Shows a cruise ship instead of the Voyager 1 spacecraft.
+photo commons29.jpg left out: Shows a cruise ship instead of the Voyager 1 spacecraft.
+photo p37.jpg left out: Shows the ISS cupola, not Voyager 1 or deep space.
+photo p37.jpg left out: Photo shows Hubble Space Telescope, not Voyager 1.
+photo p45.jpg left out: Shows a futuristic space station instead of Voyager 1.
+photo p45.jpg left out: Shows a Soyuz spacecraft, not Voyager 1.
+photo p51.jpg left out: Shows a computer lab, not Voyager 1 or space equipment.
+photo p51.jpg left out: Lab equipment unrelated to Voyager 1 or spacecraft instruments
+4 scenes without a picture of their own reuse one of the video's photos
+visuals: 40 Wikipedia and freely licensed images, 11 stock, 16 scenes on plain background
+collage: 47 photos styled, 18 with a cut-out subject
+scene 8: 3D dropped: shows rocket 'Titan IIIE', which the story's manifest doesn't list
+scene 16: 3D dropped: shows space 'Voyager 1', which the story's manifest doesn't list
+scene 20: 3D dropped: shows space 'Voyager 1', which the story's manifest doesn't list
+relevance: checking 13 3D scenes by eye
+relevance: filming scenes [1, 12, 13, 18, 21, 32] again, closer on their subject
+scene 1: the closer take shows its subject; 3D kept
+scene 12: the closer take shows its subject; 3D kept
+scene 13: 3D dropped: frame check: shows a car, not a rocket
+scene 18: 3D dropped: frame check: no moon visible, only blank grey background
+scene 21: 3D dropped: frame check: No rocket visible in the frame
+scene 26: 3D dropped: frame check: No planet visible, only stars and text
+scene 32: 3D dropped: frame check: no spacecraft visible, only stars and text
+storyboarding: an illustration for each sentence
+scene 11, sentence 2 redrawn: no glowing digital screen visible
+scene 11, sentence 2 redrawn: no glowing digital screen visible
+scene 16, sentence 2 redrawn: Planet shown is Saturn, not Jupiter
+storyboard: 13 illustrated sentences of 16 planned, 7 in the cast; 16 checked, 2 redrawn, 1 left out
+art direction: signature
+rendering 514s long video
+look: scene 1 at 7.9s: Subject cut off by frame edge
+look: scene 3 at 21.0s: Voyager-1 subject not visible; only distant lights and planet
+look: scene 3 at 25.1s: Voyager-1 subject not visible in frame
+look: scene 4 at 28.9s: Subject is Voyager-1 but image shows a helicopter
+look: scene 4 at 33.0s: Subject not Voyager-1; appears to be a helicopter or drone
+look: scene 12 at 85.3s: No Voyager-1 visible; shows spacecraft over landscape
+look: scene 12 at 90.2s: Voyager-1 not visible; subject missing from frame
+look: scene 15 at 105.9s: Subject not Voyager-1; background lacks depth
+look: scene 15 at 109.4s: Subject not Voyager-1; appears to be a drone or aircraft
+look: scene 24 at 170.2s: Voyager-1 not visible; subject cut off by frame edge
+look: scene 24 at 174.0s: Voyager-1 not visible; subject cut off by frame edge
+look: scene 54 at 393.0s: Voyager-1 not visible; background is empty void
+look: scene 54 at 396.9s: Voyager-1 not visible; only bright light and partial structure
+3D coverage: 13% of the runtime in 3D (target 75%), 13% moving on its own, 8 3D shots; environment richness 46, animation quality 61
+quality: 3D covers 13% of the runtime, under the 75% target
+quality: 3D scenes [12, 15, 24] repeat an earlier shot
+quality: 3D scenes [2, 3, 24, 54] look bare (environment richness under 40)
+quality: 3D scenes [4] have little moving in the picture beyond the camera (animation under 40)
+rendering thumbnail
+thumbnail: cutout take
+done: approved
