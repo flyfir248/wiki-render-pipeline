@@ -38,6 +38,9 @@ on:
       replay:
         description: "For a test render: the run id of an earlier test of the same title, to re-render its saved script and story without writing them again (far fewer minutes)"
         default: ""
+      script:
+        description: "For a test render (short / long with a title): a script already written and fact checked, as a path in the repo (e.g. scripts/voyager-1-long.json), used instead of writing one"
+        default: ""
 
 # A test render (short / long with a title) never uploads or touches the schedule, so it runs in a group
 # of its own: a scheduled run can't cancel it while it waits, and it never holds up the schedule.
@@ -267,6 +270,7 @@ jobs:
           COUNT: ${{ inputs.count || '1' }}
           TITLE: ${{ inputs.title }}
           REPLAY: ${{ inputs.replay }}
+          SCRIPT: ${{ inputs.script }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
@@ -298,6 +302,10 @@ jobs:
             cat kit.txt | tee -a "$GITHUB_STEP_SUMMARY"
           elif [ "$TASK" = news ]; then
             python -m fyt news ${TITLE:+--title "$TITLE"} $([ "$UPLOAD" = false ] && echo --no-upload)
+          elif [ -n "$TITLE" ] && [ -n "$SCRIPT" ]; then
+            # a test render of a script written and checked by hand: the visuals are planned and drawn as usual
+            [ -f "$SCRIPT" ] || { echo "no script at $SCRIPT"; exit 1; }
+            python -m fyt --format "$TASK" make "wiki:$TITLE" --script "$SCRIPT" --no-localize
           elif [ -n "$TITLE" ] && [ -n "$REPLAY" ]; then
             # a test re-render: the earlier test's script and story, so only the visuals are redone
             saved=$(ls -d assets/models/_runs/"$REPLAY"/*/ | head -1)
