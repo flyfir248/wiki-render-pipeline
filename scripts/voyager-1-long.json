@@ -34,7 +34,7 @@
       "type": "statement",
       "narration": "They called again a day later. Still silence. Twenty four billion kilometres away, a 49-year-old spacecraft had gone quiet.",
       "text": "Still silence",
-      "broll_query": "stars deep space",
+      "broll_query": "Voyager interstellar space",
       "transition": "whip"
     },
     {
@@ -65,10 +65,32 @@
       "broll_query": "Jupiter Saturn planets"
     },
     {
-      "type": "statement",
+      "type": "story",
       "narration": "NASA built two identical spacecraft. Voyager 2 went first, on the twentieth of August 1977.",
-      "text": "Two identical spacecraft",
-      "broll_query": "Voyager spacecraft assembly"
+      "heading": "Two identical spacecraft",
+      "setting": "room",
+      "backdrop": "a 1970s spacecraft clean room with white walls and work platforms",
+      "actors": [
+        {
+          "thing": "space probe",
+          "x": 32,
+          "y": 55,
+          "size": "l",
+          "enter": "rise",
+          "label": "Voyager 2",
+          "look": "1970s Voyager space probe: large white dish antenna on a ten-sided bus, long thin booms"
+        },
+        {
+          "thing": "space probe",
+          "x": 68,
+          "y": 55,
+          "size": "l",
+          "enter": "rise",
+          "at": 0.3,
+          "label": "Voyager 1",
+          "look": "1970s Voyager space probe: large white dish antenna on a ten-sided bus, long thin booms"
+        }
+      ]
     },
     {
       "type": "world",
@@ -78,7 +100,7 @@
       "action": "launch",
       "shot": "wide",
       "cue": "lifted off",
-      "subject_name": "Titan IIIE",
+      "subject_name": "Titan rocket",
       "heading": "5 September 1977"
     },
     {
@@ -188,7 +210,7 @@
       "type": "statement",
       "narration": "Voyager 2 went on to Uranus and Neptune. Voyager 1 was headed into the dark.",
       "text": "Headed into the dark",
-      "broll_query": "stars deep space"
+      "broll_query": "Voyager 2 Neptune"
     },
     {
       "type": "statement",
@@ -200,7 +222,7 @@
       "type": "statement",
       "narration": "The astronomer Carl Sagan had pushed for one last picture: the planets, seen from outside.",
       "text": "One last picture",
-      "broll_query": "Carl Sagan"
+      "broll_query": "Family Portrait solar system mosaic"
     },
     {
       "type": "statement",
@@ -386,7 +408,7 @@
       "type": "statement",
       "narration": "It worked. Then, in October, came the silence.",
       "text": "Then, the silence",
-      "broll_query": "stars deep space"
+      "broll_query": "Voyager interstellar space"
     },
     {
       "type": "statement",
@@ -417,7 +439,7 @@
       "type": "statement",
       "narration": "And now it is about to cross a line no machine has ever crossed.",
       "text": "A line no machine has crossed",
-      "broll_query": "stars deep space"
+      "broll_query": "Voyager interstellar space"
     },
     {
       "type": "scale",
@@ -455,7 +477,7 @@
       "suffix": " billion km",
       "heading": "One light-day",
       "text": "16.1 billion miles",
-      "broll_query": "stars deep space"
+      "broll_query": "Voyager interstellar space"
     },
     {
       "type": "statement",
@@ -491,7 +513,7 @@
       "type": "statement",
       "narration": "But Voyager 1 won't stop. It will keep falling outward with its golden record, long after the people who built it are gone.",
       "text": "It won't stop",
-      "broll_query": "Voyager Golden Record"
+      "broll_query": "Golden Record cover"
     },
     {
       "type": "statement",
