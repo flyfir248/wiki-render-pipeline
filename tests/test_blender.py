@@ -70,10 +70,14 @@ def test_stage_copies_clips_into_public(tmp_path):
 
 
 def test_scene_shots_become_video_scenes(tmp_path):
-    data = json.loads((FIXTURE.parent / "whatif_no_gravity.json").read_text(encoding="utf-8"))
+    data = json.loads((FIXTURE.parent / "whatif_grow_one_metre.json").read_text(encoding="utf-8"))
+    data.pop("journey")
+    data["blender"] = "scenes"
+    for i, shot in ((2, "Z01"), (3, "Z01"), (5, "Z02")):
+        data["scenes"][i].update(type="statement", blender_shot=shot)
     s = Script.model_validate(data)
     z1 = {"id": "Z01", "file": "Z01.mp4", "duration": 9.0}
-    root = _shots(tmp_path, [z1], name="no-gravity")
+    root = _shots(tmp_path, [z1], name="scenes")
     media = blender.scene_media(s, root=root)
     wanted = [i for i, sc in enumerate(s.scenes) if sc.blender_shot == "Z01"]
     assert sorted(media) == wanted and media[wanted[0]].src == "blender/Z01.mp4"

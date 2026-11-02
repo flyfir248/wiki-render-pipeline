@@ -1,9 +1,0 @@
-{
-  "fps": 30,
-  "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\gravity.py), Quaternius and Kenney CC0 assets",
-  "shots": [
-    {"id": "Z01", "file": "Z01.mp4", "duration": 9.0, "what": "promenade: people and street furniture lift off the ground"},
-    {"id": "Z02", "file": "Z02.mp4", "duration": 9.0, "what": "street: parked cars, bins and cones rise and tumble"},
-    {"id": "Z03", "file": "Z03.mp4", "duration": 9.0, "what": "city from above: everything adrift, the sea breaking into floating globes"}
-  ]
-}
