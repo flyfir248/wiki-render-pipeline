@@ -44,7 +44,7 @@ GIBS = [
 GIBS_TIMES = ["2004-08-01", "", "default"]
 GIBS_MAX_Z = 8
 MAX_PX = 4096  # longest side of one layer
-S2_MAX_TILES = 110  # Sentinel-2 granules one close view may read
+S2_MAX_TILES = 160  # Sentinel-2 granules one close view may read
 S2_MAX_MPP = 450.0  # coarser than this (metres per pixel on the ground), Blue Marble is as good
 
 # The renderer's frame and the box it fits a map into (renderer/src/scenes/map.tsx): long, short.
@@ -408,8 +408,8 @@ def s2_mosaic(bounds, size: tuple[int, int], ground_mpp: float, log=print) -> Im
     # The coarsest overview that is still finer than the view (10 m, then 20, 40, 80, 160).
     level = max(-1, min(3, int(math.floor(math.log2(max(ground_mpp, 10) / 10))) - 1))
     with httpx.Client(follow_redirects=True) as client, ThreadPoolExecutor(6) as pool:
-        # a wide mosaic takes three dates a granule instead of four, to keep its reads in check
-        n = 4 if len(gs) <= 40 else 3
+        # a wide mosaic takes fewer dates a granule, to keep its reads in check
+        n = 4 if len(gs) <= 40 else 3 if len(gs) <= 90 else 2
         per_granule = [s for s in pool.map(lambda g: best_scenes(client, g, n), gs) if s]
     if not per_granule:
         return None

@@ -1,0 +1,76 @@
+{
+  "title": "Ukraine's Drone War on Russian Oil, Mapped",
+  "description": "Ukraine says its long-range drones have knocked out more than half of Russia's oil refining capacity. Russia says it shoots most of them down, and keeps striking Ukraine's power grid in return. Here is the map of the refinery war: how far the drones fly, which plants have been hit, what it has done to Russian fuel, and why Washington asked Kyiv to pause.\n\nFacts as reported up to 1 November 2026, from Ukraine's Defence Ministry, the Russian Defence Ministry, the IEA, the Associated Press, the Kyiv Independent and others (sources below). Claims from either side are attributed and could not all be independently verified.\n\nMaps: country borders as shown by the Survey of India (Natural Earth, India view). Satellite imagery: NASA Blue Marble; contains modified Copernicus Sentinel data 2025-2026.",
+  "tags": ["Ukraine", "Russia", "drones", "oil refineries", "Russia Ukraine war", "geopolitics", "energy war", "diesel", "FP-1", "long range drones", "maps", "explained"],
+  "thumbnail_text": "THE REFINERY WAR",
+  "thumbnail_kicker": "Russia vs Ukraine",
+  "thumbnail_query": "oil refinery fire night",
+  "mood": "tense",
+  "core_message": "Cheap long-range drones let Ukraine hit refineries over a thousand kilometres away, and the fuel war now shapes the whole conflict.",
+  "comment_question": "Should refineries be off limits in a ceasefire, or are they fair targets in war?",
+  "series": "News Explained",
+  "map_style": "satellite",
+  "sources": [
+    "https://www.pbs.org/newshour/world/ukraine-claims-its-strikes-have-taken-out-more-than-half-of-russias-oil-refining-capacity",
+    "https://kyivindependent.com/ukraines-deep-strikes-have-wrecked-over-half-of-russias-oil-refining-capacity-defense-ministry-says/",
+    "https://united24media.com/war-in-ukraine/ukraine-hits-10-of-russias-oil-refining-capacity-in-just-72-hours-23988",
+    "https://www.bluewin.ch/en/news/moscow-ukraine-is-deploying-more-than-1-200-drones-li.3653329",
+    "https://www.washingtonpost.com/investigations/interactive/2026/10/11/how-ukraine-uses-precision-drone-strikes-hobble-russian-oil-refineries/",
+    "https://en.wikipedia.org/wiki/2025_Russian_fuel_crisis"
+  ],
+  "chapters": [
+    {"title": "1,214 drones", "scene": 0},
+    {"title": "Why refineries", "scene": 4},
+    {"title": "How far they fly", "scene": 8},
+    {"title": "The last week of October", "scene": 15},
+    {"title": "What it has cost Russia", "scene": 20},
+    {"title": "Russia strikes back", "scene": 26},
+    {"title": "The pause", "scene": 29},
+    {"title": "What to watch", "scene": 33}
+  ],
+  "scenes": [
+    {"type": "map", "narration": "On the morning of the twenty-ninth of October, Russia's defence ministry said it had intercepted one thousand two hundred and fourteen Ukrainian drones over its territory.", "heading": "1,214 drones, says Moscow", "regions": ["Russia"], "places": [{"name": "Moscow", "lat": 55.75, "lon": 37.62}]},
+    {"type": "statement", "narration": "Moscow's mayor said six hundred and thirteen of them flew towards the capital region. Three of the city's four airports had to restrict flights overnight.", "text": "613 towards Moscow", "broll_query": "Moscow skyline night", "transition": "whip"},
+    {"type": "statement", "narration": "Russia says it shot most of them down. But a few days later, three more Russian oil refineries were burning.", "text": "Three refineries in three nights", "broll_query": "oil refinery fire night", "transition": "whip"},
+    {"type": "statement", "narration": "This is the other front of the war in Ukraine: a fight over fuel, fought with drones that fly a thousand kilometres or more.", "text": "The fuel front", "broll_query": "long range drone", "transition": "thread"},
+
+    {"type": "statement", "narration": "Why refineries? Oil and fuel pay for a large part of Russia's state budget, and its army runs on diesel.", "text": "Oil pays for the war", "broll_query": "Russian oil refinery", "transition": "thread"},
+    {"type": "statement", "narration": "Crude oil is hard to destroy. It sits in pipelines and tanks, and it can be pumped out again. A refinery is different.", "text": "Crude is hard to hit. Refineries aren't.", "broll_query": "oil refinery distillation tower", "transition": "whip"},
+    {"type": "statement", "narration": "At its heart is a distillation unit, a tall column where crude is boiled and split into petrol, diesel and jet fuel. Hit that column, and the whole plant can stop.", "text": "One column runs the whole plant", "broll_query": "refinery distillation column", "transition": "whip"},
+    {"type": "statement", "narration": "Russia has about thirty-two large refineries. The International Energy Agency says some have been hit as many as fifteen times since the war began.", "text": "Some hit 15 times", "broll_query": "refinery smoke", "transition": "thread"},
+
+    {"type": "map", "narration": "Here is how far the drones fly. From Ukrainian-held territory to the refinery in Moscow is more than five hundred kilometres.", "heading": "To Moscow", "places": [{"name": "Sumy, Ukraine", "lat": 50.91, "lon": 34.8}, {"name": "Moscow refinery", "lat": 55.64, "lon": 37.8}], "route": true, "vehicle": "plane"},
+    {"type": "map", "narration": "Further north, Yaroslavl and the Kirishi refinery near Saint Petersburg have both been hit.", "heading": "North: Yaroslavl and Kirishi", "places": [{"name": "Yaroslavl", "lat": 57.55, "lon": 39.77}, {"name": "Kirishi", "lat": 59.45, "lon": 32.02}], "route": false},
+    {"type": "map", "narration": "East along the Volga are Saratov, Syzran and Novokuibyshevsk near Samara.", "heading": "The Volga refineries", "places": [{"name": "Saratov", "lat": 51.48, "lon": 46.12}, {"name": "Syzran", "lat": 53.16, "lon": 48.47}, {"name": "Novokuibyshevsk", "lat": 53.1, "lon": 49.95}], "route": false},
+    {"type": "map", "narration": "And past the Volga, Ufa in Bashkortostan and Perm, near the Ural Mountains, more than one thousand five hundred kilometres from Ukraine.", "heading": "Out to the Urals", "places": [{"name": "Kharkiv, Ukraine", "lat": 49.99, "lon": 36.23}, {"name": "Ufa", "lat": 54.8, "lon": 56.05}], "route": true, "vehicle": "plane"},
+    {"type": "statement", "narration": "According to the Kyiv Independent, Ukraine's drones and missiles now regularly hit targets more than fifteen hundred kilometres away. The longest strike so far, on a gas facility in September, was about three thousand two hundred kilometres.", "text": "Record strike: about 3,200 km", "broll_query": "drone launch", "transition": "whip"},
+    {"type": "statement", "narration": "The best known of these drones is the FP-1, built by the Ukrainian company Fire Point. Ukraine's defence ministry says it tripled production of long-range strike drones this year.", "text": "Long-range drone output tripled", "broll_query": "drone factory", "transition": "whip"},
+    {"type": "statement", "narration": "The idea is simple: launch so many cheap drones that air defences can't stop them all, and only a few need to get through.", "text": "Only a few need to get through", "broll_query": "air defence night sky", "transition": "thread"},
+
+    {"type": "map", "narration": "Overnight on the thirtieth of October, drones hit the Novokuibyshevsk refinery in the Samara region, and it caught fire.", "heading": "30 October: Novokuibyshevsk", "places": [{"name": "Novokuibyshevsk", "lat": 53.1, "lon": 49.95}], "zoom": 2},
+    {"type": "map", "narration": "On the thirty-first, the Bashneft Novoil refinery in Ufa.", "heading": "31 October: Ufa", "places": [{"name": "Ufa", "lat": 54.8, "lon": 56.05}], "zoom": 2},
+    {"type": "map", "narration": "And overnight on the first of November, LUKOIL's big refinery at Kstovo, near Nizhny Novgorod, which also caught fire.", "heading": "1 November: Kstovo", "places": [{"name": "Kstovo", "lat": 56.15, "lon": 44.2}], "zoom": 2},
+    {"type": "stat", "narration": "Together, those three plants can process about thirty-three million tonnes of crude a year, roughly a tenth of Russia's refining capacity. How much damage was done has not been independently confirmed.", "heading": "Capacity of the three plants", "value": 33, "suffix": "M tonnes/yr"},
+    {"type": "statement", "narration": "Russia does not publish figures on damage to its refineries. In September, President Putin signed a decree restricting access to data on refineries and energy exports.", "text": "Refinery data now restricted", "broll_query": "Kremlin", "transition": "whip"},
+
+    {"type": "proportion", "narration": "On the fourth of October, Ukraine's defence ministry claimed that more than half of Russia's refining capacity had been disabled. That claim could not be independently verified.", "heading": "Ukraine's claim: refining capacity disabled", "value": 51},
+    {"type": "statement", "narration": "But there are signs from outside Ukraine too. The IEA says Russian diesel output fell by about thirty percent, and that drivers waited up to forty hours to fill up.", "text": "Diesel output down about 30%", "broll_query": "petrol station queue", "transition": "whip"},
+    {"type": "statement", "narration": "The Kremlin banned diesel exports, which pushed up diesel prices around the world.", "text": "Diesel exports banned", "broll_query": "diesel fuel pump", "transition": "whip"},
+    {"type": "statement", "narration": "Refiners have delayed maintenance, restarted old mothballed units and lowered fuel quality standards to keep fuel flowing.", "text": "Patching, not fixing", "broll_query": "refinery workers", "transition": "whip"},
+    {"type": "quote", "narration": "On the first of October, Vladimir Putin said the strikes had cost Russia roughly one percent of its GDP. Asked whether Ukraine had achieved its goal, he said: partially.", "text": "Partially.", "author": "Vladimir Putin, 1 October 2026, on whether the strikes achieved their goal"},
+    {"type": "statement", "narration": "Repeated damage and rushed repairs can wear units down for years, the IEA warns.", "text": "Damage that lasts", "broll_query": "industrial plant", "transition": "thread"},
+
+    {"type": "map", "narration": "Russia has its own long-range campaign. It sends waves of Shahed-type drones and missiles at Ukraine's power stations, substations and ports.", "heading": "Russia's strikes on Ukraine", "regions": ["Ukraine"], "places": [{"name": "Kyiv", "lat": 50.45, "lon": 30.52}, {"name": "Kharkiv", "lat": 49.99, "lon": 36.23}]},
+    {"type": "statement", "narration": "Overnight into the fifth of October, Ukraine's air force said Russia launched two hundred and five drones, and that one hundred and seventy-two were shot down or jammed.", "text": "205 launched, 172 stopped", "broll_query": "Kyiv night air defence", "transition": "whip"},
+    {"type": "statement", "narration": "That same day, a Russian guided bomb in Kharkiv killed at least three people, and a drone sank a commercial ship in the Black Sea.", "text": "A city and a ship hit", "broll_query": "Black Sea cargo ship", "transition": "thread"},
+
+    {"type": "statement", "narration": "The refinery strikes worry Washington too. On the thirteenth of September, President Trump urged Ukraine to stop hitting refineries.", "text": "\"Stop hitting refineries\"", "broll_query": "White House", "transition": "thread"},
+    {"type": "statement", "narration": "In October, Kyiv paused refinery strikes for three days at Washington's request. On the fifteenth, President Zelenskyy said the restrictions had been lifted.", "text": "A three-day pause", "broll_query": "Kyiv government building", "transition": "whip"},
+    {"type": "statement", "narration": "Ukrainian analysts say there was a second, informal pause of about two weeks. It ended with the three strikes at the end of October.", "text": "Then the strikes resumed", "broll_query": "refinery fire", "transition": "whip"},
+    {"type": "map", "narration": "Fuel has become a bargaining chip. Whatever peace talks come next, the refineries along the Volga will be on the table.", "heading": "The refinery map", "places": [{"name": "Moscow", "lat": 55.64, "lon": 37.8}, {"name": "Kstovo", "lat": 56.15, "lon": 44.2}, {"name": "Novokuibyshevsk", "lat": 53.1, "lon": 49.95}, {"name": "Ufa", "lat": 54.8, "lon": 56.05}], "route": false},
+
+    {"type": "list", "narration": "So what to watch? Whether Russia's air defences can thin out the swarms. Whether repairs keep up with the damage. And whether a ceasefire puts energy off limits for both sides.", "heading": "What to watch", "items": ["Can air defences thin the swarms?", "Can repairs keep up?", "Will a ceasefire protect energy on both sides?"]},
+    {"type": "map", "narration": "A thousand kilometres used to be safe distance from a front line. In this war, it isn't any more.", "heading": "No longer out of reach", "regions": ["Russia", "Ukraine"], "places": [{"name": "Ufa", "lat": 54.8, "lon": 56.05}]},
+    {"type": "statement", "narration": "Should refineries be off limits in a ceasefire, or are they fair targets in war? Tell us in the comments.", "text": "Fair target, or off limits?", "broll_query": "oil refinery sunset", "transition": "fade"}
+  ]
+}
