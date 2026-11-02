@@ -1,0 +1,17 @@
+{
+  "checked": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    16,
+    20,
+    54
+  ],
+  "failed_text": {},
+  "failed_picture": {
+    "16": "frame check: shows Jupiter, not Voyager 1 probe",
+    "20": "frame check: shows Saturn, not Voyager probe"
+  }
+}

@@ -1,0 +1,700 @@
+{
+  "format": "long",
+  "duration": 512.8,
+  "target_3d": 0.75,
+  "share_3d": 0.095,
+  "share_animated": 0.095,
+  "share_subject_moving": 0.095,
+  "share_matched": 1.0,
+  "share_library_models": 1.0,
+  "share_camera_moving": 0.095,
+  "share_2d": 0.905,
+  "shots_3d": 6,
+  "static": [],
+  "repeats": [
+    3,
+    5
+  ],
+  "frozen": [],
+  "environment_richness": 34.6,
+  "animation_quality": 34.7,
+  "bare": [
+    1,
+    2,
+    3,
+    5,
+    8
+  ],
+  "lifeless": [
+    1,
+    3,
+    8
+  ],
+  "dropped_to_2d": [
+    16,
+    20
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "seconds": 9.62,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "establish",
+      "lead": "voyager-1",
+      "place": "space",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 5.67,
+      "environment_richness": 35.8,
+      "animation_quality": 12.9,
+      "inspection": {
+        "environment": {
+          "score": 35.8,
+          "edges": 0.062,
+          "empty": 0.551
+        },
+        "animation": {
+          "camera": 0.111,
+          "local": 0.002,
+          "moving": 0.016,
+          "cuts": 0,
+          "still_run": 3.88,
+          "score": 12.9
+        }
+      }
+    },
+    {
+      "scene": 2,
+      "start": 9.62,
+      "seconds": 9.07,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "space",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 5.18,
+      "environment_richness": 32.8,
+      "animation_quality": 54.2,
+      "inspection": {
+        "environment": {
+          "score": 32.8,
+          "edges": 0.052,
+          "empty": 0.56
+        },
+        "animation": {
+          "camera": 0.825,
+          "local": 0.061,
+          "moving": 0.295,
+          "cuts": 0,
+          "still_run": 1.88,
+          "score": 54.2
+        }
+      }
+    },
+    {
+      "scene": 3,
+      "start": 18.69,
+      "seconds": 7.8,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "space",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 4.33,
+      "environment_richness": 30.5,
+      "animation_quality": 35.9,
+      "inspection": {
+        "environment": {
+          "score": 30.5,
+          "edges": 0.05,
+          "empty": 0.597
+        },
+        "animation": {
+          "camera": 0.169,
+          "local": 0.108,
+          "moving": 0.333,
+          "cuts": 0,
+          "still_run": 2.75,
+          "score": 35.9
+        }
+      }
+    },
+    {
+      "scene": 4,
+      "start": 26.49,
+      "seconds": 8.01,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "start": 34.5,
+      "seconds": 8.56,
+      "template": "world",
+      "kind": "3D",
+      "subject": "fly",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "space",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 6.32,
+      "environment_richness": 33.2,
+      "animation_quality": 46.5,
+      "inspection": {
+        "environment": {
+          "score": 33.2,
+          "edges": 0.059,
+          "empty": 0.588
+        },
+        "animation": {
+          "camera": 0.619,
+          "local": 0.057,
+          "moving": 0.217,
+          "cuts": 1,
+          "still_run": 2.5,
+          "score": 46.5
+        }
+      }
+    },
+    {
+      "scene": 6,
+      "start": 43.06,
+      "seconds": 7.22,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "start": 50.28,
+      "seconds": 7.61,
+      "template": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 8,
+      "start": 57.9,
+      "seconds": 6.08,
+      "template": "world",
+      "kind": "3D",
+      "subject": "rise",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "space",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 4.11,
+      "environment_richness": 26.4,
+      "animation_quality": 9.2,
+      "inspection": {
+        "environment": {
+          "score": 26.4,
+          "edges": 0.047,
+          "empty": 0.676
+        },
+        "animation": {
+          "camera": 0.13,
+          "local": 0.045,
+          "moving": 0.045,
+          "cuts": 0,
+          "still_run": 5.25,
+          "score": 9.2
+        }
+      }
+    },
+    {
+      "scene": 9,
+      "start": 63.98,
+      "seconds": 5.06,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 10,
+      "start": 69.03,
+      "seconds": 4.74,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 11,
+      "start": 73.77,
+      "seconds": 7.48,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "start": 81.25,
+      "seconds": 9.51,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 13,
+      "start": 90.76,
+      "seconds": 4.27,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 14,
+      "start": 95.03,
+      "seconds": 7.72,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 15,
+      "start": 102.75,
+      "seconds": 6.69,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 16,
+      "start": 109.44,
+      "seconds": 6.81,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 17,
+      "start": 116.25,
+      "seconds": 7.92,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "start": 124.17,
+      "seconds": 8.87,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 19,
+      "start": 133.03,
+      "seconds": 6.2,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "start": 139.24,
+      "seconds": 8.74,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 21,
+      "start": 147.98,
+      "seconds": 5.56,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 22,
+      "start": 153.54,
+      "seconds": 7.38,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 23,
+      "start": 160.91,
+      "seconds": 5.92,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "start": 166.84,
+      "seconds": 7.27,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 25,
+      "start": 174.1,
+      "seconds": 6.19,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "start": 180.29,
+      "seconds": 8.02,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "start": 188.31,
+      "seconds": 5.57,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 28,
+      "start": 193.88,
+      "seconds": 5.46,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "start": 199.34,
+      "seconds": 8.63,
+      "template": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 30,
+      "start": 207.98,
+      "seconds": 7.14,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 31,
+      "start": 215.12,
+      "seconds": 7.63,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "start": 222.75,
+      "seconds": 8.3,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 33,
+      "start": 231.05,
+      "seconds": 6.91,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "start": 237.96,
+      "seconds": 6.84,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 35,
+      "start": 244.8,
+      "seconds": 4.95,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 36,
+      "start": 249.75,
+      "seconds": 6.42,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 37,
+      "start": 256.18,
+      "seconds": 9.83,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 38,
+      "start": 266.0,
+      "seconds": 7.89,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 39,
+      "start": 273.89,
+      "seconds": 9.29,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 40,
+      "start": 283.18,
+      "seconds": 7.72,
+      "template": "proportion",
+      "kind": "2D"
+    },
+    {
+      "scene": 41,
+      "start": 290.89,
+      "seconds": 7.29,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 42,
+      "start": 298.18,
+      "seconds": 5.57,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 43,
+      "start": 303.75,
+      "seconds": 9.1,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 44,
+      "start": 312.86,
+      "seconds": 9.34,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 45,
+      "start": 322.19,
+      "seconds": 7.72,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 46,
+      "start": 329.91,
+      "seconds": 4.52,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 47,
+      "start": 334.42,
+      "seconds": 9.08,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 48,
+      "start": 343.51,
+      "seconds": 6.39,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 49,
+      "start": 349.9,
+      "seconds": 9.19,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 50,
+      "start": 359.09,
+      "seconds": 8.64,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 51,
+      "start": 367.73,
+      "seconds": 8.75,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 52,
+      "start": 376.48,
+      "seconds": 3.41,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 53,
+      "start": 379.88,
+      "seconds": 9.72,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 54,
+      "start": 389.6,
+      "seconds": 7.46,
+      "template": "world",
+      "kind": "3D",
+      "subject": "approach",
+      "secondary": [
+        "turning parts"
+      ],
+      "environment": [],
+      "camera": "track",
+      "lead": "voyager-1",
+      "place": "space",
+      "set": "space",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 26.41,
+      "environment_richness": 47.9,
+      "animation_quality": 45.2,
+      "inspection": {
+        "environment": {
+          "score": 47.9,
+          "edges": 0.062,
+          "empty": 0.282
+        },
+        "animation": {
+          "camera": 0.246,
+          "local": 0.137,
+          "moving": 0.415,
+          "cuts": 2,
+          "still_run": 1.88,
+          "score": 45.2
+        }
+      }
+    },
+    {
+      "scene": 55,
+      "start": 397.06,
+      "seconds": 5.53,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 56,
+      "start": 402.59,
+      "seconds": 8.95,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 57,
+      "start": 411.54,
+      "seconds": 4.31,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 58,
+      "start": 415.86,
+      "seconds": 7.56,
+      "template": "scale",
+      "kind": "2D"
+    },
+    {
+      "scene": 59,
+      "start": 423.41,
+      "seconds": 9.11,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 60,
+      "start": 432.52,
+      "seconds": 9.47,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 61,
+      "start": 441.99,
+      "seconds": 9.0,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 62,
+      "start": 450.99,
+      "seconds": 9.23,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 63,
+      "start": 460.22,
+      "seconds": 7.62,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 64,
+      "start": 467.84,
+      "seconds": 8.19,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 65,
+      "start": 476.03,
+      "seconds": 5.65,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 66,
+      "start": 481.67,
+      "seconds": 7.61,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 67,
+      "start": 489.28,
+      "seconds": 23.46,
+      "template": "statement",
+      "kind": "2D"
+    }
+  ]
+}

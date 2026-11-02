@@ -1,0 +1,721 @@
+{
+  "style": "clinical",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model",
+    "animation": "rules"
+  },
+  "builds": [
+    {
+      "entity": "voyager-1",
+      "archetype": "vehicle",
+      "size": 4.5,
+      "primary": "#d4af37",
+      "secondary": "#111111",
+      "accent": "#cccccc",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.54,
+            0.0
+          ],
+          "size": [
+            4.5,
+            0.585,
+            1.8
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d4af37",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -0.225,
+            0.945,
+            0.0
+          ],
+          "size": [
+            2.475,
+            0.648,
+            1.665
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#d4af37",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -0.225,
+            0.945,
+            0.0
+          ],
+          "size": [
+            2.5200000000000005,
+            0.3645,
+            1.6875
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            2.25,
+            0.585,
+            0.585
+          ],
+          "size": [
+            0.045,
+            0.18,
+            0.31500000000000006
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#fff3c4",
+          "bone": "body",
+          "spin": "",
+          "glow": true
+        },
+        {
+          "shape": "box",
+          "at": [
+            2.25,
+            0.585,
+            -0.585
+          ],
+          "size": [
+            0.045,
+            0.18,
+            0.31500000000000006
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#fff3c4",
+          "bone": "body",
+          "spin": "",
+          "glow": true
+        },
+        {
+          "shape": "box",
+          "at": [
+            0.0,
+            0.40499999999999997,
+            0.0
+          ],
+          "size": [
+            4.545,
+            0.09,
+            1.8225000000000002
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#111111",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -1.44,
+            0.31500000000000006,
+            -0.9
+          ],
+          "size": [
+            0.6749999999999999,
+            0.27,
+            0.6749999999999999
+          ],
+          "rot": [
+            90.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1c1c1c",
+          "bone": "body",
+          "spin": "z",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -1.44,
+            0.31500000000000006,
+            0.9
+          ],
+          "size": [
+            0.6749999999999999,
+            0.27,
+            0.6749999999999999
+          ],
+          "rot": [
+            90.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1c1c1c",
+          "bone": "body",
+          "spin": "z",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            1.44,
+            0.31500000000000006,
+            -0.9
+          ],
+          "size": [
+            0.6749999999999999,
+            0.27,
+            0.6749999999999999
+          ],
+          "rot": [
+            90.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1c1c1c",
+          "bone": "body",
+          "spin": "z",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            1.44,
+            0.31500000000000006,
+            0.9
+          ],
+          "size": [
+            0.6749999999999999,
+            0.27,
+            0.6749999999999999
+          ],
+          "rot": [
+            90.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1c1c1c",
+          "bone": "body",
+          "spin": "z",
+          "glow": false
+        }
+      ],
+      "form": "",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        1,
+        2,
+        3,
+        5,
+        8,
+        54
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "space",
+      "kind": "space",
+      "time": "night",
+      "ground": "#000000",
+      "sky": "#050510",
+      "accent": "#ffffff",
+      "backdrop": "none",
+      "dressing": [
+        {
+          "name": "Voyager 1",
+          "build": {
+            "entity": "space:voyager-1",
+            "archetype": "vehicle",
+            "size": 3.0,
+            "primary": "#d4af37",
+            "secondary": "#222222",
+            "accent": "#ffffff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "cylinder",
+                "at": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  1.423,
+                  0.949,
+                  1.423
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#d4af37",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              },
+              {
+                "shape": "cone",
+                "at": [
+                  0.0,
+                  0.0,
+                  1.423
+                ],
+                "size": [
+                  1.897,
+                  0.759,
+                  1.897
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  270.0
+                ],
+                "color": "#111111",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 1,
+          "spread": 2.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "1": {
+      "scene": 1,
+      "place": "space",
+      "time": "",
+      "actors": [
+        {
+          "entity": "voyager-1",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "establish",
+      "on": "voyager-1",
+      "marks": [],
+      "callouts": [
+        {
+          "on": "voyager-1",
+          "text": "most distant machine"
+        }
+      ],
+      "beats": []
+    },
+    "2": {
+      "scene": 2,
+      "place": "space",
+      "time": "",
+      "actors": [
+        {
+          "entity": "voyager-1",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "push_in",
+      "on": "voyager-1",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "3": {
+      "scene": 3,
+      "place": "space",
+      "time": "",
+      "actors": [
+        {
+          "entity": "voyager-1",
+          "verb": "fly",
+          "at": "far",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "follow",
+      "on": "voyager-1",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "5": {
+      "scene": 5,
+      "place": "space",
+      "time": "",
+      "actors": [
+        {
+          "entity": "voyager-1",
+          "verb": "fly",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "aerial",
+      "on": "voyager-1",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "8": {
+      "scene": 8,
+      "place": "space",
+      "time": "",
+      "actors": [
+        {
+          "entity": "voyager-1",
+          "verb": "rise",
+          "at": "center",
+          "to": "far",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "low_angle",
+      "on": "voyager-1",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "54": {
+      "scene": 54,
+      "place": "space",
+      "time": "",
+      "actors": [
+        {
+          "entity": "voyager-1",
+          "verb": "approach",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "establish",
+      "on": "voyager-1",
+      "marks": [
+        {
+          "kind": "glow",
+          "on": "voyager-1",
+          "to": "",
+          "color": ""
+        }
+      ],
+      "callouts": [],
+      "beats": []
+    }
+  },
+  "direction": {
+    "1": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "natural"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "establish",
+          "on": "voyager-1"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [],
+        "mist": 0.0,
+        "wind": 0.0,
+        "particles": "none",
+        "life": [],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "moonlit",
+        "key": 1.0,
+        "fill": 1.0,
+        "rim": 1.0,
+        "contrast": 1.0
+      }
+    },
+    "2": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "natural"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "voyager-1"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [],
+        "mist": 0.0,
+        "wind": 0.0,
+        "particles": "none",
+        "life": [],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "moonlit",
+        "key": 1.0,
+        "fill": 1.0,
+        "rim": 1.0,
+        "contrast": 1.0
+      }
+    },
+    "3": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "natural"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "voyager-1"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [],
+        "mist": 0.0,
+        "wind": 0.0,
+        "particles": "none",
+        "life": [],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "moonlit",
+        "key": 1.0,
+        "fill": 1.0,
+        "rim": 1.0,
+        "contrast": 1.0
+      }
+    },
+    "5": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "natural"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "voyager-1"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [],
+        "mist": 0.0,
+        "wind": 0.0,
+        "particles": "none",
+        "life": [],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "moonlit",
+        "key": 1.0,
+        "fill": 1.0,
+        "rim": 1.0,
+        "contrast": 1.0
+      }
+    },
+    "8": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "natural"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "voyager-1"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [],
+        "mist": 0.0,
+        "wind": 0.0,
+        "particles": "none",
+        "life": [],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "moonlit",
+        "key": 1.0,
+        "fill": 1.0,
+        "rim": 1.0,
+        "contrast": 1.0
+      }
+    },
+    "54": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "natural"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "voyager-1"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [],
+        "mist": 0.0,
+        "wind": 0.0,
+        "particles": "none",
+        "life": [],
+        "wet": 0.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "moonlit",
+        "key": 1.0,
+        "fill": 1.0,
+        "rim": 1.0,
+        "contrast": 1.0
+      }
+    }
+  }
+}

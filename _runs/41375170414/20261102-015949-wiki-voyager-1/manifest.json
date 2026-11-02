@@ -1,0 +1,94 @@
+{
+  "entities": [
+    {
+      "id": "voyager-1",
+      "name": "Voyager 1",
+      "kind": "spacecraft",
+      "search": [
+        "voyager 1",
+        "space probe",
+        "spacecraft"
+      ],
+      "look": "Gold-plated record attached to side, high-gain dish antenna, multiple science instruments on booms, RTG power units on a truss.",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        16,
+        20,
+        22,
+        23,
+        31,
+        33,
+        35,
+        39,
+        49,
+        53,
+        54,
+        59,
+        61,
+        66
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "space",
+      "name": "Interstellar space",
+      "look": "Dark starry void with distant stars and no planets or dust clouds.",
+      "scenes": [
+        33,
+        54,
+        67
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 8,
+      "entity": "voyager-1",
+      "place": "",
+      "action": "lifted off from Cape Canaveral",
+      "motion": "rise",
+      "cue": "Voyager 1 lifted off from Cape Canaveral.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 16,
+      "entity": "voyager-1",
+      "place": "",
+      "action": "flew past Jupiter",
+      "motion": "move",
+      "cue": "Voyager 1 flew past Jupiter.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 20,
+      "entity": "voyager-1",
+      "place": "",
+      "action": "swung past Saturn's rings and Titan",
+      "motion": "move",
+      "cue": "Voyager 1 swung past its rings and its giant moon, Titan.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 54,
+      "entity": "voyager-1",
+      "place": "space",
+      "action": "signal came back from a light-day away",
+      "motion": "present",
+      "cue": "its signal came back. Alone, almost a light-day from home",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}
