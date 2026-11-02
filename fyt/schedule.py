@@ -19,7 +19,7 @@ from datetime import date, datetime, timedelta, timezone
 from datetime import time as dtime
 from zoneinfo import ZoneInfo
 
-from fyt import pipeline, youtube
+from fyt import pipeline, studio, youtube
 from fyt.config import Config
 from fyt.store import Job, Topics, Uploads
 
@@ -370,6 +370,8 @@ def fill(cfg: Config, now: datetime | None = None, rng: random.Random | None = N
             continue  # a Short may still fit after a skipped long video
         job = make_timely(cfg, topics) if slot.timely else None
         kind = "timely-short" if job else None
+        # finished Blender productions (fyt/studio.py) go ahead of the topic queue
+        job = job or studio.make_next(cfg, topics, slot.kind)
         job = job or pipeline.make_next(cfg.model_copy(update={"format": slot.kind}), topics)
         if job is None or job.meta.get("status") != "approved":
             failures += 1
@@ -453,6 +455,18 @@ def bonus(cfg: Config, now: datetime, rng, clock, started: float, budget: int, t
         if (clock() - started) / 60 + MAKE_MINUTES[fmt] > cfg.schedule.max_run_minutes:
             print(f"not enough time left for a bonus {kind} video")
             continue
+        if kind == "long":
+            # a finished Blender production takes the bonus long video ahead of a trending topic
+            job = studio.make_next(cfg, topics, "long")
+            if job is not None:
+                if job.meta.get("status") == "approved":
+                    result = _upload(cfg, job, Slot(spaced_time(cfg, fmt, rng), fmt), rng, now, kind="bonus-long", exact=True)
+                    if result:
+                        budget -= 1
+                        made += 1
+                    elif result is None:
+                        budget = 0
+                continue
         min_fit = getattr(cfg.growth, BONUS_MIN_FIT[kind])
         if kind == "short" and cfg.growth.bonus_short_min_fit is not None:
             min_fit = cfg.growth.bonus_short_min_fit
