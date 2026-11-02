@@ -1,0 +1,153 @@
+{
+  "entities": [
+    {
+      "id": "voyager-1",
+      "name": "Voyager 1",
+      "kind": "spacecraft",
+      "search": [
+        "spacecraft",
+        "probe",
+        "voyager 1"
+      ],
+      "look": "Boxy body with a large high-gain dish antenna, multiple booms, and a golden record attached.",
+      "certain": true,
+      "scenes": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        16,
+        20,
+        22,
+        23,
+        24,
+        31,
+        32,
+        33,
+        35,
+        39,
+        49,
+        53,
+        59,
+        61,
+        66
+      ]
+    },
+    {
+      "id": "titan-rocket",
+      "name": "Titan rocket",
+      "kind": "rocket",
+      "search": [
+        "rocket",
+        "titan rocket",
+        "space launch vehicle"
+      ],
+      "look": "Tall multi-stage white rocket with strap-on boosters, 1970s era.",
+      "certain": true,
+      "scenes": [
+        8,
+        10,
+        13,
+        20,
+        21,
+        22,
+        33
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "cape-canaveral",
+      "name": "Cape Canaveral",
+      "look": "Coastal launch pad with gantry structures, blue sky, 1970s era, no people.",
+      "scenes": [
+        8
+      ]
+    },
+    {
+      "id": "space",
+      "name": "Deep Space",
+      "look": "Black void of space with distant stars, nebulae, no people or planets close by.",
+      "scenes": [
+        32,
+        66
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 8,
+      "entity": "voyager-1",
+      "place": "cape-canaveral",
+      "action": "lifted off from Cape Canaveral on a Titan rocket",
+      "motion": "rise",
+      "cue": "Voyager 1 lifted off from Cape Canaveral on a Titan rocket.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 16,
+      "entity": "voyager-1",
+      "place": "space",
+      "action": "flew past Jupiter",
+      "motion": "move",
+      "cue": "Voyager 1 flew past Jupiter.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 20,
+      "entity": "voyager-1",
+      "place": "space",
+      "action": "swung past its rings and its giant moon, Titan",
+      "motion": "turn",
+      "cue": "Voyager 1 swung past its rings and its giant moon, Titan.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 24,
+      "entity": "voyager-1",
+      "place": "space",
+      "action": "it turned around",
+      "motion": "turn",
+      "cue": "it turned around.",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 32,
+      "entity": "voyager-1",
+      "place": "space",
+      "action": "it crossed the edge",
+      "motion": "move",
+      "cue": "it crossed the edge.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 53,
+      "entity": "voyager-1",
+      "place": "space",
+      "action": "swapped in backups and entered a safe state",
+      "motion": "present",
+      "cue": "The spacecraft's own fault protection swapped in the backups and put the spacecraft into a safe, stable state.",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 66,
+      "entity": "voyager-1",
+      "place": "space",
+      "action": "keep falling outward with its golden record",
+      "motion": "move",
+      "cue": "It will keep falling outward with its golden record",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

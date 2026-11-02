@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "key": "rocket",
+  "query": "rocket",
+  "source": "sketchfab",
+  "uid": "sketchfab:75d8f8cc8c2b4598b694edfe67e073e8",
+  "title": "ROCKET",
+  "author": "Ret.ouchs",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-75d8f8cc8c2b4598b694edfe67e073e8",
+  "checked": "vision",
+  "triangles": 39788,
+  "bytes": 1036456,
+  "size": [
+    6.6844,
+    26.8774,
+    3.6569
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "Tall multi-stage white rocket with strap-on boosters, 1970s era.",
+  "added": "2026-11-01T22:52:12+00:00",
+  "facing": "unclear:2"
+}

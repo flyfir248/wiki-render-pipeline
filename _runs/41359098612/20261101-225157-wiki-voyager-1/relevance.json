@@ -1,0 +1,27 @@
+{
+  "checked": [
+    1,
+    2,
+    3,
+    5,
+    12,
+    13,
+    14,
+    16,
+    20,
+    21,
+    24,
+    32,
+    53,
+    66,
+    67
+  ],
+  "failed_text": {
+    "8": "only a simplified stand-in model was found for its subject"
+  },
+  "failed_picture": {
+    "16": "frame check: The frame shows a planet, but no space probe.",
+    "20": "frame check: The frame shows a planet (Saturn) but not a space probe.",
+    "24": "frame check: The spacecraft is cut off at the edge."
+  }
+}

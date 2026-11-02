@@ -1,0 +1,33 @@
+{
+  "checks": {
+    "coverage": "pass",
+    "assets": "pass",
+    "timing": "pass",
+    "readability": "pass",
+    "continuity": "pass",
+    "provenance": "pass",
+    "technical": "pass",
+    "frames": "pass",
+    "look": "warn"
+  },
+  "problems": [],
+  "warnings": [
+    "scene 2 at 12.3s looks flat (contrast 14)",
+    "scene 3 at 21.0s looks flat (contrast 14)",
+    "scene 5 at 37.1s looks flat (contrast 14)",
+    "scene 12 at 85.3s: Does not show Voyager-1; shows a beach and pier instead.",
+    "scene 32 at 226.4s looks flat (contrast 14)",
+    "scene 32 at 226.4s: Subject too small to read on phone; background is empty void",
+    "scene 32 at 230.7s: Subject too small to read on phone",
+    "scene 53 at 384.0s: Subject too small for phone readability",
+    "scene 66 at 485.1s looks flat (contrast 13)",
+    "scene 66 at 485.1s: Subject too small to read on phone",
+    "scene 67 at 509.6s: Subject cut off by top frame edge",
+    "3D covers 22% of the runtime, under the 75% target",
+    "3D scenes [3, 5, 21, 32, 66, 67] repeat an earlier shot",
+    "3D scenes [1, 2, 3, 5, 32, 53, 66, 67] look bare (environment richness under 40)",
+    "3D scenes [1, 13, 32, 53, 66, 67] have little moving in the picture beyond the camera (animation under 40)"
+  ],
+  "repair": [],
+  "repaired": []
+}

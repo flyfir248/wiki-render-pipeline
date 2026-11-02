@@ -1,0 +1,566 @@
+{
+  "planner": "model",
+  "budget_seconds": 360.0,
+  "world_seconds": 127.5,
+  "dropped_for_budget": [],
+  "target_share": 0.75,
+  "world_share": 0.248,
+  "filled": [
+    1,
+    2,
+    3,
+    5,
+    12,
+    13,
+    14,
+    21,
+    67
+  ],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 4,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 6,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "type": "story",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 8,
+      "type": "world",
+      "kind": "3D",
+      "subject": "rocket",
+      "variant": "rocket",
+      "action": "launch",
+      "setting": "sea",
+      "weather": null,
+      "cue": "lifted off",
+      "illustrative": false,
+      "label": "RECONSTRUCTION \u00b7 SIMPLIFIED",
+      "model": {
+        "id": "rocket:rocket",
+        "level": "generic",
+        "title": "generic rocket"
+      }
+    },
+    {
+      "scene": 9,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 10,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 11,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 13,
+      "type": "world",
+      "kind": "3D",
+      "overlay": "stat",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 14,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 15,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 16,
+      "type": "world",
+      "kind": "3D",
+      "subject": "space",
+      "variant": "probe",
+      "action": "flyby",
+      "setting": "space",
+      "weather": null,
+      "cue": "flew past",
+      "illustrative": false,
+      "label": "RECONSTRUCTION",
+      "model": {
+        "id": "voyager-probe",
+        "level": "library",
+        "title": "Voyager probe (NASA 3D Resources)"
+      }
+    },
+    {
+      "scene": 17,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 19,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "type": "world",
+      "kind": "3D",
+      "subject": "space",
+      "variant": "probe",
+      "action": "flyby",
+      "setting": "space",
+      "weather": null,
+      "cue": "swung past",
+      "illustrative": false,
+      "label": "RECONSTRUCTION",
+      "model": {
+        "id": "voyager-probe",
+        "level": "library",
+        "title": "Voyager probe (NASA 3D Resources)"
+      }
+    },
+    {
+      "scene": 21,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 22,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 23,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "turn",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "it turned around.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 25,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 28,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "type": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 30,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 31,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "it crossed the edge.",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 33,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 35,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 36,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 37,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 38,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 39,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 40,
+      "type": "proportion",
+      "kind": "2D"
+    },
+    {
+      "scene": 41,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 42,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 43,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 44,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 45,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 46,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 47,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 48,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 49,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 50,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 51,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 52,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 53,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "The spacecraft's own fault protection swapped in the backups and put the spacecraft into a safe, stable state.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 54,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 55,
+      "type": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 56,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 57,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 58,
+      "type": "scale",
+      "kind": "2D"
+    },
+    {
+      "scene": 59,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 60,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 61,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 62,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 63,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 64,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 65,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 66,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "move",
+      "setting": "countryside",
+      "weather": null,
+      "cue": "It will keep falling outward with its golden record",
+      "illustrative": false,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 67,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "countryside",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    }
+  ]
+}

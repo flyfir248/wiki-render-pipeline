@@ -1,0 +1,108 @@
+reading the story: what it shows
+story: Voyager 1, Titan rocket; 7 moments
+planning the visuals
+visual plan (model): 16 3D, 1 2.5D, 50 2D (25% of the runtime in 3D, aiming for 75%); 3D: stage present, stage present, stage present, stage present, rocket launch, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+assets: 'Hover bike - "The Rocket"' (sketchfab) is not a rocket: Shows a red jet-propelled vehicle, not a 1970s multi-stage rocket.
+assets: 'Rockets Gun' (sketchfab) is not a rocket: Shows a sci-fi gun, not a rocket.
+assets: Titan rocket -> 'ROCKET' from sketchfab (by, 39788 triangles, 0 animations)
+assets: Titan rocket: its front could not be told (unclear, then unclear turned round); left to its shape
+building the story world: 2 entities for 13 scenes
+real sizes: titan-rocket: 6.08 m -> 50 m (reference size for 'rocket')
+animation director (model): scene 24: voyager-1 turn; scene 32: voyager-1 move; scene 53: voyager-1 turn
+scene director: cinematic (natural, strength 0.75); scene 1: establish; scene 2: track; scene 3: track; scene 5: track; scene 12: aerial; scene 13: track; scene 14: track; scene 21: track; scene 24: track/push_in; scene 32: track/push_in; scene 53: track/push_in; scene 66: track; scene 67: track
+story world (clinical): cast model, sets model, direction model; voyager-1 as vehicle, titan-rocket as vehicle
+voicing 67 scenes with kokoro
+fetching visuals
+stock clip s4.mp4 left out: a clip can't be checked
+stock clip s6.mp4 left out: a clip can't be checked
+stock clip s9.mp4 left out: a clip can't be checked
+stock clip s15.mp4 left out: a clip can't be checked
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s18.mp4 left out: a clip can't be checked
+stock clip s19.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s23.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s26.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s30.mp4 left out: a clip can't be checked
+stock clip s31.mp4 left out: a clip can't be checked
+stock clip s33.mp4 left out: a clip can't be checked
+stock clip s34.mp4 left out: a clip can't be checked
+stock clip s35.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s37.mp4 left out: a clip can't be checked
+stock clip s38.mp4 left out: a clip can't be checked
+stock clip s39.mp4 left out: a clip can't be checked
+stock clip s41.mp4 left out: a clip can't be checked
+stock clip s42.mp4 left out: a clip can't be checked
+stock clip s43.mp4 left out: a clip can't be checked
+stock clip s44.mp4 left out: a clip can't be checked
+stock clip s45.mp4 left out: a clip can't be checked
+stock clip s46.mp4 left out: a clip can't be checked
+stock clip s47.mp4 left out: a clip can't be checked
+stock clip s48.mp4 left out: a clip can't be checked
+stock clip s49.mp4 left out: a clip can't be checked
+stock clip s50.mp4 left out: a clip can't be checked
+stock clip s51.mp4 left out: a clip can't be checked
+stock clip s52.mp4 left out: a clip can't be checked
+stock clip s54.mp4 left out: a clip can't be checked
+stock clip s55.mp4 left out: a clip can't be checked
+stock clip s56.mp4 left out: a clip can't be checked
+stock clip s57.mp4 left out: a clip can't be checked
+stock clip s59.mp4 left out: a clip can't be checked
+stock clip s61.mp4 left out: a clip can't be checked
+stock clip s62.mp4 left out: a clip can't be checked
+stock clip s63.mp4 left out: a clip can't be checked
+stock clip s64.mp4 left out: a clip can't be checked
+stock clip s65.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Voyager 1 Io volcanic plume Voyager': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: loc image search failed for 'Voyager 1 Io volcanic plume Voyager': 403 Client Error: Forbidden for url: https://www.loc.gov/photos/?q=Voyager+1+Io+volcanic+plume+Voyager&fo=json&c=25&fa=online-format%3Aimage
+warning: openverse image search failed for 'Voyager 1 Voyager 2 Neptune': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+warning: loc image search failed for 'Voyager 1 Voyager 2 Neptune': 403 Client Error: Forbidden for url: https://www.loc.gov/photos/?q=Voyager+1+Voyager+2+Neptune&fo=json&c=25&fa=online-format%3Aimage (not asked again this run)
+photo commons28.jpg left out: Shows a train instead of the Voyager 1 spacecraft.
+photo commons28.jpg left out: Shows a cruise ship instead of the Voyager 1 spacecraft.
+photo commons29.jpg left out: Shows a cruise ship instead of the Voyager 1 spacecraft.
+photo p37.jpg left out: Shows International Space Station cupola, not Voyager 1.
+photo p37.jpg left out: Photo shows the Hubble Space Telescope, not Voyager 1.
+photo p45.jpg left out: Shows a futuristic space station instead of Voyager 1.
+photo p45.jpg left out: Shows a Soyuz spacecraft, not Voyager 1.
+4 scenes without a picture of their own reuse one of the video's photos
+visuals: 40 Wikipedia and freely licensed images, 10 stock, 17 scenes on plain background
+collage: 46 photos styled, 17 with a cut-out subject
+drawing story scenes (cloudflare)
+warning: no background art for scene 7: image generation failed: 429: the free daily image allowance is used up
+warning: no art for '1970s Voyager space probe: large white dish antenna on a ten-sided bus, long thin booms': image generation failed: the free daily image allowance is used up
+warning: no art for '1970s Voyager space probe: large white dish antenna on a ten-sided bus, long thin booms': image generation failed: the free daily image allowance is used up
+0 illustrations drawn
+2 story props had no matching illustration and are left out
+scene 8: 3D dropped: only a simplified stand-in model was found for its subject
+relevance: checking 15 3D scenes by eye
+relevance: filming scenes [24] again, closer on their subject
+scene 16: 3D dropped: frame check: The frame shows a planet, but no space probe.
+scene 20: 3D dropped: frame check: The frame shows a planet (Saturn) but not a space probe.
+scene 24: 3D dropped: frame check: The spacecraft is cut off at the edge.
+art direction: signature
+motion: s53 frame 141: jump, voyager-1: moved 1.19 in one frame (usually 0.14)
+rendering 514s long video
+look: scene 2 at 12.3s looks flat (contrast 14)
+look: scene 3 at 21.0s looks flat (contrast 14)
+look: scene 5 at 37.1s looks flat (contrast 14)
+look: scene 12 at 85.3s: Does not show Voyager-1; shows a beach and pier instead.
+look: scene 32 at 226.4s looks flat (contrast 14)
+look: scene 32 at 226.4s: Subject too small to read on phone; background is empty void
+look: scene 32 at 230.7s: Subject too small to read on phone
+look: scene 53 at 384.0s: Subject too small for phone readability
+look: scene 66 at 485.1s looks flat (contrast 13)
+look: scene 66 at 485.1s: Subject too small to read on phone
+look: scene 67 at 509.6s: Subject cut off by top frame edge
+3D coverage: 22% of the runtime in 3D (target 75%), 22% moving on its own, 12 3D shots; environment richness 38, animation quality 35
+quality: 3D covers 22% of the runtime, under the 75% target
+quality: 3D scenes [3, 5, 21, 32, 66, 67] repeat an earlier shot
+quality: 3D scenes [1, 2, 3, 5, 32, 53, 66, 67] look bare (environment richness under 40)
+quality: 3D scenes [1, 13, 32, 53, 66, 67] have little moving in the picture beyond the camera (animation under 40)
+rendering thumbnail
+thumbnail: cutout take
+done: approved
