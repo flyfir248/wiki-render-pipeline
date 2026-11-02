@@ -99,6 +99,9 @@ export type Scene = {
   yearFrom?: number | null; // map scenes: a year counter (negative for BC)
   yearTo?: number | null;
   globe?: boolean | null; // map scenes: open on a spinning globe that dives in
+  zoom?: number | null; // map scenes: how much closer than the usual framing the camera ends
+  satellite?: SatLayer[] | null; // map scenes: real imagery under the borders, coarse to fine (fyt/satellite.py)
+  mapCredit?: string | null; // map scenes: the imagery's credit, shown while it is on screen
   lines?: DialogueLine[] | null; // dialogue scenes
   setting?: Setting | null; // story scenes
   backdropSrc?: string | null; // story scenes: an illustrated plate, drawn over the setting
@@ -212,3 +215,7 @@ export type ThumbnailProps = {
   background: Media | null;
   subject?: Media | null; // the subject cut out, drawn big over the background
 };
+
+// One satellite image under a map, in Web Mercator, with its lon/lat bounds; `kind: "globe"` is the
+// equirectangular world texture for the opening globe.
+export type SatLayer = { src: string; kind?: "globe" | null; west?: number; south?: number; east?: number; north?: number };

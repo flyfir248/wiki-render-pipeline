@@ -1,0 +1,85 @@
+{
+  "title": "The Strait of Hormuz: How 34 km of Water Holds the World Hostage",
+  "description": "A strip of water between Iran and Oman, about 34 kilometres wide at its narrowest, carried about 20 million barrels of oil a day before the war. Since the US and Israel began striking Iran on 28 February 2026, it has been closed, half-open, mined, cleared and attacked again. Here is the geography, what flows through it, what happened this year, why it matters so much to India, and what to watch next.\n\nFacts as reported up to 1 November 2026, from the IEA, the US EIA, Reuters, Al Jazeera, gCaptain and others (sources below). The war is ongoing and details may change.\n\nMaps: country borders as shown by the Survey of India (Natural Earth, India view). Satellite imagery: NASA Blue Marble; contains modified Copernicus Sentinel data 2025-2026.",
+  "tags": ["Strait of Hormuz", "Iran", "Oman", "oil", "geopolitics", "Persian Gulf", "Iran war 2026", "oil prices", "LNG", "shipping", "India oil imports", "chokepoint", "maps", "explained"],
+  "thumbnail_text": "34 KM THAT RULE OIL",
+  "thumbnail_kicker": "Strait of Hormuz",
+  "thumbnail_query": "oil tanker Strait of Hormuz",
+  "mood": "tense",
+  "core_message": "A 34 km strait carries a fifth of the world's oil, and the 2026 war has shown how little room there is around it.",
+  "comment_question": "Should India build more ways around Hormuz, or more oil reserves at home?",
+  "series": "News Explained",
+  "map_style": "satellite",
+  "sources": [
+    "https://iea.blob.core.windows.net/assets/c8248eba-8689-46d9-ae4b-b858b59c0f1c/StraitofHormuz2026-Factsheet.pdf",
+    "https://eia.gov/todayinenergy/detail.php?id=65504",
+    "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis",
+    "https://en.wikipedia.org/wiki/2026_Iran_war",
+    "https://www.aljazeera.com/news/2026/10/7/oman-evacuates-injured-crew-from-attacked-tanker-in-strait-of-hormuz",
+    "https://news.usni.org/2026/10/09/october-sees-near-daily-strikes-on-ships-in-hormuz",
+    "https://gcaptain.com/container-ship-sinks-near-hormuz-after-being-hit-by-projectile-sources-say/",
+    "https://www.bloomberg.com/news/articles/2026-10-30/rare-speedboat-attack-in-hormuz-ignites-tanker-s-engine-room",
+    "https://english.ahram.org.eg/News/578962.aspx",
+    "https://www.dailymaverick.co.za/article/2026-10-28-qatari-mediators-present-iran-with-new-deal-to-end-the-war-official-says.md"
+  ],
+  "chapters": [
+    {"title": "A war zone", "scene": 0},
+    {"title": "Thirty-four kilometres", "scene": 4},
+    {"title": "What flows through it", "scene": 9},
+    {"title": "The strait closes", "scene": 16},
+    {"title": "Deals that didn't hold", "scene": 22},
+    {"title": "October", "scene": 26},
+    {"title": "Is there a way around?", "scene": 33},
+    {"title": "What to watch", "scene": 38}
+  ],
+  "scenes": [
+    {"type": "map", "narration": "Before this year, about twenty million barrels of oil passed every single day through one narrow gap between Iran and Oman.", "heading": "The Strait of Hormuz", "places": [{"name": "Strait of Hormuz", "lat": 26.57, "lon": 56.25}], "zoom": 1.5},
+    {"type": "statement", "narration": "Since the end of February 2026, that gap has been a war zone.", "text": "A war zone since February 2026", "broll_query": "oil tanker at sea Persian Gulf", "transition": "whip"},
+    {"type": "statement", "narration": "Tankers have been hit by drones, mines, missiles and speedboats. Seafarers have been killed. In March, oil prices rose faster than in any month on record.", "text": "The biggest monthly oil price jump on record", "broll_query": "oil tanker fire smoke", "transition": "whip"},
+    {"type": "statement", "narration": "So how does a strip of water this narrow hold the world economy hostage? And why does it matter so much to India?", "text": "Why this strait matters", "broll_query": "oil tanker strait", "transition": "thread"},
+
+    {"type": "map", "narration": "Here it is from space. The Persian Gulf is almost a closed sea. Its only way out to the open ocean is this one bend: the Strait of Hormuz.", "heading": "The Gulf's only way out", "places": [{"name": "Kuwait", "lat": 29.37, "lon": 47.98}, {"name": "Strait of Hormuz", "lat": 26.57, "lon": 56.25}], "route": false},
+    {"type": "map", "narration": "At its narrowest, between Iran's coast and Oman's Musandam peninsula, it is only about thirty-four kilometres across.", "heading": "About 34 km across", "places": [{"name": "Larak Island, Iran", "lat": 26.86, "lon": 56.36}, {"name": "Musandam, Oman", "lat": 26.36, "lon": 56.4}], "route": false, "zoom": 4},
+    {"type": "statement", "narration": "And big ships can't use all of that. They follow two lanes, one in and one out, each only about three kilometres wide, with a buffer of water between them.", "text": "Two lanes, each about 3 km wide", "broll_query": "supertanker aerial", "transition": "whip"},
+    {"type": "map", "narration": "Those lanes bend right past Iran's islands, Qeshm and Larak, and its biggest naval port, Bandar Abbas.", "heading": "Iran's side of the strait", "places": [{"name": "Bandar Abbas", "lat": 27.18, "lon": 56.27}, {"name": "Qeshm", "lat": 26.8, "lon": 55.85}, {"name": "Larak", "lat": 26.86, "lon": 56.36}], "route": false, "zoom": 3},
+    {"type": "statement", "narration": "From these islands and this coast, every passing ship is within easy reach.", "text": "Every ship within reach", "broll_query": "Bandar Abbas port", "transition": "thread"},
+
+    {"type": "stat", "narration": "In 2025, about twenty million barrels of crude oil and fuel went through here every day, according to the International Energy Agency.", "heading": "Through Hormuz every day in 2025", "value": 20, "suffix": "M barrels", "broll_query": "oil tanker"},
+    {"type": "proportion", "narration": "That is about a quarter of all the oil the world trades by sea.", "heading": "Share of the world's seaborne oil trade", "value": 25},
+    {"type": "map", "narration": "It comes from Saudi Arabia, Iraq, Kuwait, the United Arab Emirates, Qatar, Bahrain and Iran itself. Kuwait, Qatar and Bahrain have no other way to the open sea at all.", "heading": "Who ships through Hormuz", "regions": ["Saudi Arabia", "Iraq", "Kuwait", "United Arab Emirates", "Qatar", "Bahrain", "Iran"], "region_change": "appear"},
+    {"type": "statement", "narration": "It isn't just oil. About a fifth of the world's liquefied natural gas goes the same way, most of it from Qatar.", "text": "About 1 in 5 cargoes of the world's LNG", "broll_query": "LNG tanker ship", "transition": "whip"},
+    {"type": "map", "narration": "A gas tanker leaving Qatar's Ras Laffan terminal has to sail down the Gulf and out through the strait before it can reach a single customer.", "heading": "Out of the Gulf", "places": [{"name": "Ras Laffan", "lat": 25.91, "lon": 51.55}, {"name": "Strait of Hormuz", "lat": 26.57, "lon": 56.25}, {"name": "Gulf of Oman", "lat": 24.9, "lon": 58.2}], "route": true, "vehicle": "ship"},
+    {"type": "statement", "narration": "And most of it heads east. About eighty percent of the oil goes to Asia. China and India together took forty-four percent.", "text": "80% to Asia, 44% to China and India", "broll_query": "oil refinery India", "transition": "whip"},
+    {"type": "map", "narration": "For India, Hormuz is the front door. From the strait, a tanker can reach the giant refineries at Jamnagar in Gujarat in a few days.", "heading": "India's front door", "places": [{"name": "Strait of Hormuz", "lat": 26.57, "lon": 56.25}, {"name": "Jamnagar", "lat": 22.47, "lon": 70.06}], "route": true, "vehicle": "ship"},
+
+    {"type": "statement", "narration": "On the twenty-eighth of February 2026, the United States and Israel began strikes on Iran. Iran's Supreme Leader, Ali Khamenei, was killed.", "text": "28 February 2026", "broll_query": "Tehran skyline", "transition": "thread"},
+    {"type": "statement", "narration": "Iran fired back with missiles, and its Revolutionary Guards radioed ships in the strait that none would be allowed through.", "text": "\"No ships will pass\"", "broll_query": "warship Persian Gulf", "transition": "whip"},
+    {"type": "statement", "narration": "Traffic collapsed within days. By early March, insurers had withdrawn cover, so even ships willing to take the risk could not sail.", "text": "Insurance withdrawn", "broll_query": "tanker anchored", "transition": "whip"},
+    {"type": "stat", "narration": "Brent crude passed one hundred dollars a barrel on the eighth of March, for the first time in four years, and peaked at about one hundred and twenty-six.", "heading": "Brent crude at its 2026 peak", "value": 126, "prefix": "$", "broll_query": "oil price chart"},
+    {"type": "statement", "narration": "By April, the International Maritime Organization counted about two thousand ships and twenty thousand seafarers stuck inside the Gulf.", "text": "2,000 ships, 20,000 seafarers stranded", "broll_query": "ships anchored at sea", "transition": "whip"},
+    {"type": "statement", "narration": "Countries opened their emergency reserves. On the eleventh of March, members of the International Energy Agency agreed to release four hundred million barrels.", "text": "400 million barrels released", "broll_query": "oil storage tanks", "transition": "thread"},
+
+    {"type": "timeline", "narration": "What followed was a cycle. A ceasefire in April. Failed talks, and an American blockade of Iran's own ports. A deal to end the war in June. And in July, collapse.", "heading": "Deals that didn't hold", "events": [{"label": "8 Apr", "text": "Temporary ceasefire"}, {"label": "13 Apr", "text": "US blockades Iran's ports"}, {"label": "17 Jun", "text": "Islamabad Memorandum signed"}, {"label": "8 Jul", "text": "Truce collapses"}]},
+    {"type": "map", "narration": "Iran says it decides who passes. In May it set up its own authority to regulate the strait, and it has said it wants ships to pay for passage.", "heading": "Iran's claim to the strait", "regions": ["Iran"], "places": [{"name": "Strait of Hormuz", "lat": 26.57, "lon": 56.25}], "zoom": 1.5},
+    {"type": "statement", "narration": "Ships from some countries, including China, India and Pakistan, have been let through. Ships trading with the United States, Israel and their allies were told to stay out.", "text": "Some flags pass, others don't", "broll_query": "container ship flag", "transition": "whip"},
+    {"type": "map", "narration": "Under the water there was another danger. More than a hundred suspected mines were found in the shipping lanes, and American officials said in late August that the lanes had been cleared.", "heading": "Mines in the lanes", "places": [{"name": "Shipping lanes", "lat": 26.55, "lon": 56.5}], "zoom": 3},
+
+    {"type": "statement", "narration": "Ships started moving again. By the end of September, the Middle East was exporting about eighteen million barrels of crude a day, about what it shipped before the war, according to the analytics firm Kpler.", "text": "Exports back to about 18M barrels a day", "broll_query": "oil tanker sailing", "transition": "thread"},
+    {"type": "statement", "narration": "But the attacks didn't stop. October brought near-daily strikes on ships in and around the strait.", "text": "Near-daily strikes", "broll_query": "tanker smoke sea", "transition": "whip"},
+    {"type": "map", "narration": "On the sixth of October, the tanker On Peace was hit about nine nautical miles off Limah, on Oman's coast, and caught fire.", "heading": "On Peace, 6 October", "places": [{"name": "Limah, Oman", "lat": 25.95, "lon": 56.42}], "zoom": 3},
+    {"type": "statement", "narration": "Nineteen crew were on board, seventeen of them Indian. At least twelve were injured. Nobody claimed the attack.", "text": "17 of 19 crew were Indian", "broll_query": "ship crew rescue helicopter", "transition": "whip"},
+    {"type": "statement", "narration": "India says at least ten Indian seafarers have been killed since the war began.", "text": "At least 10 Indian seafarers killed", "broll_query": "seafarers ship deck", "transition": "whip"},
+    {"type": "statement", "narration": "On the fourteenth of October, a Singapore-flagged container ship, the GFS Pride, sank near the strait. Security sources said a projectile hit it; Iran's Revolutionary Guards blamed a mine. At the end of the month, a speedboat attack set a tanker's engine room on fire.", "text": "A container ship sunk, a tanker set ablaze", "broll_query": "container ship at sea", "transition": "whip"},
+    {"type": "bars", "narration": "Even with oil flowing, Brent crude was at about a hundred and one dollars in early October. The day before the war began, it was seventy-two.", "heading": "Brent crude, dollars a barrel", "data": [{"label": "27 Feb 2026", "value": 72.48}, {"label": "6 Oct 2026", "value": 101.51}]},
+
+    {"type": "map", "narration": "Is there a way around? Partly. Saudi Arabia can pump crude across the desert to Yanbu on the Red Sea, through a pipeline built for five million barrels a day.", "heading": "Saudi Arabia's East-West pipeline", "places": [{"name": "Abqaiq", "lat": 25.94, "lon": 49.68}, {"name": "Yanbu", "lat": 24.09, "lon": 38.06}], "route": true},
+    {"type": "map", "narration": "The UAE has its own pipeline to Fujairah, on the far side of the strait, which can carry about one point eight million.", "heading": "The UAE's pipeline to Fujairah", "places": [{"name": "Habshan", "lat": 23.83, "lon": 53.63}, {"name": "Fujairah", "lat": 25.12, "lon": 56.33}], "route": true, "zoom": 1.5},
+    {"type": "statement", "narration": "But together, they can only take part of the twenty million barrels a day that used to sail through. The IEA puts the room left in them at three and a half to five and a half million.", "text": "Room for 3.5 to 5.5M of 20M barrels", "broll_query": "oil pipeline desert", "transition": "whip"},
+    {"type": "statement", "narration": "Qatar's gas has no pipeline around the strait at all. And Bangladesh, India and Pakistan got almost two thirds of their imported LNG through the strait last year.", "text": "Two-thirds of South Asia's LNG", "broll_query": "LNG terminal", "transition": "thread"},
+
+    {"type": "statement", "narration": "At the end of October, Qatari mediators gave Iran a new draft deal to end the war: a seven-day schedule of steps, with other countries as guarantors. Iran was considering it.", "text": "A new draft deal", "broll_query": "Doha skyline", "transition": "thread"},
+    {"type": "list", "narration": "So three things will decide what happens next. Whether a deal holds. Whether the attacks on ships stop. And whether insurers are willing to cover ships again.", "heading": "What to watch", "items": ["Does a deal hold?", "Do the attacks on ships stop?", "Will insurers cover ships again?"]},
+    {"type": "map", "narration": "Thirty-four kilometres of water. Still the most important shortcut on Earth, and right now, the most fragile.", "heading": "The world's most fragile shortcut", "places": [{"name": "Strait of Hormuz", "lat": 26.57, "lon": 56.25}], "zoom": 4},
+    {"type": "statement", "narration": "Should India build more ways around Hormuz, or keep more oil in reserve at home? Tell us in the comments.", "text": "What should India do?", "broll_query": "oil tanker sunset", "transition": "fade"}
+  ]
+}

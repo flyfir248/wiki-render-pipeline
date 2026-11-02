@@ -71,6 +71,23 @@ recurring subject keeps its livery and layout across scenes, so the same ship lo
 scene of a video and different from the ship in the next one. Old `aircraft` and `ship` scenes still
 work; they are drawn as world scenes.
 
+### Satellite maps and India's borders
+
+Every map draws country borders as the Government of India shows them: all of Jammu and Kashmir, Ladakh
+with Aksai Chin, and Arunachal Pradesh are inside India (Natural Earth's India point of view, public
+domain; `scripts/india-borders.sh` rebuilds `renderer/src/data/countries-ind-*.json`).
+
+A script with `"map_style": "satellite"` puts its maps over real imagery, the documentary way: the video
+opens on a satellite globe that dives in, the world is graded dark with the story's countries lit and
+outlined, borders glow faintly, and a held map keeps pushing in slowly. `fyt/satellite.py` fetches, per
+map scene, NASA's Blue Marble (NASA GIBS, public domain) for the world and wide views, and for close
+views a cloud-free mosaic of Copernicus Sentinel-2 (10 m, free with attribution) read straight from the
+open Sentinel-2 COGs on AWS: for each 100 km granule the clearest recent scenes from each orbit that sees
+it, merged pixel by pixel so clouds and swath edges drop out. No keys. The credit stays on screen while
+the imagery does. A hand-written map scene can set `zoom` (1-16) to end closer than the usual framing,
+e.g. 4 to see a strait's shipping lanes. Google Earth imagery isn't used: it can only be exported by hand
+from Google's own apps, and Google's terms don't allow capturing it into an automated render.
+
 ### Adding a 3D subject or action
 
 Everything the planner, the scriptwriter, the fact guards and the renderer know about 3D comes from one

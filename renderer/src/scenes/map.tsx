@@ -22,10 +22,14 @@ import {
 } from "d3-geo";
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon } from "geojson";
 import { feature } from "topojson-client";
-import countries from "world-atlas/countries-50m.json";
-import coarse from "world-atlas/countries-110m.json";
-import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import type { Place, Scene, Vehicle } from "../types";
+// Borders as the Government of India shows them (Natural Earth's India point of view, public domain):
+// all of Jammu and Kashmir, Ladakh with Aksai Chin, and Arunachal Pradesh are India's. Built by
+// scripts/india-borders.sh from ne_10m_admin_0_countries_ind, simplified to two levels of detail.
+import countries from "../data/countries-ind-50m.json";
+import coarse from "../data/countries-ind-110m.json";
+import { AbsoluteFill, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import type { Place, SatLayer, Scene, Vehicle } from "../types";
+import { SatGlobe } from "./satglobe";
 import { unit } from "../theme";
 import { Heading, type SceneProps } from "./shared";
 
@@ -272,7 +276,8 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   // Keep the map clear of the heading above and the captions below.
   const rect: [[number, number], [number, number]] = short ? [[90, 420], [width - 90, 1220]] : [[200, 210], [width - 200, 900]];
   const lon0 = midLon(framePts);
-  const close = fit(box(framePts, lon0, pts.length ? 0.35 : 0.12, pts.length > 1 ? 1.5 : 3), rect);
+  const fitted = fit(box(framePts, lon0, pts.length ? 0.35 : 0.12, pts.length > 1 ? 1.5 : 3), rect);
+  const close: View = { scale: fitted.scale * Math.max(1, scene.zoom ?? 1), center: fitted.center };
   const wide = fit(box(framePts, lon0, 2.5, 25), rect);
   const key = pts.map((p) => p.join(",")).join(";");
   // The countries the places are in, highlighted on the map (unless the scene names its own regions).
@@ -309,7 +314,14 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
       })
     : 0;
   const headRot: LonLat | null = route ? [((route.head[0] - lon0 + 540) % 360) - 180, route.head[1]] : null;
-  const baseScale = wide.scale * Math.pow(close.scale / wide.scale, fly);
+  // Satellite maps: real imagery under the borders (fyt/satellite.py), graded dark and cool like a
+  // documentary map, with the countries in the story lit and the rest of the world dimmed around them.
+  const satLayers: SatLayer[] = (scene.satellite ?? []).filter((l) => l.kind !== "globe" && l.west != null);
+  const satGlobe = (scene.satellite ?? []).find((l) => l.kind === "globe");
+  const satellite = satLayers.length > 0;
+  // Once it has arrived, a satellite map keeps pushing in slowly, so a held map never stands still.
+  const drift = satellite ? interpolate(frame, [D * T.flyTo, D], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 0;
+  const baseScale = wide.scale * Math.pow(close.scale / wide.scale, fly) * (1 + 0.08 * drift);
   const baseCenter = geoInterpolate(wide.center, close.center)(fly) as LonLat;
   const scale = baseScale * Math.pow(2.2, ride);
   const center = headRot && ride > 0 ? (geoInterpolate(baseCenter, headRot)(ride) as LonLat) : baseCenter;
@@ -324,6 +336,20 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
     .clipExtent(ride > 0.01 ? [[-width * 0.7, -height * 0.45], [width * 1.7, height + 20]] : [[-20, -20], [width + 20, height + 20]]);
   const path = geoPath(proj).digits(1);
   const k = unit(format);
+  // Where a lon/lat lands on screen, without wrapping round the world (Mercator is linear in longitude),
+  // so an image's corners can be placed directly.
+  const unwrapped = (lon: number, lat: number): [number, number] => {
+    const p = proj([lon0, lat]) ?? [0, 0];
+    return [p[0] + (scale * (lon - lon0) * Math.PI) / 180, p[1]];
+  };
+  const satImages = satLayers.flatMap((l, i) => {
+    const [x0, y0] = unwrapped(l.west!, l.north!);
+    const [x1, y1] = unwrapped(l.east!, l.south!);
+    const whole = l.east! - l.west! >= 359;
+    const world = 2 * Math.PI * scale;
+    return (whole ? [-1, 0, 1] : [0]).map((n) => ({ key: `${i}:${n}`, src: l.src, x: x0 + n * world, y: y0, w: x1 - x0, h: y1 - y0 }))
+      .filter((im) => im.x < width * 1.8 && im.x + im.w > -width * 0.8);
+  });
 
   // Grid: lines every `step` degrees for the current zoom, labelled along the edges.
   const span = (width / scale) * (180 / Math.PI);
@@ -417,6 +443,19 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
     return { d: path(f) ?? "", c, r, opacity };
   });
 
+  // A country much bigger than the view (the whole USA around Boston) isn't worth highlighting.
+  const shownInvolved = involved.filter((f) => {
+    const [[x0, y0], [x1, y1]] = path.bounds(f);
+    return (x1 - x0) * (y1 - y0) <= width * height * 1.5;
+  });
+  // The lit countries of a satellite map: the places' countries and the scene's regions.
+  const lit = satellite
+    ? [
+        ...shownInvolved.map((f) => ({ d: path(f) ?? "", o: grow })),
+        ...regionShapes.filter((r) => r.opacity > 0.01).map((r) => ({ d: r.d, o: r.opacity })),
+      ]
+    : [];
+
   // The year counter, running while the journey or the change plays out.
   const years = scene.yearFrom != null && scene.yearTo != null ? [scene.yearFrom, scene.yearTo] : null;
   const year = years
@@ -488,15 +527,47 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
             ))}
           </defs>
           <rect x={-width * 0.5} y={-height * 0.5} width={width * 2} height={height * 2} fill="url(#ocean)" />
-          <path d={path(lines) ?? ""} fill="none" stroke={GRID} strokeOpacity={0.22 * grow} strokeWidth={1.4} />
-          {/* one path for land and borders: the map is the slowest thing to draw, so it is drawn once */}
-          <path d={path(span > 90 ? WORLD_COARSE : WORLD) ?? ""} fill={LAND} stroke={BORDER} strokeWidth={1.2} strokeLinejoin="round" />
-          {involved.map((f, i) => {
-            // A country much bigger than the view (the whole USA around Boston) isn't worth highlighting.
-            const [[x0, y0], [x1, y1]] = path.bounds(f);
-            if ((x1 - x0) * (y1 - y0) > width * height * 1.5) return null;
-            return <path key={i} d={path(f) ?? ""} fill={theme.accent} fillOpacity={0.3 * grow} stroke={theme.accent} strokeWidth={3} strokeOpacity={grow} />;
-          })}
+          {satellite ? (
+            <>
+              <defs>
+                <filter id={`satgrade-${scene.id}`} colorInterpolationFilters="sRGB">
+                  <feColorMatrix type="saturate" values="0.78" />
+                  <feComponentTransfer>
+                    <feFuncR type="linear" slope="0.9" intercept="-0.01" />
+                    <feFuncG type="linear" slope="0.93" intercept="-0.005" />
+                    <feFuncB type="linear" slope="1.0" intercept="0.01" />
+                  </feComponentTransfer>
+                </filter>
+                <mask id={`spot-${scene.id}`}>
+                  <rect x={-width} y={-height} width={width * 3} height={height * 3} fill="#fff" />
+                  {lit.map((d, i) => (
+                    <path key={i} d={d.d} fill="#000" fillOpacity={d.o} />
+                  ))}
+                </mask>
+              </defs>
+              <g filter={`url(#satgrade-${scene.id})`}>
+                {satImages.map((im) => (
+                  <image key={im.key} href={staticFile(im.src)} x={im.x} y={im.y} width={im.w} height={im.h} preserveAspectRatio="none" />
+                ))}
+              </g>
+              {/* the spotlight: everything but the story's countries sinks into shadow */}
+              <rect x={-width} y={-height} width={width * 3} height={height * 3} fill="#030812" fillOpacity={lit.length ? 0.5 * grow : 0.15} mask={`url(#spot-${scene.id})`} />
+              <path d={path(span > 90 ? WORLD_COARSE : WORLD) ?? ""} fill="none" stroke="#f8fafc" strokeOpacity={0.45} strokeWidth={1.3} strokeLinejoin="round" />
+            </>
+          ) : (
+            <>
+              <path d={path(lines) ?? ""} fill="none" stroke={GRID} strokeOpacity={0.22 * grow} strokeWidth={1.4} />
+              {/* one path for land and borders: the map is the slowest thing to draw, so it is drawn once */}
+              <path d={path(span > 90 ? WORLD_COARSE : WORLD) ?? ""} fill={LAND} stroke={BORDER} strokeWidth={1.2} strokeLinejoin="round" />
+            </>
+          )}
+          {shownInvolved.map((f, i) =>
+            satellite ? (
+              <path key={i} d={path(f) ?? ""} fill={theme.accent} fillOpacity={0.06 * grow} stroke={theme.accent} strokeWidth={3.5} strokeOpacity={grow} strokeLinejoin="round" filter="url(#glow)" />
+            ) : (
+              <path key={i} d={path(f) ?? ""} fill={theme.accent} fillOpacity={0.3 * grow} stroke={theme.accent} strokeWidth={3} strokeOpacity={grow} />
+            ),
+          )}
           {regionShapes.map((r, i) =>
             r.opacity > 0.01 && r.r > 0.5 ? (
               <path
@@ -504,7 +575,7 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
                 d={r.d}
                 clipPath={`url(#region-${scene.id}-${i})`}
                 fill={REGION}
-                fillOpacity={0.55 * r.opacity}
+                fillOpacity={(satellite ? 0.32 : 0.55) * r.opacity}
                 stroke={REGION}
                 strokeWidth={3}
                 strokeOpacity={0.9 * r.opacity}
@@ -513,7 +584,7 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
             ) : null,
           )}
           {/* the grid continues faintly over land, so the lines read as one grid */}
-          <path d={path(lines) ?? ""} fill="none" stroke="#000" strokeOpacity={0.06 * grow} strokeWidth={1} />
+          {satellite ? null : <path d={path(lines) ?? ""} fill="none" stroke="#000" strokeOpacity={0.06 * grow} strokeWidth={1} />}
           {placed.map((l) => (
             <text
               key={l.name}
@@ -521,8 +592,12 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
               y={l.y + l.h / 2}
               textAnchor="middle"
               dominantBaseline="central"
-              fill={LABEL}
-              fillOpacity={0.85 * grow}
+              fill={satellite ? "#f8fafc" : LABEL}
+              fillOpacity={(satellite ? 0.92 : 0.85) * grow}
+              stroke={satellite ? "#020617" : undefined}
+              strokeOpacity={satellite ? 0.75 * grow : undefined}
+              strokeWidth={satellite ? 5 : undefined}
+              paintOrder="stroke"
               fontFamily={theme.font}
               fontWeight={700}
               fontSize={l.size}
@@ -540,7 +615,11 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
               textAnchor="middle"
               dominantBaseline="central"
               fill={GRID}
-              fillOpacity={0.6 * grow}
+              fillOpacity={(satellite ? 0.85 : 0.6) * grow}
+              stroke={satellite ? "#020617" : undefined}
+              strokeOpacity={satellite ? 0.6 * grow : undefined}
+              strokeWidth={satellite ? 4 : undefined}
+              paintOrder="stroke"
               fontFamily="Georgia, 'DejaVu Serif', serif"
               fontStyle="italic"
               fontSize={wl.size}
@@ -606,7 +685,7 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
         {/* distance haze at the top of the tilted map, like a horizon */}
         {ride > 0.01 ? <rect width={width} height={height} fill="url(#haze)" opacity={ride} /> : null}
         {/* grid labels along the edges (hidden while the map is tilted) */}
-        {latTicks.map((v) => {
+        {(satellite ? [] : latTicks).map((v) => {
           const xy = proj([topLeft[0], v]);
           if (!xy || xy[1] < rect[0][1] - 30 || xy[1] > rect[1][1] + 30) return null;
           return (
@@ -615,7 +694,7 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
             </text>
           );
         })}
-        {lonTicks.map((v) => {
+        {(satellite ? [] : lonTicks).map((v) => {
           const xy = proj([v, 0]);
           if (!xy || xy[0] < 120 || xy[0] > width - 120 || underGlobe(xy[0], edgeY, 50)) return null;
           const lon = ((v + 540) % 360) - 180;
@@ -660,13 +739,34 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
             <circle key={i} cx={s.x * width} cy={s.y * height} r={s.s} fill="#fff" opacity={s.o} />
           ))}
           <circle cx={earth.translate()[0]} cy={earth.translate()[1]} r={earthR * 1.09} fill="url(#atmosphere)" />
-          <path d={earthPath({ type: "Sphere" }) ?? ""} fill={OCEAN} />
-          <path d={earthPath(geoGraticule().step([15, 15])()) ?? ""} fill="none" stroke={GRID} strokeOpacity={0.2} strokeWidth={1.2} />
-          <path d={earthPath(WORLD_COARSE) ?? ""} fill={LAND} stroke={BORDER} strokeWidth={0.8} />
+          {satGlobe ? null : (
+            <>
+              <path d={earthPath({ type: "Sphere" }) ?? ""} fill={OCEAN} />
+              <path d={earthPath(geoGraticule().step([15, 15])()) ?? ""} fill="none" stroke={GRID} strokeOpacity={0.2} strokeWidth={1.2} />
+              <path d={earthPath(WORLD_COARSE) ?? ""} fill={LAND} stroke={BORDER} strokeWidth={0.8} />
+            </>
+          )}
+        </svg>
+      ) : null}
+      {globeIn > 0 && satGlobe ? (
+        <AbsoluteFill style={{ opacity: globeIn }}>
+          <SatGlobe
+            src={satGlobe.src}
+            center={[target[0] - 110 * (1 - spin), target[1] * spin + 18 * (1 - spin)]}
+            radius={earthR}
+            at={earth.translate() as [number, number]}
+            width={width}
+            height={height}
+          />
+        </AbsoluteFill>
+      ) : null}
+      {globeIn > 0 ? (
+        <svg width={width} height={height} style={{ position: "absolute", inset: 0, opacity: globeIn }}>
+          {satGlobe ? <path d={earthPath(WORLD_COARSE) ?? ""} fill="none" stroke="#f8fafc" strokeOpacity={0.35} strokeWidth={0.8} /> : null}
           {regions.map((f, i) => (
-            <path key={i} d={earthPath(f) ?? ""} fill={REGION} fillOpacity={0.5} />
+            <path key={i} d={earthPath(f) ?? ""} fill={REGION} fillOpacity={satGlobe ? 0.35 : 0.5} stroke={satGlobe ? theme.accent : "none"} strokeWidth={2} />
           ))}
-          <path d={earthPath({ type: "Sphere" }) ?? ""} fill="url(#shade)" />
+          {satGlobe ? null : <path d={earthPath({ type: "Sphere" }) ?? ""} fill="url(#shade)" />}
           {targetXY ? (
             <g>
               <circle cx={targetXY[0]} cy={targetXY[1]} r={10 * k} fill="#c2410c" />
@@ -674,6 +774,24 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
             </g>
           ) : null}
         </svg>
+      ) : null}
+      {scene.mapCredit && satellite ? (
+        // The imagery's credit stays on screen for as long as the imagery does.
+        <div
+          style={{
+            position: "absolute",
+            left: short ? 40 : 36,
+            bottom: short ? 330 : 26,
+            fontFamily: theme.font,
+            fontSize: short ? 20 : 17,
+            color: "#e2e8f0",
+            opacity: 0.8,
+            textShadow: "0 1px 3px #000",
+            letterSpacing: 0.3,
+          }}
+        >
+          {scene.mapCredit}
+        </div>
       ) : null}
       <AbsoluteFill style={{ padding: short ? "220px 80px 0" : "60px 160px 0", alignItems: "center" }}>
         <div style={{ padding: "14px 34px", borderRadius: 18, background: `${theme.background}e6` }}>

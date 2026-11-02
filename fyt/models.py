@@ -165,6 +165,7 @@ class ScriptScene(BaseModel):
         default=None, description="map scenes: 1-6 present-day country names to highlight (an empire, an alliance, a spread)."
     )
     region_change: RegionChange | None = Field(default=None, description="map scenes: how the regions change.")
+    zoom: SkipJsonSchema[float | None] = None  # map scenes, hand-written: how much closer than usual the camera ends (1-16)
     year_from: int | None = Field(default=None, description="map scenes: a year counter starts here (negative for BC).")
     year_to: int | None = Field(default=None, description="map scenes: and counts to this year.")
     lines: list[DialogueLine] | None = Field(
@@ -177,6 +178,7 @@ class ScriptScene(BaseModel):
         "with rows of consoles, 1970', 'calm Pacific ocean at dawn'. No people in it.",
     )
     backdrop_src: SkipJsonSchema[str | None] = None  # set by the pipeline
+    satellite: SkipJsonSchema[list[dict] | None] = None  # map scenes: imagery layers, set by fyt.satellite
     actors: list[Actor] | None = Field(default=None, description="story scenes: 1-5 things on the stage.")
     effect: Effect | None = Field(default=None, description="story scenes: an optional effect.")
     effect_x: float | None = Field(default=None, description="story scenes: where the effect happens (0-100).")
@@ -284,6 +286,8 @@ class Script(BaseModel):
     series: SkipJsonSchema[str | None] = None  # playlist the video is filed under
     journey: SkipJsonSchema[dict | None] = None  # a scale journey's settings (fyt/journey.py): measure, cold_open
     blender: SkipJsonSchema[str | None] = None  # a prerendered Blender shot set in assets/blender/ (fyt/blender.py)
+    map_style: SkipJsonSchema[str | None] = None  # "satellite": map scenes over real imagery (fyt/satellite.py)
+    map_credit: SkipJsonSchema[str | None] = None  # the imagery's on-screen credit, set by fyt.satellite
 
 
 class WhatIfScript(Script):
@@ -339,6 +343,9 @@ class RenderScene(BaseModel):
     yearFrom: int | None = None
     yearTo: int | None = None
     globe: bool | None = None  # open on a spinning globe that dives in (the video's first map)
+    satellite: list[dict] | None = None  # imagery under the map, coarse to fine (fyt/satellite.py)
+    zoom: float | None = None  # how much closer than the usual framing the map ends
+    mapCredit: str | None = None  # the imagery's credit, on screen for as long as it shows
     lines: list[DialogueLine] | None = None
     setting: Setting | None = None
     backdropSrc: str | None = None

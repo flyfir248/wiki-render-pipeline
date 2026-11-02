@@ -301,6 +301,12 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
             s.model_copy(update={"model": assets.generic(s), "label": assets.label(s, assets.generic(s))}) if (s.model or {}).get("src") in missing else s
             for s in script.scenes
         ]})
+    try:
+        from fyt import satellite
+
+        script = satellite.stage(script, job.public, cfg.format, log=lambda m: log(job, m))
+    except Exception as e:  # the drawn atlas map is always there to fall back on
+        log(job, f"warning: no satellite imagery: {e}")
     staged = blender.stage(script, job.public)
     if staged:
         log(job, f"prerendered Blender shots: {staged}")
