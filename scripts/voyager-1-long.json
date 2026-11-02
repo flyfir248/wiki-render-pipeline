@@ -93,15 +93,10 @@
       ]
     },
     {
-      "type": "world",
-      "narration": "Sixteen days later, on the fifth of September, Voyager 1 lifted off from Cape Canaveral on a Titan rocket.",
-      "subject": "rocket",
-      "variant": "rocket",
-      "action": "launch",
-      "shot": "wide",
-      "cue": "lifted off",
-      "subject_name": "Titan rocket",
-      "heading": "5 September 1977"
+      "type": "statement",
+      "narration": "Sixteen days later, on the fifth of September, Voyager 1 lifted off from Cape Canaveral.",
+      "text": "5 September 1977: lift-off",
+      "broll_query": "Voyager 1 launch Cape Canaveral 1977"
     },
     {
       "type": "statement",

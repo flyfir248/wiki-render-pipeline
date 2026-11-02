@@ -1339,7 +1339,8 @@ def shows(b: Build, m: dict | None) -> bool:
 
 SPACE_THINGS = ("spacecraft", "space probe", "probe", "satellite", "space station", "space telescope", "planet", "moon",
                 "asteroid", "comet", "meteor", "star", "galaxy", "nebula", "black hole")
-SPACE_SET = "_space"  # the set a place-less scene of something in space gets when the story names no space place
+SPACE_SET = "_space"
+INDOOR_SETS = ("room", "hall", "lab", "hospital", "factory", "station", "shop")  # the set a place-less scene of something in space gets when the story names no space place
 
 
 def _in_space(e: Entity | None) -> bool:
@@ -1353,9 +1354,14 @@ def place_unplaced(shots: dict[int, Shot], story: Manifest, settings: dict[str, 
     settings = dict(settings)
     out = dict(shots)
     for k, sh in shots.items():
-        if (sh.place and sh.place in settings) or not sh.actors:
+        if not sh.actors:
             continue
         lead = sh.actors[0].entity
+        placed = sh.place in settings if sh.place else False
+        # a craft in space is shown in space: a planner that sets a probe's scene at its launch site gets a
+        # probe parked on the beach. Indoors (a clean room, a lab) it may be on the ground being built.
+        if placed and not (_in_space(manifest.entity(story, lead)) and settings[sh.place].kind not in INDOOR_SETS + ("space",)):
+            continue
         if _in_space(manifest.entity(story, lead)):
             space = next((pid for pid, s in settings.items() if s.kind == "space"), None)
             if space is None:

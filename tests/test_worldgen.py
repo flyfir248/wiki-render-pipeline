@@ -475,6 +475,8 @@ def test_a_placeless_space_scene_is_set_in_space_not_the_first_place():
     placed, sets = worldgen.place_unplaced(shots, story, settings)
     assert sets[placed[1].place].kind == "space"  # not the launch pad's grass
     assert placed[2].place == "pad"
+    moved, _ = worldgen.place_unplaced({6: shot(6, "probe", "pad")}, story, settings)
+    assert sets[moved[6].place].kind == "space"  # a probe isn't parked on the launch site's beach
     assert placed[4].place == "lab"  # where its lead is seen
     world = worldgen.world_of("lowpoly", 1, placed[1], {"probe": worldgen.rule_build(story.entities[0], 1)}, sets, {})
     assert world["set"]["kind"] == "space"
