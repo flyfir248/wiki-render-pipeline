@@ -185,6 +185,8 @@ def test_a_verdict_that_names_its_subject_does_not_drop_the_scene():
     assert contradicts("The subject is not a Cessna, but a small plane", "a cessna, a light aircraft")
     assert not contradicts("it shows a dog, not a bear", "a bear")
     assert not contradicts("shows a house, not a person", "a photographer")
+    assert not contradicts("Shows a car instead of a spacecraft or probe.", "a probe, a spacecraft")
+    assert not contradicts("The frame shows a car, rather than a rocket", "a launch vehicle, a rocket")
 
 
 def test_a_retake_overrides_the_directors_shot_list():

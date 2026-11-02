@@ -457,3 +457,35 @@ def test_a_person_is_never_dressed_in_their_skin_or_hung_with_floating_slabs():
     c = worldgen.checked_build(b, e, 1)
     assert c.primary != "#ffe0c0" and c.skin == "#ffe0c0"
     assert [p.bone for p in c.parts] == ["hand_r"]  # the tool in the hand stays
+
+
+def test_a_placeless_space_scene_is_set_in_space_not_the_first_place():
+    story = Manifest(
+        entities=[
+            Entity(id="probe", name="Voyager 1", kind="spacecraft", search=["space probe"], look="dish", certain=True, scenes=[1, 2, 3]),
+            Entity(id="rocket", name="a Titan rocket", kind="rocket", search=["rocket"], look="white", certain=False, scenes=[2]),
+            Entity(id="crew", name="engineers", kind="person", search=["engineer"], look="shirts", certain=False, scenes=[4, 5]),
+        ],
+        places=[Place(id="pad", name="Cape Canaveral", look="launch pad, scrubland", scenes=[2]),
+                Place(id="lab", name="mission control room", look="consoles", scenes=[5])],
+    )
+    settings = {p.id: worldgen.rule_setting(p) for p in story.places}
+    shot = lambda k, ent, place="": worldgen.Shot(scene=k, place=place, actors=[worldgen.Actor(entity=ent, verb="idle")], camera="orbit")  # noqa: E731
+    shots = {1: shot(1, "probe"), 2: shot(2, "rocket", "pad"), 4: shot(4, "crew"), 5: shot(5, "crew", "lab")}
+    placed, sets = worldgen.place_unplaced(shots, story, settings)
+    assert sets[placed[1].place].kind == "space"  # not the launch pad's grass
+    assert placed[2].place == "pad"
+    moved, _ = worldgen.place_unplaced({6: shot(6, "probe", "pad")}, story, settings)
+    assert sets[moved[6].place].kind == "space"  # a probe isn't parked on the launch site's beach
+    assert placed[4].place == "lab"  # where its lead is seen
+    world = worldgen.world_of("lowpoly", 1, placed[1], {"probe": worldgen.rule_build(story.entities[0], 1)}, sets, {})
+    assert world["set"]["kind"] == "space"
+
+
+def test_a_scene_can_name_its_entity_by_the_story_s_name_for_it():
+    story = Manifest(entities=[Entity(id="voyager-1", name="Voyager 1", kind="spacecraft", search=["space probe"], look="", certain=True, scenes=[1]),
+                               Entity(id="titan-rocket", name="a Titan rocket", kind="rocket", search=["rocket"], look="", certain=False, scenes=[2])])
+    assert manifest.entity(story, "voyager-1").name == "Voyager 1"
+    assert manifest.entity(story, "Voyager 1").id == "voyager-1"
+    assert manifest.entity(story, "Titan rocket").id == "titan-rocket"
+    assert manifest.entity(story, "Saturn V") is None and manifest.entity(story, None) is None

@@ -1,0 +1,562 @@
+{
+  "core_message": "A 1977 probe with less memory than a phone photo is now one light-day away, and engineers still keep it alive.",
+  "mood": "curious",
+  "title": "Voyager 1: The 1977 Probe About to Be One Light-Day Away",
+  "description": "On 18 November 2026, Voyager 1 becomes the first human-made object one light-day from Earth: 25.9 billion kilometres, so far that light needs a full day to get there. It launched in 1977 with about 69 kilobytes of memory, and engineers are still fixing it by radio, most recently after it went silent for two days in October 2026.\n\nThis is the story of how it got there: Jupiter's volcanic moon Io, Saturn and Titan, the Pale Blue Dot, the edge of the Sun's bubble, and the repairs made from a day away at the speed of light.\n\nKey points:\n- Launched 5 September 1977, 16 days after Voyager 2\n- Flew past Jupiter (1979) and Saturn (1980), then left the plane of the planets\n- Entered interstellar space on 25 August 2012\n- Fixed from Earth in 2024 after a memory chip failed, and its \"dead\" thrusters revived in 2025\n- One light-day from Earth at 06:16 UTC on 18 November 2026\n\nSources: NASA JPL and NASA Science Voyager mission updates (2024 to 2026), EarthSky, Wikipedia (Voyager 1, CC BY-SA 4.0).",
+  "tags": [
+    "Voyager 1",
+    "Voyager",
+    "NASA",
+    "light-day",
+    "interstellar space",
+    "space exploration",
+    "JPL",
+    "Pale Blue Dot",
+    "Golden Record",
+    "deep space",
+    "space history",
+    "Carl Sagan"
+  ],
+  "thumbnail_text": "ONE LIGHT-DAY AWAY",
+  "thumbnail_kicker": "Voyager 1",
+  "thumbnail_query": "Voyager spacecraft deep space",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "On the eighteenth of October 2026, engineers in California called the most distant machine humans have ever built. Nothing answered.",
+      "heading": "Voyager 1",
+      "text": "The machine now one light-day from home",
+      "broll_query": "Deep Space Network antenna night",
+      "camera": "push_in",
+      "transition": "fade"
+    },
+    {
+      "type": "statement",
+      "narration": "They called again a day later. Still silence. Twenty four billion kilometres away, a 49-year-old spacecraft had gone quiet.",
+      "text": "Still silence",
+      "broll_query": "Voyager interstellar space",
+      "transition": "whip"
+    },
+    {
+      "type": "statement",
+      "narration": "Every message to it takes almost a full day to arrive, and every reply takes another. So each call is a two-day wait.",
+      "text": "Each call is a two-day wait",
+      "broll_query": "radio telescope dish",
+      "transition": "whip"
+    },
+    {
+      "type": "statement",
+      "narration": "Was this the end of Voyager 1? To understand why anyone was still listening, we have to go back to 1977.",
+      "text": "Back to 1977",
+      "broll_query": "Voyager spacecraft",
+      "transition": "thread"
+    },
+    {
+      "type": "statement",
+      "narration": "In the late 1970s, the outer planets lined up in a way that happens only about once every 175 years.",
+      "text": "Once every 175 years",
+      "broll_query": "solar system planets",
+      "camera": "pan_right"
+    },
+    {
+      "type": "statement",
+      "narration": "Jupiter, Saturn, Uranus and Neptune sat on the same side of the Sun. One probe could swing from one to the next.",
+      "text": "One probe, four giant planets",
+      "broll_query": "Jupiter Saturn planets"
+    },
+    {
+      "type": "story",
+      "narration": "NASA built two identical spacecraft. Voyager 2 went first, on the twentieth of August 1977.",
+      "heading": "Two identical spacecraft",
+      "setting": "room",
+      "backdrop": "a 1970s spacecraft clean room with white walls and work platforms",
+      "actors": [
+        {
+          "thing": "space probe",
+          "x": 32,
+          "y": 55,
+          "size": "l",
+          "enter": "rise",
+          "label": "Voyager 2",
+          "look": "1970s Voyager space probe: large white dish antenna on a ten-sided bus, long thin booms"
+        },
+        {
+          "thing": "space probe",
+          "x": 68,
+          "y": 55,
+          "size": "l",
+          "enter": "rise",
+          "at": 0.3,
+          "label": "Voyager 1",
+          "look": "1970s Voyager space probe: large white dish antenna on a ten-sided bus, long thin booms"
+        }
+      ]
+    },
+    {
+      "type": "statement",
+      "narration": "Sixteen days later, on the fifth of September, Voyager 1 lifted off from Cape Canaveral.",
+      "text": "5 September 1977: lift-off",
+      "broll_query": "Voyager 1 launch Cape Canaveral 1977"
+    },
+    {
+      "type": "statement",
+      "narration": "It was called Voyager 1 because its faster path would get it to Jupiter first.",
+      "text": "The faster path",
+      "broll_query": "Voyager 1 trajectory"
+    },
+    {
+      "type": "stat",
+      "narration": "It weighed 815 kilograms at launch, less than a small car.",
+      "value": 815,
+      "suffix": " kg",
+      "heading": "Voyager 1 at launch",
+      "broll_query": "Voyager spacecraft"
+    },
+    {
+      "type": "stat",
+      "narration": "Its computers held about 69 kilobytes of memory in total. A single photo on your phone takes up more.",
+      "value": 69,
+      "suffix": " KB",
+      "heading": "All of its computer memory",
+      "text": "less than one phone photo",
+      "broll_query": "Voyager computer"
+    },
+    {
+      "type": "statement",
+      "narration": "Out where it was going, sunlight would be far too weak for solar panels. So it carried three generators that run on the heat of decaying plutonium.",
+      "text": "Powered by plutonium",
+      "broll_query": "radioisotope thermoelectric generator"
+    },
+    {
+      "type": "stat",
+      "narration": "Together, at launch, they made about 470 watts.",
+      "value": 470,
+      "suffix": " W",
+      "heading": "Power at launch",
+      "broll_query": "radioisotope thermoelectric generator"
+    },
+    {
+      "type": "statement",
+      "narration": "Bolted to its side was a golden record, with greetings in 55 languages, music, and the sounds of Earth.",
+      "text": "The Golden Record",
+      "broll_query": "Voyager Golden Record"
+    },
+    {
+      "type": "statement",
+      "narration": "It was a message for anyone who might find it. The mission itself was planned to last about five years.",
+      "text": "Planned for five years",
+      "broll_query": "Voyager Golden Record cover"
+    },
+    {
+      "type": "world",
+      "narration": "Eighteen months later, on the fifth of March 1979, Voyager 1 flew past Jupiter.",
+      "subject": "space",
+      "variant": "probe",
+      "action": "flyby",
+      "obstacle": "jupiter",
+      "shot": "wide",
+      "cue": "flew past",
+      "subject_name": "Voyager 1",
+      "heading": "Jupiter, 5 March 1979"
+    },
+    {
+      "type": "statement",
+      "narration": "It came within about 349,000 kilometres of the planet's centre, close enough to watch its storms swirl.",
+      "text": "349,000 km from Jupiter's centre",
+      "broll_query": "Jupiter Great Red Spot Voyager"
+    },
+    {
+      "type": "statement",
+      "narration": "Then came the surprise. A navigation engineer, Linda Morabito, spotted a strange plume rising off the edge of the moon Io.",
+      "text": "A plume on Io",
+      "broll_query": "Io volcanic plume Voyager"
+    },
+    {
+      "type": "statement",
+      "narration": "It was a volcano, erupting. The first active volcanoes ever seen anywhere beyond Earth.",
+      "text": "Volcanoes beyond Earth",
+      "broll_query": "Io moon volcano"
+    },
+    {
+      "type": "world",
+      "narration": "Next came Saturn. On the twelfth of November 1980, Voyager 1 swung past its rings and its giant moon, Titan.",
+      "subject": "space",
+      "variant": "probe",
+      "action": "flyby",
+      "obstacle": "saturn",
+      "shot": "wide",
+      "cue": "swung past",
+      "subject_name": "Voyager 1",
+      "heading": "Saturn, 12 November 1980"
+    },
+    {
+      "type": "statement",
+      "narration": "Titan was hidden under a thick orange haze. And getting a close look at it came at a price.",
+      "text": "Titan's orange haze",
+      "broll_query": "Titan moon haze Voyager"
+    },
+    {
+      "type": "statement",
+      "narration": "The path past Titan bent Voyager 1 up and out of the plane of the planets. There would be no more worlds ahead of it.",
+      "text": "No more worlds ahead",
+      "broll_query": "Saturn rings Voyager"
+    },
+    {
+      "type": "statement",
+      "narration": "Voyager 2 went on to Uranus and Neptune. Voyager 1 was headed into the dark.",
+      "text": "Headed into the dark",
+      "broll_query": "Voyager 2 Neptune"
+    },
+    {
+      "type": "statement",
+      "narration": "For nine more years it climbed away from the Sun. Then, on Valentine's Day 1990, it turned around.",
+      "text": "14 February 1990",
+      "broll_query": "Voyager spacecraft space"
+    },
+    {
+      "type": "statement",
+      "narration": "The astronomer Carl Sagan had pushed for one last picture: the planets, seen from outside.",
+      "text": "One last picture",
+      "broll_query": "Family Portrait solar system mosaic"
+    },
+    {
+      "type": "statement",
+      "narration": "From about six billion kilometres away, Earth was a speck smaller than a single pixel, caught in a ray of scattered sunlight.",
+      "text": "Smaller than a pixel",
+      "broll_query": "Pale Blue Dot"
+    },
+    {
+      "type": "quote",
+      "narration": "Sagan later wrote about that speck. That's here. That's home. That's us.",
+      "text": "That's here. That's home. That's us.",
+      "author": "Carl Sagan, Pale Blue Dot, 1994",
+      "broll_query": "Pale Blue Dot"
+    },
+    {
+      "type": "statement",
+      "narration": "Soon after, its cameras were switched off for good, to save power for the long road out.",
+      "text": "Cameras off for good",
+      "broll_query": "Voyager camera"
+    },
+    {
+      "type": "timeline",
+      "narration": "In 1998 it overtook Pioneer 10 to become the most distant human-made object. It has held that title ever since.",
+      "heading": "Farther than anything we have built",
+      "events": [
+        {
+          "label": "1977",
+          "text": "Launch"
+        },
+        {
+          "label": "1979",
+          "text": "Jupiter"
+        },
+        {
+          "label": "1980",
+          "text": "Saturn"
+        },
+        {
+          "label": "1990",
+          "text": "Pale Blue Dot"
+        },
+        {
+          "label": "1998",
+          "text": "Passes Pioneer 10"
+        }
+      ]
+    },
+    {
+      "type": "statement",
+      "narration": "The Sun blows out a wind of charged particles. That wind carves a bubble around the planets, called the heliosphere.",
+      "text": "The heliosphere",
+      "broll_query": "heliosphere"
+    },
+    {
+      "type": "statement",
+      "narration": "In December 2004, Voyager 1 felt that wind suddenly slow down. It had reached the bubble's outer layers.",
+      "text": "The solar wind slows",
+      "broll_query": "solar wind"
+    },
+    {
+      "type": "statement",
+      "narration": "On the twenty-fifth of August 2012, about 121 times as far from the Sun as Earth is, it crossed the edge.",
+      "text": "25 August 2012 · 121 AU",
+      "broll_query": "heliopause"
+    },
+    {
+      "type": "statement",
+      "narration": "Voyager 1 became the first human-made object in interstellar space, the space between the stars.",
+      "text": "Interstellar space",
+      "broll_query": "interstellar space stars"
+    },
+    {
+      "type": "statement",
+      "narration": "Scientists needed a year to be sure. The proof came from how the gas around it rang after an outburst from the Sun.",
+      "text": "The gas rang like a bell",
+      "broll_query": "solar flare"
+    },
+    {
+      "type": "statement",
+      "narration": "By then the spacecraft was 35 years old, and it was starting to wear out.",
+      "text": "Starting to wear out",
+      "broll_query": "Voyager spacecraft"
+    },
+    {
+      "type": "statement",
+      "narration": "Its plutonium keeps decaying, so its generators lose about four watts of power every year.",
+      "text": "−4 watts a year",
+      "broll_query": "radioisotope thermoelectric generator"
+    },
+    {
+      "type": "statement",
+      "narration": "Back in 2004, its main roll thrusters had died after two small heaters lost power. Engineers switched to the backups and carried on.",
+      "text": "Main thrusters dead in 2004",
+      "broll_query": "spacecraft thruster"
+    },
+    {
+      "type": "statement",
+      "narration": "In 2022 it began reporting nonsense about which way it was pointing. The fix was to switch to a different computer.",
+      "text": "Nonsense from a computer",
+      "broll_query": "Jet Propulsion Laboratory control room"
+    },
+    {
+      "type": "statement",
+      "narration": "Then, in November 2023, something worse. Voyager 1 began sending back a repeating pattern of ones and zeros. Gibberish.",
+      "text": "Gibberish",
+      "broll_query": "binary code"
+    },
+    {
+      "type": "proportion",
+      "narration": "Engineers traced it to one chip in the flight data system. It had failed, taking about three percent of the memory with it.",
+      "value": 3,
+      "heading": "Memory lost with one failed chip",
+      "broll_query": "computer chip"
+    },
+    {
+      "type": "statement",
+      "narration": "Nobody could go and replace it. So they split the code into pieces and moved each one into memory that still worked.",
+      "text": "Rewriting the code from Earth",
+      "broll_query": "programmer code screen"
+    },
+    {
+      "type": "statement",
+      "narration": "Every test meant sending a command, then waiting almost two days to see what happened.",
+      "text": "Two days per test",
+      "broll_query": "Deep Space Network antenna"
+    },
+    {
+      "type": "statement",
+      "narration": "On the twentieth of April 2024, the answer came back readable. By June, all four of its working instruments were sending science again.",
+      "text": "20 April 2024: readable again",
+      "broll_query": "Jet Propulsion Laboratory engineers"
+    },
+    {
+      "type": "statement",
+      "narration": "In October 2024, a fault shut down its main radio. It fell back on a backup transmitter that hadn't been used since 1981.",
+      "text": "A radio last used in 1981",
+      "broll_query": "radio transmitter"
+    },
+    {
+      "type": "statement",
+      "narration": "Then, in 2025, the team tried something nobody expected to work. They tried to wake the main roll thrusters.",
+      "text": "Back to the dead thrusters",
+      "broll_query": "spacecraft thruster"
+    },
+    {
+      "type": "quote",
+      "narration": "Its propulsion lead put it simply. These thrusters were considered dead.",
+      "text": "These thrusters were considered dead.",
+      "author": "Todd Barber, Voyager propulsion lead, NASA JPL, 2025",
+      "broll_query": "Jet Propulsion Laboratory"
+    },
+    {
+      "type": "statement",
+      "narration": "They suspected a switch in the heater circuit had flipped the wrong way. On the twentieth of March 2025, they sent the command to flip it back.",
+      "text": "20 March 2025",
+      "broll_query": "Deep Space Network antenna"
+    },
+    {
+      "type": "statement",
+      "narration": "When the reply arrived, the heaters were warming up. Thrusters written off for twenty-one years were back.",
+      "text": "Back after 21 years",
+      "broll_query": "Voyager spacecraft"
+    },
+    {
+      "type": "statement",
+      "narration": "They needed them. The backup thrusters' fuel lines are clogging, and without roll control Voyager can't keep its antenna pointed at Earth.",
+      "text": "Keeping the antenna on Earth",
+      "broll_query": "Voyager high gain antenna"
+    },
+    {
+      "type": "statement",
+      "narration": "In April 2026, to save power, the team turned off an instrument that had run almost nonstop for 49 years.",
+      "text": "An instrument off after 49 years",
+      "broll_query": "Voyager instrument"
+    },
+    {
+      "type": "statement",
+      "narration": "In September came a move nicknamed the Big Bang: three devices switched off and three lower-power ones switched on, all at the same moment.",
+      "text": "The Big Bang",
+      "broll_query": "Jet Propulsion Laboratory control room"
+    },
+    {
+      "type": "statement",
+      "narration": "It worked. Then, in October, came the silence.",
+      "text": "Then, the silence",
+      "broll_query": "Voyager interstellar space"
+    },
+    {
+      "type": "statement",
+      "narration": "One set of thrusters had dropped offline. The spacecraft's own fault protection swapped in the backups and put the spacecraft into a safe, stable state.",
+      "text": "It saved itself",
+      "broll_query": "Voyager spacecraft"
+    },
+    {
+      "type": "statement",
+      "narration": "On the twentieth of October, its signal came back. Alone, almost a light-day from home, it had looked after itself.",
+      "text": "20 October 2026: signal back",
+      "broll_query": "Deep Space Network antenna"
+    },
+    {
+      "type": "quote",
+      "narration": "As its project manager put it, you wait two days before you finally get a response.",
+      "text": "You wait two days before you finally get a response.",
+      "author": "Suzanne Dodd, Voyager project manager, NASA JPL, 2026",
+      "broll_query": "Deep Space Network"
+    },
+    {
+      "type": "statement",
+      "narration": "Its radio sends with only about twenty watts. By the time that signal reaches Earth, it takes dishes up to 70 metres wide to hear it.",
+      "text": "About 20 watts",
+      "broll_query": "Deep Space Network 70 meter antenna"
+    },
+    {
+      "type": "statement",
+      "narration": "And now it is about to cross a line no machine has ever crossed.",
+      "text": "A line no machine has crossed",
+      "broll_query": "Voyager interstellar space"
+    },
+    {
+      "type": "scale",
+      "narration": "Light from the Moon reaches us in about a second. From the Sun, about eight minutes. From Neptune, about four hours.",
+      "heading": "How long light takes to reach Earth",
+      "data": [
+        {
+          "label": "Moon · 1.3 s",
+          "value": 1.3
+        },
+        {
+          "label": "Sun · 8.3 min",
+          "value": 499
+        },
+        {
+          "label": "Neptune · ~4 h",
+          "value": 15000
+        },
+        {
+          "label": "Voyager 1 · 24 h",
+          "value": 86400
+        }
+      ]
+    },
+    {
+      "type": "statement",
+      "narration": "At 06:16 Universal Time on the eighteenth of November 2026, Voyager 1 will be one full light-day from Earth.",
+      "text": "18 Nov 2026 · 06:16 UTC",
+      "broll_query": "Voyager 1 interstellar"
+    },
+    {
+      "type": "stat",
+      "narration": "That is about 25.9 billion kilometres, or 16.1 billion miles. Light itself needs a whole day to cover it.",
+      "value": 25.9,
+      "suffix": " billion km",
+      "heading": "One light-day",
+      "text": "16.1 billion miles",
+      "broll_query": "Voyager interstellar space"
+    },
+    {
+      "type": "statement",
+      "narration": "Voyager 1 took 49 years, two months and eleven days to get there, moving at about 61,000 kilometres an hour.",
+      "text": "61,000 km/h",
+      "broll_query": "Voyager spacecraft space"
+    },
+    {
+      "type": "statement",
+      "narration": "And yet the nearest star is still more than four light-years away. At this speed, it would take about 75,000 years to cover that distance.",
+      "text": "About 75,000 years to the nearest star's distance",
+      "broll_query": "Proxima Centauri star"
+    },
+    {
+      "type": "statement",
+      "narration": "Only two of its ten instruments are still running, listening to magnetic fields and waves in the gas between the stars.",
+      "text": "2 of 10 instruments still on",
+      "broll_query": "magnetic field space"
+    },
+    {
+      "type": "statement",
+      "narration": "Without the Big Bang, another would have been switched off as early as summer 2027. Now the team has bought it a little more time.",
+      "text": "A little more time",
+      "broll_query": "Jet Propulsion Laboratory"
+    },
+    {
+      "type": "statement",
+      "narration": "One day there won't be enough power left to run anything. The calls will go unanswered for good.",
+      "text": "One day, no answer",
+      "broll_query": "radio telescope dish night"
+    },
+    {
+      "type": "statement",
+      "narration": "But Voyager 1 won't stop. It will keep falling outward with its golden record, long after the people who built it are gone.",
+      "text": "It won't stop",
+      "broll_query": "Golden Record cover"
+    },
+    {
+      "type": "statement",
+      "narration": "For now, though, a day away at the speed of light, the most distant thing we have ever built still answers when we call.",
+      "text": "It still answers",
+      "broll_query": "Voyager spacecraft stars",
+      "transition": "fade"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Voyager_1",
+    "https://earthsky.org/space/voyager-1-1-light-day-from-earth-november-17-18-2026/",
+    "https://science.nasa.gov/blogs/voyager/2026/10/29/nasas-voyager-1-conserves-power-resolves-brief-communications-pause/",
+    "https://www.jpl.nasa.gov/news/nasa-shuts-off-instrument-on-voyager-1-to-keep-spacecraft-operating/",
+    "https://jpl.nasa.gov/news/nasas-voyager-1-revives-backup-thrusters-before-command-pause/",
+    "https://www.livescience.com/space/space-exploration/nasa-shuts-off-another-voyager-1-instrument-as-humanitys-most-distant-spacecraft-prepares-for-risky-big-bang-maneuver-to-save-power",
+    "https://www.slashgear.com/1611283/how-nasa-fixed-voyager-1-from-15-billion-miles-away"
+  ],
+  "comment_question": "If you could add one sound to Voyager's Golden Record today, what would it be?",
+  "chapters": [
+    {
+      "title": "The call nobody answered",
+      "scene": 0
+    },
+    {
+      "title": "A once-in-175-years launch",
+      "scene": 4
+    },
+    {
+      "title": "Jupiter and Saturn",
+      "scene": 15
+    },
+    {
+      "title": "The Pale Blue Dot",
+      "scene": 23
+    },
+    {
+      "title": "Leaving the Sun behind",
+      "scene": 29
+    },
+    {
+      "title": "Repairs from 24 billion kilometres",
+      "scene": 34
+    },
+    {
+      "title": "One light-day from home",
+      "scene": 49
+    }
+  ],
+  "series": "Strange Science"
+}

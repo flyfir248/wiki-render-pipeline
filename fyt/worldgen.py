@@ -1337,6 +1337,48 @@ def shows(b: Build, m: dict | None) -> bool:
     return bool(m) and (b.archetype not in LIVING or bool(m.get("clips")) or bool(m.get("posed")))
 
 
+SPACE_THINGS = ("spacecraft", "space probe", "probe", "satellite", "space station", "space telescope", "planet", "moon",
+                "asteroid", "comet", "meteor", "star", "galaxy", "nebula", "black hole")
+SPACE_SET = "_space"
+INDOOR_SETS = ("room", "hall", "lab", "hospital", "factory", "station", "shop")  # the set a place-less scene of something in space gets when the story names no space place
+
+
+def _in_space(e: Entity | None) -> bool:
+    return e is not None and any(_has(f"{e.kind} {e.name}".lower(), w) for w in SPACE_THINGS)
+
+
+def place_unplaced(shots: dict[int, Shot], story: Manifest, settings: dict[str, Setting]) -> tuple[dict[int, Shot], dict[str, Setting]]:
+    """Give every shot that names no place the set its lead belongs in, instead of the story's first place: a
+    space probe floats in space, not over the launch site's grass. Something in space goes to a space set (the
+    story's own, else a plain starfield); anything else goes where its lead is most often seen."""
+    settings = dict(settings)
+    out = dict(shots)
+    for k, sh in shots.items():
+        if not sh.actors:
+            continue
+        lead = sh.actors[0].entity
+        placed = sh.place in settings if sh.place else False
+        # a craft in space is shown in space: a planner that sets a probe's scene at its launch site gets a
+        # probe parked on the beach. Indoors (a clean room, a lab) it may be on the ground being built.
+        if placed and not (_in_space(manifest.entity(story, lead)) and settings[sh.place].kind not in INDOOR_SETS + ("space",)):
+            continue
+        if _in_space(manifest.entity(story, lead)):
+            space = next((pid for pid, s in settings.items() if s.kind == "space"), None)
+            if space is None:
+                g, sky, acc = SET_COLOURS["space"]
+                settings[SPACE_SET] = Setting(place=SPACE_SET, kind="space", time="night", ground=g, sky=sky, accent=acc, backdrop="none")
+                space = SPACE_SET
+            out[k] = sh.model_copy(update={"place": space})
+            continue
+        seen: dict[str, int] = {}
+        for other in shots.values():
+            if other.place in settings and any(a.entity == lead for a in other.actors):
+                seen[other.place] = seen.get(other.place, 0) + 1
+        if seen:
+            out[k] = sh.model_copy(update={"place": max(seen, key=lambda pid: seen[pid])})
+    return out, settings
+
+
 def world_of(style: str, seed: int, shot: Shot, builds: dict[str, Build], settings: dict[str, Setting], models: dict[str, dict]) -> dict:
     """What the renderer's StoryWorld needs for one scene: the style, the set and every actor with its
     build (or its found model), verb, blocking and state, the camera, the marks and the labels."""

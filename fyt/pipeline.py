@@ -664,6 +664,8 @@ def story_worlds(cfg: Config, job: Job, script: Script, story: "story_manifest.M
         log(job, "real sizes: " + "; ".join(resized))
     shots, made["direction"] = worldgen.direct(cfg, script, story, builds, staged, log=lambda m: log(job, m))
     shots = director.drop_worn(shots, worn)
+    # a scene that names no place is set where its lead belongs (a probe in space), not in the story's first place
+    shots, settings = worldgen.place_unplaced(shots, story, settings)
     # the Animation Director: what physically happens in each scene (a load riding on its carrier, let go,
     # falling, detonating), checked against what the bodies can do, before it is filmed
     shots, plans, made["animation"] = animation.plan(cfg, script, story, builds, shots, log=lambda m: log(job, m))

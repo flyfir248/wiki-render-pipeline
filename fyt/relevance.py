@@ -20,7 +20,7 @@ import json
 import re
 from pathlib import Path
 
-from fyt import assetlib, manifest, render, storyboard
+from fyt import assetlib, assets, manifest, render, scenes3d, storyboard
 from fyt.config import Config
 from fyt.manifest import Manifest
 from fyt.models import Script
@@ -64,6 +64,15 @@ def subject_text(scene, story: Manifest | None) -> str:
     return f"{scene.variant or ''} {scene.subject or ''}".strip()
 
 
+def named_entity(scene, story: Manifest):
+    """The story's entity a library or spec model was picked for: the model's key ('voyager-probe') stands in
+    the scene's subject_name, and the entity is the one whose name the model's names match ('Voyager 1')."""
+    if (scene.model or {}).get("level") not in ("library", "spec"):
+        return None
+    names = assets.registry().get(scene.subject_name or "", {}).get("names", [])
+    return next((x for x in story.entities if names and scenes3d.find(" ".join([x.name, *x.search]), names)), None)
+
+
 def text_gate(script: Script, story: Manifest | None) -> dict[int, str]:
     """{scene index: why} for 3D scenes that don't show something the story lists in that scene."""
     if story is None:
@@ -72,7 +81,7 @@ def text_gate(script: Script, story: Manifest | None) -> dict[int, str]:
     for i, s in enumerate(script.scenes):
         if not is_3d(s):
             continue
-        e = manifest.entity(story, s.subject_name)
+        e = manifest.entity(story, s.subject_name) or named_entity(s, story)
         p = manifest.place(story, s.subject_name)
         if e is None and p is None:
             bad[i] = f"shows {s.subject} '{s.subject_name}', which the story's manifest doesn't list"
@@ -142,7 +151,9 @@ def contradicts(problems: str, subject: str) -> bool:
     """A failing verdict that says the frame shows its subject after all ("does not show a bear, it shows
     a 3D cartoon bear"; "not a Cessna, but a small plane"): the subject's own noun named again after the
     turn of the sentence, or the frame faulted only for its style."""
-    low = problems.lower()
+    # what the frame is said to show in place of its subject is not the subject: "shows a car instead of a
+    # spacecraft or probe" names the subject only as what is missing
+    low = re.sub(r"\b(instead of|rather than|in place of)\b[^.;,]*", " ", problems.lower())
     nouns = {w for w in re.findall(r"[a-z]{3,}", subject.lower()) if w not in GENERIC and w not in ("the",)}
     nouns |= {x for n in nouns for x in SAME.get(n, ())}
     turn = re.search(r"\b(but|instead|it shows|shows a|rather)\b", low)

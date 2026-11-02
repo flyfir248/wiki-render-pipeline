@@ -151,12 +151,20 @@ def analyse(cfg: Config, script: Script, notes: str = "") -> Manifest:
     return checked(raw, script)
 
 
+def _named(name: str | None) -> str:
+    return re.sub(r"^(the|a|an)\s+", "", (name or "").strip().lower())
+
+
 def entity(m: Manifest, eid: str | None) -> Entity | None:
-    return next((e for e in m.entities if e.id == eid), None)
+    """The entity with this id, else the one the story calls by this name (a hand-written script names the
+    subject of its 3D scene, 'Voyager 1', not the manifest's id for it)."""
+    return next((e for e in m.entities if e.id == eid), None) or (
+        next((e for e in m.entities if _named(e.name) == _named(eid)), None) if eid else None)
 
 
 def place(m: Manifest, pid: str | None) -> Place | None:
-    return next((p for p in m.places if p.id == pid), None)
+    return next((p for p in m.places if p.id == pid), None) or (
+        next((p for p in m.places if _named(p.name) == _named(pid)), None) if pid else None)
 
 
 def in_scene(m: Manifest, scene: int) -> list[Entity]:
