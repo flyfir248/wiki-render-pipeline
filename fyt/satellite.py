@@ -415,8 +415,9 @@ def s2_mosaic(bounds, size: tuple[int, int], ground_mpp: float, log=print) -> Im
         return None
     env = {"GDAL_DISABLE_READDIR_ON_OPEN": "EMPTY_DIR", "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif",
            "GDAL_HTTP_MAX_RETRY": "3", "GDAL_HTTP_RETRY_DELAY": "2", "VSI_CACHE": "TRUE"}
-    if os.environ.get("CURL_CA_BUNDLE") is None and Path("/root/.ccr/ca-bundle.crt").exists():
-        env["CURL_CA_BUNDLE"] = "/root/.ccr/ca-bundle.crt"
+    ca = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
+    if ca:
+        env["CURL_CA_BUNDLE"] = ca
 
     def read(url):
         out = np.zeros((3, h, w), dtype=np.uint8)
