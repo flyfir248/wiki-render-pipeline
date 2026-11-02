@@ -1,0 +1,100 @@
+{
+  "entities": [
+    {
+      "id": "oil-tanker",
+      "name": "the tanker On Peace",
+      "kind": "oil tanker",
+      "search": [
+        "oil tanker",
+        "tanker",
+        "ship"
+      ],
+      "look": "Large modern oil tanker, white superstructure, red and black hull, burning near the stern.",
+      "certain": false,
+      "scenes": [
+        1,
+        3,
+        7,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        18,
+        19,
+        21,
+        24,
+        25,
+        27,
+        28,
+        29,
+        32,
+        33,
+        39,
+        41
+      ]
+    },
+    {
+      "id": "container-ship",
+      "name": "the GFS Pride",
+      "kind": "container ship",
+      "search": [
+        "container ship",
+        "cargo ship",
+        "ship"
+      ],
+      "look": "Singapore-flagged container ship, stacked colorful containers on deck, sinking stern first.",
+      "certain": false,
+      "scenes": [
+        7,
+        9,
+        12,
+        18,
+        19,
+        21,
+        24,
+        25,
+        27,
+        28,
+        32,
+        39
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "strait-of-hormuz",
+      "name": "Strait of Hormuz",
+      "look": "Narrow blue water channel between arid mountainous coastlines under bright daylight.",
+      "scenes": [
+        29,
+        32
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 29,
+      "entity": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "action": "Tanker hit and caught fire",
+      "motion": "present",
+      "cue": "the tanker On Peace was hit about nine nautical miles off Limah",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 32,
+      "entity": "container-ship",
+      "place": "strait-of-hormuz",
+      "action": "Container ship sank near the strait",
+      "motion": "fall",
+      "cue": "a Singapore-flagged container ship, the GFS Pride, sank near the strait.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

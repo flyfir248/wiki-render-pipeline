@@ -1,0 +1,6818 @@
+{
+  "core_message": "A 34 km strait carries a fifth of the world's oil, and the 2026 war has shown how little room there is around it.",
+  "mood": "tense",
+  "title": "The Strait of Hormuz: How 34 km of Water Holds the World Hostage",
+  "description": "A strip of water between Iran and Oman, about 34 kilometres wide at its narrowest, carried about 20 million barrels of oil a day before the war. Since the US and Israel began striking Iran on 28 February 2026, it has been closed, half-open, mined, cleared and attacked again. Here is the geography, what flows through it, what happened this year, why it matters so much to India, and what to watch next.\n\nFacts as reported up to 1 November 2026, from the IEA, the US EIA, Reuters, Al Jazeera, gCaptain and others (sources below). The war is ongoing and details may change.\n\nMaps: country borders as shown by the Survey of India (Natural Earth, India view). Satellite imagery: NASA Blue Marble; contains modified Copernicus Sentinel data 2025-2026.\n\nImage credits:\nStrait of Hormuz OSM.webp (OpenStreetMap, CC BY 4.0): https://commons.wikimedia.org/wiki/File:Strait_of_Hormuz_OSM.webp\nStrait of Hormuz Transits.webp (Wikideas1, CC0): https://commons.wikimedia.org/wiki/File:Strait_of_Hormuz_Transits.webp\nSTS004-37-716 - Strait of Hormuz.jpg (NASA, Public domain): https://commons.wikimedia.org/wiki/File:STS004-37-716_-_Strait_of_Hormuz.jpg\nتابش آفتاب از بین ابرها - panoramio.jpg (Ali khodabakhsh, CC BY 3.0): https://commons.wikimedia.org/wiki/File:%D8%AA%D8%A7%D8%A8%D8%B4_%D8%A2%D9%81%D8%AA%D8%A7%D8%A8_%D8%A7%D8%B2_%D8%A8%DB%8C%D9%86_%D8%A7%D8%A8%D8%B1%D9%87%D8%A7_-_panoramio.jpg\nStrait of Hormuz.png (European Space Agency (ESA), Attribution): https://commons.wikimedia.org/wiki/File:Strait_of_Hormuz.png\nStrait of Hormuz ARZ.png (Almajidy, CC BY-SA 4.0): https://commons.wikimedia.org/wiki/File:Strait_of_Hormuz_ARZ.png\nPhoto by Energie-portal.sk on Unsplash: https://unsplash.com/@energie_portal_sk?utm_source=facelessyt&utm_medium=referral\nPhoto by Venti Views on Unsplash: https://unsplash.com/@ventiviews?utm_source=facelessyt&utm_medium=referral\nPhoto by Shaah Shahidh on Unsplash: https://unsplash.com/@shaahshahidh?utm_source=facelessyt&utm_medium=referral\nPhoto by Alec Douglas on Unsplash: https://unsplash.com/@alecdougie?utm_source=facelessyt&utm_medium=referral\nPhoto by Aritra Roy on Unsplash: https://unsplash.com/@aritraroys?utm_source=facelessyt&utm_medium=referral\nPhoto by Markus Kammermann on Unsplash: https://unsplash.com/@makabera?utm_source=facelessyt&utm_medium=referral\nPhoto by Popup Agency on Unsplash: https://unsplash.com/@popup_agency?utm_source=facelessyt&utm_medium=referral\nPhoto by Fredrick F. on Unsplash: https://unsplash.com/@blackspeaker93?utm_source=facelessyt&utm_medium=referral\nPhoto by Energie-portal.sk on Unsplash: https://unsplash.com/@energie_portal_sk?utm_source=facelessyt&utm_medium=referral\nPhoto by Venti Views on Unsplash: https://unsplash.com/@ventiviews?utm_source=facelessyt&utm_medium=referral\nPhoto by Ian Simmonds on Unsplash: https://unsplash.com/@ihs_photo?utm_source=facelessyt&utm_medium=referral\nPhoto by Aritra Roy on Unsplash: https://unsplash.com/@aritraroys?utm_source=facelessyt&utm_medium=referral\nPhoto by Daniil Serhiyevich on Unsplash: https://unsplash.com/@daniil_serhiyevich?utm_source=facelessyt&utm_medium=referral\nPhoto by Kenny on Unsplash: https://unsplash.com/@kennymark?utm_source=facelessyt&utm_medium=referral\n\nChapters:\n0:00 A war zone\n0:30 Thirty-four kilometres\n1:11 What flows through it\n2:09 The strait closes\n3:05 Deals that didn't hold\n3:48 October\n4:55 Is there a way around?\n5:49 What to watch",
+  "tags": [
+    "Strait of Hormuz",
+    "Iran",
+    "Oman",
+    "oil",
+    "geopolitics",
+    "Persian Gulf",
+    "Iran war 2026",
+    "oil prices",
+    "LNG",
+    "shipping",
+    "India oil imports",
+    "chokepoint",
+    "maps",
+    "explained"
+  ],
+  "thumbnail_text": "34 KM THAT RULE OIL",
+  "thumbnail_kicker": "Strait of Hormuz",
+  "thumbnail_query": "oil tanker Strait of Hormuz",
+  "scenes": [
+    {
+      "narration": "Before this year, about twenty million barrels of oil passed every single day through one narrow gap between Iran and Oman.",
+      "purpose": null,
+      "type": "map",
+      "heading": "The Strait of Hormuz",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Strait of Hormuz",
+          "lat": 26.57,
+          "lon": 56.25
+        }
+      ],
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": 1.5,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Since the end of February 2026, that gap has been a war zone.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "A war zone since February 2026",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "desert",
+      "backdrop": "Strait of Hormuz, Narrow blue water channel between arid mountainous coastlines under bright daylight.",
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "orbit",
+      "weather": null,
+      "cue": null,
+      "subject_name": "oil-tanker",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the tanker On Peace"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "Since the end of February 2026, that gap has been a war zone.",
+        "type": "statement",
+        "text": "A war zone since February 2026",
+        "transition": "whip",
+        "broll_query": "oil tanker at sea Persian Gulf"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "oil-tanker",
+            "verb": "move",
+            "at": "center",
+            "to": "far",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "oil-tanker",
+              "archetype": "vehicle",
+              "size": 330.0,
+              "primary": "#ffffff",
+              "secondary": "#222222",
+              "accent": "#ff3300",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    19.799999999999997,
+                    0.0
+                  ],
+                  "size": [
+                    330.0,
+                    39.599999999999994,
+                    92.4
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -26.4,
+                    56.1,
+                    0.0
+                  ],
+                  "size": [
+                    132.0,
+                    33.0,
+                    72.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#222222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    66.0,
+                    26.4,
+                    59.4
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    69.3,
+                    9.899999999999999,
+                    61.050000000000004
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -66.0,
+                    108.89999999999999,
+                    0.0
+                  ],
+                  "size": [
+                    16.5,
+                    33.0,
+                    16.5
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ff3300",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "aerial",
+        "on": "oil-tanker",
+        "marks": [],
+        "callouts": [],
+        "beats": [],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "aerial",
+              "on": "oil-tanker"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Tankers have been hit by drones, mines, missiles and speedboats. Seafarers have been killed. In March, oil prices rose faster than in any month on record.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "The biggest monthly oil price jump on record",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "sea",
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": "Tankers have been hit by drones, mines, missiles and speedboats",
+      "subject_name": "oil-tanker",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the tanker On Peace"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "Tankers have been hit by drones, mines, missiles and speedboats. Seafarers have been killed. In March, oil prices rose faster than in any month on record.",
+        "type": "statement",
+        "text": "The biggest monthly oil price jump on record",
+        "transition": "whip",
+        "broll_query": "oil tanker fire smoke"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "oil-tanker",
+            "verb": "move",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "oil-tanker",
+              "archetype": "vehicle",
+              "size": 330.0,
+              "primary": "#ffffff",
+              "secondary": "#222222",
+              "accent": "#ff3300",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    19.799999999999997,
+                    0.0
+                  ],
+                  "size": [
+                    330.0,
+                    39.599999999999994,
+                    92.4
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -26.4,
+                    56.1,
+                    0.0
+                  ],
+                  "size": [
+                    132.0,
+                    33.0,
+                    72.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#222222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    66.0,
+                    26.4,
+                    59.4
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    69.3,
+                    9.899999999999999,
+                    61.050000000000004
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -66.0,
+                    108.89999999999999,
+                    0.0
+                  ],
+                  "size": [
+                    16.5,
+                    33.0,
+                    16.5
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ff3300",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "oil-tanker",
+        "marks": [],
+        "callouts": [],
+        "beats": [],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "track",
+              "on": "oil-tanker"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "So how does a strip of water this narrow hold the world economy hostage? And why does it matter so much to India?",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "Why this strait matters",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "desert",
+      "backdrop": "Strait of Hormuz, Narrow blue water channel between arid mountainous coastlines under bright daylight.",
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "front",
+      "weather": null,
+      "cue": null,
+      "subject_name": "oil-tanker",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the tanker On Peace"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "So how does a strip of water this narrow hold the world economy hostage? And why does it matter so much to India?",
+        "type": "statement",
+        "text": "Why this strait matters",
+        "transition": "thread",
+        "broll_query": "oil tanker strait"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "oil-tanker",
+            "verb": "move",
+            "at": "left",
+            "to": "right",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "oil-tanker",
+              "archetype": "vehicle",
+              "size": 330.0,
+              "primary": "#ffffff",
+              "secondary": "#222222",
+              "accent": "#ff3300",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    19.799999999999997,
+                    0.0
+                  ],
+                  "size": [
+                    330.0,
+                    39.599999999999994,
+                    92.4
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -26.4,
+                    56.1,
+                    0.0
+                  ],
+                  "size": [
+                    132.0,
+                    33.0,
+                    72.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#222222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    66.0,
+                    26.4,
+                    59.4
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    69.3,
+                    9.899999999999999,
+                    61.050000000000004
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -66.0,
+                    108.89999999999999,
+                    0.0
+                  ],
+                  "size": [
+                    16.5,
+                    33.0,
+                    16.5
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ff3300",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "aerial",
+        "on": "oil-tanker",
+        "marks": [],
+        "callouts": [],
+        "beats": [],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "track",
+              "on": "oil-tanker"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "thread",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Here it is from space. The Persian Gulf is almost a closed sea. Its only way out to the open ocean is this one bend: the Strait of Hormuz.",
+      "purpose": null,
+      "type": "map",
+      "heading": "The Gulf's only way out",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Kuwait",
+          "lat": 29.37,
+          "lon": 47.98
+        },
+        {
+          "name": "Strait of Hormuz",
+          "lat": 26.57,
+          "lon": 56.25
+        }
+      ],
+      "route": false,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "At its narrowest, between Iran's coast and Oman's Musandam peninsula, it is only about thirty-four kilometres across.",
+      "purpose": null,
+      "type": "map",
+      "heading": "About 34 km across",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Larak Island, Iran",
+          "lat": 26.86,
+          "lon": 56.36
+        },
+        {
+          "name": "Musandam, Oman",
+          "lat": 26.36,
+          "lon": 56.4
+        }
+      ],
+      "route": false,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": 4.0,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "And big ships can't use all of that. They follow two lanes, one in and one out, each only about three kilometres wide, with a buffer of water between them.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "Two lanes, each about 3 km wide",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "orbit",
+      "weather": null,
+      "cue": "They follow two lanes, one in and one out",
+      "subject_name": "oil-tanker",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the tanker On Peace"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "And big ships can't use all of that. They follow two lanes, one in and one out, each only about three kilometres wide, with a buffer of water between them.",
+        "type": "statement",
+        "text": "Two lanes, each about 3 km wide",
+        "transition": "whip",
+        "broll_query": "supertanker aerial"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "oil-tanker",
+            "verb": "move",
+            "at": "left",
+            "to": "center",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "oil-tanker",
+              "archetype": "vehicle",
+              "size": 330.0,
+              "primary": "#ffffff",
+              "secondary": "#222222",
+              "accent": "#ff3300",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    19.799999999999997,
+                    0.0
+                  ],
+                  "size": [
+                    330.0,
+                    39.599999999999994,
+                    92.4
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -26.4,
+                    56.1,
+                    0.0
+                  ],
+                  "size": [
+                    132.0,
+                    33.0,
+                    72.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#222222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    66.0,
+                    26.4,
+                    59.4
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    69.3,
+                    9.899999999999999,
+                    61.050000000000004
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -66.0,
+                    108.89999999999999,
+                    0.0
+                  ],
+                  "size": [
+                    16.5,
+                    33.0,
+                    16.5
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ff3300",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          },
+          {
+            "entity": "container-ship",
+            "verb": "move",
+            "at": "right",
+            "to": "center",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "container-ship",
+              "archetype": "vehicle",
+              "size": 300.0,
+              "primary": "#0044aa",
+              "secondary": "#cc2222",
+              "accent": "#ffcc00",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    18.0,
+                    0.0
+                  ],
+                  "size": [
+                    300.0,
+                    36.0,
+                    84.0
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#0044aa",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -24.0,
+                    51.0,
+                    0.0
+                  ],
+                  "size": [
+                    119.99999999999999,
+                    29.999999999999996,
+                    66.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#cc2222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -29.999999999999996,
+                    78.0,
+                    0.0
+                  ],
+                  "size": [
+                    59.99999999999999,
+                    24.0,
+                    53.99999999999999
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -29.999999999999996,
+                    78.0,
+                    0.0
+                  ],
+                  "size": [
+                    63.0,
+                    9.0,
+                    55.49999999999999
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -59.99999999999999,
+                    99.0,
+                    0.0
+                  ],
+                  "size": [
+                    14.999999999999998,
+                    29.999999999999996,
+                    14.999999999999998
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffcc00",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "top_down",
+        "on": "oil-tanker",
+        "marks": [],
+        "callouts": [],
+        "beats": [],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "track",
+              "on": "oil-tanker"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Those lanes bend right past Iran's islands, Qeshm and Larak, and its biggest naval port, Bandar Abbas.",
+      "purpose": null,
+      "type": "map",
+      "heading": "Iran's side of the strait",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Bandar Abbas",
+          "lat": 27.18,
+          "lon": 56.27
+        },
+        {
+          "name": "Qeshm",
+          "lat": 26.8,
+          "lon": 55.85
+        },
+        {
+          "name": "Larak",
+          "lat": 26.86,
+          "lon": 56.36
+        }
+      ],
+      "route": false,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": 3.0,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "From these islands and this coast, every passing ship is within easy reach.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "Every ship within reach",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "sea",
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "wide",
+      "weather": null,
+      "cue": null,
+      "subject_name": "oil-tanker",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the tanker On Peace"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "From these islands and this coast, every passing ship is within easy reach.",
+        "type": "statement",
+        "text": "Every ship within reach",
+        "transition": "thread",
+        "broll_query": "Bandar Abbas port"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "oil-tanker",
+            "verb": "move",
+            "at": "center",
+            "to": "far",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "oil-tanker",
+              "archetype": "vehicle",
+              "size": 330.0,
+              "primary": "#ffffff",
+              "secondary": "#222222",
+              "accent": "#ff3300",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    19.799999999999997,
+                    0.0
+                  ],
+                  "size": [
+                    330.0,
+                    39.599999999999994,
+                    92.4
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -26.4,
+                    56.1,
+                    0.0
+                  ],
+                  "size": [
+                    132.0,
+                    33.0,
+                    72.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#222222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    66.0,
+                    26.4,
+                    59.4
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    69.3,
+                    9.899999999999999,
+                    61.050000000000004
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -66.0,
+                    108.89999999999999,
+                    0.0
+                  ],
+                  "size": [
+                    16.5,
+                    33.0,
+                    16.5
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ff3300",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          },
+          {
+            "entity": "container-ship",
+            "verb": "move",
+            "at": "left",
+            "to": "right",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "container-ship",
+              "archetype": "vehicle",
+              "size": 300.0,
+              "primary": "#0044aa",
+              "secondary": "#cc2222",
+              "accent": "#ffcc00",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    18.0,
+                    0.0
+                  ],
+                  "size": [
+                    300.0,
+                    36.0,
+                    84.0
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#0044aa",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -24.0,
+                    51.0,
+                    0.0
+                  ],
+                  "size": [
+                    119.99999999999999,
+                    29.999999999999996,
+                    66.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#cc2222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -29.999999999999996,
+                    78.0,
+                    0.0
+                  ],
+                  "size": [
+                    59.99999999999999,
+                    24.0,
+                    53.99999999999999
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -29.999999999999996,
+                    78.0,
+                    0.0
+                  ],
+                  "size": [
+                    63.0,
+                    9.0,
+                    55.49999999999999
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -59.99999999999999,
+                    99.0,
+                    0.0
+                  ],
+                  "size": [
+                    14.999999999999998,
+                    29.999999999999996,
+                    14.999999999999998
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffcc00",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "follow",
+        "on": "oil-tanker",
+        "marks": [],
+        "callouts": [],
+        "beats": [],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "track",
+              "on": "oil-tanker"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "thread",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "In 2025, about twenty million barrels of crude oil and fuel went through here every day, according to the International Energy Agency.",
+      "purpose": null,
+      "type": "stat",
+      "heading": "Through Hormuz every day in 2025",
+      "text": null,
+      "items": null,
+      "value": 20.0,
+      "prefix": null,
+      "suffix": " M barrels",
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": "oil tanker"
+    },
+    {
+      "narration": "That is about a quarter of all the oil the world trades by sea.",
+      "purpose": null,
+      "type": "proportion",
+      "heading": "Share of the world's seaborne oil trade",
+      "text": null,
+      "items": null,
+      "value": 25.0,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "It comes from Saudi Arabia, Iraq, Kuwait, the United Arab Emirates, Qatar, Bahrain and Iran itself. Kuwait, Qatar and Bahrain have no other way to the open sea at all.",
+      "purpose": null,
+      "type": "map",
+      "heading": "Who ships through Hormuz",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": [
+        "Saudi Arabia",
+        "Iraq",
+        "Kuwait",
+        "United Arab Emirates",
+        "Qatar",
+        "Bahrain",
+        "Iran"
+      ],
+      "region_change": "appear",
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "It isn't just oil. About a fifth of the world's liquefied natural gas goes the same way, most of it from Qatar.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "About 1 in 5 cargoes of the world's LNG",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": null,
+      "subject_name": "oil-tanker",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the tanker On Peace"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "It isn't just oil. About a fifth of the world's liquefied natural gas goes the same way, most of it from Qatar.",
+        "type": "statement",
+        "text": "About 1 in 5 cargoes of the world's LNG",
+        "transition": "whip",
+        "broll_query": "LNG tanker ship"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "oil-tanker",
+            "verb": "move",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "oil-tanker",
+              "archetype": "vehicle",
+              "size": 330.0,
+              "primary": "#ffffff",
+              "secondary": "#222222",
+              "accent": "#ff3300",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    19.799999999999997,
+                    0.0
+                  ],
+                  "size": [
+                    330.0,
+                    39.599999999999994,
+                    92.4
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -26.4,
+                    56.1,
+                    0.0
+                  ],
+                  "size": [
+                    132.0,
+                    33.0,
+                    72.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#222222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    66.0,
+                    26.4,
+                    59.4
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    69.3,
+                    9.899999999999999,
+                    61.050000000000004
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -66.0,
+                    108.89999999999999,
+                    0.0
+                  ],
+                  "size": [
+                    16.5,
+                    33.0,
+                    16.5
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ff3300",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "establish",
+        "on": "oil-tanker",
+        "marks": [],
+        "callouts": [],
+        "beats": [],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "track",
+              "on": "oil-tanker"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "A gas tanker leaving Qatar's Ras Laffan terminal has to sail down the Gulf and out through the strait before it can reach a single customer.",
+      "purpose": null,
+      "type": "map",
+      "heading": "Out of the Gulf",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Ras Laffan",
+          "lat": 25.91,
+          "lon": 51.55
+        },
+        {
+          "name": "Strait of Hormuz",
+          "lat": 26.57,
+          "lon": 56.25
+        },
+        {
+          "name": "Gulf of Oman",
+          "lat": 24.9,
+          "lon": 58.2
+        }
+      ],
+      "route": true,
+      "vehicle": "ship",
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "And most of it heads east. About eighty percent of the oil goes to Asia. China and India together took forty-four percent.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "80% to Asia, 44% to China and India",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "room",
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "orbit",
+      "weather": null,
+      "cue": null,
+      "subject_name": "oil-tanker",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the tanker On Peace"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "And most of it heads east. About eighty percent of the oil goes to Asia. China and India together took forty-four percent.",
+        "type": "statement",
+        "text": "80% to Asia, 44% to China and India",
+        "transition": "whip",
+        "broll_query": "oil refinery India"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "oil-tanker",
+            "verb": "move",
+            "at": "center",
+            "to": "far",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "oil-tanker",
+              "archetype": "vehicle",
+              "size": 330.0,
+              "primary": "#ffffff",
+              "secondary": "#222222",
+              "accent": "#ff3300",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    19.799999999999997,
+                    0.0
+                  ],
+                  "size": [
+                    330.0,
+                    39.599999999999994,
+                    92.4
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -26.4,
+                    56.1,
+                    0.0
+                  ],
+                  "size": [
+                    132.0,
+                    33.0,
+                    72.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#222222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    66.0,
+                    26.4,
+                    59.4
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    69.3,
+                    9.899999999999999,
+                    61.050000000000004
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -66.0,
+                    108.89999999999999,
+                    0.0
+                  ],
+                  "size": [
+                    16.5,
+                    33.0,
+                    16.5
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ff3300",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "aerial",
+        "on": "oil-tanker",
+        "marks": [],
+        "callouts": [],
+        "beats": [],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "track",
+              "on": "oil-tanker"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "For India, Hormuz is the front door. From the strait, a tanker can reach the giant refineries at Jamnagar in Gujarat in a few days.",
+      "purpose": null,
+      "type": "map",
+      "heading": "India's front door",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Strait of Hormuz",
+          "lat": 26.57,
+          "lon": 56.25
+        },
+        {
+          "name": "Jamnagar",
+          "lat": 22.47,
+          "lon": 70.06
+        }
+      ],
+      "route": true,
+      "vehicle": "ship",
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "On the twenty-eighth of February 2026, the United States and Israel began strikes on Iran. Iran's Supreme Leader, Ali Khamenei, was killed.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "28 February 2026",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "thread",
+      "image": null,
+      "broll_query": "Tehran skyline"
+    },
+    {
+      "narration": "Iran fired back with missiles, and its Revolutionary Guards radioed ships in the strait that none would be allowed through.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "\"No ships will pass\"",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": "warship Persian Gulf"
+    },
+    {
+      "narration": "Traffic collapsed within days. By early March, insurers had withdrawn cover, so even ships willing to take the risk could not sail.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "Insurance withdrawn",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": "tanker anchored"
+    },
+    {
+      "narration": "Brent crude passed one hundred dollars a barrel on the eighth of March, for the first time in four years, and peaked at about one hundred and twenty-six.",
+      "purpose": null,
+      "type": "stat",
+      "heading": "Brent crude at its 2026 peak",
+      "text": null,
+      "items": null,
+      "value": 126.0,
+      "prefix": "$",
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": "oil price chart"
+    },
+    {
+      "narration": "By April, the International Maritime Organization counted about two thousand ships and twenty thousand seafarers stuck inside the Gulf.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "2,000 ships, 20,000 seafarers stranded",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "sea",
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "front",
+      "weather": null,
+      "cue": null,
+      "subject_name": "oil-tanker",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the tanker On Peace"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "By April, the International Maritime Organization counted about two thousand ships and twenty thousand seafarers stuck inside the Gulf.",
+        "type": "statement",
+        "text": "2,000 ships, 20,000 seafarers stranded",
+        "transition": "whip",
+        "broll_query": "ships anchored at sea"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "oil-tanker",
+            "verb": "present",
+            "at": "center",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "oil-tanker",
+              "archetype": "vehicle",
+              "size": 330.0,
+              "primary": "#ffffff",
+              "secondary": "#222222",
+              "accent": "#ff3300",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    19.799999999999997,
+                    0.0
+                  ],
+                  "size": [
+                    330.0,
+                    39.599999999999994,
+                    92.4
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffffff",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -26.4,
+                    56.1,
+                    0.0
+                  ],
+                  "size": [
+                    132.0,
+                    33.0,
+                    72.6
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#222222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    66.0,
+                    26.4,
+                    59.4
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -33.0,
+                    85.8,
+                    0.0
+                  ],
+                  "size": [
+                    69.3,
+                    9.899999999999999,
+                    61.050000000000004
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -66.0,
+                    108.89999999999999,
+                    0.0
+                  ],
+                  "size": [
+                    16.5,
+                    33.0,
+                    16.5
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ff3300",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          },
+          {
+            "entity": "container-ship",
+            "verb": "present",
+            "at": "left",
+            "to": "",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "container-ship",
+              "archetype": "vehicle",
+              "size": 300.0,
+              "primary": "#0044aa",
+              "secondary": "#cc2222",
+              "accent": "#ffcc00",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    18.0,
+                    0.0
+                  ],
+                  "size": [
+                    300.0,
+                    36.0,
+                    84.0
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#0044aa",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -24.0,
+                    51.0,
+                    0.0
+                  ],
+                  "size": [
+                    119.99999999999999,
+                    29.999999999999996,
+                    66.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#cc2222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -29.999999999999996,
+                    78.0,
+                    0.0
+                  ],
+                  "size": [
+                    59.99999999999999,
+                    24.0,
+                    53.99999999999999
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -29.999999999999996,
+                    78.0,
+                    0.0
+                  ],
+                  "size": [
+                    63.0,
+                    9.0,
+                    55.49999999999999
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -59.99999999999999,
+                    99.0,
+                    0.0
+                  ],
+                  "size": [
+                    14.999999999999998,
+                    29.999999999999996,
+                    14.999999999999998
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffcc00",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "establish",
+        "on": "oil-tanker",
+        "marks": [],
+        "callouts": [],
+        "beats": [],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "establish",
+              "on": "oil-tanker"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Countries opened their emergency reserves. On the eleventh of March, members of the International Energy Agency agreed to release four hundred million barrels.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "400 million barrels released",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "thread",
+      "image": null,
+      "broll_query": "oil storage tanks"
+    },
+    {
+      "narration": "What followed was a cycle. A ceasefire in April. Failed talks, and an American blockade of Iran's own ports. A deal to end the war in June. And in July, collapse.",
+      "purpose": null,
+      "type": "timeline",
+      "heading": "Deals that didn't hold",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": [
+        {
+          "label": "8 Apr",
+          "text": "Temporary ceasefire"
+        },
+        {
+          "label": "13 Apr",
+          "text": "US blockades Iran's ports"
+        },
+        {
+          "label": "17 Jun",
+          "text": "Islamabad Memorandum signed"
+        },
+        {
+          "label": "8 Jul",
+          "text": "Truce collapses"
+        }
+      ],
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Iran says it decides who passes. In May it set up its own authority to regulate the strait, and it has said it wants ships to pay for passage.",
+      "purpose": null,
+      "type": "map",
+      "heading": "Iran's claim to the strait",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Strait of Hormuz",
+          "lat": 26.57,
+          "lon": 56.25
+        }
+      ],
+      "route": null,
+      "vehicle": null,
+      "regions": [
+        "Iran"
+      ],
+      "region_change": null,
+      "zoom": 1.5,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Ships from some countries, including China, India and Pakistan, have been let through. Ships trading with the United States, Israel and their allies were told to stay out.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "Some flags pass, others don't",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": "container ship flag"
+    },
+    {
+      "narration": "Under the water there was another danger. More than a hundred suspected mines were found in the shipping lanes, and American officials said in late August that the lanes had been cleared.",
+      "purpose": null,
+      "type": "map",
+      "heading": "Mines in the lanes",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Shipping lanes",
+          "lat": 26.55,
+          "lon": 56.5
+        }
+      ],
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": 3.0,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Ships started moving again. By the end of September, the Middle East was exporting about eighteen million barrels of crude a day, about what it shipped before the war, according to the analytics firm Kpler.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "Exports back to about 18M barrels a day",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "thread",
+      "image": null,
+      "broll_query": "oil tanker sailing"
+    },
+    {
+      "narration": "But the attacks didn't stop. October brought near-daily strikes on ships in and around the strait.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "Near-daily strikes",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": "tanker smoke sea"
+    },
+    {
+      "narration": "On the sixth of October, the tanker On Peace was hit about nine nautical miles off Limah, on Oman's coast, and caught fire.",
+      "purpose": null,
+      "type": "map",
+      "heading": "On Peace, 6 October",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Limah, Oman",
+          "lat": 25.95,
+          "lon": 56.42
+        }
+      ],
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": 3.0,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Nineteen crew were on board, seventeen of them Indian. At least twelve were injured. Nobody claimed the attack.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "17 of 19 crew were Indian",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": "ship crew rescue helicopter"
+    },
+    {
+      "narration": "India says at least ten Indian seafarers have been killed since the war began.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "At least 10 Indian seafarers killed",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": "seafarers ship deck"
+    },
+    {
+      "narration": "On the fourteenth of October, a Singapore-flagged container ship, the GFS Pride, sank near the strait. Security sources said a projectile hit it; Iran's Revolutionary Guards blamed a mine. At the end of the month, a speedboat attack set a tanker's engine room on fire.",
+      "purpose": null,
+      "type": "world",
+      "heading": null,
+      "text": "A container ship sunk, a tanker set ablaze",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": "desert",
+      "backdrop": "Strait of Hormuz, Narrow blue water channel between arid mountainous coastlines under bright daylight.",
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "obstacle": null,
+      "shot": "side",
+      "weather": null,
+      "cue": "the GFS Pride, sank near the strait",
+      "subject_name": "container-ship",
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": true,
+      "model": {
+        "id": "kit-cargo-ship",
+        "level": "found",
+        "title": "ship-cargo-a (kenney-watercraft)",
+        "kind": "object",
+        "src": "models/kit-cargo-ship.glb",
+        "params": {},
+        "sources": [],
+        "licence": "CC0",
+        "notes": "story world: vehicle built for the GFS Pride"
+      },
+      "label": "ILLUSTRATION",
+      "fallback": {
+        "narration": "On the fourteenth of October, a Singapore-flagged container ship, the GFS Pride, sank near the strait. Security sources said a projectile hit it; Iran's Revolutionary Guards blamed a mine. At the end of the month, a speedboat attack set a tanker's engine room on fire.",
+        "type": "statement",
+        "text": "A container ship sunk, a tanker set ablaze",
+        "transition": "whip",
+        "broll_query": "container ship at sea"
+      },
+      "world": {
+        "style": "noir",
+        "seed": 5631,
+        "set": {
+          "place": "strait-of-hormuz",
+          "kind": "sea",
+          "time": "day",
+          "ground": "#1e3f5a",
+          "sky": "#87ceeb",
+          "accent": "#ffd700",
+          "backdrop": "mountains",
+          "dressing": [
+            {
+              "name": "cargo ship",
+              "build": {
+                "entity": "strait-of-hormuz:cargo-ship",
+                "archetype": "vehicle",
+                "size": 15.0,
+                "primary": "#b22222",
+                "secondary": "#2f4f4f",
+                "accent": "#ffffff",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      0.04,
+                      0.0
+                    ],
+                    "size": [
+                      2.846,
+                      0.08,
+                      9.487
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#2f4f4f",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  },
+                  {
+                    "shape": "box",
+                    "at": [
+                      0.0,
+                      1.423,
+                      -1.897
+                    ],
+                    "size": [
+                      2.372,
+                      1.897,
+                      2.846
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#b22222",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 2,
+              "spread": 40.0
+            },
+            {
+              "name": "patrol boat",
+              "build": {
+                "entity": "strait-of-hormuz:patrol-boat",
+                "archetype": "vehicle",
+                "size": 6.0,
+                "primary": "#4682b4",
+                "secondary": "#708090",
+                "accent": "#ff4500",
+                "skin": "",
+                "hair": "",
+                "body": {
+                  "build": 0.5,
+                  "legs": 0.5,
+                  "neck": 0.3,
+                  "head": 0.5,
+                  "snout": 0.4,
+                  "ears": "round",
+                  "tail": "short",
+                  "horns": "none",
+                  "pattern": "plain",
+                  "age": "adult"
+                },
+                "outfit": null,
+                "parts": [
+                  {
+                    "shape": "capsule",
+                    "at": [
+                      0.0,
+                      0.433,
+                      0.0
+                    ],
+                    "size": [
+                      1.732,
+                      1.299,
+                      5.196
+                    ],
+                    "rot": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "color": "#708090",
+                    "bone": "body",
+                    "spin": "",
+                    "glow": false
+                  }
+                ],
+                "form": "",
+                "sex": ""
+              },
+              "count": 3,
+              "spread": 25.0
+            }
+          ]
+        },
+        "cast": [
+          {
+            "entity": "container-ship",
+            "verb": "move",
+            "at": "center",
+            "to": "left",
+            "face": "",
+            "state": "normal",
+            "holding": "",
+            "count": 1,
+            "attached": "",
+            "mount": "",
+            "impact": "",
+            "build": {
+              "entity": "container-ship",
+              "archetype": "vehicle",
+              "size": 300.0,
+              "primary": "#0044aa",
+              "secondary": "#cc2222",
+              "accent": "#ffcc00",
+              "skin": "",
+              "hair": "",
+              "body": {
+                "build": 0.5,
+                "legs": 0.5,
+                "neck": 0.3,
+                "head": 0.5,
+                "snout": 0.4,
+                "ears": "round",
+                "tail": "short",
+                "horns": "none",
+                "pattern": "plain",
+                "age": "adult"
+              },
+              "outfit": null,
+              "parts": [
+                {
+                  "shape": "wedge",
+                  "at": [
+                    0.0,
+                    18.0,
+                    0.0
+                  ],
+                  "size": [
+                    300.0,
+                    36.0,
+                    84.0
+                  ],
+                  "rot": [
+                    180.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#0044aa",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -24.0,
+                    51.0,
+                    0.0
+                  ],
+                  "size": [
+                    119.99999999999999,
+                    29.999999999999996,
+                    66.0
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#cc2222",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -29.999999999999996,
+                    78.0,
+                    0.0
+                  ],
+                  "size": [
+                    59.99999999999999,
+                    24.0,
+                    53.99999999999999
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#f2f2ee",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "box",
+                  "at": [
+                    -29.999999999999996,
+                    78.0,
+                    0.0
+                  ],
+                  "size": [
+                    63.0,
+                    9.0,
+                    55.49999999999999
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#2a3a4c",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                },
+                {
+                  "shape": "cylinder",
+                  "at": [
+                    -59.99999999999999,
+                    99.0,
+                    0.0
+                  ],
+                  "size": [
+                    14.999999999999998,
+                    29.999999999999996,
+                    14.999999999999998
+                  ],
+                  "rot": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "color": "#ffcc00",
+                  "bone": "body",
+                  "spin": "",
+                  "glow": false
+                }
+              ],
+              "form": "boat",
+              "sex": ""
+            },
+            "model": {
+              "id": "kit-cargo-ship",
+              "src": "models/kit-cargo-ship.glb",
+              "fit": {},
+              "clips": [],
+              "licence": "CC0",
+              "title": "ship-cargo-a (kenney-watercraft)"
+            }
+          }
+        ],
+        "camera": "push_in",
+        "on": "container-ship",
+        "marks": [],
+        "callouts": [],
+        "beats": [
+          {
+            "cue": "sank near the strait",
+            "cast": [
+              {
+                "entity": "container-ship",
+                "verb": "sink",
+                "to": "",
+                "state": "normal",
+                "face": "",
+                "release": false
+              }
+            ],
+            "camera": "low_angle",
+            "on": "container-ship"
+          }
+        ],
+        "direction": {
+          "art": {
+            "profile": "cinematic",
+            "strength": 0.75,
+            "detail": 0.8,
+            "atmosphere": "dramatic"
+          },
+          "acts": {},
+          "shots": [
+            {
+              "move": "track",
+              "on": "container-ship"
+            },
+            {
+              "move": "low_angle",
+              "on": "container-ship",
+              "cue": "sank near the strait"
+            }
+          ],
+          "recipe": {
+            "fore": [],
+            "mid": [],
+            "far": [
+              "water"
+            ],
+            "mist": 0.35,
+            "wind": 0.6,
+            "particles": "spray",
+            "life": [
+              "gulls"
+            ],
+            "wet": 1.0,
+            "density": 0.8
+          },
+          "light": {
+            "rig": "hard_sun",
+            "key": 1.2,
+            "fill": 0.5525,
+            "rim": 1.6,
+            "contrast": 1.375
+          }
+        }
+      },
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Even with oil flowing, Brent crude was at about a hundred and one dollars in early October. The day before the war began, it was seventy-two.",
+      "purpose": null,
+      "type": "bars",
+      "heading": "Brent crude, dollars a barrel",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": [
+        {
+          "label": "27 Feb 2026",
+          "value": 72.48
+        },
+        {
+          "label": "6 Oct 2026",
+          "value": 101.51
+        }
+      ],
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Is there a way around? Partly. Saudi Arabia can pump crude across the desert to Yanbu on the Red Sea, through a pipeline built for five million barrels a day.",
+      "purpose": null,
+      "type": "map",
+      "heading": "Saudi Arabia's East-West pipeline",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Abqaiq",
+          "lat": 25.94,
+          "lon": 49.68
+        },
+        {
+          "name": "Yanbu",
+          "lat": 24.09,
+          "lon": 38.06
+        }
+      ],
+      "route": true,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "The UAE has its own pipeline to Fujairah, on the far side of the strait, which can carry about one point eight million.",
+      "purpose": null,
+      "type": "map",
+      "heading": "The UAE's pipeline to Fujairah",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Habshan",
+          "lat": 23.83,
+          "lon": 53.63
+        },
+        {
+          "name": "Fujairah",
+          "lat": 25.12,
+          "lon": 56.33
+        }
+      ],
+      "route": true,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": 1.5,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "But together, they can only take part of the twenty million barrels a day that used to sail through. The IEA puts the room left in them at three and a half to five and a half million.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "Room for 3.5 to 5.5M of 20M barrels",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "whip",
+      "image": null,
+      "broll_query": "oil pipeline desert"
+    },
+    {
+      "narration": "Qatar's gas has no pipeline around the strait at all. And Bangladesh, India and Pakistan got almost two thirds of their imported LNG through the strait last year.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "Two-thirds of South Asia's LNG",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "thread",
+      "image": null,
+      "broll_query": "LNG terminal"
+    },
+    {
+      "narration": "At the end of October, Qatari mediators gave Iran a new draft deal to end the war: a seven-day schedule of steps, with other countries as guarantors. Iran was considering it.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "A new draft deal",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "thread",
+      "image": null,
+      "broll_query": "Doha skyline"
+    },
+    {
+      "narration": "So three things will decide what happens next. Whether a deal holds. Whether the attacks on ships stop. And whether insurers are willing to cover ships again.",
+      "purpose": null,
+      "type": "list",
+      "heading": "What to watch",
+      "text": null,
+      "items": [
+        "Does a deal hold?",
+        "Do the attacks on ships stop?",
+        "Will insurers cover ships again?"
+      ],
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Thirty-four kilometres of water. Still the most important shortcut on Earth, and right now, the most fragile.",
+      "purpose": null,
+      "type": "map",
+      "heading": "The world's most fragile shortcut",
+      "text": null,
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": [
+        {
+          "name": "Strait of Hormuz",
+          "lat": 26.57,
+          "lon": 56.25
+        }
+      ],
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": 4.0,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": null,
+      "image": null,
+      "broll_query": null
+    },
+    {
+      "narration": "Should India build more ways around Hormuz, or keep more oil in reserve at home? Tell us in the comments.",
+      "purpose": null,
+      "type": "statement",
+      "heading": null,
+      "text": "What should India do?",
+      "items": null,
+      "value": null,
+      "prefix": null,
+      "suffix": null,
+      "data": null,
+      "events": null,
+      "left_title": null,
+      "left": null,
+      "right_title": null,
+      "right": null,
+      "author": null,
+      "places": null,
+      "route": null,
+      "vehicle": null,
+      "regions": null,
+      "region_change": null,
+      "zoom": null,
+      "year_from": null,
+      "year_to": null,
+      "lines": null,
+      "setting": null,
+      "backdrop": null,
+      "backdrop_src": null,
+      "satellite": null,
+      "actors": null,
+      "effect": null,
+      "effect_x": null,
+      "effect_y": null,
+      "effect_at": null,
+      "effect_src": null,
+      "subject": null,
+      "variant": null,
+      "action": null,
+      "obstacle": null,
+      "shot": null,
+      "weather": null,
+      "cue": null,
+      "subject_name": null,
+      "altitude_from": null,
+      "altitude_to": null,
+      "illustrative": null,
+      "model": null,
+      "label": null,
+      "fallback": null,
+      "world": null,
+      "overlay": null,
+      "maneuver": null,
+      "vessel": null,
+      "ship_action": null,
+      "clock": null,
+      "clock_note": null,
+      "level": null,
+      "scale": null,
+      "landmark": null,
+      "landmark_note": null,
+      "gauge": null,
+      "gauge_label": null,
+      "blender_shot": null,
+      "camera": null,
+      "transition": "fade",
+      "image": null,
+      "broll_query": "oil tanker sunset"
+    }
+  ],
+  "sources": [
+    "https://iea.blob.core.windows.net/assets/c8248eba-8689-46d9-ae4b-b858b59c0f1c/StraitofHormuz2026-Factsheet.pdf",
+    "https://eia.gov/todayinenergy/detail.php?id=65504",
+    "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis",
+    "https://en.wikipedia.org/wiki/2026_Iran_war",
+    "https://www.aljazeera.com/news/2026/10/7/oman-evacuates-injured-crew-from-attacked-tanker-in-strait-of-hormuz",
+    "https://news.usni.org/2026/10/09/october-sees-near-daily-strikes-on-ships-in-hormuz",
+    "https://gcaptain.com/container-ship-sinks-near-hormuz-after-being-hit-by-projectile-sources-say/",
+    "https://www.bloomberg.com/news/articles/2026-10-30/rare-speedboat-attack-in-hormuz-ignites-tanker-s-engine-room",
+    "https://english.ahram.org.eg/News/578962.aspx",
+    "https://www.dailymaverick.co.za/article/2026-10-28-qatari-mediators-present-iran-with-new-deal-to-end-the-war-official-says.md"
+  ],
+  "comment_question": "Should India build more ways around Hormuz, or more oil reserves at home?",
+  "chapters": [
+    {
+      "title": "A war zone",
+      "scene": 0
+    },
+    {
+      "title": "Thirty-four kilometres",
+      "scene": 4
+    },
+    {
+      "title": "What flows through it",
+      "scene": 9
+    },
+    {
+      "title": "The strait closes",
+      "scene": 16
+    },
+    {
+      "title": "Deals that didn't hold",
+      "scene": 22
+    },
+    {
+      "title": "October",
+      "scene": 26
+    },
+    {
+      "title": "Is there a way around?",
+      "scene": 33
+    },
+    {
+      "title": "What to watch",
+      "scene": 38
+    }
+  ],
+  "series": "News Explained",
+  "journey": null,
+  "blender": null,
+  "map_style": "satellite",
+  "map_credit": null
+}

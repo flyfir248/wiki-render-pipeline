@@ -1,0 +1,79 @@
+reading the story: what it shows
+story: the tanker On Peace, the GFS Pride; 2 moments
+planning the visuals
+visual plan (model): 9 3D, 13 2.5D, 19 2D (21% of the runtime in 3D, aiming for 75%); 3D: stage present, stage present, stage present, stage present, stage present, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+building the story world: 2 entities for 9 scenes
+real sizes: oil-tanker: 27.16 m -> 330 m (reference size for 'oil tanker'); container-ship: 20.12 m -> 300 m (reference size for 'container ship')
+animation director (model): scene 32: container-ship sink (revised: oil-tanker: only named by a word another subject owns here; left out)
+scene director: cinematic (dramatic, strength 0.75); scene 2: aerial; scene 3: track; scene 4: track; scene 7: track; scene 9: track; scene 13: track; scene 15: track; scene 21: establish; scene 32: track/low_angle
+story world (noir): cast model, sets model, direction model; oil-tanker as vehicle, container-ship as vehicle
+voicing 41 scenes with kokoro
+fetching visuals
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s18.mp4 left out: a clip can't be checked
+stock clip s19.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s30.mp4 left out: a clip can't be checked
+stock clip s31.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s37.mp4 left out: a clip can't be checked
+stock clip s38.mp4 left out: a clip can't be checked
+stock clip s41.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Strait of Hormuz oil tanker': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for "Strait of Hormuz Share of the world's seaborne oil trade": HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+warning: loc image search failed for "Strait of Hormuz Share of the world's seaborne oil trade": 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Strait+of+Hormuz+Share+of+the+world%27s+seaborne+oil+trade&fo=json&c=25&fa=
+warning: loc image search failed for 'Strait of Hormuz Tehran skyline': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Strait+of+Hormuz+Tehran+skyline&fo=json&c=25&fa=online-format%3Aimage (not asked again this run)
+photo commons39.jpg left out: Shows an unidentified man instead of the Strait of Hormuz.
+3 scenes without a picture of their own reuse one of the video's photos
+visuals: 9 Wikipedia and freely licensed images, 10 stock, 22 scenes on plain background
+photo shot39-1.jpg left out: Shows an unidentified man, unrelated to the Strait of Hormuz.
+cutaways: 6 extra photos across 6 scenes
+collage: 22 photos styled, 8 with a cut-out subject
+relevance: checking 9 3D scenes by eye
+relevance: scene 2 kept: the check failed it while saying it shows its subject (Shows a container ship instead of an oil tanker.)
+relevance: scene 3 kept: the check failed it while saying it shows its subject (The frame shows a container ship, not an oil tanker.)
+relevance: scene 4 kept: the check failed it while saying it shows its subject (Shows a container ship instead of an oil tanker.)
+relevance: scene 7 kept: the check failed it while saying it shows its subject (Shows a container ship instead of an oil tanker.)
+relevance: scene 15 kept: the check failed it while saying it shows its subject (Shows a container ship instead of an oil tanker.)
+storyboarding: an illustration for each sentence
+scene 17, sentence 1 redrawn: Calendar contains garbled lettering and nonsensical numbers.
+scene 17, sentence 1 redrawn: The calendar has garbled and nonsensical numbers and letters.
+scene 17, sentence 3 redrawn: The courtyard contains figures, so it is not empty.
+scene 19, sentence 1 redrawn: Garbled lettering on the ship's bow.
+scene 19, sentence 1 redrawn: Garbled lettering on the ship's bow.
+scene 19, sentence 3 redrawn: The image contains garbled lettering and text.
+scene 20, sentence 2 redrawn: Garbled lettering on the device.
+scene 20, sentence 2 redrawn: Garbled lettering on the device.
+storyboard: 8 illustrated sentences of 16 planned, 2 in the cast; 16 checked, 5 redrawn, 3 left out
+satellite: scene 6: Sentinel-2 mosaic 3744x2106 at ~109 m/px
+warning: no satellite imagery: [Errno 13] Permission denied: '/root/.ccr/ca-bundle.crt'
+art direction: noir
+rendering 390s long video
+look: scene 2 at 9.4s looks flat (contrast 10)
+look: scene 2 at 9.4s: Shows a container ship instead of an oil tanker.
+look: scene 2 at 11.9s: Shows a container ship instead of an oil tanker.
+look: scene 3 at 15.8s: Subject is a cargo ship, not an oil tanker.
+look: scene 3 at 21.1s: Shows a container ship instead of an oil tanker.
+look: scene 4 at 25.2s: Shows a container ship instead of an oil-tanker.
+look: scene 4 at 28.9s: Shows a container ship instead of an oil tanker.
+look: scene 7 at 51.7s: Shows a container ship instead of an oil-tanker.
+look: scene 7 at 57.2s: This is a cargo/container ship, not an oil tanker.
+look: scene 9 at 67.9s: Shows a container ship instead of an oil-tanker.
+look: scene 9 at 70.4s: Shows a container ship instead of an oil tanker.
+look: scene 13 at 98.9s: Shows a container ship instead of an oil tanker.
+look: scene 13 at 103.0s: Shows a container ship instead of an oil tanker.
+look: scene 15 at 115.7s: Shows a container ship instead of an oil tanker.
+look: scene 15 at 119.6s: Shows a container ship instead of an oil tanker.
+look: scene 21 at 168.1s: Shows container ships instead of oil-tankers.
+look: scene 21 at 172.9s: Shows a container ship instead of an oil-tanker.
+look: scene 32 at 283.2s: Shows a small boat instead of a container ship, clipping issues.
+3D coverage: 21% of the runtime in 3D (target 75%), 21% moving on its own, 9 3D shots; environment richness 99, animation quality 79
+quality: 3D covers 21% of the runtime, under the 75% target
+quality: 3D scenes [4, 7, 9, 13, 15] repeat an earlier shot
+rendering thumbnail
+thumbnail: cutout take
+done: approved
