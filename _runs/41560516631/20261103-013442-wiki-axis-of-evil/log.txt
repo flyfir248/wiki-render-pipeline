@@ -1,0 +1,43 @@
+reading the story: what it shows
+story: no showable entities; 0 moments
+satellite map style: no 3D scenes
+voicing 33 scenes with kokoro
+fetching visuals
+stock clip s2.mp4 left out: a clip can't be checked
+stock clip s3.mp4 left out: a clip can't be checked
+stock clip s4.mp4 left out: a clip can't be checked
+stock clip s6.mp4 left out: a clip can't be checked
+stock clip s9.mp4 left out: a clip can't be checked
+stock clip s10.mp4 left out: a clip can't be checked
+stock clip s12.mp4 left out: a clip can't be checked
+stock clip s13.mp4 left out: a clip can't be checked
+stock clip s16.mp4 left out: a clip can't be checked
+stock clip s18.mp4 left out: a clip can't be checked
+stock clip s19.mp4 left out: a clip can't be checked
+stock clip s20.mp4 left out: a clip can't be checked
+stock clip s21.mp4 left out: a clip can't be checked
+stock clip s24.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s29.mp4 left out: a clip can't be checked
+stock clip s30.mp4 left out: a clip can't be checked
+stock clip s33.mp4 left out: a clip can't be checked
+warning: loc image search failed for 'World map 2026 treaty signing ceremony': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=World+map+2026+treaty+signing+ceremony&fo=json&c=25&fa=online-format%3Aimag
+warning: loc image search failed for 'World map 2026 world leaders handshake': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=World+map+2026+world+leaders+handshake&fo=json&c=25&fa=online-format%3Aimag (not asked again this run)
+photo commons12.jpg left out: Shows a luge athlete, unrelated to China or North Korea.
+warning: openverse image search failed for 'World map 2026 handshake diplomacy': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+2 scenes without a picture of their own reuse one of the video's photos
+visuals: 10 Wikipedia and freely licensed images, 11 stock, 12 scenes on plain background
+photo shot21-1.jpg left out: Shows a winter sport athlete, completely unrelated to geopolitics.
+cutaways: 6 extra photos across 6 scenes
+collage: 25 photos styled, 6 with a cut-out subject
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 2, sentence 1: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 16 planned, 1 in the cast; 0 checked, 0 redrawn, 1 left out
+art direction: noir
+rendering 316s long video
+3D coverage: 0% of the runtime in 3D (target 75%), 0% moving on its own, 0 3D shots
+quality: 3D covers 0% of the runtime, under the 75% target
+rendering thumbnail
+thumbnail: photo take
+done: approved
