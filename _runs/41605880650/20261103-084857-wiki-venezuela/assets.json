@@ -1,0 +1,44 @@
+{
+  "entities": [
+    {
+      "id": "warship",
+      "name": "warships",
+      "kind": "warship",
+      "search": [
+        "warship",
+        "naval ship",
+        "military ship"
+      ],
+      "look": "grey military warship, modern era",
+      "certain": false,
+      "scenes": [
+        1,
+        10
+      ],
+      "model": null
+    }
+  ],
+  "places": [
+    {
+      "id": "caribbean",
+      "name": "Caribbean",
+      "look": "open blue ocean waters under a clear sky, no people or animals",
+      "scenes": [
+        5,
+        10
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 10,
+      "entity": "warship",
+      "place": "caribbean",
+      "action": "built up in the Caribbean",
+      "motion": "present",
+      "cue": "the US built up warships in the Caribbean",
+      "documented": true,
+      "priority": 2
+    }
+  ]
+}
