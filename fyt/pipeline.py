@@ -814,6 +814,9 @@ def plan_visuals(cfg: Config, job: Job, script: Script, notes: str, story=None) 
         return script
     if not cfg.visuals.plan:
         return assets.resolve(visualplan.apply(script, [], notes)[0])
+    if script.map_style == "satellite":  # a news explainer stays on satellite maps and real photos, no 3D models
+        log(job, "satellite map style: no 3D scenes")
+        return assets.resolve(visualplan.apply(script, [], notes)[0])
     log(job, "planning the visuals")
     try:
         planned, report = visualplan.plan(cfg, script, notes, log=lambda m: log(job, m), story=story)

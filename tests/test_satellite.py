@@ -58,3 +58,19 @@ def test_no_satellite_unless_asked(tmp_path):
         "scenes": [{"type": "map", "narration": "x", "heading": "h", "places": [{"name": "A", "lat": 1, "lon": 2}]}],
     })
     assert S.stage(script, tmp_path, "long") is script
+
+
+def test_satellite_style_skips_3d(tmp_path, monkeypatch):
+    from fyt import pipeline, visualplan
+    from fyt.config import load_config
+    from fyt.models import Script
+
+    script = Script.model_validate({
+        "title": "t", "description": "d", "tags": ["a"], "thumbnail_text": "x", "thumbnail_kicker": "x",
+        "thumbnail_query": "x", "core_message": "x", "sources": ["x"], "comment_question": "x", "map_style": "satellite",
+        "scenes": [{"type": "statement", "narration": "Tankers were hit.", "text": "Hit", "broll_query": "tanker"}],
+    })
+    monkeypatch.setattr(visualplan, "plan", lambda *a, **k: (_ for _ in ()).throw(AssertionError("planned 3D")))
+    monkeypatch.setattr(pipeline, "log", lambda job, m: None)
+    out = pipeline.plan_visuals(load_config(), None, script, "")
+    assert all(s.type != "world" for s in out.scenes)
