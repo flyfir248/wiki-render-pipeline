@@ -1,0 +1,80 @@
+reading the story: what it shows
+story: the tanker On Peace, the GFS Pride; 2 moments
+planning the visuals
+visual plan (model): 9 3D, 13 2.5D, 19 2D (21% of the runtime in 3D, aiming for 75%); 3D: stage present, stage present, stage present, stage present, stage present, stage present...
+image-to-3D: Space microsoft/TRELLIS.2 (HF_TOKEN set) answers; endpoints: /extract_glb, /get_seed, /image_to_3d, /lambda, /lambda_1, /preprocess_image, /start_session
+building the story world: 2 entities for 9 scenes
+real sizes: oil-tanker: 27.16 m -> 330 m (reference size for 'oil tanker'); container-ship: 27.16 m -> 300 m (reference size for 'container ship')
+animation director (model): scene 32: container-ship sink, oil-tanker sail
+scene director: cinematic (dramatic, strength 0.75); scene 2: aerial; scene 3: push_in; scene 4: track; scene 7: track/follow; scene 9: track; scene 13: track; scene 15: track; scene 21: establish; scene 32: track/low_angle/reveal
+story world (noir): cast model, sets model, direction model; oil-tanker as vehicle, container-ship as vehicle
+voicing 41 scenes with kokoro
+fetching visuals
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s18.mp4 left out: a clip can't be checked
+stock clip s19.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s30.mp4 left out: a clip can't be checked
+stock clip s31.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s37.mp4 left out: a clip can't be checked
+stock clip s38.mp4 left out: a clip can't be checked
+stock clip s41.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Strait of Hormuz Tehran skyline': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for 'Strait of Hormuz warship Persian Gulf': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+warning: loc image search failed for 'Strait of Hormuz warship Persian Gulf': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Strait+of+Hormuz+warship+Persian+Gulf&fo=json&c=25&fa=online-format%3Aimage
+warning: loc image search failed for 'Strait of Hormuz tanker anchored': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Strait+of+Hormuz+tanker+anchored&fo=json&c=25&fa=online-format%3Aimage (not asked again this run)
+photo commons39.jpg left out: Shows an unidentified man, unrelated to the Strait of Hormuz.
+3 scenes without a picture of their own reuse one of the video's photos
+visuals: 9 Wikipedia and freely licensed images, 10 stock, 22 scenes on plain background
+photo shot39-1.jpg left out: Shows an unidentified man, unrelated to the Strait of Hormuz.
+cutaways: 6 extra photos across 6 scenes
+collage: 22 photos styled, 8 with a cut-out subject
+relevance: checking 9 3D scenes by eye
+storyboarding: an illustration for each sentence
+scene 10, sentence 2 redrawn: The building has garbled lettering on the exterior signage.
+scene 17, sentence 1 redrawn: Garbled lettering and nonsensical words on the calendar page.
+scene 17, sentence 1 redrawn: The calendar has garbled lettering and text
+scene 17, sentence 2 redrawn: Shows sunset over water, not distant flashes on a coastline.
+scene 17, sentence 3 redrawn: The courtyard is not empty; two people are present.
+scene 17, sentence 3 redrawn: The courtyard is not empty, it contains two people.
+scene 19, sentence 1 redrawn: The ocean is not empty; there is a ship present.
+scene 19, sentence 1 redrawn: Shows multiple ships instead of an empty ocean horizon.
+scene 20, sentence 2 redrawn: Garbled lettering and nonsensical text on the ticker tape.
+storyboard: 7 illustrated sentences of 16 planned, 2 in the cast; 16 checked, 6 redrawn, 3 left out
+satellite: scene 6: Sentinel-2 mosaic 3744x2106 at ~109 m/px
+satellite: scene 8: Sentinel-2 mosaic 3744x2106 at ~140 m/px
+satellite: scene 14: Sentinel-2 mosaic 4096x2304 at ~358 m/px
+satellite: the close view needs 1020 Sentinel-2 granules, more than 160
+satellite: scene 26: Sentinel-2 mosaic 3744x2106 at ~248 m/px
+satellite: scene 29: Sentinel-2 mosaic 3744x2106 at ~248 m/px
+satellite: scene 35: Sentinel-2 mosaic 3744x2106 at ~355 m/px
+satellite: scene 40: Sentinel-2 mosaic 3744x2106 at ~186 m/px
+art direction: noir
+rendering 390s long video
+look: scene 2 at 9.4s looks flat (contrast 11)
+look: scene 2 at 9.4s: Shows a container ship instead of an oil tanker.
+look: scene 2 at 11.9s: Shows a container ship instead of an oil-tanker.
+look: scene 3 at 15.8s: Severe water glitch cutting through the scene
+look: scene 3 at 21.1s: Shows a container ship, not an oil tanker.
+look: scene 4 at 25.2s: Shows a container ship instead of an oil tanker.
+look: scene 4 at 28.9s: Shows a cargo ship instead of an oil-tanker.
+look: scene 7 at 51.7s: Shows container ships instead of oil-tankers, and water rendering glitches.
+look: scene 7 at 57.2s: Shows container ships instead of oil-tanker.
+look: scene 9 at 67.9s: Shows a cargo container ship, not an oil tanker.
+look: scene 9 at 70.4s: Shows a container ship instead of an oil tanker.
+look: scene 13 at 98.9s: Shows a container ship instead of an oil tanker.
+look: scene 13 at 103.0s: Container ship clipping heavily through low-poly water mesh.
+look: scene 15 at 119.6s: Shows a container ship instead of an oil-tanker.
+look: scene 21 at 168.1s: Shows a container ship instead of an oil-tanker.
+look: scene 21 at 172.9s: Shows a container ship instead of an oil tanker.
+look: scene 32 at 283.2s: Subject is a small toy boat, not a container ship
+3D coverage: 21% of the runtime in 3D (target 75%), 21% moving on its own, 9 3D shots; environment richness 97, animation quality 81
+quality: 3D covers 21% of the runtime, under the 75% target
+quality: 3D scenes [9, 13, 15] repeat an earlier shot
+rendering thumbnail
+thumbnail: cutout take
+done: approved

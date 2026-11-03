@@ -1,0 +1,100 @@
+{
+  "entities": [
+    {
+      "id": "oil-tanker",
+      "name": "the tanker On Peace",
+      "kind": "watercraft",
+      "search": [
+        "oil tanker",
+        "tanker ship",
+        "boat"
+      ],
+      "look": "Large modern crude oil tanker, white superstructure, red and black hull, burning smoke near the middle.",
+      "certain": false,
+      "scenes": [
+        1,
+        3,
+        7,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        18,
+        19,
+        21,
+        24,
+        25,
+        27,
+        28,
+        29,
+        32,
+        33,
+        39,
+        41
+      ]
+    },
+    {
+      "id": "container-ship",
+      "name": "the GFS Pride",
+      "kind": "watercraft",
+      "search": [
+        "container ship",
+        "cargo ship",
+        "boat"
+      ],
+      "look": "Large modern container ship, stacked colorful shipping containers on deck, sinking into water.",
+      "certain": false,
+      "scenes": [
+        7,
+        9,
+        12,
+        18,
+        19,
+        21,
+        24,
+        25,
+        27,
+        28,
+        32,
+        39
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "strait-of-hormuz",
+      "name": "Strait of Hormuz",
+      "look": "Narrow blue sea channel between arid rocky coastlines and desert terrain under bright daylight.",
+      "scenes": [
+        29,
+        32
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 29,
+      "entity": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "action": "hit about nine nautical miles off Limah and caught fire",
+      "motion": "present",
+      "cue": "the tanker On Peace was hit about nine nautical miles off Limah, on Oman's coast, and caught fire",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 32,
+      "entity": "container-ship",
+      "place": "strait-of-hormuz",
+      "action": "sank near the strait after being hit by a projectile",
+      "motion": "fall",
+      "cue": "a Singapore-flagged container ship, the GFS Pride, sank near the strait",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

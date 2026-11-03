@@ -1,0 +1,341 @@
+{
+  "planner": "model",
+  "budget_seconds": 360.0,
+  "world_seconds": 84.6,
+  "dropped_for_budget": [],
+  "target_share": 0.75,
+  "world_share": 0.214,
+  "filled": [
+    2,
+    4,
+    9,
+    13,
+    15,
+    21
+  ],
+  "off_story": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "desert",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 3,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": "Tankers have been hit by drones, mines, missiles and speedboats.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 4,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "desert",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 5,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 6,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 7,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": "They follow two lanes, one in and one out",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 8,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 9,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 10,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 11,
+      "type": "proportion",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 13,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 14,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 15,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "room",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 16,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 17,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 19,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "type": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 21,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "sea",
+      "weather": null,
+      "cue": null,
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 22,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 23,
+      "type": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 25,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 27,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 28,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 30,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 31,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "type": "world",
+      "kind": "3D",
+      "subject": "stage",
+      "variant": "model",
+      "action": "present",
+      "setting": "desert",
+      "weather": null,
+      "cue": "a Singapore-flagged container ship, the GFS Pride, sank near the strait.",
+      "illustrative": true,
+      "label": null,
+      "model": {
+        "id": null,
+        "level": null,
+        "title": null
+      }
+    },
+    {
+      "scene": 33,
+      "type": "bars",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 35,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 36,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 37,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 38,
+      "type": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 39,
+      "type": "list",
+      "kind": "2D"
+    },
+    {
+      "scene": 40,
+      "type": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 41,
+      "type": "statement",
+      "kind": "2D"
+    }
+  ]
+}

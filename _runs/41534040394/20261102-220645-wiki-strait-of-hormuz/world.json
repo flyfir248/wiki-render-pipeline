@@ -1,0 +1,1093 @@
+{
+  "style": "noir",
+  "made": {
+    "cast": "model",
+    "sets": "model",
+    "direction": "model",
+    "animation": "model"
+  },
+  "builds": [
+    {
+      "entity": "oil-tanker",
+      "archetype": "vehicle",
+      "size": 330.0,
+      "primary": "#1a1a1a",
+      "secondary": "#ffffff",
+      "accent": "#cc3300",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "wedge",
+          "at": [
+            0.0,
+            19.799999999999997,
+            0.0
+          ],
+          "size": [
+            330.0,
+            39.599999999999994,
+            92.4
+          ],
+          "rot": [
+            180.0,
+            0.0,
+            0.0
+          ],
+          "color": "#1a1a1a",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -26.4,
+            56.1,
+            0.0
+          ],
+          "size": [
+            132.0,
+            33.0,
+            72.6
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffffff",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -33.0,
+            85.8,
+            0.0
+          ],
+          "size": [
+            66.0,
+            26.4,
+            59.4
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#f2f2ee",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -33.0,
+            85.8,
+            0.0
+          ],
+          "size": [
+            69.3,
+            9.899999999999999,
+            61.050000000000004
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -66.0,
+            108.89999999999999,
+            0.0
+          ],
+          "size": [
+            16.5,
+            33.0,
+            16.5
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#cc3300",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "boat",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        2,
+        3,
+        4,
+        7,
+        9,
+        13,
+        15,
+        21,
+        32
+      ]
+    },
+    {
+      "entity": "container-ship",
+      "archetype": "vehicle",
+      "size": 300.0,
+      "primary": "#003366",
+      "secondary": "#cc0000",
+      "accent": "#ffcc00",
+      "skin": "",
+      "hair": "",
+      "body": {
+        "build": 0.5,
+        "legs": 0.5,
+        "neck": 0.3,
+        "head": 0.5,
+        "snout": 0.4,
+        "ears": "round",
+        "tail": "short",
+        "horns": "none",
+        "pattern": "plain",
+        "age": "adult"
+      },
+      "outfit": null,
+      "parts": [
+        {
+          "shape": "wedge",
+          "at": [
+            0.0,
+            18.0,
+            0.0
+          ],
+          "size": [
+            300.0,
+            36.0,
+            84.00000000000001
+          ],
+          "rot": [
+            180.0,
+            0.0,
+            0.0
+          ],
+          "color": "#003366",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -24.0,
+            51.00000000000001,
+            0.0
+          ],
+          "size": [
+            120.0,
+            30.0,
+            66.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#cc0000",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -30.0,
+            78.0,
+            0.0
+          ],
+          "size": [
+            60.0,
+            24.0,
+            54.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#f2f2ee",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "box",
+          "at": [
+            -30.0,
+            78.0,
+            0.0
+          ],
+          "size": [
+            63.0,
+            9.0,
+            55.50000000000001
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#2a3a4c",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        },
+        {
+          "shape": "cylinder",
+          "at": [
+            -60.0,
+            99.0,
+            0.0
+          ],
+          "size": [
+            15.0,
+            30.0,
+            15.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "color": "#ffcc00",
+          "bone": "body",
+          "spin": "",
+          "glow": false
+        }
+      ],
+      "form": "boat",
+      "sex": "",
+      "source": "found model",
+      "scenes": [
+        7,
+        9,
+        21,
+        32
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "place": "strait-of-hormuz",
+      "kind": "sea",
+      "time": "day",
+      "ground": "#d4b886",
+      "sky": "#4ca6ff",
+      "accent": "#ffcc00",
+      "backdrop": "mountains",
+      "dressing": [
+        {
+          "name": "cargo ship",
+          "build": {
+            "entity": "strait-of-hormuz:cargo-ship",
+            "archetype": "vehicle",
+            "size": 30.0,
+            "primary": "#cc3333",
+            "secondary": "#333333",
+            "accent": "#ffffff",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "box",
+                "at": [
+                  0.0,
+                  1.677,
+                  0.0
+                ],
+                "size": [
+                  3.354,
+                  3.354,
+                  13.416
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#cc3333",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 2,
+          "spread": 50.0
+        },
+        {
+          "name": "rocky cliff",
+          "build": {
+            "entity": "strait-of-hormuz:rocky-cliff",
+            "archetype": "structure",
+            "size": 20.0,
+            "primary": "#a67c52",
+            "secondary": "#8c6747",
+            "accent": "#59402b",
+            "skin": "",
+            "hair": "",
+            "body": {
+              "build": 0.5,
+              "legs": 0.5,
+              "neck": 0.3,
+              "head": 0.5,
+              "snout": 0.4,
+              "ears": "round",
+              "tail": "short",
+              "horns": "none",
+              "pattern": "plain",
+              "age": "adult"
+            },
+            "outfit": null,
+            "parts": [
+              {
+                "shape": "wedge",
+                "at": [
+                  0.0,
+                  3.354,
+                  0.0
+                ],
+                "size": [
+                  5.031,
+                  6.708,
+                  5.031
+                ],
+                "rot": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "color": "#a67c52",
+                "bone": "body",
+                "spin": "",
+                "glow": false
+              }
+            ],
+            "form": "",
+            "sex": ""
+          },
+          "count": 4,
+          "spread": 80.0
+        }
+      ],
+      "source": "procedural, designed by the model"
+    }
+  ],
+  "shots": {
+    "2": {
+      "scene": 2,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "oil-tanker",
+          "verb": "move",
+          "at": "left",
+          "to": "right",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "aerial",
+      "on": "oil-tanker",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "3": {
+      "scene": 3,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "oil-tanker",
+          "verb": "present",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "push_in",
+      "on": "oil-tanker",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "4": {
+      "scene": 4,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "oil-tanker",
+          "verb": "move",
+          "at": "left",
+          "to": "right",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "aerial",
+      "on": "oil-tanker",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "7": {
+      "scene": 7,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "oil-tanker",
+          "verb": "move",
+          "at": "left",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        },
+        {
+          "entity": "container-ship",
+          "verb": "move",
+          "at": "right",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "aerial",
+      "on": "oil-tanker",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "They follow two lanes",
+          "actors": [],
+          "camera": "follow",
+          "on": "container-ship"
+        }
+      ]
+    },
+    "9": {
+      "scene": 9,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "oil-tanker",
+          "verb": "move",
+          "at": "left",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        },
+        {
+          "entity": "container-ship",
+          "verb": "move",
+          "at": "right",
+          "to": "center",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "aerial",
+      "on": "oil-tanker",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "13": {
+      "scene": 13,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "oil-tanker",
+          "verb": "move",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "push_in",
+      "on": "oil-tanker",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "15": {
+      "scene": 15,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "oil-tanker",
+          "verb": "move",
+          "at": "center",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "establish",
+      "on": "oil-tanker",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "21": {
+      "scene": 21,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "oil-tanker",
+          "verb": "present",
+          "at": "left",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        },
+        {
+          "entity": "container-ship",
+          "verb": "present",
+          "at": "right",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "aerial",
+      "on": "oil-tanker",
+      "marks": [],
+      "callouts": [],
+      "beats": []
+    },
+    "32": {
+      "scene": 32,
+      "place": "strait-of-hormuz",
+      "time": "",
+      "actors": [
+        {
+          "entity": "container-ship",
+          "verb": "move",
+          "at": "center",
+          "to": "front",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        },
+        {
+          "entity": "oil-tanker",
+          "verb": "present",
+          "at": "back",
+          "to": "",
+          "face": "",
+          "state": "normal",
+          "holding": "",
+          "count": 1,
+          "attached": "",
+          "mount": "",
+          "impact": ""
+        }
+      ],
+      "camera": "push_in",
+      "on": "container-ship",
+      "marks": [],
+      "callouts": [],
+      "beats": [
+        {
+          "cue": "sank near the strait",
+          "actors": [
+            {
+              "entity": "container-ship",
+              "verb": "sink",
+              "to": "",
+              "state": "normal",
+              "face": "",
+              "release": false
+            }
+          ],
+          "camera": "low_angle",
+          "on": "container-ship"
+        },
+        {
+          "cue": "At the end of the month",
+          "actors": [
+            {
+              "entity": "oil-tanker",
+              "verb": "move",
+              "to": "",
+              "state": "normal",
+              "face": "",
+              "release": false
+            }
+          ],
+          "camera": "reveal",
+          "on": "oil-tanker"
+        }
+      ]
+    }
+  },
+  "direction": {
+    "2": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "aerial",
+          "on": "oil-tanker"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "3": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "push_in",
+          "on": "oil-tanker"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "4": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "oil-tanker"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "7": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "oil-tanker"
+        },
+        {
+          "move": "follow",
+          "on": "container-ship",
+          "cue": "They follow two lanes"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "9": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "oil-tanker"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "13": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "oil-tanker"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "15": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "oil-tanker"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "21": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "establish",
+          "on": "oil-tanker"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    },
+    "32": {
+      "art": {
+        "profile": "cinematic",
+        "strength": 0.75,
+        "detail": 0.8,
+        "atmosphere": "dramatic"
+      },
+      "acts": {},
+      "shots": [
+        {
+          "move": "track",
+          "on": "container-ship"
+        },
+        {
+          "move": "low_angle",
+          "on": "container-ship",
+          "cue": "sank near the strait"
+        },
+        {
+          "move": "reveal",
+          "on": "oil-tanker",
+          "cue": "At the end of the month"
+        }
+      ],
+      "recipe": {
+        "fore": [],
+        "mid": [],
+        "far": [
+          "water"
+        ],
+        "mist": 0.35,
+        "wind": 0.6,
+        "particles": "spray",
+        "life": [
+          "gulls"
+        ],
+        "wet": 1.0,
+        "density": 0.8
+      },
+      "light": {
+        "rig": "overcast",
+        "key": 1.2,
+        "fill": 0.5525,
+        "rim": 1.6,
+        "contrast": 1.375
+      }
+    }
+  }
+}

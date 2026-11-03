@@ -1,0 +1,633 @@
+{
+  "format": "long",
+  "duration": 389.8,
+  "target_3d": 0.75,
+  "share_3d": 0.206,
+  "share_animated": 0.206,
+  "share_subject_moving": 0.156,
+  "share_matched": 1.0,
+  "share_library_models": 1.0,
+  "share_camera_moving": 0.206,
+  "share_2d": 0.794,
+  "shots_3d": 9,
+  "static": [],
+  "repeats": [
+    9,
+    13,
+    15
+  ],
+  "frozen": [],
+  "environment_richness": 96.9,
+  "animation_quality": 81.4,
+  "bare": [],
+  "lifeless": [],
+  "dropped_to_2d": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "seconds": 7.92,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "start": 7.92,
+      "seconds": 4.87,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "aerial",
+      "lead": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 10.13,
+      "environment_richness": 75.5,
+      "animation_quality": 70.3,
+      "inspection": {
+        "environment": {
+          "score": 75.5,
+          "edges": 0.138,
+          "empty": 0.093
+        },
+        "animation": {
+          "camera": 0.833,
+          "local": 0.135,
+          "moving": 0.559,
+          "cuts": 0,
+          "still_run": 1.0,
+          "score": 70.3
+        }
+      }
+    },
+    {
+      "scene": 3,
+      "start": 12.78,
+      "seconds": 10.2,
+      "template": "world",
+      "kind": "3D",
+      "subject": "",
+      "secondary": [],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "push_in",
+      "lead": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 18.54,
+      "environment_richness": 97.9,
+      "animation_quality": 69.2,
+      "inspection": {
+        "environment": {
+          "score": 97.9,
+          "edges": 0.354,
+          "empty": 0.046
+        },
+        "animation": {
+          "camera": 0.54,
+          "local": 0.173,
+          "moving": 0.59,
+          "cuts": 0,
+          "still_run": 0.75,
+          "score": 69.2
+        }
+      }
+    },
+    {
+      "scene": 4,
+      "start": 22.98,
+      "seconds": 7.25,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track",
+      "lead": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 11.2,
+      "environment_richness": 99.2,
+      "animation_quality": 79.9,
+      "inspection": {
+        "environment": {
+          "score": 99.2,
+          "edges": 0.39,
+          "empty": 0.019
+        },
+        "animation": {
+          "camera": 0.327,
+          "local": 0.21,
+          "moving": 0.887,
+          "cuts": 0,
+          "still_run": 0.25,
+          "score": 79.9
+        }
+      }
+    },
+    {
+      "scene": 5,
+      "start": 30.23,
+      "seconds": 9.52,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 6,
+      "start": 39.75,
+      "seconds": 8.71,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 7,
+      "start": 48.46,
+      "seconds": 10.7,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [
+        "others moving"
+      ],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track/follow",
+      "lead": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 16.03,
+      "environment_richness": 99.4,
+      "animation_quality": 100.0,
+      "inspection": {
+        "environment": {
+          "score": 99.4,
+          "edges": 0.39,
+          "empty": 0.014
+        },
+        "animation": {
+          "camera": 0.794,
+          "local": 0.294,
+          "moving": 1.0,
+          "cuts": 2,
+          "still_run": 0.0,
+          "score": 100.0
+        }
+      }
+    },
+    {
+      "scene": 8,
+      "start": 59.16,
+      "seconds": 7.25,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 9,
+      "start": 66.42,
+      "seconds": 4.91,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [
+        "others moving"
+      ],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track",
+      "lead": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 29.68,
+      "environment_richness": 99.2,
+      "animation_quality": 96.0,
+      "inspection": {
+        "environment": {
+          "score": 99.2,
+          "edges": 0.364,
+          "empty": 0.019
+        },
+        "animation": {
+          "camera": 0.861,
+          "local": 0.335,
+          "moving": 0.939,
+          "cuts": 1,
+          "still_run": 0.12,
+          "score": 96.0
+        }
+      }
+    },
+    {
+      "scene": 10,
+      "start": 71.32,
+      "seconds": 9.47,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 11,
+      "start": 80.8,
+      "seconds": 3.86,
+      "template": "proportion",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "start": 84.66,
+      "seconds": 11.88,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 13,
+      "start": 96.54,
+      "seconds": 7.86,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track",
+      "lead": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 11.83,
+      "environment_richness": 99.2,
+      "animation_quality": 80.6,
+      "inspection": {
+        "environment": {
+          "score": 99.2,
+          "edges": 0.383,
+          "empty": 0.019
+        },
+        "animation": {
+          "camera": 0.35,
+          "local": 0.2,
+          "moving": 0.879,
+          "cuts": 0,
+          "still_run": 0.12,
+          "score": 80.6
+        }
+      }
+    },
+    {
+      "scene": 14,
+      "start": 104.4,
+      "seconds": 9.07,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 15,
+      "start": 113.47,
+      "seconds": 7.5,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track",
+      "lead": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": true,
+      "picture_change": 9.98,
+      "environment_richness": 98.6,
+      "animation_quality": 82.0,
+      "inspection": {
+        "environment": {
+          "score": 98.6,
+          "edges": 0.316,
+          "empty": 0.033
+        },
+        "animation": {
+          "camera": 0.316,
+          "local": 0.217,
+          "moving": 0.927,
+          "cuts": 0,
+          "still_run": 0.25,
+          "score": 82.0
+        }
+      }
+    },
+    {
+      "scene": 16,
+      "start": 120.96,
+      "seconds": 8.8,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 17,
+      "start": 129.77,
+      "seconds": 9.91,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 18,
+      "start": 139.68,
+      "seconds": 7.49,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 19,
+      "start": 147.17,
+      "seconds": 8.8,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "start": 155.97,
+      "seconds": 9.34,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 21,
+      "start": 165.32,
+      "seconds": 9.24,
+      "template": "world",
+      "kind": "3D",
+      "subject": "",
+      "secondary": [],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "establish",
+      "lead": "oil-tanker",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 20.65,
+      "environment_richness": 100.0,
+      "animation_quality": 48.2,
+      "inspection": {
+        "environment": {
+          "score": 100.0,
+          "edges": 0.422,
+          "empty": 0.0
+        },
+        "animation": {
+          "camera": 0.635,
+          "local": 0.1,
+          "moving": 0.262,
+          "cuts": 0,
+          "still_run": 3.38,
+          "score": 48.2
+        }
+      }
+    },
+    {
+      "scene": 22,
+      "start": 174.56,
+      "seconds": 10.7,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 23,
+      "start": 185.26,
+      "seconds": 12.02,
+      "template": "timeline",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "start": 197.28,
+      "seconds": 9.1,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 25,
+      "start": 206.39,
+      "seconds": 10.68,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "start": 217.07,
+      "seconds": 11.53,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 27,
+      "start": 228.6,
+      "seconds": 13.05,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 28,
+      "start": 241.65,
+      "seconds": 5.99,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "start": 247.64,
+      "seconds": 8.56,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 30,
+      "start": 256.2,
+      "seconds": 7.3,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 31,
+      "start": 263.5,
+      "seconds": 4.99,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "start": 268.49,
+      "seconds": 17.88,
+      "template": "world",
+      "kind": "3D",
+      "subject": "move",
+      "secondary": [],
+      "environment": [
+        "water or flow",
+        "birds overhead",
+        "drifting mist",
+        "particles"
+      ],
+      "camera": "track/low_angle/reveal",
+      "lead": "container-ship",
+      "place": "strait-of-hormuz",
+      "set": "sea",
+      "asset": "library model",
+      "matched": true,
+      "animated": true,
+      "static": false,
+      "repeat": false,
+      "picture_change": 56.75,
+      "environment_richness": 95.6,
+      "animation_quality": 94.3,
+      "inspection": {
+        "environment": {
+          "score": 95.6,
+          "edges": 0.292,
+          "empty": 0.097
+        },
+        "animation": {
+          "camera": 0.952,
+          "local": 0.342,
+          "moving": 0.909,
+          "cuts": 2,
+          "still_run": 0.12,
+          "score": 94.3
+        }
+      }
+    },
+    {
+      "scene": 33,
+      "start": 286.38,
+      "seconds": 9.25,
+      "template": "bars",
+      "kind": "2D"
+    },
+    {
+      "scene": 34,
+      "start": 295.63,
+      "seconds": 10.97,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 35,
+      "start": 306.6,
+      "seconds": 8.39,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 36,
+      "start": 314.99,
+      "seconds": 11.02,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 37,
+      "start": 326.01,
+      "seconds": 11.32,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 38,
+      "start": 337.33,
+      "seconds": 12.28,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 39,
+      "start": 349.61,
+      "seconds": 10.03,
+      "template": "list",
+      "kind": "2D"
+    },
+    {
+      "scene": 40,
+      "start": 359.64,
+      "seconds": 6.95,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 41,
+      "start": 366.58,
+      "seconds": 23.21,
+      "template": "statement",
+      "kind": "2D"
+    }
+  ]
+}

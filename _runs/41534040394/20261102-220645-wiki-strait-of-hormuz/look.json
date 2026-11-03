@@ -1,0 +1,167 @@
+{
+  "warnings": [
+    "scene 2 at 9.4s looks flat (contrast 11)",
+    "scene 2 at 9.4s: Shows a container ship instead of an oil tanker.",
+    "scene 2 at 11.9s: Shows a container ship instead of an oil-tanker.",
+    "scene 3 at 15.8s: Severe water glitch cutting through the scene",
+    "scene 3 at 21.1s: Shows a container ship, not an oil tanker.",
+    "scene 4 at 25.2s: Shows a container ship instead of an oil tanker.",
+    "scene 4 at 28.9s: Shows a cargo ship instead of an oil-tanker.",
+    "scene 7 at 51.7s: Shows container ships instead of oil-tankers, and water rendering glitches.",
+    "scene 7 at 57.2s: Shows container ships instead of oil-tanker.",
+    "scene 9 at 67.9s: Shows a cargo container ship, not an oil tanker.",
+    "scene 9 at 70.4s: Shows a container ship instead of an oil tanker.",
+    "scene 13 at 98.9s: Shows a container ship instead of an oil tanker.",
+    "scene 13 at 103.0s: Container ship clipping heavily through low-poly water mesh.",
+    "scene 15 at 119.6s: Shows a container ship instead of an oil-tanker.",
+    "scene 21 at 168.1s: Shows a container ship instead of an oil-tanker.",
+    "scene 21 at 172.9s: Shows a container ship instead of an oil tanker.",
+    "scene 32 at 283.2s: Subject is a small toy boat, not a container ship"
+  ],
+  "frames": [
+    {
+      "scene": 2,
+      "at": 9.38,
+      "contrast": 10.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship instead of an oil tanker."
+    },
+    {
+      "scene": 2,
+      "at": 11.91,
+      "contrast": 20.6,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship instead of an oil-tanker."
+    },
+    {
+      "scene": 3,
+      "at": 15.84,
+      "contrast": 35.2,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Severe water glitch cutting through the scene"
+    },
+    {
+      "scene": 3,
+      "at": 21.15,
+      "contrast": 39.5,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship, not an oil tanker."
+    },
+    {
+      "scene": 4,
+      "at": 25.16,
+      "contrast": 38.5,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship instead of an oil tanker."
+    },
+    {
+      "scene": 4,
+      "at": 28.93,
+      "contrast": 35.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a cargo ship instead of an oil-tanker."
+    },
+    {
+      "scene": 7,
+      "at": 51.67,
+      "contrast": 59.5,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows container ships instead of oil-tankers, and water rendering glitches."
+    },
+    {
+      "scene": 7,
+      "at": 57.23,
+      "contrast": 57.1,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows container ships instead of oil-tanker."
+    },
+    {
+      "scene": 9,
+      "at": 67.89,
+      "contrast": 62.3,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a cargo container ship, not an oil tanker."
+    },
+    {
+      "scene": 9,
+      "at": 70.44,
+      "contrast": 54.6,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship instead of an oil tanker."
+    },
+    {
+      "scene": 13,
+      "at": 98.9,
+      "contrast": 38.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship instead of an oil tanker."
+    },
+    {
+      "scene": 13,
+      "at": 102.99,
+      "contrast": 35.3,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Container ship clipping heavily through low-poly water mesh."
+    },
+    {
+      "scene": 15,
+      "at": 115.72,
+      "contrast": 40.5,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 15,
+      "at": 119.61,
+      "contrast": 39.5,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship instead of an oil-tanker."
+    },
+    {
+      "scene": 21,
+      "at": 168.09,
+      "contrast": 31.3,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship instead of an oil-tanker."
+    },
+    {
+      "scene": 21,
+      "at": 172.9,
+      "contrast": 45.7,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Shows a container ship instead of an oil tanker."
+    },
+    {
+      "scene": 32,
+      "at": 273.86,
+      "contrast": 61.2,
+      "burnt": 0.0,
+      "polished": true,
+      "problems": ""
+    },
+    {
+      "scene": 32,
+      "at": 283.16,
+      "contrast": 59.9,
+      "burnt": 0.0,
+      "polished": false,
+      "problems": "Subject is a small toy boat, not a container ship"
+    }
+  ]
+}
