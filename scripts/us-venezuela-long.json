@@ -391,8 +391,7 @@
     }
    ],
    "route": true,
-   "vehicle": "car",
-   "flyover": true
+   "vehicle": "car"
   },
   {
    "type": "statement",

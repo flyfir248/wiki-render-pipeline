@@ -82,8 +82,9 @@ const cameraAt = (S: number, f: number, route: THREE.Vector3[] | null): { pos: T
     const u = Math.min(0.999, Math.max(0, e));
     const head = curve.getPointAt(u);
     const dir = curve.getTangentAt(u).setY(0).normalize();
-    const pos = head.clone().addScaledVector(dir, -0.32 * S).add(new THREE.Vector3(0, 0.17 * S, 0));
-    return { pos, look: head.clone().addScaledVector(dir, 0.12 * S) };
+    // high and only a little behind, looking well down: the route below reads as a line on the ground
+    const pos = head.clone().addScaledVector(dir, -0.2 * S).add(new THREE.Vector3(0, 0.3 * S, 0));
+    return { pos, look: head.clone().addScaledVector(dir, 0.06 * S) };
   }
   const pos = new THREE.Vector3(
     interpolate(e, [0, 1], [-0.16 * S, 0.05 * S]),
