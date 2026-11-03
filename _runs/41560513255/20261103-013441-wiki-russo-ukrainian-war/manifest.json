@@ -1,0 +1,98 @@
+{
+  "entities": [
+    {
+      "id": "drone",
+      "name": "the FP-1 drone",
+      "kind": "light aircraft",
+      "search": [
+        "military drone",
+        "uav",
+        "aircraft"
+      ],
+      "look": "Long-range strike drone, twin-boom pusher configuration, composite grey body, fixed landing gear.",
+      "certain": false,
+      "scenes": [
+        1,
+        4,
+        9,
+        13,
+        14,
+        15,
+        16,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "id": "refinery",
+      "name": "oil refinery",
+      "kind": "industrial building",
+      "search": [
+        "oil refinery",
+        "industrial plant",
+        "factory"
+      ],
+      "look": "Industrial oil refinery complex with tall distillation columns, piping, and storage tanks, weathered steel and metal cladding.",
+      "certain": false,
+      "scenes": [
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        16,
+        17,
+        18,
+        19,
+        30,
+        31,
+        33
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "volga-region",
+      "name": "Volga River basin",
+      "look": "Flat river basin with distant industrial facilities and infrastructure, overcast daylight, no people.",
+      "scenes": [
+        11,
+        33
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 3,
+      "entity": "refinery",
+      "place": "",
+      "action": "Three more Russian oil refineries were burning",
+      "motion": "present",
+      "cue": "three more Russian oil refineries were burning.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 14,
+      "entity": "drone",
+      "place": "",
+      "action": "FP-1 drone built by Fire Point",
+      "motion": "present",
+      "cue": "The best known of these drones is the FP-1, built by the Ukrainian company Fire Point.",
+      "documented": true,
+      "priority": 1
+    },
+    {
+      "scene": 16,
+      "entity": "refinery",
+      "place": "",
+      "action": "Novokuibyshevsk refinery caught fire",
+      "motion": "present",
+      "cue": "drones hit the Novokuibyshevsk refinery in the Samara region, and it caught fire.",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

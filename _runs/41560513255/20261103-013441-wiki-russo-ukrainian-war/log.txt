@@ -1,0 +1,60 @@
+reading the story: what it shows
+story: the FP-1 drone, oil refinery; 3 moments
+satellite map style: no 3D scenes
+voicing 36 scenes with kokoro
+fetching visuals
+stock clip s2.mp4 left out: a clip can't be checked
+stock clip s3.mp4 left out: a clip can't be checked
+stock clip s4.mp4 left out: a clip can't be checked
+stock clip s5.mp4 left out: a clip can't be checked
+stock clip s6.mp4 left out: a clip can't be checked
+stock clip s7.mp4 left out: a clip can't be checked
+stock clip s8.mp4 left out: a clip can't be checked
+stock clip s13.mp4 left out: a clip can't be checked
+stock clip s14.mp4 left out: a clip can't be checked
+stock clip s15.mp4 left out: a clip can't be checked
+stock clip s20.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s23.mp4 left out: a clip can't be checked
+stock clip s24.mp4 left out: a clip can't be checked
+stock clip s26.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s29.mp4 left out: a clip can't be checked
+stock clip s30.mp4 left out: a clip can't be checked
+stock clip s31.mp4 left out: a clip can't be checked
+stock clip s32.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Russia vs Ukraine': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: loc image search failed for 'Russia vs Ukraine': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Russia+vs+Ukraine&fo=json&c=25&fa=online-format%3Aimage
+warning: loc image search failed for 'Russia vs Ukraine oil refinery fire night': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Russia+vs+Ukraine+oil+refinery+fire+night&fo=json&c=25&fa=online-format%3Ai (not asked again this run)
+warning: openverse image search failed for 'Russia vs Ukraine': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+photo commons3.jpg left out: Shows a soccer team, completely unrelated to the conflict.
+photo commons3.jpg left out: Shows a soccer player, completely unrelated to the conflict or refineries.
+photo commons3.jpg left out: Shows an unrelated athlete, not Russian oil refineries.
+photo commons4.jpg left out: Shows a soccer match, which is unrelated to the war.
+photo commons4.jpg left out: Shows a football player, unrelated to the war in Ukraine.
+photo p15.jpg left out: Shows a helicopter instead of drones or air defenses.
+4 scenes without a picture of their own reuse one of the video's photos
+visuals: 2 Wikipedia and freely licensed images, 23 stock, 11 scenes on plain background
+photo shot7-1.jpg left out: Shows a protest sign instead of an oil refinery distillation unit.
+photo shot7-1.jpg left out: Shows a soccer team instead of an oil refinery.
+photo shot7-1.jpg left out: Shows a soccer player, completely unrelated to an oil refinery.
+photo shot13-1.jpg left out: Shows a soccer player, completely unrelated to drone strikes.
+photo shot13-1.jpg left out: Shows a soccer match, unrelated to the conflict.
+photo shot13-1.jpg left out: Shows a soccer player, completely unrelated to the war.
+cutaways: 6 extra photos across 6 scenes
+collage: 27 photos styled, 8 with a cut-out subject
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 2, sentence 1: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 16 planned, 2 in the cast; 0 checked, 0 redrawn, 1 left out
+satellite: scene 16: Sentinel-2 mosaic 3744x2106 at ~373 m/px
+satellite: the close view needs 186 Sentinel-2 granules, more than 160
+satellite: scene 17: Sentinel-2 mosaic 3744x2106 at ~374 m/px
+satellite: scene 18: Sentinel-2 mosaic 3744x2106 at ~374 m/px
+art direction: noir
+rendering 341s long video
+3D coverage: 0% of the runtime in 3D (target 75%), 0% moving on its own, 0 3D shots
+quality: 3D covers 0% of the runtime, under the 75% target
+rendering thumbnail
+thumbnail: cutout take
+done: approved
