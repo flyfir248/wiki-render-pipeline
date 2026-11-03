@@ -1,0 +1,42 @@
+{
+  "entities": [
+    {
+      "id": "warship",
+      "name": "warships",
+      "kind": "warship",
+      "search": [
+        "warship",
+        "naval ship",
+        "military ship"
+      ],
+      "look": "Modern gray military warship, medium size.",
+      "certain": false,
+      "scenes": [
+        1,
+        10
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "caribbean",
+      "name": "Caribbean",
+      "look": "Blue ocean water under a bright sky with no people or animals.",
+      "scenes": [
+        10
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 10,
+      "entity": "warship",
+      "place": "caribbean",
+      "action": "US built up warships in the Caribbean",
+      "motion": "present",
+      "cue": "the US built up warships in the Caribbean and began striking boats",
+      "documented": true,
+      "priority": 1
+    }
+  ]
+}

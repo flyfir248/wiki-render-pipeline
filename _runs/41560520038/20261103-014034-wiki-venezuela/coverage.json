@@ -1,0 +1,247 @@
+{
+  "format": "long",
+  "duration": 295.6,
+  "target_3d": 0.75,
+  "share_3d": 0.0,
+  "share_animated": 0.0,
+  "share_subject_moving": 0.0,
+  "share_matched": 0.0,
+  "share_library_models": 0.0,
+  "share_camera_moving": 0.0,
+  "share_2d": 1.0,
+  "shots_3d": 0,
+  "static": [],
+  "repeats": [],
+  "frozen": [],
+  "environment_richness": null,
+  "animation_quality": null,
+  "bare": [],
+  "lifeless": [],
+  "dropped_to_2d": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "seconds": 11.59,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "start": 11.59,
+      "seconds": 7.28,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 3,
+      "start": 18.86,
+      "seconds": 5.65,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 4,
+      "start": 24.52,
+      "seconds": 7.2,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "start": 31.71,
+      "seconds": 12.22,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 6,
+      "start": 43.93,
+      "seconds": 9.17,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 7,
+      "start": 53.1,
+      "seconds": 12.16,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 8,
+      "start": 65.27,
+      "seconds": 8.81,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 9,
+      "start": 74.08,
+      "seconds": 12.96,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 10,
+      "start": 87.04,
+      "seconds": 7.87,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 11,
+      "start": 94.92,
+      "seconds": 3.65,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 12,
+      "start": 98.56,
+      "seconds": 9.36,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 13,
+      "start": 107.92,
+      "seconds": 8.16,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 14,
+      "start": 116.09,
+      "seconds": 11.85,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 15,
+      "start": 127.94,
+      "seconds": 4.57,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 16,
+      "start": 132.51,
+      "seconds": 1.77,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 17,
+      "start": 134.28,
+      "seconds": 11.83,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 18,
+      "start": 146.11,
+      "seconds": 7.51,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 19,
+      "start": 153.62,
+      "seconds": 6.1,
+      "template": "proportion",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "start": 159.73,
+      "seconds": 12.28,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 21,
+      "start": 172.01,
+      "seconds": 4.55,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 22,
+      "start": 176.55,
+      "seconds": 14.04,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 23,
+      "start": 190.6,
+      "seconds": 6.74,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "start": 197.34,
+      "seconds": 11.49,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 25,
+      "start": 208.83,
+      "seconds": 7.63,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "start": 216.46,
+      "seconds": 4.93,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "start": 221.39,
+      "seconds": 14.54,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 28,
+      "start": 235.94,
+      "seconds": 11.58,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "start": 247.51,
+      "seconds": 4.93,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 30,
+      "start": 252.44,
+      "seconds": 12.24,
+      "template": "list",
+      "kind": "2D"
+    },
+    {
+      "scene": 31,
+      "start": 264.69,
+      "seconds": 8.73,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 32,
+      "start": 273.41,
+      "seconds": 22.17,
+      "template": "statement",
+      "kind": "2D"
+    }
+  ]
+}

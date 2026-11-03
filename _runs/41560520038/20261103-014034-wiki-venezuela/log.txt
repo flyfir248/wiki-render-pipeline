@@ -1,0 +1,54 @@
+reading the story: what it shows
+story: warships; 1 moments
+satellite map style: no 3D scenes
+voicing 32 scenes with kokoro
+fetching visuals
+stock clip s3.mp4 left out: a clip can't be checked
+stock clip s4.mp4 left out: a clip can't be checked
+stock clip s7.mp4 left out: a clip can't be checked
+stock clip s8.mp4 left out: a clip can't be checked
+stock clip s9.mp4 left out: a clip can't be checked
+stock clip s11.mp4 left out: a clip can't be checked
+stock clip s12.mp4 left out: a clip can't be checked
+stock clip s13.mp4 left out: a clip can't be checked
+stock clip s14.mp4 left out: a clip can't be checked
+stock clip s15.mp4 left out: a clip can't be checked
+stock clip s16.mp4 left out: a clip can't be checked
+stock clip s20.mp4 left out: a clip can't be checked
+stock clip s21.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s23.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s26.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s29.mp4 left out: a clip can't be checked
+stock clip s32.mp4 left out: a clip can't be checked
+warning: loc image search failed for 'US and Venezuela Caracas street': HTTPSConnectionPool(host='www.loc.gov', port=443): Read timed out. (read timeout=15)
+photo commons4.jpg left out: Shows generic graffiti on a garage door, unrelated to Venezuela.
+warning: openverse image search failed for 'US and Venezuela': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: loc image search failed for 'US and Venezuela': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=US+and+Venezuela&fo=json&c=25&fa=online-format%3Aimage (not asked again this run)
+warning: openverse image search failed for 'US and Venezuela': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+photo commons14.jpg left out: Shows NYPD police cars and US street protest, not Venezuela or interim government.
+photo p25.jpg left out: Shows Swedish Academy building in Stockholm, not Norway or Nobel Peace Prize.
+photo p28.jpg left out: Shows US flag for a line about Venezuelan elections.
+photo p29.jpg left out: Shows US Supreme Court, not Venezuelan court.
+photo p29.jpg left out: Shows the US Supreme Court instead of Venezuela's court.
+3 scenes without a picture of their own reuse one of the video's photos
+visuals: 18 Wikipedia and freely licensed images, 6 stock, 8 scenes on plain background
+photo shot30-1.jpg left out: Shows an old map of British Guiana, unrelated to current events.
+cutaways: 8 extra photos across 8 scenes
+collage: 29 photos styled, 15 with a cut-out subject
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 3, sentence 1: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 16 planned, 1 in the cast; 0 checked, 0 redrawn, 1 left out
+satellite: scene 6: Sentinel-2 mosaic 3744x2106 at ~298 m/px
+satellite: scene 24: Sentinel-2 mosaic 4096x2304 at ~367 m/px
+satellite: the close view needs 1104 Sentinel-2 granules, more than 160
+art direction: noir
+rendering 296s long video
+3D coverage: 0% of the runtime in 3D (target 75%), 0% moving on its own, 0 3D shots
+quality: 3D covers 0% of the runtime, under the 75% target
+rendering thumbnail
+thumbnail: cutout take
+done: approved
