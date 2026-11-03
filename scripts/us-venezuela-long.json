@@ -1,69 +1,468 @@
 {
-  "title": "What the US Is Doing in Venezuela, Mapped",
-  "description": "In January 2026, US forces captured Nicolás Maduro and flew him to New York. Ten months later, his former deputy runs the country with Washington's backing, a US-linked company holds 100-year rights to about a fifth of Venezuela's oil, and the opposition's Nobel laureate is back home asking when the election will be. Here is the map of America's role in Venezuela, step by step.\n\nFacts as reported up to 1 November 2026, from Reuters, NPR, AP and others (sources below). Positions of each government are attributed to them.\n\nMaps: country borders as shown by the Survey of India (Natural Earth, India view). Satellite imagery: NASA Blue Marble; contains modified Copernicus Sentinel data 2025-2026.",
-  "tags": ["Venezuela", "United States", "Maduro", "Delcy Rodriguez", "Maria Corina Machado", "Venezuela oil", "Caribbean", "Trump", "Rubio", "geopolitics", "Latin America", "maps", "explained"],
-  "thumbnail_text": "WHO RUNS VENEZUELA?",
-  "thumbnail_kicker": "US and Venezuela",
-  "thumbnail_query": "Caracas Venezuela skyline",
-  "mood": "tense",
-  "core_message": "Since capturing Maduro, the US has shaped who governs Venezuela and who controls its oil, and the next test is an election promised for 2027.",
-  "comment_question": "Should Venezuela hold its election sooner than 2027?",
-  "series": "News Explained",
-  "map_style": "satellite",
-  "sources": [
-    "https://en.wikipedia.org/wiki/Next_Venezuelan_presidential_election",
-    "https://npr.org/2026/09/01/g-s1-141351/us-venezuelan-oil-deal",
-    "https://www.i24news.tv/en/news/international/latin-america/artc-machado-returns-to-venezuela-after-10-months-abroad-greeted-by-tens-of-thousands-rubio-credits-us-backed-talks",
-    "https://www.wypr.org/2026-10-25/venezuelas-opposition-leader-maria-corina-machado-returns-after-months-in-exile",
-    "https://bdnews24.com/world/americas/ty3wbakarh",
-    "https://en.wikipedia.org/wiki/2024_Venezuelan_presidential_election",
-    "https://www.opec.org/opec_web/en/about_us/171.htm"
-  ],
-  "chapters": [
-    {"title": "3 January 2026", "scene": 0},
-    {"title": "How it got here", "scene": 4},
-    {"title": "Who runs Venezuela now", "scene": 11},
-    {"title": "The oil deal", "scene": 16},
-    {"title": "Machado comes home", "scene": 23},
-    {"title": "What to watch", "scene": 29}
-  ],
-  "scenes": [
-    {"type": "map", "narration": "On the third of January 2026, United States forces carried out a large military operation in Venezuela and captured its president, Nicolás Maduro.", "heading": "3 January 2026", "regions": ["Venezuela"], "places": [{"name": "Caracas", "lat": 10.49, "lon": -66.88}], "zoom": 1.5},
-    {"type": "map", "narration": "Maduro and his wife, Cilia Flores, were flown to New York to face drug trafficking and weapons charges.", "heading": "Caracas to New York", "places": [{"name": "Caracas", "lat": 10.49, "lon": -66.88}, {"name": "New York", "lat": 40.71, "lon": -74.0}], "route": true, "vehicle": "plane"},
-    {"type": "statement", "narration": "President Trump said the United States would run Venezuela until a safe transition.", "text": "\"Run\" Venezuela until a transition", "broll_query": "White House", "transition": "whip"},
-    {"type": "statement", "narration": "Ten months on, who actually runs Venezuela? Who gets its oil? And when will Venezuelans get to vote?", "text": "Who runs it now?", "broll_query": "Caracas street", "transition": "thread"},
-
-    {"type": "map", "narration": "Venezuela sits on the northern edge of South America, facing the Caribbean. Under it are the largest proven oil reserves of any country on Earth, about three hundred billion barrels.", "heading": "The world's biggest oil reserves", "regions": ["Venezuela"], "places": [{"name": "Orinoco Belt", "lat": 8.4, "lon": -64.0}]},
-    {"type": "map", "narration": "Most of that oil is extra-heavy crude in the Orinoco Belt, a strip along the Orinoco River that is hard and expensive to produce.", "heading": "The Orinoco Belt", "places": [{"name": "Orinoco Belt", "lat": 8.4, "lon": -64.0}], "zoom": 2.5},
-    {"type": "statement", "narration": "Under Hugo Chávez and then Maduro, years of mismanagement and US sanctions cut production to a fraction of what it once was, and millions of Venezuelans left the country.", "text": "Millions left", "broll_query": "Venezuelan migrants border", "transition": "whip"},
-    {"type": "statement", "narration": "In July 2024, Venezuela's electoral council declared Maduro re-elected with about fifty-two percent of the vote.", "text": "2024: Maduro declared winner", "broll_query": "Venezuela election ballot", "transition": "whip"},
-    {"type": "statement", "narration": "The opposition published its own tally from polling stations showing a clear win for its candidate, Edmundo González. Several governments and international organisations questioned the official result.", "text": "A disputed result", "broll_query": "Venezuela protest flag", "transition": "whip"},
-    {"type": "map", "narration": "In 2025, the US built up warships in the Caribbean and began striking boats it said were carrying drugs.", "heading": "The Caribbean build-up", "places": [{"name": "Caracas", "lat": 10.49, "lon": -66.88}, {"name": "Puerto Rico", "lat": 18.22, "lon": -66.59}], "route": false},
-    {"type": "statement", "narration": "Then came January, and the raid that took Maduro.", "text": "Then came January", "broll_query": "military helicopter night", "transition": "thread"},
-
-    {"type": "statement", "narration": "Venezuela's Supreme Tribunal ordered Vice-President Delcy Rodríguez to take over as acting president. The armed forces backed her.", "text": "Delcy Rodríguez takes over", "broll_query": "Miraflores Palace Caracas", "transition": "thread"},
-    {"type": "statement", "narration": "She first called the US operation an illegal kidnapping. Within days she signalled that she was willing to work with Washington.", "text": "From \"kidnapping\" to cooperation", "broll_query": "diplomatic meeting", "transition": "whip"},
-    {"type": "statement", "narration": "The US says it doesn't recognise her as democratically elected. But the Trump administration has backed her interim government, which was meant to last ninety days and is still in office.", "text": "Meant to last 90 days", "broll_query": "Caracas government building", "transition": "whip"},
-    {"type": "statement", "narration": "In September, President Trump said it was too soon to consider elections.", "text": "\"Too soon\" for elections", "broll_query": "Trump press conference", "transition": "thread"},
-    {"type": "statement", "narration": "And then there's the oil.", "text": "The oil", "broll_query": "oil derrick Venezuela", "transition": "thread"},
-
-    {"type": "map", "narration": "At the end of August, Trump announced an oil deal. Rodríguez's government granted a company called North American Blue Energy Partners hundred-year rights to seventeen oil fields.", "heading": "17 fields, 100 years", "places": [{"name": "Orinoco Belt", "lat": 8.4, "lon": -64.0}, {"name": "Maracaibo", "lat": 10.65, "lon": -71.64}], "route": false},
-    {"type": "stat", "narration": "Those fields hold about sixty-five billion barrels of proven reserves, roughly a fifth of Venezuela's total.", "heading": "Barrels in the deal", "value": 65, "suffix": " billion"},
-    {"type": "proportion", "narration": "And the Pentagon's Office of Strategic Capital will own thirty-five percent of the company.", "heading": "The Pentagon's stake", "value": 35},
-    {"type": "statement", "narration": "The United States also gets the right to buy a fifth of the output at cost. The company has agreed to invest a hundred billion dollars, and the White House says the deal costs taxpayers nothing.", "text": "20% of output at cost", "broll_query": "oil pipeline", "transition": "whip"},
-    {"type": "statement", "narration": "Many of those fields used to be run by Russian or Chinese companies.", "text": "Fields that were Russian and Chinese", "broll_query": "oil field", "transition": "whip"},
-    {"type": "statement", "narration": "Critics in Washington object. Senator Jack Reed, the top Democrat on the Armed Services Committee, called it a blatant abuse of power and taxpayer dollars. Analysts say reviving production will take years.", "text": "\"A blatant abuse of power\"", "broll_query": "US Capitol", "transition": "whip"},
-    {"type": "statement", "narration": "So the US now has a direct stake in Venezuelan oil, and in who governs the country that holds it.", "text": "A stake in oil and in power", "broll_query": "oil tanker Caribbean", "transition": "thread"},
-
-    {"type": "map", "narration": "On the twenty-fifth of October, opposition leader María Corina Machado came home after about ten months abroad. She flew to Colombia and crossed into Venezuela by land.", "heading": "Machado comes home", "places": [{"name": "Colombia border", "lat": 7.9, "lon": -72.47}, {"name": "Lara state", "lat": 10.07, "lon": -69.32}, {"name": "Caracas", "lat": 10.49, "lon": -66.88}], "route": true, "vehicle": "car"},
-    {"type": "statement", "narration": "Machado had been barred from running in 2024. Last December she received the Nobel Peace Prize in Norway.", "text": "Nobel Peace Prize laureate", "broll_query": "Nobel Peace Prize ceremony Oslo", "transition": "whip"},
-    {"type": "statement", "narration": "Crowds met her in Lara state and along an eight-hour drive to Caracas.", "text": "Crowds all the way to Caracas", "broll_query": "crowd Caracas rally", "transition": "whip"},
-    {"type": "statement", "narration": "Secretary of State Marco Rubio called her return a direct result of US-supported reconciliation talks, which he said had freed hundreds of political prisoners. Her own movement was not part of those talks.", "text": "Talks without her party", "broll_query": "Marco Rubio", "transition": "whip"},
-    {"type": "statement", "narration": "On the twenty-ninth, Machado said Rubio had laid out steps that make clear presidential elections will be held in 2027. She said Rodríguez also backed elections.", "text": "Elections in 2027?", "broll_query": "ballot box", "transition": "thread"},
-    {"type": "statement", "narration": "The talks are meant to overhaul the electoral council and the top court first.", "text": "Fix the referees first", "broll_query": "Venezuela supreme court", "transition": "whip"},
-
-    {"type": "list", "narration": "So what to watch? Whether a date is set for the 2027 vote. Whether Machado's movement is let into the talks. And whether the oil deal survives the next government, in either country.", "heading": "What to watch", "items": ["Is a date set for 2027?", "Does Machado's movement get a seat?", "Does the oil deal survive?"]},
-    {"type": "map", "narration": "For now, the country with the most oil in the world is run by an interim government that Washington backs, while its people wait for a vote.", "heading": "Waiting for a vote", "regions": ["Venezuela", "United States"], "places": [{"name": "Caracas", "lat": 10.49, "lon": -66.88}]},
-    {"type": "statement", "narration": "Should Venezuela hold its election sooner than 2027? Tell us in the comments.", "text": "Sooner than 2027?", "broll_query": "Venezuela flag", "transition": "fade"}
-  ]
+ "title": "What the US Is Doing in Venezuela, Mapped",
+ "description": "In January 2026, US forces captured Nicolás Maduro and flew him to New York. Ten months later, his former deputy runs the country with Washington's backing, a US-linked company holds 100-year rights to about a fifth of Venezuela's oil, and the opposition's Nobel laureate is back home asking when the election will be. Here is the map of America's role in Venezuela, step by step.\n\nFacts as reported up to 1 November 2026, from Reuters, NPR, AP and others (sources below). Positions of each government are attributed to them.\n\nMaps: country borders as shown by the Survey of India (Natural Earth, India view). Satellite imagery: NASA Blue Marble; contains modified Copernicus Sentinel data 2025-2026.\n\nElevation: produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.",
+ "tags": [
+  "Venezuela",
+  "United States",
+  "Maduro",
+  "Delcy Rodriguez",
+  "Maria Corina Machado",
+  "Venezuela oil",
+  "Caribbean",
+  "Trump",
+  "Rubio",
+  "geopolitics",
+  "Latin America",
+  "maps",
+  "explained"
+ ],
+ "thumbnail_text": "WHO RUNS VENEZUELA?",
+ "thumbnail_kicker": "US and Venezuela",
+ "thumbnail_query": "Caracas Venezuela skyline",
+ "mood": "tense",
+ "core_message": "Since capturing Maduro, the US has shaped who governs Venezuela and who controls its oil, and the next test is an election promised for 2027.",
+ "comment_question": "Should Venezuela hold its election sooner than 2027?",
+ "series": "News Explained",
+ "map_style": "satellite",
+ "sources": [
+  "https://en.wikipedia.org/wiki/Next_Venezuelan_presidential_election",
+  "https://npr.org/2026/09/01/g-s1-141351/us-venezuelan-oil-deal",
+  "https://www.i24news.tv/en/news/international/latin-america/artc-machado-returns-to-venezuela-after-10-months-abroad-greeted-by-tens-of-thousands-rubio-credits-us-backed-talks",
+  "https://www.wypr.org/2026-10-25/venezuelas-opposition-leader-maria-corina-machado-returns-after-months-in-exile",
+  "https://bdnews24.com/world/americas/ty3wbakarh",
+  "https://en.wikipedia.org/wiki/2024_Venezuelan_presidential_election",
+  "https://www.opec.org/opec_web/en/about_us/171.htm"
+ ],
+ "chapters": [
+  {
+   "title": "3 January 2026",
+   "scene": 0
+  },
+  {
+   "title": "How it got here",
+   "scene": 4
+  },
+  {
+   "title": "Who runs Venezuela now",
+   "scene": 11
+  },
+  {
+   "title": "The oil deal",
+   "scene": 16
+  },
+  {
+   "title": "Machado comes home",
+   "scene": 23
+  },
+  {
+   "title": "What to watch",
+   "scene": 29
+  }
+ ],
+ "scenes": [
+  {
+   "type": "map",
+   "narration": "On the third of January 2026, United States forces carried out a large military operation in Venezuela and captured its president, Nicolás Maduro.",
+   "heading": "3 January 2026",
+   "regions": [
+    "Venezuela"
+   ],
+   "places": [
+    {
+     "name": "Caracas",
+     "lat": 10.49,
+     "lon": -66.88
+    }
+   ],
+   "zoom": 1.5
+  },
+  {
+   "type": "map",
+   "narration": "Maduro and his wife, Cilia Flores, were flown to New York to face drug trafficking and weapons charges.",
+   "heading": "Caracas to New York",
+   "places": [
+    {
+     "name": "Caracas",
+     "lat": 10.49,
+     "lon": -66.88
+    },
+    {
+     "name": "New York",
+     "lat": 40.71,
+     "lon": -74.0
+    }
+   ],
+   "route": true,
+   "vehicle": "plane"
+  },
+  {
+   "type": "statement",
+   "narration": "President Trump said the United States would run Venezuela until a safe transition.",
+   "text": "\"Run\" Venezuela until a transition",
+   "broll_query": "White House",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "Ten months on, who actually runs Venezuela? Who gets its oil? And when will Venezuelans get to vote?",
+   "text": "Who runs it now?",
+   "broll_query": "Caracas street",
+   "transition": "thread"
+  },
+  {
+   "type": "map",
+   "narration": "Venezuela sits on the northern edge of South America, facing the Caribbean. Under it are the largest proven oil reserves of any country on Earth, about three hundred billion barrels.",
+   "heading": "The world's biggest oil reserves",
+   "regions": [
+    "Venezuela"
+   ],
+   "places": [
+    {
+     "name": "Orinoco Belt",
+     "lat": 8.4,
+     "lon": -64.0
+    }
+   ]
+  },
+  {
+   "type": "map",
+   "narration": "Most of that oil is extra-heavy crude in the Orinoco Belt, a strip along the Orinoco River that is hard and expensive to produce.",
+   "heading": "The Orinoco Belt",
+   "places": [
+    {
+     "name": "Ciudad Bolívar",
+     "lat": 8.12,
+     "lon": -63.55
+    }
+   ],
+   "zoom": 1.3,
+   "marks": [
+    {
+     "kind": "zone",
+     "path": [
+      [
+       -67.6,
+       8.3
+      ],
+      [
+       -65,
+       8.9
+      ],
+      [
+       -62.3,
+       9.1
+      ],
+      [
+       -61.6,
+       8.4
+      ],
+      [
+       -64,
+       7.8
+      ],
+      [
+       -67.3,
+       7.5
+      ]
+     ],
+     "label": "Orinoco Belt",
+     "color": "amber"
+    }
+   ]
+  },
+  {
+   "type": "statement",
+   "narration": "Under Hugo Chávez and then Maduro, years of mismanagement and US sanctions cut production to a fraction of what it once was, and millions of Venezuelans left the country.",
+   "text": "Millions left",
+   "broll_query": "Venezuelan migrants border",
+   "transition": "whip"
+  },
+  {
+   "type": "document",
+   "narration": "In July 2024, Venezuela's electoral council declared Maduro re-elected with about fifty-two percent of the vote.",
+   "heading": "Caracas",
+   "text": "Electoral council declares Maduro re-elected with about 52% of the vote",
+   "author": "July 2024",
+   "doc_style": "headline"
+  },
+  {
+   "type": "statement",
+   "narration": "The opposition published its own tally from polling stations showing a clear win for its candidate, Edmundo González. Several governments and international organisations questioned the official result.",
+   "text": "A disputed result",
+   "broll_query": "Venezuela protest flag",
+   "transition": "whip"
+  },
+  {
+   "type": "map",
+   "narration": "In 2025, the US built up warships in the Caribbean and began striking boats it said were carrying drugs.",
+   "heading": "The Caribbean build-up",
+   "places": [
+    {
+     "name": "Caracas",
+     "lat": 10.49,
+     "lon": -66.88
+    },
+    {
+     "name": "Puerto Rico",
+     "lat": 18.22,
+     "lon": -66.59
+    }
+   ],
+   "route": false,
+   "marks": [
+    {
+     "kind": "zone",
+     "path": [
+      [
+       -70.5,
+       11.9
+      ],
+      [
+       -61.5,
+       11.4
+      ],
+      [
+       -61.5,
+       14.8
+      ],
+      [
+       -70.5,
+       15.2
+      ]
+     ],
+     "label": "US naval build-up",
+     "color": "blue"
+    }
+   ]
+  },
+  {
+   "type": "statement",
+   "narration": "Then came January, and the raid that took Maduro.",
+   "text": "Then came January",
+   "broll_query": "military helicopter night",
+   "transition": "thread"
+  },
+  {
+   "type": "statement",
+   "narration": "Venezuela's Supreme Tribunal ordered Vice-President Delcy Rodríguez to take over as acting president. The armed forces backed her.",
+   "text": "Delcy Rodríguez takes over",
+   "broll_query": "Miraflores Palace Caracas",
+   "transition": "thread"
+  },
+  {
+   "type": "statement",
+   "narration": "She first called the US operation an illegal kidnapping. Within days she signalled that she was willing to work with Washington.",
+   "text": "From \"kidnapping\" to cooperation",
+   "broll_query": "diplomatic meeting",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "The US says it doesn't recognise her as democratically elected. But the Trump administration has backed her interim government, which was meant to last ninety days and is still in office.",
+   "text": "Meant to last 90 days",
+   "broll_query": "Caracas government building",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "In September, President Trump said it was too soon to consider elections.",
+   "text": "\"Too soon\" for elections",
+   "broll_query": "Trump press conference",
+   "transition": "thread"
+  },
+  {
+   "type": "statement",
+   "narration": "And then there's the oil.",
+   "text": "The oil",
+   "broll_query": "oil derrick Venezuela",
+   "transition": "thread"
+  },
+  {
+   "type": "map",
+   "narration": "At the end of August, Trump announced an oil deal. Rodríguez's government granted a company called North American Blue Energy Partners hundred-year rights to seventeen oil fields.",
+   "heading": "17 fields, 100 years",
+   "places": [
+    {
+     "name": "Orinoco Belt",
+     "lat": 8.4,
+     "lon": -64.0
+    },
+    {
+     "name": "Maracaibo",
+     "lat": 10.65,
+     "lon": -71.64
+    }
+   ],
+   "route": false,
+   "marks": [
+    {
+     "kind": "zone",
+     "path": [
+      [
+       -67.6,
+       8.3
+      ],
+      [
+       -65,
+       8.9
+      ],
+      [
+       -62.3,
+       9.1
+      ],
+      [
+       -61.6,
+       8.4
+      ],
+      [
+       -64,
+       7.8
+      ],
+      [
+       -67.3,
+       7.5
+      ]
+     ],
+     "label": "Most of the 17 fields",
+     "color": "amber"
+    }
+   ]
+  },
+  {
+   "type": "stat",
+   "narration": "Those fields hold about sixty-five billion barrels of proven reserves, roughly a fifth of Venezuela's total.",
+   "heading": "Barrels in the deal",
+   "value": 65,
+   "suffix": " billion"
+  },
+  {
+   "type": "proportion",
+   "narration": "And the Pentagon's Office of Strategic Capital will own thirty-five percent of the company.",
+   "heading": "The Pentagon's stake",
+   "value": 35
+  },
+  {
+   "type": "statement",
+   "narration": "The United States also gets the right to buy a fifth of the output at cost. The company has agreed to invest a hundred billion dollars, and the White House says the deal costs taxpayers nothing.",
+   "text": "20% of output at cost",
+   "broll_query": "oil pipeline",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "Many of those fields used to be run by Russian or Chinese companies.",
+   "text": "Fields that were Russian and Chinese",
+   "broll_query": "oil field",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "Critics in Washington object. Senator Jack Reed, the top Democrat on the Armed Services Committee, called it a blatant abuse of power and taxpayer dollars. Analysts say reviving production will take years.",
+   "text": "\"A blatant abuse of power\"",
+   "broll_query": "US Capitol",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "So the US now has a direct stake in Venezuelan oil, and in who governs the country that holds it.",
+   "text": "A stake in oil and in power",
+   "broll_query": "oil tanker Caribbean",
+   "transition": "thread"
+  },
+  {
+   "type": "map",
+   "narration": "On the twenty-fifth of October, opposition leader María Corina Machado came home after about ten months abroad. She flew to Colombia and crossed into Venezuela by land.",
+   "heading": "Machado comes home",
+   "places": [
+    {
+     "name": "Colombia border",
+     "lat": 7.9,
+     "lon": -72.47
+    },
+    {
+     "name": "Lara state",
+     "lat": 10.07,
+     "lon": -69.32
+    },
+    {
+     "name": "Caracas",
+     "lat": 10.49,
+     "lon": -66.88
+    }
+   ],
+   "route": true,
+   "vehicle": "car",
+   "flyover": true
+  },
+  {
+   "type": "statement",
+   "narration": "Machado had been barred from running in 2024. Last December she received the Nobel Peace Prize in Norway.",
+   "text": "Nobel Peace Prize laureate",
+   "broll_query": "Nobel Peace Prize ceremony Oslo",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "Crowds met her in Lara state and along an eight-hour drive to Caracas.",
+   "text": "Crowds all the way to Caracas",
+   "broll_query": "crowd Caracas rally",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "Secretary of State Marco Rubio called her return a direct result of US-supported reconciliation talks, which he said had freed hundreds of political prisoners. Her own movement was not part of those talks.",
+   "text": "Talks without her party",
+   "broll_query": "Marco Rubio",
+   "transition": "whip"
+  },
+  {
+   "type": "statement",
+   "narration": "On the twenty-ninth, Machado said Rubio had laid out steps that make clear presidential elections will be held in 2027. She said Rodríguez also backed elections.",
+   "text": "Elections in 2027?",
+   "broll_query": "ballot box",
+   "transition": "thread"
+  },
+  {
+   "type": "statement",
+   "narration": "The talks are meant to overhaul the electoral council and the top court first.",
+   "text": "Fix the referees first",
+   "broll_query": "Venezuela supreme court",
+   "transition": "whip"
+  },
+  {
+   "type": "list",
+   "narration": "So what to watch? Whether a date is set for the 2027 vote. Whether Machado's movement is let into the talks. And whether the oil deal survives the next government, in either country.",
+   "heading": "What to watch",
+   "items": [
+    "Is a date set for 2027?",
+    "Does Machado's movement get a seat?",
+    "Does the oil deal survive?"
+   ]
+  },
+  {
+   "type": "map",
+   "narration": "For now, the country with the most oil in the world is run by an interim government that Washington backs, while its people wait for a vote.",
+   "heading": "Waiting for a vote",
+   "places": [
+    {
+     "name": "Caracas",
+     "lat": 10.49,
+     "lon": -66.88
+    },
+    {
+     "name": "El Ávila",
+     "lat": 10.55,
+     "lon": -66.85
+    }
+   ],
+   "flyover": true
+  },
+  {
+   "type": "statement",
+   "narration": "Should Venezuela hold its election sooner than 2027? Tell us in the comments.",
+   "text": "Sooner than 2027?",
+   "broll_query": "Venezuela flag",
+   "transition": "fade"
+  }
+ ]
 }

@@ -628,8 +628,8 @@ def flyover_bounds(scene) -> tuple[float, float, float, float] | None:
         return None
     lons, lats = [p[0] for p in pts], [p[1] for p in pts]
     cx, cy = (min(lons) + max(lons)) / 2, (min(lats) + max(lats)) / 2
-    half_lat = max(0.3, (max(lats) - min(lats)) * 0.8)
-    half_lon = max(half_lat / max(0.2, math.cos(math.radians(cy))), (max(lons) - min(lons)) * 0.8)
+    half_lat = max(0.3, (max(lats) - min(lats)) * 0.62)
+    half_lon = max(half_lat / max(0.2, math.cos(math.radians(cy))), (max(lons) - min(lons)) * 0.62)
     # a 16:9 piece of ground, so the far horizon is filled whichever way the camera looks
     half_lon = max(half_lon, half_lat * 1.4 / max(0.2, math.cos(math.radians(cy))))
     return (cx - half_lon, max(-80, cy - half_lat), cx + half_lon, min(80, cy + half_lat))
