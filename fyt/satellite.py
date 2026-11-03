@@ -103,11 +103,25 @@ def view_bounds(scale, center, lon0, fmt, zoom=1.0, margin=1.25):
     return (west, south, east, north), ground
 
 
+def mark_points(marks) -> list[tuple[float, float]]:
+    """The points a scene's marks cover, as markPoints in renderer/src/scenes/mapmarks.tsx."""
+    out = []
+    for m in marks or []:
+        pt, km = m.get("point"), m.get("km")
+        if m.get("kind") == "ring" and pt and km:
+            dl = math.degrees(km / 6371)
+            dx = dl / max(0.2, math.cos(math.radians(pt[1])))
+            out += [tuple(pt), (pt[0], pt[1] + dl), (pt[0], pt[1] - dl), (pt[0] + dx, pt[1]), (pt[0] - dx, pt[1])]
+            continue
+        out += [tuple(p) for p in m.get("path") or []] + ([tuple(pt)] if pt else [])
+    return [p for p in out if abs(p[1]) <= 80 and abs(p[0]) <= 180]
+
+
 def scene_views(scene, fmt: str):
     """The wide and close views of a map scene, as map.tsx frames them: (lon0, wide, close) with each
     view as (bounds, metres per pixel). None when the scene has nothing to frame."""
     pts = [(p.lon, p.lat) for p in (scene.places or []) if abs(p.lat) <= 80 and abs(p.lon) <= 180]
-    frame_pts = pts or region_points(scene.regions or [])
+    frame_pts = (pts or region_points(scene.regions or [])) + mark_points(getattr(scene, "marks", None))
     if not frame_pts:
         return None
     rect = FRAME[fmt][2]
@@ -302,14 +316,24 @@ def _list(client, prefix) -> list[str]:
     return [e.text for e in ET.fromstring(r.text).findall("s:CommonPrefixes/s:Prefix", ns)]
 
 
-def _months(today: date) -> list[tuple[int, int]]:
-    """The last 18 months, the clear dry season (November to March) first, newest first within each."""
+MGRS_BANDS = "CDEFGHJKLMNPQRSTUVWX"  # 8-degree latitude bands from 80S
+
+
+def season(band: str) -> tuple[int, ...]:
+    """The months that show a granule's ground best: snow-free summer away from the tropics (the
+    Volga in October is already white), the clear dry season (November to March) nearer the equator."""
+    south = -80 + 8 * MGRS_BANDS.index(band.upper()) if band.upper() in MGRS_BANDS else 0
+    return (5, 6, 7, 8, 9) if south >= 40 else (11, 12, 1, 2, 3)
+
+
+def _months(today: date, prefer: tuple[int, ...] = (11, 12, 1, 2, 3)) -> list[tuple[int, int]]:
+    """The last 18 months, the preferred season first, newest first within each."""
     months = []
     y, m = today.year, today.month
     for _ in range(18):
         months.append((y, m))
         y, m = (y, m - 1) if m > 1 else (y - 1, 12)
-    return sorted(months, key=lambda ym: (ym[1] not in (11, 12, 1, 2, 3), -(ym[0] * 12 + ym[1])))
+    return sorted(months, key=lambda ym: (ym[1] not in prefer, -(ym[0] * 12 + ym[1])))
 
 
 _PICKS: dict[tuple[str, int], list[str]] = {}
@@ -328,7 +352,7 @@ def _best_scenes(client, granule: str, n: int, today: date | None, budget: int) 
     base = f"{S2_PREFIX}/{int(zone)}/{band}/{sq}/"
     found: list[tuple[float, str, float, int]] = []
     looked = 0
-    for y, m in _months(today or date.today()):
+    for y, m in _months(today or date.today(), season(band)):
         try:
             scenes = _list(client, f"{base}{y}/{m}/")
         except httpx.HTTPError:
@@ -531,6 +555,127 @@ def _size(bounds, ground_mpp, oversample=1.3) -> tuple[int, int]:
     return max(16, round(w * k)), max(16, round(hgt * k))
 
 
+# --- Terrain ---------------------------------------------------------------------------------------
+
+DEM_MAX_TILES = 40
+DEM_SIZE = 384  # elevation samples across the flyover's longer side
+CREDIT_DEM = "Copernicus DEM"
+
+
+def _dem_url(lat: int, lon: int, res: int) -> str:
+    ns, ew = ("N" if lat >= 0 else "S"), ("E" if lon >= 0 else "W")
+    name = f"Copernicus_DSM_COG_{10 if res == 30 else 30}_{ns}{abs(lat):02d}_00_{ew}{abs(lon):03d}_00_DEM"
+    return f"https://copernicus-dem-{res}m.s3.amazonaws.com/{name}/{name}.tif"
+
+
+def dem_grid(bounds, size: tuple[int, int], log=print) -> np.ndarray | None:
+    """Elevation in metres over `bounds` on a grid even in latitude and longitude (rows north to
+    south), from the Copernicus DEM (sea, where it has no tile, is 0). None without rasterio or data."""
+    try:
+        import rasterio
+        from rasterio.transform import from_bounds
+        from rasterio.warp import Resampling, reproject
+    except ImportError:
+        return None
+    west, south, east, north = bounds
+    tiles = [(la, lo) for la in range(math.floor(south), math.ceil(north)) for lo in range(math.floor(west), math.ceil(east))]
+    if len(tiles) > DEM_MAX_TILES:
+        log(f"satellite: the flyover needs {len(tiles)} elevation tiles, more than {DEM_MAX_TILES}")
+        return None
+    w, h = size
+    res = 30 if (east - west) / w * 111_000 < 60 else 90
+    dst = from_bounds(west, south, east, north, w, h)
+    env = {"GDAL_DISABLE_READDIR_ON_OPEN": "EMPTY_DIR", "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif", "GDAL_HTTP_MAX_RETRY": "3"}
+    ca = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
+    if ca:
+        env["CURL_CA_BUNDLE"] = ca
+
+    def read(tile):
+        out = np.full((h, w), np.nan, dtype=np.float32)
+        try:
+            with rasterio.Env(**env), rasterio.open("/vsicurl/" + _dem_url(*tile, res)) as src:
+                reproject(rasterio.band(src, 1), out, src_transform=src.transform, src_crs=src.crs, dst_transform=dst,
+                          dst_crs="EPSG:4326", dst_nodata=np.nan, resampling=Resampling.bilinear)
+        except Exception:  # no tile: open sea
+            return None
+        return out
+
+    grid = np.zeros((h, w), dtype=np.float32)
+    found = 0
+    with ThreadPoolExecutor(6) as pool:
+        for part in pool.map(read, tiles):
+            if part is not None:
+                found += 1
+                grid = np.where(np.isnan(part), grid, part)
+    if not found:
+        log("satellite: no elevation data under the flyover")
+        return None
+    return np.clip(grid, -500, 9000)
+
+
+def terrain_rgb(grid: np.ndarray) -> Image.Image:
+    """Heights packed into a PNG's colours (Mapbox terrain-RGB: metres = -10000 + (R*65536 + G*256 + B) / 10)."""
+    v = np.round((grid + 10000) * 10).astype(np.uint32)
+    rgb = np.dstack([(v >> 16) & 255, (v >> 8) & 255, v & 255]).astype(np.uint8)
+    return Image.fromarray(rgb, "RGB")
+
+
+def flyover_bounds(scene) -> tuple[float, float, float, float] | None:
+    """The ground a flyover shows: its places (or regions) with room round them, at least 0.6 degrees."""
+    pts = [(p.lon, p.lat) for p in (scene.places or []) if abs(p.lat) <= 80 and abs(p.lon) <= 180]
+    pts = pts or region_points(scene.regions or [])
+    if not pts:
+        return None
+    lons, lats = [p[0] for p in pts], [p[1] for p in pts]
+    cx, cy = (min(lons) + max(lons)) / 2, (min(lats) + max(lats)) / 2
+    half_lat = max(0.3, (max(lats) - min(lats)) * 0.8)
+    half_lon = max(half_lat / max(0.2, math.cos(math.radians(cy))), (max(lons) - min(lons)) * 0.8)
+    # a 16:9 piece of ground, so the far horizon is filled whichever way the camera looks
+    half_lon = max(half_lon, half_lat * 1.4 / max(0.2, math.cos(math.radians(cy))))
+    return (cx - half_lon, max(-80, cy - half_lat), cx + half_lon, min(80, cy + half_lat))
+
+
+def stage_terrain(scene, i: int, public: Path, gibs, log=print) -> dict | None:
+    b = flyover_bounds(scene)
+    if b is None:
+        return None
+    west, south, east, north = b
+    lat = (south + north) / 2
+    across_lon = (east - west) * math.cos(math.radians(lat))
+    span = max(across_lon, north - south)
+    w = round(DEM_SIZE * across_lon / span)
+    h = round(DEM_SIZE * (north - south) / span)
+    grid = dem_grid(b, (w, h), log=log)
+    if grid is None:
+        return None
+    tw = 3072
+    th = round(tw * (merc_y(north) - merc_y(south)) / math.radians(east - west))
+    mpp = (east - west) * 111_320 * math.cos(math.radians(lat)) / tw
+    tex = s2_mosaic(b, (tw, th), max(mpp, 10), log=log) if mpp <= S2_MAX_MPP else None
+    if tex is not None:
+        ref = gibs.mosaic(b, gibs_zoom(mpp * 2, lat))
+        tex = grade(tex, ref)
+        # gaps in the mosaic show the Blue Marble underneath
+        if ref is not None:
+            base = ref.convert("RGBA").resize(tex.size, Image.LANCZOS)
+            tex = Image.alpha_composite(base, tex)
+    else:
+        tex = gibs.mosaic(b, gibs_zoom(mpp, lat))
+    if tex is None:
+        return None
+    dem_name, tex_name = f"satellite/s{i + 1}-dem.png", f"satellite/s{i + 1}-terrain.jpg"
+    terrain_rgb(grid).save(public / dem_name)
+    tex.convert("RGB").save(public / tex_name, quality=88)
+    log(f"satellite: scene {i + 1}: flyover {w}x{h} elevation, {float(grid.min()):.0f} to {float(grid.max()):.0f} m")
+    path = [[p.lon, p.lat] for p in (scene.places or [])] if scene.route else None
+    # the ground's colour round its edge, for the plain that carries it on to the horizon
+    rim = np.asarray(tex.convert("RGB").resize((64, 64)), np.float32)
+    rim = np.concatenate([rim[0], rim[-1], rim[:, 0], rim[:, -1]]).mean(axis=0) * 0.8
+    edge = "#" + "".join(f"{int(v):02x}" for v in rim)
+    return {"dem": dem_name, "tex": tex_name, "bounds": [west, south, east, north], "edge": edge,
+            "minM": float(grid.min()), "maxM": float(grid.max()), "path": path}
+
+
 def stage(script, public: Path, fmt: str, log=print) -> object:
     """Fetch the imagery for every map scene of a satellite video and attach it to the scenes. Returns
     the script (unchanged when imagery isn't wanted or can't be had) and records the credits on it."""
@@ -550,7 +695,7 @@ def stage(script, public: Path, fmt: str, log=print) -> object:
         world.save(out / "world.jpg", quality=88)
         equirect(world).save(out / "globe.jpg", quality=88)
         world_layer = {"src": "satellite/world.jpg", "west": -180, "south": -MAX_LAT, "east": 180, "north": MAX_LAT}
-        used_s2 = False
+        used_s2 = used_dem = False
         scenes = list(script.scenes)
         cache: dict[str, dict] = {}
         for n, i in enumerate(maps):
@@ -596,6 +741,16 @@ def stage(script, public: Path, fmt: str, log=print) -> object:
                 layers.append({"src": name, "west": close_b[0], "south": close_b[1], "east": close_b[2], "north": close_b[3]})
             if n == 0:
                 layers.insert(0, {"src": "satellite/globe.jpg", "kind": "globe"})
-            scenes[i] = s.model_copy(update={"satellite": layers})
-    credit = CREDIT_WORLD + (" · " + CREDIT_S2 + f" {date.today().year}" if used_s2 else "")
+            update = {"satellite": layers}
+            if s.flyover:
+                try:
+                    terrain = stage_terrain(s, i, public, gibs, log=log)
+                except Exception as e:  # the flat satellite map still shows the place
+                    log(f"satellite: scene {i + 1}: no flyover: {e}")
+                    terrain = None
+                if terrain:
+                    update["terrain"] = terrain
+                    used_dem = True
+            scenes[i] = s.model_copy(update=update)
+    credit = CREDIT_WORLD + (" · " + CREDIT_S2 + f" {date.today().year}" if used_s2 else "") + (" · " + CREDIT_DEM if used_dem else "")
     return script.model_copy(update={"scenes": scenes, "map_credit": "Imagery: " + credit})

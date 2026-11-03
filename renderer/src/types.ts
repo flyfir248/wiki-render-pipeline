@@ -102,6 +102,9 @@ export type Scene = {
   zoom?: number | null; // map scenes: how much closer than the usual framing the camera ends
   satellite?: SatLayer[] | null; // map scenes: real imagery under the borders, coarse to fine (fyt/satellite.py)
   mapCredit?: string | null; // map scenes: the imagery's credit, shown while it is on screen
+  marks?: MapMark[] | null; // map scenes: data drawn on the map after the fly-in
+  terrain?: Terrain | null; // map scenes: a 3D flyover of real terrain instead of the flat map
+  docStyle?: "headline" | null; // document scenes: a newspaper clipping
   lines?: DialogueLine[] | null; // dialogue scenes
   setting?: Setting | null; // story scenes
   backdropSrc?: string | null; // story scenes: an illustrated plate, drawn over the setting
@@ -219,3 +222,30 @@ export type ThumbnailProps = {
 // One satellite image under a map, in Web Mercator, with its lon/lat bounds; `kind: "globe"` is the
 // equirectangular world texture for the opening globe.
 export type SatLayer = { src: string; kind?: "globe" | null; west?: number; south?: number; east?: number; north?: number };
+
+// Data drawn on a map scene, one after another once the camera has arrived (or at `at`, 0-1 of the scene).
+// Points are [lon, lat]. flow: an arrow along `path`, `width` 1-5 for how much moves along it.
+// traffic: ships (or trucks, planes) streaming along `path`. ring: a range circle of `km` round `at_point`.
+// zone: a hatched area. ruler: a measured line between two points. strike: a pulsing impact.
+export type MapMark = {
+  kind: "flow" | "traffic" | "ring" | "zone" | "ruler" | "strike";
+  path?: [number, number][];
+  point?: [number, number];
+  km?: number;
+  width?: number;
+  label?: string;
+  color?: "red" | "amber" | "blue" | "white" | null;
+  at?: number;
+};
+
+// A 3D flyover: an elevation grid (16-bit PNG, metres = value / 4 - 500... see fyt/satellite.py) and the
+// imagery draped over it, both covering `bounds` [west, south, east, north].
+export type Terrain = {
+  dem: string;
+  tex: string;
+  bounds: [number, number, number, number];
+  minM: number;
+  maxM: number;
+  edge?: string | null; // the ground's colour round its edge
+  path?: [number, number][] | null;
+};

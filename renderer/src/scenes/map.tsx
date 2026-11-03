@@ -30,6 +30,8 @@ import coarse from "../data/countries-ind-110m.json";
 import { AbsoluteFill, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Place, SatLayer, Scene, Vehicle } from "../types";
 import { SatGlobe } from "./satglobe";
+import { MapMarks, markPoints } from "./mapmarks";
+import { TerrainFlyover } from "./terrain";
 import { unit } from "../theme";
 import { Heading, type SceneProps } from "./shared";
 
@@ -260,7 +262,10 @@ const STARS = Array.from({ length: 90 }, (_, i) => {
   return { x: Math.abs(r(1)), y: Math.abs(r(2)), s: 0.6 + Math.abs(r(3)) * 1.8, o: 0.25 + Math.abs(r(4)) * 0.6 };
 });
 
-export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
+export const MapScene: React.FC<SceneProps> = (props) =>
+  props.scene.terrain ? <TerrainFlyover {...props} /> : <FlatMap {...props} />;
+
+const FlatMap: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
   const { width, height, durationInFrames, fps } = useVideoConfig();
   const places = validPlaces(scene.places);
@@ -272,7 +277,7 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const regions = useMemo(() => mapRegions(scene), [regionKey]);
   // The view frames the places, or the regions when the map is about territory.
-  const framePts = pts.length ? pts : regions.flatMap(regionPoints);
+  const framePts = [...(pts.length ? pts : regions.flatMap(regionPoints)), ...markPoints(scene.marks)];
   // Keep the map clear of the heading above and the captions below.
   const rect: [[number, number], [number, number]] = short ? [[90, 420], [width - 90, 1220]] : [[200, 210], [width - 200, 900]];
   const lon0 = midLon(framePts);
@@ -660,6 +665,9 @@ export const MapScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
               <circle cx={head[0]} cy={head[1]} r={30 * k} fill="none" stroke="#c2410c" strokeWidth={4} />
             </g>
           ) : null}
+          {scene.marks?.length ? (
+            <MapMarks marks={scene.marks} proj={proj} frame={frame} D={D} fps={fps} from={T.flyTo} k={k} theme={theme} id={scene.id} />
+          ) : null}
         </svg>
         {places.map((p, i) => {
           const xy = proj([p.lon, p.lat]);
@@ -852,7 +860,7 @@ export const distanceText = (miles: number): string => {
   return `about ${round(miles)} miles (${round(miles * 1.609344)} kilometers)`;
 };
 
-const Pin: React.FC<{ x: number; y: number; anchor: number; name: string; at: number; fps: number; theme: SceneProps["theme"]; k: number }> = ({
+export const Pin: React.FC<{ x: number; y: number; anchor: number; name: string; at: number; fps: number; theme: SceneProps["theme"]; k: number }> = ({
   x,
   y,
   anchor,

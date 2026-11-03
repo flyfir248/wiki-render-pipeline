@@ -74,3 +74,38 @@ def test_satellite_style_skips_3d(tmp_path, monkeypatch):
     monkeypatch.setattr(pipeline, "log", lambda job, m: None)
     out = pipeline.plan_visuals(load_config(), None, script, "")
     assert all(s.type != "world" for s in out.scenes)
+
+
+def test_terrain_rgb_round_trips():
+    g = np.array([[-20.0, 0.0], [1234.5, 8848.0]], dtype=np.float32)
+    px = np.asarray(S.terrain_rgb(g)).astype(np.int64)
+    back = -10000 + (px[..., 0] * 65536 + px[..., 1] * 256 + px[..., 2]) / 10
+    assert np.allclose(back, g, atol=0.05)
+
+
+def test_flyover_frames_its_places():
+    s = ScriptScene.model_validate({"type": "map", "narration": "x", "heading": "h", "flyover": True,
+                                    "places": [{"name": "Khasab", "lat": 26.18, "lon": 56.25}]})
+    w, so, e, n = S.flyover_bounds(s)
+    assert w < 56.25 < e and so < 26.18 < n
+    assert (e - w) > (n - so)  # wider than tall, like the frame
+    assert "N26_00_E056" in S._dem_url(26, 56, 30) and "COG_30_" in S._dem_url(26, 56, 90)
+
+
+def test_marks_reach_the_renderer():
+    from fyt import timeline
+    from fyt.config import load_config
+    from fyt.models import Script
+
+    script = Script.model_validate({
+        "title": "t", "description": "d", "tags": ["a"], "thumbnail_text": "x", "thumbnail_kicker": "x",
+        "thumbnail_query": "x", "core_message": "x", "sources": ["x"], "comment_question": "x",
+        "scenes": [
+            {"type": "map", "narration": "x y z", "heading": "h", "places": [{"name": "A", "lat": 1, "lon": 2}],
+             "marks": [{"kind": "ruler", "path": [[2, 1], [3, 1]]}]},
+            {"type": "document", "narration": "x y z", "heading": "h", "text": "Headline", "author": "A · 1 May", "doc_style": "headline"},
+        ],
+    })
+    props = timeline.build_props(load_config(), script, [(0, 3), (3, 6)], [[], []], {}, None, None)
+    assert props.scenes[0].marks[0]["kind"] == "ruler"
+    assert props.scenes[1].docStyle == "headline"

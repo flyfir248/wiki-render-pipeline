@@ -295,6 +295,18 @@ After each render the pipeline logs any stretch of 4 seconds or more where the p
 (`fyt/qa.py`), and `python -m fyt sheet video.mp4` prints them too. Every video looks different while
 the channel keeps one consistent style, which matters for monetization (see below).
 
+
+**Map annotations, flyovers and clippings** (hand-written scripts). A map scene can carry `marks`, drawn
+in one after another once the camera arrives: `flow` (an arrow along `path`, `width` 1-5), `traffic`
+(ships streaming along a lane), `ring` (`point` and `km`), `zone` (a hatched area), `ruler` (measures
+the distance between two points) and `strike` (a pulsing impact), each with an optional `label`,
+`color` (red, amber, blue, white) and `at` (0-1 of the scene). The camera frames the marks along with the
+places. `"flyover": true` turns a map scene into a 3D flight over real ground: Copernicus DEM elevation
+with Sentinel-2 imagery draped over it (summer imagery north of 40N, so it isn't under snow). A
+document scene with `"doc_style": "headline"` is a news clipping on a desk, its headline highlighted
+word by word; `author` is the date line and `heading` the section, and no outlet's masthead is drawn.
+The DEM's licence asks for its credit line in the video description (see scripts/drone-refinery-war-long.json).
+
 ## Quick start
 
 Requirements: Python 3.10+, Node.js 18+.

@@ -179,6 +179,15 @@ class ScriptScene(BaseModel):
     )
     backdrop_src: SkipJsonSchema[str | None] = None  # set by the pipeline
     satellite: SkipJsonSchema[list[dict] | None] = None  # map scenes: imagery layers, set by fyt.satellite
+    # Map scenes, hand-written: data drawn on the map after the fly-in (see MapMark in renderer/src/types.ts):
+    # flow arrows, ship traffic, range rings, hatched zones, distance rulers, strikes.
+    marks: SkipJsonSchema[list[dict] | None] = None
+    # Map scenes, hand-written: show the close view as a 3D flyover of real terrain; fyt.satellite
+    # stages the elevation and imagery into `terrain`.
+    flyover: SkipJsonSchema[bool | None] = None
+    terrain: SkipJsonSchema[dict | None] = None
+    # Document scenes: "headline" draws a newspaper clipping instead of a typed page.
+    doc_style: SkipJsonSchema[str | None] = None
     actors: list[Actor] | None = Field(default=None, description="story scenes: 1-5 things on the stage.")
     effect: Effect | None = Field(default=None, description="story scenes: an optional effect.")
     effect_x: float | None = Field(default=None, description="story scenes: where the effect happens (0-100).")
@@ -346,6 +355,9 @@ class RenderScene(BaseModel):
     satellite: list[dict] | None = None  # imagery under the map, coarse to fine (fyt/satellite.py)
     zoom: float | None = None  # how much closer than the usual framing the map ends
     mapCredit: str | None = None  # the imagery's credit, on screen for as long as it shows
+    marks: list[dict] | None = None  # data drawn on the map (MapMark)
+    terrain: dict | None = None  # a 3D flyover of real terrain (fyt/satellite.py)
+    docStyle: str | None = None  # document scenes: "headline" for a newspaper clipping
     lines: list[DialogueLine] | None = None
     setting: Setting | None = None
     backdropSrc: str | None = None

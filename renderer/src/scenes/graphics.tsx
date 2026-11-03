@@ -90,7 +90,80 @@ const StepBox: React.FC<{ i: number; at: number; text: string; last: boolean; co
 // A page from a report, letter or newspaper: it slides in, the camera leans in, and the key line is highlighted.
 // heading = what the document is, text = the line from it, author = source and date. Words in [brackets]
 // start blacked out and are uncovered one by one, like a declassified file.
-export const DocumentScene: React.FC<SceneProps> = ({ scene, theme, format }) => {
+export const DocumentScene: React.FC<SceneProps> = (props) =>
+  props.scene.docStyle === "headline" ? <HeadlineClip {...props} /> : <TypedPage {...props} />;
+
+// A news clipping on a dark desk: the source and date, the headline in a heavy serif, and a highlighter
+// pen dragged across it as the narrator reads it. heading = a kicker above the headline (optional),
+// text = the headline, author = outlet and date. No outlet's masthead or branding is imitated.
+const HeadlineClip: React.FC<SceneProps> = ({ scene, format }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const short = format === "short";
+  const k = unit(format);
+  const p = useEnter(0);
+  const push = interpolate(frame, [0, durationInFrames], [1, 1.1]);
+  const mark = interpolate(frame, [durationInFrames * 0.18, durationInFrames * 0.62], [0, 100], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.inOut(Easing.quad),
+  });
+  const w = short ? 920 : 1240;
+  const words = (scene.text ?? "").split(/\s+/).filter(Boolean);
+  // a torn edge along the bottom, the same every render
+  const teeth = Array.from({ length: 28 }, (_, i) => `${100 - (i / 27) * 100}% ${96 + ((i * 37) % 5)}%`).join(", ");
+  return (
+    <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 40%, #2a2622 0%, #12100e 75%)", alignItems: "center", justifyContent: "center", paddingBottom: short ? 380 : 40 }}>
+      <AbsoluteFill style={{ opacity: 0.06, backgroundImage: "repeating-linear-gradient(95deg, #fff 0 1px, transparent 1px 7px)" }} />
+      <div
+        style={{
+          position: "relative",
+          width: w,
+          padding: short ? "60px 60px 110px" : "56px 76px 110px",
+          background: "linear-gradient(170deg, #f4efe3 0%, #e9e2d0 100%)",
+          color: "#16140f",
+          clipPath: `polygon(0% 0%, 100% 1%, ${teeth})`,
+          boxShadow: "0 60px 140px rgba(0,0,0,0.7)",
+          transform: `translateY(${(1 - p) * 260}px) rotate(${-2.2 + p * 0.8}deg) scale(${push})`,
+          opacity: p,
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", fontFamily: MONO, fontSize: 21 * k, letterSpacing: 3, textTransform: "uppercase", color: "#5b554a", borderBottom: "3px double #16140f55", paddingBottom: 16 }}>
+          <span>{scene.author ?? ""}</span>
+          <span>{scene.heading ?? ""}</span>
+        </div>
+        <div style={{ marginTop: 30, fontFamily: "Georgia, 'DejaVu Serif', serif", fontWeight: 800, fontSize: (short ? 62 : 70) * k * (short ? 0.9 : 1), lineHeight: 1.18, letterSpacing: -0.5 }}>
+          {/* the pen moves word by word, so each line fills before the next one starts */}
+          {words.map((word, i) => (
+            <span
+              key={i}
+              style={{
+                backgroundImage: "linear-gradient(transparent 12%, #fde047d9 12%, #fde047d9 88%, transparent 88%)",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: `${Math.max(0, Math.min(1, (mark / 100) * words.length - i)) * 100}% 100%`,
+                padding: "0 6px",
+                marginRight: -6,
+              }}
+            >
+              {word}{" "}
+            </span>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: short ? "1fr 1fr" : "1fr 1fr 1fr", gap: 34, marginTop: 40 }}>
+          {Array.from({ length: short ? 2 : 3 }, (_, c) => (
+            <div key={c}>
+              {Array.from({ length: 6 }, (_, i) => (
+                <div key={i} style={{ height: 11 * k, width: `${[96, 100, 88, 100, 93, 70][(i + c) % 6]}%`, background: "#16140f26", borderRadius: 3, marginTop: 15 }} />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+const TypedPage: React.FC<SceneProps> = ({ scene, theme, format }) => {
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
   const p = useEnter(0);
