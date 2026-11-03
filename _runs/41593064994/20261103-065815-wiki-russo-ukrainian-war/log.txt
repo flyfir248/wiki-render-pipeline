@@ -1,0 +1,53 @@
+reading the story: what it shows
+story: the FP-1, Shahed-type drones, oil refineries; 2 moments
+satellite map style: no 3D scenes
+voicing 36 scenes with kokoro
+fetching visuals
+stock clip s4.mp4 left out: a clip can't be checked
+stock clip s5.mp4 left out: a clip can't be checked
+stock clip s6.mp4 left out: a clip can't be checked
+stock clip s7.mp4 left out: a clip can't be checked
+stock clip s8.mp4 left out: a clip can't be checked
+stock clip s14.mp4 left out: a clip can't be checked
+stock clip s15.mp4 left out: a clip can't be checked
+stock clip s24.mp4 left out: a clip can't be checked
+stock clip s26.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s29.mp4 left out: a clip can't be checked
+stock clip s31.mp4 left out: a clip can't be checked
+stock clip s32.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+warning: loc image search failed for 'Russia vs Ukraine long range drone': HTTPSConnectionPool(host='www.loc.gov', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for 'Russia vs Ukraine': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: openverse image search failed for 'Russia vs Ukraine': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+photo commons5.jpg left out: Shows a soccer match, which is completely unrelated to oil refineries.
+photo commons5.jpg left out: Photo shows a soccer player, completely unrelated to oil refineries.
+photo commons5.jpg left out: Shows a soccer player, unrelated to Russian oil refineries.
+warning: loc image search failed for 'Russia vs Ukraine oil refinery distillation tower': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Russia+vs+Ukraine+oil+refinery+distillation+tower&fo=json&c=25&fa=online-fo (not asked again this run)
+photo commons6.jpg left out: Shows a soccer match, completely unrelated to oil refineries or war.
+photo commons6.jpg left out: Shows a soccer match, unrelated to oil refineries or war.
+8 scenes without a picture of their own reuse one of the video's photos
+visuals: 2 Wikipedia and freely licensed images, 20 stock, 14 scenes on plain background
+photo shot7-1.jpg left out: Shows a protest sign, not an oil refinery distillation unit.
+photo shot7-1.jpg left out: Shows a soccer team, unrelated to an oil refinery.
+photo shot7-1.jpg left out: Photo shows a soccer player, completely unrelated to oil refineries.
+photo shot14-1.jpg left out: Shows a soccer player, completely unrelated to military drones.
+photo shot14-1.jpg left out: Shows a soccer match, completely unrelated to military drones.
+photo shot14-1.jpg left out: Shows a soccer match, which is unrelated to military drones.
+cutaways: 2 extra photos across 2 scenes
+collage: 16 photos styled, 3 with a cut-out subject
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 4, sentence 1: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 16 planned, 3 in the cast; 0 checked, 0 redrawn, 1 left out
+satellite: scene 16: Sentinel-2 mosaic 3744x2106 at ~409 m/px
+satellite: the close view needs 208 Sentinel-2 granules, more than 160
+satellite: scene 16: flyover 384x274 elevation, 25 to 382 m
+satellite: scene 17: Sentinel-2 mosaic 3744x2106 at ~375 m/px
+satellite: scene 18: Sentinel-2 mosaic 3744x2106 at ~375 m/px
+art direction: noir
+rendering 341s long video
+3D coverage: 0% of the runtime in 3D (target 75%), 0% moving on its own, 0 3D shots
+quality: 3D covers 0% of the runtime, under the 75% target
+rendering thumbnail
+thumbnail: cutout take
+done: approved

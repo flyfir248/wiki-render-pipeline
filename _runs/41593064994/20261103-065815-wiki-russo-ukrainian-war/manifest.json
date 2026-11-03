@@ -1,0 +1,117 @@
+{
+  "entities": [
+    {
+      "id": "fp-1-drone",
+      "name": "the FP-1",
+      "kind": "long-range strike drone",
+      "search": [
+        "military drone",
+        "uav",
+        "aircraft"
+      ],
+      "look": "Ukrainian long-range strike drone, propeller-driven, modern tactical design, grey composite body.",
+      "certain": false,
+      "scenes": [
+        1,
+        4,
+        9,
+        13,
+        14,
+        15,
+        16,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "id": "shahed-drone",
+      "name": "Shahed-type drones",
+      "kind": "loitering munition",
+      "search": [
+        "kamikaze drone",
+        "loitering munition",
+        "uav"
+      ],
+      "look": "Delta-wing loitering munition, dark triangular body, pusher propeller.",
+      "certain": false,
+      "scenes": [
+        1,
+        4,
+        9,
+        13,
+        14,
+        15,
+        16,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "id": "oil-refinery",
+      "name": "oil refineries",
+      "kind": "industrial plant",
+      "search": [
+        "oil refinery",
+        "industrial plant",
+        "refinery"
+      ],
+      "look": "Industrial oil refinery with tall distillation columns, piping networks, and storage tanks.",
+      "certain": false,
+      "scenes": [
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        16,
+        17,
+        18,
+        19,
+        20,
+        22,
+        30,
+        31,
+        33,
+        36
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "volga-region",
+      "name": "Volga region refineries",
+      "look": "Industrial refinery structures and storage tanks near a river under overcast daylight.",
+      "scenes": [
+        11,
+        33
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "scene": 14,
+      "entity": "fp-1-drone",
+      "place": "",
+      "action": "Built by the Ukrainian company Fire Point.",
+      "motion": "present",
+      "cue": "The best known of these drones is the FP-1, built by the Ukrainian company Fire Point.",
+      "documented": true,
+      "priority": 2
+    },
+    {
+      "scene": 27,
+      "entity": "shahed-drone",
+      "place": "",
+      "action": "Sends waves of drones at power stations.",
+      "motion": "move",
+      "cue": "It sends waves of Shahed-type drones and missiles at Ukraine's power stations",
+      "documented": true,
+      "priority": 2
+    }
+  ]
+}

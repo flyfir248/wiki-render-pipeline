@@ -1,0 +1,275 @@
+{
+  "format": "long",
+  "duration": 341.1,
+  "target_3d": 0.75,
+  "share_3d": 0.0,
+  "share_animated": 0.0,
+  "share_subject_moving": 0.0,
+  "share_matched": 0.0,
+  "share_library_models": 0.0,
+  "share_camera_moving": 0.0,
+  "share_2d": 1.0,
+  "shots_3d": 0,
+  "static": [],
+  "repeats": [],
+  "frozen": [],
+  "environment_richness": null,
+  "animation_quality": null,
+  "bare": [],
+  "lifeless": [],
+  "dropped_to_2d": [],
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "seconds": 10.67,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 2,
+      "start": 10.67,
+      "seconds": 9.74,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 3,
+      "start": 20.41,
+      "seconds": 6.86,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 4,
+      "start": 27.27,
+      "seconds": 8.24,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 5,
+      "start": 35.51,
+      "seconds": 7.61,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 6,
+      "start": 43.12,
+      "seconds": 7.98,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 7,
+      "start": 51.1,
+      "seconds": 10.72,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 8,
+      "start": 61.83,
+      "seconds": 9.76,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 9,
+      "start": 71.59,
+      "seconds": 9.04,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 10,
+      "start": 80.63,
+      "seconds": 6.0,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 11,
+      "start": 86.63,
+      "seconds": 5.55,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 12,
+      "start": 92.17,
+      "seconds": 9.73,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 13,
+      "start": 101.9,
+      "seconds": 15.57,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 14,
+      "start": 117.47,
+      "seconds": 12.24,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 15,
+      "start": 129.71,
+      "seconds": 8.07,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 16,
+      "start": 137.78,
+      "seconds": 8.3,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 17,
+      "start": 146.07,
+      "seconds": 4.25,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 18,
+      "start": 150.32,
+      "seconds": 9.24,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 19,
+      "start": 159.56,
+      "seconds": 13.16,
+      "template": "stat",
+      "kind": "2D"
+    },
+    {
+      "scene": 20,
+      "start": 172.72,
+      "seconds": 11.41,
+      "template": "document",
+      "kind": "2D"
+    },
+    {
+      "scene": 21,
+      "start": 184.12,
+      "seconds": 11.41,
+      "template": "proportion",
+      "kind": "2D"
+    },
+    {
+      "scene": 22,
+      "start": 195.53,
+      "seconds": 11.11,
+      "template": "document",
+      "kind": "2D"
+    },
+    {
+      "scene": 23,
+      "start": 206.64,
+      "seconds": 5.33,
+      "template": "document",
+      "kind": "2D"
+    },
+    {
+      "scene": 24,
+      "start": 211.97,
+      "seconds": 8.45,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 25,
+      "start": 220.42,
+      "seconds": 11.04,
+      "template": "quote",
+      "kind": "2D"
+    },
+    {
+      "scene": 26,
+      "start": 231.47,
+      "seconds": 5.93,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 27,
+      "start": 237.4,
+      "seconds": 9.25,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 28,
+      "start": 246.65,
+      "seconds": 10.56,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 29,
+      "start": 257.21,
+      "seconds": 8.26,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 30,
+      "start": 265.47,
+      "seconds": 8.48,
+      "template": "document",
+      "kind": "2D"
+    },
+    {
+      "scene": 31,
+      "start": 273.95,
+      "seconds": 10.06,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 32,
+      "start": 284.01,
+      "seconds": 8.7,
+      "template": "statement",
+      "kind": "2D"
+    },
+    {
+      "scene": 33,
+      "start": 292.71,
+      "seconds": 7.89,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 34,
+      "start": 300.6,
+      "seconds": 10.79,
+      "template": "list",
+      "kind": "2D"
+    },
+    {
+      "scene": 35,
+      "start": 311.39,
+      "seconds": 6.59,
+      "template": "map",
+      "kind": "2.5D"
+    },
+    {
+      "scene": 36,
+      "start": 317.98,
+      "seconds": 23.11,
+      "template": "statement",
+      "kind": "2D"
+    }
+  ]
+}
