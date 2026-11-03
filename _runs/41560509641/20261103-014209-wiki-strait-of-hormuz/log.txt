@@ -1,0 +1,55 @@
+reading the story: what it shows
+story: the tanker On Peace, the GFS Pride; 2 moments
+satellite map style: no 3D scenes
+voicing 41 scenes with kokoro
+fetching visuals
+stock clip s2.mp4 left out: a clip can't be checked
+stock clip s3.mp4 left out: a clip can't be checked
+stock clip s4.mp4 left out: a clip can't be checked
+stock clip s7.mp4 left out: a clip can't be checked
+stock clip s9.mp4 left out: a clip can't be checked
+stock clip s13.mp4 left out: a clip can't be checked
+stock clip s15.mp4 left out: a clip can't be checked
+stock clip s17.mp4 left out: a clip can't be checked
+stock clip s18.mp4 left out: a clip can't be checked
+stock clip s19.mp4 left out: a clip can't be checked
+stock clip s21.mp4 left out: a clip can't be checked
+stock clip s22.mp4 left out: a clip can't be checked
+stock clip s25.mp4 left out: a clip can't be checked
+stock clip s27.mp4 left out: a clip can't be checked
+stock clip s28.mp4 left out: a clip can't be checked
+stock clip s30.mp4 left out: a clip can't be checked
+stock clip s31.mp4 left out: a clip can't be checked
+stock clip s32.mp4 left out: a clip can't be checked
+stock clip s36.mp4 left out: a clip can't be checked
+stock clip s37.mp4 left out: a clip can't be checked
+stock clip s38.mp4 left out: a clip can't be checked
+stock clip s41.mp4 left out: a clip can't be checked
+warning: openverse image search failed for 'Strait of Hormuz oil tanker at sea Persian Gulf': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15)
+warning: loc image search failed for 'Strait of Hormuz oil tanker fire smoke': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Strait+of+Hormuz+oil+tanker+fire+smoke&fo=json&c=25&fa=online-format%3Aimag
+warning: openverse image search failed for 'Strait of Hormuz oil tanker strait': HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=15) (not asked again this run)
+warning: loc image search failed for 'Strait of Hormuz oil tanker strait': 429 Client Error: Too Many Requests for url: https://www.loc.gov/photos/?q=Strait+of+Hormuz+oil+tanker+strait&fo=json&c=25&fa=online-format%3Aimage (not asked again this run)
+photo commons39.jpg left out: Shows an unidentified man instead of shipping or the Strait.
+4 scenes without a picture of their own reuse one of the video's photos
+visuals: 10 Wikipedia and freely licensed images, 18 stock, 13 scenes on plain background
+photo shot39-1.jpg left out: Shows an unidentified man, unrelated to the Strait of Hormuz.
+cutaways: 10 extra photos across 9 scenes
+collage: 34 photos styled, 8 with a cut-out subject
+storyboarding: an illustration for each sentence
+warning: no illustration for scene 2, sentence 1: image generation failed: 429: the free daily image allowance is used up
+storyboard: 0 illustrated sentences of 16 planned, 2 in the cast; 0 checked, 0 redrawn, 1 left out
+satellite: scene 6: Sentinel-2 mosaic 3744x2106 at ~109 m/px
+satellite: scene 8: Sentinel-2 mosaic 3744x2106 at ~140 m/px
+satellite: scene 14: Sentinel-2 mosaic 4096x2304 at ~358 m/px
+satellite: the close view needs 1020 Sentinel-2 granules, more than 160
+satellite: scene 26: Sentinel-2 mosaic 3744x2106 at ~248 m/px
+satellite: scene 29: Sentinel-2 mosaic 3744x2106 at ~248 m/px
+satellite: scene 35: Sentinel-2 mosaic 3744x2106 at ~355 m/px
+satellite: scene 40: Sentinel-2 mosaic 3744x2106 at ~186 m/px
+art direction: news
+rendering 390s long video
+3D coverage: 0% of the runtime in 3D (target 75%), 0% moving on its own, 0 3D shots
+quality: 3D covers 0% of the runtime, under the 75% target
+rendering thumbnail
+thumbnail: cutout take
+done: approved
