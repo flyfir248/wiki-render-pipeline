@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "key": "nuclear-reactor",
+  "query": "nuclear reactor",
+  "source": "sketchfab",
+  "uid": "sketchfab:f5de4be4ca7948e998e01d9d40d6d28e",
+  "title": "Draft Sci-fi Nuclear Reactor",
+  "author": "19vitali99",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-f5de4be4ca7948e998e01d9d40d6d28e",
+  "checked": "vision",
+  "triangles": 97879,
+  "bytes": 4570080,
+  "size": [
+    3.3685,
+    4.154,
+    3.4932
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "Industrial nuclear reactor core with control rods, modern.",
+  "added": "2026-11-04T19:00:12+00:00",
+  "facing": "unclear:2"
+}
