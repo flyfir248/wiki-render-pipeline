@@ -109,3 +109,11 @@ def test_marks_reach_the_renderer():
     props = timeline.build_props(load_config(), script, [(0, 3), (3, 6)], [[], []], {}, None, None)
     assert props.scenes[0].marks[0]["kind"] == "ruler"
     assert props.scenes[1].docStyle == "headline"
+
+
+def test_unsafe_photos_are_left_out():
+    from fyt import wiki
+    assert wiki.unsafe("Russian warship, go fuck yourself")
+    assert wiki.unsafe("a sign that says russian warship go f*** yourself")
+    assert wiki.unsafe("Wounded soldiers")
+    assert not wiki.unsafe("Kirishi oil refinery", "Body of water near the Volga")

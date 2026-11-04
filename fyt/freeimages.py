@@ -197,7 +197,8 @@ def search(
                     log(f"warning: {name} image search failed for {q!r}: {str(e)[:150]}{gone}")
                     continue
             hits = _cache[name, q]
-            hits = [im for im in (keep(hits) if keep else hits) if im.url not in seen and im.title not in seen]
+            hits = [im for im in (keep(hits) if keep else hits) if im.url not in seen and im.title not in seen
+                    and not wiki.unsafe(im.title, im.description)]
             seen.update(im.url for im in hits)
             seen.update(im.title for im in hits)
             found += hits

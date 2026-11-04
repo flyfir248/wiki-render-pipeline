@@ -10,6 +10,7 @@ from pathlib import Path
 import requests
 
 from fyt.config import ROOT, Config, secret
+from fyt import wiki
 from fyt.models import Media
 
 PEXELS = "https://api.pexels.com"
@@ -96,6 +97,9 @@ def _unsplash_photo(cfg: Config, query: str, public: Path, name: str, used: set[
     for photo in r.json().get("results", []):
         if f"u{photo['id']}" in used:
             continue
+        tags = " ".join(t.get("title", "") for t in photo.get("tags") or [] if isinstance(t, dict))
+        if wiki.unsafe(photo.get("description") or "", photo.get("alt_description") or "", tags, photo.get("slug") or ""):
+            continue  # swearing on a sign, a body: YouTube age-restricts a video over these
         rel = f"media/{name}.jpg"
         (public / "media").mkdir(parents=True, exist_ok=True)
         # The 1080 px-wide rendition, sized for the frame (Unsplash's own resize parameters).
@@ -116,7 +120,7 @@ def _pexels_photo(cfg: Config, query: str, public: Path, name: str, used: set[st
     orientation = "portrait" if cfg.format == "short" else "landscape"
     data = _get("/v1/search", {"query": query, "orientation": orientation, "per_page": 10})
     for photo in (data or {}).get("photos", []):
-        if f"p{photo['id']}" in used:
+        if f"p{photo['id']}" in used or wiki.unsafe(photo.get("alt") or "", photo.get("url") or ""):
             continue
         rel = f"media/{name}.jpg"
         (public / "media").mkdir(parents=True, exist_ok=True)

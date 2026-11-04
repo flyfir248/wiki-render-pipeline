@@ -195,6 +195,19 @@ class WikiImage:
 
 
 SKIP_WORDS = ("logo", "icon", "symbol", "signature", "wiki", "commons-", "question_book", "edit-clear", "ambox")
+# Photos YouTube age-restricts a video over: swearing (on a protest sign, say) and the dead or wounded.
+# Matched against a file's name, its description and, for a linked article's photo, that article's name.
+UNSAFE = re.compile(
+    r"(\bf[\*#@]{2,}\w*|\bf\*ck|\bsh[\*#]t)|\b(fuck\w*|shit\w*|cunt|bitch\w*|asshole|dickhead|motherfuck\w*|"
+    r"corpses?|dead bod(y|ies)|killed (civilians|people|soldiers)|massacre victims?|"
+    r"mass grave|gore|blood(ied|y)?|wounded|injured|casualt(y|ies)|execution|beheading|torture|nude|naked)\b",
+    re.I,
+)
+
+
+def unsafe(*texts: str) -> bool:
+    """Whether a photo's name or description says it shows something that gets a video age-restricted."""
+    return any(UNSAFE.search((t or "").replace("_", " ")) for t in texts)
 
 
 def _plain(html: str) -> str:
@@ -252,6 +265,8 @@ def linked_images(cfg: Config, article: Article, limit: int = 24) -> list[WikiIm
         im = found.get(name.replace("_", " "))
         if im is None:
             continue
+        if unsafe(t):
+            continue
         im.description = f"{t}: {im.description}"[:120]
         im.source = "linked"
         out.append(im)
@@ -302,6 +317,8 @@ def _images(body: dict) -> list[WikiImage]:
         if any(w in name.lower() for w in SKIP_WORDS):
             continue
         meta = info.get("extmetadata", {})
+        if unsafe(name, _plain(meta.get("ImageDescription", {}).get("value", "")), _plain(meta.get("ObjectName", {}).get("value", ""))):
+            continue
         images.append(
             WikiImage(
                 title=name,

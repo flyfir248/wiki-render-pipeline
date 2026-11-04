@@ -25,7 +25,9 @@ THUMB_REVIEW = """You judge a YouTube thumbnail as a viewer would see it: small,
 Pass it only if all of these hold: one clear subject that fills a good part of the frame and is easy to
 recognise; the words are large, fully visible and readable; nothing important is cut off, covered by the
 words or lost in a dark or washed-out area; it is not cluttered. It is an illustration or photo for a
-documentary, so the style is fine. Fail it, naming the problem in a few words, if any of these fails."""
+documentary, so the style is fine. Always fail it if it shows swearing or crude words (on a sign, a T-shirt,
+graffiti), a dead or bloodied body, a wound or nudity: YouTube age-restricts a video over its thumbnail.
+Fail it, naming the problem in a few words, if any of these fails."""
 
 
 def _colour_cutout(img: Image.Image, mask: np.ndarray) -> Image.Image:

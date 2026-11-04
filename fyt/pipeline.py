@@ -859,7 +859,9 @@ and the video's subject are given. Pass it if the photo shows something the line
 person, place, object, event or era, or a close stand-in for it (a ship of the same kind, a street of that city,
 period clothing). A plain or loosely related photo is fine. Fail it only if it shows something unrelated a viewer
 would find confusing or misleading next to that line: a different person, a sport, a modern product, a pet, a
-fashion shoot, a different country or century. Reply with a single JSON object:
+fashion shoot, a different country or century. Always fail it, however well it fits, if it shows swearing or
+crude words (on a sign, a T-shirt, graffiti), a dead or bloodied body, a wound, or nudity: YouTube age-restricts a
+video over any of these. Reply with a single JSON object:
 {"matches": true or false, "problems": "at most 12 words, or empty"}."""
 
 
