@@ -14,7 +14,7 @@
   "thumbnail_text": "HALF GRAVITY",
   "thumbnail_kicker": "What If",
   "thumbnail_query": "person jumping high slow motion",
-  "mood": "wonder",
+  "mood": "curious",
   "core_message": "Half gravity feels like a superpower for a day, and then it takes away the Moon, the satellites, half our air and most of the tropics.",
   "comment_question": "What's the first thing you'd do with half gravity?",
   "sources": [
@@ -109,8 +109,35 @@
     },
     {
       "type": "statement",
+      "narration": "There's a catch, though. Your weight halves, but your mass doesn't. A shopping trolley full of food is just as hard to get moving and just as hard to stop. Bump into a wall, and it hurts exactly as much as it did yesterday.",
+      "heading": "Weight halves, mass doesn't"
+    },
+    {
+      "type": "statement",
+      "narration": "Climbing ten floors of stairs takes half the effort. Lifts and escalators use less electricity. Joints, knees and backs carry half the load, which for millions of people with joint pain would feel like a small miracle.",
+      "heading": "Stairs get easy"
+    },
+    {
+      "type": "statement",
       "narration": "Rivers run more slowly to the sea. Trucks need less fuel to climb hills. Bridges, cranes and the floors of every building carry half the load they did yesterday.",
       "heading": "The world gets gentler"
+    },
+    {
+      "type": "statement",
+      "narration": "Fountains shoot twice as high. Waterfalls fall more slowly and land more softly. Ocean waves travel about thirty percent more slowly, because the speed of a wave depends on how strongly gravity pulls the water back down.",
+      "heading": "Water slows down"
+    },
+    {
+      "type": "stat",
+      "narration": "But slower falling water means less power. A hydroelectric dam's output depends on gravity, so every dam on Earth suddenly makes about half as much electricity. Hydropower supplies around a seventh of the world's electricity.",
+      "value": 50,
+      "suffix": "%",
+      "heading": "Hydroelectric power lost overnight"
+    },
+    {
+      "type": "statement",
+      "narration": "Birds might expect an easier day, since they weigh half as much. But the air they push against is half as thick too, so for most of them the two changes roughly cancel out. Flying feels oddly familiar.",
+      "heading": "Birds barely notice"
     },
     {
       "type": "statement",
@@ -253,6 +280,11 @@
       "type": "statement",
       "narration": "Our bodies change too. With half the load, bones and muscles slowly weaken, like an astronaut's on a long mission. Hearts have an easier job, and nobody's back hurts quite as much.",
       "heading": "Our bodies adapt"
+    },
+    {
+      "type": "statement",
+      "narration": "Blood stops pooling in our legs as much, and more fluid drifts up towards the head. Astronauts know this as puffy face and bird legs. At half gravity it's milder, but the whole world would wake up looking slightly swollen.",
+      "heading": "Puffy faces everywhere"
     },
     {
       "type": "statement",
