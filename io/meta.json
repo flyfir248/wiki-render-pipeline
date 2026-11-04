@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "key": "io",
+  "query": "io",
+  "source": "sketchfab",
+  "uid": "sketchfab:24eff42e8ac2429a945fddd722f4ef5c",
+  "title": "Io v1.1",
+  "author": "uperesito",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-24eff42e8ac2429a945fddd722f4ef5c",
+  "checked": "vision",
+  "triangles": 22200,
+  "bytes": 1795616,
+  "size": [
+    199.9561,
+    200,
+    199.9123
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "rocky moon with bright orange surface and active volcanoes",
+  "added": "2026-11-04T09:33:14+00:00",
+  "facing": "unclear:2"
+}
