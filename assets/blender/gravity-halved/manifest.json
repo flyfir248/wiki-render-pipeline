@@ -1,0 +1,11 @@
+{
+  "fps": 30,
+  "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\halved.py), Quaternius, Kenney and Poly Haven CC0 assets",
+  "shots": [
+    {"id": "S01", "file": "S01.mp4", "duration": 6.0, "what": "06:42 bedroom, slow motion: the glass falls slowly, its normal-gravity ghost hits the floor first"},
+    {"id": "S02", "file": "S02.mp4", "duration": 6.0, "what": "promenade: springy walkers, a runner bounding a metre high"},
+    {"id": "S03", "file": "S03.mp4", "duration": 6.0, "what": "equatorial city: the sea climbs over the promenade, people head inland"},
+    {"id": "S04", "file": "S04.mp4", "duration": 6.0, "what": "dusk: crane up from the street to the Moon drifting away"},
+    {"id": "S05", "file": "S05.mp4", "duration": 6.0, "what": "golden hour: Maya's floating leap beside her normal-gravity ghost arc"}
+  ]
+}

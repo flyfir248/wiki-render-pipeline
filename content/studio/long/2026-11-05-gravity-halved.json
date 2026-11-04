@@ -1,0 +1,273 @@
+{
+  "title": "What If Earth's Gravity Halved Overnight?",
+  "description": "What if you woke up tomorrow and Earth's pull on everything had dropped to half? You'd jump twice as high and weigh half as much. But the Moon would leave, the satellites would drift off, the air would thin like a mountain top, and the oceans would start moving towards the equator.\n\nThe premise is impossible: only Earth's own gravity halves, everything else in the universe stays the same. The physics of what follows is real, worked out with simple models and rounded. 3D scenes made in Blender with CC0 assets by Quaternius, Kenney and Poly Haven.",
+  "tags": [
+    "what if",
+    "gravity",
+    "half gravity",
+    "physics",
+    "hypothetical",
+    "moon",
+    "science",
+    "space"
+  ],
+  "thumbnail_text": "HALF GRAVITY",
+  "thumbnail_kicker": "What If",
+  "thumbnail_query": "person jumping high slow motion",
+  "mood": "wonder",
+  "core_message": "Half gravity feels like a superpower for a day, and then it takes away the Moon, the satellites, half our air and most of the tropics.",
+  "comment_question": "What's the first thing you'd do with half gravity?",
+  "sources": [
+    "https://en.wikipedia.org/wiki/Gravity_of_Earth",
+    "https://en.wikipedia.org/wiki/Escape_velocity",
+    "https://en.wikipedia.org/wiki/Orbital_speed",
+    "https://en.wikipedia.org/wiki/Moon",
+    "https://en.wikipedia.org/wiki/Tide",
+    "https://en.wikipedia.org/wiki/International_Space_Station",
+    "https://en.wikipedia.org/wiki/Global_Positioning_System",
+    "https://en.wikipedia.org/wiki/Atmospheric_pressure",
+    "https://en.wikipedia.org/wiki/Scale_height",
+    "https://en.wikipedia.org/wiki/Effects_of_high_altitude_on_humans",
+    "https://en.wikipedia.org/wiki/Boiling_point",
+    "https://en.wikipedia.org/wiki/Equatorial_bulge",
+    "https://en.wikipedia.org/wiki/Geoid",
+    "https://en.wikipedia.org/wiki/Froude_number",
+    "https://en.wikipedia.org/wiki/Terminal_velocity",
+    "https://en.wikipedia.org/wiki/Axial_tilt"
+  ],
+  "series": "What If",
+  "blender": "gravity-halved",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "S01",
+      "narration": "Six forty two in the morning. Maya knocks a glass off her nightstand. It falls. But it falls slowly, far more slowly than it should. Overnight, Earth's gravity has dropped to half."
+    },
+    {
+      "type": "statement",
+      "narration": "Only Earth's pull has changed. The Sun, the Moon and every other star and planet are exactly as they were. Just one number has changed, and it was holding up almost everything.",
+      "heading": "Only Earth's pull halves"
+    },
+    {
+      "type": "stat",
+      "narration": "Gravity at the surface used to pull every object down at nine point eight one metres per second, every second. This morning, it's four point nine.",
+      "value": 4.9,
+      "suffix": " m/s²",
+      "heading": "Earth's surface gravity, from 9.81"
+    },
+    {
+      "type": "statement",
+      "narration": "Maya's glass takes about forty percent longer to hit the floor. Her reflexes were tuned to the old gravity, so for the first time in her life she can catch it.",
+      "heading": "Everything falls slower"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S02",
+      "narration": "Outside, the city has turned into a trampoline. Everyone weighs half what they did yesterday. Every step is a little bounce, and running becomes a series of long, floating leaps."
+    },
+    {
+      "type": "bars",
+      "narration": "Jump with the same push as yesterday, and you go twice as high and stay in the air twice as long. An athlete who could clear a metre now clears two.",
+      "data": [
+        {
+          "label": "Normal gravity",
+          "value": 0.5
+        },
+        {
+          "label": "Half gravity",
+          "value": 1.0
+        }
+      ],
+      "heading": "A standing jump, in metres"
+    },
+    {
+      "type": "stat",
+      "narration": "Sport changes overnight. A high jumper lifts their body twice as far, so the world record of two point four five metres could get close to four metres. Every basketball player can dunk.",
+      "value": 2.45,
+      "suffix": " m",
+      "heading": "High jump world record today"
+    },
+    {
+      "type": "statement",
+      "narration": "A ball thrown at the same speed flies twice as far before it lands. Football, cricket and baseball fields would all suddenly be too small, and goalkeepers would have a very bad week.",
+      "heading": "Every throw goes twice as far"
+    },
+    {
+      "type": "statement",
+      "narration": "Falls become far less dangerous. Drop from the same height, and you hit the ground at about seventy percent of the speed, with half the energy. A tumble down the stairs is more embarrassing than painful.",
+      "heading": "Falls hurt less"
+    },
+    {
+      "type": "statement",
+      "narration": "But walking gets slower. Your legs swing like pendulums, and pendulums swing more slowly in weaker gravity. Comfortable walking speed drops by around thirty percent, which is why astronauts on the Moon hopped instead of walking.",
+      "heading": "Walking slows down"
+    },
+    {
+      "type": "statement",
+      "narration": "Everyone can carry twice as much. A fridge weighs as much as a washing machine used to. A suitcase feels like a backpack. Lifting a car off the ground becomes a job for four friends instead of eight.",
+      "heading": "Everything weighs half"
+    },
+    {
+      "type": "statement",
+      "narration": "Rivers run more slowly to the sea. Trucks need less fuel to climb hills. Bridges, cranes and the floors of every building carry half the load they did yesterday.",
+      "heading": "The world gets gentler"
+    },
+    {
+      "type": "statement",
+      "narration": "For a few hours, it feels like a superpower. Then the problems begin, and the first ones are in space.",
+      "heading": "Then the problems start"
+    },
+    {
+      "type": "statement",
+      "narration": "A satellite stays up by falling around Earth at exactly the right speed. Halve Earth's pull, and every satellite in a circular orbit is suddenly moving too fast to be held.",
+      "heading": "Everything in orbit is too fast"
+    },
+    {
+      "type": "stat",
+      "narration": "Here's the strange coincidence. The speed you need to escape a planet is always about one point four times the speed of a circular orbit. Halve the planet's pull, and the old orbital speed becomes exactly the new escape speed.",
+      "value": 1.41,
+      "suffix": "×",
+      "heading": "Escape speed ÷ circular orbit speed"
+    },
+    {
+      "type": "statement",
+      "narration": "So the International Space Station, the GPS satellites, the weather satellites and the TV satellites all start drifting away from Earth. Within days, satellite navigation stops working.",
+      "heading": "Satellites drift away"
+    },
+    {
+      "type": "stat",
+      "narration": "There is one silver lining in space. The speed needed to escape Earth drops from eleven point two kilometres per second to about seven point nine. Rockets need far less fuel, so replacing the lost satellites becomes cheaper than ever.",
+      "value": 7.9,
+      "suffix": " km/s",
+      "heading": "New escape speed, from 11.2"
+    },
+    {
+      "type": "statement",
+      "narration": "In fact, with half the pull, reaching orbit would be so much easier that spaceflight could become as routine as long haul flights. Getting into space was always a fight against gravity, and gravity just lost half its strength.",
+      "heading": "Space gets closer"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S04",
+      "narration": "And the biggest satellite of all is in the same position. The Moon is now moving at just about escape speed. Night after night it rises a little smaller, slowly drifting away."
+    },
+    {
+      "type": "stat",
+      "narration": "The Moon is about three hundred and eighty four thousand kilometres away. With Earth's pull halved, it never comes back. It slowly drifts off into its own orbit around the Sun.",
+      "value": 384400,
+      "suffix": " km",
+      "heading": "Distance to the Moon today"
+    },
+    {
+      "type": "proportion",
+      "narration": "With the Moon gone, so are most of the tides. Only the Sun's tides are left, a little under half as strong as the Moon's. Coastlines, estuaries and the creatures that live between the tides all change.",
+      "value": 46,
+      "heading": "the Sun's tides, compared with the Moon's"
+    },
+    {
+      "type": "statement",
+      "narration": "Over millions of years, losing the Moon could also let Earth's tilt wobble far more than it does now, swinging the seasons to extremes.",
+      "heading": "The seasons lose their anchor"
+    },
+    {
+      "type": "statement",
+      "narration": "Back on the ground, the next problem is the air. The atmosphere stays, but it now weighs half as much, so it presses down half as hard.",
+      "heading": "The air weighs half as much"
+    },
+    {
+      "type": "stat",
+      "narration": "Air pressure at sea level falls to about half. That's what climbers feel at around five and a half kilometres up, higher than Everest base camp.",
+      "value": 5.5,
+      "suffix": " km",
+      "heading": "Sea level now feels like this altitude"
+    },
+    {
+      "type": "statement",
+      "narration": "Every breath has about half the oxygen. Overnight, billions of people wake up with altitude sickness: headaches, breathlessness, and no sleep. Most can slowly adapt, as people in the high Andes and Himalayas have, but the first weeks are hard.",
+      "heading": "The whole planet at altitude"
+    },
+    {
+      "type": "stat",
+      "narration": "With lower pressure, water boils at a lower temperature, around eighty one degrees. Pasta takes longer to cook, and a hot cup of tea is never quite as hot.",
+      "value": 81,
+      "suffix": " °C",
+      "heading": "Water's new boiling point"
+    },
+    {
+      "type": "statement",
+      "narration": "The air also stretches upwards. In weaker gravity, the atmosphere spreads out about twice as high before it thins away. Mountain tops are no longer quite so airless, but there's less air everywhere below.",
+      "heading": "The sky gets taller"
+    },
+    {
+      "type": "statement",
+      "narration": "And then there's the slowest, biggest change of all. It's caused by something you never notice: Earth's spin.",
+      "heading": "The spin takes over"
+    },
+    {
+      "type": "statement",
+      "narration": "Earth spins once a day, and at the equator the ground moves at about sixteen hundred and seventy kilometres an hour. The spin flings the oceans outwards slightly, and gravity holds them in.",
+      "heading": "A tug of war at the equator"
+    },
+    {
+      "type": "statement",
+      "narration": "Halve gravity, and the spin wins more of that tug of war. Water starts flowing away from the poles and piling up around the middle of the planet.",
+      "heading": "The oceans flow to the equator"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S03",
+      "narration": "In a simple model, over the following weeks the sea would rise by kilometres across the tropics, and fall by kilometres near the poles. Cities like Singapore, Lagos and Belém would slowly disappear beneath it."
+    },
+    {
+      "type": "stat",
+      "narration": "In that simple model, the difference in sea height between the equator and the poles grows by about eleven kilometres. Today's map of the world would be unrecognisable.",
+      "value": 11,
+      "suffix": " km",
+      "heading": "Extra bulge of the oceans, equator vs poles"
+    },
+    {
+      "type": "map",
+      "narration": "Around the poles, the opposite happens. The seas drain away, and land that has been underwater for millions of years appears, around Greenland, Siberia and Antarctica.",
+      "places": [
+        {
+          "name": "Greenland",
+          "lat": 72.0,
+          "lon": -40.0
+        },
+        {
+          "name": "Siberia",
+          "lat": 66.0,
+          "lon": 100.0
+        }
+      ],
+      "regions": [
+        "Greenland"
+      ]
+    },
+    {
+      "type": "statement",
+      "narration": "Humanity, which has always crowded towards warm coasts, would have to move towards the poles, where the new land is, and where the sea has gone.",
+      "heading": "Everyone moves towards the poles"
+    },
+    {
+      "type": "statement",
+      "narration": "Our bodies change too. With half the load, bones and muscles slowly weaken, like an astronaut's on a long mission. Hearts have an easier job, and nobody's back hurts quite as much.",
+      "heading": "Our bodies adapt"
+    },
+    {
+      "type": "statement",
+      "narration": "Over many generations, plants could grow taller and thinner, and animals lighter. Life on Earth would slowly reshape itself to fit the new pull.",
+      "heading": "Life reshapes itself"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S05",
+      "narration": "On that first evening, none of this is visible yet. Maya jumps off the sea wall, floats, and lands like it was nothing. Half gravity would give us one perfect day."
+    },
+    {
+      "type": "statement",
+      "narration": "And then it would take away the Moon, the satellites, half of every breath and most of the tropics. So, what's the first thing you'd do with half gravity?",
+      "heading": "One perfect day, then everything changes"
+    }
+  ]
+}
