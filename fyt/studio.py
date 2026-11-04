@@ -76,7 +76,9 @@ def make_next(cfg, topics, fmt: str):
     topics.set(topic_id, "in_progress")
     print(f"studio queue: making {path.name} for the next {fmt} slot")
     try:
-        job = pipeline.make_video(cfg.model_copy(update={"format": fmt}), topic, script=load(path), polish=False)
+        # the Blender clips are the 3D: the runner's own 3D scenes would cost hours and outrun the job's time limit
+        visuals = cfg.visuals.model_copy(update={"plan": False})
+        job = pipeline.make_video(cfg.model_copy(update={"format": fmt, "visuals": visuals}), topic, script=load(path), polish=False)
     except Exception as e:
         topics.set(topic_id, "failed")
         print(f"::warning::studio script {path.name} failed: {e}")
