@@ -280,6 +280,8 @@ class GrowthConfig(BaseModel):
     # Extra videos on topics trending on Wikipedia that fit the niche, on top of the schedule.
     bonus_shorts_per_day: int = 1
     bonus_longs_per_week: int = 1
+    # Finished Blender productions (content/studio/long) go out as extra long videos, this many a week.
+    studio_longs_per_week: int = 0
     bonus_min_fit: int = 7  # 0-10
     # The bonus Short is an extra on top of the schedule: only for a trend this strong (0-10; None for
     # bonus_min_fit, which timely slots use).

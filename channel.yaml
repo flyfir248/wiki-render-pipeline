@@ -146,6 +146,9 @@ growth:
   # Off while the weekly long video gets the run time and the free model tokens: no long video went out
   # after 17 Oct because the Shorts used them first. Bonus and news long videos got 2-16 views each.
   bonus_longs_per_week: 0   # extra long video, only for a very strong trending fit
+  # The Blender What If productions rendered overnight on the studio laptop: two a week, on top of
+  # Saturday's long video, so the queue they render into keeps moving.
+  studio_longs_per_week: 2
   bonus_min_fit: 7
   bonus_long_min_fit: 9
   # A weekly long explainer on a recent news incident (Wikipedia "In the news" and most read, at

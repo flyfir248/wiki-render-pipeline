@@ -421,7 +421,8 @@ def make_timely(cfg: Config, topics: Topics) -> Job | None:
 
 
 BONUS_MIN_FIT = {"short": "bonus_min_fit", "long": "bonus_long_min_fit", "news": "news_min_fit"}
-BONUS_FORMAT = {"short": "short", "long": "long", "news": "long"}  # news explainers are long videos
+# news explainers and finished Blender productions (fyt/studio.py) are long videos
+BONUS_FORMAT = {"short": "short", "studio": "long", "long": "long", "news": "long"}
 
 
 def bonus_due(cfg: Config, fmt: str, now: datetime) -> bool:
@@ -429,6 +430,7 @@ def bonus_due(cfg: Config, fmt: str, now: datetime) -> bool:
     g = cfg.growth
     per_day = {
         "short": g.bonus_shorts_per_day,
+        "studio": g.studio_longs_per_week / 7,
         "long": g.bonus_longs_per_week / 7,
         "news": g.news_longs_per_week / 7,
     }[fmt]
@@ -448,25 +450,24 @@ def bonus(cfg: Config, now: datetime, rng, clock, started: float, budget: int, t
     from fyt import growth, wiki
 
     made = 0
-    for kind in ("short", "long", "news"):
+    for kind in ("short", "studio", "long", "news"):
         fmt = BONUS_FORMAT[kind]
         if budget <= 0 or not bonus_due(cfg, kind, now):
             continue
         if (clock() - started) / 60 + MAKE_MINUTES[fmt] > cfg.schedule.max_run_minutes:
             print(f"not enough time left for a bonus {kind} video")
             continue
-        if kind == "long":
-            # a finished Blender production takes the bonus long video ahead of a trending topic
+        if kind == "studio":
+            # a finished Blender production gets its own slot, off the weekly long slot
             job = studio.make_next(cfg, topics, "long")
-            if job is not None:
-                if job.meta.get("status") == "approved":
-                    result = _upload(cfg, job, Slot(spaced_time(cfg, fmt, rng), fmt), rng, now, kind="bonus-long", exact=True)
-                    if result:
-                        budget -= 1
-                        made += 1
-                    elif result is None:
-                        budget = 0
-                continue
+            if job is not None and job.meta.get("status") == "approved":
+                result = _upload(cfg, job, Slot(spaced_time(cfg, fmt, rng), fmt), rng, now, kind="bonus-studio", exact=True)
+                if result:
+                    budget -= 1
+                    made += 1
+                elif result is None:
+                    budget = 0
+            continue
         min_fit = getattr(cfg.growth, BONUS_MIN_FIT[kind])
         if kind == "short" and cfg.growth.bonus_short_min_fit is not None:
             min_fit = cfg.growth.bonus_short_min_fit
