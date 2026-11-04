@@ -420,6 +420,7 @@ def make_timely(cfg: Config, topics: Topics) -> Job | None:
     return job
 
 
+STUDIO_START_MINUTES = 60
 BONUS_MIN_FIT = {"short": "bonus_min_fit", "long": "bonus_long_min_fit", "news": "news_min_fit"}
 # news explainers and finished Blender productions (fyt/studio.py) are long videos
 BONUS_FORMAT = {"short": "short", "studio": "long", "long": "long", "news": "long"}
@@ -454,7 +455,8 @@ def bonus(cfg: Config, now: datetime, rng, clock, started: float, budget: int, t
         fmt = BONUS_FORMAT[kind]
         if budget <= 0 or not bonus_due(cfg, kind, now):
             continue
-        if (clock() - started) / 60 + MAKE_MINUTES[fmt] > cfg.schedule.max_run_minutes:
+        # a studio video has no 3D planning step and the job's time limit has room for it after the Shorts
+        if (clock() - started) / 60 + (STUDIO_START_MINUTES if kind == "studio" else MAKE_MINUTES[fmt]) > cfg.schedule.max_run_minutes:
             print(f"not enough time left for a bonus {kind} video")
             continue
         if kind == "studio":
