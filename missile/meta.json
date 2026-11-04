@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "missile",
+  "query": "missile",
+  "source": "sketchfab",
+  "uid": "sketchfab:7803ebaeda034fda92c104b794d6bbc3",
+  "title": "Missile model (Murder Drones)",
+  "author": "Kittytuber",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-7803ebaeda034fda92c104b794d6bbc3",
+  "checked": "vision",
+  "triangles": 4224,
+  "bytes": 216400,
+  "size": [
+    2.7673,
+    6.5533,
+    2.7673
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "long slender tube with fins, painted gray",
+  "added": "2026-11-04T16:14:53+00:00"
+}

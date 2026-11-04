@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "sea-mine",
+  "query": "sea mine",
+  "source": "sketchfab",
+  "uid": "sketchfab:d7182920875d48e886a2c3dfc942fe51",
+  "title": "Sea Mine",
+  "author": "Bora \u00d6zakaltun",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-d7182920875d48e886a2c3dfc942fe51",
+  "checked": "vision",
+  "triangles": 5484,
+  "bytes": 277520,
+  "size": [
+    2.4674,
+    2.814,
+    2.5
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "submerged cylindrical device with black casing",
+  "added": "2026-11-04T16:13:07+00:00"
+}
