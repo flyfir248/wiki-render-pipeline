@@ -1,7 +1,16 @@
 {
   "title": "What If Everyone on Earth Vanished Overnight?",
   "description": "What if every person on Earth vanished at once, and the world just carried on without us? Second by second, then year by year: what stops first, what keeps running on its own, and how quickly nature takes a city back.\n\nThe premise is impossible. The timelines draw on real engineering, real abandoned places like Pripyat, and Alan Weisman's book The World Without Us. 3D city scenes made in Blender with CC0 assets by Quaternius and Kenney.",
-  "tags": ["what if", "everyone disappeared", "world without us", "life after people", "abandoned city", "pripyat", "hypothetical", "science"],
+  "tags": [
+    "what if",
+    "everyone disappeared",
+    "world without us",
+    "life after people",
+    "abandoned city",
+    "pripyat",
+    "hypothetical",
+    "science"
+  ],
   "thumbnail_text": "YEAR 20: CITY FOREST",
   "thumbnail_kicker": "What If",
   "thumbnail_query": "abandoned overgrown city",
@@ -20,26 +29,343 @@
   "series": "What If",
   "blender": "everyone-vanished",
   "scenes": [
-    {"type": "broll", "blender_shot": "E01", "narration": "Six fourteen in the evening. Every car on this street is exactly where it was a second ago. Every engine is still running. And there is nobody here.", "clock": "SECOND 0", "level": 0.02},
-    {"type": "statement", "narration": "What if every person on Earth vanished, all at once? Not a war, not a disease. Just gone. Over eight billion of us.", "heading": "8 billion people: gone", "clock": "SECOND 0", "level": 0.04},
-    {"type": "statement", "narration": "The strange thing is how much keeps going. Traffic lights keep changing for nobody. Phones keep ringing in empty rooms.", "heading": "The machines don't know yet", "clock": "MINUTE 1", "level": 0.07},
-    {"type": "statement", "narration": "But almost everything we built needs someone to keep it running. Fuel to be delivered. Faults to be fixed. Switches to be flipped.", "heading": "Everything needs tending", "clock": "HOUR 1", "level": 0.1},
-    {"type": "statement", "narration": "Nuclear reactors are designed for this moment. When something goes wrong, they shut themselves down automatically, dropping control rods into the core.", "heading": "Reactors shut themselves down", "clock": "HOUR 6", "level": 0.14},
-    {"type": "statement", "narration": "Other power stations simply run out of fuel or trip on faults that no one is there to clear. One by one, they drop off the grid.", "heading": "The grid starts to fail", "clock": "HOUR 24", "level": 0.18},
-    {"type": "broll", "blender_shot": "E02", "narration": "Somewhere around the second evening, the lights start going out. Street by street, window by window, the city goes dark.", "clock": "HOUR 30", "level": 0.22},
-    {"type": "statement", "narration": "For the first time in over a century, the night sky over a city is truly black. The Milky Way is back.", "heading": "The stars come back", "clock": "HOUR 30", "level": 0.25},
-    {"type": "statement", "narration": "Below ground, the pumps that keep subway tunnels dry have stopped. In cities like New York, the water starts rising in the tunnels within days.", "heading": "The tunnels flood", "clock": "DAY 3", "level": 0.29},
-    {"type": "statement", "narration": "Pets are on their own. Some find their way outside. Many do not survive. The ones that do learn to hunt, or to follow the animals that can.", "heading": "Pets on their own", "clock": "WEEK 2", "level": 0.33},
-    {"type": "broll", "blender_shot": "E03", "narration": "One month. Grass and weeds are pushing up through every crack in the pavement. Dust settles on the cars. Nobody sweeps it away.", "clock": "MONTH 1", "level": 0.38},
-    {"type": "statement", "narration": "The first winter does the real damage. Water seeps into those cracks, freezes, expands and splits them wider. Every frost makes the next one easier.", "heading": "Ice splits the roads", "clock": "MONTH 4", "level": 0.43},
-    {"type": "statement", "narration": "Roofs start to leak. Once water gets into a house, wood rots and nails rust. Ordinary homes begin their slow collapse from the inside.", "heading": "Roofs leak, homes rot", "clock": "YEAR 1", "level": 0.48},
-    {"type": "broll", "blender_shot": "E04", "narration": "Five years. Saplings are rising straight out of the roads. Bushes have swallowed the cars that never moved again.", "clock": "YEAR 5", "level": 0.54},
-    {"type": "statement", "narration": "We don't have to guess what comes next. We've already seen it happen. In 1986, the city of Pripyat in Ukraine was evacuated after the Chernobyl disaster.", "heading": "We've seen this before", "clock": "YEAR 5", "level": 0.58},
-    {"type": "statement", "narration": "Its streets and squares are now forest. Wolves, boar and deer move through a city built for fifty thousand people.", "heading": "Pripyat: a city become forest", "clock": "YEAR 10", "level": 0.63},
-    {"type": "broll", "blender_shot": "E05", "narration": "Twenty years in, our city looks like that too. From above, it's a forest with towers standing in it.", "clock": "YEAR 20", "level": 0.7},
-    {"type": "statement", "narration": "Steel frames rust where water reaches them. Bridges that were painted every year now have no paint at all. One by one, the weakest structures give way.", "heading": "Rust wins slowly", "clock": "YEAR 50", "level": 0.77},
-    {"type": "statement", "narration": "In his book The World Without Us, Alan Weisman estimates that residential neighbourhoods would become forests within five hundred years.", "heading": "Neighbourhoods into forests", "clock": "YEAR 500", "level": 0.85},
-    {"type": "statement", "narration": "What lasts longest is what we made to last. Bronze statues. Carved stone like Mount Rushmore. And plastic, which nature has barely learned to break down.", "heading": "What outlasts us", "clock": "YEAR 10,000", "level": 0.93},
-    {"type": "statement", "narration": "The city doesn't disappear. It just stops being ours. And somewhere under the trees, a car still sits where its driver left it. So, how long would your town last?", "heading": "A city that isn't ours any more", "clock": "YEAR 10,000", "level": 1.0}
+    {
+      "type": "broll",
+      "blender_shot": "E01",
+      "narration": "Six fourteen in the evening. Every car on this street is exactly where it was a second ago. Every engine is still running. And there is nobody here.",
+      "clock": "SECOND 0",
+      "level": 0.02
+    },
+    {
+      "type": "statement",
+      "narration": "What if every person on Earth vanished, all at once? Not a war, not a disease. Just gone. Over eight billion of us.",
+      "heading": "8 billion people: gone",
+      "clock": "SECOND 0",
+      "level": 0.04
+    },
+    {
+      "type": "statement",
+      "narration": "The strange thing is how much keeps going. Traffic lights keep changing for nobody. Phones keep ringing in empty rooms.",
+      "heading": "The machines don't know yet",
+      "clock": "MINUTE 1",
+      "level": 0.06
+    },
+    {
+      "type": "statement",
+      "narration": "Data centres switch to their backup generators. For a day or two, websites still load and videos still stream, to an audience of nobody. Then the diesel runs out, and the internet falls silent, server by server.",
+      "heading": "The internet keeps talking to itself",
+      "clock": "HOUR 2",
+      "level": 0.08
+    },
+    {
+      "type": "statement",
+      "narration": "But almost everything we built needs someone to keep it running. Fuel to be delivered. Faults to be fixed. Switches to be flipped.",
+      "heading": "Everything needs tending",
+      "clock": "HOUR 1",
+      "level": 0.1
+    },
+    {
+      "type": "statement",
+      "narration": "Nuclear reactors are designed for this moment. When something goes wrong, they shut themselves down automatically, dropping control rods into the core.",
+      "heading": "Reactors shut themselves down",
+      "clock": "HOUR 6",
+      "level": 0.12
+    },
+    {
+      "type": "statement",
+      "narration": "Other power stations simply run out of fuel or trip on faults that no one is there to clear. One by one, they drop off the grid.",
+      "heading": "The grid starts to fail",
+      "clock": "HOUR 24",
+      "level": 0.15
+    },
+    {
+      "type": "statement",
+      "narration": "Not everything fails at once. Solar panels keep producing power every sunny day. Some hydroelectric dams can keep spinning on their own for a while, until debris clogs their intakes. A few lonely lights stay on long after the rest.",
+      "heading": "A few lights stay on",
+      "clock": "DAY 2",
+      "level": 0.17
+    },
+    {
+      "type": "statement",
+      "narration": "Water treatment plants and pumping stations stop with the power. Within days, the pressure in the pipes drops and the taps run dry. The water that fed a city of millions just sits in the reservoirs.",
+      "heading": "The taps run dry",
+      "clock": "DAY 3",
+      "level": 0.19
+    },
+    {
+      "type": "statement",
+      "narration": "Every fridge and freezer on Earth warms up. Supermarkets full of food spoil within weeks. It sounds grim, but it's a feast for insects, birds and rats, and it's the last free meal humanity ever leaves behind.",
+      "heading": "Food rots, then feeds the rest",
+      "clock": "WEEK 1",
+      "level": 0.21
+    },
+    {
+      "type": "statement",
+      "narration": "Reactors may shut down safely, but their used fuel is still hot and sits in cooling pools. With no power to circulate the water, some pools could slowly boil dry over weeks, releasing radiation around those sites.",
+      "heading": "Spent fuel needs cooling",
+      "clock": "WEEK 2",
+      "level": 0.23
+    },
+    {
+      "type": "broll",
+      "blender_shot": "E02",
+      "narration": "Somewhere around the second evening, the lights start going out. Street by street, window by window, the city goes dark.",
+      "clock": "HOUR 30",
+      "level": 0.25
+    },
+    {
+      "type": "statement",
+      "narration": "For the first time in over a century, the night sky over a city is truly black. The Milky Way is back.",
+      "heading": "The stars come back",
+      "clock": "HOUR 30",
+      "level": 0.27
+    },
+    {
+      "type": "statement",
+      "narration": "Below ground, the pumps that keep subway tunnels dry have stopped. In cities like New York, the water starts rising in the tunnels within days.",
+      "heading": "The tunnels flood",
+      "clock": "DAY 3",
+      "level": 0.29
+    },
+    {
+      "type": "statement",
+      "narration": "Without our noise, our cars and our rubbish, the animals notice quickly. City rats lose the food waste they lived on. Foxes, coyotes and deer start wandering into empty parks and streets.",
+      "heading": "The animals notice first",
+      "clock": "WEEK 1",
+      "level": 0.31
+    },
+    {
+      "type": "statement",
+      "narration": "Crops like wheat and corn were bred to need us. Without farmers they can't compete with weeds, and within a few years most fields have turned back into wild grassland and scrub.",
+      "heading": "Fields go wild",
+      "clock": "WEEK 3",
+      "level": 0.33
+    },
+    {
+      "type": "statement",
+      "narration": "The plants we brought from other continents for our gardens don't stay in them. Ivy climbs the walls, bamboo and vines spread across the yards, and fences disappear under green.",
+      "heading": "Garden plants escape",
+      "clock": "MONTH 2",
+      "level": 0.35
+    },
+    {
+      "type": "statement",
+      "narration": "Over many generations, the dogs that survive change. Tiny breeds and dogs that depend on people struggle, while medium sized, tough dogs form packs, and their descendants look more and more alike.",
+      "heading": "Dogs become a different animal",
+      "clock": "YEAR 2",
+      "level": 0.38
+    },
+    {
+      "type": "statement",
+      "narration": "When fences rust and gates fail, some zoo animals and farm animals get out. Horses, goats and cattle that escape into the wild can thrive, the way wild horses already roam large parts of the world.",
+      "heading": "Zoos and farms open up",
+      "clock": "YEAR 3",
+      "level": 0.4
+    },
+    {
+      "type": "statement",
+      "narration": "Pets are on their own. Some find their way outside. Many do not survive. The ones that do learn to hunt, or to follow the animals that can.",
+      "heading": "Pets on their own",
+      "clock": "WEEK 2",
+      "level": 0.42
+    },
+    {
+      "type": "broll",
+      "blender_shot": "E03",
+      "narration": "One month. Grass and weeds are pushing up through every crack in the pavement. Dust settles on the cars. Nobody sweeps it away.",
+      "clock": "MONTH 1",
+      "level": 0.44
+    },
+    {
+      "type": "statement",
+      "narration": "The first winter does the real damage. Water seeps into those cracks, freezes, expands and splits them wider. Every frost makes the next one easier.",
+      "heading": "Ice splits the roads",
+      "clock": "MONTH 4",
+      "level": 0.46
+    },
+    {
+      "type": "statement",
+      "narration": "Lightning still strikes. In a city full of dry wood, paper and fuel, with no fire brigades, a single fire can sweep through whole neighbourhoods. Over the years, fire clears space for new forest.",
+      "heading": "Fires with no one to fight them",
+      "clock": "MONTH 6",
+      "level": 0.48
+    },
+    {
+      "type": "statement",
+      "narration": "In cold climates, cockroaches depend on our heated buildings. The first winters without heating are the end of them there, a rare case of a creature that really does need us.",
+      "heading": "The cold kills the cockroaches",
+      "clock": "YEAR 1",
+      "level": 0.5
+    },
+    {
+      "type": "statement",
+      "narration": "Roofs start to leak. Once water gets into a house, wood rots and nails rust. Ordinary homes begin their slow collapse from the inside.",
+      "heading": "Roofs leak, homes rot",
+      "clock": "YEAR 1",
+      "level": 0.52
+    },
+    {
+      "type": "statement",
+      "narration": "Windows usually survive longer than the walls around them. Paint peels, wood swells and splits, and wooden houses in damp places can fall within a few decades, glass still sitting in the rubble.",
+      "heading": "Glass outlasts the frames",
+      "clock": "YEAR 3",
+      "level": 0.54
+    },
+    {
+      "type": "statement",
+      "narration": "Peregrine falcons already nest on skyscrapers. With no people, birds have the whole skyline: they nest on ledges, in broken windows and on the roofs of empty offices, high above a city turning green.",
+      "heading": "Birds take the towers",
+      "clock": "YEAR 4",
+      "level": 0.56
+    },
+    {
+      "type": "broll",
+      "blender_shot": "E04",
+      "narration": "Five years. Saplings are rising straight out of the roads. Bushes have swallowed the cars that never moved again.",
+      "clock": "YEAR 5",
+      "level": 0.58
+    },
+    {
+      "type": "statement",
+      "narration": "We don't have to guess what comes next. We've already seen it happen. In 1986, the city of Pripyat in Ukraine was evacuated after the Chernobyl disaster.",
+      "heading": "We've seen this before",
+      "clock": "YEAR 5",
+      "level": 0.6
+    },
+    {
+      "type": "stat",
+      "narration": "The Chernobyl Exclusion Zone covers about two thousand six hundred square kilometres. People have mostly stayed out of it for decades, and wildlife has moved back in: wolves, elk, boar, lynx and even bears.",
+      "value": 2600,
+      "suffix": " km²",
+      "heading": "Chernobyl Exclusion Zone",
+      "clock": "YEAR 8",
+      "level": 0.62
+    },
+    {
+      "type": "statement",
+      "narration": "Its streets and squares are now forest. Wolves, boar and deer move through a city built for fifty thousand people.",
+      "heading": "Pripyat: a city become forest",
+      "clock": "YEAR 10",
+      "level": 0.65
+    },
+    {
+      "type": "statement",
+      "narration": "Far above the empty planet, our satellites keep orbiting until their orbits decay. Further out, Voyager one keeps flying away from the Sun, carrying a golden record of human voices that no one on Earth can still hear.",
+      "heading": "Our machines in space keep going",
+      "clock": "YEAR 15",
+      "level": 0.67
+    },
+    {
+      "type": "statement",
+      "narration": "On the Moon there is no wind and no rain. The astronauts' footprints and the landers they left behind could last for millions of years, long after our cities have gone.",
+      "heading": "Footprints on the Moon",
+      "clock": "YEAR 15",
+      "level": 0.69
+    },
+    {
+      "type": "broll",
+      "blender_shot": "E05",
+      "narration": "Twenty years in, our city looks like that too. From above, it's a forest with towers standing in it.",
+      "clock": "YEAR 20",
+      "level": 0.71
+    },
+    {
+      "type": "statement",
+      "narration": "Steel frames rust where water reaches them. Bridges that were painted every year now have no paint at all. One by one, the weakest structures give way.",
+      "heading": "Rust wins slowly",
+      "clock": "YEAR 50",
+      "level": 0.73
+    },
+    {
+      "type": "statement",
+      "narration": "Skyscrapers are tougher. But once their windows break, rain and frost get into the steel frames. Over decades and centuries, the towers lean, crack and finally come down, often taking their neighbours with them.",
+      "heading": "Skyscrapers fall last",
+      "clock": "YEAR 100",
+      "level": 0.75
+    },
+    {
+      "type": "statement",
+      "narration": "Long before the towers fall, the wind and birds plant seeds on their roofs and ledges. Small trees grow from gutters and window boxes, and from a distance the skyline looks like a row of green hilltops.",
+      "heading": "Gardens on the rooftops",
+      "clock": "YEAR 120",
+      "level": 0.77
+    },
+    {
+      "type": "statement",
+      "narration": "Within weeks of us vanishing, smog clears and the air over cities is cleaner than it has been in two hundred years. The carbon dioxide we added takes much longer: centuries to millennia for most of it to be absorbed.",
+      "heading": "The air clears",
+      "clock": "YEAR 200",
+      "level": 0.79
+    },
+    {
+      "type": "statement",
+      "narration": "Big steel bridges were repainted and repaired constantly. Without that care, rust eats into their cables and joints, and many would probably collapse within a few hundred years.",
+      "heading": "Big bridges come down",
+      "clock": "YEAR 300",
+      "level": 0.81
+    },
+    {
+      "type": "statement",
+      "narration": "The dams that hold back rivers need constant care too. Over the centuries some silt up, crack or overflow, and rivers return to the paths they followed before we arrived.",
+      "heading": "Dams give way",
+      "clock": "YEAR 400",
+      "level": 0.83
+    },
+    {
+      "type": "statement",
+      "narration": "Oil tanks, chemical plants and pipelines slowly rust through and leak. It's a mess nature has to absorb, but over time bacteria break much of it down, and plants grow over the stains.",
+      "heading": "Tanks and pipes leak",
+      "clock": "YEAR 400",
+      "level": 0.85
+    },
+    {
+      "type": "statement",
+      "narration": "In his book The World Without Us, Alan Weisman estimates that residential neighbourhoods would become forests within five hundred years.",
+      "heading": "Neighbourhoods into forests",
+      "clock": "YEAR 500",
+      "level": 0.88
+    },
+    {
+      "type": "statement",
+      "narration": "Stone lasts far longer than steel. Ancient monuments like the pyramids and the Great Wall have already lasted thousands of years with people around. Without us, the best built ones could stand for thousands more.",
+      "heading": "Stone remembers us",
+      "clock": "YEAR 1,000",
+      "level": 0.9
+    },
+    {
+      "type": "statement",
+      "narration": "Then there's plastic. Bags, bottles and fibres break into smaller and smaller pieces but barely disappear. Long after the buildings have gone, tiny fragments of our plastic will still be found in the soil and the sea.",
+      "heading": "Plastic lingers",
+      "clock": "YEAR 2,000",
+      "level": 0.92
+    },
+    {
+      "type": "statement",
+      "narration": "And one thing we made is still moving outwards: our radio and TV signals. A bubble of broadcasts about a hundred light years wide keeps spreading through space, long after the last broadcaster is gone.",
+      "heading": "Our voices are still travelling",
+      "clock": "YEAR 5,000",
+      "level": 0.94
+    },
+    {
+      "type": "statement",
+      "narration": "Give it a few million years, and almost every sign of us is buried, eroded or crushed into rock. Future geologists, if there were any, might find only a thin layer of strange materials: concrete, plastic and metal, the fossil of a city.",
+      "heading": "A planet that forgets",
+      "clock": "YEAR 1,000,000",
+      "level": 0.96
+    },
+    {
+      "type": "statement",
+      "narration": "What lasts longest is what we made to last. Bronze statues. Carved stone like Mount Rushmore. And plastic, which nature has barely learned to break down.",
+      "heading": "What outlasts us",
+      "clock": "YEAR 10,000",
+      "level": 0.98
+    },
+    {
+      "type": "statement",
+      "narration": "The city doesn't disappear. It just stops being ours. And somewhere under the trees, a car still sits where its driver left it. So, how long would your town last?",
+      "heading": "A city that isn't ours any more",
+      "clock": "YEAR 10,000",
+      "level": 1.0
+    }
   ]
 }

@@ -1,7 +1,16 @@
 {
   "title": "What If the Sea Rose One Metre Every Day?",
   "description": "What if the sea rose one metre every single day, and never stopped? Day by day, from the first flooded streets to the last dry rock on Earth: which places go first, how far the water climbs, and how much of it it would take.\n\nThe premise is impossible. The heights, populations and volumes are real. 3D city scenes made in Blender with CC0 assets by Quaternius and Kenney. The companion to What If You Grew One Metre Every Day?",
-  "tags": ["what if", "sea level rise", "flood", "hypothetical", "mount everest", "geography", "science", "one metre a day"],
+  "tags": [
+    "what if",
+    "sea level rise",
+    "flood",
+    "hypothetical",
+    "mount everest",
+    "geography",
+    "science",
+    "one metre a day"
+  ],
   "thumbnail_text": "DAY 8,849: NO LAND",
   "thumbnail_kicker": "What If",
   "thumbnail_query": "flooded city aerial",
@@ -27,31 +36,469 @@
   "series": "What If",
   "blender": "sea-rises",
   "scenes": [
-    {"type": "broll", "blender_shot": "S01", "narration": "A seaside city on an ordinary morning. Traffic on the promenade, boats on the water. Now, what if the sea rose one metre, every single day, and never stopped?", "clock": "DAY 0", "clock_note": "+0 m", "level": 0.01},
-    {"type": "statement", "narration": "One metre doesn't sound like much. It's about waist height. But it's one metre more ocean across the whole planet, every day.", "heading": "One metre. Every day.", "clock": "DAY 0", "level": 0.02},
-    {"type": "stat", "narration": "To raise every ocean by one metre takes about three hundred and sixty one thousand cubic kilometres of new water. That's more than four thousand times the water in Lake Geneva, every day.", "value": 361000, "suffix": " km³", "heading": "New water needed, every day", "clock": "DAY 1", "clock_note": "+1 m", "level": 0.03},
-    {"type": "statement", "narration": "Day one. High tides spill over sea walls in cities like Miami, Jakarta and Venice. It looks like a bad storm. Except the water doesn't go back.", "heading": "The water doesn't go back", "clock": "DAY 1", "clock_note": "+1 m", "level": 0.04},
-    {"type": "broll", "blender_shot": "S02", "narration": "Day two. The sea is in the streets now. Cars are drowned to their roofs. People row where they used to drive.", "clock": "DAY 2", "clock_note": "+2 m", "level": 0.05},
-    {"type": "stat", "narration": "By day two, the sea covers land where around two hundred and sixty seven million people live.", "value": 267, "suffix": " million", "heading": "People living less than 2 m above the sea", "clock": "DAY 2", "clock_note": "+2 m", "level": 0.06},
-    {"type": "map", "narration": "Day three. Most of the Maldives, the lowest country on Earth, is under the sea. Its land sits on average about a metre and a half above the water.", "places": [{"name": "Maldives", "lat": 3.2, "lon": 73.2}], "clock": "DAY 3", "clock_note": "+3 m", "level": 0.07},
-    {"type": "map", "narration": "Day five. About a quarter of the Netherlands already lies below sea level, protected by dykes. They were never built for this.", "places": [{"name": "Amsterdam", "lat": 52.37, "lon": 4.9}, {"name": "Rotterdam", "lat": 51.92, "lon": 4.48}], "regions": ["Netherlands"], "clock": "DAY 5", "clock_note": "+5 m", "level": 0.09},
-    {"type": "proportion", "narration": "Day ten. One in every ten people on Earth lives less than ten metres above the sea. Their homes are gone.", "value": 10, "heading": "of people live less than 10 m above the sea", "clock": "DAY 10", "clock_note": "+10 m", "level": 0.11},
-    {"type": "statement", "narration": "This is the biggest migration in history, and it never stops. Every day the coastline moves inland, and everyone has to move with it.", "heading": "Everyone moves uphill", "clock": "DAY 20", "clock_note": "+20 m", "level": 0.14},
-    {"type": "statement", "narration": "Ports, airports and power stations were built by the sea, because that's where ships and cooling water are. Most of them go in the first month.", "heading": "The coast was where we built", "clock": "DAY 30", "clock_note": "+30 m", "level": 0.17},
-    {"type": "broll", "blender_shot": "S03", "narration": "Day seventy. Only the tallest towers still break the surface. The sea is now higher than if every glacier and ice sheet on Earth melted at once.", "clock": "DAY 70", "clock_note": "+70 m", "level": 0.21},
-    {"type": "bars", "narration": "Day ninety three, the water reaches the torch of the Statue of Liberty. Three days later, the top of Big Ben's tower in London.", "data": [{"label": "A house", "value": 8}, {"label": "Statue of Liberty", "value": 93}, {"label": "Big Ben's tower", "value": 96}], "heading": "Height, in metres", "clock": "DAY 96", "clock_note": "+96 m", "level": 0.25},
-    {"type": "stat", "narration": "Day three hundred and thirty. The Eiffel Tower disappears under the sea.", "value": 330, "suffix": " m", "heading": "Eiffel Tower", "clock": "DAY 330", "clock_note": "+330 m", "level": 0.3},
-    {"type": "statement", "narration": "One year in, the sea is three hundred and sixty five metres higher. London, New York, Shanghai and central Tokyo are seabed. Whole countries exist only as islands.", "heading": "Year one: the great cities are seabed", "clock": "DAY 365", "clock_note": "+365 m", "level": 0.35},
-    {"type": "stat", "narration": "Day eight hundred and twenty eight. The world's tallest building, the Burj Khalifa, slips under.", "value": 828, "suffix": " m", "heading": "Burj Khalifa", "clock": "DAY 828", "clock_note": "+828 m", "level": 0.41},
-    {"type": "statement", "narration": "By then, the sea has passed the average height of all the land on Earth, around eight hundred and forty metres.", "heading": "Past the average height of land", "clock": "DAY 840", "clock_note": "+840 m", "level": 0.43},
-    {"type": "map", "narration": "Day sixteen hundred and nine, about four years in. Waves reach Denver, the Mile High City.", "places": [{"name": "Denver", "lat": 39.74, "lon": -104.99}], "clock": "DAY 1,609", "clock_note": "+1,609 m", "level": 0.5},
-    {"type": "statement", "narration": "What's left are mountain ranges, standing out of a world ocean. The Rockies, the Andes, the Alps, the Himalayas become archipelagos.", "heading": "Mountains become islands", "clock": "DAY 2,500", "clock_note": "+2,500 m", "level": 0.58},
-    {"type": "map", "narration": "Day three thousand six hundred and forty, ten years in. The sea reaches La Paz in Bolivia, one of the highest capitals in the world.", "places": [{"name": "La Paz", "lat": -16.5, "lon": -68.15}], "clock": "DAY 3,640", "clock_note": "+3,640 m", "level": 0.66},
-    {"type": "statement", "narration": "Day five thousand one hundred. La Rinconada in Peru, the highest permanent town on Earth, goes under. People have nowhere higher to live.", "heading": "The highest town on Earth", "clock": "DAY 5,100", "clock_note": "+5,100 m", "level": 0.74},
-    {"type": "stat", "narration": "Day five thousand eight hundred and ninety five. Kilimanjaro, Africa's highest mountain, disappears.", "value": 5895, "suffix": " m", "heading": "Kilimanjaro", "clock": "DAY 5,895", "clock_note": "+5,895 m", "level": 0.8},
-    {"type": "statement", "narration": "By now only the highest peaks of the Andes and the Himalayas are left. Bare rock and ice, too high and too cold for anyone to survive for long.", "heading": "Only the highest peaks", "clock": "DAY 7,000", "clock_note": "+7,000 m", "level": 0.88},
-    {"type": "broll", "blender_shot": "S04", "narration": "After twenty four years, the sea closes over the top of Mount Everest. There is no dry land left on Earth. Just water, and whatever floats.", "clock": "DAY 8,849", "clock_note": "+8,849 m", "level": 0.97},
-    {"type": "stat", "narration": "In total, it would take at least three billion cubic kilometres of new water. More than twice all the water in every ocean today.", "value": 3.2, "suffix": " billion km³", "heading": "New water, in total", "clock": "DAY 8,849", "level": 0.99},
-    {"type": "statement", "narration": "It started with a puddle on a promenade. It ended with a planet made of sea. So, which day would your home go under?", "heading": "From a puddle to a planet of sea", "clock": "DAY 8,849", "level": 1.0}
+    {
+      "type": "broll",
+      "blender_shot": "S01",
+      "narration": "A seaside city on an ordinary morning. Traffic on the promenade, boats on the water. Now, what if the sea rose one metre, every single day, and never stopped?",
+      "clock": "DAY 0",
+      "clock_note": "+0 m",
+      "level": 0.01
+    },
+    {
+      "type": "statement",
+      "narration": "One metre doesn't sound like much. It's about waist height. But it's one metre more ocean across the whole planet, every day.",
+      "heading": "One metre. Every day.",
+      "clock": "DAY 0",
+      "level": 0.02
+    },
+    {
+      "type": "stat",
+      "narration": "To raise every ocean by one metre takes about three hundred and sixty one thousand cubic kilometres of new water. That's more than four thousand times the water in Lake Geneva, every day.",
+      "value": 361000,
+      "suffix": " km³",
+      "heading": "New water needed, every day",
+      "clock": "DAY 1",
+      "clock_note": "+1 m",
+      "level": 0.03
+    },
+    {
+      "type": "statement",
+      "narration": "Day one. High tides spill over sea walls in cities like Miami, Jakarta and Venice. It looks like a bad storm. Except the water doesn't go back.",
+      "heading": "The water doesn't go back",
+      "clock": "DAY 1",
+      "clock_note": "+1 m",
+      "level": 0.04
+    },
+    {
+      "type": "statement",
+      "narration": "The first hidden damage is underground. Sea water pushes into rivers, estuaries and the wells that coastal cities drink from. Fresh water turns salty long before the streets go under.",
+      "heading": "Salt in the fresh water",
+      "clock": "DAY 1",
+      "clock_note": "+1 m",
+      "level": 0.045
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S02",
+      "narration": "Day two. The sea is in the streets now. Cars are drowned to their roofs. People row where they used to drive.",
+      "clock": "DAY 2",
+      "clock_note": "+2 m",
+      "level": 0.05
+    },
+    {
+      "type": "stat",
+      "narration": "By day two, the sea covers land where around two hundred and sixty seven million people live.",
+      "value": 267,
+      "suffix": " million",
+      "heading": "People living less than 2 m above the sea",
+      "clock": "DAY 2",
+      "clock_note": "+2 m",
+      "level": 0.06
+    },
+    {
+      "type": "statement",
+      "narration": "Large parts of Bangladesh, home to more than a hundred and seventy million people, sit only a few metres above the sea on the delta of the Ganges. Within days, the delta becomes sea.",
+      "heading": "Bangladesh begins to vanish",
+      "clock": "DAY 3",
+      "clock_note": "+3 m",
+      "level": 0.065
+    },
+    {
+      "type": "map",
+      "narration": "Day three. Most of the Maldives, the lowest country on Earth, is under the sea. Its land sits on average about a metre and a half above the water.",
+      "places": [
+        {
+          "name": "Maldives",
+          "lat": 3.2,
+          "lon": 73.2
+        }
+      ],
+      "clock": "DAY 3",
+      "clock_note": "+3 m",
+      "level": 0.07
+    },
+    {
+      "type": "statement",
+      "narration": "Day four. Large parts of central London lie only a few metres above the Thames. The river bursts its banks and the water spreads through the streets around Westminster, a city that has kept the tide out for centuries.",
+      "heading": "London",
+      "clock": "DAY 4",
+      "clock_note": "+4 m",
+      "level": 0.08
+    },
+    {
+      "type": "map",
+      "narration": "Day five. About a quarter of the Netherlands already lies below sea level, protected by dykes. They were never built for this.",
+      "places": [
+        {
+          "name": "Amsterdam",
+          "lat": 52.37,
+          "lon": 4.9
+        },
+        {
+          "name": "Rotterdam",
+          "lat": 51.92,
+          "lon": 4.48
+        }
+      ],
+      "regions": [
+        "Netherlands"
+      ],
+      "clock": "DAY 5",
+      "clock_note": "+5 m",
+      "level": 0.09
+    },
+    {
+      "type": "statement",
+      "narration": "Day seven. Shanghai, one of the biggest cities on Earth, sits on average only about four metres above the sea. Its streets, metro and the famous Bund waterfront are underwater.",
+      "heading": "Shanghai",
+      "clock": "DAY 7",
+      "clock_note": "+7 m",
+      "level": 0.095
+    },
+    {
+      "type": "statement",
+      "narration": "Day eight. Many of the world's busiest airports were built on flat land right by the sea, some on land reclaimed from it, like Hong Kong's. Their runways are now part of the seabed.",
+      "heading": "Airports on reclaimed land",
+      "clock": "DAY 8",
+      "clock_note": "+8 m",
+      "level": 0.103
+    },
+    {
+      "type": "proportion",
+      "narration": "Day ten. One in every ten people on Earth lives less than ten metres above the sea. Their homes are gone.",
+      "value": 10,
+      "heading": "of people live less than 10 m above the sea",
+      "clock": "DAY 10",
+      "clock_note": "+10 m",
+      "level": 0.11
+    },
+    {
+      "type": "statement",
+      "narration": "Some of the world's best farmland lies on low river plains and deltas: the Nile, the Mekong, the Ganges. As they flood, food production falls at the very moment billions of people are on the move.",
+      "heading": "Farmland goes first",
+      "clock": "DAY 12",
+      "clock_note": "+12 m",
+      "level": 0.12
+    },
+    {
+      "type": "statement",
+      "narration": "The land that goes under becomes a vast new shallow sea. Fish move in over drowned fields and roads, while coral reefs, which grow only a few millimetres a year, are left far too deep to keep up.",
+      "heading": "The seafloor of tomorrow",
+      "clock": "DAY 15",
+      "clock_note": "+15 m",
+      "level": 0.13
+    },
+    {
+      "type": "statement",
+      "narration": "This is the biggest migration in history, and it never stops. Every day the coastline moves inland, and everyone has to move with it.",
+      "heading": "Everyone moves uphill",
+      "clock": "DAY 20",
+      "clock_note": "+20 m",
+      "level": 0.14
+    },
+    {
+      "type": "statement",
+      "narration": "Ports, airports and power stations were built by the sea, because that's where ships and cooling water are. Most of them go in the first month.",
+      "heading": "The coast was where we built",
+      "clock": "DAY 30",
+      "clock_note": "+30 m",
+      "level": 0.17
+    },
+    {
+      "type": "statement",
+      "narration": "By day forty five, coastal cities have become lagoons. Office towers stand in the water like islands, their lower floors flooded and their upper floors packed with people waiting for boats.",
+      "heading": "Islands of skyscrapers",
+      "clock": "DAY 45",
+      "clock_note": "+45 m",
+      "level": 0.18
+    },
+    {
+      "type": "statement",
+      "narration": "Day sixty. Pisa lies only a few metres above sea level, and its leaning tower is about fifty six metres tall. The sea closes over it, still leaning.",
+      "heading": "The Leaning Tower of Pisa",
+      "clock": "DAY 60",
+      "clock_note": "+60 m",
+      "level": 0.19
+    },
+    {
+      "type": "statement",
+      "narration": "Around day sixty eight, the water reaches Rome's Colosseum. The city's centre lies about twenty metres above the sea, and the amphitheatre's outer wall stands nearly fifty metres high. Two thousand years of history, gone in a weekend.",
+      "heading": "The Colosseum",
+      "clock": "DAY 68",
+      "clock_note": "+68 m",
+      "level": 0.2
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S03",
+      "narration": "Day seventy. Only the tallest towers still break the surface. The sea is now higher than if every glacier and ice sheet on Earth melted at once.",
+      "clock": "DAY 70",
+      "clock_note": "+70 m",
+      "level": 0.21
+    },
+    {
+      "type": "bars",
+      "narration": "Day ninety three, the water reaches the torch of the Statue of Liberty. Three days later, the top of Big Ben's tower in London.",
+      "data": [
+        {
+          "label": "A house",
+          "value": 8
+        },
+        {
+          "label": "Statue of Liberty",
+          "value": 93
+        },
+        {
+          "label": "Big Ben's tower",
+          "value": 96
+        }
+      ],
+      "heading": "Height, in metres",
+      "clock": "DAY 96",
+      "clock_note": "+96 m",
+      "level": 0.25
+    },
+    {
+      "type": "statement",
+      "narration": "With the land shrinking every day, more and more people live on the water itself: on ships, rafts and floating platforms lashed together. Cities become fleets.",
+      "heading": "Life on the water",
+      "clock": "DAY 150",
+      "clock_note": "+150 m",
+      "level": 0.267
+    },
+    {
+      "type": "statement",
+      "narration": "Around day two hundred and forty, the sea reaches the top of the Taj Mahal. Agra sits about a hundred and seventy metres above the sea, and the great dome rises another seventy three.",
+      "heading": "The Taj Mahal",
+      "clock": "DAY 240",
+      "clock_note": "+240 m",
+      "level": 0.283
+    },
+    {
+      "type": "stat",
+      "narration": "Day three hundred and thirty. The Eiffel Tower disappears under the sea.",
+      "value": 330,
+      "suffix": " m",
+      "heading": "Eiffel Tower",
+      "clock": "DAY 330",
+      "clock_note": "+330 m",
+      "level": 0.3
+    },
+    {
+      "type": "statement",
+      "narration": "One year in, the sea is three hundred and sixty five metres higher. London, New York, Shanghai and central Tokyo are seabed. Whole countries exist only as islands.",
+      "heading": "Year one: the great cities are seabed",
+      "clock": "DAY 365",
+      "clock_note": "+365 m",
+      "level": 0.35
+    },
+    {
+      "type": "statement",
+      "narration": "Around day four hundred and fifty, even the tip of the Empire State Building's antenna slips under. New York's skyline is now a reef.",
+      "heading": "The Empire State Building",
+      "clock": "DAY 450",
+      "clock_note": "+450 m",
+      "level": 0.365
+    },
+    {
+      "type": "statement",
+      "narration": "Rivers no longer reach the sea, because the sea comes to them. Every day the mouth of each river moves upstream, and valleys fill like bathtubs, one after another.",
+      "heading": "Rivers run backwards",
+      "clock": "DAY 500",
+      "clock_note": "+500 m",
+      "level": 0.38
+    },
+    {
+      "type": "stat",
+      "narration": "Day eight hundred and twenty eight. The world's tallest building, the Burj Khalifa, slips under.",
+      "value": 828,
+      "suffix": " m",
+      "heading": "Burj Khalifa",
+      "clock": "DAY 828",
+      "clock_note": "+828 m",
+      "level": 0.41
+    },
+    {
+      "type": "statement",
+      "narration": "By then, the sea has passed the average height of all the land on Earth, around eight hundred and forty metres.",
+      "heading": "Past the average height of land",
+      "clock": "DAY 840",
+      "clock_note": "+840 m",
+      "level": 0.43
+    },
+    {
+      "type": "statement",
+      "narration": "After about three years, most of humanity is squeezed onto high plateaus and mountain ranges: the Andes, the Ethiopian Highlands, the Tibetan Plateau and the Rockies. These places were never built to feed billions.",
+      "heading": "Where the people are",
+      "clock": "DAY 1,000",
+      "clock_note": "+1,000 m",
+      "level": 0.465
+    },
+    {
+      "type": "map",
+      "narration": "Day sixteen hundred and nine, about four years in. Waves reach Denver, the Mile High City.",
+      "places": [
+        {
+          "name": "Denver",
+          "lat": 39.74,
+          "lon": -104.99
+        }
+      ],
+      "clock": "DAY 1,609",
+      "clock_note": "+1,609 m",
+      "level": 0.5
+    },
+    {
+      "type": "statement",
+      "narration": "Day one thousand seven hundred and fifty. The sea reaches Johannesburg, one of Africa's biggest cities, built on a plateau about seventeen hundred and fifty metres high.",
+      "heading": "Johannesburg",
+      "clock": "DAY 1,750",
+      "clock_note": "+1,750 m",
+      "level": 0.502
+    },
+    {
+      "type": "statement",
+      "narration": "Day two thousand two hundred and forty, about six years in. Mexico City, home to more than twenty million people, sits two thousand two hundred and forty metres up. The sea reaches it anyway.",
+      "heading": "Mexico City",
+      "clock": "DAY 2,240",
+      "clock_note": "+2,240 m",
+      "level": 0.504
+    },
+    {
+      "type": "statement",
+      "narration": "What's left are mountain ranges, standing out of a world ocean. The Rockies, the Andes, the Alps, the Himalayas become archipelagos.",
+      "heading": "Mountains become islands",
+      "clock": "DAY 2,500",
+      "clock_note": "+2,500 m",
+      "level": 0.58
+    },
+    {
+      "type": "statement",
+      "narration": "Day two thousand six hundred and forty. Bogotá, Colombia's capital, is one of the highest big cities on Earth, at about two thousand six hundred metres. Its millions of people have nowhere left to climb but the mountains around it.",
+      "heading": "Bogotá",
+      "clock": "DAY 2,640",
+      "clock_note": "+2,640 m",
+      "level": 0.6
+    },
+    {
+      "type": "statement",
+      "narration": "With so much more ocean and so little land, the weather changes too. More sea surface means more evaporation, more cloud and more rain, falling on a planet that has nowhere left to drain it.",
+      "heading": "Weather on a water world",
+      "clock": "DAY 3,000",
+      "clock_note": "+3,000 m",
+      "level": 0.62
+    },
+    {
+      "type": "map",
+      "narration": "Day three thousand six hundred and forty, ten years in. The sea reaches La Paz in Bolivia, one of the highest capitals in the world.",
+      "places": [
+        {
+          "name": "La Paz",
+          "lat": -16.5,
+          "lon": -68.15
+        }
+      ],
+      "clock": "DAY 3,640",
+      "clock_note": "+3,640 m",
+      "level": 0.66
+    },
+    {
+      "type": "statement",
+      "narration": "Day four thousand five hundred. The sea reaches the Tibetan Plateau, the roof of the world, about four and a half kilometres high on average. For a while it's an island the size of a small continent.",
+      "heading": "The roof of the world",
+      "clock": "DAY 4,500",
+      "clock_note": "+4,500 m",
+      "level": 0.715
+    },
+    {
+      "type": "statement",
+      "narration": "Day four thousand eight hundred and six. Mont Blanc, the highest mountain in the Alps, disappears. In Europe, only the peaks of the Caucasus are left above the water.",
+      "heading": "Mont Blanc",
+      "clock": "DAY 4,806",
+      "clock_note": "+4,806 m",
+      "level": 0.77
+    },
+    {
+      "type": "statement",
+      "narration": "Day five thousand one hundred. La Rinconada in Peru, the highest permanent town on Earth, goes under. People have nowhere higher to live.",
+      "heading": "The highest town on Earth",
+      "clock": "DAY 5,100",
+      "clock_note": "+5,100 m",
+      "level": 0.772
+    },
+    {
+      "type": "stat",
+      "narration": "Day five thousand eight hundred and ninety five. Kilimanjaro, Africa's highest mountain, disappears.",
+      "value": 5895,
+      "suffix": " m",
+      "heading": "Kilimanjaro",
+      "clock": "DAY 5,895",
+      "clock_note": "+5,895 m",
+      "level": 0.8
+    },
+    {
+      "type": "statement",
+      "narration": "Above six kilometres, almost nothing grows. The last refugees live on ice and bare rock, in air with less than half the oxygen at sea level, with the ocean lapping at the snowline.",
+      "heading": "Ice and cloud",
+      "clock": "DAY 6,500",
+      "clock_note": "+6,500 m",
+      "level": 0.82
+    },
+    {
+      "type": "statement",
+      "narration": "Day six thousand nine hundred and sixty one. Aconcagua in Argentina, the highest mountain outside Asia, goes under. The Americas are gone.",
+      "heading": "Aconcagua",
+      "clock": "DAY 6,961",
+      "clock_note": "+6,961 m",
+      "level": 0.84
+    },
+    {
+      "type": "statement",
+      "narration": "By now only the highest peaks of the Andes and the Himalayas are left. Bare rock and ice, too high and too cold for anyone to survive for long.",
+      "heading": "Only the highest peaks",
+      "clock": "DAY 7,000",
+      "clock_note": "+7,000 m",
+      "level": 0.88
+    },
+    {
+      "type": "statement",
+      "narration": "Day eight thousand. Only fourteen mountains on Earth rise above eight thousand metres, all of them in the Himalaya and the Karakoram. They're the last land on the planet.",
+      "heading": "Fourteen peaks",
+      "clock": "DAY 8,000",
+      "clock_note": "+8,000 m",
+      "level": 0.925
+    },
+    {
+      "type": "statement",
+      "narration": "Near the end, the last of humanity lives mostly at sea, on ships moving between the shrinking islands of the Himalaya, fishing in water that covers every city that ever existed.",
+      "heading": "The last ships",
+      "clock": "DAY 8,500",
+      "clock_note": "+8,500 m",
+      "level": 0.948
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S04",
+      "narration": "After twenty four years, the sea closes over the top of Mount Everest. There is no dry land left on Earth. Just water, and whatever floats.",
+      "clock": "DAY 8,849",
+      "clock_note": "+8,849 m",
+      "level": 0.97
+    },
+    {
+      "type": "stat",
+      "narration": "In total, it would take at least three billion cubic kilometres of new water. More than twice all the water in every ocean today.",
+      "value": 3.2,
+      "suffix": " billion km³",
+      "heading": "New water, in total",
+      "clock": "DAY 8,849",
+      "level": 0.99
+    },
+    {
+      "type": "statement",
+      "narration": "It started with a puddle on a promenade. It ended with a planet made of sea. So, which day would your home go under?",
+      "heading": "From a puddle to a planet of sea",
+      "clock": "DAY 8,849",
+      "level": 1.0
+    }
   ]
 }
