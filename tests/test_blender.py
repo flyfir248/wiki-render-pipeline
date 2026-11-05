@@ -94,3 +94,17 @@ def test_journey_props_carry_clips(tmp_path, monkeypatch):
     s = _script()
     props = journey.build(s, [(a, b - 0.3) for a, b in zip(*_spans(len(s.scenes)))])
     assert [c["id"] for c in props["clips"]] == ["G01"]
+
+
+def test_thumbnail_comes_from_the_set(tmp_path):
+    from fyt import blender
+    from fyt.models import Script
+    root, public = tmp_path / "sets", tmp_path / "public"
+    (root / "demo").mkdir(parents=True)
+    (root / "demo" / "manifest.json").write_text('{"fps": 30, "thumbnail": "thumb.jpg", "shots": []}')
+    (root / "demo" / "thumb.jpg").write_bytes(b"jpg")
+    script = Script.model_construct(blender="demo", journey=None)
+    media = blender.thumbnail(script, public, root)
+    assert media.src == "blender/thumb.jpg" and (public / "blender" / "thumb.jpg").exists()
+    (root / "demo" / "manifest.json").write_text('{"fps": 30, "shots": []}')
+    assert blender.thumbnail(script, public, root) is None

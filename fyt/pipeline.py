@@ -370,23 +370,30 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         log(job, f"warning: could not measure the 3D coverage: {str(e)[:160]}")
 
     log(job, "rendering thumbnail")
+    hero = blender.thumbnail(script, job.public)  # a Blender production's own action frame beats any photo
     # The subject's own photo makes a better thumbnail than a stock one.
-    bg = next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)), None)
+    bg = hero or next((m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)), None)
     if bg is None and cfg.stock_footage:
         try:
             bg = media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-bg", used)
         except Exception as e:
             log(job, f"warning: no stock thumbnail background: {e}")
-    try:  # a few takes (cut-out subject, the 3D world's key moment, the photo); the best one is used
-        photos = [m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)][:4]
-        stock = (lambda: media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-stock", used)) if cfg.stock_footage else None
-        thumbs.make(cfg, job.path, job.public, script.thumbnail_text, bg, props, script.core_message or script.title,
-                    log=lambda m: log(job, m), photos=photos, stock=stock)
-    except Exception as e:  # never lose the video over its thumbnail: the plain take
-        log(job, f"warning: thumbnail takes failed ({str(e)[:160]}); using the plain one")
+    def plain_thumbnail():
         thumb = ThumbnailProps(format=cfg.format, title=script.thumbnail_text, theme=cfg.theme.model_dump(), background=bg)
         job.file("thumbnail.json").write_text(thumb.model_dump_json(indent=2))
         render.render(job.file("thumbnail.json"), job.public, job.file("thumbnail.png"), still=True)
+
+    if hero:
+        plain_thumbnail()
+    else:
+        try:  # a few takes (cut-out subject, the 3D world's key moment, the photo); the best one is used
+            photos = [m for i, m in sorted(scene_media.items()) if m.kind == "image" and ("wiki" in m.src or "commons" in m.src)][:4]
+            stock = (lambda: media.fetch_photo(cfg, script.thumbnail_query, job.public, "thumb-stock", used)) if cfg.stock_footage else None
+            thumbs.make(cfg, job.path, job.public, script.thumbnail_text, bg, props, script.core_message or script.title,
+                        log=lambda m: log(job, m), photos=photos, stock=stock)
+        except Exception as e:  # never lose the video over its thumbnail: the plain take
+            log(job, f"warning: thumbnail takes failed ({str(e)[:160]}); using the plain one")
+            plain_thumbnail()
 
     problems = qa.check_render(cfg, props, video, voiced=provider != "silent") + qc["problems"]
     try:  # a held picture loses viewers: say where, so the template or script can be fixed

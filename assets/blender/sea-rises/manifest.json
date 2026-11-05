@@ -1,6 +1,7 @@
 {
   "fps": 30,
   "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\shots.py), Quaternius and Kenney CC0 assets",
+  "thumbnail": "thumb.jpg",
   "shots": [
     {"id": "S01", "file": "S01.mp4", "duration": 6.0, "what": "day 0: sunny seafront orbit"},
     {"id": "S02", "file": "S02.mp4", "duration": 6.0, "what": "day 2: flooded street, rowing boat"},

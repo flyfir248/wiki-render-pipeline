@@ -1,6 +1,7 @@
 {
   "fps": 30,
   "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\halved.py), Quaternius, Kenney and Poly Haven CC0 assets",
+  "thumbnail": "thumb.jpg",
   "shots": [
     {"id": "S01", "file": "S01.mp4", "duration": 6.0, "what": "06:42 bedroom, slow motion: the glass falls slowly, its normal-gravity ghost hits the floor first"},
     {"id": "S02", "file": "S02.mp4", "duration": 6.0, "what": "promenade: springy walkers, a runner bounding a metre high"},

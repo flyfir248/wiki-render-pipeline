@@ -1,6 +1,7 @@
 {
   "fps": 30,
   "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\vanish.py), Quaternius and Kenney CC0 assets",
+  "thumbnail": "thumb.jpg",
   "shots": [
     {"id": "E01", "file": "E01.mp4", "duration": 8.0, "what": "second 0: an evening street, cars where their drivers vanished"},
     {"id": "E02", "file": "E02.mp4", "duration": 8.0, "what": "hour 30: dusk, street lights and windows failing"},

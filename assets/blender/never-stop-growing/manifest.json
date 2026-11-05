@@ -1,6 +1,7 @@
 {
   "fps": 30,
   "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\growing.py), Quaternius and Kenney CC0 assets",
+  "thumbnail": "thumb.jpg",
   "shots": [
     {"id": "G01", "file": "G01.mp4", "duration": 6.0, "from_m": 1.8, "to_m": 8.0, "what": "street: you outgrow the people around you"},
     {"id": "G02", "file": "G02.mp4", "duration": 6.0, "from_m": 9.0, "to_m": 50.0, "what": "houses: taller than every roof, people run"},

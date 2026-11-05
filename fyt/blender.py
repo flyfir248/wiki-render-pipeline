@@ -58,6 +58,18 @@ def stage(script: Script, public: Path, root: Path | None = None) -> list[str]:
     return copied
 
 
+def thumbnail(script: Script, public: Path, root: Path | None = None) -> Media | None:
+    """The set's thumbnail picture (its manifest's optional `thumbnail`), staged in the job's public dir."""
+    m = manifest(script, root)
+    src = (root or ROOT) / m["name"] / m["thumbnail"] if m and m.get("thumbnail") else None
+    if src is None or not src.exists():
+        return None
+    out = public / "blender"
+    out.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, out / src.name)
+    return Media(src=f"blender/{src.name}", kind="image")
+
+
 def scene_media(script: Script, root: Path | None = None) -> dict[int, Media]:
     """The clips of scenes that name a `blender_shot`, by scene index (only shots whose file is there)."""
     m = manifest(script, root)
