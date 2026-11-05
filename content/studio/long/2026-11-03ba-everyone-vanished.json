@@ -52,16 +52,16 @@
     },
     {
       "type": "statement",
-      "narration": "Data centres switch to their backup generators. For a day or two, websites still load and videos still stream, to an audience of nobody. Then the diesel runs out, and the internet falls silent, server by server.",
-      "heading": "The internet keeps talking to itself",
-      "clock": "HOUR 2",
+      "narration": "But almost everything we built needs someone to keep it running. Fuel to be delivered. Faults to be fixed. Switches to be flipped.",
+      "heading": "Everything needs tending",
+      "clock": "HOUR 1",
       "level": 0.08
     },
     {
       "type": "statement",
-      "narration": "But almost everything we built needs someone to keep it running. Fuel to be delivered. Faults to be fixed. Switches to be flipped.",
-      "heading": "Everything needs tending",
-      "clock": "HOUR 1",
+      "narration": "Data centres switch to their backup generators. For a day or two, websites still load and videos still stream, to an audience of nobody. Then the diesel runs out, and the internet falls silent, server by server.",
+      "heading": "The internet keeps talking to itself",
+      "clock": "HOUR 2",
       "level": 0.1
     },
     {
@@ -79,129 +79,129 @@
       "level": 0.15
     },
     {
-      "type": "statement",
-      "narration": "Not everything fails at once. Solar panels keep producing power every sunny day. Some hydroelectric dams can keep spinning on their own for a while, until debris clogs their intakes. A few lonely lights stay on long after the rest.",
-      "heading": "A few lights stay on",
-      "clock": "DAY 2",
-      "level": 0.17
-    },
-    {
-      "type": "statement",
-      "narration": "Water treatment plants and pumping stations stop with the power. Within days, the pressure in the pipes drops and the taps run dry. The water that fed a city of millions just sits in the reservoirs.",
-      "heading": "The taps run dry",
-      "clock": "DAY 3",
-      "level": 0.19
-    },
-    {
-      "type": "statement",
-      "narration": "Every fridge and freezer on Earth warms up. Supermarkets full of food spoil within weeks. It sounds grim, but it's a feast for insects, birds and rats, and it's the last free meal humanity ever leaves behind.",
-      "heading": "Food rots, then feeds the rest",
-      "clock": "WEEK 1",
-      "level": 0.21
-    },
-    {
-      "type": "statement",
-      "narration": "Reactors may shut down safely, but their used fuel is still hot and sits in cooling pools. With no power to circulate the water, some pools could slowly boil dry over weeks, releasing radiation around those sites.",
-      "heading": "Spent fuel needs cooling",
-      "clock": "WEEK 2",
-      "level": 0.23
-    },
-    {
       "type": "broll",
       "blender_shot": "E02",
       "narration": "Somewhere around the second evening, the lights start going out. Street by street, window by window, the city goes dark.",
       "clock": "HOUR 30",
-      "level": 0.25
+      "level": 0.17
     },
     {
       "type": "statement",
       "narration": "For the first time in over a century, the night sky over a city is truly black. The Milky Way is back.",
       "heading": "The stars come back",
       "clock": "HOUR 30",
-      "level": 0.27
+      "level": 0.19
+    },
+    {
+      "type": "statement",
+      "narration": "Not everything fails at once. Solar panels keep producing power every sunny day. Some hydroelectric dams can keep spinning on their own for a while, until debris clogs their intakes. A few lonely lights stay on long after the rest.",
+      "heading": "A few lights stay on",
+      "clock": "DAY 2",
+      "level": 0.21
+    },
+    {
+      "type": "statement",
+      "narration": "Water treatment plants and pumping stations stop with the power. Within days, the pressure in the pipes drops and the taps run dry. The water that fed a city of millions just sits in the reservoirs.",
+      "heading": "The taps run dry",
+      "clock": "DAY 3",
+      "level": 0.23
     },
     {
       "type": "statement",
       "narration": "Below ground, the pumps that keep subway tunnels dry have stopped. In cities like New York, the water starts rising in the tunnels within days.",
       "heading": "The tunnels flood",
       "clock": "DAY 3",
-      "level": 0.29
+      "level": 0.25
+    },
+    {
+      "type": "statement",
+      "narration": "Every fridge and freezer on Earth warms up. Supermarkets full of food spoil within weeks. It sounds grim, but it's a feast for insects, birds and rats, and it's the last free meal humanity ever leaves behind.",
+      "heading": "Food rots, then feeds the rest",
+      "clock": "WEEK 1",
+      "level": 0.27
     },
     {
       "type": "statement",
       "narration": "Without our noise, our cars and our rubbish, the animals notice quickly. City rats lose the food waste they lived on. Foxes, coyotes and deer start wandering into empty parks and streets.",
       "heading": "The animals notice first",
       "clock": "WEEK 1",
+      "level": 0.29
+    },
+    {
+      "type": "statement",
+      "narration": "Reactors may shut down safely, but their used fuel is still hot and sits in cooling pools. With no power to circulate the water, some pools could slowly boil dry over weeks, releasing radiation around those sites.",
+      "heading": "Spent fuel needs cooling",
+      "clock": "WEEK 2",
       "level": 0.31
-    },
-    {
-      "type": "statement",
-      "narration": "Crops like wheat and corn were bred to need us. Without farmers they can't compete with weeds, and within a few years most fields have turned back into wild grassland and scrub.",
-      "heading": "Fields go wild",
-      "clock": "WEEK 3",
-      "level": 0.33
-    },
-    {
-      "type": "statement",
-      "narration": "The plants we brought from other continents for our gardens don't stay in them. Ivy climbs the walls, bamboo and vines spread across the yards, and fences disappear under green.",
-      "heading": "Garden plants escape",
-      "clock": "MONTH 2",
-      "level": 0.35
-    },
-    {
-      "type": "statement",
-      "narration": "Over many generations, the dogs that survive change. Tiny breeds and dogs that depend on people struggle, while medium sized, tough dogs form packs, and their descendants look more and more alike.",
-      "heading": "Dogs become a different animal",
-      "clock": "YEAR 2",
-      "level": 0.38
-    },
-    {
-      "type": "statement",
-      "narration": "When fences rust and gates fail, some zoo animals and farm animals get out. Horses, goats and cattle that escape into the wild can thrive, the way wild horses already roam large parts of the world.",
-      "heading": "Zoos and farms open up",
-      "clock": "YEAR 3",
-      "level": 0.4
     },
     {
       "type": "statement",
       "narration": "Pets are on their own. Some find their way outside. Many do not survive. The ones that do learn to hunt, or to follow the animals that can.",
       "heading": "Pets on their own",
       "clock": "WEEK 2",
-      "level": 0.42
+      "level": 0.33
+    },
+    {
+      "type": "statement",
+      "narration": "Crops like wheat and corn were bred to need us. Without farmers they can't compete with weeds, and within a few years most fields have turned back into wild grassland and scrub.",
+      "heading": "Fields go wild",
+      "clock": "WEEK 3",
+      "level": 0.35
     },
     {
       "type": "broll",
       "blender_shot": "E03",
       "narration": "One month. Grass and weeds are pushing up through every crack in the pavement. Dust settles on the cars. Nobody sweeps it away.",
       "clock": "MONTH 1",
-      "level": 0.44
+      "level": 0.38
+    },
+    {
+      "type": "statement",
+      "narration": "The plants we brought from other continents for our gardens don't stay in them. Ivy climbs the walls, bamboo and vines spread across the yards, and fences disappear under green.",
+      "heading": "Garden plants escape",
+      "clock": "MONTH 2",
+      "level": 0.4
     },
     {
       "type": "statement",
       "narration": "The first winter does the real damage. Water seeps into those cracks, freezes, expands and splits them wider. Every frost makes the next one easier.",
       "heading": "Ice splits the roads",
       "clock": "MONTH 4",
-      "level": 0.46
+      "level": 0.42
     },
     {
       "type": "statement",
       "narration": "Lightning still strikes. In a city full of dry wood, paper and fuel, with no fire brigades, a single fire can sweep through whole neighbourhoods. Over the years, fire clears space for new forest.",
       "heading": "Fires with no one to fight them",
       "clock": "MONTH 6",
-      "level": 0.48
+      "level": 0.44
     },
     {
       "type": "statement",
       "narration": "In cold climates, cockroaches depend on our heated buildings. The first winters without heating are the end of them there, a rare case of a creature that really does need us.",
       "heading": "The cold kills the cockroaches",
       "clock": "YEAR 1",
-      "level": 0.5
+      "level": 0.46
     },
     {
       "type": "statement",
       "narration": "Roofs start to leak. Once water gets into a house, wood rots and nails rust. Ordinary homes begin their slow collapse from the inside.",
       "heading": "Roofs leak, homes rot",
       "clock": "YEAR 1",
+      "level": 0.48
+    },
+    {
+      "type": "statement",
+      "narration": "Over many generations, the dogs that survive change. Tiny breeds and dogs that depend on people struggle, while medium sized, tough dogs form packs, and their descendants look more and more alike.",
+      "heading": "Dogs become a different animal",
+      "clock": "YEAR 2",
+      "level": 0.5
+    },
+    {
+      "type": "statement",
+      "narration": "When fences rust and gates fail, some zoo animals and farm animals get out. Horses, goats and cattle that escape into the wild can thrive, the way wild horses already roam large parts of the world.",
+      "heading": "Zoos and farms open up",
+      "clock": "YEAR 3",
       "level": 0.52
     },
     {
@@ -348,23 +348,23 @@
     },
     {
       "type": "statement",
-      "narration": "Give it a few million years, and almost every sign of us is buried, eroded or crushed into rock. Future geologists, if there were any, might find only a thin layer of strange materials: concrete, plastic and metal, the fossil of a city.",
-      "heading": "A planet that forgets",
-      "clock": "YEAR 1,000,000",
+      "narration": "What lasts longest is what we made to last. Bronze statues. Carved stone like Mount Rushmore. And plastic, which nature has barely learned to break down.",
+      "heading": "What outlasts us",
+      "clock": "YEAR 10,000",
       "level": 0.96
     },
     {
       "type": "statement",
-      "narration": "What lasts longest is what we made to last. Bronze statues. Carved stone like Mount Rushmore. And plastic, which nature has barely learned to break down.",
-      "heading": "What outlasts us",
-      "clock": "YEAR 10,000",
+      "narration": "Give it a few million years, and almost every sign of us is buried, eroded or crushed into rock. Future geologists, if there were any, might find only a thin layer of strange materials: concrete, plastic and metal, the fossil of a city.",
+      "heading": "A planet that forgets",
+      "clock": "YEAR 1,000,000",
       "level": 0.98
     },
     {
       "type": "statement",
       "narration": "The city doesn't disappear. It just stops being ours. And somewhere under the trees, a car still sits where its driver left it. So, how long would your town last?",
       "heading": "A city that isn't ours any more",
-      "clock": "YEAR 10,000",
+      "clock": "YEAR 1,000,000",
       "level": 1.0
     }
   ]

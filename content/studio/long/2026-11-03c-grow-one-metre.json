@@ -39,32 +39,67 @@
   "scenes": [
     {
       "type": "journey",
-      "narration": "Day eight thousand, eight hundred and forty seven. Your head is level with the top of Mount Everest, more than eight and a half kilometres up, in air so thin and cold it would kill an unprotected climber. And it all started with a single metre."
+      "narration": "Day eight thousand, eight hundred and forty seven. Your head is level with the top of Mount Everest, in air that kills."
     },
     {
       "type": "journey",
-      "narration": "What if you grew one metre taller, every single day, and never stopped? No pause, no slowing down. Just one more metre, every morning, for the rest of your life. Here's what it would do to your body, your city and the world around you.",
+      "narration": "What if you grew one metre taller, every single day, and never stopped? No pause, no slowing down.",
       "scale": 1.7,
       "gauge": "0",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day zero. One point seven metres, about the height of an average adult. An ordinary morning, on an ordinary street. You don't know it yet, but this is the last day anything in your house will fit.",
+      "gauge": "0",
+      "gauge_label": "Days of growing",
+      "narration": "Just one more metre, every morning, for the rest of your life.",
+      "scale": 1.72
+    },
+    {
+      "type": "journey",
+      "gauge": "0",
+      "gauge_label": "Days of growing",
+      "narration": "Here's what it would do to your body, your city and the world around you.",
+      "scale": 1.73
+    },
+    {
+      "type": "journey",
+      "narration": "Day zero. One point seven metres, about the height of an average adult. An ordinary morning, on an ordinary street.",
       "scale": 1.75,
       "gauge": "0",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day one. You wake up two point seven metres tall, with your feet hanging off the end of the bed. Your clothes have split at the seams, and you have to duck through every door, because a standard door is only about two metres high.",
+      "gauge": "0",
+      "gauge_label": "Days of growing",
+      "narration": "You don't know it yet, but this is the last day anything in your house will fit.",
+      "scale": 2.17
+    },
+    {
+      "type": "journey",
+      "narration": "Day one. You wake up two point seven metres tall, with your feet hanging off the end of the bed.",
       "scale": 2.7,
       "gauge": "1",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "That's the height of Robert Wadlow, the tallest person ever reliably measured, at two point seven two metres. He needed leg braces to walk and had little feeling in his feet. You've reached his height in a single night.",
+      "gauge": "1",
+      "gauge_label": "Days of growing",
+      "narration": "Your clothes have split at the seams, and you have to duck through every door,",
+      "scale": 2.71
+    },
+    {
+      "type": "journey",
+      "gauge": "1",
+      "gauge_label": "Days of growing",
+      "narration": "because a standard door is only about two metres high.",
+      "scale": 2.71
+    },
+    {
+      "type": "journey",
+      "narration": "That's the height of Robert Wadlow, the tallest person ever reliably measured, at two point seven two metres.",
       "scale": 2.72,
       "landmark": "Robert Wadlow",
       "landmark_note": "2.72 m, tallest person on record",
@@ -73,21 +108,56 @@
     },
     {
       "type": "journey",
-      "narration": "Here's why being big is so hard. Grow twice as tall and you become eight times as heavy, because you grow in all three directions. But the strength of a bone depends on how thick it is, and that only goes up four times.",
+      "gauge": "1",
+      "gauge_label": "Days of growing",
+      "narration": "He needed leg braces to walk and had little feeling in his feet. You've reached his height in a single night.",
+      "scale": 3.17
+    },
+    {
+      "type": "journey",
+      "narration": "Here's why being big is so hard.",
       "scale": 3.7,
       "gauge": "2",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "It's called the square cube law, and it's the reason there are no giants. Every day, each of your bones carries more weight for its thickness than the day before. Engineers face the same problem when they try to scale up bridges.",
+      "gauge": "2",
+      "gauge_label": "Days of growing",
+      "narration": "Grow twice as tall and you become eight times as heavy, because you grow in all three directions.",
+      "scale": 4.01
+    },
+    {
+      "type": "journey",
+      "gauge": "2",
+      "gauge_label": "Days of growing",
+      "narration": "But the strength of a bone depends on how thick it is, and that only goes up four times.",
+      "scale": 4.34
+    },
+    {
+      "type": "journey",
+      "narration": "It's called the square cube law, and it's the reason there are no giants.",
       "scale": 4.7,
       "gauge": "3",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day four. Five point seven metres. You're looking a giraffe in the eye, the tallest animal alive. A giraffe manages that height with a light build, extra thick leg bones and a heart that pumps with enormous force.",
+      "gauge": "3",
+      "gauge_label": "Days of growing",
+      "narration": "Every day, each of your bones carries more weight for its thickness than the day before.",
+      "scale": 5.01
+    },
+    {
+      "type": "journey",
+      "gauge": "3",
+      "gauge_label": "Days of growing",
+      "narration": "Engineers face the same problem when they try to scale up bridges.",
+      "scale": 5.35
+    },
+    {
+      "type": "journey",
+      "narration": "Day four. Five point seven metres. You're looking a giraffe in the eye, the tallest animal alive.",
       "scale": 5.7,
       "landmark": "A giraffe",
       "landmark_note": "up to about 5.8 m",
@@ -96,14 +166,35 @@
     },
     {
       "type": "journey",
-      "narration": "A giraffe needs roughly twice the blood pressure of a human to push blood all the way up its neck to its brain. Your heart was built for one point seven metres. At this height, standing up too fast would make you black out.",
+      "gauge": "4",
+      "gauge_label": "Days of growing",
+      "narration": "A giraffe manages that height with a light build, extra thick leg bones and a heart that pumps with enormous force.",
+      "scale": 6.75
+    },
+    {
+      "type": "journey",
+      "narration": "A giraffe needs roughly twice the blood pressure of a human to push blood all the",
       "scale": 8.0,
       "gauge": "6",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day nine. Ten point seven metres. Taller than a two storey house. You can look into upstairs windows without standing on tiptoe, and people stop in the street to stare. No car, bus or train will ever carry you again.",
+      "gauge": "6",
+      "gauge_label": "Days of growing",
+      "narration": "way up its neck to its brain. Your heart was built for one point seven metres.",
+      "scale": 8.81
+    },
+    {
+      "type": "journey",
+      "gauge": "6",
+      "gauge_label": "Days of growing",
+      "narration": "At this height, standing up too fast would make you black out.",
+      "scale": 9.71
+    },
+    {
+      "type": "journey",
+      "narration": "Day nine. Ten point seven metres. Taller than a two storey house.",
       "scale": 10.7,
       "landmark": "A two-storey house",
       "landmark_note": "about 10 m",
@@ -112,36 +203,92 @@
     },
     {
       "type": "journey",
-      "narration": "Day sixteen. If your body kept the same proportions, you'd weigh around eighty tonnes. That's as much as a dozen elephants. The ground starts to matter: soft grass and garden soil give way under every step.",
+      "gauge": "9",
+      "gauge_label": "Days of growing",
+      "narration": "You can look into upstairs windows without standing on tiptoe, and people stop in the street to stare.",
+      "scale": 12.65
+    },
+    {
+      "type": "journey",
+      "gauge": "9",
+      "gauge_label": "Days of growing",
+      "narration": "No car, bus or train will ever carry you again.",
+      "scale": 14.97
+    },
+    {
+      "type": "journey",
+      "narration": "Day sixteen. If your body kept the same proportions, you'd weigh around eighty tonnes. That's as much as a dozen elephants.",
       "scale": 17.7,
       "gauge": "16",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day twenty three. You're taller than every house on the street. Each footstep thuds through the ground and rattles windows a block away. People run when you turn around, not because you're angry, but because you can't see them any more.",
+      "gauge": "16",
+      "gauge_label": "Days of growing",
+      "narration": "The ground starts to matter: soft grass and garden soil give way under every step.",
+      "scale": 20.91
+    },
+    {
+      "type": "journey",
+      "narration": "Day twenty three. You're taller than every house on the street.",
       "scale": 24.7,
       "gauge": "23",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day twenty eight. Nearly thirty metres. Doctors from around the world have flown in to study you, but no scanner is big enough to fit you inside. Your heartbeat can be heard from across the street, a slow, deep thud every few seconds.",
+      "gauge": "23",
+      "gauge_label": "Days of growing",
+      "narration": "Each footstep thuds through the ground and rattles windows a block away.",
+      "scale": 26.27
+    },
+    {
+      "type": "journey",
+      "gauge": "23",
+      "gauge_label": "Days of growing",
+      "narration": "People run when you turn around, not because you're angry, but because you can't see them any more.",
+      "scale": 27.93
+    },
+    {
+      "type": "journey",
+      "narration": "Day twenty eight. Nearly thirty metres.",
       "scale": 29.7,
       "gauge": "28",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day forty. Forty one point seven metres, and about a thousand tonnes. As much as seven hundred cars. No human skeleton could hold that. In real life, your thigh bones would have given way long ago.",
+      "gauge": "28",
+      "gauge_label": "Days of growing",
+      "narration": "Doctors from around the world have flown in to study you, but no scanner is big enough to fit you inside.",
+      "scale": 33.26
+    },
+    {
+      "type": "journey",
+      "gauge": "28",
+      "gauge_label": "Days of growing",
+      "narration": "Your heartbeat can be heard from across the street, a slow, deep thud every few seconds.",
+      "scale": 37.24
+    },
+    {
+      "type": "journey",
+      "narration": "Day forty. Forty one point seven metres, and about a thousand tonnes. As much as seven hundred cars.",
       "scale": 41.7,
       "gauge": "40",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day ninety one. Ninety three metres. As tall as the Statue of Liberty, pedestal and torch included. The statue is hollow, with a copper skin about as thick as two coins. You are not hollow, and you weigh more than a navy destroyer.",
-      "scale": 93,
+      "gauge": "40",
+      "gauge_label": "Days of growing",
+      "narration": "No human skeleton could hold that. In real life, your thigh bones would have given way long ago.",
+      "scale": 62.27
+    },
+    {
+      "type": "journey",
+      "narration": "Day ninety one. Ninety three metres. As tall as the Statue of Liberty, pedestal and torch included.",
+      "scale": 93.0,
       "landmark": "Statue of Liberty",
       "landmark_note": "93 m with its pedestal",
       "gauge": "91",
@@ -149,29 +296,85 @@
     },
     {
       "type": "journey",
-      "narration": "One step now covers about the length of a city block. Traffic stops wherever you stand, and your shadow puts whole streets into shade. Feeding you every day would take the food of a small town.",
-      "scale": 150,
+      "gauge": "91",
+      "gauge_label": "Days of growing",
+      "narration": "The statue is hollow, with a copper skin about as thick as two coins.",
+      "scale": 109.07
+    },
+    {
+      "type": "journey",
+      "gauge": "91",
+      "gauge_label": "Days of growing",
+      "narration": "You are not hollow, and you weigh more than a navy destroyer.",
+      "scale": 127.91
+    },
+    {
+      "type": "journey",
+      "narration": "One step now covers about the length of a city block.",
+      "scale": 150.0,
       "gauge": "148",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day two hundred. Two hundred and one metres. Every tower in the old town is below your chin. Pigeons land on your shoulders and helicopters keep their distance. Up by your head, the wind blows harder than it ever does at street level.",
+      "gauge": "148",
+      "gauge_label": "Days of growing",
+      "narration": "Traffic stops wherever you stand, and your shadow puts whole streets into shade.",
+      "scale": 165.56
+    },
+    {
+      "type": "journey",
+      "gauge": "148",
+      "gauge_label": "Days of growing",
+      "narration": "Feeding you every day would take the food of a small town.",
+      "scale": 182.74
+    },
+    {
+      "type": "journey",
+      "narration": "Day two hundred. Two hundred and one metres. Every tower in the old town is below your chin.",
       "scale": 201.7,
       "gauge": "200",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day three hundred and sixty five. One year in, and you're three hundred and sixty seven metres tall, taller than the Eiffel Tower. Every step you take is now a construction problem for the city below.",
+      "gauge": "200",
+      "gauge_label": "Days of growing",
+      "narration": "Pigeons land on your shoulders and helicopters keep their distance.",
+      "scale": 246.17
+    },
+    {
+      "type": "journey",
+      "gauge": "200",
+      "gauge_label": "Days of growing",
+      "narration": "Up by your head, the wind blows harder than it ever does at street level.",
+      "scale": 300.45
+    },
+    {
+      "type": "journey",
+      "narration": "Day three hundred and sixty five.",
       "scale": 366.7,
       "gauge": "365",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Taller than the Empire State Building, antenna and all. It took workers about four hundred and ten days to build it. It took you about four hundred and forty days to outgrow it.",
-      "scale": 443,
+      "gauge": "365",
+      "gauge_label": "Days of growing",
+      "narration": "One year in, and you're three hundred and sixty seven metres tall, taller than the Eiffel Tower.",
+      "scale": 390.55
+    },
+    {
+      "type": "journey",
+      "gauge": "365",
+      "gauge_label": "Days of growing",
+      "narration": "Every step you take is now a construction problem for the city below.",
+      "scale": 415.95
+    },
+    {
+      "type": "journey",
+      "narration": "Taller than the Empire State Building, antenna and all. It took workers about four hundred and ten days to build it.",
+      "scale": 443.0,
       "landmark": "Empire State Building",
       "landmark_note": "443 m to the antenna tip",
       "gauge": "441",
@@ -179,15 +382,29 @@
     },
     {
       "type": "journey",
-      "narration": "Day five hundred and ninety eight. Six hundred metres tall. From up here you can watch weather happen: rain showers drifting across the city like grey curtains, and the sun shining on one district while another is soaked.",
-      "scale": 600,
+      "gauge": "441",
+      "gauge_label": "Days of growing",
+      "narration": "It took you about four hundred and forty days to outgrow it.",
+      "scale": 515.56
+    },
+    {
+      "type": "journey",
+      "narration": "Day five hundred and ninety eight. Six hundred metres tall. From up here you can watch weather happen:",
+      "scale": 600.0,
       "gauge": "598",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day eight hundred and twenty six. You look the world's tallest building, the Burj Khalifa, in the eye. Eight hundred and twenty eight metres of steel and glass. It took about six years to build. You grew past it in just over two.",
-      "scale": 828,
+      "gauge": "598",
+      "gauge_label": "Days of growing",
+      "narration": "rain showers drifting across the city like grey curtains, and the sun shining on one district while another is soaked.",
+      "scale": 704.84
+    },
+    {
+      "type": "journey",
+      "narration": "Day eight hundred and twenty six. You look the world's tallest building, the Burj Khalifa, in the eye.",
+      "scale": 828.0,
       "landmark": "Burj Khalifa",
       "landmark_note": "828 m, the tallest building",
       "gauge": "826",
@@ -195,36 +412,106 @@
     },
     {
       "type": "journey",
-      "narration": "Your nerves carry signals at roughly a hundred metres a second at best. That felt instant when you were one point seven metres tall. Now, at a kilometre, a message from your toes takes about ten seconds to reach your brain.",
-      "scale": 1000,
+      "gauge": "826",
+      "gauge_label": "Days of growing",
+      "narration": "Eight hundred and twenty eight metres of steel and glass. It took about six years to build.",
+      "scale": 881.77
+    },
+    {
+      "type": "journey",
+      "gauge": "826",
+      "gauge_label": "Days of growing",
+      "narration": "You grew past it in just over two.",
+      "scale": 939.02
+    },
+    {
+      "type": "journey",
+      "narration": "Your nerves carry signals at roughly a hundred metres a second at best.",
+      "scale": 1000.0,
       "gauge": "998",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Stub your toe, and you'll feel it fifteen seconds later. Decide to take a step, and the order takes another fifteen seconds to reach your leg. Catching yourself when you trip is impossible.",
-      "scale": 1500,
+      "gauge": "998",
+      "gauge_label": "Days of growing",
+      "narration": "That felt instant when you were one point seven metres tall.",
+      "scale": 1144.71
+    },
+    {
+      "type": "journey",
+      "gauge": "998",
+      "gauge_label": "Days of growing",
+      "narration": "Now, at a kilometre, a message from your toes takes about ten seconds to reach your brain.",
+      "scale": 1310.37
+    },
+    {
+      "type": "journey",
+      "narration": "Stub your toe, and you'll feel it fifteen seconds later.",
+      "scale": 1500.0,
       "gauge": "1,498",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day two thousand. Over two kilometres. Your body is now taller than the tallest building on Earth more than twice over. If you lay down, you would stretch across an entire town, and it would take the fastest runner several minutes to run from your head to your feet.",
-      "scale": 2002,
+      "gauge": "1,498",
+      "gauge_label": "Days of growing",
+      "narration": "Decide to take a step, and the order takes another fifteen seconds to reach your leg.",
+      "scale": 1651.51
+    },
+    {
+      "type": "journey",
+      "gauge": "1,498",
+      "gauge_label": "Days of growing",
+      "narration": "Catching yourself when you trip is impossible.",
+      "scale": 1818.33
+    },
+    {
+      "type": "journey",
+      "narration": "Day two thousand. Over two kilometres. Your body is now taller than the tallest building on Earth more than twice over.",
+      "scale": 2002.0,
       "gauge": "2,000",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day two thousand five hundred. Almost seven years. Low clouds start drifting around your knees, and on foggy days you can't see your own feet. Planes have been flying around you for years.",
-      "scale": 2500,
+      "gauge": "2,000",
+      "gauge_label": "Days of growing",
+      "narration": "If you lay down, you would stretch across an entire town,",
+      "scale": 2155.87
+    },
+    {
+      "type": "journey",
+      "gauge": "2,000",
+      "gauge_label": "Days of growing",
+      "narration": "and it would take the fastest runner several minutes to run from your head to your feet.",
+      "scale": 2321.57
+    },
+    {
+      "type": "journey",
+      "narration": "Day two thousand five hundred. Almost seven years.",
+      "scale": 2500.0,
       "gauge": "2,498",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day three thousand, seven hundred and seventy four. You're as tall as Mount Fuji, Japan's highest mountain, at three thousand seven hundred and seventy six metres. Climbers take a day or two to reach its summit. You'd reach it by standing up.",
-      "scale": 3776,
+      "gauge": "2,498",
+      "gauge_label": "Days of growing",
+      "narration": "Low clouds start drifting around your knees, and on foggy days you can't see your own feet.",
+      "scale": 2868.38
+    },
+    {
+      "type": "journey",
+      "gauge": "2,498",
+      "gauge_label": "Days of growing",
+      "narration": "Planes have been flying around you for years.",
+      "scale": 3291.05
+    },
+    {
+      "type": "journey",
+      "narration": "Day three thousand, seven hundred and seventy four.",
+      "scale": 3776.0,
       "landmark": "Mount Fuji",
       "landmark_note": "3,776 m",
       "gauge": "3,774",
@@ -232,43 +519,92 @@
     },
     {
       "type": "journey",
-      "narration": "The air around your head gets colder as you rise, about six and a half degrees for every kilometre on average. That's why mountain tops stay snowy in summer. Your head now lives in a different climate from your feet.",
-      "scale": 4800,
+      "gauge": "3,774",
+      "gauge_label": "Days of growing",
+      "narration": "You're as tall as Mount Fuji, Japan's highest mountain, at three thousand seven hundred and seventy six metres.",
+      "scale": 4090.42
+    },
+    {
+      "type": "journey",
+      "gauge": "3,774",
+      "gauge_label": "Days of growing",
+      "narration": "Climbers take a day or two to reach its summit. You'd reach it by standing up.",
+      "scale": 4431.03
+    },
+    {
+      "type": "journey",
+      "narration": "The air around your head gets colder as you rise, about six and a half degrees for every kilometre on average.",
+      "scale": 4800.0,
       "gauge": "4,798",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day five thousand. Five kilometres, higher than any town in Europe. Snow has settled on your shoulders and never melts. Birds that cross the mountains on migration, like bar headed geese, fly past at the height of your chest.",
-      "scale": 5002,
+      "gauge": "4,798",
+      "gauge_label": "Days of growing",
+      "narration": "That's why mountain tops stay snowy in summer. Your head now lives in a different climate from your feet.",
+      "scale": 4899.96
+    },
+    {
+      "type": "journey",
+      "narration": "Day five thousand. Five kilometres, higher than any town in Europe. Snow has settled on your shoulders and never melts.",
+      "scale": 5002.0,
       "gauge": "5,000",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Your face is now in air almost forty degrees colder than the street under your feet. On a warm summer's day at the bottom, your eyebrows are frosted with ice at the top.",
-      "scale": 6000,
+      "gauge": "5,000",
+      "gauge_label": "Days of growing",
+      "narration": "Birds that cross the mountains on migration, like bar headed geese, fly past at the height of your chest.",
+      "scale": 5478.32
+    },
+    {
+      "type": "journey",
+      "narration": "Your face is now in air almost forty degrees colder than the street under your feet.",
+      "scale": 6000.0,
       "gauge": "5,998",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "And thinner. Up here, every breath holds less than half the air it did on the street. Climbers at this height carry bottled oxygen. Your lungs are the size of a building, and they're filling with thin, freezing air.",
-      "scale": 7000,
+      "gauge": "5,998",
+      "gauge_label": "Days of growing",
+      "narration": "On a warm summer's day at the bottom, your eyebrows are frosted with ice at the top.",
+      "scale": 6480.74
+    },
+    {
+      "type": "journey",
+      "narration": "And thinner. Up here, every breath holds less than half the air it did on the street.",
+      "scale": 7000.0,
       "gauge": "6,998",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Below you, the city you grew up in would fit in the palm of your hand. From this height you can see the curve of the horizon, more than three hundred kilometres away in every direction.",
-      "scale": 8000,
+      "gauge": "6,998",
+      "gauge_label": "Days of growing",
+      "narration": "Climbers at this height carry bottled oxygen. Your lungs are the size of a building, and they're filling with thin, freezing air.",
+      "scale": 7483.31
+    },
+    {
+      "type": "journey",
+      "narration": "Below you, the city you grew up in would fit in the palm of your hand.",
+      "scale": 8000.0,
       "gauge": "7,998",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Day eight thousand, eight hundred and forty seven. Twenty four years. You're as tall as Mount Everest, the highest point on Earth, at eight thousand eight hundred and forty nine metres. You've outgrown the planet without climbing a single step.",
-      "scale": 8849,
+      "gauge": "7,998",
+      "gauge_label": "Days of growing",
+      "narration": "From this height you can see the curve of the horizon, more than three hundred kilometres away in every direction.",
+      "scale": 8413.8
+    },
+    {
+      "type": "journey",
+      "narration": "Day eight thousand, eight hundred and forty seven. Twenty four years.",
+      "scale": 8849.0,
       "landmark": "Mount Everest",
       "landmark_note": "8,849 m",
       "gauge": "8,847",
@@ -276,31 +612,73 @@
     },
     {
       "type": "journey",
-      "narration": "At the summit, the air is about a third as thick as on your street, and more than fifty degrees colder. Even the strongest climbers can only stay up here for a short time. Your head will stay here forever.",
-      "scale": 8851,
+      "gauge": "8,847",
+      "gauge_label": "Days of growing",
+      "narration": "You're as tall as Mount Everest, the highest point on Earth, at eight thousand eight hundred and forty nine metres.",
+      "scale": 8849.67
+    },
+    {
+      "type": "journey",
+      "gauge": "8,847",
+      "gauge_label": "Days of growing",
+      "narration": "You've outgrown the planet without climbing a single step.",
+      "scale": 8850.33
+    },
+    {
+      "type": "journey",
+      "narration": "At the summit, the air is about a third as thick as on your street, and more than fifty degrees colder.",
+      "scale": 8851.0,
       "gauge": "8,849",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "A message from your toes takes a minute and a half to arrive. If you started to fall, you wouldn't even know it for more than a minute.",
-      "scale": 8853,
+      "gauge": "8,849",
+      "gauge_label": "Days of growing",
+      "narration": "Even the strongest climbers can only stay up here for a short time. Your head will stay here forever.",
+      "scale": 8852.0
+    },
+    {
+      "type": "journey",
+      "narration": "A message from your toes takes a minute and a half to arrive.",
+      "scale": 8853.0,
       "gauge": "8,851",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "And tomorrow, you'll be one metre taller still. And the day after that. In another twenty four years, your head would be higher than most passenger planes ever fly.",
-      "scale": 8855,
+      "gauge": "8,851",
+      "gauge_label": "Days of growing",
+      "narration": "If you started to fall, you wouldn't even know it for more than a minute.",
+      "scale": 8854.0
+    },
+    {
+      "type": "journey",
+      "narration": "And tomorrow, you'll be one metre taller still. And the day after that.",
+      "scale": 8855.0,
       "gauge": "8,853",
       "gauge_label": "Days of growing"
     },
     {
       "type": "journey",
-      "narration": "Somewhere far below, the street where it started is still there, with the same front door you squeezed through on day one. You just can't see it any more. So, which day would you have wanted it to stop?",
-      "scale": 8857,
+      "gauge": "8,853",
+      "gauge_label": "Days of growing",
+      "narration": "In another twenty four years, your head would be higher than most passenger planes ever fly.",
+      "scale": 8856.0
+    },
+    {
+      "type": "journey",
+      "narration": "Somewhere far below, the street where it started is still there, with the same front door you squeezed through on day one.",
+      "scale": 8857.0,
       "gauge": "8,855",
       "gauge_label": "Days of growing"
+    },
+    {
+      "type": "journey",
+      "gauge": "8,855",
+      "gauge_label": "Days of growing",
+      "narration": "You just can't see it any more. So, which day would you have wanted it to stop?",
+      "scale": 8857.0
     }
   ]
 }
