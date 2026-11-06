@@ -76,6 +76,12 @@ def _layers(scene, render) -> dict:
             "asset": (scene.model or {}).get("level", "procedural"), "matched": bool(scene.subject_name)}
 
 
+def _prerendered(scene, render) -> bool:
+    """A scene that plays one of the production's prerendered Blender clips (fyt/blender.py)."""
+    m = getattr(render, "media", None)
+    return bool(getattr(scene, "blender_shot", None)) and m is not None and m.kind == "video" and m.src.startswith("blender/")
+
+
 def build(cfg, script: Script, props: RenderProps, video: Path | None = None, relevance: dict | None = None) -> dict:
     """The coverage of one rendered video."""
     rows, seen = [], []
@@ -84,7 +90,15 @@ def build(cfg, script: Script, props: RenderProps, video: Path | None = None, re
         row = {"scene": i, "start": round(r.start, 2), "seconds": round(length, 2), "template": scene.type, "kind": visualplan.kind(scene)}
         if scene.overlay:
             row["overlay"] = scene.overlay
-        if row["kind"] == "3D":
+        if _prerendered(scene, r):
+            # a Blender clip rendered in the local studio: full-frame 3D with its own animation and camera move
+            row["kind"] = "3D"
+            lay = {"subject": "prerendered", "secondary": [], "environment": ["prerendered"], "camera": "prerendered",
+                   "lead": scene.blender_shot, "place": scene.blender_shot, "set": "blender", "asset": "blender",
+                   "matched": True}
+            row |= lay | {"animated": True, "static": False, "repeat": False}
+            seen.append((scene.blender_shot,))
+        elif row["kind"] == "3D":
             lay = _layers(scene, r)
             # birds far off are life in the place, not action: the subject or the place itself must move
             animated = bool(lay["subject"] or set(lay["environment"]) - {"birds overhead"})

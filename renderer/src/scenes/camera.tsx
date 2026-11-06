@@ -14,9 +14,14 @@ export const transitionOf = (scene: Scene): Transition =>
 
 const fill = { width: "100%", height: "100%", objectFit: "cover" as const };
 
+// A clip shorter than its scene plays slower (fyt/timeline.py sets the rate) so it doesn't freeze.
+const ClipEl: React.FC<{ media: Media; style: React.CSSProperties }> = ({ media, style }) => (
+  <OffthreadVideo src={staticFile(media.src)} muted playbackRate={media.rate ?? 1} style={style} />
+);
+
 const MediaEl: React.FC<{ media: Media; style: React.CSSProperties }> = ({ media, style }) =>
   media.kind === "video" ? (
-    <OffthreadVideo src={staticFile(media.src)} muted style={style} />
+    <ClipEl media={media} style={style} />
   ) : media.styled ? (
     <Collage media={media} style={style} />
   ) : (

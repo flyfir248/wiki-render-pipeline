@@ -128,7 +128,7 @@ def test_long_video_stock_goes_in_only_when_a_checker_saw_it(monkeypatch, tmp_pa
     assert not pipeline._photo_fits(Config(format="long"), job, clip, s, "MOAB", stock=True)
 
 
-def test_long_video_scenes_reuse_photos_instead_of_empty_cards(tmp_path):
+def test_long_video_scenes_reuse_only_matching_photos(tmp_path):
     from fyt.models import Media, Script
 
     images = [wiki.WikiImage("File:A.jpg", "u", "p", "MOAB on its trailer", "", "PD"),
@@ -140,8 +140,31 @@ def test_long_video_scenes_reuse_photos_instead_of_empty_cards(tmp_path):
     job.public.mkdir(parents=True)
     pipeline.refill(job, s, images, media)
     assert media[2].src == "media/wiki2.jpg"  # the photo the scene names
-    assert media[3].src == "media/wiki1.jpg"  # not the photo of the scenes either side
+    assert 3 not in media  # no photo matches "y": a plain card beats an unrelated photo
     assert 1 not in media  # its neighbours show the only two photos: better a card than the same photo twice
+
+
+def test_a_photo_is_reused_at_most_twice(tmp_path):
+    from fyt.models import Media, Script
+
+    images = [wiki.WikiImage("File:A.jpg", "u", "p", "Hercules cargo plane", "", "PD")]
+    line = "The Hercules cargo plane flew on."
+    s = Script(title="t", description="d", tags=[], thumbnail_text="x", thumbnail_kicker="y", thumbnail_query="z", sources=[],
+               scenes=[scene(line), scene("a"), scene(line), scene("b"), scene(line), scene("c"), scene(line)])
+    media = {0: Media(src="media/wiki1.jpg", kind="image")}
+    job = Job(tmp_path / "job")
+    job.public.mkdir(parents=True)
+    pipeline.refill(job, s, images, media)
+    assert sum(m.src == "media/wiki1.jpg" for m in media.values()) == pipeline.MAX_REUSE
+
+
+def test_a_series_label_is_never_the_image_subject():
+    from fyt.models import Script
+
+    s = Script(title="What If Everyone Vanished?", description="d", tags=[], thumbnail_text="x", thumbnail_kicker="What If",
+               thumbnail_query="z", sources=[], scenes=[scene("a")], series="What If")
+    assert pipeline.image_subject(s) == ""
+    assert pipeline.image_subject(s.model_copy(update={"thumbnail_kicker": "Titanic"})) == "Titanic"
 
 
 def test_photos_of_what_the_story_links_to(monkeypatch):
@@ -226,3 +249,40 @@ def test_gemini_gets_room_to_think_and_a_cut_off_reply_gets_more(monkeypatch):
     got = llm._openai_structured_once(cfg, "gemini-3-flash", "s", "u", llm.ChapterScenes, 3000)
     assert got.scenes[0].narration == "Done."
     assert [b["max_tokens"] for b in sent] == [16000, 32000] and sent[0]["reasoning_effort"] == "low"
+
+
+def test_srt_keeps_a_sentence_end_with_its_line():
+    from fyt.models import Word
+    from fyt.timeline import to_srt
+
+    words = [Word(word=w, start=i * 0.3, end=i * 0.3 + 0.25) for i, w in enumerate("The strange thing is how much keeps going.".split())]
+    srt = to_srt(words)
+    assert srt.count("-->") == 1 and "keeps going." in srt
+
+
+def test_clock_must_match_the_narration():
+    from fyt import whatif
+    from fyt.models import Script
+
+    def sc(clock, line):
+        return scene(line).model_copy(update={"clock": clock})
+
+    s = Script(title="What If X?", description="d", tags=[], thumbnail_text="x", thumbnail_kicker="y", thumbnail_query="z", sources=[],
+               scenes=[sc("YEAR 200", "Within weeks, the smog clears."), sc("YEAR 300", "Most collapse within a few hundred years."),
+                       sc("YEAR 2", "Over many generations, dogs change.")])
+    found = whatif.clock_mismatches(s)
+    assert any("scene 1" in f for f in found) and any("scene 3" in f for f in found)
+    assert not any("scene 2" in f for f in found)
+
+
+def test_clock_chapters():
+    from fyt.models import Script
+
+    def sc(clock):
+        return scene("x").model_copy(update={"clock": clock})
+
+    s = Script(title="What If X?", description="d", tags=[], thumbnail_text="x", thumbnail_kicker="y", thumbnail_query="z", sources=[],
+               scenes=[sc("SECOND 0"), sc("HOUR 2"), sc("DAY 3"), sc("MONTH 2"), sc("YEAR 5"), sc("YEAR 500")])
+    spans = [(i * 20.0, i * 20.0 + 18) for i in range(6)]
+    text = pipeline.chapter_list(s, spans)
+    assert text.startswith("Chapters:\n0:00 The first hours") and "Centuries" in text

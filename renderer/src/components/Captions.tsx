@@ -5,20 +5,33 @@ import type { Format, Theme, Word } from "../types";
 // How much the spoken word grows while it is said.
 const GROW = 0.08;
 
-// Group words into short phrases so only a few are on screen at once.
-const chunk = (words: Word[], maxWords: number, maxGap = 0.6): Word[][] => {
+// Words from index k to the end of its sentence (or the next pause), counting k itself.
+const leftInSentence = (words: Word[], k: number, maxGap: number): number => {
+  let n = 0;
+  for (let j = k; j < words.length; j++) {
+    if (j > k && words[j].start - words[j - 1].end > maxGap) break;
+    n++;
+    if (/[.!?]$/.test(words[j].word)) break;
+  }
+  return n;
+};
+
+// Group words into short phrases so only a few are on screen at once. A sentence's last word or two
+// ride with the phrase before them instead of flashing up alone ("going." for a third of a second).
+const chunk = (words: Word[], maxWords: number, maxGap = 0.6, orphan = 2): Word[][] => {
   const out: Word[][] = [];
   let cur: Word[] = [];
-  for (const w of words) {
+  words.forEach((w, k) => {
     const prev = cur[cur.length - 1];
+    const full = cur.length >= maxWords && leftInSentence(words, k, maxGap) > orphan;
     const breakHere =
-      cur.length >= maxWords || (prev && w.start - prev.end > maxGap) || (prev && /[.!?]$/.test(prev.word));
+      cur.length >= maxWords + orphan || full || (prev && w.start - prev.end > maxGap) || (prev && /[.!?]$/.test(prev.word));
     if (breakHere && cur.length) {
       out.push(cur);
       cur = [];
     }
     cur.push(w);
-  }
+  });
   if (cur.length) out.push(cur);
   return out;
 };
@@ -27,7 +40,7 @@ export const Captions: React.FC<{ words: Word[]; theme: Theme; format: Format }>
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
   const t = frame / fps;
-  const groups = React.useMemo(() => chunk(words, format === "short" ? 3 : 6), [words, format]);
+  const groups = React.useMemo(() => chunk(words, format === "short" ? 3 : 6, 0.6, format === "short" ? 1 : 2), [words, format]);
   const group = groups.find((g) => t >= g[0].start - 0.05 && t <= g[g.length - 1].end + 0.25);
   if (!group) return null;
 

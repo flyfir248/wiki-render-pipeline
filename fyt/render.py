@@ -64,6 +64,12 @@ def loudnorm_stats(stderr: str) -> dict | None:
     return stats if "input_i" in stats else None
 
 
+def _limiter(peak: float) -> str:
+    """A brick-wall limiter a dB under the true-peak ceiling: loudnorm alone, plus the AAC encode after it,
+    let peaks through to +1.1 dBTP on a long video, which clips on playback."""
+    return f"alimiter=limit={10 ** ((peak - 1.0) / 20):.4f}:attack=1:release=50:level=false"
+
+
 def master(video: Path, lufs: float = -14.0, peak: float = -1.0) -> bool:
     """Bring the video's sound to `lufs` integrated loudness with a true-peak ceiling of `peak` dBTP, in two
     passes (measure, then correct linearly where it can), keeping the picture as it is. The voice, music
@@ -79,7 +85,7 @@ def master(video: Path, lufs: float = -14.0, peak: float = -1.0) -> bool:
     tmp = video.with_name(video.stem + ".master" + video.suffix)
     measured = (f"{target}:measured_I={stats['input_i']}:measured_TP={stats['input_tp']}:measured_LRA={stats['input_lra']}"
                 f":measured_thresh={stats['input_thresh']}:offset={stats['target_offset']}:linear=true")
-    done = subprocess.run([ff, "-hide_banner", "-loglevel", "error", "-y", "-i", str(video), "-af", f"loudnorm={measured},aresample=48000",
+    done = subprocess.run([ff, "-hide_banner", "-loglevel", "error", "-y", "-i", str(video), "-af", f"loudnorm={measured},aresample=48000,{_limiter(peak)}",
                            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(tmp)], capture_output=True, text=True)
     if done.returncode != 0 or not tmp.exists():
         tmp.unlink(missing_ok=True)
