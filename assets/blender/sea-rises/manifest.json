@@ -1,11 +1,26 @@
 {
   "fps": 30,
-  "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\shots.py), Quaternius and Kenney CC0 assets",
+  "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\shots.py and sea2.py), Quaternius and Kenney CC0 assets",
   "thumbnail": "thumb.jpg",
   "shots": [
     {"id": "S01", "file": "S01.mp4", "duration": 6.0, "what": "day 0: sunny seafront orbit"},
     {"id": "S02", "file": "S02.mp4", "duration": 6.0, "what": "day 2: flooded street, rowing boat"},
     {"id": "S03", "file": "S03.mp4", "duration": 6.0, "what": "day 70: towers in a grey sea"},
-    {"id": "S04", "file": "S04.mp4", "duration": 6.0, "what": "day 8,849: lifeboat on open ocean at dusk"}
+    {"id": "S04", "file": "S04.mp4", "duration": 6.0, "what": "day 8,849: lifeboat on open ocean at dusk"},
+    {"id": "R01", "file": "R01.mp4", "duration": 6.0, "what": "day 1: waves spill over the sea wall onto the promenade"},
+    {"id": "R02", "file": "R02.mp4", "duration": 6.0, "what": "day 7: downtown flooded to the first floors, boats between towers"},
+    {"id": "R03", "file": "R03.mp4", "duration": 6.0, "what": "day 10: the suburbs from the air, only roof ridges above water"},
+    {"id": "R04", "file": "R04.mp4", "duration": 6.0, "what": "day 30: storm, a cargo ship and containers drifting through the city"},
+    {"id": "R05", "file": "R05.mp4", "duration": 6.0, "what": "day 45: a calm lagoon, towers as islands"},
+    {"id": "R06", "file": "R06.mp4", "duration": 6.0, "what": "day 60: a 56 m leaning tower, the sea climbing it"},
+    {"id": "R07", "file": "R07.mp4", "duration": 6.0, "what": "day 96: a 96 m clock tower, water at the clock faces"},
+    {"id": "R08", "file": "R08.mp4", "duration": 6.0, "what": "day 150: people living on lashed-together boats and rafts"},
+    {"id": "R09", "file": "R09.mp4", "duration": 6.0, "what": "day 330: a 330 m iron lattice tower going under"},
+    {"id": "R10", "file": "R10.mp4", "duration": 6.0, "what": "day 450: the last of a 443 m tower mast above the waves"},
+    {"id": "R11", "file": "R11.mp4", "duration": 6.0, "what": "day 828: an 828 m spire slipping under"},
+    {"id": "R12", "file": "R12.mp4", "duration": 6.0, "what": "day 1,000: the sea at 1 km among mountain ranges"},
+    {"id": "R13", "file": "R13.mp4", "duration": 6.0, "what": "day 2,500: mountain islands in a world ocean"},
+    {"id": "R14", "file": "R14.mp4", "duration": 6.0, "what": "day 5,895: a 5,895 m volcano down to its summit snows"},
+    {"id": "R15", "file": "R15.mp4", "duration": 6.0, "what": "day 8,500: the last Himalayan peaks, a ship between them"}
   ]
 }
