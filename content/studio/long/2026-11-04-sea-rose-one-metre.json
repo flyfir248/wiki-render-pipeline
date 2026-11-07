@@ -63,6 +63,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R01",
       "narration": "Day one. High tides spill over sea walls in cities like Miami, Jakarta and Venice. It looks like a bad storm. Except the water doesn't go back.",
       "heading": "The water doesn't go back",
       "clock": "DAY 1",
@@ -149,6 +150,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R02",
       "narration": "Day seven. Shanghai, one of the biggest cities on Earth, sits on average only about four metres above the sea. Its streets, metro and the famous Bund waterfront are underwater.",
       "heading": "Shanghai",
       "clock": "DAY 7",
@@ -165,6 +167,7 @@
     },
     {
       "type": "proportion",
+      "blender_shot": "R03",
       "narration": "Day ten. One in every ten people on Earth lives less than ten metres above the sea. Their homes are gone.",
       "value": 10,
       "heading": "of people live less than 10 m above the sea",
@@ -198,6 +201,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R04",
       "narration": "Ports, airports and power stations were built by the sea, because that's where ships and cooling water are. Most of them go in the first month.",
       "heading": "The coast was where we built",
       "clock": "DAY 30",
@@ -206,6 +210,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R05",
       "narration": "By day forty five, coastal cities have become lagoons. Office towers stand in the water like islands, their lower floors flooded and their upper floors packed with people waiting for boats.",
       "heading": "Islands of skyscrapers",
       "clock": "DAY 45",
@@ -214,6 +219,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R06",
       "narration": "Day sixty. Pisa lies only a few metres above sea level, and its leaning tower is about fifty six metres tall. The sea closes over it, still leaning.",
       "heading": "The Leaning Tower of Pisa",
       "clock": "DAY 60",
@@ -238,6 +244,7 @@
     },
     {
       "type": "bars",
+      "blender_shot": "R07",
       "narration": "Day ninety three, the water reaches the torch of the Statue of Liberty. Three days later, the top of Big Ben's tower in London.",
       "data": [
         {
@@ -260,6 +267,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R08",
       "narration": "With the land shrinking every day, more and more people live on the water itself: on ships, rafts and floating platforms lashed together. Cities become fleets.",
       "heading": "Life on the water",
       "clock": "DAY 150",
@@ -276,6 +284,7 @@
     },
     {
       "type": "stat",
+      "blender_shot": "R09",
       "narration": "Day three hundred and thirty. The Eiffel Tower disappears under the sea.",
       "value": 330,
       "suffix": " m",
@@ -294,6 +303,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R10",
       "narration": "Around day four hundred and fifty, even the tip of the Empire State Building's antenna slips under. New York's skyline is now a reef.",
       "heading": "The Empire State Building",
       "clock": "DAY 450",
@@ -310,6 +320,7 @@
     },
     {
       "type": "stat",
+      "blender_shot": "R11",
       "narration": "Day eight hundred and twenty eight. The world's tallest building, the Burj Khalifa, slips under.",
       "value": 828,
       "suffix": " m",
@@ -328,6 +339,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R12",
       "narration": "After about three years, most of humanity is squeezed onto high plateaus and mountain ranges: the Andes, the Ethiopian Highlands, the Tibetan Plateau and the Rockies. These places were never built to feed billions.",
       "heading": "Where the people are",
       "clock": "DAY 1,000",
@@ -366,6 +378,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R13",
       "narration": "What's left are mountain ranges, standing out of a world ocean. The Rockies, the Andes, the Alps, the Himalayas become archipelagos.",
       "heading": "Mountains become islands",
       "clock": "DAY 2,500",
@@ -428,6 +441,7 @@
     },
     {
       "type": "stat",
+      "blender_shot": "R14",
       "narration": "Day five thousand eight hundred and ninety five. Kilimanjaro, Africa's highest mountain, disappears.",
       "value": 5895,
       "suffix": " m",
@@ -470,6 +484,7 @@
     },
     {
       "type": "statement",
+      "blender_shot": "R15",
       "narration": "Near the end, the last of humanity lives mostly at sea, on ships moving between the shrinking islands of the Himalaya, fishing in water that covers every city that ever existed.",
       "heading": "The last ships",
       "clock": "DAY 8,500",
