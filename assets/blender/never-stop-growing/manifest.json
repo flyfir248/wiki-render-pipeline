@@ -1,11 +1,28 @@
 {
   "fps": 30,
-  "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\growing.py), Quaternius and Kenney CC0 assets",
+  "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\growing.py), Quaternius, Kenney, Poly Haven and GameKit CC0 assets",
   "thumbnail": "thumb.jpg",
   "shots": [
-    {"id": "G01", "file": "G01.mp4", "duration": 6.0, "from_m": 1.8, "to_m": 8.0, "what": "street: you outgrow the people around you"},
-    {"id": "G02", "file": "G02.mp4", "duration": 6.0, "from_m": 9.0, "to_m": 50.0, "what": "houses: taller than every roof, people run"},
-    {"id": "G03", "file": "G03.mp4", "duration": 6.0, "from_m": 60.0, "to_m": 250.0, "what": "towers: standing among the skyscrapers"},
-    {"id": "G04", "file": "G04.mp4", "duration": 6.0, "from_m": 2400.0, "to_m": 6500.0, "what": "clouds: clouds at your knees, the city at your feet"}
+    {"id": "H01", "file": "H01.mp4", "duration": 6.0, "from_m": 1.74, "to_m": 2.2, "what": "day 0-1: the bedroom at dawn, your head nearing the ceiling"},
+    {"id": "H02", "file": "H02.mp4", "duration": 6.0, "from_m": 2.6, "to_m": 2.715, "what": "day 1: the 2 m front door only reaches your shoulders"},
+    {"id": "G01", "file": "G01.mp4", "duration": 6.0, "from_m": 2.718, "to_m": 3.2, "what": "street: you outgrow the people around you"},
+    {"id": "H03", "file": "H03.mp4", "duration": 6.0, "from_m": 5.6, "to_m": 6.8, "what": "day 4: eye to eye with a giraffe at the zoo"},
+    {"id": "H04", "file": "H04.mp4", "duration": 6.0, "from_m": 14.9, "to_m": 17.8, "what": "day 16: a double-decker bus leaves without you"},
+    {"id": "G02", "file": "G02.mp4", "duration": 6.0, "from_m": 24.0, "to_m": 28.0, "what": "houses: taller than every roof, people run"},
+    {"id": "H05", "file": "H05.mp4", "duration": 6.0, "from_m": 29.0, "to_m": 34.0, "what": "day 28: doctors' tents and a scanner far too small"},
+    {"id": "H06", "file": "H06.mp4", "duration": 6.0, "from_m": 90.0, "to_m": 110.0, "what": "day 91: Statue of Liberty height, standing in the harbour"},
+    {"id": "H07", "file": "H07.mp4", "duration": 6.0, "from_m": 127.0, "to_m": 170.0, "what": "from above: one step crosses a block, your shadow shades whole streets"},
+    {"id": "G03", "file": "G03.mp4", "duration": 6.0, "from_m": 200.0, "to_m": 250.0, "what": "towers: standing among the skyscrapers"},
+    {"id": "H08", "file": "H08.mp4", "duration": 6.0, "from_m": 300.0, "to_m": 392.0, "what": "up by your head: wind and a circling helicopter"},
+    {"id": "H09", "file": "H09.mp4", "duration": 6.0, "from_m": 415.0, "to_m": 520.0, "what": "past a 443 m Empire State-height tower at sunset"},
+    {"id": "H10", "file": "H10.mp4", "duration": 6.0, "from_m": 828.0, "to_m": 940.0, "what": "eye to eye with an 828 m Burj Khalifa-height spire"},
+    {"id": "H11", "file": "H11.mp4", "duration": 6.0, "from_m": 1300.0, "to_m": 1520.0, "what": "tilt from your shoe to your head, over a kilometre up"},
+    {"id": "H12", "file": "H12.mp4", "duration": 6.0, "from_m": 2150.0, "to_m": 2330.0, "what": "lying down, you stretch across the whole town"},
+    {"id": "G04", "file": "G04.mp4", "duration": 6.0, "from_m": 2400.0, "to_m": 3300.0, "what": "clouds: clouds at your knees, the city at your feet"},
+    {"id": "H13", "file": "H13.mp4", "duration": 6.0, "from_m": 3700.0, "to_m": 4500.0, "what": "as tall as Mount Fuji, clouds at your waist"},
+    {"id": "H14", "file": "H14.mp4", "duration": 6.0, "from_m": 5000.0, "to_m": 5500.0, "what": "at chest height, snow drifting past 3.5 km up"},
+    {"id": "G05", "file": "G05.mp4", "duration": 6.0, "from_m": 7990.0, "to_m": 8420.0, "what": "edge of the sky: the sky above you turning dark"},
+    {"id": "H15", "file": "H15.mp4", "duration": 6.0, "from_m": 8848.0, "to_m": 8850.5, "what": "level with Everest's summit over a sea of cloud"},
+    {"id": "H16", "file": "H16.mp4", "duration": 6.0, "from_m": 8854.5, "to_m": 8858.0, "what": "the end: the same front door, empty at dusk"}
   ]
 }
