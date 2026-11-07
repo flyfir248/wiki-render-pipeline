@@ -219,7 +219,7 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
     voice_src = None if provider == "silent" else "voice.wav"
 
     log(job, "fetching visuals")
-    subject = article.title if article else (script.thumbnail_kicker or "")
+    subject = image_subject(script, article)
     scene_media, credits, used = scene_visuals(cfg, job, script, images, topic, subject)
     shots = extra_shots(cfg, job, script, images, spans, scene_media, credits, used, subject)
     if cfg.collage.enabled:
@@ -366,6 +366,10 @@ def _make(cfg: Config, job: Job, topic: str, script: Script | None, voice: str |
         for w in coverage.warnings(cov):
             log(job, f"quality: {w}")
             qc["warnings"].append(w)
+        # a Blender production is made to be 3D: one that came out mostly flat is held, not published
+        if script.blender and cov["share_3d"] < cov["target_3d"] / 2:
+            qc["problems"].append(f"a Blender production with only {cov['share_3d']:.0%} of its runtime in 3D "
+                                  f"(at least {cov['target_3d'] / 2:.0%} needed)")
     except Exception as e:
         log(job, f"warning: could not measure the 3D coverage: {str(e)[:160]}")
 
@@ -829,10 +833,41 @@ def plan_visuals(cfg: Config, job: Job, script: Script, notes: str, story=None) 
     return planned
 
 
+def _era(clock: str) -> str:
+    """The chapter a What If clock ("HOUR 30", "YEAR 1,000") falls in."""
+    unit, _, n = (clock or "").upper().partition(" ")
+    try:
+        n = float(n.replace(",", "") or 0)
+    except ValueError:
+        n = 0
+    if unit in ("SECOND", "MINUTE", "HOUR"):
+        return "The first hours"
+    if unit == "DAY":
+        return "The first days"
+    if unit in ("WEEK", "MONTH"):
+        return "Weeks and months"
+    if unit == "YEAR":
+        return "The first decades" if n < 100 else "Centuries" if n < 1000 else "Thousands of years" if n < 100000 else "Deep time"
+    return ""
+
+
+def clock_chapters(script: Script) -> list:
+    """Chapters for a timeline script that wrote none: a new one wherever its clock moves into a new era."""
+    from fyt.models import Chapter
+
+    out, last = [], None
+    for i, s in enumerate(script.scenes):
+        era = _era(getattr(s, "clock", "") or "")
+        if era and era != last:
+            out.append(Chapter(scene=i if out else 0, title=era))
+            last = era
+    return out
+
+
 def chapter_list(script: Script, spans: list[tuple[float, float]]) -> str:
     """YouTube chapter timestamps for the description, or "" when YouTube wouldn't accept them
     (it needs at least 3 chapters, the first at 0:00, each at least 10 seconds long)."""
-    marks = [c for c in script.chapters or [] if 0 <= c.scene < len(spans)]
+    marks = [c for c in script.chapters or [] if 0 <= c.scene < len(spans)] or clock_chapters(script)
     if len(marks) < 3 or marks[0].scene != 0:
         return ""
     starts = [0.0] + [spans[c.scene][0] for c in marks[1:]]
@@ -930,6 +965,22 @@ def _photo_fits(cfg: Config, job: Job, path: Path, scene, subject: str, stock: b
     return True
 
 
+def image_subject(script: Script, article=None) -> str:
+    """What every image search for this video is about. The article's title when there is one, else the
+    thumbnail kicker, but never a series label: "What If" is not a subject, and searching for it found a
+    children's book called "What if...?" and a "What is a Schnoodle?" dog advert for every scene."""
+    if article:
+        return article.title
+    kicker = (script.thumbnail_kicker or "").strip()
+    labels = {x.lower() for x in (script.series, whatif.SERIES) if x}
+    return "" if kicker.lower() in labels else kicker
+
+
+def scene_query(scene) -> str:
+    """A scene's own image search: its concrete query, else its heading."""
+    return (scene.broll_query or scene.heading or "").strip()
+
+
 def scene_visuals(
     cfg: Config, job: Job, script: Script, images: list["wiki.WikiImage"], topic: str, subject: str = ""
 ) -> tuple[dict[int, Media], list[str], set[str]]:
@@ -998,8 +1049,8 @@ def scene_visuals(
         commons_seen: set[str] = set()
 
         def commons(query: str) -> list["wiki.WikiImage"]:
-            found = freeimages.search(cfg, query, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m),
-                                      broaden=query == subject)
+            found = freeimages.search(cfg, query, keep=lambda hits: _on_subject(hits, subject or query),
+                                      log=lambda m: log(job, m), broaden=bool(subject) and query == subject)
             return [im for im in found if im.title not in commons_seen]
 
         for i, s in enumerate(script.scenes):
@@ -1008,8 +1059,11 @@ def scene_visuals(
             n = _best_fit(s, images, [k for k in range(1, len(images) + 1) if k not in taken])
             if n is not None and article_image(i, n):
                 continue
-            query = s.broll_query or s.heading or ""
-            found = (commons(f"{subject} {query}".strip()) if subject and query else []) or (commons(subject) if subject else [])
+            query = scene_query(s)
+            if subject:
+                found = (commons(f"{subject} {query}".strip()) if query else []) or commons(subject)
+            else:  # no subject to anchor on: the scene's own query, and nothing when it has none
+                found = commons(query) if query else []
             placed = False
             for im in found[:3]:
                 commons_seen.add(im.title)
@@ -1044,10 +1098,14 @@ def scene_visuals(
     return scene_media, credits, used
 
 
+MAX_REUSE = 2  # a photo appears behind at most this many scenes in one video
+
+
 def refill(job: Job, script: Script, images: list["wiki.WikiImage"], scene_media: dict[int, Media]) -> None:
-    """A long video's scenes still on a plain background get a photo the video already has: the one whose
-    description best matches the scene, else the one used least, never the photo of the scene before or after.
-    The renderer frames a reused photo with its own camera move, so it doesn't look repeated."""
+    """A long video's scenes still on a plain background get a photo the video already has, but only one
+    whose description shares words with what the scene says, never the photo of the scene before or after,
+    and never a photo already shown MAX_REUSE times. A scene with no such photo keeps its plain background:
+    the same pocket watch behind eleven unrelated scenes is worse than a clean title card."""
     have = sorted({m.src for m in scene_media.values() if m.kind == "image"})
     if not have:
         return
@@ -1056,6 +1114,7 @@ def refill(job: Job, script: Script, images: list["wiki.WikiImage"], scene_media
     for m in scene_media.values():
         if m.src in uses:
             uses[m.src] += 1
+
     def fit(i: int, src: str) -> int:
         im = by_src.get(src.rsplit(".", 1)[0])
         return len(_about(script.scenes[i]) & _words(f"{im.description} {im.title}")) if im else 0
@@ -1066,15 +1125,18 @@ def refill(job: Job, script: Script, images: list["wiki.WikiImage"], scene_media
     filled = 0
     for i in empty:
         near = {scene_media[k].src for k in (i - 1, i + 1) if k in scene_media}
-        free = [src for src in have if src not in near]
+        free = [src for src in have if src not in near and uses[src] < MAX_REUSE and fit(i, src) > 0]
         if not free:
             continue
         src = max(free, key=lambda src: (fit(i, src), -uses[src]))
         scene_media[i] = Media(src=src, kind="image")
         uses[src] += 1
         filled += 1
+    left = len(empty) - filled
     if filled:
-        log(job, f"{filled} scenes without a picture of their own reuse one of the video's photos")
+        log(job, f"{filled} scenes without a picture of their own reuse a matching photo from the video")
+    if left:
+        log(job, f"{left} scenes keep a plain background: no photo the video has matches them")
 
 
 MAX_EXTRA_SHOTS = 2  # per scene; the renderer re-frames the photos it has for any further cuts
@@ -1108,8 +1170,8 @@ def extra_shots(
     def commons(query: str) -> list["wiki.WikiImage"]:
         if query not in commons_cache:
             commons_cache[query] = freeimages.search(
-                cfg, query, keep=lambda hits: _on_subject(hits, subject), log=lambda m: log(job, m),
-                broaden=query == subject,
+                cfg, query, keep=lambda hits: _on_subject(hits, subject or query), log=lambda m: log(job, m),
+                broaden=bool(subject) and query == subject,
             )
         return [im for im in commons_cache[query] if im.title.removeprefix("File:") not in seen]
 
@@ -1144,8 +1206,11 @@ def extra_shots(
                     credits.pop()
                     continue
             else:
-                query = s.broll_query or s.heading or ""
-                hits = (commons(f"{subject} {query}".strip()) if subject and query else []) or (commons(subject) if subject else [])
+                query = scene_query(s)
+                if subject:
+                    hits = (commons(f"{subject} {query}".strip()) if query else []) or commons(subject)
+                else:
+                    hits = commons(query) if query else []
                 found = download(hits[0], f"{name}.jpg") if hits else None
                 if found and not _photo_fits(cfg, job, job.public / found.src, s, subject):
                     credits.pop()

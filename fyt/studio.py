@@ -61,6 +61,33 @@ def ready(fmt: str, done: set[str], queue: Path | None = None, root: Path | None
     return out
 
 
+def make_one(cfg, topics, name: str):
+    """Make one named studio script now, without uploading (a review render, e.g. a remake under a new name).
+    Its topic is marked done, so the queue doesn't make it again; upload it with `fyt replace` or `fyt publish`."""
+    from fyt import pipeline
+
+    path = next((p for p in QUEUE.glob(f"*/{name}.json") if p.parent.name != "published"), None)
+    if path is None:
+        raise SystemExit(f"no studio script {name}.json in {QUEUE}")
+    fmt = path.parent.name
+    missing = missing_shots(load(path))
+    if missing:
+        print(f"warning: shots missing, those scenes fall back to photos: {missing}")
+    topic = topic_of(path)
+    topics.add([topic])
+    topic_id, _ = topics.find(topic)
+    topics.set(topic_id, "in_progress")
+    visuals = cfg.visuals.model_copy(update={"plan": False})
+    try:
+        job = pipeline.make_video(cfg.model_copy(update={"format": fmt, "visuals": visuals}), topic, script=load(path), polish=False)
+    except Exception:
+        topics.set(topic_id, "failed")
+        raise
+    topics.set(topic_id, "done", job.id)
+    print(f"made {job.id}: {job.meta.get('status')}")
+    return job
+
+
 def make_next(cfg, topics, fmt: str):
     """Make the next ready studio script of this format; None when the queue has nothing ready (or it failed)."""
     from fyt import pipeline

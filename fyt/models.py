@@ -302,6 +302,8 @@ class Media(BaseModel):
     styled: str | None = None  # images: the photo as a halftone print (fyt/cutout.py)
     cutout: str | None = None  # images: its main subject cut out, same size, transparent elsewhere
     aspect: float | None = None  # images with a print: width / height
+    seconds: float | None = None  # clips: how long the clip runs, so it can be slowed to fill its scene
+    rate: float | None = None  # clips: playback speed (fyt/timeline.py slows a short clip to fit its scene)
     credit: str | None = Field(default=None, exclude=True)  # stock photos that ask for one (Unsplash); not sent to the renderer
 
 

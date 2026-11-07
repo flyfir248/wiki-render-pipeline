@@ -168,7 +168,7 @@ def _upload(
     return True
 
 
-def replace(cfg: Config, job: Job, now: datetime | None = None) -> str:
+def replace(cfg: Config, job: Job, now: datetime | None = None, old: str | None = None) -> str:
     """Upload a reviewed re-render (a test render's job folder) in place of the same article's video
     still waiting on YouTube to go public: the new one takes its publish time and slot, and the old one
     is made private and taken off the schedule (it stays on the channel, so it can be brought back).
@@ -177,7 +177,16 @@ def replace(cfg: Config, job: Job, now: datetime | None = None) -> str:
     slug = job.id.split("-", 2)[-1]  # 20261025-114127-wiki-solway-firth-spaceman -> wiki-solway-firth-spaceman
     uploads = Uploads(cfg)
     earliest = now + timedelta(minutes=youtube.MIN_PUBLISH_LEAD_MINUTES + 15)
-    found = uploads.scheduled_for(slug, earliest.isoformat())
+    if old:  # named outright: a remake made under a new name (studio:...-v2) replacing an earlier upload
+        found = uploads.upload_row(old)
+        if found is None:
+            raise SystemExit(f"https://youtu.be/{old} is not in this channel's upload record")
+        if not found[4] or found[4] <= now.isoformat():
+            raise SystemExit(f"https://youtu.be/{old} is no longer waiting to go public ({found[4]})")
+        if found[4] < earliest.isoformat():  # too close to its slot for YouTube to take a new schedule: go a little later
+            found = (*found[:4], earliest.isoformat())
+    else:
+        found = uploads.scheduled_for(slug, earliest.isoformat())
     topic = job.meta.get("topic", "")
     if not found and topic.startswith("wiki:"):
         # recorded from the channel itself (no job): find it by the article its description credits
@@ -197,6 +206,11 @@ def replace(cfg: Config, job: Job, now: datetime | None = None) -> str:
     if row is not None:
         uploads.retire(row, old_id)
     uploads.record(kind, job.id, new_id, at.isoformat(), slot, at=now.isoformat(timespec="seconds"))
+    if old and topic:  # a remake under its own name: made, so the studio queue doesn't make it again
+        topics = Topics(cfg)
+        topics.add([topic])
+        if (r := topics.find(topic)) is not None:
+            topics.set(r[0], "done", job.id)
     print(f"scheduled https://youtu.be/{new_id} for {at:%a %d %b %H:%M} UTC; https://youtu.be/{old_id} is now private")
     return new_id
 

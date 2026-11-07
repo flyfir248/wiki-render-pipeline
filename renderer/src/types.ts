@@ -15,6 +15,8 @@ export type Media = {
   styled?: string | null; // images: the photo as a halftone print (fyt/cutout.py)
   cutout?: string | null; // images: its main subject cut out, same size as the print
   aspect?: number | null; // images with a print: width / height
+  seconds?: number | null; // clips: how long the clip runs
+  rate?: number | null; // clips: playback speed, below 1 when a clip is slowed to fill its scene
 };
 
 export type DataPoint = { label: string; value: number };

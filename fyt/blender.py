@@ -76,9 +76,9 @@ def scene_media(script: Script, root: Path | None = None) -> dict[int, Media]:
     if not m:
         return {}
     src_dir = (root or ROOT) / m["name"]
-    files = {s["id"]: s["file"] for s in m["shots"] if (src_dir / s["file"]).exists()}
-    return {i: Media(src=f"blender/{files[s.blender_shot]}", kind="video")
-            for i, s in enumerate(script.scenes) if s.blender_shot in files}
+    shots = {s["id"]: s for s in m["shots"] if (src_dir / s["file"]).exists()}
+    return {i: Media(src=f"blender/{shots[s.blender_shot]['file']}", kind="video", seconds=shots[s.blender_shot].get("duration"))
+            for i, s in enumerate(script.scenes) if s.blender_shot in shots}
 
 
 def as_video_scenes(script: Script, media: dict[int, Media]) -> Script:

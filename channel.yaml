@@ -102,7 +102,8 @@ youtube:
   # Caption tracks, playlists and view stats need a token with the full YouTube
   # permission (see "Caption tracks, playlists and stats" in the README). With an
   # upload-only token they're skipped. Captions are burned into the video either way.
-  upload_captions: true
+  # Off: the captions are burned into the picture, so a CC track on top showed every line twice.
+  upload_captions: false
   # Title and description translated into these languages too (one extra LLM call each per video).
   localize: [es, pt, hi, fr, de]
 
@@ -164,7 +165,7 @@ growth:
     - "Subscribe: one strange true story a day"
     - "More true stories like this every day"
     - "Subscribe for tomorrow's strange true story"
-  end_card_seconds: 15      # add the end screen (subscribe + best video) in YouTube Studio
+  end_card_seconds: 8       # room for an end screen (subscribe + best video), added in YouTube Studio: the API cannot add one
 
 # Shorts cross-posted as Instagram Reels, pointing viewers to the YouTube channel (fyt/instagram.py).
 # Every Short gets instagram.txt (caption, call to action, hashtags) in the run's artifact.

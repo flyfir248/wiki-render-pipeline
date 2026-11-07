@@ -30,6 +30,9 @@ def main(argv: list[str] | None = None) -> None:
     m.add_argument("--no-research", action="store_true", help="skip web research")
     m.add_argument("--voice", choices=list(tts.PROVIDERS))
 
+    sm = sub.add_parser("studio", help="make one studio script now, without uploading (for review)")
+    sm.add_argument("name", help="the script's file name in content/studio/<format>/, without .json")
+
     t = sub.add_parser("topics", help="manage the topic queue")
     tsub = t.add_subparsers(dest="action", required=True)
     tsub.add_parser("list")
@@ -63,6 +66,7 @@ def main(argv: list[str] | None = None) -> None:
     u.add_argument("--force", action="store_true", help="upload even if not approved")
     rp = sub.add_parser("replace", help="upload a reviewed re-render in place of the same article's scheduled video (the old one goes private)")
     rp.add_argument("job")
+    rp.add_argument("--old", help="the YouTube id of the scheduled video to replace, when the re-render was made under another name")
     pb = sub.add_parser("publish", help="upload a reviewed test render: in place of its article's scheduled video, else into the next empty slot")
     pb.add_argument("job")
     sub.add_parser("auth", help="authorise YouTube uploads (opens a browser)")
@@ -273,10 +277,15 @@ def main(argv: list[str] | None = None) -> None:
             pipeline.upload_job(cfg, job)
     elif args.cmd == "upload":
         pipeline.upload_job(cfg, find_job(cfg, args.job), force=args.force)
+    elif args.cmd == "studio":
+        from fyt import studio
+        from fyt.store import Topics
+
+        studio.make_one(cfg, Topics(cfg), args.name)
     elif args.cmd == "replace":
         from fyt import schedule
 
-        schedule.replace(cfg, find_job(cfg, args.job))
+        schedule.replace(cfg, find_job(cfg, args.job), old=args.old)
     elif args.cmd == "publish":
         from fyt import schedule
 

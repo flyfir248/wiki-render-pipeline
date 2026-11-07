@@ -66,7 +66,7 @@ def build_props(
                 leftTitle=scene.left_title,
                 rightTitle=scene.right_title,
                 author=scene.author,
-                media=media.get(i),
+                media=_fit_clip(media.get(i), vis_end - vis_start),
                 shots=(shots or {}).get(i) or None,
                 beats=(beats or {}).get(i) or None,
                 places=scene.places,
@@ -407,7 +407,18 @@ def key_moment(scene: ScriptScene, words: list[Word], offset: float, length: flo
     return scene.effect_at
 
 
-def to_srt(words: list[Word], max_words: int = 7) -> str:
+MIN_CLIP_RATE = 0.5
+
+
+def _fit_clip(m, seconds: float):
+    """A clip shorter than its scene plays slower (down to half speed) so it fills the scene instead of
+    freezing on its last frame; other media pass through."""
+    if m is None or m.kind != "video" or not m.seconds or seconds <= m.seconds:
+        return m
+    return m.model_copy(update={"rate": round(max(MIN_CLIP_RATE, m.seconds / seconds), 4)})
+
+
+def to_srt(words: list[Word], max_words: int = 7, orphan: int = 2) -> str:
     """Build an SRT caption file for YouTube from word timings."""
 
     def ts(t: float) -> str:
@@ -417,10 +428,20 @@ def to_srt(words: list[Word], max_words: int = 7) -> str:
         s, ms = divmod(ms, 1000)
         return f"{h:02}:{m:02}:{s:02},{ms:03}"
 
+    def left(k: int) -> int:  # words from k to the end of its sentence, k included
+        n = 0
+        for w in words[k:]:
+            n += 1
+            if w.word.endswith((".", "!", "?")):
+                break
+        return n
+
     lines, group = [], []
-    for w in words:
+    for k, w in enumerate(words):
         group.append(w)
-        if len(group) >= max_words or w.word.endswith((".", "!", "?")):
+        # a sentence's last word or two stay with this line rather than flashing up on their own
+        full = len(group) >= max_words and left(k + 1) > orphan
+        if full or len(group) >= max_words + orphan or w.word.endswith((".", "!", "?")):
             lines.append(group)
             group = []
     if group:

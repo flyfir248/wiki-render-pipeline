@@ -147,6 +147,38 @@ def problems(script: Script) -> list[str]:
     levels = [s.level for s in script.scenes if s.level is not None]
     if any(b < a for a, b in zip(levels, levels[1:])):
         out.append("the danger level falls between scenes")
+    out += clock_mismatches(script)
+    return out
+
+
+# How long the time words in a narration line mean, in seconds.
+SPAN = {"hour": 3600, "day": 86400, "week": 604800, "month": 2.63e6, "year": 3.156e7, "decade": 3.156e8,
+        "century": 3.156e9, "centurie": 3.156e9, "millenni": 3.156e10}
+WITHIN = re.compile(r"\bwithin (?:a |an |the first |the next |a few |a couple of |hours|days|weeks|months)?"
+                    r"(?:\w+ )?(hour|day|week|month|year|decade|centur(?:y|ie)|millenni)", re.I)
+
+
+def clock_mismatches(script: Script) -> list[str]:
+    """Scenes whose clock is far from what their own narration says: "within weeks, smog clears" under
+    YEAR 200, "over many generations" under YEAR 2, "a few million years" under YEAR 1,000,000."""
+    out = []
+    for i, s in enumerate(script.scenes, 1):
+        at = clock_seconds(s.clock) if s.clock else None
+        if not at:
+            continue
+        text = s.narration.lower()
+        m = WITHIN.search(text)
+        if m:
+            unit = m.group(1).lower()
+            span = SPAN.get(unit) or SPAN.get(unit[:7]) or SPAN["year"]
+            few = 5 if re.search(r"\b(?:a few|several|two|three|four|five)\b", m.group(0)) else 1
+            few *= 1000 if "thousand" in m.group(0) else 100 if "hundred" in m.group(0) else 1
+            if at > 30 * span * few:
+                out.append(f"scene {i}: the narration says '{m.group(0)}' but the clock reads {s.clock}")
+        if "many generations" in text and at < 10 * SPAN["year"]:
+            out.append(f"scene {i}: 'many generations' under {s.clock}")
+        if re.search(r"\b(?:a few|several|many) million years\b", text) and at < 2e6 * SPAN["year"]:
+            out.append(f"scene {i}: the narration says millions of years but the clock reads {s.clock}")
     return out
 
 

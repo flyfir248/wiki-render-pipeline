@@ -1,12 +1,139 @@
 {
   "fps": 30,
   "source": "Blender studio (D:\\BlenderWorkspace\\04_PIPELINES\\whatif\\vanish.py), Quaternius and Kenney CC0 assets",
-  "thumbnail": "thumb.jpg",
+  "thumbnail": "thumb_v2.jpg",
   "shots": [
-    {"id": "E01", "file": "E01.mp4", "duration": 8.0, "what": "second 0: an evening street, cars where their drivers vanished"},
-    {"id": "E02", "file": "E02.mp4", "duration": 8.0, "what": "hour 30: dusk, street lights and windows failing"},
-    {"id": "E03", "file": "E03.mp4", "duration": 8.0, "what": "month 1: weeds through the kerbs, dusty cars"},
-    {"id": "E04", "file": "E04.mp4", "duration": 8.0, "what": "year 5: saplings in the road, bushes over the cars"},
-    {"id": "E05", "file": "E05.mp4", "duration": 8.0, "what": "year 20: a forest city from the air"}
+    {
+      "id": "E01",
+      "file": "E01.mp4",
+      "duration": 8.0,
+      "what": "second 0: an evening street, cars where their drivers vanished"
+    },
+    {
+      "id": "E02",
+      "file": "E02.mp4",
+      "duration": 8.0,
+      "what": "hour 30: dusk, street lights and windows failing"
+    },
+    {
+      "id": "E03",
+      "file": "E03.mp4",
+      "duration": 8.0,
+      "what": "month 1: weeds through the kerbs, dusty cars"
+    },
+    {
+      "id": "E04",
+      "file": "E04.mp4",
+      "duration": 8.0,
+      "what": "year 5: saplings in the road, bushes over the cars"
+    },
+    {
+      "id": "E05",
+      "file": "E05.mp4",
+      "duration": 8.0,
+      "what": "year 20: a forest city from the air"
+    },
+    {
+      "id": "V01",
+      "file": "V01.mp4",
+      "duration": 6.0,
+      "what": "second 0: the whole city from the air at golden hour, cars stopped on every street"
+    },
+    {
+      "id": "V02",
+      "file": "V02.mp4",
+      "duration": 6.0,
+      "what": "minute 1: dusk at a crossing, lamps and windows still lit for nobody"
+    },
+    {
+      "id": "V03",
+      "file": "V03.mp4",
+      "duration": 6.0,
+      "what": "hour 1: the empty waterfront, cars stopped on the coast road"
+    },
+    {
+      "id": "V04",
+      "file": "V04.mp4",
+      "duration": 6.0,
+      "what": "hour 12: night from the air, windows and lamps going out"
+    },
+    {
+      "id": "V06",
+      "file": "V06.mp4",
+      "duration": 6.0,
+      "what": "day 2: a dark city with a handful of windows still lit"
+    },
+    {
+      "id": "V08",
+      "file": "V08.mp4",
+      "duration": 6.0,
+      "what": "week 2: a pet dog waiting beside a car in the empty street"
+    },
+    {
+      "id": "V09",
+      "file": "V09.mp4",
+      "duration": 6.0,
+      "what": "month 2: suburban gardens spilling over fences and pavements"
+    },
+    {
+      "id": "V12",
+      "file": "V12.mp4",
+      "duration": 6.0,
+      "what": "year 2: a pack of dogs in the weed-grown avenue"
+    },
+    {
+      "id": "V13",
+      "file": "V13.mp4",
+      "duration": 6.0,
+      "what": "year 3: escaped horses and a goat grazing down an overgrown street"
+    },
+    {
+      "id": "V14",
+      "file": "V14.mp4",
+      "duration": 6.0,
+      "what": "year 4: climbing a tower to a roof where herons nest"
+    },
+    {
+      "id": "V15",
+      "file": "V15.mp4",
+      "duration": 6.0,
+      "what": "year 50: trees in the road, rusted cars under them"
+    },
+    {
+      "id": "V16",
+      "file": "V16.mp4",
+      "duration": 6.0,
+      "what": "year 100: towers standing over a canopy that fills every street"
+    },
+    {
+      "id": "V21",
+      "file": "V21.mp4",
+      "duration": 6.0,
+      "what": "year 120: low over the roofs, small trees growing on them"
+    },
+    {
+      "id": "V17",
+      "file": "V17.mp4",
+      "duration": 6.0,
+      "what": "year 200: the clear coast from high above"
+    },
+    {
+      "id": "V18",
+      "file": "V18.mp4",
+      "duration": 6.0,
+      "what": "year 500: the street has become a forest floor"
+    },
+    {
+      "id": "V19",
+      "file": "V19.mp4",
+      "duration": 6.0,
+      "what": "a million years: green from the hills to the shore"
+    },
+    {
+      "id": "V20",
+      "file": "V20.mp4",
+      "duration": 6.0,
+      "what": "the ending: one car where its driver left it, deep under the trees"
+    }
   ]
 }
