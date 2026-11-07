@@ -286,3 +286,34 @@ def test_clock_chapters():
     spans = [(i * 20.0, i * 20.0 + 18) for i in range(6)]
     text = pipeline.chapter_list(s, spans)
     assert text.startswith("Chapters:\n0:00 The first hours") and "Centuries" in text
+
+
+def test_replace_names_the_old_video(monkeypatch, tmp_path):
+    from datetime import datetime, timezone
+    from fyt import schedule
+
+    cfg = Config(format="long")
+    job = Job(tmp_path / "20261107-090000-studio-2026-11-06-everyone-vanished-v2")
+    job.public.mkdir(parents=True)
+    job.update(topic="studio:2026-11-06-everyone-vanished-v2", format="long")
+
+    class FakeUploads:
+        def __init__(self, cfg): pass
+        def upload_row(self, vid): return (7, vid, "2026-11-07T16:23", "long", "2026-11-07T16:23:40+00:00") if vid == "OLD" else None
+        def retire(self, row, vid): calls.append(("retire", row, vid))
+        def record(self, *a, **k): calls.append(("record", a[2]))
+
+    class FakeTopics:
+        def __init__(self, cfg): pass
+        def add(self, t): pass
+        def find(self, t): return (3,)
+        def set(self, *a): calls.append(("done", a))
+
+    calls = []
+    monkeypatch.setattr(schedule, "Uploads", FakeUploads)
+    monkeypatch.setattr(schedule, "Topics", FakeTopics)
+    monkeypatch.setattr(schedule.pipeline, "upload_job", lambda cfg, job, publish_at: "NEW")
+    monkeypatch.setattr(schedule.youtube, "unschedule", lambda vid: calls.append(("unschedule", vid)))
+    now = datetime(2026, 11, 7, 9, 0, tzinfo=timezone.utc)
+    assert schedule.replace(cfg, job, now, old="OLD") == "NEW"
+    assert ("unschedule", "OLD") in calls and ("retire", 7, "OLD") in calls and any(c[0] == "done" for c in calls)
