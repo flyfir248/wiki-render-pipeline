@@ -95,7 +95,7 @@ def test_a_heading_is_not_an_action():
 def test_art_profile_is_one_per_video_and_the_setting_wins():
     assert director.choose_art(SOLWAY, STORY)["profile"] in ("cinematic", "noir")
     assert director.choose_art(SOLWAY, STORY, style="stencil")["profile"] == "stencil"
-    for style in ("painterly", "cel", "clay", "noir"):
+    for style in ("painterly", "cel", "clay", "noir", "paper", "blueprint", "neon"):
         assert director.choose_art(SOLWAY, STORY, style=style)["profile"] == style
 
     def told(title, *lines, mood="curious"):
@@ -113,6 +113,10 @@ def test_art_profile_is_one_per_video_and_the_setting_wins():
     old = told("The Vasa", "In 1628 the warship Vasa sank in Stockholm harbour on her maiden voyage.")
     assert director.choose_art(old, None)["profile"] == "painterly"
     assert director.choose_art(SOLWAY, STORY, style="cinematic", strength=0.4)["strength"] == 0.4
+    # the outline looks read as graphic, never picked by themselves
+    assert director.choose_art(SOLWAY, STORY, style="neon")["atmosphere"] == "graphic"
+    assert director.choose_art(SOLWAY, STORY, style="blueprint")["atmosphere"] == "graphic"
+    assert director.choose_art(war, None)["profile"] not in ("paper", "blueprint", "neon")
 
 
 def test_shots_and_acts_land_on_their_cue_words():

@@ -1,5 +1,5 @@
 // Art-style profiles (fyt/director.py picks one per video): cinematic stylised 3D, inked graphic novel,
-// stencil / cutout, painterly 3D, cel-shaded 3D, clay / miniature and dark noir. A profile is not a filter over a finished frame. It sets, together:
+// stencil / cutout, painterly 3D, cel-shaded 3D, clay / miniature, dark noir, layered paper, blueprint and neon. A profile is not a filter over a finished frame. It sets, together:
 // - materials: smooth lit surfaces, or toon ramps with three or two hard bands;
 // - light: how hard the key is, how much fill and rim, how soft the shadows are;
 // - the set: how dense it is dressed and how much mist sits between its layers;
@@ -26,7 +26,7 @@ export type Profile = {
   fov: number; // lens scale
   low: number; // camera height scale on dramatic moves
   dutch: number; // camera roll on low angles and reveals, radians
-  mode: 0 | 1 | 2 | 3 | 4 | 5 | 6; // finishing pass: grade, ink, print, paint, cel bands, tilt-shift, silver print
+  mode: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9; // finishing pass: grade, ink, print, paint, cel bands, tilt-shift, silver print, cut paper, blueprint, neon
 };
 
 export const PROFILES: Record<ArtProfile, Profile> = {
@@ -37,6 +37,13 @@ export const PROFILES: Record<ArtProfile, Profile> = {
   cel: { name: "cel", toon: 3, key: 1.2, fill: 0.95, rim: 1.3, shadowSoft: 0, fog: 0.8, mist: 0.6, detail: 0.9, step: 1, fov: 1, low: 1, dutch: 0, mode: 4 },
   clay: { name: "clay", toon: 0, key: 0.9, fill: 1.25, rim: 0.7, shadowSoft: 8, fog: 0.5, mist: 0.4, detail: 0.85, step: 2, fov: 0.85, low: 1, dutch: 0, mode: 5 },
   noir: { name: "noir", toon: 0, key: 1.4, fill: 0.45, rim: 1.6, shadowSoft: 1, fog: 1.3, mist: 1.2, detail: 0.85, step: 1, fov: 1.05, low: 0.8, dutch: 0.06, mode: 6 },
+  // layered paper: soft light (cut card catches little shading), each layer's edge outlined and casting a
+  // drop shadow onto the layer behind, paper fibre, animation on twos like stop-motion papercraft
+  paper: { name: "paper", toon: 0, key: 0.95, fill: 1.3, rim: 0.6, shadowSoft: 2, fog: 0.4, mist: 0.4, detail: 0.85, step: 2, fov: 0.9, low: 1, dutch: 0, mode: 7 },
+  // blueprint: the scene as a technical drawing, white edges and depth contours on blue grid paper
+  blueprint: { name: "blueprint", toon: 0, key: 1, fill: 1.1, rim: 0.6, shadowSoft: 2, fog: 0.15, mist: 0.2, detail: 0.7, step: 1, fov: 0.95, low: 1, dutch: 0, mode: 8 },
+  // neon: the scene as glowing outlines over near-black, each line in its surface's own hue
+  neon: { name: "neon", toon: 0, key: 1, fill: 1, rim: 1.2, shadowSoft: 2, fog: 0.2, mist: 0.3, detail: 0.75, step: 1, fov: 1, low: 0.9, dutch: 0.03, mode: 9 },
 };
 
 // The video's art, set by the scene before its children draw (one profile for the whole video).
@@ -104,6 +111,13 @@ float edgeAt(vec2 uv, float w){
   // far off, lines thin out into the air
   float fade = 1.0 - smoothstep(focus * 3.0, focus * 10.0, d0);
   return max(de, ce * 0.55) * fade;
+}
+// a silhouette from the depth alone (cheaper than edgeAt, for halos and drop shadows sampled many times)
+float depthEdge(vec2 uv, float w){
+  vec2 px = w / res;
+  float d0 = lin(uv);
+  float dd = max(abs(lin(uv + vec2(px.x, 0.0)) - d0), abs(lin(uv + vec2(0.0, px.y)) - d0));
+  return smoothstep(0.035, 0.09, dd / max(d0, 0.001)) * (1.0 - smoothstep(focus * 3.0, focus * 10.0, d0));
 }
 void main(){
   vec2 uv = vUv;
@@ -198,6 +212,75 @@ void main(){
     l += (hash(fc + seed) - 0.5) * 0.07;
     vec3 col = vec3(l) * vec3(1.0, 0.985, 0.95); // a silver print, a touch warm
     gl_FragColor = vec4(mix(c, col, 0.5 + 0.5 * strength), src.a);
+    return;
+  }
+  if (mode == 7) {
+    // layered paper: colour flattened into a few cut-card tones, brighter and lifted towards the paper,
+    // each layer outlined, the layer above casting a soft shadow down and to the right, paper fibre
+    float l = luma(c);
+    vec3 hue = c / max(l, 0.04);
+    float lift = l * 0.75 + 0.22;
+    float band = floor(lift * 4.0 + 0.5) / 4.0;
+    vec3 col = clamp(hue * mix(lift, band, 0.85 * strength), 0.0, 1.0);
+    col = mix(vec3(luma(col)), col, 1.0 + 0.25 * strength);
+    col = mix(col, paper, 0.22 * strength);
+    float e = edgeAt(uv, 1.8 * k);
+    // the drop shadow: an edge a few pixels up and to the left darkens this pixel
+    vec2 so = vec2(-4.0, 6.0) * k / res;
+    float sh = 0.0;
+    for (int i = 1; i <= 3; i++) sh = max(sh, depthEdge(uv + so * float(i), 1.8 * k) * (1.0 - float(i) * 0.2));
+    col *= 1.0 - 0.38 * sh * strength;
+    col = mix(col, ink * 0.8 + 0.2 * col, step(0.4, e) * 0.75 * strength);
+    float fibre = noise(fc * vec2(0.9, 0.35) + seed) * 0.6 + noise(fc * 0.08 + seed) * 0.4;
+    col *= 0.92 + 0.1 * fibre;
+    gl_FragColor = vec4(mix(c, col, 0.7 + 0.3 * strength), src.a);
+    return;
+  }
+  if (mode == 8) {
+    // blueprint: blue drafting paper with a fine and a coarse grid, the surfaces a faint lighter fill,
+    // white outlines, and depth contours like a survey drawing
+    vec3 blue = vec3(0.055, 0.176, 0.333);
+    float d0 = lin(uv);
+    float l = d0 < far * 0.9 ? luma(c) : 0.0; // the sky is bare paper
+    vec3 col = mix(blue, blue * 1.55 + 0.03, smoothstep(0.1, 0.9, l) * 0.6);
+    vec2 g1 = abs(mod(fc, 24.0 * k) - 12.0 * k), g2 = abs(mod(fc, 120.0 * k) - 60.0 * k);
+    float grid = max(1.0 - smoothstep(0.0, 1.0 * k, min(g1.x, g1.y) - 11.0 * k), 0.0) * 0.12
+               + (1.0 - smoothstep(0.0, 1.0 * k, min(g2.x, g2.y) - 59.0 * k)) * 0.22;
+    col += vec3(0.62, 0.78, 1.0) * grid;
+    float iso = 0.0;
+    if (d0 < far * 0.9) {
+      float f = d0 / max(focus * 0.18, 0.05);
+      iso = 1.0 - min(abs(fract(f - 0.5) - 0.5) / max(fwidth(f), 1e-4), 1.0);
+      iso *= 1.0 - smoothstep(focus * 2.5, focus * 8.0, d0);
+    }
+    col += vec3(0.55, 0.75, 1.0) * iso * 0.22 * strength;
+    float e = edgeAt(uv, 1.1 * k);
+    col = mix(col, vec3(0.9, 0.96, 1.0), smoothstep(0.25, 0.6, e) * (0.65 + 0.35 * strength));
+    col *= 0.97 + 0.03 * noise(fc * 0.6 + seed);
+    gl_FragColor = vec4(mix(c, col, 0.5 + 0.5 * strength), src.a);
+    return;
+  }
+  if (mode == 9) {
+    // neon: near-black, every edge a tube of light in its surface's own hue (cyan where the surface is
+    // grey), with a halo from the edges around it, and a faint trace of the lit surfaces underneath
+    float l = luma(c);
+    vec3 hue = c / max(max(c.r, max(c.g, c.b)), 0.04);
+    float sat = max(max(c.r, c.g), c.b) - min(min(c.r, c.g), c.b);
+    vec3 tube = mix(vec3(0.2, 0.9, 1.0), hue, smoothstep(0.08, 0.25, sat));
+    tube = normalize(tube + 0.001) * 1.6;
+    float e = edgeAt(uv, 1.2 * k);
+    float halo = 0.0;
+    for (int i = 0; i < 8; i++) {
+      float a = float(i) * 0.785 + seed;
+      halo += depthEdge(uv + vec2(cos(a), sin(a)) * 5.0 * k / res, 1.2 * k);
+      halo += depthEdge(uv + vec2(cos(a + 0.4), sin(a + 0.4)) * 11.0 * k / res, 1.2 * k) * 0.5;
+    }
+    halo /= 12.0;
+    vec3 col = c * 0.1 + vec3(0.01, 0.0, 0.03);
+    col += tube * halo * 0.6 * strength;
+    col = mix(col, tube, smoothstep(0.25, 0.6, e));
+    col *= 0.92 + 0.08 * sin(fc.y * 3.1416 / (2.0 * k)); // faint scanlines
+    gl_FragColor = vec4(mix(c, col, 0.6 + 0.4 * strength), src.a);
     return;
   }
   // a hand-drawn line wobbles: the edge is found a little off where the pixel is

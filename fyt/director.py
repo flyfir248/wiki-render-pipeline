@@ -6,7 +6,7 @@ module adds the direction every scene needs before the renderer draws it, all fr
 nothing and runs the same with or without a model:
 
 1. art: one art-style profile for the whole video (cinematic stylised, inked graphic novel, stencil /
-   cutout, painterly, cel-shaded, clay / miniature or dark noir), picked from the story (``choose_art``). A profile is not a filter: it sets the materials,
+   cutout, painterly, cel-shaded, clay / miniature, dark noir, layered paper, blueprint or neon), picked from the story (``choose_art``). A profile is not a filter: it sets the materials,
    the light rig, how dense and how simplified the set is, the animation timing, the lens and the
    finishing passes together (renderer/src/scenes/world/storyworld/artstyle.ts).
 2. recipe: how the place is built in layers (``recipe_for``): foreground cover that frames the shot,
@@ -41,11 +41,11 @@ from fyt.worldgen import Build, Setting, Shot
 
 # --- art style profiles -----------------------------------------------------------------------------
 
-PROFILES = ("cinematic", "ink", "stencil", "painterly", "cel", "clay", "noir")
+PROFILES = ("cinematic", "ink", "stencil", "painterly", "cel", "clay", "noir", "paper", "blueprint", "neon")
 
 # Picked by itself (art_style "auto"): the cinematic stylised 3D the first story worlds were made in, the
 # look that reads best, for most stories; dark noir for crime and mysteries; painterly for a story set
-# before PAINTED_BEFORE. The others (ink, stencil, cel, clay) are there to be chosen (art_style). A story is
+# before PAINTED_BEFORE. The others (ink, stencil, cel, clay, paper, blueprint, neon) are there to be chosen (art_style). A story is
 # scored by how many of each word list its title and narration use; cinematic wins ties.
 PAINTED_BEFORE = 1850
 NOIR_WORDS = ("mystery", "mysterious", "unexplained", "unsolved", "murder", "crime", "criminal", "detective", "police", "investigat",
@@ -88,8 +88,8 @@ def choose_art(script: Script, story: Manifest | None, style: str = "auto", stre
         profile = "cinematic"
     if atmosphere not in ATMOSPHERES:
         mood = (script.mood or "").lower()
-        atmosphere = ("graphic" if profile in ("stencil", "cel") else "dramatic" if profile in ("ink", "noir") or mood in ("somber", "tense", "dark")
-                      else "dreamlike" if profile == "clay" or mood in ("wonder", "awe", "whimsical", "nostalgic") else "natural")
+        atmosphere = ("graphic" if profile in ("stencil", "cel", "blueprint", "neon") else "dramatic" if profile in ("ink", "noir") or mood in ("somber", "tense", "dark")
+                      else "dreamlike" if profile in ("clay", "paper") or mood in ("wonder", "awe", "whimsical", "nostalgic") else "natural")
     return {"profile": profile, "strength": round(max(0.0, min(1.0, strength)), 2), "detail": round(max(0.2, min(1.0, detail)), 2),
             "atmosphere": atmosphere, "scores": scores}
 

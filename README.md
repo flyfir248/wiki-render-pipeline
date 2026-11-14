@@ -232,6 +232,9 @@ pass that reads the scene's depth.
 | `stencil` | four-ink stencil print, out of register, red accent | when chosen |
 | `cel` | cel-shaded 3D: flat bands of light, bright colour, clean outlines | when chosen |
 | `clay` | clay / miniature: a tilt-shift lens, soft studio light, animation on twos | when chosen |
+| `paper` | layered paper: flat cut-card tones, outlined layers with drop shadows, paper fibre, on twos | when chosen |
+| `blueprint` | blueprint: white outlines and depth contours on blue grid paper | when chosen |
+| `neon` | neon: glowing outlines in each surface's own hue over near-black, with a halo | when chosen |
 
 Settings in `config.yaml` under `visuals`: `art_style` (`auto` or one of the profiles above),
 `art_strength` (0-1, default 0.75), `environment_detail` (0-1, default 0.8) and `atmosphere` (`auto`,

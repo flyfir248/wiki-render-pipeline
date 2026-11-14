@@ -78,7 +78,7 @@ class VisualsConfig(BaseModel):
     world_style: str = "auto"
     # The scene director's art direction (fyt/director.py), one profile per video: auto picks from the
     # story (dark noir for crime and mysteries, painterly for a story before 1850, cinematic stylised 3D
-    # otherwise), or name one of cinematic, ink, stencil, painterly, cel, clay, noir. Strength (0-1) is how far the profile's stylisation goes; environment
+    # otherwise), or name one of cinematic, ink, stencil, painterly, cel, clay, noir, paper, blueprint, neon. Strength (0-1) is how far the profile's stylisation goes; environment
     # detail (0.2-1) how densely places are dressed; atmosphere: auto, natural, dramatic, dreamlike, graphic.
     art_style: str = "auto"
     art_strength: float = 0.75
