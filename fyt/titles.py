@@ -13,7 +13,8 @@ from __future__ import annotations
 import re
 import unicodedata
 
-SHORT_MAX = 55  # the whole title shows under a Short on most phones up to about here
+SHORT_MAX = 45  # the Shorts player covers longer titles with the channel name and buttons; our
+# Shorts of 45 characters or fewer got a median of 38 views against 11 for longer ones (Sep-Nov 2026)
 LONG_MAX = 70  # suggested videos and search cut a long video's title at about 60-70
 FRONT = {"short": 40, "long": 50}  # what shows before the cut: the subject is named in here
 MIN_CHARS = 20
@@ -21,6 +22,11 @@ MIN_CHARS = 20
 RULES = """Titles (they decide whether YouTube shows the video to anyone, so they are written for strangers):
 - Name the subject in its everyday words near the start ("penguins", "a ship", "a town in Ohio"), the
   words someone would type to find it, within the first {front} characters: that is all a phone shows.
+- ONE thing a stranger can picture (object, animal, place, famous person) + ONE twist that should
+  not be true: a contradiction ("The 'extinct' insect hiding on a rock"), a role reversal ("How did
+  emus beat an army?") or an extreme ("The loneliest spot in the ocean"). Abstract subjects get no views.
+- Numbers only to make the thing stranger ("A 25-foot wave of molasses"); never open on a big
+  impersonal number ("150,000 laborers..."): those got a fifth of the views here.
 - Then give a stranger a reason to want the answer: the question the video answers, phrased as they
   would wonder it ("Why do penguins steal stones?", "How did a town burn for 60 years?"), or the most
   surprising fact stated plainly ("This town has been on fire since 1962"). Questions work well here.
@@ -37,7 +43,7 @@ def rules(short: bool) -> str:
     return RULES.format(
         front=FRONT["short" if short else "long"],
         length=(
-            f"Short: 30-50 characters (max {SHORT_MAX}), one idea."
+            f"Short: 25-45 characters (max {SHORT_MAX}), one idea, matching the first frame and first spoken line."
             if short
             else f"Long video: 40-65 characters (max {LONG_MAX}); the subject and the stakes or mystery."
         ),
@@ -61,6 +67,7 @@ UNSAFE = re.compile(
 )
 _LABEL = re.compile(r"^[^:?!.]{2,32}:\s")  # "Pebble-for-sex: ..."
 _HASHTAG = re.compile(r"(^|\s)#\w+")
+_NUMBER_FIRST = re.compile(r"^[$£€]?\d")  # "150,000 laborers...", "$300 million..."
 
 
 def clean(title: str) -> str:
@@ -89,6 +96,8 @@ def problems(title: str, short: bool, subject: str = "") -> tuple[list[str], lis
         soft.append("a \"Label: subtitle\" headline")
     if re.search(r"\b[A-Za-z]+-[A-Za-z]+-[A-Za-z]+\b", title):
         soft.append("an invented hyphenated compound")
+    if short and _NUMBER_FIRST.match(title):
+        soft.append("opens with a number")
     if subject:
         front = title[: FRONT["short" if short else "long"]].lower()
         words = [w for w in re.findall(r"[a-z0-9']+", subject.lower()) if len(w) > 2]

@@ -16,7 +16,7 @@ def test_the_penguin_short_fails_and_a_plain_question_passes():
 
 
 def test_length_caps_and_acronyms():
-    assert titles.problems("x" * 56, short=True)[0] and not titles.problems("Why " + "x" * 51, short=True)[0]
+    assert titles.problems("x" * 46, short=True)[0] and not titles.problems("Why " + "x" * 41, short=True)[0]
     assert not titles.problems("x" * 70, short=False)[0] and titles.problems("x" * 71, short=False)[0]
     assert titles.problems("Too short", short=True)[0]
     assert not titles.problems("How NASA lost a spacecraft to inches", short=True)[1]
@@ -38,3 +38,10 @@ def test_pick_takes_the_first_clean_title_with_fewest_weaknesses():
     assert best == "Why do penguins trade pebbles?"
     assert len(notes) == 2
     assert titles.pick(["Sex and the penguin"], short=True) == (None, ['"Sex and the penguin": too short (19 characters), "Sex" limits ads and reach'])
+
+
+def test_a_short_that_opens_on_a_big_number_is_weaker():
+    assert "opens with a number" in titles.problems("150,000 laborers rerouted the Yellow River", short=True)[1]
+    assert "opens with a number" in titles.problems("$300 million forged by Nazi spies", short=True)[1]
+    assert not titles.problems("A 25-Foot Wave of Molasses Hit Boston", short=True)[1]
+    assert not titles.problems("150,000 laborers rerouted the Yellow River", short=False)[1]
