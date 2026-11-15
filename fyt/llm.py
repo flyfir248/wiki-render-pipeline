@@ -900,7 +900,7 @@ class Outline(BaseModel):
     title: str = Field(description=TITLE_HELP)
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")
-    thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail (not the title).")
+    thumbnail_text: str = Field(description="2-4 punchy words for the thumbnail, adding to the title.")
     thumbnail_kicker: str = Field(description="1-3 word label above the thumbnail text, e.g. the topic.")
     thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
     chapters: list[ChapterPlan]

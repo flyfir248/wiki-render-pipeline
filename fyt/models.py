@@ -257,7 +257,7 @@ class Chapter(BaseModel):
     scene: int  # index of the scene the chapter starts on
 
 
-TITLE_HELP = "YouTube title, max 70 characters (55 for a Short): the subject first, then the question it answers."
+TITLE_HELP = "YouTube title, max 70 characters (45 for a Short): a thing people can picture, then its twist."
 
 
 class Script(BaseModel):
@@ -269,7 +269,7 @@ class Script(BaseModel):
     title: str = Field(description=TITLE_HELP)
     description: str = Field(description="YouTube description: 2 short paragraphs, then key points. No hashtag spam.")
     tags: list[str] = Field(description="8-15 search tags.")
-    thumbnail_text: str = Field(description="2-5 punchy words for the thumbnail (not the title).")
+    thumbnail_text: str = Field(description="2-4 punchy words for the thumbnail, adding to the title.")
     thumbnail_kicker: str = Field(description="1-3 word label above the thumbnail text, e.g. the topic.")
     thumbnail_query: str = Field(description="Stock photo search query for the thumbnail background.")
     scenes: list[ScriptScene]

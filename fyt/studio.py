@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from fyt import blender
+from fyt import blender, titles
 from fyt.models import Script
 
 QUEUE = Path(__file__).resolve().parent.parent / "content" / "studio"
@@ -53,6 +53,9 @@ def ready(fmt: str, done: set[str], queue: Path | None = None, root: Path | None
         except Exception as e:  # a broken file waits; the rest of the queue still runs
             print(f"::warning::studio script {path.name} doesn't load: {e}")
             continue
+        hard, soft = titles.problems(titles.clean(script.title), fmt == "short")
+        if hard or soft:  # hand-written titles get the same checks as fyt's own (docs/PACKAGING.md)
+            print(f"::warning::studio script {path.name}: title \"{script.title}\": {', '.join(hard + soft)}")
         missing = missing_shots(script, root)
         if missing:
             print(f"studio script {path.name} waits for its Blender shots: {missing}")
