@@ -457,7 +457,8 @@ Each run's summary shows the coming slots and their videos. `python -m fyt buffe
 
 **Growth features** (`growth` in `channel.yaml`):
 - *Packaging:* after the script is written, a second pass rewrites the title, the thumbnail text and
-  the opening line for curiosity, and gives each Short a last line that loops back into its hook.
+  the opening line for curiosity, and gives each Short a last line that loops back into its hook. The
+  rules for titles, thumbnails and first frames, including hand-written ones, are in `docs/PACKAGING.md`.
 - *Topics:* articles are ranked by how well they fit the niche (rated by the model) and by how many
   people read them on Wikipedia in the last 30 days, plus the channel's own view counts when the token
   allows reading them. Off-niche articles are skipped.
