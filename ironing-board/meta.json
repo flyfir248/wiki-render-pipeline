@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "ironing-board",
+  "query": "ironing board",
+  "source": "sketchfab",
+  "uid": "sketchfab:488ec480ae7c4975998e30f8f23df2d4",
+  "title": "ironing board",
+  "author": "Dawn7",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-488ec480ae7c4975998e30f8f23df2d4",
+  "checked": "vision",
+  "triangles": 976,
+  "bytes": 35532,
+  "size": [
+    54.4981,
+    79.498,
+    137.1097
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "foldable wooden board with padded top, blue plastic strap",
+  "added": "2026-11-21T13:02:25+00:00"
+}

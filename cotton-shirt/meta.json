@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "cotton-shirt",
+  "query": "cotton shirt",
+  "source": "sketchfab",
+  "uid": "sketchfab:be31fcbad6314b53abb31974be828dda",
+  "title": "Male shirt",
+  "author": "Virtual Pandora",
+  "licence": "by",
+  "url": "https://sketchfab.com/3d-models/none-be31fcbad6314b53abb31974be828dda",
+  "checked": "vision",
+  "triangles": 23985,
+  "bytes": 491428,
+  "size": [
+    655.1795,
+    819.9695,
+    334.8119
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "medium",
+  "illustrative": false,
+  "look": "white cotton shirt, long sleeves, collar",
+  "added": "2026-11-21T13:02:21+00:00"
+}
