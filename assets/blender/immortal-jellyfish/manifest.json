@@ -1,0 +1,36 @@
+{
+  "fps": 30,
+  "source": "Three.js on the Weird But True style kit (wbt_kit.js); rendered off the laptop",
+  "shots": [
+    {
+      "id": "K01",
+      "file": "K01.mp4",
+      "duration": 7.0,
+      "what": "close underwater: a tiny transparent jellyfish pulses, then shrinks into a blob and settles on a rock as a polyp"
+    },
+    {
+      "id": "K02",
+      "file": "K02.mp4",
+      "duration": 7.0,
+      "what": "1988, a colourful Italian Riviera harbour (Rapallo): fishing boats, pastel houses, a student on a jetty with a plankton net"
+    },
+    {
+      "id": "K03",
+      "file": "K03.mp4",
+      "duration": 7.0,
+      "what": "a small lab bench with glass jars of seawater; tiny jellyfish in one jar have turned into polyps on the bottom"
+    },
+    {
+      "id": "K04",
+      "file": "K04.mp4",
+      "duration": 7.0,
+      "what": "the cycle as a diagram-like underwater scene: medusa to blob to polyp colony, with new little medusae budding off"
+    },
+    {
+      "id": "K05",
+      "file": "K05.mp4",
+      "duration": 7.0,
+      "what": "a bright reef with fish, kelp and coral; a fish snaps up drifting jellyfish"
+    }
+  ]
+}

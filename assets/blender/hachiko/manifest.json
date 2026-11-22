@@ -1,0 +1,36 @@
+{
+  "fps": 30,
+  "source": "Three.js on the Weird But True style kit (wbt_kit.js); rendered off the laptop",
+  "shots": [
+    {
+      "id": "T01",
+      "file": "T01.mp4",
+      "duration": 7.0,
+      "what": "old Hachiko, an Akita, sits by the entrance of Shibuya Station and looks up at each person who comes out"
+    },
+    {
+      "id": "T02",
+      "file": "T02.mp4",
+      "duration": 7.0,
+      "what": "1924: Professor Ueno walks to Shibuya Station with young Hachiko; he goes inside and the dog sits to wait"
+    },
+    {
+      "id": "T03",
+      "file": "T03.mp4",
+      "duration": 7.0,
+      "what": "a locked-off wide of the station plaza: spring to winter in seconds while crowds pass and the dog stays"
+    },
+    {
+      "id": "T04",
+      "file": "T04.mp4",
+      "duration": 7.0,
+      "what": "evening: commuters stop to look; a station attendant brings the dog food"
+    },
+    {
+      "id": "T05",
+      "file": "T05.mp4",
+      "duration": 7.0,
+      "what": "today: the bronze statue of Hachiko in the busy plaza, people meeting beside it"
+    }
+  ]
+}
