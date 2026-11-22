@@ -20,7 +20,7 @@ const RED = '#D9452B', CYST = '#E98E66', POLYP = '#F2A48C', STALK = '#C8A57E';
 // ---------------------------------------------------------------- the animal (registered look: clear bell, red cross-shaped stomach, white rim and tentacles)
 function jelly(r = 0.3, parent = world) {
   const g = new THREE.Group(); parent.add(g); g.userData.prop = true; g.name = 'jellyfish';
-  const bellM = new THREE.MeshStandardMaterial({ color: C('#EAF6F8'), transparent: true, opacity: 0.55, roughness: 0.25, flatShading: true, emissive: C('#CFEFF4'), emissiveIntensity: 0.3, side: THREE.DoubleSide, depthWrite: false });
+  const bellM = new THREE.MeshStandardMaterial({ color: C('#EAF6F8'), transparent: true, opacity: 0.4, roughness: 0.25, flatShading: true, emissive: C('#CFEFF4'), emissiveIntensity: 0.15, side: THREE.DoubleSide, depthWrite: false });
   const bell = new THREE.Group(); g.add(bell);
   bell.add(new THREE.Mesh(new THREE.SphereGeometry(r, 14, 6, 0, Math.PI * 2, 0, Math.PI * 0.52), bellM));
   const red = M(RED, { emissive: C('#C8361E'), emissiveIntensity: 0.55 });
@@ -28,10 +28,10 @@ function jelly(r = 0.3, parent = world) {
   mesh(new THREE.CylinderGeometry(r * 0.09, r * 0.12, r * 0.5, 6), red, 0, r * 0.15, 0, bell);   // manubrium
   // four radial canals and gonads along the bell, a ring canal near the rim, a faint inner bell: what makes it read as a hydromedusa
   const canalM = M('#F7E9E4', { transparent: true, opacity: 0.85 });
-  for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + Math.PI / 4; for (let i = 0; i < 6; i++) { const th = (i + 0.5) / 6 * Math.PI * 0.5; const c = mesh(box(r * 0.03, r * 0.27, r * 0.015), canalM, Math.cos(a) * Math.sin(th) * r * 1.005, Math.cos(th) * r * 1.005, Math.sin(a) * Math.sin(th) * r * 1.005, bell); c.lookAt(0, 0, 0); }
+  for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + Math.PI / 4; for (let i = 0; i < 6; i++) { const th = (i + 0.5) / 6 * Math.PI * 0.5; const c = mesh(box(r * 0.045, r * 0.27, r * 0.02), canalM, Math.cos(a) * Math.sin(th) * r * 1.005, Math.cos(th) * r * 1.005, Math.sin(a) * Math.sin(th) * r * 1.005, bell); c.lookAt(0, 0, 0); }
     mesh(new THREE.IcosahedronGeometry(r * 0.1, 0), M('#F2A06A', { emissive: C('#C8602E'), emissiveIntensity: 0.3 }), Math.cos(a) * r * 0.55, r * 0.62, Math.sin(a) * r * 0.55, bell).scale.set(0.7, 1.3, 0.7); }
   const ringc = mesh(new THREE.TorusGeometry(r * 0.9, r * 0.012, 3, 24), canalM, 0, r * 0.12, 0, bell); ringc.rotation.x = Math.PI / 2;
-  bell.add(new THREE.Mesh(new THREE.SphereGeometry(r * 0.8, 10, 5, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshStandardMaterial({ color: C('#DDF2F6'), transparent: true, opacity: 0.25, flatShading: true, depthWrite: false, side: THREE.DoubleSide })));
+  bell.add(new THREE.Mesh(new THREE.SphereGeometry(r * 0.8, 10, 5, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshStandardMaterial({ color: C('#DDF2F6'), transparent: true, opacity: 0.12, flatShading: true, depthWrite: false, side: THREE.DoubleSide })));
   const rim = mesh(new THREE.TorusGeometry(r * 0.98, r * 0.035, 4, 24), M(PAL.offwhite), 0, -r * 0.05, 0, bell); rim.rotation.x = Math.PI / 2;
   const tents = []; const tm = M(PAL.offwhite, { transparent: true, opacity: 0.85 });
   for (let k = 0; k < 44; k++) { const a = k / 44 * Math.PI * 2; const P = new THREE.Group(); P.position.set(Math.cos(a) * r * 0.96, -r * 0.05, Math.sin(a) * r * 0.96); P.rotation.y = -a; bell.add(P);
@@ -44,7 +44,7 @@ function jelly(r = 0.3, parent = world) {
 function pulse(g, t, m = 0, speed = 1.2, ph = 0) { const j = g.userData.j; const q = ((t * speed + ph) % 1); const c = q < 0.3 ? sm(0, 0.3, q) : 1 - sm(0.3, 1, q);
   const s = mix(1, 0.25, m); j.bell.scale.set(s * (1 - 0.16 * c * (1 - m)), s * (1 + 0.1 * c * (1 - m)), s * (1 - 0.16 * c * (1 - m)));
   j.tents.forEach((tn) => { tn.Q.rotation.z = (0.55 - 0.4 * c) * (1 - m) + 0.12 * Math.sin(t * 2.4 + tn.ph); tn.Q.scale.y = Math.max(0.02, 1 - m * 1.1); });
-  j.bellM.opacity = 0.55 * (1 - sm(0.6, 1, m)); j.bell.visible = m < 0.98; j.cyst.visible = m > 0.3; j.cyst.scale.setScalar(Math.max(0.01, sm(0.3, 1, m))); return c; }
+  j.bellM.opacity = 0.4 * (1 - sm(0.6, 1, m)); j.bell.visible = m < 0.98; j.cyst.visible = m > 0.3; j.cyst.scale.setScalar(Math.max(0.01, sm(0.3, 1, m))); return c; }
 
 // polyp: stalk, hydranth and a ring of tentacles; grow 0..1
 function polyp(h, parent) { const g = new THREE.Group(); parent.add(g);
@@ -255,6 +255,8 @@ if (K3) {
   { const g = prop('glass cabinet', 1.2, -5.6, 0, 0); mesh(box(1.8, 1.1, 0.35), M('#8A6A48'), 0, 0.55, 0, g); for (const x of [-0.45, 0.45]) { mesh(box(0.8, 0.9, 0.02), M('#CFE6EE', { transparent: true, opacity: 0.5 }), x, 0.58, 0.18, g); for (let k = 0; k < 4; k++) mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.2, 8), M(['#BFE2EE', PAL.peach, '#D8E9C9', PAL.golden][k]), x - 0.3 + k * 0.2, 0.6, 0.05, g); } }
   { const g = prop('poster', -1.0, -5.76, 0, 1.3); mesh(box(0.6, 0.8, 0.02), M(PAL.navy), 0, 0, 0, g); mesh(new THREE.CircleGeometry(0.16, 10), M('#CFEFF4'), 0, 0.1, 0.015, g); mesh(new THREE.CircleGeometry(0.06, 8), M(RED), 0, 0.12, 0.02, g); mesh(box(0.4, 0.05, 0.01), M(PAL.paper), 0, -0.25, 0.015, g); }
   { const g = prop('gas taps', 0, -5.76, 0, 1.0); mesh(box(2.8, 0.06, 0.08), M('#B9C2C8', { metalness: 0.5, roughness: 0.4 }), 0, 0, 0.04, g); for (let k = 0; k < 6; k++) mesh(box(0.05, 0.1, 0.08), M(PAL.golden), -1.2 + k * 0.48, -0.06, 0.08, g); }
+  for (const [x, y, c] of [[-2.0, 0.75, PAL.peach], [-1.4, 0.7, PAL.sky], [0.0, 0.72, PAL.golden], [-0.6, 0.78, PAL.paper]]) { const g = prop('notice', x, -5.76, 0, y); mesh(box(0.34, 0.44, 0.01), M(c), 0, 0, 0, g); for (let k = 0; k < 4; k++) mesh(box(0.24, 0.025, 0.012), M(PAL.ink), 0, 0.12 - k * 0.07, 0.006, g); mesh(new THREE.IcosahedronGeometry(0.02, 0), M(PAL.brick), 0, 0.2, 0.01, g); }
+  { const g = prop('wall shelf', 1.2, -5.62, 0, 1.25); mesh(box(1.9, 0.04, 0.25), M(PAL.wood), 0, 0, 0, g); for (let k = 0; k < 7; k++) mesh(k % 2 ? new THREE.CylinderGeometry(0.05, 0.05, 0.16, 8) : box(0.1, 0.2, 0.08), M([PAL.teal, PAL.offwhite, PAL.brick, '#BFE2EE', PAL.golden, PAL.navy, PAL.leaf][k]), -0.8 + k * 0.26, 0.1, 0, g); }
   { const g = prop('clock', -0.3, -5.76, 0, 2.6); mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.05, 16), M(PAL.offwhite), 0, 0, 0, g).rotation.x = Math.PI / 2; mesh(box(0.02, 0.15, 0.02), M(PAL.ink), 0, 0.06, 0.03, g); }
   { const g = prop('periodic table', -2.2, -5.76, 0, 1.9); mesh(box(1.0, 0.7, 0.02), M(PAL.paper), 0, 0, 0, g); for (let i = 0; i < 18; i++) for (let j = 0; j < 7; j++) if (j > 1 || i < 2 || i > 11) mesh(box(0.045, 0.07, 0.01), M([PAL.peach, PAL.sky, PAL.golden, PAL.leaf][(i + j) % 4]), -0.45 + i * 0.053, 0.27 - j * 0.085, 0.015, g); }
   { const g = prop('sink and tap', -2.3, -1.2, Math.PI / 2, 0); mesh(box(1.0, 0.9, 0.6), M('#8A6A48'), 0, 0.45, 0, g); mesh(box(0.7, 0.05, 0.45), M('#DCE6E8', { metalness: 0.4, roughness: 0.3 }), 0, 0.92, 0, g); mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.3, 6), M('#B9C2C8', { metalness: 0.6, roughness: 0.3 }), 0, 1.07, -0.18, g); }
@@ -295,7 +297,7 @@ if (K3) {
     mesh(new THREE.CylinderGeometry(r, r, h, 14, 1, true), glass, 0, h / 2, 0, g); mesh(new THREE.CylinderGeometry(r * 0.96, r * 0.96, h * 0.8, 14), seaw, 0, h * 0.4, 0, g); mesh(new THREE.CylinderGeometry(r * 1.05, r * 1.05, 0.03, 14), M(PAL.charcoal), 0, h + 0.015, 0, g);
     mesh(box(0.1, 0.06, 0.005), M(PAL.paper), 0, h * 0.62, r + 0.004, g); mesh(box(0.07, 0.008, 0.006), M(PAL.ink), 0, h * 0.64, r + 0.006, g);
     if (x !== HERO_X) { const js = [0, 1].map((k) => { const j = jelly(0.034, g); j.position.set((k - 0.5) * 0.08, 0.12 + k * 0.08, 0.02); j.userData.prop = false; return j; }); jars.push({ g, js }); } else { hero(g); jars.push({ g, js: [], hero: true }); } }
-  const hj = jars.find((j) => j.hero).g; const pols = []; for (let k = 0; k < 6; k++) { const p = polyp(0.1 + (k % 3) * 0.025, hj); const a = k * 1.1; p.position.set(Math.cos(a) * 0.05, 0.005, Math.sin(a) * 0.05); pols.push(p); }
+  const hj = jars.find((j) => j.hero).g; const pols = []; for (let k = 0; k < 6; k++) { const p = polyp(0.14 + (k % 3) * 0.03, hj); const a = k * 1.1; p.position.set(Math.cos(a) * 0.05, 0.005, Math.sin(a) * 0.05); pols.push(p); }
   for (let k = 0; k < 3; k++) { const c = mesh(blob(0.012, 0, 0.2), M(CYST), Math.cos(k * 2) * 0.07, 0.01, Math.sin(k * 2) * 0.07, hj); c; }
   // air line and bubbles in the jar next to the hero
   const bubbles = []; const bj = jars[4].g; for (let k = 0; k < 10; k++) { const b = mesh(new THREE.IcosahedronGeometry(0.006, 0), M('#F4FBFA', { transparent: true, opacity: 0.8 }), 0.05, 0, 0, bj); bubbles.push({ b, ph: k / 10 }); }

@@ -247,7 +247,7 @@ if (T1) { // hook: frame 1 = thumbnail. Old Hachiko waits; looks up at each pers
 }
 
 if (T2) { // 1924: Ueno walks to the station with young Hachiko, goes in; the dog sits by the door.
-  setSeason(0.3); sun.intensity = 3.1; fill.intensity = 0.35; sun.color = C('#FFE6C2');
+  setSeason(0.3); sun.intensity = 3.1; fill.intensity = 0.3; sun.color = C('#FFE0B5'); hemi.intensity = 0.95; renderer.toneMappingExposure = 1.0;
   const ueno = person({ top: PAL.charcoal, bottom: PAL.charcoal, skin: '#E0AE84', hair: '#1F1A17', hat: 'fedora', hatCol: PAL.navy, collar: PAL.offwhite, bag: PAL.wood, height: 1.66, step: 0.72, cadence: 1.85 });
   hero(ueno); const path = [[-2.4, 2.6], [-0.3, -1.4], [0.0, FZ - 1.75], [3.2, FZ - 1.75]]; const uGo = walker(ueno, path, 0.0);
   const dogPath = [[-1.75, 2.85], [0.35, -1.25], [0.9, FZ + 1.35]]; const v = 0.72 * 1.85;
@@ -298,6 +298,17 @@ if (T4) { // evening: commuters stop beside him; the station attendant brings hi
   for (const [x, z] of [[-4.5, 2.5], [4.5, 2.5]]) { const l = new THREE.PointLight(C('#FFD29A'), 5, 7, 1.6); l.position.set(x, 3.3, z); world.add(l); }
   { const lan = prop('stone lantern', 2.05, 0.65); mesh(box(0.34, 0.12, 0.34), M('#9C958B'), 0, 0.06, 0, lan); mesh(box(0.12, 0.5, 0.12), M('#9C958B'), 0, 0.37, 0, lan); mesh(box(0.3, 0.24, 0.3), M('#A9A296', { emissive: C('#F2B53A'), emissiveIntensity: 0.6 }), 0, 0.74, 0, lan); const cap = mesh(new THREE.ConeGeometry(0.3, 0.2, 4), M('#8E877D'), 0, 0.96, 0, lan); cap.rotation.y = Math.PI / 4; }
   { const pine = prop('potted pine', 0.35, 0.4); pine.scale.setScalar(0.6); mesh(new THREE.CylinderGeometry(0.26, 0.2, 0.36, 8), M(PAL.brick), 0, 0.18, 0, pine); mesh(blob(0.32, 0, 0.15), M(PAL.forest), 0, 0.62, 0, pine); mesh(blob(0.22, 0, 0.15), M(PAL.forest), 0.1, 0.9, 0.05, pine); }
+  // near foreground at the frame foot: a vendor's persimmon basket and a wrapped furoshiki bundle on the paving
+  { const b = prop('persimmon basket', 1.0, 1.45, 0.3); mesh(new THREE.CylinderGeometry(0.24, 0.18, 0.2, 10), M(PAL.wood), 0, 0.1, 0, b); mesh(new THREE.TorusGeometry(0.24, 0.025, 4, 10), M('#8A5A32'), 0, 0.2, 0, b).rotation.x = Math.PI / 2;
+    for (let k = 0; k < 9; k++) { const a = k * 2.4, r = 0.06 + (k % 3) * 0.05; mesh(new THREE.IcosahedronGeometry(0.065, 0), M(k % 4 ? '#E8742A' : PAL.golden), Math.cos(a) * r, 0.24 + (k % 2) * 0.03, Math.sin(a) * r, b); }
+    for (let k = 0; k < 3; k++) mesh(new THREE.IcosahedronGeometry(0.06, 0), M('#E8742A'), 0.32 + k * 0.1, 0.05, 0.1 * k, b); }
+  { const f = prop('furoshiki bundle', 0.4, 1.95, -0.4); mesh(blob(0.2, 0, 0.12), M(PAL.teal), 0, 0.16, 0, f); mesh(box(0.08, 0.1, 0.08), M(PAL.teal), 0, 0.33, 0, f); mesh(box(0.34, 0.03, 0.05), M(PAL.golden), 0, 0.2, 0.17, f); mesh(box(0.5, 0.06, 0.28), M('#B08458'), 0.38, 0.03, 0.05, f); }
+  // drifts of fallen leaves near the lens, dropped onto whatever is there (paving, the plank, the basket rim)
+  { const N = 260, lm = new THREE.InstancedMesh(new THREE.CircleGeometry(0.04, 5), new THREE.MeshStandardMaterial({ color: C('#FFFFFF'), roughness: 0.9, side: THREE.DoubleSide }), N); world.add(lm);
+    const ray = new THREE.Raycaster(), o = new THREE.Object3D(), cols = [PAL.amber, PAL.golden, PAL.brick, '#E8742A']; world.updateMatrixWorld(true);
+    const solid = []; world.traverse((m) => { if (m.isMesh && m !== lm && m !== petalsOnGround && m.visible) solid.push(m); });
+    for (let i = 0; i < N; i++) { const x = -1.2 + rnd() * 3.4, z = 0.6 + Math.pow(rnd(), 0.7) * 2.2; ray.set(V(x, 3.0, z), V(0, -1, 0)); const h = ray.intersectObjects(solid, false)[0];
+      o.position.set(x, (h ? h.point.y : 0) + 0.008, z); o.rotation.set(-Math.PI / 2 + (rnd() - 0.5) * 0.4, 0, rnd() * 6); o.scale.setScalar(0.8 + rnd() * 0.9); o.updateMatrix(); lm.setMatrixAt(i, o.matrix); lm.setColorAt(i, C(cols[i % 4])); } }
   useCrowd([[0, 0, -0.4, 1], [1, 3, -2.0, 1], [3, 1, 4.6, 1], [5, 6, -5, 1], [6, 5, -2.5, 1], [7, 3, -4.0, 1]]);
   // two commuters who have stopped to look at him (they stand clear of every path)
   const stop1 = person({ outfit: 'kimono', top: PAL.peach, bottom: '#C97E5A', obi: PAL.teal, skin: PAL.skin[0], hair: PAL.hair[1], bun: true, height: 1.52 }); stop1.position.set(1.05, 0, -2.4); stop1.rotation.y = 0.6;
@@ -320,7 +331,7 @@ if (T4) { // evening: commuters stop beside him; the station attendant brings hi
     const eat = sm(4.5, 5.0, t); dogSit(hachi, t, mix(D(45) * sm(1.6, 2.4, t), D(30), eat), true); hachi.userData.neck.rotation.x = 0.55 + 0.95 * eat + 0.06 * eat * Math.sin(t * 9);
     hachi.userData.tail.rotation.z = 0.06 * Math.sin(t * 2.5) + 0.25 * eat * Math.sin(t * 8);
     orbit(V(DOGPOS.x - 0.1, 0.75, DOGPOS.z + 0.1), D(-16 + 4 * e), D(12), mix(4.7, 4.25, e)); camera.fov = 50; camera.updateProjectionMatrix(); };
-  overlay = (t) => card('Strangers\nFed Him', { y: 0.2, size: 0.058, alpha: sm(0.3, 0.6, t) });
+  overlay = (t) => card('Strangers\nFed Him', { y: 0.2, size: 0.058 });
 }
 
 if (T5) { // today: the bronze statue in a busy modern plaza where people meet
