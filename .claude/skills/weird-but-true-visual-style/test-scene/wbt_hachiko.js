@@ -6,12 +6,14 @@
 // T01 hook: old Hachiko sits by the entrance and looks up at each person who comes out (medium, +8 deg, push-in 10%)
 // T02 1924: Ueno walks to the station with young Hachiko, goes in; the dog sits (elevated wide, +30 deg, 10 deg orbit)
 // T03 the years: locked-off wide, spring to winter in 7 s while the crowds pass and he stays (time-lapse)
+// T04 evening: commuters stop beside him and the station attendant brings him food (medium, +12 deg, push-in)
+// T05 today: the bronze statue in a busy modern plaza where people meet (wide, +8 deg, slow 12 deg orbit)
 import { renderer, THREE, SHOT, rnd, C, V, D, sm, mix, clamp, PAL, world, scene, sky, hemi, sun, fill, camera, grade, M, E, mesh, box, blob, canvasTex,
   person, walker, standPose, sitPose, prop, dog, dogSit, dogWalk, orbit, card, run, hero, atmo } from './wbt_kit.js';
 
-const T1 = SHOT === 'T01', T2 = SHOT === 'T02', T3 = SHOT === 'T03';
-window.SHOT_SIZE = T1 ? 'medium' : 'wide';
-sky('day', 28, 85);
+const T1 = SHOT === 'T01', T2 = SHOT === 'T02', T3 = SHOT === 'T03', T4 = SHOT === 'T04', T5 = SHOT === 'T05';
+window.SHOT_SIZE = T1 || T4 ? 'medium' : 'wide';
+sky(T4 ? 'golden' : 'day', 28, 85);
 sun.position.set(-10, 15, 11); sun.target.position.set(0, 0, -1);
 
 // ---------------------------------------------------------------- the plaza
@@ -174,7 +176,7 @@ const tram = prop('tram', -30, 13.5, 0); mesh(box(7.5, 2.2, 2.2), M('#E3D6B5'), 
 for (let k = 0; k < 6; k++) mesh(box(0.8, 0.7, 0.05), M('#F6E2B4', { emissive: C(PAL.golden), emissiveIntensity: 0.15 }), -3 + k * 1.2, 1.8, 1.11, tram); const pole = mesh(box(0.05, 1.6, 0.05), M(PAL.charcoal), 1.5, 3.3, 0, tram); pole.rotation.z = -0.6;
 for (const x of [-5, 5]) { const g = prop('roof vent', x, -7.0, 0, 5.0); mesh(box(0.6, 1.2, 0.6), M(PAL.bluegrey), 0, 0.6, 0, g); mesh(box(0.8, 0.1, 0.8), M(PAL.navy), 0, 1.25, 0, g); }
 const birds = []; for (let k = 0; k < 7; k++) { const g = new THREE.Group(); world.add(g); const l = mesh(box(0.28, 0.02, 0.08), M(PAL.charcoal), -0.14, 0, 0, g), r = mesh(box(0.28, 0.02, 0.08), M(PAL.charcoal), 0.14, 0, 0, g); birds.push({ g, l, r, o: rnd() }); }
-atmo('crowd'); atmo('falling petals'); atmo('steam'); atmo('tram'); atmo('birds'); atmo('lanterns');
+if (!T5) { atmo('crowd'); atmo(T4 ? 'falling leaves' : 'falling petals'); atmo('steam'); atmo('tram'); atmo('birds'); atmo('lanterns'); }
 function life(t) { // background life shared by every shot
   steam.forEach((p) => { const q = (p.ph + t * 0.25) % 1; p.m.position.set(-5.15 + Math.sin(q * 6 + p.ph * 9) * 0.12 * q, 2.1 + q * 1.4, 1.75); p.m.scale.setScalar(0.4 + q * 1.6); p.m.material.opacity = 0.55 * (1 - q); });
   tram.position.x = -26 + t * 7.5; lanterns.forEach((g, k) => (g.rotation.z = 0.06 * Math.sin(t * 1.6 + k)));
@@ -284,6 +286,132 @@ if (T3) { // the years: locked-off wide; spring, summer, autumn, winter while he
     dogSit(hachi, t, D(-10) + D(-35) * (sm(1.0, 1.4, t) - sm(2.2, 2.6, t)), true); mm.rotation.z = -t * 3; hh.rotation.z = -t * 0.25;
     orbit(V(0.9, 1.1, -1.2), D(-16), D(25), 9.2); camera.fov = 54; camera.updateProjectionMatrix(); };
   overlay = (t) => card('For Nearly\n10 Years', { y: 0.2, size: 0.056, alpha: sm(3.6, 4.1, t) });
+}
+
+if (T4) { // evening: commuters stop beside him; the station attendant brings his supper (people fed him for years)
+  // Dressing plan (3A): foreground potted pine + stone lantern by the door; hero Hachiko; midground the attendant with a
+  // bowl, two commuters who stop, the queue, kiosk vendor, potato cart and steam, benches, rickshaw; background the lit
+  // station windows, shops, poles and wires, a tram; atmosphere crowd, falling autumn leaves, steam, tram, birds, lanterns.
+  setSeason(2.0); petalsOnGround.material.color.set(PAL.amber);
+  sun.position.set(-16, 6.5, 6); sun.color = C('#FFC27E'); sun.intensity = 2.7; hemi.color.set(C('#F0DCC4')); hemi.intensity = 1.3; fill.intensity = 0.3; renderer.toneMappingExposure = 1.22;
+  world.traverse((o) => { if (o.isMesh && o.material.emissive && o.material.emissiveIntensity > 0.1 && o.material.emissiveIntensity < 0.5) o.material.emissiveIntensity *= 2.2; });
+  for (const [x, z] of [[-4.5, 2.5], [4.5, 2.5]]) { const l = new THREE.PointLight(C('#FFD29A'), 5, 7, 1.6); l.position.set(x, 3.3, z); world.add(l); }
+  { const lan = prop('stone lantern', 2.05, 0.65); mesh(box(0.34, 0.12, 0.34), M('#9C958B'), 0, 0.06, 0, lan); mesh(box(0.12, 0.5, 0.12), M('#9C958B'), 0, 0.37, 0, lan); mesh(box(0.3, 0.24, 0.3), M('#A9A296', { emissive: C('#F2B53A'), emissiveIntensity: 0.6 }), 0, 0.74, 0, lan); const cap = mesh(new THREE.ConeGeometry(0.3, 0.2, 4), M('#8E877D'), 0, 0.96, 0, lan); cap.rotation.y = Math.PI / 4; }
+  { const pine = prop('potted pine', 0.35, 0.4); pine.scale.setScalar(0.6); mesh(new THREE.CylinderGeometry(0.26, 0.2, 0.36, 8), M(PAL.brick), 0, 0.18, 0, pine); mesh(blob(0.32, 0, 0.15), M(PAL.forest), 0, 0.62, 0, pine); mesh(blob(0.22, 0, 0.15), M(PAL.forest), 0.1, 0.9, 0.05, pine); }
+  useCrowd([[0, 0, -0.4, 1], [1, 3, -2.0, 1], [3, 1, 4.6, 1], [5, 6, -5, 1], [6, 5, -2.5, 1], [7, 3, -4.0, 1]]);
+  // two commuters who have stopped to look at him (they stand clear of every path)
+  const stop1 = person({ outfit: 'kimono', top: PAL.peach, bottom: '#C97E5A', obi: PAL.teal, skin: PAL.skin[0], hair: PAL.hair[1], bun: true, height: 1.52 }); stop1.position.set(1.05, 0, -2.4); stop1.rotation.y = 0.6;
+  const stop2 = person({ top: '#E8D2B0', bottom: PAL.warmgrey, skin: PAL.skin[1], hair: PAL.hair[0], height: 1.25 }); stop2.position.set(0.45, 0, -1.0); stop2.rotation.y = 1.2;
+  // the attendant walks out of the door with a bowl, crouches and sets it down in front of the dog
+  attendant.visible = false; const att = person({ top: PAL.navy, bottom: PAL.navy, skin: PAL.skin[1], hat: 'fedora', hatCol: PAL.navy, collar: PAL.golden, height: 1.68 });
+  const AX = 2.48, AZ = -1.05; const aPath = [[-0.4, FZ + 0.9], [1.6, -2.6], [AX, AZ]]; const aGo = walker(att, aPath, 0.3, 0.8);
+  const bowl = new THREE.Group(); mesh(new THREE.CylinderGeometry(0.13, 0.09, 0.08, 10), M(PAL.brick), 0, 0.04, 0, bowl); mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.02, 10), M('#F1E4C8'), 0, 0.075, 0, bowl);
+  for (let k = 0; k < 4; k++) mesh(new THREE.IcosahedronGeometry(0.03, 0), M(k % 2 ? PAL.peach : PAL.wood), -0.05 + k * 0.035, 0.09, 0.02 * Math.sin(k * 2), bowl);
+  const hand = att.userData.arms[1].userData.hand; hand.add(bowl); bowl.position.set(0, -0.02, 0.06);
+  const BOWL = V(DOGPOS.x + 0.3, 0, DOGPOS.z + 0.4); let placed = false;
+  update = (t, u, e) => { life(t); crowd.forEach((c) => c.go(t)); fall(t, PAL.amber, 0.7, 1.3); mm.rotation.z = -3.3 - t * 0.03; hh.rotation.z = -3.4;
+    standPose(stop1, t); standPose(stop2, t + 1); stop1.userData.hd.rotation.y = 0.15 * Math.sin(t * 0.5); stop2.userData.hd.rotation.x = 0.25;
+    const arrived = aGo(t); if (arrived || t > 3.0) { att.visible = true; att.position.set(AX, 0, AZ); att.rotation.y = Math.atan2(BOWL.x - AX, BOWL.z - AZ);
+      const k = sm(3.4, 4.2, t) - sm(5.0, 5.7, t); standPose(att, t); att.userData.body.rotation.x = 0.75 * k; att.userData.hips.position.y = att.userData.leg - 0.25 * k; att.userData.body.position.y = att.userData.leg - 0.25 * k;
+      att.userData.legs.forEach((l) => { l.rotation.x = -0.6 * k; l.scale.y = 1 - 0.15 * k; }); att.userData.arms.forEach((a) => (a.rotation.x = -0.5 - 0.6 * k));
+      if (!placed && t > 4.15) { placed = true; world.attach(bowl); bowl.position.copy(BOWL); bowl.rotation.set(0, 0, 0); } }
+    else att.userData.arms[1].rotation.x = -0.9;
+    // he looks at the attendant, then lowers his head to the bowl
+    const eat = sm(4.5, 5.0, t); dogSit(hachi, t, mix(D(45) * sm(1.6, 2.4, t), D(30), eat), true); hachi.userData.neck.rotation.x = 0.55 + 0.95 * eat + 0.06 * eat * Math.sin(t * 9);
+    hachi.userData.tail.rotation.z = 0.06 * Math.sin(t * 2.5) + 0.25 * eat * Math.sin(t * 8);
+    orbit(V(DOGPOS.x - 0.1, 0.75, DOGPOS.z + 0.1), D(-16 + 4 * e), D(12), mix(4.7, 4.25, e)); camera.fov = 50; camera.updateProjectionMatrix(); };
+  overlay = (t) => card('Strangers\nFed Him', { y: 0.2, size: 0.058, alpha: sm(0.3, 0.6, t) });
+}
+
+if (T5) { // today: the bronze statue in a busy modern plaza where people meet
+  // Dressing plan (3A), Hachiko Square, Shibuya, today:
+  //  foreground  a street-tree planter and a map board at the frame edges
+  //  hero zone   the bronze Hachiko on a granite plinth inside a low railing and planting bed, flowers left at its feet
+  //  midground   people waiting and checking phones, two taking photos, walkers with bags crossing, benches, vending
+  //              machines, bicycles, bollards, traffic lights, an old green railway carriage kept as a landmark, trees
+  //  background  glass towers with big screens, the scramble crossing with cars and a bus, an elevated railway line
+  //  atmosphere  crowd, traffic, screens changing, pigeons, birds overhead
+  for (const o of [...world.children]) o.visible = false; ground.visible = true;
+  sun.position.set(-9, 15, 10); sun.intensity = 3.0; fill.intensity = 0.4; hemi.intensity = 1.45; renderer.toneMappingExposure = 1.2;
+  ground.material.map.repeat.set(26, 21); ground.material.color.set('#DCD8D2');
+  atmo('crowd'); atmo('traffic'); atmo('screens'); atmo('pigeons'); atmo('birds');
+  const bronze = new THREE.MeshStandardMaterial({ color: C('#8A6236'), metalness: 0.55, roughness: 0.42, flatShading: true });
+  const granite = M('#8E8A86');
+  { const g = prop('plinth', 0, 0); mesh(box(1.25, 1.0, 0.95), granite, 0, 0.5, 0, g); mesh(box(1.4, 0.08, 1.1), M('#7A7672'), 0, 1.04, 0, g); mesh(box(0.7, 0.22, 0.02), M('#5E5A56'), 0, 0.62, 0.48, g); }
+  const statue = dog({ coat: '#8A6236', belly: '#9B7244', dark: '#6E4A28', size: 1.0 }); statue.traverse((o) => { if (o.isMesh) o.material = bronze; }); statue.position.set(0, 1.08, 0.05); statue.scale.setScalar(1.35); hero(statue);
+  dogSit(statue, 0, 0, true);
+  { const g = prop('flowers', 0.3, 0.62); for (let k = 0; k < 5; k++) mesh(new THREE.IcosahedronGeometry(0.06, 0), M([PAL.golden, PAL.blossom, PAL.offwhite, PAL.peach, PAL.golden][k]), -0.2 + k * 0.1, 0.06, 0.04 * (k % 2), g); mesh(box(0.4, 0.03, 0.1), M(PAL.forest), 0, 0.02, 0, g); }
+  { const g = prop('railing', 0, 0); for (let k = 0; k < 10; k++) { const a = k / 10 * Math.PI * 2; mesh(box(0.05, 0.55, 0.05), M('#5A5F66'), Math.cos(a) * 1.4, 0.27, Math.sin(a) * 1.4, g); }
+    const rr = mesh(new THREE.TorusGeometry(1.4, 0.025, 4, 20), M('#5A5F66'), 0, 0.52, 0, g); rr.rotation.x = Math.PI / 2;
+    const bed = mesh(new THREE.CylinderGeometry(1.35, 1.35, 0.12, 20), M('#5E8F3E'), 0, 0.06, 0, g); bed; for (let k = 0; k < 9; k++) { const a = k / 9 * 6.28 + 0.3; mesh(blob(0.2, 0, 0.15), M(k % 3 ? PAL.leaf : PAL.forest), Math.cos(a) * 1.05, 0.2, Math.sin(a) * 1.05, g); } }
+  function streetTree(x, z, s = 1) { const g = prop('street tree', x, z, rnd() * 6); g.scale.setScalar(s); mesh(new THREE.CylinderGeometry(0.12, 0.16, 2.6, 6), M('#5E4330'), 0, 1.3, 0, g);
+    for (let k = 0; k < 5; k++) { const a = rnd() * 6.28, r = rnd() * 0.7; mesh(blob(0.7 + rnd() * 0.3, 1, 0.14), M([PAL.leaf, PAL.forest, '#5FA347'][k % 3]), Math.cos(a) * r, 3.0 + rnd() * 0.7, Math.sin(a) * r, g); }
+    mesh(box(0.9, 0.12, 0.9), M('#7A7672'), 0, 0.06, 0, g); return g; }
+  for (const [x, z, s] of [[-2.9, -1.7, 1.1], [3.0, -2.1, 1.0], [-6.2, 1.2, 1.0], [10.8, 0.8, 1.1], [-9.5, -1.0, 1.0], [9.8, -1.4, 1.0]]) streetTree(x, z, s);
+  for (const [x, z] of [[-3.8, 1.2], [4.0, 1.0]]) { const g = prop('bench', x, z); mesh(box(1.6, 0.08, 0.45), M('#B98A5A'), 0, 0.45, 0, g); for (const sx of [-0.7, 0.7]) mesh(box(0.08, 0.45, 0.4), M(PAL.charcoal), sx, 0.22, 0, g); }
+  for (let k = 0; k < 3; k++) { const g = prop('vending machine', -8.6 + k * 1.0, -5.4); mesh(box(0.9, 1.8, 0.7), M([PAL.offwhite, PAL.brick, PAL.sky][k]), 0, 0.9, 0, g); mesh(box(0.7, 0.9, 0.02), M('#DDE7EE', { emissive: C('#FFFFFF'), emissiveIntensity: 0.2 }), 0, 1.25, 0.36, g);
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) mesh(box(0.1, 0.18, 0.03), M([PAL.golden, PAL.teal, PAL.brick, PAL.leaf][(r + c) % 4]), -0.24 + c * 0.16, 1.5 - r * 0.28, 0.37, g); }
+  { const g = prop('green carriage', 11.5, -5.8); mesh(box(8, 2.5, 2.4), M('#5E9E55'), 0, 1.65, 0, g); mesh(box(8, 0.6, 2.45), M('#E7E2C6'), 0, 1.9, 0, g); mesh(box(8.1, 0.2, 2.5), M(PAL.charcoal), 0, 3.0, 0, g);
+    for (let k = 0; k < 6; k++) mesh(box(0.8, 0.6, 0.05), M('#BFD8E6'), -3 + k * 1.2, 1.95, 1.23, g); mesh(box(7.6, 0.4, 2.0), M(PAL.charcoal), 0, 0.2, 0, g); }
+  for (const x of [-7, -5, -3, -1, 1]) { const g = prop('bollard', x, -6.6); mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.8, 8), M(PAL.charcoal), 0, 0.4, 0, g); mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.06, 8), M(PAL.signal), 0, 0.72, 0, g); }
+  const tl = []; for (const x of [3.0, 6.0]) { const g = prop('traffic light', x, -6.8); mesh(new THREE.CylinderGeometry(0.06, 0.08, 3.2, 6), M('#6E7378'), 0, 1.6, 0, g); mesh(box(0.35, 0.8, 0.3), M(PAL.charcoal), 0, 2.9, 0.1, g);
+    const lamp = mesh(new THREE.CircleGeometry(0.1, 10), new THREE.MeshBasicMaterial({ color: C('#3BD17A') }), 0, 2.75, 0.26, g); tl.push(lamp); }
+  for (let k = 0; k < 4; k++) { const g = prop('bicycle', -10.8 + k * 0.6, 2.8, Math.PI / 2 + 0.15); for (const z of [-0.5, 0.5]) { const w = mesh(new THREE.TorusGeometry(0.32, 0.025, 4, 12), M(PAL.charcoal), 0, 0.33, z, g); w.rotation.y = Math.PI / 2; }
+    mesh(box(0.04, 0.04, 0.95), M([PAL.teal, PAL.brick, PAL.offwhite, PAL.golden][k]), 0, 0.6, 0, g); mesh(box(0.04, 0.5, 0.04), M(PAL.charcoal), 0, 0.55, 0.35, g); }
+  { const g = prop('map board', 2.05, 2.55, -0.5); g.scale.setScalar(0.75); mesh(box(0.08, 1.9, 0.08), M('#6E7378'), -0.5, 0.95, 0, g); mesh(box(0.08, 1.9, 0.08), M('#6E7378'), 0.5, 0.95, 0, g); mesh(box(1.1, 0.8, 0.06), M(PAL.navy), 0, 1.5, 0, g);
+    for (const [x, y, w, c] of [[-0.2, 1.62, 0.5, PAL.sky], [0.2, 1.42, 0.4, PAL.leaf], [0, 1.3, 0.7, PAL.paper]]) mesh(box(w, 0.08, 0.02), M(c), x, y, 0.04, g); }
+  { const g = prop('street-tree planter', -0.75, 2.75); mesh(box(1.0, 0.5, 1.0), M('#7A7672'), 0, 0.25, 0, g); mesh(new THREE.CylinderGeometry(0.1, 0.13, 2.4, 6), M('#5E4330'), 0, 1.6, 0, g); mesh(blob(0.55, 1, 0.14), M(PAL.leaf), 0.1, 2.9, 0, g); mesh(blob(0.45, 1, 0.14), M(PAL.forest), -0.25, 2.6, 0.15, g); for (let k = 0; k < 4; k++) mesh(blob(0.16, 0, 0.1), M(k % 2 ? PAL.golden : PAL.blossom), -0.3 + k * 0.2, 0.58, 0.3, g); }
+  for (let k = 0; k < 7; k++) { const g = prop('shopfront', -18 + k * 6, -17.6); mesh(box(5.2, 3.2, 0.4), M([PAL.cream, '#E8D2B0', PAL.offwhite][k % 3]), 0, 1.6, 0, g); mesh(box(4.4, 1.8, 0.05), M('#9FB8C8', { metalness: 0.3, roughness: 0.3 }), 0, 1.3, 0.22, g);
+    mesh(box(4.8, 0.6, 0.1), M([PAL.brick, PAL.teal, PAL.golden, PAL.navy, PAL.leaf][k % 5]), 0, 2.85, 0.25, g); mesh(box(5.0, 0.12, 1.0), M(PAL.charcoal), 0, 2.4, 0.6, g); }
+  // the road, the scramble crossing and the towers with screens
+  const road5 = mesh(box(80, 0.02, 6), M('#55585C', { roughness: 0.95 }), 0, 0.012, -10); road5;
+  mesh(box(80, 0.14, 0.3), M('#B9B4AC'), 0, 0.07, -6.95);
+  for (let k = 0; k < 14; k++) mesh(box(0.5, 0.015, 5.2), M('#ECECE8'), -14 + k * 1.0 + (k > 6 ? 21 : 0), 0.022, -10);
+  for (let k = 0; k < 10; k++) { const m = mesh(box(0.5, 0.015, 7.6), M('#ECECE8'), -3 + k * 0.9, 0.022, -10); m.rotation.y = 0.75; }
+  const screens = [];
+  for (const [x, w, h, col, scr] of [[-15, 7, 30, '#B8C4CF', 1], [-7.5, 6.5, 22, '#D3C2A6', 1], [0, 7, 34, '#BFC6C9', 1], [7.5, 6, 24, '#C9BBA8', 0], [15, 7, 28, '#AFC0CC', 1], [-23, 7, 20, '#C9C3B8', 0], [23, 7, 26, '#D3C2A6', 0]]) {
+    const g = prop('tower', x, -21); mesh(box(w, h, 6), M(col), 0, h / 2, 0, g); for (let k = 0; k < Math.floor(h / 2.0); k++) mesh(box(w * 0.86, 0.9, 0.05), M('#7F93A6', { metalness: 0.3, roughness: 0.3 }), 0, 1.2 + k * 2.0, 3.03, g);
+    mesh(box(w * 0.9, 1.4, 0.2), M(PAL.charcoal), 0, 4.2, 3.1, g);
+    if (scr) { const tex = canvasTex(256, 160, (q) => { q.fillStyle = PAL.navy; q.fillRect(0, 0, 256, 160); for (let i = 0; i < 9; i++) { q.fillStyle = [PAL.golden, PAL.turquoise, PAL.blossom, PAL.signal, PAL.sky][i % 5]; if (i % 2) { q.beginPath(); q.arc(rnd() * 256, rnd() * 160, 10 + rnd() * 30, 0, 7); q.fill(); } else q.fillRect(rnd() * 256, rnd() * 160, 30 + rnd() * 80, 12 + rnd() * 20); } });
+      tex.wrapS = THREE.RepeatWrapping; const sm2 = mesh(box(w * 0.8, w * 0.5, 0.1), new THREE.MeshStandardMaterial({ map: tex, emissive: C('#FFFFFF'), emissiveMap: tex, emissiveIntensity: 0.55, roughness: 0.6 }), 0, h * 0.55, 3.12, g); screens.push(tex); sm2; } }
+  { const g = prop('railway viaduct', 0, -15.5); mesh(box(80, 1.0, 2.2), M('#9A948C'), 0, 6.0, 0, g); for (let x = -36; x <= 36; x += 6) mesh(box(0.8, 5.5, 1.6), M('#8E877D'), x, 2.75, 0, g); }
+  const train = prop('train', -60, -15.5, 0, 6.5); for (let k = 0; k < 4; k++) { mesh(box(5.6, 2.2, 2.0), M('#7DBA4E'), k * 5.8, 1.1, 0, train); mesh(box(5.6, 0.5, 2.05), M(PAL.offwhite), k * 5.8, 1.5, 0, train); }
+  // traffic
+  const cars = [[PAL.offwhite, -1, -8.6, 7, 0], [PAL.golden, -1, -8.6, 7, 14], [PAL.brick, 1, -11.4, 6, -6], [PAL.charcoal, 1, -11.4, 6, 10]].map(([col, dir, z, v, x0]) => { const g = prop('car', x0, z, dir > 0 ? Math.PI / 2 : -Math.PI / 2); mesh(box(1.8, 0.7, 4.2), M(col), 0, 0.6, 0, g); mesh(box(1.6, 0.6, 2.2), M(col), 0, 1.2, -0.2, g); mesh(box(1.62, 0.45, 2.0), M('#3E4A56'), 0, 1.2, -0.2, g);
+    for (const [wx, wz] of [[-0.85, 1.3], [0.85, 1.3], [-0.85, -1.3], [0.85, -1.3]]) { const w = mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.2, 10), M('#222'), wx, 0.32, wz, g); w.rotation.z = Math.PI / 2; } return { g, dir, v, x0 }; });
+  const bus = prop('bus', 30, -11.4, -Math.PI / 2); mesh(box(2.4, 2.6, 10), M(PAL.offwhite), 0, 1.6, 0, bus); mesh(box(2.45, 0.8, 9.6), M('#5E7A92'), 0, 2.0, 0, bus); mesh(box(2.45, 0.4, 10), M(PAL.teal), 0, 0.6, 0, bus);
+  // pigeons pecking by the bed (no walker comes near them)
+  const pigeons = []; for (const [x, z] of [[-1.9, 1.5], [-2.2, 1.85], [1.9, 1.35], [-0.5, 1.8]]) { const g = new THREE.Group(); g.position.set(x, 0, z); world.add(g); mesh(blob(0.09, 0, 0.1), M('#7D8590'), 0, 0.1, 0, g); mesh(new THREE.IcosahedronGeometry(0.05, 0), M('#5E6670'), 0, 0.18, 0.07, g); pigeons.push(g); }
+  const birds5 = []; for (let k = 0; k < 6; k++) { const g = new THREE.Group(); world.add(g); const l = mesh(box(0.28, 0.02, 0.08), M(PAL.charcoal), -0.14, 0, 0, g), r = mesh(box(0.28, 0.02, 0.08), M(PAL.charcoal), 0.14, 0, 0, g); birds5.push({ g, l, r, o: rnd() }); }
+  // people: today's clothes, phones, bags; some waiting to meet someone, two taking photos
+  const today = (o) => person({ shoes: '#3E4A56', ...o });
+  const phone = (p, up = 0.9) => { const ph = mesh(box(0.07, 0.13, 0.015), M(PAL.ink), 0, -0.02, 0.05, p.userData.arms[1].userData.hand); p.userData.arms[1].rotation.x = -up; ph; };
+  const waiters = [
+    [today({ top: PAL.golden, bottom: PAL.navy, skin: PAL.skin[0], hair: PAL.hair[0], height: 1.62, longHair: true }), 1.85, 1.8, -2.6, 1.6],
+    [today({ top: PAL.teal, bottom: PAL.charcoal, skin: PAL.skin[1], hair: PAL.hair[1], height: 1.74 }), -1.95, 2.2, 2.4, 0.9],
+    [today({ top: PAL.offwhite, bottom: '#5E7A92', skin: PAL.skin[2], hair: PAL.hair[0], height: 1.68 }), -2.4, -2.4, 0.9, 0.9],
+    [today({ top: PAL.brick, bottom: PAL.charcoal, skin: PAL.skin[0], hair: PAL.hair[2], height: 1.58, longHair: true }), 2.3, -2.6, -0.7, 0.9],
+    [today({ top: PAL.leaf, bottom: PAL.navy, skin: PAL.skin[3], hair: PAL.hair[0], height: 1.7 }), -4.6, -2.3, 0.6, 0.9],
+    [today({ top: PAL.peach, bottom: PAL.charcoal, skin: PAL.skin[1], hair: PAL.hair[3], height: 1.6, longHair: true }), 5.2, -2.2, -0.5, 0.9],
+    [today({ top: PAL.sky, bottom: PAL.navy, skin: PAL.skin[4], hair: PAL.hair[0], height: 1.72 }), -1.05, -2.15, 1.3, 0.3],
+    [today({ top: PAL.blossom, bottom: PAL.charcoal, skin: PAL.skin[0], hair: PAL.hair[1], height: 1.58, longHair: true }), -0.35, -2.2, -1.6, 0.3],
+    [today({ top: PAL.golden, bottom: '#5E7A92', skin: PAL.skin[2], hair: PAL.hair[2], height: 1.66 }), 1.35, -2.3, -0.3, 0.9],
+  ].map(([p, x, z, ry, up], k) => { p.position.set(x, 0, z); p.rotation.y = ry; phone(p, k < 1 ? 1.5 : up); return p; });
+  const sitters5 = [[today({ top: PAL.sky, bottom: PAL.charcoal, skin: PAL.skin[2], hair: PAL.hair[0], height: 1.7 }), -3.8, 1.1], [today({ top: PAL.cream, bottom: PAL.navy, skin: PAL.skin[0], hair: PAL.hair[4], height: 1.6, longHair: true }), 4.3, 0.9]].map(([p, x, z]) => { p.position.set(x, 0, z); p.rotation.y = Math.PI; return p; });
+  const cols = [PAL.navy, PAL.brick, PAL.teal, PAL.golden, PAL.charcoal, PAL.offwhite, PAL.leaf, PAL.peach, PAL.sky, PAL.bluegrey];
+  const R5 = [[[-14, 3.4], [14, 3.8]], [[14, -3.9], [-14, -3.5]], [[4.5, -13], [4.5, -6.2], [6.0, -3.2], [9, 2.0], [12, 6.0]], [[-14, 5.6], [14, 5.2]], [[14, 2.6], [8.5, 2.6], [5.0, -4.6], [4.6, -13]], [[-3.6, -13], [-4.0, -6.2], [-5.2, -3.2], [-14, -3.0]]];
+  const crowd5 = [[0, -3, 1.0], [1, -1, 1.0], [2, -2, 1.0], [3, -6, 1.0], [4, -4, 1.0], [5, -3.5, 1.0], [0, 1.5, 1.0], [1, 2.8, 1.0], [3, -1.5, 1.0], [2, 2.4, 1.0], [4, 0.5, 1.0], [5, 1.8, 1.0]].map(([r, t0, sp], k) => {
+    const p = today({ top: cols[k % 10], bottom: [PAL.charcoal, PAL.navy, '#5E7A92'][k % 3], skin: PAL.skin[k % 5], hair: PAL.hair[k % 4], height: 1.55 + (k % 4) * 0.07, longHair: k % 3 === 1, bag: k % 2 ? PAL.wood : null });
+    if (k % 3 === 0) mesh(box(0.28, 0.36, 0.14), M([PAL.navy, PAL.brick, PAL.golden][k % 3]), 0, p.userData.h * 0.2, -0.12, p.userData.body); return { p, go: walker(p, R5[r], t0, sp) }; });
+  update = (t, u, e) => { crowd5.forEach((c) => c.go(t)); waiters.forEach((p, k) => { standPose(p, t + k); p.userData.arms[1].rotation.x = k < 1 ? -1.5 : -0.9; p.userData.hd.rotation.x = k < 1 ? 0 : 0.35; p.userData.hd.rotation.y = 0.3 * Math.sin(t * 0.4 + k * 2) * (k > 1 && k % 2 ? 1 : 0); });
+    sitters5.forEach((p, k) => sitPose(p, t + k, 0.25 * Math.sin(t * 0.5 + k)));
+    for (const c of cars) { c.g.position.x = c.x0 + c.dir * c.v * t; } bus.position.x = 30 - 6.5 * t; train.position.x = -60 + 11 * t;
+    screens.forEach((tx, k) => (tx.offset.x = Math.floor(t * 0.7 + k) * 0.37)); tl.forEach((l) => l.material.color.set(t < 3.5 ? '#3BD17A' : '#F2B53A'));
+    pigeons.forEach((g, k) => { g.rotation.y = k + 0.4 * Math.sin(t * 1.3 + k); g.children[1].position.y = 0.18 - 0.07 * Math.max(0, Math.sin(t * 5 + k * 2)); });
+    birds5.forEach((b, k) => { b.g.position.set(-14 + ((t * 3.2 + b.o * 6) % 30), 12 + Math.sin(k) * 0.8, -8 + k * 0.6); b.l.rotation.z = 0.5 * Math.sin(t * 12 + k); b.r.rotation.z = -0.5 * Math.sin(t * 12 + k); });
+    dogSit(statue, 0, 0, true); statue.userData.torso.scale.y = 1; statue.userData.tail.rotation.z = 0; statue.userData.neck.rotation.x = 0.55;
+    orbit(V(0, 1.55, 0), D(14 + 12 * e), D(7), mix(5.4, 4.9, e)); camera.fov = 52; camera.updateProjectionMatrix(); };
+  overlay = (t) => card('A Statue Where\nHe Waited', { y: 0.2, size: 0.056, alpha: sm(0.3, 0.6, t) });
 }
 
 run(update, overlay);
