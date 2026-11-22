@@ -1,0 +1,59 @@
+{
+  "core_message": "In 1908 an object from space exploded in the air over Siberia and flattened more than 2,000 square kilometres of forest, but left no impact crater at the centre.",
+  "mood": "curious",
+  "title": "The Explosion That Left No Crater",
+  "description": "On the morning of 30 June 1908, a huge explosion went off in the sky over central Siberia, near the Podkamennaya Tunguska River. It flattened millions of trees across more than 2,150 square kilometres of forest, and windows were shattered up to about 200 kilometres away. Because the region was so remote, the first scientific expedition, led by Leonid Kulik, only found the centre of the blast in 1927. He found the fallen trees pointing away from the centre, while at the centre itself the trees were left standing, stripped of their branches. No impact crater has been confirmed there. Most scientists think a small asteroid or comet, perhaps 50 to 60 metres across, exploded several kilometres above the ground, releasing energy often estimated at 10 to 15 megatons of TNT. For a few nights afterwards, the sky stayed unusually bright across Europe and western Asia.\n\nSource: Wikipedia, Tunguska event.\n\nAnimated 3D illustration (Three.js); places and people are stylised and not to scale.",
+  "tags": [
+    "tunguska",
+    "tunguska event",
+    "siberia",
+    "asteroid",
+    "meteor",
+    "airburst",
+    "space facts",
+    "weird history",
+    "weird but true",
+    "science shorts"
+  ],
+  "thumbnail_text": "NO CRATER?",
+  "thumbnail_kicker": "Siberia, 1908",
+  "thumbnail_query": "flattened forest seen from above",
+  "comment_question": "What do you think exploded over Siberia?",
+  "series": "Weird History",
+  "blender": "tunguska",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "G01",
+      "narration": "In 1908, something exploded over Siberia and flattened millions of trees, but it left no crater at the centre.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "G02",
+      "narration": "On the morning of the thirtieth of June, a fireball streaked across the sky above a remote river called the Podkamennaya Tunguska.",
+      "purpose": "the fireball"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "G03",
+      "narration": "It blew up in the air, kilometres above the forest. Windows shattered up to two hundred kilometres away, and people were knocked off their feet.",
+      "purpose": "the blast"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "G04",
+      "narration": "The place was so remote that scientist Leonid Kulik only reached the centre in 1927. He found over two thousand square kilometres of fallen trees, all pointing away from one spot.",
+      "purpose": "the search"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "G05",
+      "narration": "And at that spot, the trees were still standing, stripped bare. Most scientists think a space rock about fifty metres wide exploded before it ever hit the ground.",
+      "purpose": "the answer"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Tunguska_event"
+  ]
+}

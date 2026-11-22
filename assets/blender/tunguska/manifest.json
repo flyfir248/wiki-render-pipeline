@@ -1,0 +1,37 @@
+{
+  "fps": 30,
+  "baked_text": true,
+  "source": "Three.js on the Weird But True style kit (wbt_kit.js); to be rendered in the cloud",
+  "shots": [
+    {
+      "id": "G01",
+      "file": "G01.mp4",
+      "duration": 7.0,
+      "what": "hook, aerial: a huge circle of Siberian taiga with every tree knocked flat and pointing outward, a ring of standing forest at the edge, smoke and low mist; hook card 'No Crater'"
+    },
+    {
+      "id": "G02",
+      "file": "G02.mp4",
+      "duration": 7.0,
+      "what": "dawn, 30 June 1908: Evenk reindeer herders' tents (chums) and reindeer by the Podkamennaya Tunguska River; a blinding fireball streaks across the sky and they look up; card 'Siberia, 1908'"
+    },
+    {
+      "id": "G03",
+      "file": "G03.mp4",
+      "duration": 7.0,
+      "what": "a log-cabin trading post (Vanavara) at the forest edge: a bright flash on the horizon, then a wave of wind - shutters bang, windows burst outward as glass shards, people stumble and fall, birds scatter; no injuries shown; card 'Windows Shattered'"
+    },
+    {
+      "id": "G04",
+      "file": "G04.mp4",
+      "duration": 7.0,
+      "what": "1927: scientist Leonid Kulik (beard, cap, coat) and two helpers with packs walk through mile after mile of fallen trunks, all pointing the same way away from the centre; card 'All Pointing Out'"
+    },
+    {
+      "id": "G05",
+      "file": "G05.mp4",
+      "duration": 7.0,
+      "what": "the centre of the blast: bare upright trunks stripped of branches like telegraph poles, young green regrowth below, Kulik looking up at them; card 'Still Standing'"
+    }
+  ]
+}
