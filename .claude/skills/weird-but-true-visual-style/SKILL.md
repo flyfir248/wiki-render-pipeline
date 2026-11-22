@@ -10,6 +10,10 @@ check, adds Shorts, a pinned palette, thumbnails, a render budget, a colour-blin
 Where a number and an adjective disagree, the number wins. Where narrative truth and "bright" disagree, truth wins
 and the scene uses the sombre profile (section 4.3).
 
+**Where the tools are.** Frame QC: `scripts/wbt_frame_qc.py` in the FacelessYT repo's copy of this skill, and
+`D:\BlenderWorkspace\03_SCRIPTS\qc\wbt_frame_qc.py` on the laptop. Shared Three.js kit and the style test:
+`test-scene/` in the repo, `D:\BlenderWorkspace\04_PIPELINES\threejs\web\wbt_kit.js` and `wbt_hachiko.js` on the laptop.
+
 **How to use it.** Before building: read sections 1-10 and the mistakes list (section 17). Before rendering: run the
 browser preview and `scripts/wbt_frame_qc.py` (section 14). After a review: put every repeated note into section 17
 and fix the skill, not only the video (section 18).
