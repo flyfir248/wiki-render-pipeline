@@ -172,7 +172,7 @@ export function dog(o = {}) {
   const tc = mesh(new THREE.TorusGeometry(0.075, 0.04, 5, 8, Math.PI * 1.4), M(coat), 0, 0.06, -0.02, tail); tc.rotation.y = Math.PI / 2;
   // legs: front pair hangs from the chest, back pair from the haunch
   const legs = [[-0.08, 0.42], [0.08, 0.42], [-0.08, -0.05], [0.08, -0.05]].map(([x, z], k) => { const p = new THREE.Group(); p.position.set(x, -0.02, z); root.add(p);
-    mesh(new THREE.CylinderGeometry(0.035, 0.03, 0.4, 5), M(coat), 0, -0.2, 0, p); mesh(box(0.06, 0.035, 0.08), M(belly), 0, -0.4, 0.015, p); p.userData.front = k < 2; return p; });
+    mesh(new THREE.CylinderGeometry(0.048, 0.038, 0.4, 6), M(coat), 0, -0.2, 0, p); mesh(box(0.06, 0.035, 0.08), M(belly), 0, -0.4, 0.015, p); p.userData.front = k < 2; return p; });
   g.userData = { root, torso, neck, head, ears, tail, legs, step: 0.36, cadence: 3.0 };
   return g;
 }

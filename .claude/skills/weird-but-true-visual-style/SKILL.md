@@ -5,7 +5,7 @@ description: Apply the permanent Weird But True visual identity (bright cinemati
 
 # Weird But True — Visual Style Skill
 
-Version 1.1 (22 Nov 2026). v1.0 was the owner's text; v1.1 keeps its direction and turns it into numbers QC can
+Version 1.1.1 (22 Nov 2026). v1.0 was the owner's text; v1.1 keeps its direction and turns it into numbers QC can
 check, adds Shorts, a pinned palette, thumbnails, a render budget, a colour-blind rule and a growing mistakes list.
 Where a number and an adjective disagree, the number wins. Where narrative truth and "bright" disagree, truth wins
 and the scene uses the sombre profile (section 4.3).
@@ -78,6 +78,8 @@ rescaled on load and checked against a door before anything else is placed (sect
 - Each scene uses 3-5 colour families from 4.2 plus neutrals. List them in the shot plan.
 - Strongest contrast and saturation go to the subject or key evidence: subject saturation at least 0.10 (HSV S)
   above the frame average.
+- The subject separates from what is directly behind it by lightness ΔL* ≥ 15 or a clearly different hue: a
+  cream animal never sits on beige ground, a navy coat never stands against a navy wall.
 - Complementary or analogous pairs guide the eye. Not every object equally saturated.
 - Use natural colour where history, science or geography require it. Never recolour evidence or historically
   significant objects in a way that misleads.
@@ -380,6 +382,8 @@ Add a row whenever a note repeats (section 18). Counts come from `05_REFERENCES\
 | M-22 | Laptop shut down from heat (11 Nov, 22 Nov) | Section 13: one job at a time, heat gates, no CPU render beside a GPU job |
 | M-23 | 3D below the runtime target (6 jobs) | Section 15 minimums |
 | M-25 | Style test (22 Nov): the hook card covered the heads of people stepping out of the doorway behind the subject | Check the card's box against every head on every frame, not just the hero's; tilt the camera up rather than move the card into the subject band |
+| M-26 | Style test round 1: the cream dog sat on beige sandstone paving and blended in | Subject vs its background ΔL* ≥ 15 or a different hue (section 4.1); pick the ground colour after the subject |
+| M-27 | Style test round 2: the high wide shot lost contrast (luma std 39) with soft fill on pale stone | On wides over pale ground, drop fill to ≤ 0.3 of the key and raise the key so shadows draw the shapes |
 | M-24 | (Known 3D failure modes) billboard trees and people turning with the camera; people walking through furniture | No sprites for solid objects (sprites only for smoke, sparks, mist); walker paths clear set pieces by 0.3 m |
 
 ## 18. Learning loop
@@ -397,6 +401,7 @@ test lives in `test-scene/` (Hachikō at Shibuya Station, three 7 s shots; `wbt_
 `npm i three@0.186.1 && node test-scene/render_test.mjs wbt_hachiko.js T01 out 0-210` renders a shot without the laptop.
 
 ## Changelog
+- 1.1.1 (22 Nov 2026): two lessons from the Hachikō test (subject-to-ground separation, contrast on high wides).
 - 1.1 (22 Nov 2026): numbers for exposure, colour, lenses, camera moves, faces, facets, walking; Shorts section with
   safe zones and first-second hook; pinned default and sombre palettes; reference image location; thumbnails;
   render budget and heat rules; colour-blind rule; shared character kit; deaths implied, never shown; mistakes list

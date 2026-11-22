@@ -15,8 +15,8 @@ sun.position.set(-10, 15, 11); sun.target.position.set(0, 0, -1);
 
 // ---------------------------------------------------------------- the plaza
 const paveTex = canvasTex(512, 512, (g) => { const n = 8, s = 512 / n;
-  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const k = 0.94 + rnd() * 0.08; const c = C(PAL.sandstone).multiplyScalar(k); g.fillStyle = '#' + c.getHexString(); g.fillRect(i * s, j * s, s, s); }
-  g.strokeStyle = 'rgba(120,96,70,0.55)'; g.lineWidth = 3; for (let i = 0; i <= n; i++) { g.beginPath(); g.moveTo(i * s, 0); g.lineTo(i * s, 512); g.stroke(); g.beginPath(); g.moveTo(0, i * s); g.lineTo(512, i * s); g.stroke(); } });
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const k = 0.9 + rnd() * 0.16; const c = C(rnd() < 0.2 ? '#B9AC98' : '#A89F93').multiplyScalar(k); g.fillStyle = '#' + c.getHexString(); g.fillRect(i * s, j * s, s, s); }
+  g.strokeStyle = 'rgba(70,64,58,0.6)'; g.lineWidth = 3; for (let i = 0; i <= n; i++) { g.beginPath(); g.moveTo(i * s, 0); g.lineTo(i * s, 512); g.stroke(); g.beginPath(); g.moveTo(0, i * s); g.lineTo(512, i * s); g.stroke(); } });
 paveTex.wrapS = paveTex.wrapT = THREE.RepeatWrapping; paveTex.repeat.set(10, 8);
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 32), new THREE.MeshStandardMaterial({ map: paveTex, roughness: 0.9 })); ground.rotation.x = -Math.PI / 2; ground.position.z = 4; ground.receiveShadow = true; world.add(ground);
 const road = mesh(box(60, 0.02, 5), M('#8C847A', { roughness: 0.95 }), 0, 0.01, 13.5);
@@ -95,6 +95,14 @@ function setSeason(t) { // t in seasons: 0 spring .. 1 summer .. 2 autumn .. 3 w
 // planters with low shrubs and flowers (colour and scale near the door)
 for (const [x, z] of [[-5.6, -2.9], [5.6, -2.9], [-2.6, 5.6], [2.6, 5.6]]) { mesh(box(1.4, 0.45, 0.7), M(PAL.wood), x, 0.22, z); for (let k = 0; k < 3; k++) mesh(blob(0.28, 0, 0.15), M(k === 1 ? PAL.forest : PAL.leaf), x - 0.45 + k * 0.45, 0.6, z);
   for (let k = 0; k < 5; k++) mesh(new THREE.IcosahedronGeometry(0.07, 0), M(k % 2 ? PAL.golden : PAL.peach), x - 0.55 + k * 0.27, 0.78, z + 0.18); }
+// fallen petals on the paving (spring), recoloured as leaves in autumn
+const GP = 420; const petalsOnGround = new THREE.InstancedMesh(new THREE.CircleGeometry(0.035, 5), new THREE.MeshStandardMaterial({ color: C(PAL.blossom), roughness: 0.9 }), GP); world.add(petalsOnGround);
+{ const o = new THREE.Object3D(); for (let i = 0; i < GP; i++) { const a = rnd() * 6.28, r = Math.pow(rnd(), 0.6) * 3.2; const cx = [[-3.9, -2.5], [3.9, -2.6], [-7.5, -1.8], [7.6, -2.0], [1.2, -1.6]][i % 5];
+  o.position.set(cx[0] + Math.cos(a) * r * 1.4, 0.006, cx[1] + Math.sin(a) * r + 0.8); o.rotation.set(-Math.PI / 2, 0, rnd() * 6); o.scale.setScalar(0.7 + rnd() * 0.8); o.updateMatrix(); petalsOnGround.setMatrixAt(i, o.matrix); } }
+// foreground dressing near the door: a luggage cart with trunks, a bicycle rack (clear of every path by >= 0.3 m)
+{ const g = new THREE.Group(); g.position.set(-2.9, 0, -1.3); g.rotation.y = 0.3; world.add(g); mesh(box(1.3, 0.1, 0.7), M(PAL.wood), 0, 0.32, 0, g);
+  for (const [x, z] of [[-0.5, -0.32], [0.5, -0.32], [-0.5, 0.32], [0.5, 0.32]]) { const w = mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.05, 8), M(PAL.charcoal), x, 0.14, z, g); w.rotation.x = Math.PI / 2; }
+  mesh(box(0.6, 0.38, 0.45), M(PAL.brick), -0.3, 0.56, 0, g); mesh(box(0.5, 0.3, 0.4), M(PAL.teal), 0.3, 0.52, 0.05, g); mesh(box(0.42, 0.26, 0.34), M(PAL.golden), 0.28, 0.8, 0.02, g); }
 // ---------------------------------------------------------------- falling petals / leaves / snow
 const FALL = 140; const flakes = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.07, 0.05), new THREE.MeshStandardMaterial({ color: C(PAL.blossom), side: THREE.DoubleSide, roughness: 0.9 }), FALL); world.add(flakes);
 const fl = []; for (let i = 0; i < FALL; i++) fl.push({ x: -10 + rnd() * 20, z: -3 + rnd() * 12, ph: rnd(), sp: 0.5 + rnd() * 0.5, r: rnd() * 6 });
@@ -169,11 +177,11 @@ if (T3) { // the years: locked-off wide; spring, summer, autumn, winter while he
   useCrowd([[0, 0, -1, 2.4], [1, 3, -2, 2.4], [2, 6, -4, 2.4], [3, 2, 0.6, 2.4], [5, 1, 2.2, 2.4], [6, 4, 1.0, 2.4], [7, 5, -3, 2.4], [4, 7, 3.0, 2.4]]);
   const roofBase = C(PAL.bluegrey);
   update = (t, u, e) => { const s = t / 7 * 3.25; setSeason(s); crowd.forEach((c) => c.go(t));
-    const wint = sm(2.55, 3.0, s); snowGround.material.opacity = 0.72 * wint; renderer.toneMappingExposure = mix(1.05, 0.92, wint); roof.material.color.copy(roofBase.clone().lerp(C(PAL.offwhite), wint * 0.8));
+    petalsOnGround.visible = s < 1.0 || (s > 2.0 && s < 2.9); petalsOnGround.material.color.set(s < 1 ? PAL.blossom : PAL.amber); const wint = sm(2.55, 3.0, s); snowGround.material.opacity = 0.72 * wint; renderer.toneMappingExposure = mix(1.05, 0.92, wint); roof.material.color.copy(roofBase.clone().lerp(C(PAL.offwhite), wint * 0.8));
     if (s < 1) fall(t, PAL.blossom, 1.4, 1); else if (s < 2) fall(t, PAL.blossom, 1.4, 0.001); else if (s < 2.6) fall(t, PAL.amber, 1.2, 1.4); else fall(t, PAL.offwhite, 0.8, 0.9);
-    sun.intensity = mix(2.6, 2.0, wint); hemi.color.set(C('#CFE6F7').lerp(C('#DCE6EE'), wint)); grade.uniforms.cool.value = 0.5 * wint;
+    sun.intensity = mix(3.1, 2.0, wint); hemi.intensity = mix(1.1, 1.35, wint); fill.intensity = mix(0.3, 0.55, wint); hemi.color.set(C('#CFE6F7').lerp(C('#DCE6EE'), wint)); grade.uniforms.cool.value = 0.5 * wint;
     dogSit(hachi, t, D(-10) + D(-35) * (sm(1.0, 1.4, t) - sm(2.2, 2.6, t)), true); mm.rotation.z = -t * 3; hh.rotation.z = -t * 0.25;
-    orbit(V(0.9, 1.5, -1.5), D(-16), D(20), 8.6); camera.fov = 56; camera.updateProjectionMatrix(); };
+    orbit(V(0.9, 1.1, -1.2), D(-16), D(25), 9.2); camera.fov = 54; camera.updateProjectionMatrix(); };
   overlay = (t) => card('For Nearly\n10 Years', { y: 0.2, size: 0.056, alpha: sm(3.6, 4.1, t) });
 }
 
