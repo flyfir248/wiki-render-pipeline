@@ -119,7 +119,7 @@ export function person(o = {}) {
   if (o.hat === 'boater') { mesh(new THREE.CylinderGeometry(head * 0.66, head * 0.66, head * 0.04, 10), M('#E8D49A'), 0, head * 0.38, 0, hd);
     mesh(new THREE.CylinderGeometry(head * 0.42, head * 0.42, head * 0.24, 9), M('#E8D49A'), 0, head * 0.5, 0, hd); mesh(new THREE.CylinderGeometry(head * 0.425, head * 0.425, head * 0.07, 9), M(PAL.navy), 0, head * 0.44, 0, hd); }
   if (o.bag) { const b = mesh(box(h * 0.2, h * 0.14, h * 0.05), M(o.bag), 0, -h * 0.08, 0, arms[1].userData.hand); b.position.set(0, -h * 0.08, 0); }
-  g.userData = { h, legs, arms, body, hips, hd, mouth, leg, step: o.step || h * 0.42, cadence: o.cadence || 1.8 };
+  g.userData = { prop: true, h, legs, arms, body, hips, hd, mouth, leg, step: o.step || h * 0.42, cadence: o.cadence || 1.8 };
   return g;
 }
 
@@ -136,9 +136,13 @@ export function walkPose(p, d, lift = 1) {
 }
 export function standPose(p, t = 0) { const u = p.userData; u.legs.forEach((l) => { l.rotation.x = 0; l.scale.y = 1; }); u.arms.forEach((a, k) => (a.rotation.x = 0.04 * Math.sin(t * 1.3 + k)));
   u.body.position.y = u.leg + 0.004 * Math.sin(t * 2.1); }
+// seated on a 0.45 m seat: thighs forward, shins down, hands on the lap; small breathing and a head turn
+export function sitPose(p, t = 0, look = 0) { const u = p.userData, seat = 0.45; u.hips.position.y = seat; u.body.position.y = seat + 0.004 * Math.sin(t * 2.1);
+  u.legs.forEach((l) => { l.rotation.x = -1.45; l.scale.y = 0.55; }); u.arms.forEach((a, k) => (a.rotation.x = -0.6 + 0.03 * Math.sin(t + k))); u.hd.rotation.y = look; }
 // walk a person along a polyline path (array of [x,z]) at speed = step x cadence; returns the update fn (t in s)
+export const PATHS = [];
 export function walker(p, path, t0 = 0, speedMul = 1) {
-  const pts = path.map(([x, z]) => V(x, 0, z)); const segs = []; let tot = 0;
+  const pts = path.map(([x, z]) => V(x, 0, z)); PATHS.push(pts); const segs = []; let tot = 0;
   for (let i = 1; i < pts.length; i++) { const l = pts[i].distanceTo(pts[i - 1]); segs.push([pts[i - 1], pts[i], tot, l]); tot += l; }
   const v = p.userData.step * p.userData.cadence * speedMul;
   return (t) => { const d = clamp((t - t0) * v, 0, tot); let s = segs[segs.length - 1]; for (const q of segs) if (d <= q[2] + q[3]) { s = q; break; }
@@ -173,7 +177,7 @@ export function dog(o = {}) {
   // legs: front pair hangs from the chest, back pair from the haunch
   const legs = [[-0.08, 0.42], [0.08, 0.42], [-0.08, -0.05], [0.08, -0.05]].map(([x, z], k) => { const p = new THREE.Group(); p.position.set(x, -0.02, z); root.add(p);
     mesh(new THREE.CylinderGeometry(0.048, 0.038, 0.4, 6), M(coat), 0, -0.2, 0, p); mesh(box(0.06, 0.035, 0.08), M(belly), 0, -0.4, 0.015, p); p.userData.front = k < 2; return p; });
-  g.userData = { root, torso, neck, head, ears, tail, legs, step: 0.36, cadence: 3.0 };
+  g.userData = { prop: true, root, torso, neck, head, ears, tail, legs, step: 0.36, cadence: 3.0 };
   return g;
 }
 // sit: hips down, torso up ~35 deg, hind legs folded under, front legs straight
@@ -208,10 +212,40 @@ export function card(text, { y = 0.2, size = 0.052, alpha = 1, sub = false } = {
   og.restore();
 }
 
+// ---------------------------------------------------------------- environment-density gate (SKILL.md 3A)
+// Mark the story's subject with hero(obj) and each moving system (crowd, particles, traffic, smoke) with atmo(name).
+// densityReport() counts the world's top-level objects that are on screen, by layer, measured from the camera:
+// Only objects tagged as props count (prop(), person(), dog()): bare floors, walls and loose meshes don't.
+// foreground < 0.75 x hero distance, midground up to 3 x, background beyond; heroes counted on their own.
+// The page sets window.SHOT_SIZE ('wide' | 'medium' | 'close') so the gate applies the right minimums.
+const ATMO = new Set(); export const atmo = (name) => ATMO.add(name);
+export const hero = (o) => { o.userData.isHero = true; return o; };
+// a named piece of set dressing: a group placed in the world that counts as one object for the density gate
+export function prop(name, x = 0, z = 0, ry = 0, y = 0, parent) { const g = new THREE.Group(); g.name = name; g.userData.prop = true; g.position.set(x, y, z); g.rotation.y = ry; (parent || world).add(g); return g; }
+export function densityReport() { camera.updateMatrixWorld(); const fr = new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
+  const box3 = new THREE.Box3(), c = new THREE.Vector3(); const objs = [];
+  const visit = (o) => { if (!o.visible) return; if (o.userData.isHero || o.userData.prop) { objs.push(o); return; } o.children.forEach(visit); };
+  world.children.forEach(visit);
+  const heroes = objs.filter((o) => o.userData.isHero); let hd = 6; if (heroes.length) { box3.setFromObject(heroes[0]); box3.getCenter(c); hd = c.distanceTo(camera.position); }
+  const L = { foreground: 0, hero: 0, midground: 0, background: 0 };
+  for (const o of objs) { box3.setFromObject(o); if (box3.isEmpty() || !fr.intersectsBox(box3)) continue; box3.getCenter(c); const r = c.distanceTo(camera.position) / hd;
+    if (o.userData.isHero) L.hero++; else if (r < 0.75) L.foreground++; else if (r < 3) L.midground++; else L.background++; }
+  return { ...L, atmosphere: ATMO.size, systems: [...ATMO] }; }
+
+// walkers must clear every prop by >= 0.3 m (SKILL.md 9, M-24): sample each path every 0.1 m against the props' footprints
+export function clearanceReport(min = 0.3) { const bad = []; const b = new THREE.Box3();
+  const props = []; world.traverse((o) => { if (o.userData.prop && !o.userData.legs && !o.userData.root && !o.userData.isHero && o.visible && o.name !== 'tram' && o.name !== 'station') { b.makeEmpty(); const mb = new THREE.Box3(); o.traverse((m) => { if (m.isMesh) { mb.setFromObject(m); if (mb.min.y < 1.0) b.union(mb); } }); if (!b.isEmpty()) props.push([o.name || 'prop', b.clone()]); } });  // footprint = parts that reach below 1 m (a canopy overhead is fine)
+  for (const pts of PATHS) for (let i = 1; i < pts.length; i++) { const a = pts[i - 1], c = pts[i], n = Math.ceil(a.distanceTo(c) / 0.1);
+    for (let k = 0; k <= n; k++) { const q = a.clone().lerp(c, k / n); for (const [name, bb] of props) { const dx = Math.max(bb.min.x - q.x, 0, q.x - bb.max.x), dz = Math.max(bb.min.z - q.z, 0, q.z - bb.max.z);
+      if (Math.hypot(dx, dz) < min) { const key = `${name} @ ${q.x.toFixed(1)},${q.z.toFixed(1)}`; if (!bad.some((s) => s.startsWith(name + ' @ ' + q.x.toFixed(0)))) bad.push(key); } } } }
+  return bad; }
+
 export function run(update, overlay = () => {}) {
   const draw = (i) => { const t = i / FPS, u = i / (N - 1), e = u * u * (3 - 2 * u); update(t, u, e); grade.uniforms.t.value = i * 0.37; composer.render();
     og.clearRect(0, 0, W, H); og.drawImage(renderer.domElement, 0, 0); overlay(t, u, e); return out; };
   window.renderFrame = (i) => draw(i).toDataURL('image/jpeg', 0.93);
+  window.densityAt = (i) => { draw(i); return densityReport(); };
+  window.clearance = () => clearanceReport();
   window.FRAMES = N; window.ready = true;
   // live preview in a browser: show the composited canvas and play or hold a time
   if (P.get('play') || P.get('t')) { renderer.domElement.style.display = 'none'; document.body.appendChild(out);

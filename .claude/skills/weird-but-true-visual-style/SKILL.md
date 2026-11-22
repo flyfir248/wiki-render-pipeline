@@ -5,7 +5,7 @@ description: Apply the permanent Weird But True visual identity (bright cinemati
 
 # Weird But True — Visual Style Skill
 
-Version 1.1.1 (22 Nov 2026). v1.0 was the owner's text; v1.1 keeps its direction and turns it into numbers QC can
+Version 1.2 (22 Nov 2026). v1.0 was the owner's text; v1.1 keeps its direction and turns it into numbers QC can
 check, adds Shorts, a pinned palette, thumbnails, a render budget, a colour-blind rule and a growing mistakes list.
 Where a number and an adjective disagree, the number wins. Where narrative truth and "bright" disagree, truth wins
 and the scene uses the sombre profile (section 4.3).
@@ -14,7 +14,10 @@ and the scene uses the sombre profile (section 4.3).
 `D:\BlenderWorkspace\03_SCRIPTS\qc\wbt_frame_qc.py` on the laptop. Shared Three.js kit and the style test:
 `test-scene/` in the repo, `D:\BlenderWorkspace\04_PIPELINES\threejs\web\wbt_kit.js` and `wbt_hachiko.js` on the laptop.
 
-**How to use it.** Before building: read sections 1-10 and the mistakes list (section 17). Before rendering: run the
+**Rule zero: rich environments.** Section 3A is mandatory and outranks every other style rule except narrative truth.
+No scene is built without a written dressing plan, and no scene is approved until the density gate passes.
+
+**How to use it.** Before building: read sections 1-10 and 3A and the mistakes list (section 17). Before rendering: run the
 browser preview and `scripts/wbt_frame_qc.py` (section 14). After a review: put every repeated note into section 17
 and fix the skill, not only the video (section 18).
 
@@ -71,6 +74,70 @@ triangulation, lumpy topology, flipped normals or smoothing on faceted objects.
 **Scale (real metres, always).** Adult 1.60-1.85 m, child 1.0-1.4 m, door 2.0-2.1 m high, table 0.75 m, chair seat
 0.45 m, car 1.5 m high, storey 3.0 m, medium dog 0.5-0.7 m at the shoulder. Kit assets that use other units are
 rescaled on load and checked against a door before anything else is placed (section 17, M-03).
+
+## 3A. Environment density (mandatory, top priority)
+
+The most common failure is an empty world: a character, a floor and a few isolated objects. Every environment must
+feel inhabited, specific to its place and period, and busy enough that the viewer believes it continues past the
+frame edge. **Rich does not mean cluttered.** Every object must contribute to the location, the period, the
+atmosphere or the story. If you cannot say which, cut it.
+
+**Five layers, every scene.**
+
+| Layer | What goes there | Examples |
+|---|---|---|
+| 1. Foreground | Objects between the camera and the subject that frame the view and give depth | Trees, furniture, signs, railings, posts, plants, door frames, crates |
+| 2. Hero zone | The subject and what they touch or use | The person or animal, their tools, the object the story is about |
+| 3. Midground | The working life of the place | Benches, displays, streetlights, equipment, pedestrians, vehicles, carts, props |
+| 4. Background | What tells you where and when you are | Buildings, windows, rooftops, trees, distant architecture, skyline, hills |
+| 5. Atmosphere and activity | Motion and air | Weather, smoke, steam, dust, falling leaves or snow, foliage moving, distant traffic, birds, light shafts, people going about their day |
+
+**Dressing plan first.** Before any geometry, write the plan in the shot file (a comment block) or the shot list:
+the location and year, then each of the five layers as a list of named objects, then the activity (who moves, where
+they come from and where they go). Example, a 1930s airship hangar:
+
+- *Location and period:* Lakehurst-style airship hangar, 1936, dawn.
+- *Foreground:* a coil of mooring rope, the edge of a tool cart, a hand rail on the gantry stairs.
+- *Hero zone:* the ground crew chief with a clipboard beside the bow mooring line.
+- *Midground:* the airship's gondola and lower hull, wheeled ladders, fuel and gas service stations, crates, cables
+  across the floor, a tractor, ground crew hauling lines, a mechanic on a ladder.
+- *Background:* steel roof beams and trusses, industrial windows, overhead lamps, the open hangar doors with
+  service buildings and a water tower outside.
+- *Atmosphere and activity:* dust in the light shafts from the windows, steam from a service line, workers crossing,
+  a truck passing outside, a flag moving at the doors, period signage ("NO SMOKING", unit numbers).
+
+**Minimum counts in the final camera view** (named props, people and vehicles that are on screen; the hero is
+separate; layers are measured from the camera: foreground nearer than 0.75 × the hero distance, midground up to
+3 × the hero distance, background beyond):
+
+| Shot size | Foreground | Hero | Midground | Background | Atmosphere systems |
+|---|---|---|---|---|---|
+| Wide / establishing | 2 | 1 | 8 | 5 | 2 |
+| Medium | 1 | 1 | 6 | 3 | 2 |
+| Close-up | 0 | 1 | 3 | 1 | 1 |
+
+An atmosphere system is something that moves on its own: a crowd, falling particles, steam, smoke, traffic, birds,
+swaying lamps or foliage. A close-up still needs a readable place behind the face (a window, a shelf, a street).
+
+**Density review gate (before approving any scene).** Inspect the final camera view, not the set from a work camera:
+
+1. **Per-layer counts.** In Three.js, build props with the kit's `prop()`, `hero()` and `atmo()` and set
+   `window.SHOT_SIZE`; `test-scene/render_test.mjs` prints the counts for the first and last frame and
+   `DENSITY FAIL` if any layer is under the table above. In Blender, count by collection (`FG`, `HERO`, `MID`, `BG`,
+   `ATMO`) in the camera's view.
+2. **Empty space.** `scripts/wbt_frame_qc.py frames` splits each sampled frame into cells 1/24 of the width and marks
+   a cell empty when under 3.5% of its pixels carry an edge and its brightness barely varies. Only connected empty
+   patches of 2% of the frame or more count (a flat facet on a beam is the style; a bare floor is not).
+   Limits: empty share ≤ 15% and largest patch ≤ 8% (sombre: 20% and 10%). Sky counts: a plain sky over a third of the
+   frame fails, so add cloud, birds, rooftops or treetops.
+3. **Paths.** Every walker passes props by ≥ 0.3 m (`render_test.mjs` prints `PATH FAIL` with the props it hits).
+   People enter and leave through a believable opening (a door, a passage, a street, the frame edge), never into a wall.
+4. **Look at it.** On the stills sheet, point at any area of the frame larger than a postage stamp with nothing in
+   it and ask whether that is intended (a sky for a title, a deliberate quiet beat). Unintended means dress it.
+
+Fixes that work, in order: texture and wear on the ground (paving joints, puddles, tracks, fallen leaves); props that
+belong to the place along the walls and edges; people with a job; background windows, signage and rooftops; motion.
+Snow, sand and water are the hardest: give them tracks, piles, cleared paths and footprints (M-28).
 
 ## 4. Colour
 
@@ -327,10 +394,11 @@ transfer; record baked effects and engine-specific replacements. Keep source ass
 2. **Stills sheet.** Render the first, middle and last frame of every shot (`still_sheet.ps1`) and look at all three.
 3. **Numbers.** Run
    `python scripts/wbt_frame_qc.py frames <mp4-or-frame-dir> --profile short|long [--sombre] [--every 1.0]`.
-   It checks section 5's exposure and colour targets on frame 1 and every sampled second and exits non-zero on a
+   It checks section 5's exposure and colour targets and section 3A's empty-space limits on frame 1 and every sampled second and exits non-zero on a
    failure. Fix or record a deliberate exception in the shot plan.
 4. **Human review.** Watch the whole thing at phone size with sound. Checklist:
    - *Style:* bright, polished, faceted low-poly? Palette from 4.2/4.3 only? Rich but not cluttered? Tone fits?
+   - *Density (3A):* five layers present? Counts and empty-space numbers pass? Any unintended empty area?
    - *Composition:* focal subject obvious, in the safe zone, separated from background? Camera move motivated?
    - *Technical:* floating objects, clipping, intersections, broken shadows, sliding feet, scale errors? Characters and
      props consistent between shots? Labels readable and not overlapping? Synced to narration?
@@ -384,6 +452,8 @@ Add a row whenever a note repeats (section 18). Counts come from `05_REFERENCES\
 | M-25 | Style test (22 Nov): the hook card covered the heads of people stepping out of the doorway behind the subject | Check the card's box against every head on every frame, not just the hero's; tilt the camera up rather than move the card into the subject band |
 | M-26 | Style test round 1: the cream dog sat on beige sandstone paving and blended in | Subject vs its background ΔL* ≥ 15 or a different hue (section 4.1); pick the ground colour after the subject |
 | M-27 | Style test round 2: the high wide shot lost contrast (luma std 39) with soft fill on pale stone | On wides over pale ground, drop fill to ≤ 0.3 of the key and raise the key so shadows draw the shapes |
+| M-28 | Style test rounds 1-2: environments read as a character, a floor and a few isolated objects; the winter plaza was a blank white field (largest empty patch 21%) | Section 3A: dressing plan, five layers, per-layer counts and the empty-space gate; on snow add tracks, a shovelled path, piles, paw prints |
+| M-29 | Style test round 3: the new path check found walkers passing through planters, a lamp, a cart, ticket gates and a timetable, and vanishing into the back wall | Run the path check every render; move props or reroute; exits go through an opening |
 | M-24 | (Known 3D failure modes) billboard trees and people turning with the camera; people walking through furniture | No sprites for solid objects (sprites only for smoke, sparks, mist); walker paths clear set pieces by 0.3 m |
 
 ## 18. Learning loop
@@ -401,6 +471,8 @@ test lives in `test-scene/` (Hachikō at Shibuya Station, three 7 s shots; `wbt_
 `npm i three@0.186.1 && node test-scene/render_test.mjs wbt_hachiko.js T01 out 0-210` renders a shot without the laptop.
 
 ## Changelog
+- 1.2 (22 Nov 2026): environment density made mandatory and top priority (section 3A): five layers, written dressing
+  plan, per-layer minimum counts by shot size, empty-space and path-clearance gates in the QC tools; M-28, M-29.
 - 1.1.1 (22 Nov 2026): two lessons from the Hachikō test (subject-to-ground separation, contrast on high wides).
 - 1.1 (22 Nov 2026): numbers for exposure, colour, lenses, camera moves, faces, facets, walking; Shorts section with
   safe zones and first-second hook; pinned default and sombre palettes; reference image location; thumbnails;

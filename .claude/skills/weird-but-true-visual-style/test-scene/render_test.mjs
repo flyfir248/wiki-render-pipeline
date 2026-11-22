@@ -20,4 +20,11 @@ await pg.goto(`http://localhost:${port}/index.html?shot=${shot}&w=${W}&h=${H}`);
 fs.mkdirSync(out, { recursive: true }); const t0 = Date.now();
 for (const i of frames) { const f = path.join(out, `f_${String(i + 1).padStart(4, '0')}.jpg`); if (fs.existsSync(f)) continue;
   const d = await pg.evaluate((i) => window.renderFrame(i), i); fs.writeFileSync(f, Buffer.from(d.split(',')[1], 'base64')); }
+// environment-density gate (SKILL.md 3A): object count per layer on the first and last frame
+const MINS = { wide: { foreground: 2, hero: 1, midground: 8, background: 5, atmosphere: 2 }, medium: { foreground: 1, hero: 1, midground: 6, background: 3, atmosphere: 2 }, close: { foreground: 0, hero: 1, midground: 3, background: 1, atmosphere: 1 } };
+const MIN = MINS[await pg.evaluate(() => window.SHOT_SIZE || 'wide')];
+for (const i of [frames[0], frames[frames.length - 1]]) { const d = await pg.evaluate((i) => window.densityAt ? window.densityAt(i) : null, i); if (!d) break;
+  const low = Object.entries(MIN).filter(([k, v]) => d[k] < v).map(([k, v]) => `${k} ${d[k]} < ${v}`);
+  console.log(`${shot} frame ${i + 1} layers: fg ${d.foreground}, hero ${d.hero}, mid ${d.midground}, bg ${d.background}, atmosphere ${d.atmosphere} (${d.systems.join(', ')})` + (low.length ? `  DENSITY FAIL: ${low.join('; ')}` : '  ok')); }
+const clr = await pg.evaluate(() => window.clearance ? window.clearance() : []); console.log(clr.length ? `${shot} PATH FAIL: walkers pass within 0.3 m of ${clr.slice(0, 8).join('; ')}` : `${shot} paths clear`);
 console.log(`${shot}: ${frames.length} frames in ${((Date.now() - t0) / 1000).toFixed(1)}s`); await b.close(); srv.close();

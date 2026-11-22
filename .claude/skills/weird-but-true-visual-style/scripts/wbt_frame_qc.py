@@ -15,8 +15,8 @@ import numpy as np
 from PIL import Image
 
 TARGETS = {  # SKILL.md section 5
-    False: dict(luma=(105, 170), std=40, blown=0.02, crushed=0.03, sat=(0.25, 0.55), colourful=30, first=95),
-    True: dict(luma=(60, 115), std=32, blown=0.01, crushed=0.10, sat=(0.10, 0.32), colourful=12, first=80),
+    False: dict(luma=(105, 170), std=40, blown=0.02, crushed=0.03, sat=(0.25, 0.55), colourful=30, first=95, empty=0.15, patch=0.08),
+    True: dict(luma=(60, 115), std=32, blown=0.01, crushed=0.10, sat=(0.10, 0.32), colourful=12, first=80, empty=0.20, patch=0.10),
 }
 
 
@@ -30,8 +30,39 @@ def measure(img):
     lit = v > 0.15
     rg, yb = r - g, 0.5 * (r + g) - b  # Hasler & Suesstrunk colourfulness
     m = np.sqrt(rg.std() ** 2 + yb.std() ** 2) + 0.3 * np.sqrt(rg.mean() ** 2 + yb.mean() ** 2)
-    return dict(luma=float(y.mean()), std=float(y.std()), blown=float((y >= 250).mean()), crushed=float((y <= 12).mean()),
+    empty, patch = emptiness(img)
+    return dict(empty=empty, patch=patch, luma=float(y.mean()), std=float(y.std()), blown=float((y >= 250).mean()), crushed=float((y <= 12).mean()),
                 sat=float(s[lit].mean()) if lit.any() else 0.0, colourful=float(m))
+
+
+def emptiness(img, cells=24):
+    """Environment-density gate (SKILL.md section 3A): split the frame into square cells ~1/24 of its width and call a
+    cell empty when it has almost no edges and almost no colour change (bare floor, blank wall, plain sky).
+    Returns (share of the frame in empty patches of >= 2%, share covered by the largest patch)."""
+    a = np.asarray(img.convert("RGB"), dtype=np.float32)
+    y = 0.2126 * a[..., 0] + 0.7152 * a[..., 1] + 0.0722 * a[..., 2]
+    g = np.zeros_like(y); g[:, 1:] += np.abs(np.diff(y, axis=1)); g[1:, :] += np.abs(np.diff(y, axis=0))
+    h, w = y.shape; c = max(8, w // cells); ny, nx = h // c, w // c
+    e = np.zeros((ny, nx), bool)
+    for i in range(ny):
+        for j in range(nx):
+            gy, yy = g[i * c:(i + 1) * c, j * c:(j + 1) * c], y[i * c:(i + 1) * c, j * c:(j + 1) * c]
+            e[i, j] = (gy > 12).mean() < 0.035 and yy.std() < 9
+    # flat facets are the style, so a lone flat cell (a beam, a dog's flank) is fine: only connected patches of at
+    # least 2% of the frame count as empty space (bare floor, blank wall, plain sky, untouched snow)
+    seen, sizes = np.zeros_like(e), []
+    for i in range(ny):
+        for j in range(nx):
+            if e[i, j] and not seen[i, j]:
+                stack, n = [(i, j)], 0; seen[i, j] = True
+                while stack:
+                    p, q = stack.pop(); n += 1
+                    for dp, dq in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        u, v = p + dp, q + dq
+                        if 0 <= u < ny and 0 <= v < nx and e[u, v] and not seen[u, v]: seen[u, v] = True; stack.append((u, v))
+                sizes.append(n)
+    total = float(ny * nx)
+    return sum(n for n in sizes if n >= 0.02 * total) / total, (max(sizes) if sizes else 0) / total
 
 
 def check(mx, t, first):
@@ -44,6 +75,8 @@ def check(mx, t, first):
     if mx["crushed"] > t["crushed"]: bad.append(f"crushed {mx['crushed']:.1%} > {t['crushed']:.0%}")
     lo, hi = t["sat"]
     if not lo <= mx["sat"] <= hi: bad.append(f"saturation {mx['sat']:.2f} outside {lo}-{hi}")
+    if mx["empty"] > t["empty"]: bad.append(f"empty {mx['empty']:.0%} > {t['empty']:.0%} (dress the set)")
+    if mx["patch"] > t["patch"]: bad.append(f"largest empty patch {mx['patch']:.0%} > {t['patch']:.0%}")
     if mx["colourful"] < t["colourful"]: bad.append(f"colourfulness {mx['colourful']:.0f} < {t['colourful']}")
     return bad
 
@@ -106,7 +139,7 @@ def main():
         mx = measure(img); bad = check(mx, t, first=(k == 0 and a.profile == "short"))
         fails += bool(bad)
         print(f"{'FAIL' if bad else 'ok  '} {'frame 1' if k == 0 else f'{sec:5.1f}s'}: luma {mx['luma']:.0f} std {mx['std']:.0f} "
-              f"sat {mx['sat']:.2f} M {mx['colourful']:.0f} blown {mx['blown']:.1%} crushed {mx['crushed']:.1%}"
+              f"sat {mx['sat']:.2f} M {mx['colourful']:.0f} empty {mx['empty']:.0%}/{mx['patch']:.0%} blown {mx['blown']:.1%} crushed {mx['crushed']:.1%}"
               + ("  <- " + "; ".join(bad) if bad else ""))
     print(f"{fails} sample(s) failed" if fails else "all samples pass")
     sys.exit(1 if fails else 0)
