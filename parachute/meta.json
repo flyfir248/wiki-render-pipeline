@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "key": "parachute",
+  "query": "parachute",
+  "source": "generated",
+  "uid": "generated:parachute",
+  "title": "parachute (generated)",
+  "author": "generated with microsoft/TRELLIS.2",
+  "licence": "generated",
+  "url": "https://huggingface.co/spaces/microsoft/TRELLIS.2",
+  "checked": "concept",
+  "triangles": 21074,
+  "bytes": 1386284,
+  "size": [
+    1.0003,
+    0.9937,
+    1.001
+  ],
+  "clips": [],
+  "skinned": false,
+  "morphs": false,
+  "fidelity": "wide",
+  "illustrative": true,
+  "look": "white nylon canopy, harness",
+  "added": "2026-11-24T18:10:58+00:00"
+}
