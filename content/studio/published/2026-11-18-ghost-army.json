@@ -1,0 +1,26 @@
+{
+  "core_message": "In World War II an American unit of artists and sound engineers fooled the enemy with inflatable tanks, fake sounds and fake radio traffic.",
+  "mood": "playful",
+  "title": "The Army That Won With Fake Tanks",
+  "description": "The 23rd Headquarters Special Troops, nicknamed the Ghost Army, was a US Army tactical deception unit of about 1,100 men, activated on 20 January 1944. In Europe from shortly before D-Day until 1945, it staged more than 20 deceptions using inflatable rubber tanks, trucks and artillery, recorded sound effects played from speakers on halftracks (audible about 15 miles away), and fake radio traffic. Many of its members were artists, including the fashion designer Bill Blass and the painter Ellsworth Kelly. The unit's work stayed classified until 1996.\n\nSource: Wikipedia, Ghost Army.\n\nAnimated 3D illustration made with Three.js; the vehicles and landscape are stylised.",
+  "tags": ["ghost army", "world war 2", "inflatable tanks", "military deception", "23rd headquarters special troops", "ww2 history", "bill blass", "weird history", "weird but true", "history shorts"],
+  "thumbnail_text": "FAKE TANKS",
+  "thumbnail_kicker": "And it worked",
+  "thumbnail_query": "inflatable tank world war 2",
+  "comment_question": "Would you have fallen for a rubber tank?",
+  "series": "Weird History",
+  "blender": "ghost-army",
+  "scenes": [
+    {"type": "broll", "blender_shot": "G01", "narration": "During World War Two, an American army fooled the enemy with tanks that weren't even real.",
+     "purpose": "hook"},
+    {"type": "broll", "blender_shot": "G02", "narration": "It was a secret unit of about eleven hundred men, officially the 23rd Headquarters Special Troops. Today it's known as the Ghost Army.",
+     "purpose": "who they were"},
+    {"type": "broll", "blender_shot": "G03", "narration": "Overnight, they inflated rubber tanks, trucks and artillery, so that from the air, an empty field looked like an armoured division.",
+     "purpose": "the inflatables"},
+    {"type": "broll", "blender_shot": "G04", "narration": "Speaker trucks blasted recorded sounds of tanks and construction that could be heard fifteen miles away, while radio operators sent fake messages for units that didn't exist.",
+     "purpose": "sound and radio"},
+    {"type": "broll", "blender_shot": "G05", "narration": "They staged more than twenty deceptions across Europe. Many of them were artists, like the fashion designer Bill Blass, and their story stayed secret for more than fifty years.",
+     "purpose": "the payoff"}
+  ],
+  "sources": ["https://en.wikipedia.org/wiki/Ghost_Army"]
+}

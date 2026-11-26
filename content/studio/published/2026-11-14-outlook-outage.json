@@ -1,0 +1,31 @@
+{
+  "core_message": "One faulty network change at Microsoft knocked email and work chat offline in 74 countries, some for over 18 hours.",
+  "mood": "curious",
+  "title": "The Day Outlook Went Dark in 74 Countries",
+  "description": "From midday on Thursday 12 November 2026, a Microsoft 365 outage disrupted Outlook, Teams, Copilot and SharePoint around the world. More than 100,000 problem reports reached Downdetector within an hour, businesses, governments, schools and healthcare providers lost their usual way to communicate, and some users were locked out for more than 18 hours. Microsoft blamed elevated load after an issue with a network capacity upgrade surfaced following a recent network change, said there was no sign of a cyberattack, apologised, and said affected customers may be eligible for service credits.\n\nSources: Al Jazeera, CNBC, NPR, Variety (12-13 Nov 2026).\n\nAnimated 3D illustration made with Three.js; the city, map and data centre are stylised, not real places.",
+  "tags": ["outlook down", "microsoft outage", "outlook outage", "microsoft 365", "teams down", "tech news", "internet outage", "breaking news", "weird but true", "news shorts"],
+  "thumbnail_text": "OUTLOOK WENT DARK",
+  "thumbnail_kicker": "74 countries",
+  "thumbnail_query": "office towers at night lights off",
+  "comment_question": "Were you hit by the Outlook outage?",
+  "series": "In the News",
+  "blender": "outlook-outage",
+  "scenes": [
+    {"type": "broll", "blender_shot": "O01", "narration": "On November the twelfth, a huge part of the world's work email simply stopped.",
+     "purpose": "hook"},
+    {"type": "broll", "blender_shot": "O02", "narration": "A Microsoft outage took down Outlook, along with Teams, Copilot and SharePoint, with services disrupted in seventy four countries.",
+     "purpose": "what went down"},
+    {"type": "broll", "blender_shot": "O03", "narration": "Within an hour, more than a hundred thousand problem reports hit Downdetector. Businesses, governments, schools and hospitals lost their main way to talk to each other.",
+     "purpose": "the scale"},
+    {"type": "broll", "blender_shot": "O04", "narration": "Some people were locked out for more than eighteen hours. Microsoft says it wasn't a hack. A network capacity upgrade went wrong, and its servers were overloaded.",
+     "purpose": "how long, and the cause"},
+    {"type": "broll", "blender_shot": "O05", "narration": "Microsoft has apologised and is offering credits to affected customers. One bad change, and much of the working world went quiet.",
+     "purpose": "the aftermath and the point"}
+  ],
+  "sources": [
+    "https://www.aljazeera.com/news/2026/11/13/microsoft-hit-by-global-outages-what-happened-and-why",
+    "https://www.cnbc.com/2026/11/12/microsoft-outage-outlook-aws-google.html",
+    "https://www.npr.org/2026/11/12/nx-s1-6039343/is-outlook-down-widespread-outage-hits-microsoft-email-and-other-apps",
+    "https://variety.com/2026/digital/news/microsoft-apologizes-outlook-outage-customer-credits-1236947124/"
+  ]
+}

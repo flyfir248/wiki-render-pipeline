@@ -1,0 +1,59 @@
+{
+  "core_message": "In 1919 a burst tank sent a wave of molasses through Boston's North End, killing 21 people.",
+  "mood": "tense",
+  "title": "A 25-Foot Wave of Molasses Hit Boston",
+  "description": "At about 12:30 pm on 15 January 1919, a steel storage tank of the Purity Distilling Company at 529 Commercial Street in Boston's North End burst. It was about 50 ft tall and 90 ft wide and held up to 2.3 million US gallons of molasses. A wave estimated at around 25 ft high at its peak and about 35 mph swept through the neighbourhood, damaged the Atlantic Avenue elevated railway and buildings, and killed 21 people; about 150 were injured. The tank had been poorly built and leaked so badly it was painted brown to hide it. Boston Harbor stayed brown until summer, and residents said the neighbourhood smelled of molasses for decades. After three years of hearings, the owner, the United States Industrial Alcohol Company, was found responsible and paid $628,000 in damages.\n\nSource: Wikipedia, Great Molasses Flood.\n\nAnimated 3D illustration (Three.js with Blender-built models); buildings and people are stylised.",
+  "tags": [
+    "great molasses flood",
+    "boston 1919",
+    "molasses disaster",
+    "north end",
+    "weird history",
+    "strange disasters",
+    "history",
+    "weird but true",
+    "history shorts",
+    "boston"
+  ],
+  "thumbnail_text": "35 MPH SYRUP",
+  "thumbnail_kicker": "Boston, 1919",
+  "thumbnail_query": "brown flood city street 1919",
+  "comment_question": "Had you ever heard of the molasses flood?",
+  "series": "Weird History",
+  "blender": "molasses-flood",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "M01",
+      "narration": "On a winter afternoon in 1919, a wave of molasses about twenty five feet high tore through the streets of Boston.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M02",
+      "narration": "A giant steel tank by the harbour held more than two million gallons of syrup. It leaked so badly, the company painted it brown to hide the stains.",
+      "purpose": "the tank"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M03",
+      "narration": "Just after half past twelve, the tank burst. A brown wave rolled through the North End at around thirty five miles an hour, smashing buildings and buckling the elevated railway.",
+      "purpose": "the wave"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M04",
+      "narration": "Twenty one people were killed and about a hundred and fifty were injured. Rescuers had to fight through the sticky syrup, and the harbour stayed brown until summer.",
+      "purpose": "the toll"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M05",
+      "narration": "The owner was found responsible and paid six hundred and twenty eight thousand dollars. And locals said the North End smelled of molasses for decades.",
+      "purpose": "aftermath"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Great_Molasses_Flood"
+  ]
+}

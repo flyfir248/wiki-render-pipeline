@@ -1,0 +1,28 @@
+{
+  "core_message": "Canada and Denmark spent nearly 40 years swapping flags and bottles of booze on a tiny Arctic rock, then split it in half.",
+  "mood": "playful",
+  "title": "Why Did Two Countries Fight With Whisky?",
+  "description": "Hans Island is a barren rock of about 1.3 square kilometres in the Nares Strait, between Canada's Ellesmere Island and Greenland. Both Canada and Denmark claimed it. In 1984 Denmark's minister for Greenland affairs landed, planted a Danish flag and left a bottle of schnapps; Canadian visitors answered with their own flag and a bottle of Canadian whisky, and the swaps went on for decades, nicknamed the Whisky War.\n\nIn June 2022 the two countries agreed to split the island roughly in half, giving Canada and Denmark a land border. 3D scenes made in Blender with CC0 assets by Kenney.",
+  "tags": ["hans island", "whisky war", "canada", "denmark", "greenland", "arctic", "weird geography", "border dispute", "weird but true", "history shorts"],
+  "thumbnail_text": "THE WHISKY WAR",
+  "thumbnail_kicker": "Canada vs Denmark",
+  "thumbnail_query": "arctic rock island flags",
+  "comment_question": "Which bottle would you have left on the island?",
+  "series": "Weird Geography",
+  "blender": "hans-island",
+  "scenes": [
+    {"type": "broll", "blender_shot": "H01", "narration": "For almost forty years, two countries fought over this tiny rock. Their weapons were flags and bottles of booze.",
+     "purpose": "a friendly fight over a rock"},
+    {"type": "broll", "blender_shot": "H02", "narration": "Hans Island sits in the icy strait between Canada and Greenland, which belongs to Denmark. Both countries claimed it. In 1984, a Danish minister landed, planted a Danish flag and left a bottle of schnapps.",
+     "purpose": "how the Whisky War started"},
+    {"type": "broll", "blender_shot": "H04", "narration": "Canadians answered with their own flag and a bottle of Canadian whisky. Then the Danes came back. The swapping went on for decades, and people called it the Whisky War.",
+     "purpose": "the swaps go on for decades"},
+    {"type": "broll", "blender_shot": "H05", "narration": "In 2022, the two countries finally settled it. They split the island roughly in half, with a border running straight across the rock.",
+     "purpose": "the settlement"},
+    {"type": "broll", "blender_shot": "H01", "narration": "So Canada and Denmark now share a land border, on an island where nobody lives at all.",
+     "purpose": "the weird result"}
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Hans_Island"
+  ]
+}

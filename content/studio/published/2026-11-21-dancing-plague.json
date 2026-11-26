@@ -1,0 +1,59 @@
+{
+  "core_message": "In 1518 hundreds of people in Strasbourg danced uncontrollably for weeks, and the city's cure was to hire musicians.",
+  "mood": "curious",
+  "title": "Why Did Hundreds of People Dance for Weeks?",
+  "description": "In July 1518, in Strasbourg (then in the Holy Roman Empire), a woman usually named as Frau Troffea began dancing in the street and kept going for days. Others joined her; by August estimates range from about 50 to 400 dancers. The city council reportedly opened guild halls and hired musicians to keep the dancers moving, believing they had to dance it out, which made things worse; later it banned public dancing. Some later accounts claim many deaths, but contemporary Strasbourg sources do not mention deaths. In September the dancers were taken to a shrine of Saint Vitus, given red shoes, and the outbreak faded. Historians such as John Waller think it was a mass psychogenic illness brought on by famine, disease and fear.\n\nSource: Wikipedia, Dancing plague of 1518.\n\nAnimated 3D illustration (Three.js with Blender-built models); buildings and people are stylised.",
+  "tags": [
+    "dancing plague",
+    "1518",
+    "strasbourg",
+    "dancing mania",
+    "mass hysteria",
+    "weird history",
+    "medieval mystery",
+    "history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "THEY COULDN'T STOP",
+  "thumbnail_kicker": "Strasbourg, 1518",
+  "thumbnail_query": "medieval town square dancing crowd",
+  "comment_question": "What do you think really caused it?",
+  "series": "Weird History",
+  "blender": "dancing-plague",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "S01",
+      "narration": "In the summer of 1518, a woman stepped into a street in Strasbourg and started to dance. She didn't stop for days.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S02",
+      "narration": "Her name is usually recorded as Frau Troffea. Soon others joined her, dancing in the streets, and nobody could explain why.",
+      "purpose": "it spreads"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S03",
+      "narration": "By August there were somewhere between fifty and four hundred dancers. The city's answer was more dancing: it opened guild halls and hired musicians to keep them going.",
+      "purpose": "the strange cure"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S04",
+      "narration": "It made things worse. Dancers collapsed from exhaustion. Later accounts claim many died, though records from the time don't mention deaths.",
+      "purpose": "the toll and the doubt"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S05",
+      "narration": "In September, the dancers were taken to a shrine of Saint Vitus and given red shoes, and the plague faded. Historians now think it was a mass panic, brought on by famine and fear.",
+      "purpose": "the ending and the theory"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Dancing_plague_of_1518"
+  ]
+}

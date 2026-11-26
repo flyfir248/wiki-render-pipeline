@@ -1,0 +1,59 @@
+{
+  "core_message": "A 1983 airliner ran out of fuel at 41,000 feet because of a metric mix-up, and a glider pilot landed it safely on a drag strip.",
+  "mood": "curious",
+  "title": "The Jet That Ran Out of Fuel at 41,000 Feet",
+  "description": "On 23 July 1983, Air Canada Flight 143, a nearly new Boeing 767, ran out of fuel at 41,000 feet over Red Lake, Ontario, on its way from Montreal to Edmonton via Ottawa. Canada was converting to metric, the 767 was one of the airline's first metric aircraft, and its fuel gauges were not working. The fuel load was worked out with a conversion factor for pounds instead of kilograms, so the jet carried less than half the fuel it needed. With both engines out and most cockpit displays dark, a ram-air turbine powered the hydraulics. Captain Robert Pearson, an experienced glider pilot, and First Officer Maurice Quintal, who had served at RCAF Station Gimli, glided to Gimli's former air-force runway, then used as a racing strip during a family day. Pearson side-slipped to lose height; the nose gear collapsed on landing and a small fire was put out. All 61 passengers and 8 crew survived, with only minor injuries during the evacuation. The aircraft was repaired and flew until 2008.\n\nSource: Wikipedia, Gimli Glider.\n\nAnimated 3D illustration (Three.js with Blender-built models); aircraft, places and people are stylised.",
+  "tags": [
+    "gimli glider",
+    "air canada 143",
+    "boeing 767",
+    "aviation",
+    "metric mistake",
+    "plane ran out of fuel",
+    "emergency landing",
+    "weird history",
+    "weird but true",
+    "aviation shorts"
+  ],
+  "thumbnail_text": "NO FUEL. NO DEATHS.",
+  "thumbnail_kicker": "July 1983",
+  "thumbnail_query": "airliner gliding to a runway",
+  "comment_question": "Would you have trusted the glider pilot?",
+  "series": "Weird History",
+  "blender": "gimli-glider",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "J04",
+      "narration": "In 1983, a passenger jet came down silently onto an old runway, right in the middle of a family day at a drag strip.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "J01",
+      "narration": "Air Canada Flight 143 had run out of fuel at forty-one thousand feet. Both engines stopped, and most of the cockpit screens went dark.",
+      "purpose": "the problem"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "J02",
+      "narration": "Canada was switching to the metric system. When the jet was fuelled, the numbers were worked out in pounds instead of kilograms, so it carried less than half the fuel it needed.",
+      "purpose": "the cause"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "J03",
+      "narration": "A tiny wind turbine dropped out to keep the controls working. Luckily, the captain was an experienced glider pilot, and his co-pilot knew an old air base nearby, at Gimli.",
+      "purpose": "the twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "J05",
+      "narration": "The nose gear collapsed, and the jet scraped to a stop on its nose. All sixty-nine people on board survived, and the plane went on flying for another twenty-five years.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Gimli_Glider"
+  ]
+}

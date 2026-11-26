@@ -1,0 +1,60 @@
+{
+  "core_message": "Juliane Koepcke survived a 3 km fall in her seat after her plane broke up over the Amazon, then walked out of the rainforest using what her biologist father taught her.",
+  "mood": "tense",
+  "title": "She Fell 3 km From a Plane and Lived",
+  "description": "On 24 December 1971, LANSA Flight 508, a Lockheed L-188 Electra flying from Lima to Pucallpa, Peru, entered a thunderstorm, was struck by lightning and broke up in the air. Seventeen-year-old Juliane Koepcke fell about 3 km into the rainforest still strapped into her row of seats. She woke with a broken collarbone, a deep cut and concussion. Her parents were biologists who ran a research station in the forest, and she remembered her father's advice to follow water downhill. She walked and waded downstream for days until she found a loggers' shelter, where she was found on her eleventh day in the forest and taken to safety. Of the 92 people on board, she was the only survivor; her mother, the ornithologist Maria Koepcke, was among those who died. Juliane later became a biologist herself.\n\nSource: Wikipedia, LANSA Flight 508; Wikipedia, Juliane Koepcke.\n\nAnimated 3D illustration (Three.js with Blender-built models); aircraft, places and people are stylised.",
+  "tags": [
+    "juliane koepcke",
+    "lansa flight 508",
+    "plane crash survivor",
+    "amazon rainforest",
+    "survival story",
+    "peru",
+    "true story",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "SHE SURVIVED",
+  "thumbnail_kicker": "Peru, 1971",
+  "thumbnail_query": "dense amazon rainforest from above",
+  "comment_question": "What would you have done first?",
+  "series": "Weird History",
+  "blender": "juliane-koepcke",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "F01",
+      "narration": "On Christmas Eve 1971, a seventeen-year-old girl fell three kilometres into the Amazon rainforest, still strapped into her seat. She survived.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "F02",
+      "narration": "Juliane Koepcke was flying with her mother over Peru when their plane flew into a thunderstorm. Lightning struck it, and it broke apart in the air.",
+      "purpose": "what happened"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "F03",
+      "narration": "She woke up alone on the forest floor with a broken collarbone. Her parents were biologists, and her father had taught her: if you're lost, follow water downstream.",
+      "purpose": "the lesson"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "F04",
+      "narration": "So she walked and waded down creeks and rivers for days, until she found a loggers' hut on the bank.",
+      "purpose": "the walk"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "F05",
+      "narration": "On her eleventh day in the forest, the loggers found her. She was the only one of ninety-two people on board to survive.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/LANSA_Flight_508",
+    "https://en.wikipedia.org/wiki/Juliane_Koepcke"
+  ]
+}

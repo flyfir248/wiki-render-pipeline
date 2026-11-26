@@ -1,0 +1,58 @@
+{
+  "core_message": "Turritopsis dohrnii can turn from an adult jellyfish back into a juvenile polyp, possibly again and again, so it is called the immortal jellyfish.",
+  "mood": "curious",
+  "title": "The Jellyfish That Turns Back Into a Baby",
+  "description": "Turritopsis dohrnii is a jellyfish only about 4.5 mm across. When it is stressed, injured, sick or old, the adult medusa can sink, shrink into a blob and transform back into a polyp, the stage that normally comes first, which then buds off new jellyfish. Because this reverse life cycle can in principle repeat indefinitely, it is often called biologically immortal. The ability was noticed after a marine biology student, Christian Sommer, collected specimens on the Italian Riviera in 1988 and saw them revert in the lab; it was described in scientific papers in the 1990s. In the wild, most still die young, eaten by predators or killed by disease. The species has spread around the world, likely carried in ships' ballast water.\n\nSource: Wikipedia, Turritopsis dohrnii.\n\nAnimated 3D illustration (Three.js); animals and places are stylised and not to scale.",
+  "tags": [
+    "immortal jellyfish",
+    "turritopsis dohrnii",
+    "jellyfish",
+    "biology",
+    "ocean life",
+    "science facts",
+    "weird science",
+    "weird but true",
+    "science shorts"
+  ],
+  "thumbnail_text": "IT NEVER GROWS OLD?",
+  "thumbnail_kicker": "4.5 mm",
+  "thumbnail_query": "tiny transparent jellyfish",
+  "comment_question": "Would you want to live forever?",
+  "series": "Weird History",
+  "blender": "immortal-jellyfish",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "K01",
+      "narration": "This jellyfish is smaller than your fingernail, and when it grows old or gets hurt, it can turn itself back into a baby.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "K02",
+      "narration": "In 1988, a marine biology student collecting jellyfish on the Italian Riviera took some back to the lab.",
+      "purpose": "discovery"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "K03",
+      "narration": "Instead of dying, some of them sank, shrank into blobs, and became polyps again, the stage that normally comes first.",
+      "purpose": "the twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "K04",
+      "narration": "Those polyps then grew brand new jellyfish. In theory, it can repeat this again and again, so it's called the immortal jellyfish.",
+      "purpose": "the cycle"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "K05",
+      "narration": "But in the wild, most still die young, eaten by fish or killed by disease. Immortal, just not invincible.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Turritopsis_dohrnii"
+  ]
+}

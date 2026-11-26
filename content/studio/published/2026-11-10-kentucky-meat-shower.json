@@ -1,0 +1,30 @@
+{
+  "core_message": "In 1876 chunks of meat fell from a clear sky over a Kentucky farm, and vultures are the best explanation.",
+  "mood": "playful",
+  "title": "Why Did It Rain Meat in Kentucky?",
+  "description": "On 3 March 1876, pieces of meat fell from a clear sky for several minutes over a farm near Olympia Springs in Bath County, Kentucky, while Mrs Crouch was making soap in her yard. Two men tasted it and guessed mutton or venison. Samples examined later were identified as lung tissue.\n\nThe most accepted explanation: a flock of vultures disgorging their meal, as they do to lighten themselves for a quick take-off. 3D scenes made in Blender with CC0 assets by Quaternius.",
+  "tags": ["kentucky meat shower", "raining meat", "weird history", "1876", "vultures", "strange weather", "bath county", "unexplained", "history shorts", "weird but true"],
+  "thumbnail_text": "IT RAINED MEAT",
+  "thumbnail_kicker": "1876",
+  "thumbnail_query": "farm blue sky kentucky",
+  "comment_question": "Would you have tasted it?",
+  "series": "Weird History",
+  "blender": "kentucky-meat-shower",
+  "scenes": [
+    {"type": "broll", "blender_shot": "K01", "narration": "On the third of March, 1876, it rained meat on a farm in Kentucky. Out of a clear blue sky.",
+     "purpose": "meat falls from a clear sky"},
+    {"type": "broll", "blender_shot": "K02", "narration": "Mrs Crouch was making soap in her yard in Bath County when chunks of flesh began to fall around her, for several minutes, over a patch of land about a hundred yards long.",
+     "purpose": "a witness and the scale of it"},
+    {"type": "broll", "blender_shot": "K03", "narration": "Most pieces were a few centimetres across. Two curious neighbours even tasted them, and guessed it was mutton or venison.",
+     "purpose": "people tasted it"},
+    {"type": "broll", "blender_shot": "K05", "narration": "When samples reached scientists, several turned out to be lung tissue, possibly from a horse.",
+     "purpose": "what the meat was"},
+    {"type": "broll", "blender_shot": "K04", "narration": "The best explanation came from a local doctor: vultures. When a flock is startled, they throw up their last meal to lighten the load and take off faster.",
+     "purpose": "vultures are the likely cause"},
+    {"type": "broll", "blender_shot": "K01", "narration": "So that day in Kentucky, it really did rain meat. It just came from a flock of vultures.",
+     "purpose": "the answer"}
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Kentucky_meat_shower"
+  ]
+}

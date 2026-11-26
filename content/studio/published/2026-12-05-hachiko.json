@@ -1,0 +1,59 @@
+{
+  "core_message": "Hachiko waited at Shibuya Station every day for almost ten years after his owner died, and became a symbol of loyalty.",
+  "mood": "curious",
+  "title": "The Dog Who Waited Almost Ten Years",
+  "description": "Hachiko was an Akita born in November 1923. His owner, Professor Hidesaburo Ueno of the Imperial University in Tokyo, took the train from Shibuya Station, and Hachiko met him there at the end of each day. In May 1925 Ueno died suddenly at work and never came back. Hachiko kept going to the station every day, at the time the train arrived, for nine years and ten months, until he died in March 1935. Station staff and commuters fed and looked after him, newspaper stories made him famous, and a bronze statue was put up at Shibuya Station in 1934 while he was still alive; the current statue dates from 1948. This animation is a reconstruction, not archival footage.\n\nSource: Wikipedia, Hachiko.\n\nAnimated 3D illustration (Three.js); places and people are stylised.",
+  "tags": [
+    "hachiko",
+    "loyal dog",
+    "akita",
+    "shibuya",
+    "japan",
+    "true story",
+    "dog story",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "HE KEPT WAITING",
+  "thumbnail_kicker": "Shibuya, 1925-1935",
+  "thumbnail_query": "akita dog waiting at a station",
+  "comment_question": "What's the most loyal thing an animal has done for you?",
+  "series": "Weird History",
+  "blender": "hachiko",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "T01",
+      "narration": "Every day for almost ten years, this dog waited at the same train station, for someone who was never coming back.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "T02",
+      "narration": "In 1924, Hachiko met his owner, Professor Ueno, at Shibuya Station in Tokyo, at the end of each day.",
+      "purpose": "the routine"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "T03",
+      "narration": "Then in May 1925, the professor died suddenly at work. Hachiko kept coming anyway, through every season, at the time the train arrived.",
+      "purpose": "the loss"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "T04",
+      "narration": "Station staff and commuters fed him and looked after him, and newspaper stories made him famous across Japan.",
+      "purpose": "the people"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "T05",
+      "narration": "He waited until he died in 1935. Today a bronze statue of Hachiko stands at Shibuya Station, where people still meet.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Hachik%C5%8D"
+  ]
+}

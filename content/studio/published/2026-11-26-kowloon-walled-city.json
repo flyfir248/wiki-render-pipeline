@@ -1,0 +1,58 @@
+{
+  "core_message": "Kowloon Walled City packed about 33,000 people into 2.6 hectares, largely ungoverned, until it was demolished and turned into a park.",
+  "mood": "curious",
+  "title": "The Hong Kong Block No Government Ran",
+  "description": "Kowloon Walled City began as a Chinese military fort. When Britain leased the surrounding New Territories in 1898, the fort was excluded, and for most of the 20th century neither Britain nor China effectively governed it. After the Second World War it filled with housing; by 1987 about 33,000 people lived on roughly 2.6 hectares, in some 350 interlocking buildings capped at about 14 storeys because of the flight path into Kai Tak airport. Its narrow alleys were lit by bare bulbs under dripping pipes, and it held small factories, schools and unlicensed dentists and doctors. Residents used the rooftops as open space beneath the landing jets. The city was demolished in 1993-94, and Kowloon Walled City Park opened on the site in 1995.\n\nSource: Wikipedia, Kowloon Walled City.\n\nAnimated 3D illustration (Three.js); buildings, aircraft and people are stylised.",
+  "tags": [
+    "kowloon walled city",
+    "hong kong",
+    "densest place on earth",
+    "kai tak",
+    "urban history",
+    "lost cities",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "33,000 PEOPLE",
+  "thumbnail_kicker": "Hong Kong",
+  "thumbnail_query": "dense apartment block with antennas",
+  "comment_question": "Could you live somewhere with no daylight?",
+  "series": "Weird History",
+  "blender": "kowloon-walled-city",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "I01",
+      "narration": "Planes landing in Hong Kong used to skim over one block where thirty-three thousand people lived, stacked fourteen storeys high.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "I02",
+      "narration": "This was Kowloon Walled City. When Britain leased the land around it in 1898, this tiny old fort was left out, and for decades, almost no government ran it.",
+      "purpose": "the loophole"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "I03",
+      "narration": "Hundreds of buildings grew into one solid mass. Many alleys barely saw daylight. They were lit by bare bulbs, and dripped from the pipes above.",
+      "purpose": "inside"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "I04",
+      "narration": "There were factories, schools and unlicensed dentists inside. The rooftops were the only open space, where kids played as jets thundered just overhead.",
+      "purpose": "the twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "I05",
+      "narration": "In 1993, the whole city was torn down. Today, the spot is a quiet park, with a few relics of the old fort.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Kowloon_Walled_City"
+  ]
+}

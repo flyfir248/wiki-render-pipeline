@@ -1,0 +1,59 @@
+{
+  "core_message": "Hiroo Onoda kept up his WWII mission in the Philippine jungle until 1974, refusing to believe the war had ended, and only surrendered when his old commander ordered him to.",
+  "mood": "tense",
+  "title": "The Soldier Who Fought On for 29 Years",
+  "description": "Hiroo Onoda was a Japanese army intelligence officer sent to Lubang Island in the Philippines in December 1944, with orders to carry on guerrilla operations and never surrender. After Japan's surrender in 1945, leaflets and later letters and family appeals were left for him, but he dismissed them as enemy propaganda. With a few men he stayed in the jungle for decades; his group killed around 30 Filipino inhabitants during that time, and his last companions died in clashes with local police and troops. In February 1974 a young Japanese traveller, Norio Suzuki, found him; on 9 March 1974 his former commanding officer, Major Yoshimi Taniguchi, came to Lubang and formally relieved him of duty, and he surrendered. He was pardoned by the Philippine government and returned to Japan.\n\nSource: Wikipedia, Hiroo Onoda.\n\nAnimated 3D illustration (Three.js with Blender-built models); places and people are stylised. No violence is depicted.",
+  "tags": [
+    "hiroo onoda",
+    "last soldier",
+    "ww2",
+    "lubang island",
+    "philippines",
+    "japanese holdout",
+    "military history",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "THE WAR WAS OVER",
+  "thumbnail_kicker": "Philippines, 1974",
+  "thumbnail_query": "soldier in jungle",
+  "comment_question": "Why do you think he never believed the leaflets?",
+  "series": "Weird History",
+  "blender": "hiroo-onoda",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "O01",
+      "narration": "In 1974, a Japanese soldier walked out of the jungle in the Philippines, still fighting a war that had ended twenty-nine years earlier.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "O02",
+      "narration": "Hiroo Onoda was sent to Lubang Island in 1944, with orders to hold out and never surrender.",
+      "purpose": "the orders"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "O03",
+      "narration": "When the war ended, leaflets were dropped telling soldiers to come out. Onoda decided they were enemy tricks, and stayed hidden.",
+      "purpose": "the denial"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "O04",
+      "narration": "For decades he and a few men kept up their campaign. They killed around thirty local people, and his last companions died in clashes with the police.",
+      "purpose": "the cost"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "O05",
+      "narration": "In 1974, his old commanding officer flew to the island and formally ordered him to stand down. Only then did he surrender.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Hiroo_Onoda"
+  ]
+}

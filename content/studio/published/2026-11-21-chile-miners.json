@@ -1,0 +1,59 @@
+{
+  "core_message": "Thirty-three Chilean miners survived 69 days trapped 700 m underground, and all came out alive one by one in a narrow capsule.",
+  "mood": "uplifting",
+  "title": "The Note That Came Up From 700 Metres Down",
+  "description": "On 5 August 2010, part of the San Jose copper-gold mine near Copiapo, in Chile's Atacama Desert, collapsed, trapping 33 miners about 700 metres underground and some 5 km from the entrance. For 17 days nobody knew whether they were alive; they rationed their emergency food, reportedly two spoonfuls of tuna every two days. On 22 August a drill probe broke through near their shelter and came back up with a note taped to it: \"Estamos bien en el refugio los 33\" (\"We are well in the shelter, the 33\"). Supplies went down narrow boreholes while the families waited in a tent camp they called Camp Hope. On 12 and 13 October, after 69 days, all 33 were winched up one at a time in the Fenix 2 capsule; the last out was shift foreman Luis Urzua.\n\nSource: Wikipedia, 2010 Copiapo mining accident.\n\nAnimated 3D illustration (Three.js with Blender-built models); places and people are stylised.",
+  "tags": [
+    "chilean miners",
+    "33 miners",
+    "copiapo",
+    "san jose mine",
+    "mine rescue",
+    "fenix capsule",
+    "survival story",
+    "true story",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "WE ARE WELL",
+  "thumbnail_kicker": "Chile, 2010",
+  "thumbnail_query": "mine rescue capsule at night",
+  "comment_question": "Could you have lasted 69 days down there?",
+  "series": "Weird History",
+  "blender": "chile-miners",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "A01",
+      "narration": "In 2010, thirty-three men came up from seven hundred metres underground, one at a time, in a capsule barely wider than a man.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "A02",
+      "narration": "On the fifth of August, part of the San Jose mine in Chile's Atacama Desert collapsed, trapping thirty-three miners deep inside the mountain.",
+      "purpose": "the collapse"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "A03",
+      "narration": "For seventeen days nobody knew if they were alive. They rationed tiny spoonfuls of tuna. Then a drill broke through near their shelter, and came back up with a note: we are well in the shelter, the thirty-three.",
+      "purpose": "the note"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "A04",
+      "narration": "Their families set up a tent town at the mine called Camp Hope, while rescuers drilled a shaft wide enough for a capsule.",
+      "purpose": "the wait"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "A05",
+      "narration": "After sixty-nine days, all thirty-three came out alive. The last one up was their shift boss, Luis Urzua.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/2010_Copiap%C3%B3_mining_accident"
+  ]
+}

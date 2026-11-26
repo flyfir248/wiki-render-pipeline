@@ -1,0 +1,59 @@
+{
+  "core_message": "Tristan da Cunha is the most remote inhabited island group, and after a 1961 eruption forced everyone out, most islanders chose to return.",
+  "mood": "curious",
+  "title": "The Most Remote Village on Earth",
+  "description": "Tristan da Cunha, a British Overseas Territory in the South Atlantic, is the most remote inhabited island group in the world. Its only settlement, Edinburgh of the Seven Seas, sits on a coastal plain beneath Queen Mary's Peak, a 2,062 m volcano, and is home to fewer than 250 people. There is no airport; Cape Town, about 2,800 km away, is roughly a week by ship. Land is held in common, families farm potatoes and keep cattle, and the population shares only a handful of surnames. In October 1961 a volcanic vent opened right beside the settlement, and the whole population was evacuated and taken to England. In 1963 most of them chose to return home.\n\nSource: Wikipedia, Tristan da Cunha; Wikipedia, Edinburgh of the Seven Seas.\n\nAnimated 3D illustration (Three.js with Blender-built models); island, village and people are stylised.",
+  "tags": [
+    "tristan da cunha",
+    "most remote island",
+    "remote places",
+    "south atlantic",
+    "volcano",
+    "island life",
+    "weird geography",
+    "weird but true",
+    "geography shorts"
+  ],
+  "thumbnail_text": "NO AIRPORT",
+  "thumbnail_kicker": "South Atlantic",
+  "thumbnail_query": "remote volcanic island village",
+  "comment_question": "Could you live a week's sail from anywhere?",
+  "series": "Weird History",
+  "blender": "tristan-da-cunha",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "R01",
+      "narration": "This is the most remote inhabited island on Earth. Fewer than two hundred and fifty people live here, in one village at the foot of a volcano.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "R02",
+      "narration": "Tristan da Cunha has no airport. The nearest city, Cape Town, is about two thousand eight hundred kilometres away, roughly a week by ship.",
+      "purpose": "how far"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "R03",
+      "narration": "The land is owned by the whole community. Families grow potatoes and keep cattle, and most islanders share just a handful of surnames.",
+      "purpose": "life"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "R04",
+      "narration": "In 1961, the volcano erupted right next to the village. Everyone was evacuated, and the whole population was taken to England.",
+      "purpose": "the eruption"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "R05",
+      "narration": "Two years later, most of them chose to come home. And they still live there today.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Tristan_da_Cunha",
+    "https://en.wikipedia.org/wiki/Edinburgh_of_the_Seven_Seas"
+  ]
+}

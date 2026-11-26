@@ -1,0 +1,59 @@
+{
+  "core_message": "A gas crater in Turkmenistan's desert was set alight to burn off its gas, supposedly for a few weeks, and it has been burning for more than 50 years.",
+  "mood": "tense",
+  "title": "The 'Gates of Hell' Are Finally Going Out",
+  "description": "The Darvaza gas crater, nicknamed the Door to Hell, is a burning natural-gas crater about 60-70 m across and about 30 m deep in the Karakum Desert, Turkmenistan, roughly 260 km north of Ashgabat. The most common account says Soviet engineers drilling for gas in 1971 broke into a cavern, the ground collapsed, and the gas was set alight to stop it spreading, in the hope it would burn off quickly. Records are incomplete and some accounts date the collapse and the fire differently.\n\nIn 2013 explorer George Kourounis became the first person known to reach the crater floor. In 2022 Turkmenistan's president called for the fire to be put out, and in 2025 officials reported the flames had shrunk considerably as nearby wells captured more of the gas.\n\n3D scenes made in Blender with CC0 scanned textures from Poly Haven; the crater, flames and derrick are modelled for this video.",
+  "tags": [
+    "darvaza",
+    "door to hell",
+    "gas crater",
+    "turkmenistan",
+    "karakum desert",
+    "burning crater",
+    "weird places",
+    "weird geography",
+    "weird but true",
+    "shorts"
+  ],
+  "thumbnail_text": "LIT ON PURPOSE",
+  "thumbnail_kicker": "The Door to Hell",
+  "thumbnail_query": "burning gas crater desert night",
+  "comment_question": "Would you camp next to the Door to Hell?",
+  "series": "Weird Places",
+  "blender": "darvaza",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "D01",
+      "narration": "In the middle of a desert in Turkmenistan, there is a hole in the ground that has been on fire for more than fifty years.",
+      "purpose": "hook: a hole that won't stop burning"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "D02",
+      "narration": "It's the Darvaza gas crater, about seventy metres wide and thirty metres deep. Locals call it the Door to Hell.",
+      "purpose": "the place"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "D03",
+      "narration": "The usual story is that in 1971, Soviet engineers drilling for gas broke into a hidden cavern, and the ground collapsed under their rig. To stop the gas from spreading, they set it on fire, expecting it to burn out in a few weeks.",
+      "purpose": "how it started (the commonly told version)"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "D04",
+      "narration": "It never did. In 2013, explorer George Kourounis became the first person known to climb all the way down to its burning floor.",
+      "purpose": "it kept burning; someone went in"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "D05",
+      "narration": "Turkmenistan now wants the fire put out, and the flames have started to shrink. But for now, tourists still camp at its edge at night, to watch the Door to Hell glow.",
+      "purpose": "today"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Darvaza_gas_crater"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "core_message": "A cargo ship abandoned in the Arctic ice in 1931 kept being sighted, crewless, for 38 years.",
+  "mood": "tense",
+  "title": "How Did This Ship Drift Alone for 38 Years?",
+  "description": "In 1931 the Hudson's Bay Company cargo steamer SS Baychimo was trapped in pack ice off Alaska with a cargo of furs. Her crew sheltered on shore; after a November blizzard the ship was gone, presumed sunk.\n\nShe wasn't. The Baychimo was sighted drifting again and again for decades, and some people even boarded her. The last reported sighting was in 1969, frozen into the ice of the Beaufort Sea, 38 years after she was abandoned. 3D scenes made in Blender with CC0 assets by Kenney and Quaternius.",
+  "tags": ["ss baychimo", "ghost ship", "arctic", "alaska", "unsolved mystery", "weird history", "beaufort sea", "1931", "abandoned ship", "history shorts"],
+  "thumbnail_text": "38 YEARS ADRIFT",
+  "thumbnail_kicker": "Arctic",
+  "thumbnail_query": "ship in arctic ice",
+  "comment_question": "Do you think the Baychimo is still out there?",
+  "series": "Weird History",
+  "blender": "baychimo",
+  "scenes": [
+    {"type": "broll", "blender_shot": "B01", "narration": "This cargo ship drifted around the Arctic with no crew for thirty eight years. Her name was the SS Baychimo.",
+     "purpose": "a crewless ship drifted for 38 years"},
+    {"type": "broll", "blender_shot": "B02", "narration": "In October 1931, she was trapped in pack ice off the coast of Alaska, carrying a load of valuable furs. Her crew walked across the ice and built a shelter on shore to wait it out.",
+     "purpose": "trapped in ice, crew moves ashore"},
+    {"type": "broll", "blender_shot": "B03", "narration": "Then, in November, a blizzard hit. When it cleared, the Baychimo was gone. Everyone assumed she had sunk.",
+     "purpose": "the ship vanishes in a blizzard"},
+    {"type": "broll", "blender_shot": "B04", "narration": "But she hadn't. A hunter spotted her drifting weeks later. Over the following decades she was seen again and again, and some people even climbed aboard, but nobody could ever bring her back.",
+     "purpose": "decades of sightings"},
+    {"type": "broll", "blender_shot": "B05", "narration": "The last sighting came in 1969, when she was found frozen into the ice of the Beaufort Sea, thirty eight years after she was abandoned.",
+     "purpose": "the last sighting"},
+    {"type": "broll", "blender_shot": "B01", "narration": "Nobody has seen her since. She may have sunk, or she may still be out there, drifting.",
+     "purpose": "her fate is unknown"}
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/SS_Baychimo"
+  ]
+}

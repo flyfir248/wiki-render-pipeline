@@ -1,0 +1,59 @@
+{
+  "core_message": "The Antikythera mechanism, found in a shipwreck in 1901, is a 2,000-year-old Greek gear computer that predicted eclipses.",
+  "mood": "curious",
+  "title": "A Computer Found in an Ancient Shipwreck",
+  "description": "In 1900, Greek sponge divers sheltering from a storm near the island of Antikythera found a Roman-era shipwreck full of statues and treasure. In 1901 they brought up corroded lumps of bronze that turned out to be the Antikythera mechanism, a hand-cranked device made in Greece in roughly the 2nd or 1st century BC. Housed in a wooden case, it used at least 30 interlocking bronze gears to show the positions of the Sun and Moon, the Moon's phases, eclipse predictions years ahead, and the four-year cycle of the Panhellenic games including the Olympics. It is often called the oldest known analogue computer; nothing of comparable complexity is known until medieval astronomical clocks more than a thousand years later. The fragments are in the National Archaeological Museum in Athens. The gear layout shown here is illustrative, not an exact reconstruction.\n\nSource: Wikipedia, Antikythera mechanism.\n\nAnimated 3D illustration (Three.js with Blender-built models).",
+  "tags": [
+    "antikythera mechanism",
+    "ancient computer",
+    "ancient greece",
+    "shipwreck",
+    "archaeology",
+    "ancient technology",
+    "history mystery",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "2,000 YEARS OLD",
+  "thumbnail_kicker": "Found 1901",
+  "thumbnail_query": "ancient bronze gears",
+  "comment_question": "What else do you think the ancients could build?",
+  "series": "Weird History",
+  "blender": "antikythera",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "X01",
+      "narration": "Divers pulled this lump of corroded bronze out of a shipwreck in 1901. Inside it is a computer more than two thousand years old.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "X02",
+      "narration": "Greek sponge divers sheltering from a storm near the island of Antikythera found a Roman-era wreck full of treasure, and among it, a few pieces of bronze.",
+      "purpose": "the find"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "X03",
+      "narration": "It was a hand-cranked machine in a wooden box. Turn the handle, and pointers showed where the Sun and Moon would be, and even the Moon's phases.",
+      "purpose": "what it did"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "X04",
+      "narration": "Inside were at least thirty interlocking bronze gears. It could predict eclipses years ahead, and even kept track of the Olympic Games.",
+      "purpose": "the twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "X05",
+      "narration": "Nothing this complex is known again for more than a thousand years. Today its pieces sit in a museum in Athens.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Antikythera_mechanism"
+  ]
+}
