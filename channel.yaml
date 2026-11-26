@@ -150,7 +150,7 @@ growth:
   # The Blender What If productions rendered overnight on the studio laptop: three a week, on top of
   # Saturday's long video, so the queue they render into keeps moving.
   studio_longs_per_week: 1  # what the laptop can render with its heat limit (was 3, never met)
-  bonus_min_fit: 9                 # trending only when it truly fits (was 7); also gates make_shorts.py on the laptop
+  bonus_min_fit: 8                 # trending only when it fits well (was 7: Diamant got in at 7 with 0 readers); also gates make_shorts.py
   bonus_long_min_fit: 9
   # A weekly long explainer on a recent news incident (Wikipedia "In the news" and most read, at
   # least a day old). Factual and attributed, no speculation; see NEWS_GUIDE in fyt/llm.py.
