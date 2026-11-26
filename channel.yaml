@@ -127,7 +127,7 @@ schedule:
 growth:
   polish: true              # second pass on title, hook and thumbnail text; loop line for Shorts
   rank_topics: true         # pick articles by fit with the niche and Wikipedia readers
-  min_topic_fit: 6          # 0-10
+  min_topic_fit: 7          # 0-10; 7 keeps the queue to odd places, mysteries and strange events
   cuts_per_long: 2          # Shorts cut from each long video, linking to it
   # The weekly long video tells the full story of the recent Short with the most views (at least 300,
   # public 2+ days, from the last 3 weeks), else a fresh article. In October the best Shorts got 1,000+
@@ -142,15 +142,15 @@ growth:
   # No Part 1 / Part 2 Shorts: part 2s kept a fraction of part 1's viewers (52-Hz whale 275 -> 32, Nim
   # Chimpsky 138 -> 18), so each Short tells its story whole.
   two_part_share: 0
-  bonus_shorts_per_day: 1   # extra Short on a trending topic that fits (if one does)
+  bonus_shorts_per_day: 0   # off: one channel, one look; volume was diluting it (was 1)
   bonus_short_min_fit: 8    # only for a strong trend: the two daily Shorts already follow what's trending
   # Off while the weekly long video gets the run time and the free model tokens: no long video went out
   # after 17 Oct because the Shorts used them first. Bonus and news long videos got 2-16 views each.
   bonus_longs_per_week: 0   # extra long video, only for a very strong trending fit
   # The Blender What If productions rendered overnight on the studio laptop: three a week, on top of
   # Saturday's long video, so the queue they render into keeps moving.
-  studio_longs_per_week: 3
-  bonus_min_fit: 7
+  studio_longs_per_week: 1  # what the laptop can render with its heat limit (was 3, never met)
+  bonus_min_fit: 9                 # trending only when it truly fits (was 7); also gates make_shorts.py on the laptop
   bonus_long_min_fit: 9
   # A weekly long explainer on a recent news incident (Wikipedia "In the news" and most read, at
   # least a day old). Factual and attributed, no speculation; see NEWS_GUIDE in fyt/llm.py.
