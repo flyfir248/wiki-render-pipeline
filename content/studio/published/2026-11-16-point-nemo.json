@@ -1,0 +1,61 @@
+{
+  "core_message": "Point Nemo is so far from land that its nearest humans are often astronauts, which is why space agencies crash dead spacecraft there.",
+  "mood": "curious",
+  "title": "The Nearest Humans Here Are in Space",
+  "description": "Point Nemo, in the South Pacific, is the oceanic pole of inaccessibility: the point in the ocean farthest from any land, about 2,700 km (1,450 nautical miles) from the nearest islands. The International Space Station orbits about 400 km above the Earth, so when it passes overhead its crew can be the closest people to anyone at Point Nemo.\n\nBecause nobody lives or sails nearby, the surrounding ocean is used as a spacecraft cemetery. Since 1971 space agencies have steered hundreds of spacecraft to controlled re-entries here, including Russia's Mir space station in 2001. Debris rests roughly 4 km down. NASA plans to bring the ISS down into the same remote area after it retires in the early 2030s.\n\n3D scenes made in Blender; the station, wreck and seabed are modelled for this video.",
+  "tags": [
+    "point nemo",
+    "spacecraft cemetery",
+    "iss",
+    "mir space station",
+    "pacific ocean",
+    "most remote place",
+    "space",
+    "weird geography",
+    "weird but true",
+    "space shorts"
+  ],
+  "thumbnail_text": "2,688 KM FROM LAND",
+  "thumbnail_kicker": "Point Nemo",
+  "thumbnail_query": "spacecraft reentry fireball ocean",
+  "comment_question": "Would you visit the most remote point in the ocean?",
+  "series": "Weird Places",
+  "blender": "point-nemo",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "N01",
+      "narration": "There is a spot in the Pacific Ocean so remote that the closest people to you are usually astronauts, flying overhead.",
+      "purpose": "hook: remoteness measured by astronauts"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "N02",
+      "narration": "It's called Point Nemo. The nearest land is about two thousand seven hundred kilometres away. The International Space Station, only four hundred kilometres up, is often closer than any human on the ground.",
+      "purpose": "the place"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "N03",
+      "narration": "That emptiness makes it the perfect graveyard. Since 1971, space agencies have steered hundreds of dead spacecraft to crash here, where no ship or person can be hit.",
+      "purpose": "the spacecraft cemetery"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "N04",
+      "narration": "Russia's Mir space station came down here in 2001. What survived the fall now lies about four kilometres down, in the dark, on the ocean floor.",
+      "purpose": "what's down there"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "N05",
+      "narration": "And in the early 2030s, the International Space Station itself is planned to join them, falling into the same empty ocean its crew once flew over.",
+      "purpose": "the ISS's own fate"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Pole_of_inaccessibility#Oceanic_pole_of_inaccessibility",
+    "https://www.livescience.com/62197-point-nemo-tinagong-1-crash-landing.html",
+    "https://en.wikipedia.org/wiki/Spacecraft_cemetery"
+  ]
+}

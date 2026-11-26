@@ -1,0 +1,29 @@
+{
+  "core_message": "A coal fire lit under a Pennsylvania town in 1962 is still burning, and it emptied the whole town.",
+  "mood": "tense",
+  "title": "Why Has This Town Been on Fire Since 1962?",
+  "description": "In 1962 a fire at the dump in Centralia, Pennsylvania, spread into old mine workings and lit the coal seam under the town. It never went out. Smoke and gas seeped into homes, and in 1981 a 12-year-old boy fell into a steaming sinkhole and was pulled out just in time.\n\nThe government bought the town out, almost every house was demolished, and only a handful of people still live there. The fire could burn for another 250 years. 3D scenes made in Blender with CC0 assets by Kenney and Quaternius.",
+  "tags": ["centralia", "mine fire", "ghost town", "pennsylvania", "coal fire", "weird history", "abandoned town", "1962", "sinkhole", "history shorts"],
+  "thumbnail_text": "STILL BURNING",
+  "thumbnail_kicker": "Since 1962",
+  "thumbnail_query": "smoke from cracked road",
+  "comment_question": "Would you visit Centralia?",
+  "series": "Weird History",
+  "blender": "centralia",
+  "scenes": [
+    {"type": "broll", "blender_shot": "C01", "narration": "This road in Pennsylvania has been smoking since 1962. Underneath it, a fire has been burning for more than sixty years.",
+     "purpose": "the ground has been burning for decades"},
+    {"type": "broll", "blender_shot": "C02", "narration": "This was Centralia, a coal mining town of over a thousand people. In 1962, a fire at the town dump crept into an old mine and lit the coal seam beneath the streets.",
+     "purpose": "how the fire started"},
+    {"type": "broll", "blender_shot": "C05", "narration": "It never went out. Smoke and toxic gas seeped up through gardens and basements. In 1981, the ground opened under a twelve year old boy, and he was pulled out of a steaming sinkhole just in time.",
+     "purpose": "the fire becomes dangerous"},
+    {"type": "broll", "blender_shot": "C06", "narration": "The government bought out the town. Almost every house was torn down, and the streets were left to the trees.",
+     "purpose": "the town is emptied"},
+    {"type": "broll", "blender_shot": "C01", "narration": "Today, only a handful of people still live there. And the fire beneath them could burn for another 250 years.",
+     "purpose": "it may burn for centuries"}
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Centralia,_Pennsylvania",
+    "https://en.wikipedia.org/wiki/Centralia_mine_fire"
+  ]
+}

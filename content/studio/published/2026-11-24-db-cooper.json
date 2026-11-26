@@ -1,0 +1,60 @@
+{
+  "core_message": "In 1971 a hijacker jumped from a jet with $200,000 and was never identified; it is still the only unsolved US airliner hijacking.",
+  "mood": "tense",
+  "title": "He Jumped From a Jet and Was Never Found",
+  "description": "On 24 November 1971, the day before Thanksgiving, a man who bought his ticket as \"Dan Cooper\" boarded Northwest Orient Airlines Flight 305, a Boeing 727 from Portland to Seattle. A press mix-up later made him \"D.B. Cooper\". He told a flight attendant he had a bomb and demanded $200,000 and four parachutes. In Seattle, the 36 passengers were released in exchange for the money and parachutes, and the jet took off again with its crew, heading for Mexico City via Reno. Somewhere over southwest Washington that night, in rain, he jumped from the 727's rear airstair and was never identified. In February 1980 an eight-year-old boy found $5,800 of the ransom bills on a Columbia River sandbank. The FBI ended its active investigation in July 2016. Nobody was hurt, but it was a real crime, and the crew and passengers went through a frightening ordeal.\n\nSource: Wikipedia, D. B. Cooper; FBI, D.B. Cooper Hijacking.\n\nAnimated 3D illustration (Three.js with Blender-built models); aircraft, places and people are stylised.",
+  "tags": [
+    "db cooper",
+    "d.b. cooper",
+    "hijacking",
+    "unsolved mystery",
+    "1971",
+    "boeing 727",
+    "fbi",
+    "true crime history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "NEVER FOUND",
+  "thumbnail_kicker": "24 Nov 1971",
+  "thumbnail_query": "boeing 727 at night in the rain",
+  "comment_question": "Do you think he survived the jump?",
+  "series": "Weird History",
+  "blender": "db-cooper",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "Y01",
+      "narration": "In 1971, a man jumped out of the back of a passenger jet, at night, in the rain, with two hundred thousand dollars. He has never been found.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "Y02",
+      "narration": "The day before Thanksgiving, a man who bought his ticket as Dan Cooper boarded a flight from Portland to Seattle. Newspapers later called him D.B. Cooper.",
+      "purpose": "who"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "Y03",
+      "narration": "He told a flight attendant he had a bomb. In Seattle, he let the thirty-six passengers go, in exchange for two hundred thousand dollars and four parachutes.",
+      "purpose": "the crime"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "Y04",
+      "narration": "Then he had the jet take off again, heading south. Somewhere over the forests of southwest Washington, he jumped from its rear stairs into the dark.",
+      "purpose": "the jump"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "Y05",
+      "narration": "In 1980, a boy found five thousand eight hundred dollars of the ransom money on a riverbank. The FBI ended its active investigation in 2016. Who he was is still a mystery.",
+      "purpose": "the open ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/D._B._Cooper",
+    "https://www.fbi.gov/history/famous-cases/db-cooper-hijacking"
+  ]
+}

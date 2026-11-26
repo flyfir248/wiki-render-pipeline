@@ -1,0 +1,30 @@
+{
+  "core_message": "In 1950 a dam drowned the Italian village of Curon, and only its medieval bell tower still stands above the lake.",
+  "mood": "somber",
+  "title": "Why Is There a Church Tower in the Middle of This Lake?",
+  "description": "The bell tower standing in Lake Reschen (Lago di Resia) in South Tyrol, Italy, is all that is left above water of the old village of Curon (Graun). A dam completed in July 1950 flooded the valley for hydroelectric power. About 163 houses were demolished and around 150 families had to leave; the new village was rebuilt on the shore. The 14th-century bell tower was the only building spared, and its bells were taken down shortly before the flooding. In winter, when the lake freezes, people walk across the ice to the tower.\n\n3D scenes made in Blender with CC0 scanned textures from Poly Haven; the tower, church and houses are modelled for this video.",
+  "tags": ["curon", "graun", "lake reschen", "lago di resia", "sunken village", "bell tower", "south tyrol", "italy", "weird places", "weird but true"],
+  "thumbnail_text": "A VILLAGE UNDER THIS LAKE",
+  "thumbnail_kicker": "Curon, Italy",
+  "thumbnail_query": "church tower in lake mountains",
+  "comment_question": "Would you walk out to the tower on the ice?",
+  "series": "Weird Places",
+  "blender": "curon",
+  "scenes": [
+    {"type": "broll", "blender_shot": "R01", "narration": "In the middle of an Alpine lake in northern Italy, a church tower sticks straight out of the water. Underneath it lies an entire village.",
+     "purpose": "hook: a tower in a lake"},
+    {"type": "broll", "blender_shot": "R02", "narration": "This is Lake Reschen, in South Tyrol. In 1950, a new dam flooded the whole valley to make hydroelectric power. Many villagers fought the plan, but it went ahead anyway.",
+     "purpose": "the place and the dam"},
+    {"type": "broll", "blender_shot": "R03", "narration": "Around a hundred and sixty houses were blown up, and about a hundred and fifty families had to leave. Then the water rose over the streets, the fields and the church.",
+     "purpose": "the flood"},
+    {"type": "broll", "blender_shot": "R04", "narration": "Only the fourteenth century bell tower was left standing. Its bells were taken down just before the flood, but locals say that on winter nights you can still hear them ring.",
+     "purpose": "the tower and its legend"},
+    {"type": "broll", "blender_shot": "R05", "narration": "And when the lake freezes in winter, you can walk across the ice and touch the tower, with the old village lying somewhere beneath your feet.",
+     "purpose": "the strange present"}
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Curon_Venosta",
+    "https://www.smithsonianmag.com/smart-news/medieval-italian-village-briefly-surfaces-after-70-years-underwater-180977838/",
+    "https://www.vinschgau.net/en/culture-art/places-of-interest/tower-in-the-reschensee-lake.html"
+  ]
+}

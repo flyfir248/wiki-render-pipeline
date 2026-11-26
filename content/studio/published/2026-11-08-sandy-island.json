@@ -1,0 +1,65 @@
+{
+  "core_message": "An island sat on maps and Google Earth for over a century, and it had never existed.",
+  "mood": "curious",
+  "title": "Why Did Maps Show a Fake Island?",
+  "description": "Sandy Island appeared on charts of the Coral Sea, between Australia and New Caledonia, after a whaling ship reported it in 1876. It stayed on maps for over a century, Google Earth included.\n\nIn November 2012 an Australian research ship, the Southern Surveyor, sailed to the spot. There was only open ocean, about 1,400 metres deep. 3D scenes made in Blender with CC0 assets by Kenney and Quaternius.",
+  "tags": [
+    "sandy island",
+    "phantom island",
+    "fake island",
+    "google earth",
+    "coral sea",
+    "map mystery",
+    "weird geography",
+    "southern surveyor",
+    "geography shorts",
+    "weird but true"
+  ],
+  "thumbnail_text": "IT NEVER EXISTED",
+  "thumbnail_kicker": "Coral Sea",
+  "thumbnail_query": "open ocean research ship",
+  "comment_question": "What other place on a map do you think isn't really there?",
+  "series": "Weird Geography",
+  "blender": "sandy-island",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "S01",
+      "narration": "In 2012, scientists sailed to this exact spot to find an island. There was nothing here but open ocean.",
+      "purpose": "the island on the maps isn't there"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S02",
+      "narration": "The island first appeared in 1876, when a whaling ship called the Velocity reported sandy islets here, in the Coral Sea.",
+      "purpose": "where the island came from"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S03",
+      "narration": "For more than a century, Sandy Island sat on charts and atlases, and even on Google Earth, between Australia and New Caledonia.",
+      "purpose": "it stayed on maps for a century"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S04",
+      "narration": "So when an Australian research ship, the Southern Surveyor, passed nearby, its scientists went to take a look.",
+      "purpose": "scientists go to check"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S05",
+      "narration": "Their echo sounder found no island at all. The sea floor was fourteen hundred metres down.",
+      "purpose": "deep ocean where the island should be"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "S01",
+      "narration": "Sandy Island never existed. The ship had sailed straight across it.",
+      "purpose": "the island was never real"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Sandy_Island,_New_Caledonia"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "core_message": "In 1964 a survey team found an empty, unmarked lifeboat on the most remote island on Earth, and nobody has ever proven where it came from.",
+  "mood": "tense",
+  "title": "Who Left This Boat on the Loneliest Island on Earth?",
+  "description": "Bouvet Island is a small volcanic island in the far South Atlantic, almost entirely covered by a glacier. The nearest land, the coast of Antarctica, is about 1,700 km away. On 2 April 1964 a survey team led by Lieutenant Commander Allan Crawford was flown ashore by helicopter from HMS Protector. In a small lagoon on a lava shelf that had formed only a few years earlier, they found a half-swamped, unmarked whaler or ship's lifeboat. Nearby lay a pair of oars, a 44-gallon drum and a flattened copper tank. They found no camp and no remains, and they had about 45 minutes before they had to leave.\n\nA biological survey visited the lagoon in 1966 and made no mention of the boat. Its origin has never been established.\n\n3D scenes made in Blender with CC0 scanned textures and rocks from Poly Haven.",
+  "tags": ["bouvet island", "lifeboat mystery", "most remote island", "unsolved mysteries", "southern ocean", "antarctica", "weird history", "ghost boat", "weird but true", "history shorts"],
+  "thumbnail_text": "WHO LEFT THIS BOAT?",
+  "thumbnail_kicker": "Loneliest island on Earth",
+  "thumbnail_query": "abandoned lifeboat icy island",
+  "comment_question": "Whose boat do you think it was?",
+  "series": "Unsolved",
+  "blender": "bouvet-lifeboat",
+  "scenes": [
+    {"type": "broll", "blender_shot": "L01", "narration": "In 1964, a helicopter dropped a survey team onto the loneliest island on Earth. In a small lagoon, they found a boat. There was nobody in it.",
+     "purpose": "hook: an empty boat where no boat should be"},
+    {"type": "broll", "blender_shot": "L02", "narration": "This is Bouvet Island, in the far South Atlantic. It is almost entirely covered by a glacier, and the nearest land, Antarctica, is about seventeen hundred kilometres away. Nobody lives here, and almost nobody ever visits.",
+     "purpose": "how remote the island is"},
+    {"type": "broll", "blender_shot": "L03", "narration": "The boat was a ship's lifeboat, half full of water, with no name and no markings. On the shore lay a pair of oars, an oil drum and a flattened copper tank. There was no camp, no message and no bodies.",
+     "purpose": "the evidence"},
+    {"type": "broll", "blender_shot": "L04", "narration": "Stranger still, the lagoon sat on a lava shelf that had only formed a few years earlier. So someone had landed here recently, on the most remote island in the world, and left without their boat.",
+     "purpose": "why it cannot be an old wreck"},
+    {"type": "broll", "blender_shot": "L05", "narration": "The team had less than an hour, so they flew away. When scientists came back two years later, there was no sign of the boat. Nobody has ever proven who it belonged to.",
+     "purpose": "the boat vanishes, the mystery stays open"}
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Bouvet_Island",
+    "https://mikedashhistory.com/2011/02/13/an-abandoned-lifeboat-at-worlds-end/"
+  ]
+}

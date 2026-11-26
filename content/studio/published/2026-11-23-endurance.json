@@ -1,0 +1,59 @@
+{
+  "core_message": "Shackleton's Endurance was crushed by Antarctic ice in 1915, all 28 men survived, and the wreck was found almost perfectly preserved in 2022.",
+  "mood": "curious",
+  "title": "The Ship Found 107 Years After It Sank",
+  "description": "Endurance carried Ernest Shackleton's Imperial Trans-Antarctic Expedition, which set out to cross Antarctica. In January 1915 she was trapped in pack ice in the Weddell Sea. For months the ice crushed her; the crew moved onto the ice in October, and on 21 November 1915 the ship sank. The 28 men camped on drifting ice, escaped in the lifeboats to Elephant Island, and Shackleton and five others sailed the small boat James Caird about 1,300 km to South Georgia to get help. Every one of the 28 survived. On 5 March 2022 the Endurance22 expedition found the wreck 3,008 m down, with the name ENDURANCE still clear on her stern; Antarctic waters have no wood-eating shipworms, so she is remarkably well preserved.\n\nSource: Wikipedia, Endurance (1912 ship).\n\nAnimated 3D illustration (Three.js with Blender-built models); ship, ice and people are stylised.",
+  "tags": [
+    "endurance",
+    "shackleton",
+    "endurance shipwreck",
+    "antarctica",
+    "shipwreck found",
+    "weddell sea",
+    "polar exploration",
+    "survival story",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "STILL PERFECT",
+  "thumbnail_kicker": "Found in 2022",
+  "thumbnail_query": "wooden ship trapped in antarctic sea ice",
+  "comment_question": "Would you have signed up for Shackleton's crew?",
+  "series": "Weird History",
+  "blender": "endurance",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "W01",
+      "narration": "In 2022, three kilometres under the Antarctic sea, an underwater drone shone its lights on a name: Endurance.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "W02",
+      "narration": "In January 1915, Ernest Shackleton's ship froze into the sea ice on its way to cross Antarctica. Twenty-eight men and their sled dogs were stuck.",
+      "purpose": "trapped"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "W03",
+      "narration": "For months the ice squeezed the ship. When her timbers began to break, the crew moved out onto the ice with their lifeboats.",
+      "purpose": "crushed"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "W04",
+      "narration": "On the twenty-first of November 1915, Endurance slid under the ice and was gone, leaving the men camped on drifting floes.",
+      "purpose": "the sinking"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "W05",
+      "narration": "They escaped in open boats, and Shackleton sailed thirteen hundred kilometres to get help. All twenty-eight survived. And with no wood-eating worms in those icy waters, the wreck still looks almost new.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Endurance_(1912_ship)"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "core_message": "In 1943 British intelligence used a dead man carrying fake invasion plans to fool Germany about where the Allies would land.",
+  "mood": "tense",
+  "title": "The Dead Man Who Fooled Hitler",
+  "description": "Operation Mincemeat was a British deception in the Second World War. Intelligence officers Ewen Montagu and Charles Cholmondeley obtained the body of Glyndwr Michael, a homeless Welshman who had died after eating rat poison, and dressed him as a fictitious Royal Marines officer, Captain (acting Major) William Martin. They gave him an invented life in his pockets: letters, a photograph of a fiancee called Pam, and theatre tickets. A briefcase chained to him held fake letters suggesting the Allies would invade Greece and Sardinia. On 30 April 1943 the submarine HMS Seraph released him off Huelva, Spain; a fisherman found him, and Spanish officials passed the documents to German intelligence. German forces were reinforced in Greece and Sardinia, and the Allies invaded Sicily in July 1943. He was buried in Huelva as William Martin; in 1998 the inscription 'Glyndwr Michael served as Major William Martin' was added to the grave.\n\nSource: Wikipedia, Operation Mincemeat.\n\nAnimated 3D illustration (Three.js with Blender-built models); vessels, places and people are stylised.",
+  "tags": [
+    "operation mincemeat",
+    "ww2",
+    "world war 2 deception",
+    "hms seraph",
+    "glyndwr michael",
+    "spy history",
+    "military history",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "A FAKE MAJOR",
+  "thumbnail_kicker": "Spain, 1943",
+  "thumbnail_query": "ww2 submarine surfacing at night",
+  "comment_question": "Would you have believed the briefcase?",
+  "series": "Weird History",
+  "blender": "operation-mincemeat",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "B01",
+      "narration": "In 1943, a British submarine crept close to the coast of Spain before dawn and released a dead man dressed as an officer, with a briefcase chained to him.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "B02",
+      "narration": "It was called Operation Mincemeat. Intelligence officers gave their fake Major William Martin a whole invented life: letters, a photo of a fiancee, even theatre tickets.",
+      "purpose": "the trick"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "B03",
+      "narration": "A Spanish fisherman found him floating off Huelva. In the briefcase were secret letters about the Allies' next invasion.",
+      "purpose": "the find"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "B04",
+      "narration": "The letters were fakes. They pointed to Greece and Sardinia. Spain passed them to the Germans, and Germany moved forces to guard the wrong places.",
+      "purpose": "the twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "B05",
+      "narration": "In July 1943, the real invasion hit Sicily. The man in the uniform was Glyndwr Michael, a homeless Welshman, and his real name was added to his grave in 1998.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Operation_Mincemeat"
+  ]
+}

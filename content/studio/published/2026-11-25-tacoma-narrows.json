@@ -1,0 +1,59 @@
+{
+  "core_message": "In 1940 the Tacoma Narrows Bridge shook itself apart in a moderate wind, and the disaster changed how bridges are designed.",
+  "mood": "tense",
+  "title": "The Bridge That Twisted Itself to Pieces",
+  "description": "The first Tacoma Narrows Bridge in Washington State opened on 1 July 1940; its 853 m main span was then the third longest of any suspension bridge. Its slender deck moved up and down in even light winds, earning it the nickname Galloping Gertie, and drivers came out to ride the waves. On 7 November 1940, in a wind of about 64 km/h, the motion turned into a violent twisting. Leonard Coatsworth, a newspaper editor, abandoned his car and crawled to safety; about an hour later the centre span tore loose and fell into the Narrows. No person died; the only death was a dog left in Coatsworth's car. The collapse, filmed by local camera-shop owners, became a classic lesson in aeroelastic flutter. Its replacement, opened in 1950, was wind-tunnel tested and much stiffer, and a parallel bridge followed in 2007.\n\nSource: Wikipedia, Tacoma Narrows Bridge (1940).\n\nAnimated 3D illustration (Three.js); bridge, cars and people are stylised.",
+  "tags": [
+    "tacoma narrows bridge",
+    "galloping gertie",
+    "bridge collapse",
+    "engineering disaster",
+    "1940",
+    "aeroelastic flutter",
+    "engineering",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "GALLOPING GERTIE",
+  "thumbnail_kicker": "7 Nov 1940",
+  "thumbnail_query": "suspension bridge twisting in wind",
+  "comment_question": "Would you have driven across it for fun?",
+  "series": "Weird History",
+  "blender": "tacoma-narrows",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "Q01",
+      "narration": "In 1940, a brand-new bridge in Washington State twisted itself to pieces, in a wind of just sixty-four kilometres an hour.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "Q02",
+      "narration": "From the day it opened, the deck bounced up and down in the wind. Locals called it Galloping Gertie, and people drove across just to feel the ride.",
+      "purpose": "the bounce"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "Q03",
+      "narration": "Four months later, on the seventh of November, the bouncing turned into a violent twist. A newspaper editor abandoned his car and crawled to safety.",
+      "purpose": "the twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "Q04",
+      "narration": "About an hour later, the middle of the bridge tore loose and fell into the water. The only death was a dog left in that car.",
+      "purpose": "the collapse"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "Q05",
+      "narration": "Engineers learned that wind can make a structure shake itself apart. The bridges that replaced it were built much stiffer, and tested in wind tunnels first.",
+      "purpose": "the lesson"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Tacoma_Narrows_Bridge_(1940)"
+  ]
+}

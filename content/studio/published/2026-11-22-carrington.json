@@ -1,0 +1,61 @@
+{
+  "core_message": "In 1859 a storm from the Sun hit Earth hard enough to set telegraph wires sparking, and a storm that strong could hit our power grids today.",
+  "mood": "curious",
+  "title": "The Sun Ran Telegraphs With No Batteries",
+  "description": "On 1 September 1859, astronomers Richard Carrington and Richard Hodgson independently saw a brilliant white-light flare on the Sun, the first solar flare ever recorded. About 17.6 hours later a coronal mass ejection struck Earth, causing the strongest geomagnetic storm on record. Auroras were seen as far south as the Caribbean, Colombia and Hawaii; in the Rocky Mountains, gold miners reportedly woke and started making breakfast, thinking it was morning. Telegraph systems across Europe and North America failed; some operators got electric shocks and sparks flew from equipment. Operators on the Boston to Portland line disconnected their batteries and sent messages for about two hours using the current induced by the storm. A 2013 Lloyd's study estimated a similar storm today could cost the US $0.6 to 2.6 trillion, and in July 2012 a Carrington-class solar storm crossed Earth's orbit about nine days after Earth had passed that point.\n\nSources: Wikipedia, Carrington Event; NASA Science, 'Near Miss: The Solar Superstorm of July 2012'.\n\nAnimated 3D illustration (Three.js with Blender-built models); buildings and people are stylised.",
+  "tags": [
+    "carrington event",
+    "solar storm",
+    "1859",
+    "aurora",
+    "northern lights",
+    "telegraph",
+    "solar flare",
+    "space weather",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "NO BATTERIES. STILL SENDING.",
+  "thumbnail_kicker": "September 1859",
+  "thumbnail_query": "aurora over a victorian town at night",
+  "comment_question": "Would you be ready if the power went out for weeks?",
+  "series": "Weird History",
+  "blender": "carrington",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "E01",
+      "narration": "In 1859, a storm from the Sun hit the Earth so hard that telegraph wires around the world started to spark.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "E02",
+      "narration": "On the first of September, astronomer Richard Carrington saw a blinding white flash on the Sun. Less than a day later, the storm arrived.",
+      "purpose": "the cause"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "E03",
+      "narration": "The northern lights glowed as far south as Cuba and Hawaii. In some cities, people could read a newspaper by their light. In the Rocky Mountains, miners got up and made breakfast, thinking it was morning.",
+      "purpose": "the spectacle"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "E04",
+      "narration": "Telegraph operators got electric shocks, and sparks flew from their machines. Between Boston and Portland, operators unplugged their batteries and kept sending messages for two hours on the storm's power alone.",
+      "purpose": "the weird twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "E05",
+      "narration": "Today, a storm like that could knock out power grids and satellites. In 2012, one just as strong crossed Earth's orbit. We missed it by about nine days.",
+      "purpose": "why it matters"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Carrington_Event",
+    "https://science.nasa.gov/science-research/heliophysics/near-miss-the-solar-superstorm-of-july-2012/"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "core_message": "Three lighthouse keepers vanished from a tiny Scottish island in 1900, leaving their lamp ready and a coat behind.",
+  "mood": "tense",
+  "title": "Where Did 3 Lighthouse Keepers Go?",
+  "description": "In December 1900 the lighthouse on Eilean Mor, in the Flannan Isles west of Scotland's Outer Hebrides, went dark. When the relief boat Hesperus finally landed on 26 December, all three keepers, James Ducat, Thomas Marshall and Donald MacArthur, were gone.\n\nThe lamps were cleaned and ready, and one keeper's oilskins still hung inside. The official inquiry found storm damage high on the west landing and concluded a huge wave had probably swept the men away. They were never found. 3D scenes made in Blender with CC0 assets by Quaternius.",
+  "tags": [
+    "flannan isles",
+    "lighthouse mystery",
+    "eilean mor",
+    "unsolved mystery",
+    "1900",
+    "lighthouse keepers",
+    "scotland",
+    "outer hebrides",
+    "weird history",
+    "history shorts"
+  ],
+  "thumbnail_text": "ALL 3 VANISHED",
+  "thumbnail_kicker": "1900",
+  "thumbnail_query": "lighthouse storm",
+  "comment_question": "Would you take a job as a lighthouse keeper on Eilean Mor?",
+  "series": "Weird History",
+  "blender": "flannan",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "F01",
+      "narration": "In December 1900, this lighthouse in Scotland's Flannan Isles went dark. Its three keepers, James Ducat, Thomas Marshall and Donald MacArthur, had vanished.",
+      "purpose": "the keepers are gone"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "F06",
+      "narration": "The light stood on Eilean Mor, a bare rock about thirty kilometres out in the Atlantic, built to warn ships off the reefs. On the fifteenth of December, a passing steamer saw that it was out.",
+      "purpose": "how isolated the island is"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "F02",
+      "narration": "Storms kept the relief boat Hesperus away until Boxing Day. When it finally landed, no flag was flying, and nobody came down to the jetty to meet it.",
+      "purpose": "nobody greets the relief boat"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "F05",
+      "narration": "Inside, the lamps were cleaned and filled, ready to light. Two sets of oilskins were gone, but MacArthur's still hung on its hook, as if he had rushed out in his shirt. On the west landing, the storm had torn away railings and a box of ropes, thirty three metres above the sea.",
+      "purpose": "everything ready, a wave the likely cause"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "F01",
+      "narration": "The inquiry's answer: a huge wave swept the men off the rocks. They were never found, and the light on Eilean Mor stayed dark.",
+      "purpose": "they were never found"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Flannan_Isles_Lighthouse",
+    "https://en.wikipedia.org/wiki/Eilean_M%C3%B2r,_Flannan_Isles"
+  ]
+}

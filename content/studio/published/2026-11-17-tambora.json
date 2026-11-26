@@ -1,0 +1,26 @@
+{
+  "core_message": "One volcano in Indonesia cooled the whole planet in 1815, causing a year without a summer, mass famine, and even Frankenstein.",
+  "mood": "somber",
+  "title": "The Volcano That Cancelled Summer",
+  "description": "Mount Tambora on Sumbawa, Indonesia, erupted in April 1815, with its climax on 10 April. It was a VEI-7 eruption, the most powerful in recorded history. Explosions were heard at least 2,600 km away, and the peak lost about a third of its height, dropping from about 4,300 m to 2,851 m. Around 10,000-11,000 people died from the eruption itself, and tens of thousands more from famine and disease; one estimate puts the total at at least 71,000.\n\nSulfur from the eruption cooled the climate. 1816 became the Year Without a Summer: global temperatures fell by about 0.4-0.7 degrees C, snow fell in Albany, New York, on 6 June, and crops failed across North America and Europe. That cold, wet summer, at the Villa Diodati by Lake Geneva, 18-year-old Mary Shelley began the story that became Frankenstein.\n\nSource: Wikipedia, 1815 eruption of Mount Tambora.\n\nAnimated 3D illustration made with Three.js; the island, globe and buildings are stylised.",
+  "tags": ["mount tambora", "year without a summer", "1815 eruption", "volcano", "1816", "frankenstein", "mary shelley", "climate history", "weird but true", "history shorts"],
+  "thumbnail_text": "SUMMER CANCELLED",
+  "thumbnail_kicker": "Because of one volcano",
+  "thumbnail_query": "volcano eruption island ash",
+  "comment_question": "Would you survive a year without summer?",
+  "series": "Weird History",
+  "blender": "tambora",
+  "scenes": [
+    {"type": "broll", "blender_shot": "T01", "narration": "In April 1815, a volcano in Indonesia exploded so violently that people heard it more than two and a half thousand kilometres away.",
+     "purpose": "hook"},
+    {"type": "broll", "blender_shot": "T02", "narration": "Mount Tambora lost about a third of its height. It was the most powerful eruption in recorded history, and around ten thousand people died in the eruption itself.",
+     "purpose": "the eruption"},
+    {"type": "broll", "blender_shot": "T03", "narration": "Its sulphur spread around the planet like a veil, dimming the sun. The next year, 1816, became known as the Year Without a Summer.",
+     "purpose": "global effect"},
+    {"type": "broll", "blender_shot": "T04", "narration": "Snow fell in New York in June. Crops failed across Europe and North America, and famine followed. By one estimate, at least seventy thousand people died in all.",
+     "purpose": "the human cost"},
+    {"type": "broll", "blender_shot": "T05", "narration": "And in a rainy villa by a Swiss lake that cold summer, an eighteen year old named Mary Shelley began writing the story that became Frankenstein.",
+     "purpose": "the surprising twist"}
+  ],
+  "sources": ["https://en.wikipedia.org/wiki/1815_eruption_of_Mount_Tambora", "https://en.wikipedia.org/wiki/Year_Without_a_Summer"]
+}

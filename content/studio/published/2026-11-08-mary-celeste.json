@@ -1,0 +1,72 @@
+{
+  "core_message": "A seaworthy ship was found sailing with everything aboard except its ten people, and nobody knows why.",
+  "mood": "tense",
+  "title": "Why Was the Mary Celeste Empty?",
+  "description": "In December 1872 the crew of the Dei Gratia found the Mary Celeste drifting between the Azores and Portugal with her sails set and nobody aboard. Her food, water and the sailors' belongings were untouched. Only the lifeboat was gone.\n\nThe ten people who left New York on her were never seen again. 3D scenes made in Blender with CC0 assets by Quaternius and Kenney.",
+  "tags": [
+    "mary celeste",
+    "ghost ship",
+    "unsolved mystery",
+    "weird history",
+    "sea mystery",
+    "1872",
+    "dei gratia",
+    "maritime history",
+    "abandoned ship",
+    "history shorts"
+  ],
+  "thumbnail_text": "NOBODY ON BOARD",
+  "thumbnail_kicker": "1872",
+  "thumbnail_query": "old sailing ship fog",
+  "comment_question": "Would you have climbed aboard the Mary Celeste?",
+  "series": "Weird History",
+  "blender": "mary-celeste",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "M01",
+      "narration": "In December 1872, sailors found this ship drifting in the Atlantic, sails still set, with nobody on board.",
+      "purpose": "a ship is found drifting with no one aboard"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M05",
+      "narration": "Four weeks earlier, the Mary Celeste had left New York with ten people: the captain, his wife, their two year old daughter and seven crew.",
+      "purpose": "ten people set sail on her"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M02",
+      "narration": "When sailors from the Dei Gratia climbed aboard, there was no one at the wheel, and no one below deck.",
+      "purpose": "the rescuers find nobody steering"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M03",
+      "narration": "A hatch was open. The only lifeboat was gone.",
+      "purpose": "the lifeboat is missing"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M04",
+      "narration": "Yet there was six months of food and water, and everyone's belongings were untouched. In the hold, nine of seventeen hundred barrels of alcohol were empty.",
+      "purpose": "supplies untouched, alcohol barrels empty"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M06",
+      "narration": "The best theory: fumes from those barrels scared the captain into ordering everyone into the lifeboat, tied behind the ship, until the rope gave way.",
+      "purpose": "the leading theory"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "M01",
+      "narration": "They were never seen again. And their ship sailed on without them.",
+      "purpose": "the people vanished and the ship drifted on"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Mary_Celeste",
+    "https://en.wikipedia.org/wiki/Benjamin_Briggs"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "core_message": "In 1932 Australian soldiers with machine guns failed to defeat a plague of emus, and the birds outlasted them.",
+  "mood": "playful",
+  "title": "When Australia Went to War With Emus",
+  "description": "In late 1932, after the breeding season, an estimated 20,000 emus moved into the wheat belt of Western Australia's Campion district, eating and trampling crops. Many local farmers were First World War veterans, and they asked for machine guns. The Minister of Defence, Sir George Pearce, sent Major G. P. W. Meredith of the Royal Australian Artillery with two soldiers, two Lewis guns and 10,000 rounds of ammunition. The emus scattered into small groups and ran out of range, a gun jammed, and a gun mounted on a truck could not keep up or be aimed over rough ground. The operation was withdrawn after about a week, resumed, and ended in December; Meredith reported 986 birds killed for 9,860 rounds, and newspapers mocked the effort as a war the emus had won. Later, bounties and exclusion fences proved more effective. No birds are shown being harmed in this animation.\n\nSource: Wikipedia, Emu War.\n\nAnimated 3D illustration (Three.js with Blender-built models); animals, places and people are stylised.",
+  "tags": [
+    "emu war",
+    "great emu war",
+    "australia",
+    "1932",
+    "weird history",
+    "military history",
+    "emus",
+    "funny history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "THE EMUS WON",
+  "thumbnail_kicker": "Australia, 1932",
+  "thumbnail_query": "emus running in a wheat field",
+  "comment_question": "Who would you have bet on?",
+  "series": "Weird History",
+  "blender": "emu-war",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "H01",
+      "narration": "In 1932, Australia sent soldiers with machine guns to fight an unusual enemy: emus. And the birds mostly won.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "H02",
+      "narration": "About twenty thousand emus had moved into the wheat farms of Western Australia, eating and trampling the crops. Many of the farmers were ex-soldiers, and they asked the army for help.",
+      "purpose": "the problem"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "H03",
+      "narration": "So a major and two soldiers arrived with two Lewis guns and ten thousand rounds of ammunition.",
+      "purpose": "the plan"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "H04",
+      "narration": "But the emus split into small groups and sprinted off. One gun jammed. Even a gun mounted on a truck failed, because the birds could outrun it over rough ground.",
+      "purpose": "the twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "H05",
+      "narration": "Within about a month, the army gave up. Farmers later had more luck with bounties and better fences, and the emus are still there today.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Emu_War"
+  ]
+}

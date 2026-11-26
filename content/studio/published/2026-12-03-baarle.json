@@ -1,0 +1,60 @@
+{
+  "core_message": "In Baarle, Belgium and the Netherlands are tangled into dozens of pockets, so the border runs through streets, cafes and even houses.",
+  "mood": "playful",
+  "title": "The Town Where the Border Runs Through Doors",
+  "description": "Baarle is one town made of two municipalities: Baarle-Hertog in Belgium and Baarle-Nassau in the Netherlands. Belgium's part consists of 22 small exclaves inside Dutch territory, and seven Dutch counter-exclaves sit inside those Belgian pockets (with one more in Belgium proper). The border is marked on pavements and floors with lines of white crosses, and where it cuts through a building, the address belongs to the country in which the front door stands. The patchwork goes back to medieval land arrangements between the Lords of Breda and the Dukes of Brabant, carried into the 1843 Treaty of Maastricht; the last unassigned parcel was only settled in 1995.\n\nSource: Wikipedia, Baarle-Hertog; Wikipedia, Baarle-Nassau.\n\nAnimated 3D illustration (Three.js); the town, people and street layout are stylised, not a map.",
+  "tags": [
+    "baarle",
+    "baarle-hertog",
+    "baarle-nassau",
+    "enclaves",
+    "weird borders",
+    "belgium",
+    "netherlands",
+    "geography facts",
+    "weird but true",
+    "geography shorts"
+  ],
+  "thumbnail_text": "WHICH COUNTRY?",
+  "thumbnail_kicker": "Belgium or the Netherlands",
+  "thumbnail_query": "border line on a town street",
+  "comment_question": "Which side of the door would you live on?",
+  "series": "Weird History",
+  "blender": "baarle",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "C01",
+      "narration": "In this town, the border between Belgium and the Netherlands runs across the street, and straight through people's front doors.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "C02",
+      "narration": "Baarle is two towns tangled together. Belgium owns twenty-two little pockets of land inside the Netherlands, and some of those pockets hold Dutch pockets of their own.",
+      "purpose": "the tangle"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "C03",
+      "narration": "The border is painted on the pavement with white crosses. When it cuts through a house, the country is decided by where the front door is.",
+      "purpose": "the rule"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "C04",
+      "narration": "Some cafes have tables in both countries at once, and shops, homes and gardens are split the same way.",
+      "purpose": "daily life"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "C05",
+      "narration": "It goes back to medieval land deals between local lords, and the last unclaimed scrap of land was only sorted out in 1995.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Baarle-Hertog",
+    "https://en.wikipedia.org/wiki/Baarle-Nassau"
+  ]
+}

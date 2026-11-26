@@ -1,0 +1,60 @@
+{
+  "core_message": "Big and Little Diomede are under 4 km apart, but the International Date Line between them puts their clocks almost a day apart.",
+  "mood": "curious",
+  "title": "Tomorrow Island and Yesterday Island",
+  "description": "In the middle of the Bering Strait sit two small islands about 3.8 km apart: Big Diomede, which belongs to Russia, and Little Diomede, which belongs to the United States. The International Date Line runs between them, so in winter Big Diomede's clocks are 21 hours ahead (20 in summer), which is why they are nicknamed Tomorrow Island and Yesterday Island. About 80 people, mostly Inupiat, live in the village of Diomede on Little Diomede. Big Diomede has no civilian town; its native residents were moved to the Siberian mainland after the Second World War, and it hosts a Russian border post. During the Cold War the frozen strait was called the Ice Curtain. On 7 August 1987, American long-distance swimmer Lynne Cox swam from Little Diomede to Big Diomede in about two hours in water just above freezing, a crossing later praised by both Ronald Reagan and Mikhail Gorbachev.\n\nSources: Wikipedia, Diomede Islands; Wikipedia, Lynne Cox.\n\nAnimated 3D illustration (Three.js); islands, buildings and people are stylised.",
+  "tags": [
+    "diomede islands",
+    "international date line",
+    "bering strait",
+    "tomorrow island",
+    "russia and usa",
+    "geography facts",
+    "lynne cox",
+    "weird geography",
+    "weird but true",
+    "geography shorts"
+  ],
+  "thumbnail_text": "21 HOURS APART",
+  "thumbnail_kicker": "Bering Strait",
+  "thumbnail_query": "two islands in arctic sea",
+  "comment_question": "Would you swim from Yesterday into Tomorrow?",
+  "series": "Weird History",
+  "blender": "diomede",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "P01",
+      "narration": "These two islands are less than four kilometres apart, but their clocks are almost a whole day apart.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "P02",
+      "narration": "Big Diomede belongs to Russia, Little Diomede belongs to the United States, and the International Date Line runs right between them.",
+      "purpose": "why"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "P03",
+      "narration": "That's why they're nicknamed Tomorrow Island and Yesterday Island. About eighty people live in the village on Little Diomede.",
+      "purpose": "the people"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "P04",
+      "narration": "Big Diomede has no town at all, just a Russian border post. During the Cold War, the frozen sea between them was called the Ice Curtain.",
+      "purpose": "the divide"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "P05",
+      "narration": "Then in 1987, an American swimmer named Lynne Cox swam across in near-freezing water, from Yesterday into Tomorrow, in about two hours. Leaders of both countries praised her for it.",
+      "purpose": "the twist"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Diomede_Islands",
+    "https://en.wikipedia.org/wiki/Lynne_Cox"
+  ]
+}

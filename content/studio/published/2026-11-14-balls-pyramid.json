@@ -1,0 +1,30 @@
+{
+  "core_message": "An insect declared extinct for 80 years was found alive in 2001, two dozen of them under a single bush on a sea spire.",
+  "mood": "uplifting",
+  "title": "The 'Extinct' Insect Hiding on a Rock in the Ocean",
+  "description": "Ball's Pyramid is the eroded remains of a volcano, 562 metres tall, rising out of the Tasman Sea about 20 km from Lord Howe Island, Australia. The Lord Howe Island stick insect (Dryococelus australis), locally called the tree lobster, was once common on Lord Howe. After the SS Makambo ran aground there in 1918, black rats became established, no insects were found after 1920, and the species was declared extinct.\n\nIn 2001 researchers David Priddel and Nicholas Carlile climbed Ball's Pyramid. They found large droppings under a single Melaleuca shrub about 65 m up, came back after dark with ranger Dean Hiscox and torches, and found 24 insects. Since 2003, Melbourne Zoo has bred thousands of them for a future return to Lord Howe.\n\n3D scenes made in Blender with CC0 scanned textures and rocks from Poly Haven; the insects, shrub and steamer are modelled for this video.",
+  "tags": ["balls pyramid", "lord howe island", "tree lobster", "stick insect", "lazarus species", "extinct animal found", "australia", "weird nature", "weird but true", "nature shorts"],
+  "thumbnail_text": "NOT EXTINCT",
+  "thumbnail_kicker": "Found on one bush",
+  "thumbnail_query": "giant black stick insect night torch",
+  "comment_question": "What extinct animal would you most like to see rediscovered?",
+  "series": "Weird Nature",
+  "blender": "balls-pyramid",
+  "scenes": [
+    {"type": "broll", "blender_shot": "P01", "narration": "In 2001, scientists climbed a deadly spike of rock in the Pacific, in the dark, hunting for an insect that nobody had seen alive in eighty years.",
+     "purpose": "hook: a night hunt for an extinct animal"},
+    {"type": "broll", "blender_shot": "P02", "narration": "This is Ball's Pyramid, the jagged remains of an ancient volcano, five hundred and sixty two metres tall, rising straight out of the sea near Australia's Lord Howe Island.",
+     "purpose": "the place"},
+    {"type": "broll", "blender_shot": "P03", "narration": "The insect was the Lord Howe Island stick insect, a giant bug up to twenty centimetres long, nicknamed the tree lobster. In 1918, a ship ran aground on Lord Howe, black rats got ashore, and within two years the insects were gone.",
+     "purpose": "how it went extinct"},
+    {"type": "broll", "blender_shot": "P04", "narration": "On their climb, the team spotted huge droppings under a single bush, about sixty five metres up the cliff. So they came back after dark, with torches.",
+     "purpose": "the clue and the night climb"},
+    {"type": "broll", "blender_shot": "P05", "narration": "Under that one bush were twenty four of them, the last wild tree lobsters on Earth. Their descendants have since been bred by the thousands, waiting for the day they can go home.",
+     "purpose": "the find and the hopeful ending"}
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Dryococelus_australis",
+    "https://en.wikipedia.org/wiki/Ball%27s_Pyramid",
+    "https://link.springer.com/article/10.1023/A%3A1023625710011"
+  ]
+}

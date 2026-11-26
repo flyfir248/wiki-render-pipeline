@@ -1,0 +1,26 @@
+{
+  "core_message": "The shortest war ever recorded, between Britain and Zanzibar in 1896, was over in about 38 minutes.",
+  "mood": "curious",
+  "title": "The War That Lasted Just 38 Minutes",
+  "description": "On 25 August 1896 the pro-British Sultan of Zanzibar, Hamad bin Thuwaini, died suddenly, and his nephew Khalid bin Barghash took the palace without the British consent an 1890 agreement required. Rear-Admiral Harry Rawson's ultimatum gave him until 09:00 on 27 August to lower his flag and leave. At 09:02 British warships opened fire on the palace; the shelling stopped at about 09:40, making it the shortest war on record (sources give 38 to 45 minutes). About 500 Zanzibari soldiers and civilians were killed or wounded; one British petty officer was seriously wounded. The royal yacht Glasgow was sunk. Khalid fled to the German consulate, and Britain made his supporters pay 300,000 rupees for the shells fired at them and for looting damage.\n\nSource: Wikipedia, Anglo-Zanzibar War.\n\nAnimated 3D illustration made with Three.js; buildings and ships are stylised.",
+  "tags": ["anglo zanzibar war", "shortest war in history", "38 minute war", "zanzibar", "1896", "british empire", "history", "weird history", "weird but true", "history shorts"],
+  "thumbnail_text": "38 MINUTES",
+  "thumbnail_kicker": "The shortest war ever",
+  "thumbnail_query": "warships bombarding palace harbour",
+  "comment_question": "What's the shortest thing you've ever won?",
+  "series": "Weird History",
+  "blender": "zanzibar-war",
+  "scenes": [
+    {"type": "broll", "blender_shot": "Z01", "narration": "The shortest war in recorded history lasted about thirty eight minutes. It was fought on a Thursday morning in 1896.",
+     "purpose": "hook"},
+    {"type": "broll", "blender_shot": "Z02", "narration": "Two days earlier, the Sultan of Zanzibar, who was friendly to Britain, died suddenly. His nephew Khalid seized the palace and declared himself sultan, without Britain's approval.",
+     "purpose": "the cause"},
+    {"type": "broll", "blender_shot": "Z03", "narration": "British warships lined up in the harbour and sent an ultimatum. Lower your flag and leave the palace by nine o'clock, or we open fire.",
+     "purpose": "the ultimatum"},
+    {"type": "broll", "blender_shot": "Z04", "narration": "At two minutes past nine, they opened fire. The palace burned, the sultan's old royal yacht was sunk, and about five hundred defenders were killed or wounded. One British sailor was hurt.",
+     "purpose": "the bombardment"},
+    {"type": "broll", "blender_shot": "Z05", "narration": "By about twenty to ten, it was over. Khalid escaped to the German consulate, and Britain made his supporters pay for the shells it had fired at them.",
+     "purpose": "the absurd ending"}
+  ],
+  "sources": ["https://en.wikipedia.org/wiki/Anglo-Zanzibar_War"]
+}

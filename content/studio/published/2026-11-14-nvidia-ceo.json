@@ -1,0 +1,30 @@
+{
+  "core_message": "Nvidia, the chip company behind the AI boom, lost the founder who had run it for over thirty years, overnight.",
+  "mood": "tense",
+  "title": "Nvidia's CEO Quit Overnight. Here's What Happened",
+  "description": "On 12 November 2026 Nvidia's board announced that co-founder Jensen Huang had resigned as president, chief executive and board member, effective immediately. The board has hired an outside law firm to carry out an investigation, and chief financial officer Colette Kress is serving as interim CEO while the company searches for a successor. Nvidia's shares fell as much as 14% during the day before closing down 4.3%. Huang co-founded Nvidia in 1993 and led it for more than three decades as its graphics chips became the hardware behind most of today's AI.\n\nSources: CNBC live coverage (12 Nov 2026), Nvidia board statement.\n\nAnimated 3D illustration made with Three.js; the campus, chip and boardroom are stylised, not real places.",
+  "tags": ["nvidia", "jensen huang", "nvidia ceo", "colette kress", "ai chips", "tech news", "stock market", "breaking news", "weird but true", "news shorts"],
+  "thumbnail_text": "NVIDIA'S CEO IS OUT",
+  "thumbnail_kicker": "Overnight",
+  "thumbnail_query": "empty boardroom chair spotlight",
+  "comment_question": "What do you think happens to Nvidia now?",
+  "series": "In the News",
+  "blender": "nvidia-ceo",
+  "scenes": [
+    {"type": "broll", "blender_shot": "V01", "narration": "On November the twelfth, the boss of one of the most valuable companies on Earth was suddenly gone.",
+     "purpose": "hook"},
+    {"type": "broll", "blender_shot": "V02", "narration": "Jensen Huang co-founded Nvidia in 1993, and ran it for more than thirty years. Its chips now power most of the world's artificial intelligence.",
+     "purpose": "who he is and why Nvidia matters"},
+    {"type": "broll", "blender_shot": "V03", "narration": "Then Nvidia's board announced that he had resigned as chief executive and left the board, effective immediately, and that it had hired an outside law firm to run an investigation.",
+     "purpose": "what happened"},
+    {"type": "broll", "blender_shot": "V04", "narration": "Finance chief Colette Kress stepped in as interim CEO, while the company searches for a permanent replacement.",
+     "purpose": "who is in charge"},
+    {"type": "broll", "blender_shot": "V05", "narration": "Investors panicked. Nvidia's shares plunged as much as fourteen percent, before recovering to close about four percent down. Now the company at the centre of the AI boom has to find out what it looks like without its founder.",
+     "purpose": "the shock and what's next"}
+  ],
+  "sources": [
+    "https://www.cnbc.com/2026/11/12/nvidia-jensen-huang-ceo-live-updates.html",
+    "https://nvidianews.nvidia.com/news/latest",
+    "https://www.cnbc.com/2026/11/12/nvidia-nvda-jensen-huang-second-affair.html"
+  ]
+}

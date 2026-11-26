@@ -1,0 +1,60 @@
+{
+  "core_message": "A Russian family lived completely cut off in the Siberian taiga for over 40 years and never heard of the Second World War.",
+  "mood": "curious",
+  "title": "The Family That Missed World War Two",
+  "description": "In 1978, a helicopter carrying Soviet geologists over the remote Abakan region of the Siberian taiga spotted a cleared, cultivated patch more than 200 km from the nearest settlement. It belonged to the Lykovs, a family of Old Believers. In 1936, after his brother was shot by a Communist patrol, Karp Lykov fled into the forest with his wife Akulina and their children Savin and Natalia; Dmitry and Agafia were born in the wilderness. They lived for more than 40 years with almost no outside contact, mainly on potatoes; in 1961 Akulina died of starvation after a hard frost destroyed their crops. When the geologists arrived, the family knew nothing of the Second World War. In 1981, Savin, Natalia and Dmitry died within months of each other; Karp died in 1988. Agafia, the youngest, chose to stay in the taiga.\n\nSources: Wikipedia, Lykov family; Smithsonian Magazine, For 40 Years, This Russian Family Was Cut Off From All Human Contact.\n\nAnimated 3D illustration (Three.js with Blender-built models); places and people are stylised.",
+  "tags": [
+    "lykov family",
+    "siberia",
+    "taiga",
+    "hermits",
+    "old believers",
+    "isolated family",
+    "agafia lykova",
+    "weird history",
+    "weird but true",
+    "history shorts"
+  ],
+  "thumbnail_text": "40 YEARS ALONE",
+  "thumbnail_kicker": "Siberia, 1978",
+  "thumbnail_query": "log cabin in siberian taiga snow",
+  "comment_question": "Could you live 40 years without the outside world?",
+  "series": "Weird History",
+  "blender": "lykov-family",
+  "scenes": [
+    {
+      "type": "broll",
+      "blender_shot": "U01",
+      "narration": "In 1978, a Soviet helicopter flying over the Siberian wilderness spotted something impossible: a garden, more than two hundred kilometres from the nearest village.",
+      "purpose": "hook"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "U02",
+      "narration": "Back in 1936, Karp Lykov had fled into the forest with his wife and two children, escaping religious persecution.",
+      "purpose": "the escape"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "U03",
+      "narration": "They lived alone for over forty years. Two more children were born out there. They survived mostly on potatoes, and after one hard frost, the mother starved to death.",
+      "purpose": "the cost"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "U04",
+      "narration": "When the geologists finally walked up to their hut, the Lykovs had never heard of the Second World War.",
+      "purpose": "the twist"
+    },
+    {
+      "type": "broll",
+      "blender_shot": "U05",
+      "narration": "In 1981, three of the children died within months, and Karp died in 1988. His youngest daughter, Agafia, chose to stay on in the taiga.",
+      "purpose": "the ending"
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Lykov_family",
+    "https://www.smithsonianmag.com/history/for-40-years-this-russian-family-was-cut-off-from-human-contact-unaware-of-world-war-ii-7354256/"
+  ]
+}

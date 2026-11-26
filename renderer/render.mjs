@@ -39,6 +39,8 @@ const browserExecutable = process.env.REMOTION_BROWSER_EXECUTABLE || null;
 const serveUrl = await bundle({ entryPoint: path.join(here, "src/index.ts"), publicDir });
 const composition = await selectComposition({
   serveUrl,
+  // Remotion's 30 s default is too short on a slow machine (the laptop's first bundle load timed out)
+  timeoutInMilliseconds: 240000,
   id: still ? "Thumbnail" : "Video",
   inputProps,
   browserExecutable,
