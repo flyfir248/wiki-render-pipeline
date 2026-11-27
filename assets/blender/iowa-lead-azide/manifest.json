@@ -1,0 +1,13 @@
+{
+  "fps": 30,
+  "source": "Three.js 0.186.1 (wbt_kit.js, page iowa_azide.js), rendered in a cloud container on SwiftShader at 720x1280; all models procedural",
+  "thumbnail": "thumb.jpg",
+  "shots": [
+    {"id": "A01", "file": "A01.mp4", "duration": 7.0, "what": "hook: the lead azide drums alone in the sand-barrier ring with misters running, a soldier checking them"},
+    {"id": "A02", "file": "A02.mp4", "duration": 7.0, "what": "earth-covered magazines at the plant, fence and warning signs, patrol pickup"},
+    {"id": "A03", "file": "A03.mp4", "duration": 7.0, "what": "inside a magazine: the open drum, dried bath line, white crystals growing; inspector with a torch"},
+    {"id": "A04", "file": "A04.mp4", "duration": 7.0, "what": "overhead: the blast pit, rings of sand barriers, lime piles, misters, crews and trucks"},
+    {"id": "A05", "file": "A05.mp4", "duration": 7.0, "what": "a farmyard a mile away: the grey plume rises on the horizon and drifts south; windows rattle on the sound"},
+    {"id": "A06", "file": "A06.mp4", "duration": 7.0, "what": "a stubble field downwind: EPA samplers with jars, flags and an air sampler"}
+  ]
+}

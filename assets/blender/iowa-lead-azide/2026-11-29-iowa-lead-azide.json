@@ -1,0 +1,22 @@
+{
+  "core_message": "The US Army blew up about 4,300 kg of forty-year-old lead azide in Iowa on purpose, because the liquid keeping it safe had dried up and it had become too dangerous to move.",
+  "mood": "tense",
+  "title": "The Explosive Too Dangerous to Move",
+  "description": "On 25 November 2026 at 9:00 am, the US Army detonated about 9,500 lb (4,300 kg) of lead azide, a sensitive explosive used to set off larger charges, in 68 drums at the Iowa Army Ammunition Plant near Middletown, Iowa. The drums had been stored since at least the 1980s in earth-covered, concrete-lined magazines under an ethanol and water bath that kept the explosive stable. In March 2026 a routine check found the bath had evaporated and the lead azide had recrystallised into crystals that are sensitive to friction and movement. A plan to neutralise it chemically was cancelled in May. The Army instead surrounded the drums with about 300 two-storey sand barriers, lime fill, soaked soil and misters. There were two explosions; a grey plume drifted south and southwest and was gone from view within minutes, and a resident a mile away said windows rattled. No deaths or injuries were reported. EPA teams are sampling soil, water and surfaces to find out how much lead was spread; results were still pending at the time of making.\n\nSources: Wikipedia, Iowa lead azide detonation; Wikipedia, Lead(II) azide.\n\nAnimated 3D illustration made with Three.js; the plant, bunkers, blast pit and farms are stylised, not real places.",
+  "tags": ["lead azide", "iowa army ammunition plant", "iowa explosion", "middletown iowa", "controlled detonation", "us army", "explosives", "news explained", "weird but true", "news shorts"],
+  "thumbnail_text": "ON PURPOSE",
+  "thumbnail_kicker": "Iowa, 2026",
+  "thumbnail_query": "rusty steel drums in a sandbag ring",
+  "comment_question": "Would you have stayed home or left town that morning?",
+  "series": "In the News",
+  "blender": "iowa-lead-azide",
+  "scenes": [
+    {"type": "broll", "blender_shot": "A01", "narration": "On November the twenty-fifth, the US Army blew up more than four tonnes of an explosive that had become too dangerous to move.", "purpose": "hook"},
+    {"type": "broll", "blender_shot": "A02", "narration": "It was lead azide, the touchy explosive used to set off bigger ones. Sixty-eight drums of it had sat in bunkers in Iowa since at least the 1980s, kept under liquid so it stayed calm.", "purpose": "what it was"},
+    {"type": "broll", "blender_shot": "A03", "narration": "But this year inspectors found the liquid had dried up. The powder had regrown as crystals that can go off from friction, or just from being moved.", "purpose": "the problem"},
+    {"type": "broll", "blender_shot": "A04", "narration": "A plan to dissolve it with chemicals was cancelled. So the Army ringed the drums with three hundred sand barriers, tonnes of lime and water misters.", "purpose": "the plan"},
+    {"type": "broll", "blender_shot": "A05", "narration": "At nine in the morning it went off in two blasts. A mile away, windows rattled, and a grey plume drifted south.", "purpose": "the blast"},
+    {"type": "broll", "blender_shot": "A06", "narration": "Nobody was hurt. Now EPA teams are testing the soil and water downwind, to find out where the lead went.", "purpose": "what now"}
+  ],
+  "sources": ["https://en.wikipedia.org/wiki/Iowa_lead_azide_detonation", "https://en.wikipedia.org/wiki/Lead(II)_azide"]
+}
