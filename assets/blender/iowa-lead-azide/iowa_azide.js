@@ -55,7 +55,8 @@
 //   Background: a farm with barn and silo, a tree line, power poles, a grain elevator.
 //   Atmosphere: grass and stubble moving, crows, a car on the far road.
 import { renderer, THREE, SHOT, rnd, C, V, D, sm, mix, clamp, PAL, world, scene, sky, hemi, sun, fill, camera, grade, M, E, mesh, box, blob, canvasTex,
-  person, walker, standPose, prop, orbit, card, run, hero, atmo } from './wbt_kit.js';
+  person, walker, standPose, prop, orbit, card, run, hero, atmo, composer } from './wbt_kit.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 
 const S = SHOT;
 window.SHOT_SIZE = { A01: 'medium', A02: 'wide', A03: 'close', A04: 'wide', A05: 'wide', A06: 'medium' }[S] || 'wide';
@@ -203,6 +204,13 @@ function clouds(n, cx, cz, spread, y) { for (let i = 0; i < n; i++) { const c = 
 function skyFill(at, camY, pitch, n, d0, d1, a0 = 2, a1 = 26) { for (let i = 0; i < n; i++) { const d = mix(d0, d1, rnd()), [x, z] = at(d, (rnd() - 0.5) * 2.6), a = D(pitch + mix(a0, a1, (i + rnd()) / n));
     const c = mesh(blob(1, 1, 0.3), M(rnd() < 0.3 ? '#E9EEF2' : '#FFFFFF', { roughness: 1 }), x, camY + d * Math.tan(a), z); c.scale.set(d * (0.06 + rnd() * 0.08), d * (0.018 + rnd() * 0.014), d * 0.05); c.castShadow = false; } }
 function wideLight() { hemi.intensity = 1.05; fill.intensity = 0.28; sun.intensity = 3.0; renderer.toneMappingExposure = 1.0; }
+// The studio template burns in the title bar and captions, so this page bakes no text cards (they collided with the
+// title bar in the first assembly, 27 Nov). nocard() keeps each card's wording here for reference.
+const nocard = () => {};
+// gentle S-curve for the pale wides (SKILL.md M-14/M-27: shadows draw the shapes); k = share of the curve
+function contrast(k) { composer.addPass(new ShaderPass({ uniforms: { tDiffuse: { value: null }, k: { value: k } }, vertexShader: 'varying vec2 vUv; void main(){vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader: 'uniform sampler2D tDiffuse; uniform float k; varying vec2 vUv; void main(){ vec3 c=texture2D(tDiffuse,vUv).rgb; vec3 s=c*c*(3.0-2.0*c); float l=dot(c,vec3(0.2126,0.7152,0.0722)); vec3 g=mix(vec3(l),c,1.12); gl_FragColor=vec4(mix(c,mix(s,g,0.4),k),1.); }' })); }
+if (S === 'A02' || S === 'A04') contrast(0.7);
 let update = () => {}, overlay = () => {};
 const sweep = [];
 camera.near = 0.1; camera.far = S === 'A05' ? 3000 : 700; camera.updateProjectionMatrix();
@@ -240,9 +248,9 @@ if (S === 'A01' || S === 'A04') {
     const w = walker(sol, arc(2.95, 205, 290, 8), 0, 0.55);
     sweep.push(crows(5, V(-40, 14, -30), V(30, 18, -40), 0.4, 6, 0));
     update = (t, u, e) => { sweep.forEach((f) => f(t)); w(t); orbit(V(0.3, 0.7, -0.3), D(40), D(16), mix(5.4, 5.0, e)); camera.fov = 52; camera.updateProjectionMatrix(); };
-    overlay = (t) => card('Iowa, 25 Nov 2026', { y: 0.2, size: 0.046, alpha: 1 - sm(5.6, 6.2, t) });
+    overlay = (t) => nocard('Iowa, 25 Nov 2026', { y: 0.2, size: 0.046, alpha: 1 - sm(5.6, 6.2, t) });
   } else {
-    const CAM = V(18.2, 24.6, 31.6), at = aim(CAM, V(0, 0, 0)); wideLight(); hemi.intensity = 0.8; fill.intensity = 0.15; sun.intensity = 3.6;
+    const CAM = V(18.2, 24.6, 31.6), at = aim(CAM, V(0, 0, 0)); wideLight(); hemi.intensity = 0.6; fill.intensity = 0.1; sun.intensity = 4.3; renderer.toneMappingExposure = 1.05;
     const ex = excavator(-15, 8, 2.2); const dt = dumpTruck(0, 0, 0);
     lightTower(-15, -9); generator(-17, -12, 0.3); bowser(16, -10, -0.3);
     const ws = [[60, 100, 0], [265, 300, 1], [-15, 15, 2], [180, 195, 3]].map(([a0, a1, k]) => { const p = person({ height: 1.75, skin: PAL.skin[(k * 2) % 6], hair: PAL.hair[k % 6], top: CAMO, bottom: CAMO }); hardhat(p, '#6E6A4E'); return walker(p, arc(9.6, a0, a1, 5), 0, 0.45); });
@@ -256,13 +264,13 @@ if (S === 'A01' || S === 'A04') {
     update = (t, u, e) => { sweep.forEach((f) => f(t)); ws.forEach((f) => f(t)); dt.position.set(mix(-30, 4, t / 7), 0, mix(19, 20, t / 7)); dt.rotation.y = Math.PI / 2 + 0.05; dust(t); dustIM.position.set(dt.position.x - 4, 0, dt.position.z);
       ex.userData.top.rotation.y = 0.5 * Math.sin(t * 0.6);
       orbit(V(0, 0, 0), D(30), D(34), mix(46, 42, e)); camera.fov = 56; camera.updateProjectionMatrix(); };
-    overlay = (t) => card('300 Sand Barriers', { y: 0.2, size: 0.05, alpha: 1 });
+    overlay = (t) => nocard('300 Sand Barriers', { y: 0.2, size: 0.05, alpha: 1 });
   }
 }
 
 if (S === 'A02') {
   sky('day', 90, 520); ground(grass(), 120, 260); ground(stubble(), 1000, 1000, 0, 0, -0.03);
-  const CAM = V(7, 13, 36), TGT = V(0, 2.0, -2), at = aim(CAM, TGT); wideLight(); skyFill(at, 13, -13, 44, 150, 420, 1, 32); fill.intensity = 0.18; hemi.intensity = 0.95;
+  const CAM = V(7, 13, 36), TGT = V(0, 2.0, -2), at = aim(CAM, TGT); wideLight(); skyFill(at, 13, -13, 44, 150, 420, 1, 32); fill.intensity = 0.1; hemi.intensity = 0.65; sun.intensity = 4.2; renderer.toneMappingExposure = 1.05;
   { const g = prop('gravel road', 0, 14); const r = new THREE.Mesh(new THREE.PlaneGeometry(200, 6), new THREE.MeshStandardMaterial({ map: gravel(), roughness: 0.95 })); r.rotation.x = -Math.PI / 2; r.position.set(0, 0.02, 0); r.receiveShadow = true; g.add(r); }
   const hm = mound(0, 0, 0, 1, 'magazine'); hero(hm);
   for (const [x, z] of [[-13, -34], [13, -34], [0, -68], [-13, -102], [13, -102]]) mound(x, z, 0, 1, 'magazine');
@@ -283,7 +291,7 @@ if (S === 'A02') {
   update = (t, u, e) => { sweep.forEach((f) => f(t)); tufts.forEach(([x, z, p], i) => { o.position.set(x, 0.2, z); o.rotation.set(0.15 * Math.sin(t * 2 + p + x * 0.2), 0, 0); o.updateMatrix(); grassTufts.setMatrixAt(i, o.matrix); }); grassTufts.count = tufts.length; grassTufts.instanceMatrix.needsUpdate = true;
     pu.position.set(mix(-30, 18, t / 7), 0, 14.2); pu.rotation.y = Math.PI / 2;
     camera.position.copy(CAM).lerp(TGT, 0.08 * e); camera.lookAt(TGT); camera.fov = 56; camera.updateProjectionMatrix(); };
-  overlay = (t) => card('Stored Since\nthe 1980s', { y: 0.2, size: 0.048, alpha: 1 });
+  overlay = (t) => nocard('Stored Since\nthe 1980s', { y: 0.2, size: 0.048, alpha: 1 });
 }
 
 if (S === 'A03') {
@@ -319,7 +327,7 @@ if (S === 'A03') {
     const hand = new THREE.Vector3(); insp.userData.arms[1].userData.hand.getWorldPosition(hand); beam.position.copy(hand); beam.target.position.set(-0.9 + 0.1 * Math.sin(t * 0.9), 0.95, 1.0);
     const g = sm(0.2, 6.2, t); xtals.forEach((m) => m.scale.set(1, Math.max(0.001, clamp(g * 1.6 - m.userData.k * 0.6)), 1));
     orbit(V(-0.75, 1.0, 1.1), D(-160), D(34), mix(2.6, 2.3, e)); camera.fov = 46; camera.updateProjectionMatrix(); };
-  overlay = (t) => card('The Liquid\nDried Up', { y: 0.2, size: 0.05, alpha: sm(0.5, 0.9, t) });
+  overlay = (t) => nocard('The Liquid\nDried Up', { y: 0.2, size: 0.05, alpha: sm(0.5, 0.9, t) });
 }
 
 if (S === 'A05') {
@@ -347,11 +355,11 @@ if (S === 'A05') {
     const snd = t - 4.6; const sh = snd > 0 && snd < 0.6 ? (1 - snd / 0.6) : 0; fh.userData.wins.forEach((w, k) => (w.rotation.z = sh * 0.04 * Math.sin(t * 80 + k)));
     cows.forEach((c, k) => { c.userData.head.rotation.y = sm(1.4 + k * 0.2, 2.2 + k * 0.2, t) * -0.6; });
     camera.position.copy(CAM).add(V(sh * 0.04 * Math.sin(t * 60), sh * 0.03 * Math.sin(t * 47), 0)); camera.lookAt(TGT); camera.fov = 58; camera.updateProjectionMatrix(); };
-  overlay = (t) => card('9:00 AM', { y: 0.2, size: 0.056, alpha: sm(0.2, 0.6, t) });
+  overlay = (t) => nocard('9:00 AM', { y: 0.2, size: 0.056, alpha: sm(0.2, 0.6, t) });
 }
 
 if (S === 'A06') {
-  sky('day', 90, 600); ground(stubble(), 1200, 1200);
+  sky('day', 90, 600); ground(texRows('#D2A45A', 'rgba(120,85,40,0.55)', 14, 22), 1200, 1200);
   const CAM = V(1.5, 1.55, 4.3), at = aim(CAM, V(0, 1.15, 0)); wideLight(); skyFill(at, 1.55, -5, 40, 120, 400, 1, 30); skyFill(at, 1.55, -5, 12, 300, 600, 0.5, 6);
   const smp = person({ height: 1.74, skin: PAL.skin[3], hair: PAL.hair[0], top: PAL.offwhite, bottom: PAL.offwhite, shoes: PAL.teal }); hero(smp); smp.rotation.y = 0.55; { const g = prop('sample bucket and trowel', -0.55, 0.45); mesh(new THREE.CylinderGeometry(0.15, 0.12, 0.3, 8), M(PAL.offwhite), 0, 0.15, 0, g); const tr = mesh(box(0.06, 0.02, 0.3), M(PAL.bluegrey, { metalness: 0.6, roughness: 0.4 }), 0.2, 0.03, 0.1, g); tr.rotation.y = 0.6; } hardhat(smp, PAL.teal);
   mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.12, 8), M('#DCEBF2', { roughness: 0.1, transparent: true, opacity: 0.85 }), 0, -0.06, 0.03, smp.userData.arms[0].userData.hand);
@@ -375,7 +383,7 @@ if (S === 'A06') {
     standPose(smp, t); const u2 = smp.userData; const lift = sm(0.3, 1.6, t); u2.arms[0].rotation.x = mix(-0.3, -1.75, lift); u2.arms[0].rotation.z = mix(0, -0.35, lift); u2.arms[1].rotation.x = -0.25 + 0.05 * Math.sin(t * 1.3); u2.hd.rotation.x = mix(0.1, 0.05, lift); u2.hd.rotation.y = mix(0, 0.35, lift) + 0.05 * Math.sin(t * 0.7);
     { const u = V(cx - CAM.x, 0, cz - CAM.z).normalize(), k = mix(-40, 40, t / 7); car.position.set(cx - u.z * k, 0, cz + u.x * k); car.rotation.y = Math.atan2(-u.z, u.x); }
     camera.position.copy(CAM).lerp(V(0, 1.15, 0), 0.08 * e); camera.lookAt(0, 1.15, 0); camera.fov = 50; camera.updateProjectionMatrix(); };
-  overlay = (t) => card('Where Did\nthe Lead Go?', { y: 0.2, size: 0.05, alpha: sm(2.0, 2.4, t) });
+  overlay = (t) => nocard('Where Did\nthe Lead Go?', { y: 0.2, size: 0.05, alpha: sm(2.0, 2.4, t) });
 }
 
 run(update, overlay);
